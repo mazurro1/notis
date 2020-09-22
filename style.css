@@ -17,7 +17,7 @@
   box-sizing: border-box;
 }
 body {
-  font-family: "Lato", sans-serif;
+  font-family: Calibri, sans-serif;
   color: var(--mainBlack);
   background: var(--mainWhite);
   line-height: 1.4;
