@@ -3,10 +3,12 @@ const Navigation = require("./src/components/Navigation").default
 const Footer = require("./src/components/Footer").default
 
 exports.wrapPageElement = ({ element, props }) => {
+  const isMainPage = props.location.pathname === "/"
   return (
     <>
-      <Navigation />
-      <div className="heightElement">{element}</div>
+      <Navigation isMainPage={isMainPage}>
+        <div className="heightElement">{element}</div>
+      </Navigation>
       <Footer />
     </>
   )

@@ -2,14 +2,17 @@ import React from "react"
 import styled from "styled-components"
 
 const InputStyled = styled.input`
-  padding: 10px 15px;
+  padding: 15px 20px;
   padding-left: 50px;
+  margin-right: 10px;
+  margin-bottom: 5px;
   border: none;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 16px;
   color: #212121;
   ::placeholder {
     color: #757575;
+    padding-right: 50px;
   }
 
   &:active,
@@ -29,7 +32,7 @@ const AllInput = styled.div`
 
 const IconInput = styled.div`
   position: absolute;
-  top: 0;
+  top: -2px;
   bottom: 0;
   left: 0;
   width: 40px;
@@ -40,10 +43,19 @@ const IconInput = styled.div`
   color: #757575;
 `
 
-const InputIcon = ({ placeholder = "", icon = "" }) => {
+const InputIcon = ({
+  placeholder = "",
+  icon = "",
+  value = "",
+  onChange = () => {},
+}) => {
   return (
     <AllInput>
-      <InputStyled value="" placeholder={placeholder} />
+      <InputStyled
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+      />
       <IconInput>{icon}</IconInput>
     </AllInput>
   )

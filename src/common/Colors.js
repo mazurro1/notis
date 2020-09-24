@@ -1,5 +1,6 @@
 export const Colors = {
   navBackground: "#212121",
+  navDownBackground: "#282828",
   navText: "white",
   secondColor: "#e91e63",
   buttonIconColor: "#5ec2d7",

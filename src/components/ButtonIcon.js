@@ -4,7 +4,7 @@ import { Colors } from "../common/Colors"
 
 const ButtonStyle = styled.div`
   position: relative;
-  padding: 2px 10px;
+  padding: 4px 10px;
   padding-left: 45px;
   padding-left: ${props => (props.icon ? "45px" : "10px")};
   border-radius: 5px;
@@ -23,10 +23,10 @@ const ButtonStyle = styled.div`
   color: black;
   overflow: hidden;
   color: white;
-  font-weight: 700;
   font-size: ${props => props.fontSize + "px"};
   text-transform: ${props => (props.uppercase ? "uppercase" : "")};
   transform: ${props => (props.mouseClick ? `scale(0.95)` : "scale(1)")};
+  user-select: none;
   cursor: pointer;
   transition-property: background-color, transform;
   transition-duration: 0.2s;
