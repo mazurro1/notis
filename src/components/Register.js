@@ -19,6 +19,14 @@ const ButtonLoginRegister = styled.button`
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
+  &:disabled {
+    background-color: #bdbdbd;
+
+    &:hover {
+      background-color: #bdbdbd;
+    }
+  }
+
   &:hover {
     background-color: ${Colors.buttonIconColor};
   }
@@ -55,6 +63,13 @@ const RegisterContent = () => {
     console.log("submit")
   }
 
+  const validButtonRegistration =
+    emailInput.length > 0 &&
+    passwordInput.length > 0 &&
+    nameInput.length > 0 &&
+    phoneInput.length > 0 &&
+    repeatPasswordInput === passwordInput
+
   return (
     <form onSubmit={handleSubmit}>
       <InputIcon
@@ -77,7 +92,6 @@ const RegisterContent = () => {
         value={phoneInput}
         type="number"
         onChange={e => handleChange(e, setPhoneInput)}
-        maxlength="9"
       />
       <InputIcon
         icon={<MdLock />}
@@ -97,7 +111,9 @@ const RegisterContent = () => {
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
-      <ButtonLoginRegister type="submit">ZAREJESTRUJ KONTO</ButtonLoginRegister>
+      <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
+        ZAREJESTRUJ KONTO
+      </ButtonLoginRegister>
     </form>
   )
 }

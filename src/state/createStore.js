@@ -5,6 +5,7 @@ const initialState = {
     userName: "Hubert",
     userId: 1,
   },
+  spinnerEnable: false,
 }
 
 const reducer = (state = initialState, action) => {

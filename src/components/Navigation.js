@@ -12,6 +12,8 @@ import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
 import LoginContent from "./Login"
 import RegisterContent from "./Register"
+import Spinner from "./Spinner"
+import { useDispatch, useSelector } from "react-redux"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -155,6 +157,8 @@ const Navigation = ({ children, isMainPage }) => {
   const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
 
+  const spinnerEnable = useSelector(state => state.spinnerEnable)
+
   const topNavRef = useRef(null)
   const bottomNavRef = useRef(null)
   const size = useWindowSize()
@@ -256,6 +260,7 @@ const Navigation = ({ children, isMainPage }) => {
 
   return (
     <>
+      <Spinner spinnerEnable={spinnerEnable} />
       {PopupLogin}
       {PopupRegister}
       {PopupTakeData}

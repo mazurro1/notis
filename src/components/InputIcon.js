@@ -5,8 +5,8 @@ import { Colors } from "../common/Colors"
 const InputStyled = styled.input`
   padding: 15px 15px;
   padding-left: ${props => (props.icon ? "50px" : "15px")};
-  margin: 5px;
-  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   border: none;
   font-size: 16px;
   border-bottom: ${props =>
@@ -62,7 +62,8 @@ const InputIcon = ({
   value = "",
   onChange = () => {},
   type = "text",
-  maxlength = "2",
+  maxLength = "",
+  max = "",
 }) => {
   const [inputActive, setInputActive] = useState(false)
 
@@ -83,7 +84,8 @@ const InputIcon = ({
         onBlur={handleOnBlur}
         inputActive={inputActive}
         type={type}
-        maxlength="5"
+        maxLength={maxLength}
+        max={max}
       />
       {!!icon && <IconInput inputActive={inputActive}>{icon}</IconInput>}
     </AllInput>

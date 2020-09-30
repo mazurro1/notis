@@ -19,6 +19,14 @@ const ButtonLoginRegister = styled.button`
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
+  &:disabled {
+    background-color: #bdbdbd;
+
+    &:hover {
+      background-color: #bdbdbd;
+    }
+  }
+
   &:hover {
     background-color: ${Colors.buttonIconColor};
   }
@@ -30,13 +38,14 @@ const ButtonFacebook = styled.div`
   width: 100%;
   border: none;
   border-radius: 5px;
-  background-color: #bdbdbd;
+  background-color: #48a6dd;
   color: white;
   padding: 10px 15px;
   font-size: 1.2rem;
   margin-top: 5px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   padding-left: 35px;
   /* text-align: center; */
   transition-property: background-color;
@@ -47,7 +56,7 @@ const ButtonFacebook = styled.div`
   align-items: center;
 
   &:hover {
-    background-color: #1877f2;
+    background-color: #3060ab;
   }
 `
 
@@ -72,7 +81,11 @@ const LoginContent = () => {
 
   const handleSubmit = () => {
     console.log("submit")
+    const emailValid = emailInput.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
+    console.log(emailValid)
   }
+
+  const validButtonLogin = emailInput.length > 0 && passwordInput.length > 0
 
   return (
     <form onSubmit={handleSubmit}>
@@ -90,7 +103,9 @@ const LoginContent = () => {
         type="password"
         onChange={e => handleChange(e, setPasswordInput)}
       />
-      <ButtonLoginRegister type="submit">LOGOWANIE</ButtonLoginRegister>
+      <ButtonLoginRegister disabled={!validButtonLogin} type="submit">
+        LOGOWANIE
+      </ButtonLoginRegister>
       <ButtonFacebook>
         ZALOGUJ SIĘ PRZEZ FACEBOOKA
         <FacebookIcon>
