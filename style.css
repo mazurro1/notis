@@ -107,3 +107,55 @@ p {
 .menu-exit.menu-exit-active {
   top: 70px;
 }
+
+.popup-enter {
+  opacity: 0.01;
+  transform: scale(0.1);
+}
+
+.popup-enter.popup-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.popup-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.popup-exit.popup-exit-active {
+  opacity: 0.01;
+  transform: scale(0.1);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.popup2-enter {
+  opacity: 0.01;
+  transform: translateY(-100vh);
+}
+
+.popup2-enter.popup2-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.popup2-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.popup2-exit.popup2-exit-active {
+  opacity: 0.01;
+  transform: translateY(100vh);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}

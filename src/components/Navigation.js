@@ -9,6 +9,9 @@ import { MdWork } from "react-icons/md"
 import { useWindowSize } from "./UseWindowSize"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
+import Popup from "./Popup"
+import LoginContent from "./Login"
+import RegisterContent from "./Register"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -109,9 +112,48 @@ const PaddingContent = styled.div`
   transition-delay: 0.3s;
 `
 
+const ButtonLoginRegister = styled.button`
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  background-color: ${Colors.buttonColor};
+  color: white;
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  margin-top: 30px;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${Colors.buttonIconColor};
+  }
+`
+
+const RegulationsText = styled.div`
+  color: #bdbdbd;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 20px;
+  a {
+    color: ${Colors.buttonIconColor};
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    &:hover {
+      color: ${Colors.buttonColor};
+    }
+  }
+`
+
 const Navigation = ({ children, isMainPage }) => {
   const [topNavHeight, setTopNavHeight] = useState(0)
   const [bottomNavHeight, setBottomNavHeight] = useState(0)
+  const [popupLogin, setPopupLogin] = useState(false)
+  const [popupRegister, setPopupRegister] = useState(false)
+  const [popupTakeData, setPopupTakeData] = useState(false)
+  const [popupTakePlace, setPopupTakePlace] = useState(false)
 
   const topNavRef = useRef(null)
   const bottomNavRef = useRef(null)
@@ -129,8 +171,20 @@ const Navigation = ({ children, isMainPage }) => {
     }
   }, [bottomNavRef, size.width])
 
-  const handleTakeData = () => {
-    console.log("data")
+  const handleClickLogin = () => {
+    setPopupLogin(prevValue => !prevValue)
+  }
+
+  const handleClickRegister = () => {
+    setPopupRegister(prevValue => !prevValue)
+  }
+
+  const handleClickTakeData = () => {
+    setPopupTakeData(prevValue => !prevValue)
+  }
+
+  const handleClickTakePlace = () => {
+    setPopupTakePlace(prevValue => !prevValue)
   }
 
   const mapIndustries = Industries.map((item, index) => {
@@ -154,12 +208,12 @@ const Navigation = ({ children, isMainPage }) => {
             <ButtonTakeData
               icon={<FaSearch />}
               text="Znajdz ulubione miejsce..."
-              onClick={handleTakeData}
+              onClick={handleClickTakePlace}
             />
             <ButtonTakeData
               icon={<FaCalendarDay />}
               text="Wybierz dogodny termin..."
-              onClick={handleTakeData}
+              onClick={handleClickTakeData}
             />
           </AllInputs>
           <UnderMenuIndustries>{mapIndustries}</UnderMenuIndustries>
@@ -168,8 +222,44 @@ const Navigation = ({ children, isMainPage }) => {
     </CSSTransition>
   )
 
+  const PopupLogin = (
+    <Popup
+      popupEnable={popupLogin}
+      handleClose={handleClickLogin}
+      maxWidth="400"
+    >
+      <LoginContent />
+    </Popup>
+  )
+
+  const PopupRegister = (
+    <Popup
+      popupEnable={popupRegister}
+      handleClose={handleClickRegister}
+      maxWidth="400"
+    >
+      <RegisterContent />
+    </Popup>
+  )
+
+  const PopupTakeData = (
+    <Popup popupEnable={popupTakeData} handleClose={handleClickTakeData}>
+      PopupTakeData
+    </Popup>
+  )
+
+  const PopupTakePlace = (
+    <Popup popupEnable={popupTakePlace} handleClose={handleClickTakePlace}>
+      PopupTakePlace
+    </Popup>
+  )
+
   return (
     <>
+      {PopupLogin}
+      {PopupRegister}
+      {PopupTakeData}
+      {PopupTakePlace}
       <WrapperNavigation ref={topNavRef}>
         <NavigationDiv>
           <NavigationItems>
@@ -184,6 +274,7 @@ const Navigation = ({ children, isMainPage }) => {
                   fontIconSize="35"
                   fontSize="16"
                   icon={<FaUserPlus />}
+                  onClick={handleClickRegister}
                 />
               </ButtonNavStyle>
               <ButtonNavStyle>
@@ -193,16 +284,22 @@ const Navigation = ({ children, isMainPage }) => {
                   fontIconSize="20"
                   fontSize="16"
                   icon={<FaUser />}
+                  onClick={handleClickLogin}
                 />
               </ButtonNavStyle>
               <ButtonNavStyle>
-                <ButtonIcon
-                  title="dla firm"
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="16"
-                  icon={<MdWork />}
-                  secondColors
+                <LinkEffect
+                  path="/company"
+                  text={
+                    <ButtonIcon
+                      title="dla firm"
+                      uppercase
+                      fontIconSize="25"
+                      fontSize="16"
+                      icon={<MdWork />}
+                      secondColors
+                    />
+                  }
                 />
               </ButtonNavStyle>
             </ButtonsNav>
