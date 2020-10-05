@@ -4,6 +4,11 @@ import styled from "styled-components"
 import { MdAccountBox, MdEmail, MdPhoneAndroid, MdLock } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
+import ReactTooltip from "react-tooltip"
+
+const PaddingText = styled.div`
+  padding: 10px 15px;
+`
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -11,7 +16,6 @@ const ButtonLoginRegister = styled.button`
   border-radius: 5px;
   background-color: ${Colors.buttonColor};
   color: white;
-  padding: 10px 15px;
   font-size: 1.2rem;
   margin-top: 30px;
   cursor: pointer;
@@ -59,7 +63,8 @@ const RegisterContent = () => {
     setValue(e.target.value)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
+    e.preventDefault()
     console.log("submit")
   }
 
@@ -69,6 +74,12 @@ const RegisterContent = () => {
     nameInput.length > 0 &&
     phoneInput.length > 0 &&
     repeatPasswordInput === passwordInput
+
+  const tooltipButtonRegister = !validButtonRegistration && (
+    <ReactTooltip id="happyFace" effect="float" multiline={true}>
+      <span>Uzupełnij wszystkie dane</span>
+    </ReactTooltip>
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -112,8 +123,11 @@ const RegisterContent = () => {
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
       <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
-        ZAREJESTRUJ KONTO
+        <PaddingText data-tip data-for="happyFace">
+          ZAREJESTRUJ KONTO
+        </PaddingText>
       </ButtonLoginRegister>
+      {tooltipButtonRegister}
     </form>
   )
 }

@@ -1,9 +1,14 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdEmail, MdLock } from "react-icons/md"
 import { FaFacebookF } from "react-icons/fa"
 import { Colors } from "../common/Colors"
+import ReactTooltip from "react-tooltip"
+
+const PaddingText = styled.div`
+  padding: 10px 15px;
+`
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -11,7 +16,6 @@ const ButtonLoginRegister = styled.button`
   border-radius: 5px;
   background-color: ${Colors.buttonColor};
   color: white;
-  padding: 10px 15px;
   font-size: 1.2rem;
   margin-top: 30px;
   cursor: pointer;
@@ -32,7 +36,7 @@ const ButtonLoginRegister = styled.button`
   }
 `
 
-const ButtonFacebook = styled.div`
+const ButtonFacebook = styled.button`
   font-family: Arial, Helvetica, sans-serif;
   position: relative;
   width: 100%;
@@ -54,6 +58,14 @@ const ButtonFacebook = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:disabled {
+    background-color: #bdbdbd;
+
+    &:hover {
+      background-color: #bdbdbd;
+    }
+  }
 
   &:hover {
     background-color: #3060ab;
@@ -79,40 +91,53 @@ const LoginContent = () => {
     setValue(e.target.value)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
+    e.preventDefault()
     console.log("submit")
-    const emailValid = emailInput.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-    console.log(emailValid)
   }
 
   const validButtonLogin = emailInput.length > 0 && passwordInput.length > 0
 
+  const tooltipButtonLogin = !validButtonLogin && (
+    <ReactTooltip id="happyFace" effect="float" multiline={true}>
+      <span>Uzupełnij wszystkie dane</span>
+    </ReactTooltip>
+  )
+
   return (
-    <form onSubmit={handleSubmit}>
-      <InputIcon
-        icon={<MdEmail />}
-        placeholder="Email"
-        value={emailInput}
-        type="email"
-        onChange={e => handleChange(e, setEmailInput)}
-      />
-      <InputIcon
-        icon={<MdLock />}
-        placeholder="Hasło"
-        value={passwordInput}
-        type="password"
-        onChange={e => handleChange(e, setPasswordInput)}
-      />
-      <ButtonLoginRegister disabled={!validButtonLogin} type="submit">
-        LOGOWANIE
-      </ButtonLoginRegister>
-      <ButtonFacebook>
-        ZALOGUJ SIĘ PRZEZ FACEBOOKA
-        <FacebookIcon>
-          <FaFacebookF />
-        </FacebookIcon>
-      </ButtonFacebook>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <InputIcon
+          icon={<MdEmail />}
+          placeholder="Email"
+          value={emailInput}
+          type="email"
+          onChange={e => handleChange(e, setEmailInput)}
+        />
+        <InputIcon
+          icon={<MdLock />}
+          placeholder="Hasło"
+          value={passwordInput}
+          type="password"
+          onChange={e => handleChange(e, setPasswordInput)}
+        />
+
+        <ButtonLoginRegister disabled={!validButtonLogin} type="submit">
+          <PaddingText data-tip data-for="happyFace">
+            LOGOWANIE
+          </PaddingText>
+        </ButtonLoginRegister>
+
+        {tooltipButtonLogin}
+
+        <ButtonFacebook disabled={validButtonLogin}>
+          ZALOGUJ SIĘ PRZEZ FACEBOOKA
+          <FacebookIcon>
+            <FaFacebookF />
+          </FacebookIcon>
+        </ButtonFacebook>
+      </form>
+    </>
   )
 }
 export default LoginContent

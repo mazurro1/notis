@@ -13,6 +13,9 @@ import Popup from "./Popup"
 import LoginContent from "./Login"
 import RegisterContent from "./Register"
 import Spinner from "./Spinner"
+import SelectDataCalendar from "./SelectDataCalendar"
+import TimePickerContent from "./TimePicker"
+import FindPlaceContent from "./FindPlace"
 import { useDispatch, useSelector } from "react-redux"
 
 const WrapperNavigation = styled.div`
@@ -27,9 +30,9 @@ const WrapperNavigation = styled.div`
 `
 
 const WrapperNavigationUnder = styled.div`
-  position: absolute;
+  position: relative;
   z-index: 90;
-  top: ${props => props.topNavHeight + "px"};
+  /* top: ${props => props.topNavHeight + "px"}; */
   left: 0;
   right: 0;
   background-color: ${Colors.navDownBackground};
@@ -102,8 +105,8 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  padding-top: ${props =>
-    props.isMainPage ? props.bottomNavHeight + "px" : "0px"};
+  /* padding-top: ${props =>
+    props.isMainPage ? props.bottomNavHeight + "px" : "0px"}; */
 
   margin-bottom: ${props =>
     props.isMainPage ? "-" + props.bottomNavHeight + "px" : "0px"};
@@ -114,66 +117,50 @@ const PaddingContent = styled.div`
   transition-delay: 0.3s;
 `
 
-const ButtonLoginRegister = styled.button`
-  width: 100%;
-  border: none;
-  border-radius: 5px;
-  background-color: ${Colors.buttonColor};
-  color: white;
-  padding: 10px 15px;
-  font-size: 1.2rem;
-  margin-top: 30px;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-
-  &:hover {
-    background-color: ${Colors.buttonIconColor};
-  }
-`
-
-const RegulationsText = styled.div`
-  color: #bdbdbd;
-  font-size: 0.85rem;
-  text-align: center;
-  margin-top: 20px;
-  a {
-    color: ${Colors.buttonIconColor};
-    transition-property: color;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
-    &:hover {
-      color: ${Colors.buttonColor};
-    }
-  }
-`
-
 const Navigation = ({ children, isMainPage }) => {
-  const [topNavHeight, setTopNavHeight] = useState(0)
-  const [bottomNavHeight, setBottomNavHeight] = useState(0)
+  // const [topNavHeight, setTopNavHeight] = useState(0)
+  // const [bottomNavHeight, setBottomNavHeight] = useState(0)
   const [popupLogin, setPopupLogin] = useState(false)
   const [popupRegister, setPopupRegister] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
+  const [isDataActive, setIsDataActive] = useState(true)
+  const [isTimeActive, setIsTimeActive] = useState(false)
+  const [selectedDate, setSelectedDate] = useState()
+  const [selectedTime, setSelectedTime] = useState()
+  const [selectedDateAndTime, setSelectedDateAndTime] = useState("")
+  const [selectedName, setSelectedName] = useState("")
 
   const spinnerEnable = useSelector(state => state.spinnerEnable)
 
-  const topNavRef = useRef(null)
-  const bottomNavRef = useRef(null)
-  const size = useWindowSize()
+  // const topNavRef = useRef(null)
+  // const bottomNavRef = useRef(null)
+  // const size = useWindowSize()
 
   useEffect(() => {
-    if (topNavRef.current) {
-      setTopNavHeight(topNavRef.current.clientHeight)
-    }
-  }, [topNavRef, size.width])
+    console.log("update")
+  }, [selectedDateAndTime, selectedName])
 
   useEffect(() => {
-    if (bottomNavRef.current) {
-      setBottomNavHeight(bottomNavRef.current.clientHeight)
+    if (!!selectedDate && !!selectedTime && !!!popupTakeData) {
+      const newDate = `${selectedTime} ${selectedDate.getDate()}.${
+        selectedDate.getMonth() + 1
+      }.${selectedDate.getFullYear()}`
+      setSelectedDateAndTime(newDate)
     }
-  }, [bottomNavRef, size.width])
+  }, [selectedDate, selectedTime, setSelectedDateAndTime, popupTakeData])
+
+  // useEffect(() => {
+  //   if (topNavRef.current) {
+  //     setTopNavHeight(topNavRef.current.clientHeight)
+  //   }
+  // }, [topNavRef, size.width])
+
+  // useEffect(() => {
+  //   if (bottomNavRef.current) {
+  //     setBottomNavHeight(bottomNavRef.current.clientHeight)
+  //   }
+  // }, [bottomNavRef, size.width])
 
   const handleClickLogin = () => {
     setPopupLogin(prevValue => !prevValue)
@@ -185,6 +172,15 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleClickTakeData = () => {
     setPopupTakeData(prevValue => !prevValue)
+  }
+
+  const handleResetTakeData = () => {
+    setPopupTakeData(false)
+    setIsTimeActive(false)
+    setIsDataActive(false)
+    setTimeout(() => {
+      setIsDataActive(true)
+    }, 400)
   }
 
   const handleClickTakePlace = () => {
@@ -206,17 +202,35 @@ const Navigation = ({ children, isMainPage }) => {
       classNames="menu"
       unmountOnExit
     >
-      <WrapperNavigationUnder topNavHeight={topNavHeight} ref={bottomNavRef}>
+      <WrapperNavigationUnder
+      // topNavHeight={topNavHeight}
+      // ref={bottomNavRef}
+      >
         <NavigationDiv>
           <AllInputs>
             <ButtonTakeData
+              setResetText={() => {
+                setSelectedName("")
+              }}
+              resetTextEnable={!!selectedName}
               icon={<FaSearch />}
-              text="Znajdz ulubione miejsce..."
+              text={
+                !!selectedName ? selectedName : "Znajdz ulubione miejsce..."
+              }
               onClick={handleClickTakePlace}
             />
+
             <ButtonTakeData
               icon={<FaCalendarDay />}
-              text="Wybierz dogodny termin..."
+              setResetText={() => {
+                setSelectedDateAndTime("")
+              }}
+              resetTextEnable={!!selectedDateAndTime}
+              text={
+                !!selectedDateAndTime
+                  ? selectedDateAndTime
+                  : "Wybierz dogodny termin..."
+              }
               onClick={handleClickTakeData}
             />
           </AllInputs>
@@ -247,14 +261,47 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const PopupTakeData = (
-    <Popup popupEnable={popupTakeData} handleClose={handleClickTakeData}>
-      PopupTakeData
+    <Popup
+      popupEnable={popupTakeData}
+      handleClose={handleResetTakeData}
+      noContent
+    >
+      <CSSTransition
+        in={isDataActive}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <SelectDataCalendar
+          setActualCalendarDate={setSelectedDate}
+          setIsDataActive={setIsDataActive}
+          setIsTimeActive={setIsTimeActive}
+        />
+      </CSSTransition>
+      <CSSTransition
+        in={isTimeActive}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <TimePickerContent
+          handleResetTakeData={handleResetTakeData}
+          setSelectedTime={setSelectedTime}
+        />
+      </CSSTransition>
     </Popup>
   )
 
   const PopupTakePlace = (
-    <Popup popupEnable={popupTakePlace} handleClose={handleClickTakePlace}>
-      PopupTakePlace
+    <Popup
+      popupEnable={popupTakePlace}
+      handleClose={handleClickTakePlace}
+      maxWidth="600"
+    >
+      <FindPlaceContent
+        handleClose={handleClickTakePlace}
+        setSelectedName={setSelectedName}
+      />
     </Popup>
   )
 
@@ -265,7 +312,9 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupRegister}
       {PopupTakeData}
       {PopupTakePlace}
-      <WrapperNavigation ref={topNavRef}>
+      <WrapperNavigation
+      // ref={topNavRef}
+      >
         <NavigationDiv>
           <NavigationItems>
             <LogoStyle>
@@ -312,7 +361,10 @@ const Navigation = ({ children, isMainPage }) => {
         </NavigationDiv>
       </WrapperNavigation>
       {renderExtraPropsInMainMenu}
-      <PaddingContent bottomNavHeight={bottomNavHeight} isMainPage={isMainPage}>
+      <PaddingContent
+        // bottomNavHeight={bottomNavHeight}
+        isMainPage={isMainPage}
+      >
         {children}
       </PaddingContent>
     </>

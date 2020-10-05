@@ -27,7 +27,7 @@ const SpinnerDiv = styled.div`
   animation-iteration-count: infinite;
   color: ${Colors.buttonIconColor};
   font-size: 3rem;
-  height: 58px;
+  height: 52px;
   width: 48px;
 `
 

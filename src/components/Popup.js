@@ -49,6 +49,7 @@ const Popup = ({
   handleClose = () => {},
   children,
   maxWidth = 900,
+  noContent = false,
 }) => {
   const handleOnClick = e => {
     handleClose()
@@ -57,6 +58,18 @@ const Popup = ({
   const handleOnClickContent = e => {
     e.stopPropagation()
   }
+
+  const contentComponent = noContent ? (
+    <div onClick={handleOnClickContent}>{children}</div>
+  ) : (
+    <PopupContent maxWidth={maxWidth} onClick={handleOnClickContent}>
+      {children}
+      <ClosePopup onClick={handleOnClick}>
+        <MdClose />
+      </ClosePopup>
+    </PopupContent>
+  )
+
   return (
     <CSSTransition
       in={popupEnable}
@@ -64,14 +77,7 @@ const Popup = ({
       classNames="popup"
       unmountOnExit
     >
-      <PopupWindow onClick={handleOnClick}>
-        <PopupContent maxWidth={maxWidth} onClick={handleOnClickContent}>
-          {children}
-          <ClosePopup onClick={handleOnClick}>
-            <MdClose />
-          </ClosePopup>
-        </PopupContent>
-      </PopupWindow>
+      <PopupWindow onClick={handleOnClick}>{contentComponent}</PopupWindow>
     </CSSTransition>
   )
 }

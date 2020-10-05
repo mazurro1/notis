@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
+import { MdClose } from "react-icons/md"
+import { Colors } from "../common/Colors"
 
 const DivTakeData = styled.div`
   position: relative;
@@ -8,12 +10,14 @@ const DivTakeData = styled.div`
   color: #757575;
   font-size: 16px;
   user-select: none;
-  padding: 13px 20px;
+  padding: 13px 0;
   padding-left: 50px;
+  padding-right: ${props => (props.resetTextEnable ? "40px" : "20px")};
   background-color: #fff;
   cursor: pointer;
   margin-bottom: 5px;
   margin-right: 10px;
+  min-width: 260px;
   transform: ${props =>
     props.mouseClick ? `scale(${props.numberScale})` : "scale(1)"};
   transition-property: background-color, transform;
@@ -37,7 +41,27 @@ const IconStyle = styled.div`
   color: #757575;
 `
 
-const ButtonTakeData = ({ icon = "", text = "", onClick = () => {} }) => {
+const IconResetDate = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  font-size: 1.5rem;
+  color: #757575;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    color: ${Colors.buttonColor};
+  }
+`
+
+const ButtonTakeData = ({
+  icon = "",
+  text = "",
+  onClick = () => {},
+  setResetText = () => {},
+  resetTextEnable = false,
+}) => {
   const [mouseClick, setMouseClick] = useState(false)
   const [numberScale, setNumberScale] = useState(1)
 
@@ -51,14 +75,25 @@ const ButtonTakeData = ({ icon = "", text = "", onClick = () => {} }) => {
     }, 500)
   }
 
+  const handleResetText = e => {
+    e.stopPropagation()
+    setResetText()
+  }
+
   return (
     <DivTakeData
       onClick={handleOnClick}
       mouseClick={mouseClick}
       numberScale={numberScale}
+      resetTextEnable={resetTextEnable}
     >
       <IconStyle>{icon}</IconStyle>
       {text}
+      {resetTextEnable && (
+        <IconResetDate onClick={handleResetText}>
+          <MdClose />
+        </IconResetDate>
+      )}
     </DivTakeData>
   )
 }
