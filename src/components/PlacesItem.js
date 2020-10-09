@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "../components/ButtonIcon"
@@ -30,7 +30,8 @@ const PlaceImage = styled.div`
   position: relative;
   width: 35%;
   min-width: 200px;
-  border-right: 1px solid #757575;
+  /* border-right: 1px solid #757575; */
+  /* border-right: 1px solid ${Colors.buttonColor}; */
   img {
     height: 100%;
     width: 100%;
@@ -80,6 +81,7 @@ const BackGroundImageCustomUrl = styled.div`
   background: url(${props => props.url}) 50% 0 no-repeat;
   background-position: center;
   background-size: cover;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.4);
 `
 
 const PaddingRight = styled.div`
@@ -168,7 +170,7 @@ const SerivesDiv = styled.div`
   padding: 20px;
 `
 
-const PlacesItem = ({ item, filters }) => {
+const PlacesItem = ({ item, filters, index }) => {
   const [servicesVisible, setServicesVisible] = useState(false)
 
   const handleServicesVisible = () => {
@@ -184,21 +186,44 @@ const PlacesItem = ({ item, filters }) => {
   })
 
   const isInServicesFilter = item.services.filter(
-    item => item.toLowerCase() === filters.toLowerCase()
+    item => {
+      if(filters){
+        return item.toLowerCase() === filters.value.toLowerCase()
+      }
+    }
   )
 
-  const renderSelectedFilter =
-    isInServicesFilter.length > 0 ? (
+  const isInServicesFilterSome = item.services.some(
+    item => {
+      if(filters){
+        return item.toLowerCase() === filters.value.toLowerCase()
+      }
+    }
+  )
+
+  const renderSelectedFilter =(
+      <CSSTransition
+        in={isInServicesFilterSome}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
       <UnderMenuServices>
         <ButtonIcon
-          title={`W usługach znajduje się: ${isInServicesFilter[0]}`}
+          title={isInServicesFilterSome ? `W usługach znajduje się: ${isInServicesFilter[0]}` : 'Brak w usługach'}
           fontSize="13"
         />
       </UnderMenuServices>
-    ) : null
+      </CSSTransition>
+      )
 
   return (
-    <PlaceItem key={item.id}>
+    <PlaceItem key={item.id}
+    
+    data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
+        data-sal-duration="1000"
+        data-sal-easing="ease-out-bounce"
+    >
       <PlaceImage>
         <BackGroundImageCustomUrl url={item.image} />
       </PlaceImage>
@@ -207,12 +232,7 @@ const PlacesItem = ({ item, filters }) => {
         <MarginBottomTitle>
           <h6>{item.adress}</h6>
         </MarginBottomTitle>
-        <p>
-          {item.title}
-          {item.title}
-          {item.title}
-          {item.title}
-        </p>
+        <p>{item.title}</p>
 
         {renderSelectedFilter}
 

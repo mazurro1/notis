@@ -6,5 +6,4 @@ export const Industries = [
   "Brwi i Rzęsy",
   "Masaż",
   "Fizjoterapia",
-  "Więcej...",
 ]

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Colors } from "../common/Colors"
 import { Industries } from "../common/Industries"
 import ButtonIcon from "../components/ButtonIcon"
@@ -6,7 +6,6 @@ import ButtonTakeData from "../components/ButtonTakeData"
 import styled from "styled-components"
 import { FaUserPlus, FaUser, FaSearch, FaCalendarDay } from "react-icons/fa"
 import { MdWork } from "react-icons/md"
-import { useWindowSize } from "./UseWindowSize"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
@@ -17,6 +16,15 @@ import SelectDataCalendar from "./SelectDataCalendar"
 import TimePickerContent from "./TimePicker"
 import FindPlaceContent from "./FindPlace"
 import { useDispatch, useSelector } from "react-redux"
+import {
+  changeSortVisible,
+  changeFilterVisible,
+  changeLocaliaztionVisible,
+  changeIndustries
+} from "../state/actions"
+import Sort from './Sort'
+import Filter from './Filter'
+import Localization from './Localization'
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -32,7 +40,6 @@ const WrapperNavigation = styled.div`
 const WrapperNavigationUnder = styled.div`
   position: relative;
   z-index: 90;
-  /* top: ${props => props.topNavHeight + "px"}; */
   left: 0;
   right: 0;
   background-color: ${Colors.navDownBackground};
@@ -105,8 +112,6 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  /* padding-top: ${props =>
-    props.isMainPage ? props.bottomNavHeight + "px" : "0px"}; */
 
   margin-bottom: ${props =>
     props.isMainPage ? "-" + props.bottomNavHeight + "px" : "0px"};
@@ -118,8 +123,6 @@ const PaddingContent = styled.div`
 `
 
 const Navigation = ({ children, isMainPage }) => {
-  // const [topNavHeight, setTopNavHeight] = useState(0)
-  // const [bottomNavHeight, setBottomNavHeight] = useState(0)
   const [popupLogin, setPopupLogin] = useState(false)
   const [popupRegister, setPopupRegister] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
@@ -132,14 +135,20 @@ const Navigation = ({ children, isMainPage }) => {
   const [selectedName, setSelectedName] = useState("")
 
   const spinnerEnable = useSelector(state => state.spinnerEnable)
+  const sortVisible = useSelector(state => state.sortVisible)
+  const filterVisible = useSelector(state => state.filterVisible)
+  const localizationVisible = useSelector(state => state.localizationVisible)
+  const sorts = useSelector(state => state.sorts)
+  const filters = useSelector(state => state.filters)
+  const localization = useSelector(state => state.localization)
+  const industries = useSelector(state => state.industries)
+  const page = useSelector(state => state.page)
 
-  // const topNavRef = useRef(null)
-  // const bottomNavRef = useRef(null)
-  // const size = useWindowSize()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     console.log("update")
-  }, [selectedDateAndTime, selectedName])
+  }, [selectedDateAndTime, selectedName, sorts, filters, localization, page, industries])
 
   useEffect(() => {
     if (!!selectedDate && !!selectedTime && !!!popupTakeData) {
@@ -149,18 +158,6 @@ const Navigation = ({ children, isMainPage }) => {
       setSelectedDateAndTime(newDate)
     }
   }, [selectedDate, selectedTime, setSelectedDateAndTime, popupTakeData])
-
-  // useEffect(() => {
-  //   if (topNavRef.current) {
-  //     setTopNavHeight(topNavRef.current.clientHeight)
-  //   }
-  // }, [topNavRef, size.width])
-
-  // useEffect(() => {
-  //   if (bottomNavRef.current) {
-  //     setBottomNavHeight(bottomNavRef.current.clientHeight)
-  //   }
-  // }, [bottomNavRef, size.width])
 
   const handleClickLogin = () => {
     setPopupLogin(prevValue => !prevValue)
@@ -187,10 +184,14 @@ const Navigation = ({ children, isMainPage }) => {
     setPopupTakePlace(prevValue => !prevValue)
   }
 
+  const handleChangeIndustries = (item) => {
+    dispatch(changeIndustries(item))
+  }
+
   const mapIndustries = Industries.map((item, index) => {
     return (
       <PaddingRight key={index}>
-        <ButtonIcon title={item} fontSize="16" buttonBgDark />
+        <ButtonIcon title={item} fontSize="15" buttonBgDark onClick={()=>handleChangeIndustries(item)}/>
       </PaddingRight>
     )
   })
@@ -203,8 +204,6 @@ const Navigation = ({ children, isMainPage }) => {
       unmountOnExit
     >
       <WrapperNavigationUnder
-      // topNavHeight={topNavHeight}
-      // ref={bottomNavRef}
       >
         <NavigationDiv>
           <AllInputs>
@@ -234,10 +233,45 @@ const Navigation = ({ children, isMainPage }) => {
               onClick={handleClickTakeData}
             />
           </AllInputs>
-          <UnderMenuIndustries>{mapIndustries}</UnderMenuIndustries>
+          <UnderMenuIndustries>
+            {mapIndustries}
+            <PaddingRight >
+              <ButtonIcon title="Więcej..." fontSize="15" buttonBgDark />
+            </PaddingRight>
+          </UnderMenuIndustries>
         </NavigationDiv>
       </WrapperNavigationUnder>
     </CSSTransition>
+  )
+
+  const PopupSort = (
+    <Popup
+      popupEnable={sortVisible}
+      handleClose={() => dispatch(changeSortVisible())}
+      noContent
+    >
+      <Sort/>
+    </Popup>
+  )
+
+  const PopupFilter = (
+    <Popup
+      popupEnable={filterVisible}
+      handleClose={() => dispatch(changeFilterVisible())}
+      noContent
+    >
+      <Filter/>
+    </Popup>
+  )
+
+  const PopupLocalization = (
+    <Popup
+      popupEnable={localizationVisible}
+      handleClose={() => dispatch(changeLocaliaztionVisible())}
+      noContent
+    >
+      <Localization/>
+    </Popup>
   )
 
   const PopupLogin = (
@@ -312,9 +346,10 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupRegister}
       {PopupTakeData}
       {PopupTakePlace}
-      <WrapperNavigation
-      // ref={topNavRef}
-      >
+      {PopupSort}
+      {PopupFilter}
+      {PopupLocalization}
+      <WrapperNavigation>
         <NavigationDiv>
           <NavigationItems>
             <LogoStyle>
@@ -361,12 +396,7 @@ const Navigation = ({ children, isMainPage }) => {
         </NavigationDiv>
       </WrapperNavigation>
       {renderExtraPropsInMainMenu}
-      <PaddingContent
-        // bottomNavHeight={bottomNavHeight}
-        isMainPage={isMainPage}
-      >
-        {children}
-      </PaddingContent>
+      <PaddingContent isMainPage={isMainPage}>{children}</PaddingContent>
     </>
   )
 }
