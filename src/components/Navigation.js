@@ -5,7 +5,7 @@ import ButtonIcon from "../components/ButtonIcon"
 import ButtonTakeData from "../components/ButtonTakeData"
 import styled from "styled-components"
 import { FaUserPlus, FaUser, FaSearch, FaCalendarDay } from "react-icons/fa"
-import { MdWork } from "react-icons/md"
+import { MdWork, MdPowerSettingsNew } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
@@ -21,12 +21,15 @@ import {
   changeFilterVisible,
   changeLocaliaztionVisible,
   changeIndustries,
-  changeLoginVisible
+  changeLoginVisible,
+  fetchAutoLogin,
+  logout,
 } from "../state/actions"
-import Sort from './Sort'
-import Filter from './Filter'
-import Localization from './Localization'
-import Alerts from './Alerts'
+import Sort from "./Sort"
+import Filter from "./Filter"
+import Localization from "./Localization"
+import Alerts from "./Alerts"
+import ActiveAccount from "./ActiveAccount"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -114,11 +117,11 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  padding-top: ${props => props.topNavVisibleMenu ? "152px" : "0px"};
+  padding-top: ${props => (props.topNavVisibleMenu ? "152px" : "0px")};
   transition-property: padding-top, margin-bottom;
   transition-duration: 0.3s;
   transition-timing-function: inline;
-  transition-delay: ${props => props.topNavVisibleMenu ? "0" : "0.195s"};
+  transition-delay: ${props => (props.topNavVisibleMenu ? "0" : "0.195s")};
 `
 
 const Navigation = ({ children, isMainPage }) => {
@@ -144,21 +147,26 @@ const Navigation = ({ children, isMainPage }) => {
   const localization = useSelector(state => state.localization)
   const industries = useSelector(state => state.industries)
   const page = useSelector(state => state.page)
+  const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
 
-  useEffect(()=>{
-    if(isMainPage){
-      setTimeout(()=>{
+  useEffect(() => {
+    dispatch(fetchAutoLogin())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (isMainPage) {
+      setTimeout(() => {
         setTopNavVisible(true)
-        setTimeout(()=>{
+        setTimeout(() => {
           setTopNavVisibleMenu(true)
         }, 100)
       }, 200)
-    }else{
-      setTimeout(()=>{
+    } else {
+      setTimeout(() => {
         setTopNavVisible(false)
-        setTimeout(()=>{
+        setTimeout(() => {
           setTopNavVisibleMenu(false)
         }, 200)
       }, 200)
@@ -167,7 +175,15 @@ const Navigation = ({ children, isMainPage }) => {
 
   useEffect(() => {
     console.log("update")
-  }, [selectedDateAndTime, selectedName, sorts, filters, localization, page, industries])
+  }, [
+    selectedDateAndTime,
+    selectedName,
+    sorts,
+    filters,
+    localization,
+    page,
+    industries,
+  ])
 
   useEffect(() => {
     if (!!selectedDate && !!selectedTime && !!!popupTakeData) {
@@ -203,14 +219,23 @@ const Navigation = ({ children, isMainPage }) => {
     setPopupTakePlace(prevValue => !prevValue)
   }
 
-  const handleChangeIndustries = (item) => {
+  const handleChangeIndustries = item => {
     dispatch(changeIndustries(item))
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
   }
 
   const mapIndustries = Industries.map((item, index) => {
     return (
       <PaddingRight key={index}>
-        <ButtonIcon title={item} fontSize="15" buttonBgDark onClick={()=>handleChangeIndustries(item)}/>
+        <ButtonIcon
+          title={item}
+          fontSize="15"
+          buttonBgDark
+          onClick={() => handleChangeIndustries(item)}
+        />
       </PaddingRight>
     )
   })
@@ -222,8 +247,7 @@ const Navigation = ({ children, isMainPage }) => {
       classNames="popup3"
       unmountOnExit
     >
-      <WrapperNavigationUnder
-      >
+      <WrapperNavigationUnder>
         <NavigationDiv>
           <AllInputs>
             <ButtonTakeData
@@ -254,7 +278,7 @@ const Navigation = ({ children, isMainPage }) => {
           </AllInputs>
           <UnderMenuIndustries>
             {mapIndustries}
-            <PaddingRight >
+            <PaddingRight>
               <ButtonIcon title="Więcej..." fontSize="15" buttonBgDark />
             </PaddingRight>
           </UnderMenuIndustries>
@@ -269,7 +293,7 @@ const Navigation = ({ children, isMainPage }) => {
       handleClose={() => dispatch(changeSortVisible())}
       noContent
     >
-      <Sort/>
+      <Sort />
     </Popup>
   )
 
@@ -279,7 +303,7 @@ const Navigation = ({ children, isMainPage }) => {
       handleClose={() => dispatch(changeFilterVisible())}
       noContent
     >
-      <Filter/>
+      <Filter />
     </Popup>
   )
 
@@ -289,7 +313,7 @@ const Navigation = ({ children, isMainPage }) => {
       handleClose={() => dispatch(changeLocaliaztionVisible())}
       noContent
     >
-      <Localization/>
+      <Localization />
     </Popup>
   )
 
@@ -349,19 +373,83 @@ const Navigation = ({ children, isMainPage }) => {
     <Popup
       popupEnable={popupTakePlace}
       handleClose={handleClickTakePlace}
-      maxWidth="600"
+      maxWidth="500"
     >
       <FindPlaceContent
         handleClose={handleClickTakePlace}
         setSelectedName={setSelectedName}
+        selectedName={selectedName}
       />
     </Popup>
+  )
+
+  const PopupActiveAccount = (
+    <Popup
+      popupEnable={!!user ? !user.accountVerified : false}
+      maxWidth="500"
+      noContent
+    >
+      <ActiveAccount />
+    </Popup>
+  )
+
+  console.log(user)
+
+  const renderButtonsUp = !!user ? (
+    <>
+      <ButtonNavStyle>
+        <ButtonIcon
+          title={user.userName}
+          uppercase
+          fontIconSize="20"
+          fontSize="16"
+          icon={<FaUser />}
+          // onClick={handleClickRegister}
+        />
+      </ButtonNavStyle>
+      <ButtonNavStyle>
+        <ButtonIcon
+          title="LOGOUT"
+          uppercase
+          fontIconSize="26"
+          fontSize="16"
+          customColorButton="#c62828"
+          customColorIcon="#f44336"
+          icon={<MdPowerSettingsNew />}
+          onClick={handleLogout}
+        />
+      </ButtonNavStyle>
+    </>
+  ) : (
+    <>
+      <ButtonNavStyle>
+        <ButtonIcon
+          title="zarejestruj się"
+          uppercase
+          fontIconSize="35"
+          fontSize="16"
+          icon={<FaUserPlus />}
+          onClick={handleClickRegister}
+        />
+      </ButtonNavStyle>
+      <ButtonNavStyle>
+        <ButtonIcon
+          title="zaloguj się"
+          uppercase
+          fontIconSize="20"
+          fontSize="16"
+          icon={<FaUser />}
+          onClick={handleClickLogin}
+        />
+      </ButtonNavStyle>
+    </>
   )
 
   return (
     <>
       <Spinner spinnerEnable={spinnerEnable} />
-      <Alerts/>
+      <Alerts />
+      {PopupActiveAccount}
       {PopupLogin}
       {PopupRegister}
       {PopupTakeData}
@@ -369,33 +457,13 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupSort}
       {PopupFilter}
       {PopupLocalization}
-      <WrapperNavigation >
+      <WrapperNavigation>
         <NavigationDiv>
           <NavigationItems>
             <LogoStyle>
               <LinkEffect text="NOTISE" path="/" />
             </LogoStyle>
             <ButtonsNav>
-              <ButtonNavStyle>
-                <ButtonIcon
-                  title="zarejestruj się"
-                  uppercase
-                  fontIconSize="35"
-                  fontSize="16"
-                  icon={<FaUserPlus />}
-                  onClick={handleClickRegister}
-                />
-              </ButtonNavStyle>
-              <ButtonNavStyle>
-                <ButtonIcon
-                  title="zaloguj się"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="16"
-                  icon={<FaUser />}
-                  onClick={handleClickLogin}
-                />
-              </ButtonNavStyle>
               <ButtonNavStyle>
                 <LinkEffect
                   path="/company"
@@ -411,12 +479,17 @@ const Navigation = ({ children, isMainPage }) => {
                   }
                 />
               </ButtonNavStyle>
+              {renderButtonsUp}
             </ButtonsNav>
           </NavigationItems>
         </NavigationDiv>
       </WrapperNavigation>
       {renderExtraPropsInMainMenu}
-      <PaddingContent topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}>{children}</PaddingContent>
+      <PaddingContent
+        topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
+      >
+        {children}
+      </PaddingContent>
     </>
   )
 }

@@ -29,6 +29,10 @@ module.exports = {
         windowKey: "__PRELOADED_STATE__",
       },
     },
+    {
+      resolve: `gatsby-plugin-create-client-paths`,
+      options: { prefixes: [`/app/*`] },
+    },
     "gatsby-plugin-transition-link",
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,

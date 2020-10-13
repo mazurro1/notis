@@ -104,7 +104,7 @@ const SelectDataCalendar = ({
     setIsDataActive(false)
     setTimeout(() => {
       setIsTimeActive(true)
-    }, 450)
+    }, 500)
   }
   return (
     <StyleSimpleReactCalendar>

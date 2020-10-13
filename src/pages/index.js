@@ -10,13 +10,13 @@ import {
   changeFilterVisible,
   changeLocaliaztionVisible,
   changeLoadingPlaces,
-  fetchLoginUser,
   
 } from "../state/actions"
 import {Colors} from '../common/Colors'
 import sal from 'sal.js'
 import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import { LinkEffect } from "../common/LinkEffect"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -127,6 +127,9 @@ const Home = () => {
       </div>
       <div>
         <button onClick={()=>{dispatch(changeLoadingPlaces(false))}}>load places false</button>
+      </div>
+      <div>
+        <LinkEffect text={<button>company</button>} path="/company-profil" />
       </div>
       <CSSTransition
       in={!loadingPlaces}

@@ -5,35 +5,15 @@ import { MdAccountBox, MdEmail, MdPhoneAndroid, MdLock } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-
-const PaddingText = styled.div`
-  padding: 10px 15px;
-`
+import { FaUserPlus } from "react-icons/fa"
+import ButtonIcon from './ButtonIcon'
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
   border: none;
   border-radius: 5px;
-  background-color: ${Colors.buttonColor};
-  color: white;
-  font-size: 1.2rem;
+  background-color: white;
   margin-top: 30px;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-
-  &:disabled {
-    background-color: #bdbdbd;
-
-    &:hover {
-      background-color: #bdbdbd;
-    }
-  }
-
-  &:hover {
-    background-color: ${Colors.buttonIconColor};
-  }
 `
 
 const RegulationsText = styled.div`
@@ -76,7 +56,7 @@ const RegisterContent = () => {
     repeatPasswordInput === passwordInput
 
   const tooltipButtonRegister = !validButtonRegistration && (
-    <ReactTooltip id="happyFace" effect="float" multiline={true}>
+    <ReactTooltip id="alertRegistration" effect="float" multiline={true}>
       <span>Uzupełnij wszystkie dane</span>
     </ReactTooltip>
   )
@@ -122,11 +102,16 @@ const RegisterContent = () => {
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
-      <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
+      {/* <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
         <PaddingText data-tip data-for="happyFace">
           ZAREJESTRUJ KONTO
         </PaddingText>
-      </ButtonLoginRegister>
+      </ButtonLoginRegister> */}
+      <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
+          <div data-tip data-for="alertRegistration">
+            <ButtonIcon title="LOGOWANIE" uppercase fontIconSize="24" icon={<FaUserPlus />} disabled={!validButtonRegistration} fontSize="20"/>
+          </div>
+        </ButtonLoginRegister>
       {tooltipButtonRegister}
     </form>
   )

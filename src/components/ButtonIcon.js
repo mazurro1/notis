@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 
@@ -13,14 +13,16 @@ const ButtonStyle = styled.div`
       ? props.secondColors
         ? Colors.buttonIconColorSecond
         : Colors.buttonIconColor
-      : props.buttonBgDark && props.icon
-        ? Colors.navDownBackground
-        : props.secondColors 
-        ? Colors.buttonColorSecond
-      : props.buttonBgDark
-      ? Colors.buttonColorDark
       : props.disabled
       ? "#e0e0e0"
+      : props.buttonBgDark && props.icon
+      ? Colors.navDownBackground
+      : props.secondColors
+      ? Colors.buttonColorSecond
+      : props.buttonBgDark
+      ? Colors.buttonColorDark
+      : props.customColorButton
+      ? props.customColorButton
       : Colors.buttonColor};
   color: black;
   overflow: hidden;
@@ -49,13 +51,19 @@ const IconStyle = styled.div`
     props.mouseClick
       ? props.secondColors
         ? Colors.buttonColorSecond
+        : props.customColorIcon
+        ? props.customColorIcon
+        : props.buttonBgDark
+        ? Colors.buttonColorDark
         : Colors.buttonColor
-      : props.secondColors
-      ? Colors.buttonIconColorSecond
-      : props.buttonBgDark 
-      ? Colors.buttonColorDark
       : props.disabled
       ? "#bdbdbd"
+      : props.secondColors
+      ? Colors.buttonIconColorSecond
+      : props.buttonBgDark
+      ? Colors.buttonColorDark
+      : props.customColorIcon
+      ? props.customColorIcon
       : Colors.buttonIconColor};
   transform: ${props =>
     props.mouseOn ? `scale(${props.numberScale})` : "scale(1)"};
@@ -81,6 +89,7 @@ const OnlyIcon = styled.div`
 const TextStyle = styled.div`
   position: relative;
   z-index: 10;
+  text-align: center;
 `
 
 const ButtonIcon = ({
@@ -92,15 +101,29 @@ const ButtonIcon = ({
   icon,
   secondColors = false,
   buttonBgDark = false,
-  disabled = false
+  disabled = false,
+  customColorButton = false,
+  customColorIcon = false,
 }) => {
   const [mouseOn, setMouseOn] = useState(false)
   const [mouseClick, setMouseClick] = useState(false)
   const [numberScale, setNumberScale] = useState(1)
   const refButton = useRef(null)
+  const timerToClearSomewhere = useRef(null)
+
+  useEffect(() => {
+    if (mouseClick) {
+      timerToClearSomewhere.current = setTimeout(() => {
+        setMouseClick(false)
+      }, 500)
+    }
+    return () => {
+      clearInterval(timerToClearSomewhere.current)
+    }
+  }, [mouseClick])
 
   const handleOnMouseOn = () => {
-    if(!disabled){
+    if (!disabled) {
       setMouseOn(true)
       const numberScale = Math.floor(refButton.current.clientWidth / 35) * 2 + 1
       setNumberScale(numberScale)
@@ -108,19 +131,16 @@ const ButtonIcon = ({
   }
 
   const handleOnMouseLeave = () => {
-    if(!disabled){
+    if (!disabled) {
       setMouseOn(false)
     }
   }
 
   const handleOnClick = () => {
-    if(!disabled){
+    if (!disabled) {
       setNumberScale(1)
       setMouseClick(true)
       onClick()
-      setTimeout(() => {
-        setMouseClick(false)
-      }, 500)
     }
   }
 
@@ -134,6 +154,7 @@ const ButtonIcon = ({
         secondColors={secondColors}
         buttonBgDark={buttonBgDark}
         disabled={disabled}
+        customColorIcon={customColorIcon}
       />
       <OnlyIcon fontIconSize={fontIconSize}>{iconRender}</OnlyIcon>
     </>
@@ -153,6 +174,7 @@ const ButtonIcon = ({
       secondColors={secondColors}
       buttonBgDark={buttonBgDark}
       disabled={disabled}
+      customColorButton={customColorButton}
     >
       {allIcon}
       <TextStyle>{title}</TextStyle>

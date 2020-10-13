@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from "react-redux"
 import {Colors} from '../common/Colors'
 import { CSSTransition } from "react-transition-group"
-import {removeAlertItem, addAlertItem} from '../state/actions'
+import {removeAlertItem} from '../state/actions'
 import { MdClose } from 'react-icons/md';
 
 
@@ -62,8 +62,6 @@ const IconClose = styled.div`
  const Alerts = () => {
     const alerts = useSelector(state => state.alerts);
 
-    const dispatch = useDispatch();
-
      const mapAlerts = alerts.map((item, index)=>{
          return(
             <Alert key={item.id} item={item} index={index}/>
@@ -106,7 +104,7 @@ const Alert = ({item, index}) => {
                 dispatch(removeAlertItem(item.id))
             }, 400)
         }
-    }, [alertVisible, isNew])
+    }, [alertVisible, isNew, item.id, dispatch])
 
     const handleClose = () => {
         clearTimeout(timerToClearSomewhere.current)

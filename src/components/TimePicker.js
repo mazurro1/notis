@@ -1,33 +1,24 @@
 import React, { useState, useEffect } from "react"
 import TimeKeeper from "react-timekeeper"
-import { Colors } from "../common/Colors"
 import styled from "styled-components"
+import ButtonIcon from './ButtonIcon'
+import { FaCheck } from "react-icons/fa"
 
 const ButtonConfirmDate = styled.div`
-  background-color: ${Colors.buttonColor};
-  color: white;
-  padding: 10px 0px;
-  text-align: center;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.5) inset;
-
-  &:hover {
-    background-color: ${Colors.buttonIconColor};
-  }
+  padding: 5px;
+  background-color: #f4f4f4;
 `
 
 const TimePickerContent = ({ handleResetTakeData, setSelectedTime }) => {
-  const [time, setTime] = useState("0:00")
+  const [time, setTime] = useState(null)
 
   useEffect(() => {
-    const date = new Date()
-    const actualTime = `${date.getHours()}:${date.getMinutes()}`
-    setTime(actualTime)
-  }, [])
+    if(!!!time){
+      const date = new Date()
+      const actualTime = `${date.getHours()}:${date.getMinutes()}`
+      setTime(actualTime)
+    }
+  }, [time])
 
   const handleTimeOnChange = data => {
     setTime(data.formatted24)
@@ -40,16 +31,18 @@ const TimePickerContent = ({ handleResetTakeData, setSelectedTime }) => {
 
   return (
     <div>
-      <TimeKeeper
+      {!!time && <TimeKeeper
         hour24Mode
         switchToMinuteOnHourSelect
         time={time}
         closeOnMinuteSelect
         onChange={handleTimeOnChange}
         doneButton={newTime => (
-          <ButtonConfirmDate onClick={handleClose}>ZATWIERDŹ</ButtonConfirmDate>
+          <ButtonConfirmDate>
+            <ButtonIcon title="ZATWIERDŹ" uppercase fontIconSize="20" fontSize="20" icon={<FaCheck />} onClick={handleClose}/>
+          </ButtonConfirmDate>
         )}
-      />
+      />}
     </div>
   )
 }

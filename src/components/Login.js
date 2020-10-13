@@ -3,12 +3,11 @@ import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdEmail, MdLock } from "react-icons/md"
 import { FaFacebookF } from "react-icons/fa"
-import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import {fetchLoginUser} from '../state/actions'
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import ButtonIcon from "../components/ButtonIcon"
-import { MdWork } from "react-icons/md"
+import { FaUser } from "react-icons/fa"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -18,49 +17,15 @@ const ButtonLoginRegister = styled.button`
   margin-top: 30px;
 `
 
-const ButtonFacebook = styled.button`
-  font-family: Arial, Helvetica, sans-serif;
-  position: relative;
+const ButtonFacebook = styled.div`
   width: 100%;
   border: none;
   border-radius: 5px;
-  background-color: #48a6dd;
-  color: white;
-  padding: 10px 15px;
-  font-size: 1.2rem;
+  background-color: white;
   margin-top: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding-left: 35px;
-  /* text-align: center; */
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:disabled {
-    background-color: #bdbdbd;
-
-    &:hover {
-      background-color: #bdbdbd;
-    }
-  }
-
 `
 
-const FacebookIcon = styled.div`
-  position: absolute;
-  left: 10px;
-  top: 0;
-  bottom: 0;
-  font-size: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+
 
 const LoginContent = () => {
   const [emailInput, setEmailInput] = useState("")
@@ -105,18 +70,14 @@ const LoginContent = () => {
         
         <ButtonLoginRegister disabled={!validButtonLogin} type="submit">
           <div data-tip data-for="alertLogin">
-            <ButtonIcon title="LOGOWANIE" uppercase fontIconSize="25" icon={<MdWork />} disabled={!validButtonLogin}/>
+            <ButtonIcon title="LOGOWANIE" uppercase fontIconSize="20" fontSize="20" icon={<FaUser />} disabled={!validButtonLogin}/>
           </div>
-          
         </ButtonLoginRegister>
 
         {tooltipButtonLogin}
 
-        <ButtonFacebook disabled={validButtonLogin}>
-          ZALOGUJ SIĘ PRZEZ FACEBOOKA
-          <FacebookIcon>
-            <FaFacebookF />
-          </FacebookIcon>
+        <ButtonFacebook>
+            <ButtonIcon title="ZALOGUJ SIĘ PRZEZ FACEBOOKA" uppercase customColorButton="#0062e0" customColorIcon="#18acfe" fontIconSize="22" icon={<FaFacebookF />} disabled={validButtonLogin}/>
         </ButtonFacebook>
       </form>
     </>
