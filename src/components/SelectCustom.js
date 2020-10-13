@@ -6,8 +6,6 @@ import { Colors } from "../common/Colors"
 
 const SelectDiv = styled.div`
   margin: 0 auto;
-  margin-top: 50px;
-  margin-bottom: 150px;
   width: 500px;
   max-width: 90vw;
   div{

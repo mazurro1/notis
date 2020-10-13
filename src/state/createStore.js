@@ -1,4 +1,8 @@
 import { createStore as reduxCreateStore } from "redux"
+import { applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+
+
 import {
   CHANGE_SORT_VISIBLE,
   CHANGE_FILTER_VISIBLE,
@@ -6,17 +10,22 @@ import {
   CHANGE_LOCALIZATION_VISIBLE,
   CHANGE_FILTER_VALUE,
   CHANGE_LOCALIZATION_VALUE,
-  CHANGE_INDUSTRIES
+  CHANGE_INDUSTRIES,
+  LOADING_PLACES,
+  CHANGE_SPINNER,
+  LOGOUT,
+  LOGIN,
+  CHANGE_LOGIN_VISIBLE,
+  REMOVE_ALERT_ITEM,
+  ADD_ALERT_ITEM
 } from "./actions"
 
 const initialState = {
-  user: {
-    userName: "Hubert",
-    userId: 1,
-  },
+  user: null,
   page: 1,
   spinnerEnable: false,
   industries: null,
+  loginVisible: false,
   localizationVisible: false,
   localization: false,
   localizationData: [
@@ -34,13 +43,7 @@ const initialState = {
   filterDataLoading: false,
   sortVisible: false,
   sorts: null,
-  sortData: [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ],
   sortDataLoading: false,
-  localization: "",
   placesData: [
     {
       id: 1,
@@ -133,10 +136,63 @@ const initialState = {
       ],
     },
   ],
+  loadingPlaces: false,
+  alerts: []
 }
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_ALERT_ITEM: {
+      const newAlertId = state.alerts.length > 0 ? state.alerts[state.alerts.length - 1].id + 1 : 0;
+      const newAlert = {
+        id: newAlertId,
+        text: action.text,
+        color: action.color,
+      }
+      const newAlerts = [...state.alerts, newAlert]
+      return {
+        ...state,
+        alerts: newAlerts,
+      }
+    }
+
+    case REMOVE_ALERT_ITEM: {
+      const filterAlerts = state.alerts.filter(item=> item.id !== action.id);
+      return {
+        ...state,
+        alerts: filterAlerts,
+      }
+    }
+
+    case CHANGE_LOGIN_VISIBLE:
+      return{
+        ...state,
+        loginVisible: action.value,
+      }
+
+    case LOGIN:
+      return{
+        ...state,
+        user: action.user
+      }
+    case LOGOUT:
+      return{
+        ...state,
+        user: null,
+      }
+    case CHANGE_SPINNER:
+      return{
+        ...state,
+        spinnerEnable: action.value,
+      }
+
+    case LOADING_PLACES: 
+    return{
+      ...state,
+      loadingPlaces: action.value
+    }
+
     case CHANGE_INDUSTRIES:
       return{
         ...state,
@@ -187,5 +243,7 @@ const reducer = (state = initialState, action) => {
   }
 }
 
-const createStore = () => reduxCreateStore(reducer, initialState)
+
+const createStore = () => reduxCreateStore(reducer, initialState, applyMiddleware(thunk))
+
 export default createStore

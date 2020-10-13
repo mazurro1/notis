@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "../components/ButtonIcon"
 import { CSSTransition } from "react-transition-group"
+import { MdWork } from "react-icons/md"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -16,7 +17,8 @@ const PlaceItem = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
   margin-bottom: 50px;
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #b2ebf2;
   overflow: hidden;
   @media all and (max-width: 920px) {
     max-width: 400px;
@@ -81,7 +83,7 @@ const BackGroundImageCustomUrl = styled.div`
   background: url(${props => props.url}) 50% 0 no-repeat;
   background-position: center;
   background-size: cover;
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
 `
 
 const PaddingRight = styled.div`
@@ -140,24 +142,14 @@ const ButtonReservContent = styled.div`
   }
 `
 
-const ButtonReserv = styled.button`
+const ButtonReserv = styled.div`
+  display: inline-block;
   width: ${props => (props.services ? "33%" : "63%")};
-  background-color: ${props =>
-    props.services ? "#424242" : Colors.buttonColor};
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 1.4rem;
-  cursor: pointer;
   border-radius: 5px;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+  overflow: hidden;
   margin: 1%;
-  &:hover {
-    background-color: ${props =>
-      props.services ? Colors.navDownBackground : Colors.buttonIconColor};
-  }
 `
 
 const SerivesDiv = styled.div`
@@ -190,6 +182,7 @@ const PlacesItem = ({ item, filters, index }) => {
       if(filters){
         return item.toLowerCase() === filters.value.toLowerCase()
       }
+      return false
     }
   )
 
@@ -198,6 +191,7 @@ const PlacesItem = ({ item, filters, index }) => {
       if(filters){
         return item.toLowerCase() === filters.value.toLowerCase()
       }
+      return false
     }
   )
 
@@ -241,10 +235,10 @@ const PlacesItem = ({ item, filters, index }) => {
           <OpinionBottom>Opinie: {item.countOpinions}</OpinionBottom>
         </OpinionMainDiv>
         <ButtonReservContent>
-          <ButtonReserv services onClick={handleServicesVisible}>
-            USŁUGI
+          <ButtonReserv services >
+            <ButtonIcon buttonBgDark title="USŁUGI" uppercase fontIconSize="25" icon={<MdWork />} onClick={handleServicesVisible}/>
           </ButtonReserv>
-          <ButtonReserv>REZERWUJ</ButtonReserv>
+          <ButtonReserv><ButtonIcon title="REZERWUJ" uppercase fontIconSize="25" icon={<MdWork />}/></ButtonReserv>
         </ButtonReservContent>
       </PlaceContent>
       <CSSTransition

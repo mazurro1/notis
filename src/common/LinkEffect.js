@@ -4,7 +4,7 @@ import { Colors } from "./Colors"
 
 export const LinkEffect = ({ path = "/", text = "" }) => {
   return (
-    <AniLink cover direction="bottom" to={path} bg={Colors.buttonIconColor}>
+    <AniLink cover direction="bottom" to={path} bg={Colors.buttonIconColor} duration={0.7}>
       {text}
     </AniLink>
   )

@@ -2,7 +2,6 @@ import React from "react"
 import { Colors } from "../common/Colors"
 import styled from "styled-components"
 import { Routes } from "../common/Routes"
-import { Link, navigate } from "gatsby"
 import { FaFacebookSquare } from "react-icons/fa"
 import { LinkEffect } from "../common/LinkEffect"
 

@@ -44,6 +44,15 @@ const ClosePopup = styled.div`
   }
 `
 
+const ContentNoBorder = styled.div`
+  border: none;
+    outline: none;
+  &:active, &:focus{
+    border: none;
+    outline: none;
+  } 
+`
+
 const Popup = ({
   popupEnable = false,
   handleClose = () => {},
@@ -60,7 +69,7 @@ const Popup = ({
   }
 
   const contentComponent = noContent ? (
-    <div onClick={handleOnClickContent}>{children}</div>
+    <ContentNoBorder onClick={handleOnClickContent} onKeyDown={()=>{}} role="button" tabIndex={0}>{children}</ContentNoBorder>
   ) : (
     <PopupContent maxWidth={maxWidth} onClick={handleOnClickContent}>
       {children}

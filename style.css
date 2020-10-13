@@ -116,6 +116,63 @@ button:focus {
   top: 70px;
 }
 
+
+
+
+
+.menu2-enter {
+  top: 0;
+}
+
+.menu2-enter.popup-enter-active {
+  top: -100vh;
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.menu2-exit {
+  top: -100vh;
+}
+
+.menu2-exit.popup-exit-active {
+  top: 70px;
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+
+
+.alert-enter {
+  opacity: 0.01;
+}
+
+.alert-enter.alert-enter-active {
+  opacity: 1;
+  transition-property: transform, opacity;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+}
+
+.alert-exit {
+  opacity: 1;
+}
+
+.alert-exit.alert-exit-active {
+  opacity: 0.01;
+  transition-property: transform, opacity;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+}
+
+
+
+.alert-enter {
+  opacity: 0.01;
+  transform: scale(0.1);
+}
+
 .popup-enter {
   opacity: 0.01;
   transform: scale(0.1);
@@ -176,4 +233,31 @@ button:focus {
   100% {
     transform: rotate(360deg);
   }
+}
+
+
+.popup3-enter {
+  /* opacity: 0.01; */
+  transform: translateY(-100%);
+}
+
+.popup3-enter.popup3-enter-active {
+  /* opacity: 1; */
+  transform: translateY(0);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.popup3-exit {
+  /* opacity: 1; */
+  transform: translateY(0);
+}
+
+.popup3-exit.popup3-exit-active {
+  /* opacity: 0.01; */
+  transform: translateY(100%);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }

@@ -20,11 +20,13 @@ import {
   changeSortVisible,
   changeFilterVisible,
   changeLocaliaztionVisible,
-  changeIndustries
+  changeIndustries,
+  changeLoginVisible
 } from "../state/actions"
 import Sort from './Sort'
 import Filter from './Filter'
 import Localization from './Localization'
+import Alerts from './Alerts'
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -38,7 +40,7 @@ const WrapperNavigation = styled.div`
 `
 
 const WrapperNavigationUnder = styled.div`
-  position: relative;
+  position: absolute;
   z-index: 90;
   left: 0;
   right: 0;
@@ -112,18 +114,14 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-
-  margin-bottom: ${props =>
-    props.isMainPage ? "-" + props.bottomNavHeight + "px" : "0px"};
-
+  padding-top: ${props => props.topNavVisibleMenu ? "152px" : "0px"};
   transition-property: padding-top, margin-bottom;
   transition-duration: 0.3s;
-  transition-timing-function: ease;
-  transition-delay: 0.3s;
+  transition-timing-function: inline;
+  transition-delay: ${props => props.topNavVisibleMenu ? "0" : "0.195s"};
 `
 
 const Navigation = ({ children, isMainPage }) => {
-  const [popupLogin, setPopupLogin] = useState(false)
   const [popupRegister, setPopupRegister] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
@@ -133,7 +131,10 @@ const Navigation = ({ children, isMainPage }) => {
   const [selectedTime, setSelectedTime] = useState()
   const [selectedDateAndTime, setSelectedDateAndTime] = useState("")
   const [selectedName, setSelectedName] = useState("")
+  const [topNavVisible, setTopNavVisible] = useState(false)
+  const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
 
+  const loginVisible = useSelector(state => state.loginVisible)
   const spinnerEnable = useSelector(state => state.spinnerEnable)
   const sortVisible = useSelector(state => state.sortVisible)
   const filterVisible = useSelector(state => state.filterVisible)
@@ -145,6 +146,24 @@ const Navigation = ({ children, isMainPage }) => {
   const page = useSelector(state => state.page)
 
   const dispatch = useDispatch()
+
+  useEffect(()=>{
+    if(isMainPage){
+      setTimeout(()=>{
+        setTopNavVisible(true)
+        setTimeout(()=>{
+          setTopNavVisibleMenu(true)
+        }, 100)
+      }, 200)
+    }else{
+      setTimeout(()=>{
+        setTopNavVisible(false)
+        setTimeout(()=>{
+          setTopNavVisibleMenu(false)
+        }, 200)
+      }, 200)
+    }
+  }, [isMainPage])
 
   useEffect(() => {
     console.log("update")
@@ -160,7 +179,7 @@ const Navigation = ({ children, isMainPage }) => {
   }, [selectedDate, selectedTime, setSelectedDateAndTime, popupTakeData])
 
   const handleClickLogin = () => {
-    setPopupLogin(prevValue => !prevValue)
+    dispatch(changeLoginVisible(!loginVisible))
   }
 
   const handleClickRegister = () => {
@@ -196,11 +215,11 @@ const Navigation = ({ children, isMainPage }) => {
     )
   })
 
-  const renderExtraPropsInMainMenu = (
+  const renderExtraPropsInMainMenu = topNavVisible && (
     <CSSTransition
-      in={isMainPage}
+      in={topNavVisibleMenu}
       timeout={400}
-      classNames="menu"
+      classNames="popup3"
       unmountOnExit
     >
       <WrapperNavigationUnder
@@ -276,7 +295,7 @@ const Navigation = ({ children, isMainPage }) => {
 
   const PopupLogin = (
     <Popup
-      popupEnable={popupLogin}
+      popupEnable={loginVisible}
       handleClose={handleClickLogin}
       maxWidth="400"
     >
@@ -342,6 +361,7 @@ const Navigation = ({ children, isMainPage }) => {
   return (
     <>
       <Spinner spinnerEnable={spinnerEnable} />
+      <Alerts/>
       {PopupLogin}
       {PopupRegister}
       {PopupTakeData}
@@ -349,7 +369,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupSort}
       {PopupFilter}
       {PopupLocalization}
-      <WrapperNavigation>
+      <WrapperNavigation >
         <NavigationDiv>
           <NavigationItems>
             <LogoStyle>
@@ -396,7 +416,7 @@ const Navigation = ({ children, isMainPage }) => {
         </NavigationDiv>
       </WrapperNavigation>
       {renderExtraPropsInMainMenu}
-      <PaddingContent isMainPage={isMainPage}>{children}</PaddingContent>
+      <PaddingContent topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}>{children}</PaddingContent>
     </>
   )
 }

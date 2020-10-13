@@ -13,12 +13,14 @@ const ButtonStyle = styled.div`
       ? props.secondColors
         ? Colors.buttonIconColorSecond
         : Colors.buttonIconColor
-      : props.secondColors
-      ? props.buttonBgDark
-        ? Colors.buttonColorDark
-        : Colors.buttonColorSecond
+      : props.buttonBgDark && props.icon
+        ? Colors.navDownBackground
+        : props.secondColors 
+        ? Colors.buttonColorSecond
       : props.buttonBgDark
       ? Colors.buttonColorDark
+      : props.disabled
+      ? "#e0e0e0"
       : Colors.buttonColor};
   color: black;
   overflow: hidden;
@@ -50,6 +52,10 @@ const IconStyle = styled.div`
         : Colors.buttonColor
       : props.secondColors
       ? Colors.buttonIconColorSecond
+      : props.buttonBgDark 
+      ? Colors.buttonColorDark
+      : props.disabled
+      ? "#bdbdbd"
       : Colors.buttonIconColor};
   transform: ${props =>
     props.mouseOn ? `scale(${props.numberScale})` : "scale(1)"};
@@ -86,6 +92,7 @@ const ButtonIcon = ({
   icon,
   secondColors = false,
   buttonBgDark = false,
+  disabled = false
 }) => {
   const [mouseOn, setMouseOn] = useState(false)
   const [mouseClick, setMouseClick] = useState(false)
@@ -93,22 +100,28 @@ const ButtonIcon = ({
   const refButton = useRef(null)
 
   const handleOnMouseOn = () => {
-    setMouseOn(true)
-    const numberScale = Math.floor(refButton.current.clientWidth / 35) * 2 + 1
-    setNumberScale(numberScale)
+    if(!disabled){
+      setMouseOn(true)
+      const numberScale = Math.floor(refButton.current.clientWidth / 35) * 2 + 1
+      setNumberScale(numberScale)
+    }
   }
 
   const handleOnMouseLeave = () => {
-    setMouseOn(false)
+    if(!disabled){
+      setMouseOn(false)
+    }
   }
 
   const handleOnClick = () => {
-    setNumberScale(1)
-    setMouseClick(true)
-    onClick()
-    setTimeout(() => {
-      setMouseClick(false)
-    }, 500)
+    if(!disabled){
+      setNumberScale(1)
+      setMouseClick(true)
+      onClick()
+      setTimeout(() => {
+        setMouseClick(false)
+      }, 500)
+    }
   }
 
   const iconRender = icon && icon
@@ -119,6 +132,8 @@ const ButtonIcon = ({
         numberScale={numberScale}
         mouseClick={mouseClick}
         secondColors={secondColors}
+        buttonBgDark={buttonBgDark}
+        disabled={disabled}
       />
       <OnlyIcon fontIconSize={fontIconSize}>{iconRender}</OnlyIcon>
     </>
@@ -137,6 +152,7 @@ const ButtonIcon = ({
       mouseOn={mouseOn}
       secondColors={secondColors}
       buttonBgDark={buttonBgDark}
+      disabled={disabled}
     >
       {allIcon}
       <TextStyle>{title}</TextStyle>

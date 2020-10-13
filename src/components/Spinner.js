@@ -2,7 +2,6 @@ import React from "react"
 import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { CgSpinner } from "react-icons/cg"
-import { ImSpinner } from "react-icons/im"
 import { Colors } from "../common/Colors"
 
 const PopupWindow = styled.div`
@@ -12,7 +11,7 @@ const PopupWindow = styled.div`
   left: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 500;
+  z-index: 2000;
   display: flex;
   justify-content: center;
   align-items: center;

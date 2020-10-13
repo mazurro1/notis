@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import "../../style.css"
 import { useDispatch, useSelector } from "react-redux"
 import PlacesItem from "../components/PlacesItem"
@@ -9,9 +9,14 @@ import {
   changeSortVisible,
   changeFilterVisible,
   changeLocaliaztionVisible,
+  changeLoadingPlaces,
+  fetchLoginUser,
+  
 } from "../state/actions"
 import {Colors} from '../common/Colors'
 import sal from 'sal.js'
+import { CSSTransition } from "react-transition-group"
+import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -26,20 +31,23 @@ const ButtonMargin = styled.div`
   margin-top: 10px;
 `
 
-const TextH1 = styled.h1`
-  margin-top: 40px;
+const TextH1 = styled.div`
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
   color: ${Colors.navDownBackground};
-  padding-bottom: 5px;
+  padding: 5px 10px;
+  padding-left: 25px;
   margin-bottom: 10px;
   text-transform: uppercase;
-`
-
-const LineBlack = styled.div`
-  height: 3px;
-  width: 50px;
-  border-radius: 5px;
-  background-color: ${Colors.navDownBackground};
-  margin-bottom: 20px;
+  font-size: 2rem;
+  letter-spacing: 0.5rem;
+  text-align: center;
+  color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: ${Colors.buttonIconColor};
 `
 
 const Home = () => {
@@ -48,16 +56,28 @@ const Home = () => {
   const sorts = useSelector(state => state.sorts)
   const localization = useSelector(state => state.localization)
   const industries = useSelector(state => state.industries)
+  const loadingPlaces = useSelector(state => state.loadingPlaces)
 
+  const contentRef = useRef(null)
+
+  useEffect(()=>{
+    const heightContent = contentRef.current.clientHeight;
+    // window.scrollTo(heightContent)
+    console.log(heightContent)
+  }, [contentRef])
 
   const dispatch = useDispatch()
+
+  useScrollPosition(({ prevPos, currPos }) => {
+    // console.log(currPos.y)
+  })
 
   useEffect(()=>{
     sal({
       threshold: 0.1,
       once: false,
     })
-  }, [])
+  }, [loadingPlaces])
 
   const mapPlacesData = placesData.map((item, index) => {
     return <PlacesItem key={item.id} item={item} filters={filters} index={index}/>
@@ -66,9 +86,8 @@ const Home = () => {
   const industriesText = !!industries ? <TextH1>{industries}</TextH1> : <TextH1>Wszystko</TextH1>
 
   return (
-    <>
+    <div ref={contentRef}>
       {industriesText}
-      <LineBlack/>
       <ButtonsFilters>
         <ButtonMargin>
           <ButtonIcon
@@ -103,8 +122,23 @@ const Home = () => {
           />
         </ButtonMargin>
       </ButtonsFilters>
-      {mapPlacesData}
-    </>
+      <div>
+        <button onClick={()=>{dispatch(changeLoadingPlaces(true))}}>load places true</button>
+      </div>
+      <div>
+        <button onClick={()=>{dispatch(changeLoadingPlaces(false))}}>load places false</button>
+      </div>
+      <CSSTransition
+      in={!loadingPlaces}
+      timeout={400}
+      classNames="popup"
+      unmountOnExit
+    >
+      <div>
+        {mapPlacesData}
+      </div>
+    </CSSTransition>
+    </div>
   )
 }
 export default Home
