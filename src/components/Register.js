@@ -6,7 +6,9 @@ import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import { FaUserPlus } from "react-icons/fa"
-import ButtonIcon from './ButtonIcon'
+import ButtonIcon from "./ButtonIcon"
+import { fetchRegisterUser } from "../state/actions"
+import { useDispatch } from "react-redux"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -39,13 +41,17 @@ const RegisterContent = () => {
   const [passwordInput, setPasswordInput] = useState("")
   const [repeatPasswordInput, setRepeatPasswordInput] = useState("")
 
+  const dispatch = useDispatch()
+
   const handleChange = (e, setValue) => {
     setValue(e.target.value)
   }
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log("submit")
+    dispatch(
+      fetchRegisterUser(emailInput, nameInput, phoneInput, repeatPasswordInput)
+    )
   }
 
   const validButtonRegistration =
@@ -102,16 +108,18 @@ const RegisterContent = () => {
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
-      {/* <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
-        <PaddingText data-tip data-for="happyFace">
-          ZAREJESTRUJ KONTO
-        </PaddingText>
-      </ButtonLoginRegister> */}
       <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
-          <div data-tip data-for="alertRegistration">
-            <ButtonIcon title="LOGOWANIE" uppercase fontIconSize="24" icon={<FaUserPlus />} disabled={!validButtonRegistration} fontSize="20"/>
-          </div>
-        </ButtonLoginRegister>
+        <div data-tip data-for="alertRegistration">
+          <ButtonIcon
+            title="ZAREJESTRUJ KONTO"
+            uppercase
+            fontIconSize="24"
+            icon={<FaUserPlus />}
+            disabled={!validButtonRegistration}
+            fontSize="20"
+          />
+        </div>
+      </ButtonLoginRegister>
       {tooltipButtonRegister}
     </form>
   )

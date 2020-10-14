@@ -22,14 +22,17 @@ import {
   changeLocaliaztionVisible,
   changeIndustries,
   changeLoginVisible,
+  changeRegistrationVisible,
   fetchAutoLogin,
   logout,
+  changeUserProfilVisible,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
 import Localization from "./Localization"
 import Alerts from "./Alerts"
 import ActiveAccount from "./ActiveAccount"
+import UserProfil from "./UserProfil"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -125,7 +128,6 @@ const PaddingContent = styled.div`
 `
 
 const Navigation = ({ children, isMainPage }) => {
-  const [popupRegister, setPopupRegister] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
   const [isDataActive, setIsDataActive] = useState(true)
@@ -137,6 +139,7 @@ const Navigation = ({ children, isMainPage }) => {
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
 
+  const registrationVisible = useSelector(state => state.registrationVisible)
   const loginVisible = useSelector(state => state.loginVisible)
   const spinnerEnable = useSelector(state => state.spinnerEnable)
   const sortVisible = useSelector(state => state.sortVisible)
@@ -148,6 +151,7 @@ const Navigation = ({ children, isMainPage }) => {
   const industries = useSelector(state => state.industries)
   const page = useSelector(state => state.page)
   const user = useSelector(state => state.user)
+  const userProfilVisible = useSelector(state => state.userProfilVisible)
 
   const dispatch = useDispatch()
 
@@ -199,7 +203,7 @@ const Navigation = ({ children, isMainPage }) => {
   }
 
   const handleClickRegister = () => {
-    setPopupRegister(prevValue => !prevValue)
+    dispatch(changeRegistrationVisible(!registrationVisible))
   }
 
   const handleClickTakeData = () => {
@@ -225,6 +229,10 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleLogout = () => {
     dispatch(logout())
+  }
+
+  const handleUserProfil = () => {
+    dispatch(changeUserProfilVisible(!userProfilVisible))
   }
 
   const mapIndustries = Industries.map((item, index) => {
@@ -329,7 +337,7 @@ const Navigation = ({ children, isMainPage }) => {
 
   const PopupRegister = (
     <Popup
-      popupEnable={popupRegister}
+      popupEnable={registrationVisible}
       handleClose={handleClickRegister}
       maxWidth="400"
     >
@@ -393,7 +401,52 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
+  const PopupUserProfil = (
+    <Popup
+      popupEnable={userProfilVisible}
+      fullScreen
+      handleClose={handleUserProfil}
+    >
+      <UserProfil />
+    </Popup>
+  )
+
   console.log(user)
+
+  const renderCompanyOrCreateCompany =
+    !!user && user.hasCompany ? (
+      <ButtonNavStyle>
+        <LinkEffect
+          path="/company-profil"
+          text={
+            <ButtonIcon
+              title="Twoja firma"
+              uppercase
+              fontIconSize="25"
+              fontSize="16"
+              icon={<MdWork />}
+              secondColors
+            />
+          }
+        />
+      </ButtonNavStyle>
+    ) : (
+      <ButtonNavStyle>
+        <LinkEffect
+          path="/company"
+          text={
+            <ButtonIcon
+              title="dla firm"
+              uppercase
+              fontIconSize="25"
+              fontSize="16"
+              icon={<MdWork />}
+              secondColors
+            />
+          }
+        />
+      </ButtonNavStyle>
+    )
 
   const renderButtonsUp = !!user ? (
     <>
@@ -404,7 +457,7 @@ const Navigation = ({ children, isMainPage }) => {
           fontIconSize="20"
           fontSize="16"
           icon={<FaUser />}
-          // onClick={handleClickRegister}
+          onClick={handleUserProfil}
         />
       </ButtonNavStyle>
       <ButtonNavStyle>
@@ -457,6 +510,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupSort}
       {PopupFilter}
       {PopupLocalization}
+      {PopupUserProfil}
       <WrapperNavigation>
         <NavigationDiv>
           <NavigationItems>
@@ -464,21 +518,7 @@ const Navigation = ({ children, isMainPage }) => {
               <LinkEffect text="NOTISE" path="/" />
             </LogoStyle>
             <ButtonsNav>
-              <ButtonNavStyle>
-                <LinkEffect
-                  path="/company"
-                  text={
-                    <ButtonIcon
-                      title="dla firm"
-                      uppercase
-                      fontIconSize="25"
-                      fontSize="16"
-                      icon={<MdWork />}
-                      secondColors
-                    />
-                  }
-                />
-              </ButtonNavStyle>
+              {renderCompanyOrCreateCompany}
               {renderButtonsUp}
             </ButtonsNav>
           </NavigationItems>

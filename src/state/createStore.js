@@ -1,7 +1,6 @@
 import { createStore as reduxCreateStore } from "redux"
-import { applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-
+import { applyMiddleware } from "redux"
+import thunk from "redux-thunk"
 
 import {
   CHANGE_SORT_VISIBLE,
@@ -17,20 +16,26 @@ import {
   LOGIN,
   CHANGE_LOGIN_VISIBLE,
   REMOVE_ALERT_ITEM,
-  ADD_ALERT_ITEM
+  ADD_ALERT_ITEM,
+  CHANGE_REGISTRATION_VISIBLE,
+  ADD_USER_PHONE,
+  CHANGE_USER_PROFIL_VISIBLE,
 } from "./actions"
 
 const initialState = {
   user: null,
+  userPhone: null,
   page: 1,
   spinnerEnable: false,
   industries: null,
+  userProfilVisible: false,
   loginVisible: false,
+  registrationVisible: false,
   localizationVisible: false,
   localization: false,
   localizationData: [
-    {value: 'warszawa', label: 'Warszawa'},
-    {value: 'krakow', label: 'Kraków'}
+    { value: "warszawa", label: "Warszawa" },
+    { value: "krakow", label: "Kraków" },
   ],
   localizationDataLoading: false,
   filterVisible: false,
@@ -137,14 +142,28 @@ const initialState = {
     },
   ],
   loadingPlaces: false,
-  alerts: []
+  alerts: [],
 }
-
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_USER_PROFIL_VISIBLE:
+      return {
+        ...state,
+        userProfilVisible: action.value,
+      }
+
+    case ADD_USER_PHONE:
+      return {
+        ...state,
+        userPhone: action.phone,
+      }
+
     case ADD_ALERT_ITEM: {
-      const newAlertId = state.alerts.length > 0 ? state.alerts[state.alerts.length - 1].id + 1 : 0;
+      const newAlertId =
+        state.alerts.length > 0
+          ? state.alerts[state.alerts.length - 1].id + 1
+          : 0
       const newAlert = {
         id: newAlertId,
         text: action.text,
@@ -158,7 +177,7 @@ const reducer = (state = initialState, action) => {
     }
 
     case REMOVE_ALERT_ITEM: {
-      const filterAlerts = state.alerts.filter(item=> item.id !== action.id);
+      const filterAlerts = state.alerts.filter(item => item.id !== action.id)
       return {
         ...state,
         alerts: filterAlerts,
@@ -166,37 +185,43 @@ const reducer = (state = initialState, action) => {
     }
 
     case CHANGE_LOGIN_VISIBLE:
-      return{
+      return {
         ...state,
         loginVisible: action.value,
       }
 
-    case LOGIN:
-      return{
+    case CHANGE_REGISTRATION_VISIBLE:
+      return {
         ...state,
-        user: action.user
+        registrationVisible: action.value,
+      }
+
+    case LOGIN:
+      return {
+        ...state,
+        user: action.user,
       }
     case LOGOUT:
-      return{
+      return {
         ...state,
         user: null,
       }
     case CHANGE_SPINNER:
-      return{
+      return {
         ...state,
         spinnerEnable: action.value,
       }
 
-    case LOADING_PLACES: 
-    return{
-      ...state,
-      loadingPlaces: action.value
-    }
+    case LOADING_PLACES:
+      return {
+        ...state,
+        loadingPlaces: action.value,
+      }
 
     case CHANGE_INDUSTRIES:
-      return{
+      return {
         ...state,
-        industries: action.value
+        industries: action.value,
       }
 
     case CHANGE_SORT_VISIBLE:
@@ -217,33 +242,33 @@ const reducer = (state = initialState, action) => {
         localizationVisible: !state.localizationVisible,
       }
 
-      case CHANGE_SORT_VALUE:
-        return{
-          ...state,
-          sorts: action.value,
-          sortVisible: false,
-        }
+    case CHANGE_SORT_VALUE:
+      return {
+        ...state,
+        sorts: action.value,
+        sortVisible: false,
+      }
 
     case CHANGE_FILTER_VALUE:
-        return{
-          ...state,
-          filters: action.value,
-          filterVisible: false,
-        }    
+      return {
+        ...state,
+        filters: action.value,
+        filterVisible: false,
+      }
 
-  case CHANGE_LOCALIZATION_VALUE:
-        return{
-          ...state,
-          localization: action.value,
-          localizationVisible: false,
-        }    
+    case CHANGE_LOCALIZATION_VALUE:
+      return {
+        ...state,
+        localization: action.value,
+        localizationVisible: false,
+      }
 
     default:
       return state
   }
 }
 
-
-const createStore = () => reduxCreateStore(reducer, initialState, applyMiddleware(thunk))
+const createStore = () =>
+  reduxCreateStore(reducer, initialState, applyMiddleware(thunk))
 
 export default createStore

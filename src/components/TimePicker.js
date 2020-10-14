@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import TimeKeeper from "react-timekeeper"
 import styled from "styled-components"
-import ButtonIcon from './ButtonIcon'
-import { FaCheck } from "react-icons/fa"
+import ButtonIcon from "./ButtonIcon"
+import { MdDoneAll } from "react-icons/md"
 
 const ButtonConfirmDate = styled.div`
   padding: 5px;
@@ -13,7 +13,7 @@ const TimePickerContent = ({ handleResetTakeData, setSelectedTime }) => {
   const [time, setTime] = useState(null)
 
   useEffect(() => {
-    if(!!!time){
+    if (!!!time) {
       const date = new Date()
       const actualTime = `${date.getHours()}:${date.getMinutes()}`
       setTime(actualTime)
@@ -31,18 +31,27 @@ const TimePickerContent = ({ handleResetTakeData, setSelectedTime }) => {
 
   return (
     <div>
-      {!!time && <TimeKeeper
-        hour24Mode
-        switchToMinuteOnHourSelect
-        time={time}
-        closeOnMinuteSelect
-        onChange={handleTimeOnChange}
-        doneButton={newTime => (
-          <ButtonConfirmDate>
-            <ButtonIcon title="ZATWIERDŹ" uppercase fontIconSize="20" fontSize="20" icon={<FaCheck />} onClick={handleClose}/>
-          </ButtonConfirmDate>
-        )}
-      />}
+      {!!time && (
+        <TimeKeeper
+          hour24Mode
+          switchToMinuteOnHourSelect
+          time={time}
+          closeOnMinuteSelect
+          onChange={handleTimeOnChange}
+          doneButton={newTime => (
+            <ButtonConfirmDate>
+              <ButtonIcon
+                title="ZATWIERDŹ"
+                uppercase
+                fontIconSize="20"
+                fontSize="20"
+                icon={<MdDoneAll />}
+                onClick={handleClose}
+              />
+            </ButtonConfirmDate>
+          )}
+        />
+      )}
     </div>
   )
 }

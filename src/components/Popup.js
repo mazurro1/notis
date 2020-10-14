@@ -22,6 +22,7 @@ const PopupContent = styled.div`
   background-color: white;
   max-width: ${props => props.maxWidth + "px"};
   width: 100%;
+  height: ${props => (props.fullScreen ? "100vh" : "auto")};
   margin: 0 auto;
   border-radius: 5px;
   padding: 10px 15px;
@@ -46,11 +47,12 @@ const ClosePopup = styled.div`
 
 const ContentNoBorder = styled.div`
   border: none;
-    outline: none;
-  &:active, &:focus{
+  outline: none;
+  &:active,
+  &:focus {
     border: none;
     outline: none;
-  } 
+  }
 `
 
 const Popup = ({
@@ -59,6 +61,7 @@ const Popup = ({
   children,
   maxWidth = 900,
   noContent = false,
+  fullScreen = false,
 }) => {
   const handleOnClick = e => {
     handleClose()
@@ -69,9 +72,20 @@ const Popup = ({
   }
 
   const contentComponent = noContent ? (
-    <ContentNoBorder onClick={handleOnClickContent} onKeyDown={()=>{}} role="button" tabIndex={0}>{children}</ContentNoBorder>
+    <ContentNoBorder
+      onClick={handleOnClickContent}
+      onKeyDown={() => {}}
+      role="button"
+      tabIndex={0}
+    >
+      {children}
+    </ContentNoBorder>
   ) : (
-    <PopupContent maxWidth={maxWidth} onClick={handleOnClickContent}>
+    <PopupContent
+      maxWidth={maxWidth}
+      onClick={handleOnClickContent}
+      fullScreen={fullScreen}
+    >
       {children}
       <ClosePopup onClick={handleOnClick}>
         <MdClose />

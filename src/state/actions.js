@@ -13,8 +13,25 @@ export const CHANGE_SPINNER = "CHANGE_SPINNER"
 export const LOGOUT = "LOGOUT"
 export const LOGIN = "LOGIN"
 export const CHANGE_LOGIN_VISIBLE = "CHANGE_LOGIN_VISIBLE"
+export const CHANGE_REGISTRATION_VISIBLE = "CHANGE_REGISTRATION_VISIBLE"
 export const REMOVE_ALERT_ITEM = "REMOVE_ALERT_ITEM"
 export const ADD_ALERT_ITEM = "ADD_ALERT_ITEM"
+export const ADD_USER_PHONE = "ADD_USER_PHONE"
+export const CHANGE_USER_PROFIL_VISIBLE = "CHANGE_USER_PROFIL_VISIBLE"
+
+export const changeUserProfilVisible = value => {
+  return {
+    type: CHANGE_USER_PROFIL_VISIBLE,
+    value: value,
+  }
+}
+
+export const addUserPhone = phone => {
+  return {
+    type: ADD_USER_PHONE,
+    phone: phone,
+  }
+}
 
 export const addAlertItem = (text, color) => {
   return {
@@ -34,6 +51,13 @@ export const removeAlertItem = id => {
 export const changeLoginVisible = value => {
   return {
     type: CHANGE_LOGIN_VISIBLE,
+    value: value,
+  }
+}
+
+export const changeRegistrationVisible = value => {
+  return {
+    type: CHANGE_REGISTRATION_VISIBLE,
     value: value,
   }
 }
@@ -143,19 +167,31 @@ export const fetchLoginUser = (email, password) => {
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas logowania się", "red"))
         dispatch(changeSpinner(false))
-        // if (error.response) {
-        //   const errorMessage = error.response.data.message;
-        //   if (error.response.status === 403) {
-        //     dispatch(failMessagesChange("", errorMessage));
-        //   } else if (error.response.status === 422) {
-        //     dispatch(failMessagesChange(errorMessage));
-        //   } else if (error.response.status === 401) {
-        //     dispatch(logout());
-        //   } else {
-        //     dispatch(failMessagesChange("", "", "", errorMessage));
-        //   }
-        // }
-        // dispatch(loginAttemptsTask("plus"));
+      })
+  }
+}
+
+export const fetchRegisterUser = (email, name, phone, password) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(`${Site.serverUrl}/registration`, {
+        email: email,
+        userName: name,
+        phoneNumber: phone,
+        password: password,
+      })
+      .then(response => {
+        localStorage.setItem("USERID", response.data.userId)
+        localStorage.setItem("TOKEN", response.data.token)
+        dispatch(loginUser(response.data))
+        dispatch(changeRegistrationVisible(false))
+        dispatch(addAlertItem("Pomyślnie utworzono konto", "green"))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas tworzenia konta", "red"))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -220,6 +256,60 @@ export const fetchSentAgainActivedEmail = () => {
       .catch(error => {
         dispatch(
           addAlertItem("Błąd podczas wysyłania kodu aktywującego konto.", "red")
+        )
+      })
+  }
+}
+
+export const fetchUserPhone = () => {
+  return dispatch => {
+    const token = localStorage.getItem("TOKEN")
+    return axios
+      .get(`${Site.serverUrl}/get-user-phone`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then(response => {
+        dispatch(addUserPhone(response.data.userPhone))
+      })
+      .catch(error => {})
+  }
+}
+
+export const fetchEditUser = (newPhone, newPassword, password) => {
+  return dispatch => {
+    const token = localStorage.getItem("TOKEN")
+    return axios
+      .patch(
+        `${Site.serverUrl}/edit-user`,
+        {
+          newPhone: newPhone,
+          newPassword: newPassword,
+          password: password,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        console.log(response.data)
+        dispatch(loginUser(response.data))
+        dispatch(addUserPhone(response.data.userPhone))
+        localStorage.removeItem("USERID")
+        localStorage.removeItem("TOKEN")
+        localStorage.setItem("USERID", response.data.userId)
+        localStorage.setItem("TOKEN", response.data.token)
+        dispatch(
+          addAlertItem("Pomyślnie zaktualizowano dane użytkownika", "green")
+        )
+        dispatch(changeUserProfilVisible(false))
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas aktualizowania danych użytkownika", "red")
         )
       })
   }
