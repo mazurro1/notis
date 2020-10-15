@@ -7,7 +7,7 @@ import {
   fetchSentAgainActivedEmail,
   fetchActiveAccount,
 } from "../state/actions"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
 
 const BackgroundContent = styled.div`
@@ -48,6 +48,7 @@ const MarginBottom = styled.div`
 const ActiveAccount = () => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
+  const user = useSelector(state => state.user)
   const fieldOneRef = useRef(null)
 
   const dispatch = useDispatch()
@@ -63,7 +64,7 @@ const ActiveAccount = () => {
   }
 
   const handleActiveAccount = () => {
-    dispatch(fetchActiveAccount(activeCode))
+    dispatch(fetchActiveAccount(activeCode, user.token, user.userId))
   }
 
   const tooltipActive = activeCode.length === 0 && (

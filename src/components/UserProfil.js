@@ -9,16 +9,16 @@ import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
 import { Checkbox } from "react-input-checkbox"
 import { CSSTransition } from "react-transition-group"
-import "react-input-checkbox/lib/react-input-checkbox.min.css"
 import { MdDone } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import { fetchEditUser } from "../state/actions"
 
 const ProfilStyle = styled.div`
-  margin-top: 20px;
+  padding: 20px;
 `
 
 const TextToUser = styled.div`
+  margin-top: 50px;
   h1 {
     font-size: 1.4rem;
   }
@@ -55,10 +55,10 @@ const UserProfil = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!!user && checkboxPhone && !userPhone) {
+    if (!!user && !userPhone) {
       dispatch(fetchUserPhone())
     }
-  }, [user, checkboxPhone, userPhone])
+  }, [user, userPhone, dispatch])
 
   useEffect(() => {
     if (!!userPhone) {
@@ -102,6 +102,7 @@ const UserProfil = () => {
   return (
     <ProfilStyle>
       {tooltipButton}
+      <h1>Dane użytkownika:</h1>
       <TextToUser>
         <div>
           <h1>

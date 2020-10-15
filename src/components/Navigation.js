@@ -16,6 +16,7 @@ import SelectDataCalendar from "./SelectDataCalendar"
 import TimePickerContent from "./TimePicker"
 import FindPlaceContent from "./FindPlace"
 import { useDispatch, useSelector } from "react-redux"
+import "react-input-checkbox/lib/react-input-checkbox.min.css"
 import {
   changeSortVisible,
   changeFilterVisible,
@@ -26,6 +27,7 @@ import {
   fetchAutoLogin,
   logout,
   changeUserProfilVisible,
+  changeRemindPasswordVisible,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -33,6 +35,7 @@ import Localization from "./Localization"
 import Alerts from "./Alerts"
 import ActiveAccount from "./ActiveAccount"
 import UserProfil from "./UserProfil"
+import RemindPassword from "./RemindPassword"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -152,6 +155,9 @@ const Navigation = ({ children, isMainPage }) => {
   const page = useSelector(state => state.page)
   const user = useSelector(state => state.user)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
+  const remindPasswordVisible = useSelector(
+    state => state.remindPasswordVisible
+  )
 
   const dispatch = useDispatch()
 
@@ -233,6 +239,11 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleUserProfil = () => {
     dispatch(changeUserProfilVisible(!userProfilVisible))
+  }
+
+  const handleCloseRemindPassword = () => {
+    dispatch(changeRemindPasswordVisible(!remindPasswordVisible))
+    dispatch(changeLoginVisible(!loginVisible))
   }
 
   const mapIndustries = Industries.map((item, index) => {
@@ -335,6 +346,16 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
+  const PopupRemindPassword = (
+    <Popup
+      popupEnable={remindPasswordVisible}
+      handleClose={handleCloseRemindPassword}
+      maxWidth="400"
+    >
+      <RemindPassword />
+    </Popup>
+  )
+
   const PopupRegister = (
     <Popup
       popupEnable={registrationVisible}
@@ -402,11 +423,7 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const PopupUserProfil = (
-    <Popup
-      popupEnable={userProfilVisible}
-      fullScreen
-      handleClose={handleUserProfil}
-    >
+    <Popup popupEnable={userProfilVisible} handleClose={handleUserProfil}>
       <UserProfil />
     </Popup>
   )
@@ -462,7 +479,7 @@ const Navigation = ({ children, isMainPage }) => {
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
-          title="LOGOUT"
+          title="Wyloguj"
           uppercase
           fontIconSize="26"
           fontSize="16"
@@ -503,6 +520,7 @@ const Navigation = ({ children, isMainPage }) => {
       <Spinner spinnerEnable={spinnerEnable} />
       <Alerts />
       {PopupActiveAccount}
+      {PopupRemindPassword}
       {PopupLogin}
       {PopupRegister}
       {PopupTakeData}

@@ -20,6 +20,8 @@ import {
   CHANGE_REGISTRATION_VISIBLE,
   ADD_USER_PHONE,
   CHANGE_USER_PROFIL_VISIBLE,
+  CHANGE_REMIND_PASSWORD_VISIBLE,
+  CHANGE_REMIND_PASSWORD_EMAIL_SENT,
 } from "./actions"
 
 const initialState = {
@@ -28,6 +30,8 @@ const initialState = {
   page: 1,
   spinnerEnable: false,
   industries: null,
+  remindPasswordVisible: false,
+  remindPasswordEmailSent: false,
   userProfilVisible: false,
   loginVisible: false,
   registrationVisible: false,
@@ -147,6 +151,19 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_REMIND_PASSWORD_EMAIL_SENT:
+      return {
+        ...state,
+        remindPasswordEmailSent: action.value,
+      }
+
+    case CHANGE_REMIND_PASSWORD_VISIBLE:
+      return {
+        ...state,
+        remindPasswordVisible: action.value,
+        loginVisible: false,
+      }
+
     case CHANGE_USER_PROFIL_VISIBLE:
       return {
         ...state,

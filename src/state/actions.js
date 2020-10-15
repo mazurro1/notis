@@ -18,6 +18,23 @@ export const REMOVE_ALERT_ITEM = "REMOVE_ALERT_ITEM"
 export const ADD_ALERT_ITEM = "ADD_ALERT_ITEM"
 export const ADD_USER_PHONE = "ADD_USER_PHONE"
 export const CHANGE_USER_PROFIL_VISIBLE = "CHANGE_USER_PROFIL_VISIBLE"
+export const CHANGE_REMIND_PASSWORD_VISIBLE = "CHANGE_REMIND_PASSWORD_VISIBLE"
+export const CHANGE_REMIND_PASSWORD_EMAIL_SENT =
+  "CHANGE_REMIND_PASSWORD_EMAIL_SENT"
+
+export const changeRemindPasswordEmailSent = value => {
+  return {
+    type: CHANGE_REMIND_PASSWORD_EMAIL_SENT,
+    value: value,
+  }
+}
+
+export const changeRemindPasswordVisible = value => {
+  return {
+    type: CHANGE_REMIND_PASSWORD_VISIBLE,
+    value: value,
+  }
+}
 
 export const changeUserProfilVisible = value => {
   return {
@@ -148,7 +165,7 @@ export const logout = () => {
   }
 }
 
-export const fetchLoginUser = (email, password) => {
+export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -157,8 +174,10 @@ export const fetchLoginUser = (email, password) => {
         password: password,
       })
       .then(response => {
-        localStorage.setItem("USERID", response.data.userId)
-        localStorage.setItem("TOKEN", response.data.token)
+        if (checkboxAutoLogin) {
+          localStorage.setItem("USERID", response.data.userId)
+          localStorage.setItem("TOKEN", response.data.token)
+        }
         dispatch(loginUser(response.data))
         dispatch(changeLoginVisible(false))
         dispatch(addAlertItem("Pomyślnie zalogowano się na konto", "green"))
@@ -182,8 +201,6 @@ export const fetchRegisterUser = (email, name, phone, password) => {
         password: password,
       })
       .then(response => {
-        localStorage.setItem("USERID", response.data.userId)
-        localStorage.setItem("TOKEN", response.data.token)
         dispatch(loginUser(response.data))
         dispatch(changeRegistrationVisible(false))
         dispatch(addAlertItem("Pomyślnie utworzono konto", "green"))
@@ -196,11 +213,18 @@ export const fetchRegisterUser = (email, name, phone, password) => {
   }
 }
 
-export const fetchAutoLogin = (noAlert = false, noSpinner = false) => {
+export const fetchAutoLogin = (
+  noAlert = false,
+  noSpinner = false,
+  tokenComing = null,
+  userIdComing = null
+) => {
   return dispatch => {
-    const userId = localStorage.getItem("USERID")
+    const userId = !!userIdComing
+      ? userIdComing
+      : localStorage.getItem("USERID")
     if (userId !== null) {
-      const token = localStorage.getItem("TOKEN")
+      const token = !!tokenComing ? tokenComing : localStorage.getItem("TOKEN")
       if (token !== null) {
         if (!noSpinner) {
           dispatch(changeSpinner(true))
@@ -295,13 +319,8 @@ export const fetchEditUser = (newPhone, newPassword, password) => {
         }
       )
       .then(response => {
-        console.log(response.data)
         dispatch(loginUser(response.data))
         dispatch(addUserPhone(response.data.userPhone))
-        localStorage.removeItem("USERID")
-        localStorage.removeItem("TOKEN")
-        localStorage.setItem("USERID", response.data.userId)
-        localStorage.setItem("TOKEN", response.data.token)
         dispatch(
           addAlertItem("Pomyślnie zaktualizowano dane użytkownika", "green")
         )
@@ -315,10 +334,9 @@ export const fetchEditUser = (newPhone, newPassword, password) => {
   }
 }
 
-export const fetchActiveAccount = codeToVerified => {
+export const fetchActiveAccount = (codeToVerified, token, userId) => {
   return dispatch => {
     dispatch(changeSpinner(true))
-    const token = localStorage.getItem("TOKEN")
     return axios
       .patch(
         `${Site.serverUrl}/veryfied-email`,
@@ -333,7 +351,7 @@ export const fetchActiveAccount = codeToVerified => {
       )
       .then(response => {
         dispatch(addAlertItem("Pomyślnie aktywowano konto", "green"))
-        dispatch(fetchAutoLogin(true, true))
+        dispatch(fetchAutoLogin(true, true, token, userId))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)
@@ -343,6 +361,51 @@ export const fetchActiveAccount = codeToVerified => {
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)
+      })
+  }
+}
+
+export const fetchSentEmailResetPassword = email => {
+  return dispatch => {
+    return axios
+      .post(`${Site.serverUrl}/sent-email-reset-password`, {
+        email: email,
+      })
+      .then(response => {
+        dispatch(changeRemindPasswordEmailSent(true))
+        dispatch(
+          addAlertItem(
+            "Pomyślnie wysłano na adres email kod resetujący hasło.",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem(
+            "Błąd podczas wysyłania na adres email kodu resetującego hasło.",
+            "red"
+          )
+        )
+      })
+  }
+}
+
+export const fetchResetPassword = (email, password, codeReset) => {
+  return dispatch => {
+    return axios
+      .post(`${Site.serverUrl}/reset-password`, {
+        email: email,
+        password: password,
+        codeReset: codeReset,
+      })
+      .then(response => {
+        dispatch(changeRemindPasswordVisible(false))
+        dispatch(changeRemindPasswordEmailSent(false))
+        dispatch(addAlertItem("Pomyślnie zresetowano hasło.", "green"))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas resetowania hasła.", "red"))
       })
   }
 }
