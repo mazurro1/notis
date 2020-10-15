@@ -60,7 +60,7 @@ const ActiveAccount = () => {
   }
 
   const handleSentAgain = () => {
-    dispatch(fetchSentAgainActivedEmail())
+    dispatch(fetchSentAgainActivedEmail(user.token))
   }
 
   const handleActiveAccount = () => {

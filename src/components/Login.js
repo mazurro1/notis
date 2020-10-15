@@ -109,7 +109,7 @@ const LoginContent = () => {
             title="Przypomnij hasło"
             uppercase
             fontIconSize="20"
-            fontSize="20"
+            fontSize="16"
             icon={<FaQuestion />}
             onClick={handleRemindPassword}
           />
@@ -120,7 +120,7 @@ const LoginContent = () => {
               title="LOGOWANIE"
               uppercase
               fontIconSize="20"
-              fontSize="20"
+              fontSize="16"
               icon={<FaUser />}
               disabled={!validButtonLogin}
             />
@@ -135,7 +135,8 @@ const LoginContent = () => {
             uppercase
             customColorButton="#0062e0"
             customColorIcon="#18acfe"
-            fontIconSize="22"
+            fontIconSize="16"
+            fontSize="16"
             icon={<FaFacebookF />}
             disabled={validButtonLogin}
           />

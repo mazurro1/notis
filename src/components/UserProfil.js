@@ -56,7 +56,7 @@ const UserProfil = () => {
 
   useEffect(() => {
     if (!!user && !userPhone) {
-      dispatch(fetchUserPhone())
+      dispatch(fetchUserPhone(user.token))
     }
   }, [user, userPhone, dispatch])
 
@@ -87,7 +87,9 @@ const UserProfil = () => {
         checkboxPhone && newPhone.length > 0 ? newPhone : null
       const newPasswordUser =
         checkboxPassword && newPassword.length > 0 ? newPassword : null
-      dispatch(fetchEditUser(newPhoneUser, newPasswordUser, password))
+      dispatch(
+        fetchEditUser(newPhoneUser, newPasswordUser, password, user.token)
+      )
     }
   }
 

@@ -263,9 +263,8 @@ export const fetchAutoLogin = (
   }
 }
 
-export const fetchSentAgainActivedEmail = () => {
+export const fetchSentAgainActivedEmail = token => {
   return dispatch => {
-    const token = localStorage.getItem("TOKEN")
     return axios
       .get(`${Site.serverUrl}/sent-again-veryfied-email`, {
         headers: {
@@ -285,9 +284,8 @@ export const fetchSentAgainActivedEmail = () => {
   }
 }
 
-export const fetchUserPhone = () => {
+export const fetchUserPhone = token => {
   return dispatch => {
-    const token = localStorage.getItem("TOKEN")
     return axios
       .get(`${Site.serverUrl}/get-user-phone`, {
         headers: {
@@ -301,9 +299,8 @@ export const fetchUserPhone = () => {
   }
 }
 
-export const fetchEditUser = (newPhone, newPassword, password) => {
+export const fetchEditUser = (newPhone, newPassword, password, token) => {
   return dispatch => {
-    const token = localStorage.getItem("TOKEN")
     return axios
       .patch(
         `${Site.serverUrl}/edit-user`,

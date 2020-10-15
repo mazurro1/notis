@@ -139,7 +139,7 @@ const RemindPassword = () => {
             title="Zapisz zmiany"
             uppercase
             fontIconSize="20"
-            fontSize="20"
+            fontSize="16"
             icon={<MdDone />}
             disabled={!(demoCompleted && passwordInput.length >= 6)}
             onClick={handleSentResetPassword}

@@ -116,7 +116,7 @@ const RegisterContent = () => {
             fontIconSize="24"
             icon={<FaUserPlus />}
             disabled={!validButtonRegistration}
-            fontSize="20"
+            fontSize="16"
           />
         </div>
       </ButtonLoginRegister>
