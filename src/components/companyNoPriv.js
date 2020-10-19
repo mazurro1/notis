@@ -7,6 +7,6 @@ const BodyDiv = styled.div`
 `
 
 const CompanyNoPriv = () => {
-  return <BodyDiv>CompanyNoPriv</BodyDiv>
+  return <BodyDiv>Zaloguj się</BodyDiv>
 }
 export default CompanyNoPriv

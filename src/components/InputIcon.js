@@ -4,17 +4,20 @@ import { Colors } from "../common/Colors"
 
 const InputStyled = styled.input`
   padding: 15px 15px;
-  padding-left: ${props => (props.icon ? "50px" : "15px")};
+  padding-left: ${props => (props.icon ? "50px" : "10px")};
   margin-top: 5px;
   margin-bottom: 5px;
   border: none;
   font-size: 16px;
   border-bottom: ${props =>
     props.inputActive
-      ? `1px solid ${Colors.buttonIconColor}`
-      : "1px solid #bdbdbd"};
+      ? props.secondColor
+        ? `2px solid ${Colors.secondColor}`
+        : `2px solid ${Colors.buttonIconColor}`
+      : "2px solid #bdbdbd"};
   width: 100%;
   color: #212121;
+  background-color: transparent;
   transition-property: border-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -50,7 +53,12 @@ const IconInput = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 25px;
-  color: ${props => (props.inputActive ? Colors.buttonIconColor : "#bdbdbd")};
+  color: ${props =>
+    props.inputActive
+      ? props.secondColor
+        ? Colors.secondColor
+        : Colors.buttonIconColor
+      : "#bdbdbd"};
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -64,6 +72,8 @@ const InputIcon = ({
   type = "text",
   maxLength = "",
   max = "",
+  secondColor = false,
+  required = false,
 }) => {
   const [inputActive, setInputActive] = useState(false)
 
@@ -86,8 +96,14 @@ const InputIcon = ({
         type={type}
         maxLength={maxLength}
         max={max}
+        secondColor={secondColor}
+        required={required}
       />
-      {!!icon && <IconInput inputActive={inputActive}>{icon}</IconInput>}
+      {!!icon && (
+        <IconInput inputActive={inputActive} secondColor={secondColor}>
+          {icon}
+        </IconInput>
+      )}
     </AllInput>
   )
 }

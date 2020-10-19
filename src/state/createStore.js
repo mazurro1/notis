@@ -22,6 +22,13 @@ import {
   CHANGE_USER_PROFIL_VISIBLE,
   CHANGE_REMIND_PASSWORD_VISIBLE,
   CHANGE_REMIND_PASSWORD_EMAIL_SENT,
+  CHANGE_CREATE_COMPANY_VISIBLE,
+  //COMPANY
+  //COMPANY
+  //COMPANY
+  //COMPANY
+  //COMPANY
+  REPLACE_COMPANY_DATA,
 } from "./actions"
 
 const initialState = {
@@ -30,6 +37,7 @@ const initialState = {
   page: 1,
   spinnerEnable: false,
   industries: null,
+  createCompanyVisible: false,
   remindPasswordVisible: false,
   remindPasswordEmailSent: false,
   userProfilVisible: false,
@@ -151,6 +159,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_CREATE_COMPANY_VISIBLE:
+      return {
+        ...state,
+        createCompanyVisible: action.value,
+      }
+
     case CHANGE_REMIND_PASSWORD_EMAIL_SENT:
       return {
         ...state,
@@ -278,6 +292,22 @@ const reducer = (state = initialState, action) => {
         ...state,
         localization: action.value,
         localizationVisible: false,
+      }
+
+    //COMPANY
+    //COMPANY
+    //COMPANY
+    //COMPANY
+    //COMPANY
+
+    case REPLACE_COMPANY_DATA:
+      const newUserCompany = { ...state.user }
+      if (!!newUserCompany.company) {
+        newUserCompany.company = action.data
+      }
+      return {
+        ...state,
+        user: newUserCompany,
       }
 
     default:

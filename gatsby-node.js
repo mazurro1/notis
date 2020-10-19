@@ -7,4 +7,9 @@ exports.onCreatePage = async ({ page, actions }) => {
     // Update the page.
     createPage(page)
   }
+  if (page.path.match(/^\/confirm-added-worker-to-company/)) {
+    page.matchPath = "/confirm-added-worker-to-company/*"
+    // Update the page.
+    createPage(page)
+  }
 }

@@ -1,14 +1,22 @@
 import React, { useState } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
-import { MdAccountBox, MdEmail, MdPhoneAndroid, MdLock } from "react-icons/md"
+import {
+  MdAccountBox,
+  MdEmail,
+  MdPhoneAndroid,
+  MdLocationOn,
+  MdWork,
+  MdLocationCity,
+} from "react-icons/md"
+import { FaMapSigns } from "react-icons/fa"
+
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-import { FaUserPlus } from "react-icons/fa"
 import ButtonIcon from "./ButtonIcon"
-import { fetchRegisterUser } from "../state/actions"
-import { useDispatch } from "react-redux"
+import { FetchCompanyRegistration } from "../state/actions"
+import { useDispatch, useSelector } from "react-redux"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -34,13 +42,14 @@ const RegulationsText = styled.div`
   }
 `
 
-const RegisterContent = () => {
+const CreateCompany = () => {
   const [emailInput, setEmailInput] = useState("")
   const [nameInput, setNameInput] = useState("")
-  const [surnameInput, setSurnameInput] = useState("")
   const [phoneInput, setPhoneInput] = useState("")
-  const [passwordInput, setPasswordInput] = useState("")
-  const [repeatPasswordInput, setRepeatPasswordInput] = useState("")
+  const [cityInput, setCityInput] = useState("")
+  const [discrictInput, setDiscrictInput] = useState("")
+  const [adressInput, setAdressInput] = useState("")
+  const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
 
@@ -51,25 +60,28 @@ const RegisterContent = () => {
   const handleSubmit = e => {
     e.preventDefault()
     dispatch(
-      fetchRegisterUser(
+      FetchCompanyRegistration(
         emailInput,
         nameInput,
-        surnameInput,
         phoneInput,
-        repeatPasswordInput
+        cityInput,
+        discrictInput,
+        adressInput,
+        user.token,
+        user.userId
       )
     )
   }
 
-  const validButtonRegistration =
+  const validButtonRegisterCompany =
     emailInput.length > 0 &&
-    passwordInput.length > 0 &&
     nameInput.length > 0 &&
-    surnameInput.length > 0 &&
     phoneInput.length > 0 &&
-    repeatPasswordInput === passwordInput
+    cityInput.length > 0 &&
+    discrictInput.length > 0 &&
+    adressInput.length > 0
 
-  const tooltipButtonRegister = !validButtonRegistration && (
+  const tooltipButtonRegister = !validButtonRegisterCompany && (
     <ReactTooltip id="alertRegistration" effect="float" multiline={true}>
       <span>Uzupełnij wszystkie dane</span>
     </ReactTooltip>
@@ -79,23 +91,40 @@ const RegisterContent = () => {
     <form onSubmit={handleSubmit}>
       <InputIcon
         icon={<MdEmail />}
-        placeholder="Email"
+        placeholder="Email firmowy"
         value={emailInput}
         type="email"
         onChange={e => handleChange(e, setEmailInput)}
       />
       <InputIcon
         icon={<MdAccountBox />}
-        placeholder="Imię"
+        placeholder="Nazwa firmy"
+        type="text"
         value={nameInput}
         onChange={e => handleChange(e, setNameInput)}
       />
       <InputIcon
-        icon={<MdAccountBox />}
-        placeholder="Nazwisko"
-        value={surnameInput}
-        onChange={e => handleChange(e, setSurnameInput)}
+        icon={<MdLocationCity />}
+        placeholder="Miejscowość"
+        value={cityInput}
+        type="text"
+        onChange={e => handleChange(e, setCityInput)}
       />
+      <InputIcon
+        icon={<FaMapSigns />}
+        placeholder="Dzielnica"
+        value={discrictInput}
+        type="text"
+        onChange={e => handleChange(e, setDiscrictInput)}
+      />
+      <InputIcon
+        icon={<MdLocationOn />}
+        placeholder="Adres firmy"
+        value={adressInput}
+        type="text"
+        onChange={e => handleChange(e, setAdressInput)}
+      />
+
       <InputIcon
         icon={<MdPhoneAndroid />}
         placeholder="Numer telefonu"
@@ -103,32 +132,19 @@ const RegisterContent = () => {
         type="number"
         onChange={e => handleChange(e, setPhoneInput)}
       />
-      <InputIcon
-        icon={<MdLock />}
-        placeholder="Hasło"
-        value={passwordInput}
-        type="password"
-        onChange={e => handleChange(e, setPasswordInput)}
-      />
-      <InputIcon
-        icon={<MdLock />}
-        placeholder="Powtórz hasło"
-        value={repeatPasswordInput}
-        type="password"
-        onChange={e => handleChange(e, setRepeatPasswordInput)}
-      />
+
       <RegulationsText>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
-      <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
+      <ButtonLoginRegister disabled={!validButtonRegisterCompany} type="submit">
         <div data-tip data-for="alertRegistration">
           <ButtonIcon
-            title="ZAREJESTRUJ KONTO"
+            title="ZAREJESTRUJ FIRMĘ"
             uppercase
-            fontIconSize="24"
-            icon={<FaUserPlus />}
-            disabled={!validButtonRegistration}
+            fontIconSize="20"
+            icon={<MdWork />}
+            disabled={!validButtonRegisterCompany}
             fontSize="16"
           />
         </div>
@@ -137,4 +153,4 @@ const RegisterContent = () => {
     </form>
   )
 }
-export default RegisterContent
+export default CreateCompany

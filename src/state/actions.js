@@ -1,6 +1,12 @@
 import axios from "axios"
 import { Site } from "../common/Site"
 
+// USER ACTIONS
+// USER ACTIONS
+// USER ACTIONS
+// USER ACTIONS
+// USER ACTIONS
+
 export const CHANGE_SORT_VISIBLE = "CHANGE_SORT_VISIBLE"
 export const CHANGE_FILTER_VISIBLE = "CHANGE_FILTER_VISIBLE"
 export const CHANGE_LOCALIZATION_VISIBLE = "CHANGE_LOCALIZATION_VISIBLE"
@@ -21,6 +27,14 @@ export const CHANGE_USER_PROFIL_VISIBLE = "CHANGE_USER_PROFIL_VISIBLE"
 export const CHANGE_REMIND_PASSWORD_VISIBLE = "CHANGE_REMIND_PASSWORD_VISIBLE"
 export const CHANGE_REMIND_PASSWORD_EMAIL_SENT =
   "CHANGE_REMIND_PASSWORD_EMAIL_SENT"
+export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
+
+export const changeCreateCompanyVisible = value => {
+  return {
+    type: CHANGE_CREATE_COMPANY_VISIBLE,
+    value: value,
+  }
+}
 
 export const changeRemindPasswordEmailSent = value => {
   return {
@@ -190,13 +204,14 @@ export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
   }
 }
 
-export const fetchRegisterUser = (email, name, phone, password) => {
+export const fetchRegisterUser = (email, name, surname, phone, password) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
       .post(`${Site.serverUrl}/registration`, {
         email: email,
         userName: name,
+        userSurname: surname,
         phoneNumber: phone,
         password: password,
       })
@@ -217,7 +232,8 @@ export const fetchAutoLogin = (
   noAlert = false,
   noSpinner = false,
   tokenComing = null,
-  userIdComing = null
+  userIdComing = null,
+  lastSpinnerCreateCompany = false
 ) => {
   return dispatch => {
     const userId = !!userIdComing
@@ -244,6 +260,15 @@ export const fetchAutoLogin = (
                 dispatch(changeSpinner(false))
               }, 1000)
             }
+            if (lastSpinnerCreateCompany) {
+              dispatch(
+                addAlertItem("Pomyślnie utworzono konto firmowe.", "green")
+              )
+              dispatch(changeCreateCompanyVisible(false))
+              setTimeout(() => {
+                dispatch(changeSpinner(false))
+              }, 1000)
+            }
           })
           .catch(error => {
             if (!noAlert) {
@@ -253,6 +278,14 @@ export const fetchAutoLogin = (
               dispatch(logout())
             }
             if (!noSpinner) {
+              setTimeout(() => {
+                dispatch(changeSpinner(false))
+              }, 1000)
+            }
+            if (lastSpinnerCreateCompany) {
+              dispatch(
+                addAlertItem("Błąd podczas tworzenia konta firmowego.", "red")
+              )
               setTimeout(() => {
                 dispatch(changeSpinner(false))
               }, 1000)
@@ -403,6 +436,251 @@ export const fetchResetPassword = (email, password, codeReset) => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas resetowania hasła.", "red"))
+      })
+  }
+}
+
+// COMPANY ACTIONS
+// COMPANY ACTIONS
+// COMPANY ACTIONS
+// COMPANY ACTIONS
+// COMPANY ACTIONS
+
+export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
+
+export const replaceCompanyData = data => {
+  return {
+    type: REPLACE_COMPANY_DATA,
+    data: data,
+  }
+}
+
+export const FetchAddCompanyToUser = (companyId, userToken, userId) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/add-company`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + userToken,
+          },
+        }
+      )
+
+      .then(response => {
+        dispatch(fetchAutoLogin(true, true, userToken, userId, true))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas tworzenia konta firmowego.", "red"))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const FetchCompanyRegistration = (
+  companyEmail,
+  companyName,
+  companyNumber,
+  companyCity,
+  companyDiscrict,
+  companyAdress,
+  userToken,
+  userId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-registration`,
+        {
+          companyEmail: companyEmail,
+          companyName: companyName,
+          companyNumber: companyNumber,
+          companyCity: companyCity,
+          companyDiscrict: companyDiscrict,
+          companyAdress: companyAdress,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + userToken,
+          },
+        }
+      )
+
+      .then(response => {
+        dispatch(
+          FetchAddCompanyToUser(response.data.companyId, userToken, userId)
+        )
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas tworzenia konta firmowego.", "red"))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/company-sent-again-verification-email`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addAlertItem(
+            "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe na adres email",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem(
+            "Błąd podczas wysyłania kodu aktywującego konto firmowe.",
+            "red"
+          )
+        )
+      })
+  }
+}
+
+export const fetchActiveCompanyAccount = (
+  codeToVerified,
+  companyId,
+  token,
+  userId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-veryfied-email`,
+        {
+          companyId: companyId,
+          codeToVerified: codeToVerified,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Pomyślnie aktywowano konto firmowe", "green"))
+        dispatch(fetchAutoLogin(true, true, token, userId))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas aktywowania konta firmowego.", "red")
+        )
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
+export const fetchCompanyData = (companyId, token) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-data`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(replaceCompanyData(response.data.companyProfil))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas ładowania konta firmowego.", "red"))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
+export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/sent-email-to-active-company-worker`,
+        {
+          companyId: companyId,
+          emailWorker: emailWorker,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addAlertItem("Wysłano link aktywacyjny na podany email.", "green")
+        )
+        dispatch(fetchCompanyData(companyId, token))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas dodawania pracownika.", "red"))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
+export const fetchConfirmAddWorkerToCompany = (
+  companyId,
+  workerEmail,
+  codeToActive
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(`${Site.serverUrl}/confirm-added-worker-to-company`, {
+        companyId: companyId,
+        workerEmail: workerEmail,
+        codeToActive: codeToActive,
+      })
+      .then(response => {
+        dispatch(addAlertItem("Dodano użytkownika do firmy.", "green"))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas dodawania pracownika do firmy.", "red")
+        )
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
       })
   }
 }

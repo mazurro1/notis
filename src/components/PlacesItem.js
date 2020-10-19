@@ -18,7 +18,7 @@ const PlaceItem = styled.div`
   flex-wrap: wrap;
   margin-bottom: 50px;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #b2ebf2;
+  /* border: 1px solid #b2ebf2; */
   overflow: hidden;
   @media all and (max-width: 920px) {
     max-width: 400px;
@@ -177,46 +177,46 @@ const PlacesItem = ({ item, filters, index }) => {
     )
   })
 
-  const isInServicesFilter = item.services.filter(
-    item => {
-      if(filters){
-        return item.toLowerCase() === filters.value.toLowerCase()
-      }
-      return false
+  const isInServicesFilter = item.services.filter(item => {
+    if (filters) {
+      return item.toLowerCase() === filters.value.toLowerCase()
     }
-  )
+    return false
+  })
 
-  const isInServicesFilterSome = item.services.some(
-    item => {
-      if(filters){
-        return item.toLowerCase() === filters.value.toLowerCase()
-      }
-      return false
+  const isInServicesFilterSome = item.services.some(item => {
+    if (filters) {
+      return item.toLowerCase() === filters.value.toLowerCase()
     }
-  )
+    return false
+  })
 
-  const renderSelectedFilter =(
-      <CSSTransition
-        in={isInServicesFilterSome}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
+  const renderSelectedFilter = (
+    <CSSTransition
+      in={isInServicesFilterSome}
+      timeout={400}
+      classNames="popup"
+      unmountOnExit
+    >
       <UnderMenuServices>
         <ButtonIcon
-          title={isInServicesFilterSome ? `W usługach znajduje się: ${isInServicesFilter[0]}` : 'Brak w usługach'}
+          title={
+            isInServicesFilterSome
+              ? `W usługach znajduje się: ${isInServicesFilter[0]}`
+              : "Brak w usługach"
+          }
           fontSize="13"
         />
       </UnderMenuServices>
-      </CSSTransition>
-      )
+    </CSSTransition>
+  )
 
   return (
-    <PlaceItem key={item.id}
-    
-    data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
-        data-sal-duration="1000"
-        data-sal-easing="ease-out-bounce"
+    <PlaceItem
+      key={item.id}
+      data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
+      data-sal-duration="1000"
+      data-sal-easing="ease-out-bounce"
     >
       <PlaceImage>
         <BackGroundImageCustomUrl url={item.image} />
@@ -235,10 +235,24 @@ const PlacesItem = ({ item, filters, index }) => {
           <OpinionBottom>Opinie: {item.countOpinions}</OpinionBottom>
         </OpinionMainDiv>
         <ButtonReservContent>
-          <ButtonReserv services >
-            <ButtonIcon buttonBgDark title="USŁUGI" uppercase fontIconSize="25" icon={<MdWork />} onClick={handleServicesVisible}/>
+          <ButtonReserv services>
+            <ButtonIcon
+              buttonBgDark
+              title="USŁUGI"
+              uppercase
+              fontIconSize="25"
+              icon={<MdWork />}
+              onClick={handleServicesVisible}
+            />
           </ButtonReserv>
-          <ButtonReserv><ButtonIcon title="REZERWUJ" uppercase fontIconSize="25" icon={<MdWork />}/></ButtonReserv>
+          <ButtonReserv>
+            <ButtonIcon
+              title="REZERWUJ"
+              uppercase
+              fontIconSize="25"
+              icon={<MdWork />}
+            />
+          </ButtonReserv>
         </ButtonReservContent>
       </PlaceContent>
       <CSSTransition

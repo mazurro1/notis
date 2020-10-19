@@ -165,6 +165,59 @@ button:focus {
   transform: scale(0.1);
 }
 
+.textDelay-enter {
+  opacity: 0.01;
+  transform: scale(0.1);
+}
+
+.textDelay-enter.textDelay-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.textDelay-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.textDelay-exit.textDelay-exit-active {
+  opacity: 0.01;
+  transform: scale(0.1);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.textAreaDelay-enter {
+  opacity: 0.01;
+  transform: scale(0.1);
+}
+
+.textAreaDelay-enter.textAreaDelay-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.textAreaDelay-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.textAreaDelay-exit.textAreaDelay-exit-active {
+  opacity: 0.01;
+  transform: scale(0.1);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  /* transition-delay: 0.5s; */
+  transition-timing-function: ease;
+}
+
 .popup-enter {
   opacity: 0.01;
   transform: scale(0.1);
@@ -362,4 +415,9 @@ button:focus {
   border-top: 0;
   border-left: 0;
   content: "";
+}
+
+textarea:focus,
+textarea:active {
+  outline: none;
 }

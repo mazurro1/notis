@@ -28,6 +28,7 @@ import {
   logout,
   changeUserProfilVisible,
   changeRemindPasswordVisible,
+  changeCreateCompanyVisible,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -36,6 +37,7 @@ import Alerts from "./Alerts"
 import ActiveAccount from "./ActiveAccount"
 import UserProfil from "./UserProfil"
 import RemindPassword from "./RemindPassword"
+import CreateCompany from "./CreateCompany"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -60,7 +62,8 @@ const WrapperNavigationUnder = styled.div`
 
 const NavigationDiv = styled.div`
   color: ${Colors.navText};
-  max-width: 900px;
+  /* max-width: 900px; */
+  max-width: 1200px;
   margin: 0 auto;
 `
 
@@ -119,7 +122,8 @@ const PaddingRight = styled.div`
 `
 
 const PaddingContent = styled.div`
-  max-width: 900px;
+  /* max-width: 900px; */
+  max-width: 1200px;
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
@@ -142,6 +146,7 @@ const Navigation = ({ children, isMainPage }) => {
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
 
+  const createCompanyVisible = useSelector(state => state.createCompanyVisible)
   const registrationVisible = useSelector(state => state.registrationVisible)
   const loginVisible = useSelector(state => state.loginVisible)
   const spinnerEnable = useSelector(state => state.spinnerEnable)
@@ -162,8 +167,10 @@ const Navigation = ({ children, isMainPage }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchAutoLogin())
-  }, [dispatch])
+    if (!!!user) {
+      dispatch(fetchAutoLogin())
+    }
+  }, [dispatch, user])
 
   useEffect(() => {
     if (isMainPage) {
@@ -244,6 +251,10 @@ const Navigation = ({ children, isMainPage }) => {
   const handleCloseRemindPassword = () => {
     dispatch(changeRemindPasswordVisible(!remindPasswordVisible))
     dispatch(changeLoginVisible(!loginVisible))
+  }
+
+  const handleCreateCompany = () => {
+    dispatch(changeCreateCompanyVisible(!createCompanyVisible))
   }
 
   const mapIndustries = Industries.map((item, index) => {
@@ -366,6 +377,16 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
+  const PopupCreateCompany = (
+    <Popup
+      popupEnable={createCompanyVisible}
+      handleClose={handleCreateCompany}
+      maxWidth="400"
+    >
+      <CreateCompany />
+    </Popup>
+  )
+
   const PopupTakeData = (
     <Popup
       popupEnable={popupTakeData}
@@ -437,7 +458,7 @@ const Navigation = ({ children, isMainPage }) => {
           path="/company-profil"
           text={
             <ButtonIcon
-              title="Twoja firma"
+              title={user.company.name}
               uppercase
               fontIconSize="25"
               fontSize="16"
@@ -469,7 +490,7 @@ const Navigation = ({ children, isMainPage }) => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
-          title={user.userName}
+          title={`${user.userName} ${user.userSurname}`}
           uppercase
           fontIconSize="20"
           fontSize="16"
@@ -522,6 +543,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupActiveAccount}
       {PopupRemindPassword}
       {PopupLogin}
+      {PopupCreateCompany}
       {PopupRegister}
       {PopupTakeData}
       {PopupTakePlace}
