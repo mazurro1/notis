@@ -1,61 +1,201 @@
 import React, { useState } from "react"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit } from "react-icons/md"
-import TextareaCustom from "../TextareaCustom"
+import { MdEdit, MdPhoneAndroid } from "react-icons/md"
+import { FaFacebook, FaInstagram, FaChrome } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
-import TextDelay from "../TextDelay"
 import styled from "styled-components"
-import InputCustom from "../InputCustom"
+import InputIcon from "../InputIcon"
+import { Colors } from "../../common/Colors"
+import { validURL } from "../../common/Functions"
 
-const MarginButtonSave = styled.div`
+const ButtonPosition = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+const ButtonMargin = styled.div`
   margin-left: 5px;
+`
+
+const ButtonSubmit = styled.button`
+  border: none;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+`
+
+const BackgroundEdit = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const BackgroundEditContent = styled.div`
+  width: 90%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 90%;
+  overflow-y: auto;
+`
+
+const HeightComponentLinks = styled.div`
+  min-height: ${props => (props.isCompanyEditProfil ? "220px" : "auto")};
+`
+
+const PositionLinksSites = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`
+
+const IconLinkToSite = styled.button`
+  padding: 10px;
+  height: 70px;
+  font-size: 2.9rem;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  color: ${props => (props.color ? props.color : "black")};
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    color: #ed6c0c;
+  }
 `
 
 const OurLinksContent = ({
   TitleRightColumn,
-  ParagraphRightColumn,
   ButtonEditPosition,
   companyEditProfilProps = {},
   isCompanyEditProfil = false,
-  title = "",
   editable = false,
   onClickEdit = () => {},
-  setTextEditedChange,
-  textEdited,
+  linkFacebook,
+  linkiWebsite,
+  linkInstagram,
+  handleSaveLinks,
 }) => {
-  const [textTitle, handleTextAbout] = useState(textEdited ? textEdited : title)
+  const [facebookInput, setFacebookInput] = useState(linkFacebook)
+  const [instagramInput, setInstagramInput] = useState(linkInstagram)
+  const [websiteInput, setWebsiteInput] = useState(linkiWebsite)
+
   const handleEdit = () => {
     onClickEdit()
   }
 
-  const handleTextAboutOnChange = e => {
-    handleTextAbout(e.target.value)
-  }
+  const isUrlFacebook = validURL(facebookInput)
+  const isUrlInstagram = validURL(instagramInput)
+  const isUrlWebsite = validURL(websiteInput)
 
-  const handleSaveButton = () => {
-    setTextEditedChange(textTitle)
-    onClickEdit()
+  console.log(isUrlFacebook)
+
+  const disabledButtonSave =
+    (facebookInput !== linkFacebook ||
+      instagramInput !== linkFacebook ||
+      websiteInput !== linkiWebsite) &&
+    (isUrlFacebook || isUrlInstagram || isUrlWebsite)
+
+  const handleSaveButton = e => {
+    e.preventDefault()
+
+    if (disabledButtonSave) {
+      onClickEdit()
+      const newFacebookLink =
+        facebookInput !== linkFacebook
+          ? isUrlFacebook
+            ? facebookInput
+            : null
+          : null
+      const newInstagramLink =
+        instagramInput !== linkInstagram
+          ? isUrlInstagram
+            ? linkInstagram
+            : null
+          : null
+      const newWebsiteLink =
+        websiteInput !== linkiWebsite
+          ? isUrlWebsite
+            ? websiteInput
+            : null
+          : null
+      handleSaveLinks(newFacebookLink, newInstagramLink, newWebsiteLink)
+    }
   }
 
   const handleResetButton = () => {
-    setTextEditedChange(null)
-    handleTextAbout(title)
     onClickEdit()
+    setFacebookInput(linkFacebook)
+    setInstagramInput(linkInstagram)
+    setWebsiteInput(linkiWebsite)
+    handleSaveLinks(null, null, null)
+  }
+
+  const handleClickContent = e => {
+    e.stopPropagation()
+  }
+
+  const handleChangeInputs = (e, setChange) => {
+    setChange(e.target.value)
+  }
+
+  const handleOpenInNewWindow = link => {
+    const isUrl = validURL(link)
+    if (isUrl) {
+      window.open(link, "_blank", "noopener,noreferrer")
+    }
   }
 
   return (
-    <>
+    <HeightComponentLinks isCompanyEditProfil={isCompanyEditProfil}>
       <TitleRightColumn {...companyEditProfilProps}>LINKI</TitleRightColumn>
-      <TextDelay textActive={!editable}>
-        <ParagraphRightColumn>{textTitle}</ParagraphRightColumn>
-      </TextDelay>
-      <InputCustom
-        inputActive={editable}
-        onChange={handleTextAboutOnChange}
-        value={textTitle}
-      />
-      {isCompanyEditProfil ? (
-        !editable ? (
+      <PositionLinksSites>
+        {!!facebookInput && isUrlFacebook && (
+          <div>
+            <IconLinkToSite
+              color="#3b5998"
+              onClick={() => handleOpenInNewWindow(facebookInput)}
+            >
+              <FaFacebook />
+            </IconLinkToSite>
+          </div>
+        )}
+        {!!instagramInput && isUrlInstagram && (
+          <div>
+            <IconLinkToSite
+              color="#dd2a7b"
+              onClick={() => handleOpenInNewWindow(instagramInput)}
+            >
+              <FaInstagram />
+            </IconLinkToSite>
+          </div>
+        )}
+        {!!websiteInput && websiteInput && (
+          <div>
+            <IconLinkToSite
+              color={Colors.secondColor}
+              onClick={() => handleOpenInNewWindow(websiteInput)}
+            >
+              <FaChrome />
+            </IconLinkToSite>
+          </div>
+        )}
+      </PositionLinksSites>
+
+      {isCompanyEditProfil && (
+        <>
           <ButtonEditPosition>
             <ButtonIcon
               title="Edytuj"
@@ -67,34 +207,77 @@ const OurLinksContent = ({
               onClick={handleEdit}
             />
           </ButtonEditPosition>
-        ) : (
-          <>
-            <ButtonEditPosition>
-              <ButtonIcon
-                title="Cofnij"
-                uppercase
-                fontIconSize="25"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                onClick={handleResetButton}
-              />
-              <MarginButtonSave>
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                  onClick={handleSaveButton}
-                />
-              </MarginButtonSave>
-            </ButtonEditPosition>
-          </>
-        )
-      ) : null}
-    </>
+
+          <CSSTransition
+            in={editable}
+            timeout={400}
+            classNames="popup"
+            unmountOnExit
+          >
+            <BackgroundEdit onClick={handleResetButton}>
+              <BackgroundEditContent onClick={handleClickContent}>
+                <form onSubmit={handleSaveButton}>
+                  <InputIcon
+                    icon={<FaFacebook />}
+                    placeholder="Facebook"
+                    type="text"
+                    secondColor={isCompanyEditProfil}
+                    onChange={e => handleChangeInputs(e, setFacebookInput)}
+                    value={facebookInput}
+                  />
+                  <InputIcon
+                    icon={<FaInstagram />}
+                    placeholder="Instagram"
+                    type="text"
+                    secondColor={isCompanyEditProfil}
+                    onChange={e => handleChangeInputs(e, setInstagramInput)}
+                    value={instagramInput}
+                  />
+                  <InputIcon
+                    icon={<FaChrome />}
+                    placeholder="Strona www"
+                    type="text"
+                    secondColor={isCompanyEditProfil}
+                    onChange={e => handleChangeInputs(e, setWebsiteInput)}
+                    value={websiteInput}
+                  />
+                  <ButtonPosition>
+                    <>
+                      <ButtonMargin>
+                        <ButtonIcon
+                          title="Cofnij"
+                          uppercase
+                          fontIconSize="20"
+                          fontSize="12"
+                          icon={<MdEdit />}
+                          customColorButton="#c62828"
+                          customColorIcon="#f44336"
+                          onClick={handleResetButton}
+                        />
+                      </ButtonMargin>
+                    </>
+                    <ButtonSubmit type="submit">
+                      <ButtonMargin>
+                        <ButtonIcon
+                          title="Zapisz"
+                          uppercase
+                          fontIconSize="25"
+                          fontSize="14"
+                          icon={<MdEdit />}
+                          customColorButton="#2e7d32"
+                          customColorIcon="#43a047"
+                          disabled={!disabledButtonSave}
+                        />
+                      </ButtonMargin>
+                    </ButtonSubmit>
+                  </ButtonPosition>
+                </form>
+              </BackgroundEditContent>
+            </BackgroundEdit>
+          </CSSTransition>
+        </>
+      )}
+    </HeightComponentLinks>
   )
 }
 export default OurLinksContent

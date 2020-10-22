@@ -655,6 +655,47 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
   }
 }
 
+export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/sent-again-email-to-active-company-worker`,
+        {
+          companyId: companyId,
+          emailWorker: emailWorker,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addAlertItem(
+            "Wysłano ponownie link aktywacyjny na podany email.",
+            "green"
+          )
+        )
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem(
+            "Błąd podczas ponownego wysyłania linku aktywacyjnego.",
+            "red"
+          )
+        )
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
 export const fetchConfirmAddWorkerToCompany = (
   companyId,
   workerEmail,
@@ -678,6 +719,35 @@ export const fetchConfirmAddWorkerToCompany = (
         dispatch(
           addAlertItem("Błąd podczas dodawania pracownika do firmy.", "red")
         )
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
+export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/delete-worker-from-company`,
+        {
+          companyId: companyId,
+          workerEmail: workerId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Usunięto pracownika.", "green"))
+        dispatch(fetchCompanyData(companyId, token))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas usuwania pracownika.", "red"))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)

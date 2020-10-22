@@ -19,9 +19,9 @@ const CustomStyleTextarea = styled.textarea`
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
-  &:focus {
+  /* &:focus {
     border: 2px solid ${Colors.secondColor};
-  }
+  } */
 `
 
 const ErrorText = styled.div`
@@ -46,7 +46,7 @@ const TextareaCustom = ({
     if (textareaActive) {
       timerToClearSomewhere.current = setTimeout(() => {
         setAreaActive(true)
-      }, 300)
+      }, 400)
     } else {
       clearTimeout(timerToClearSomewhere.current)
       setAreaActive(false)
@@ -58,32 +58,25 @@ const TextareaCustom = ({
   }
 
   return (
-    <CSSTransition
-      in={areaActive}
-      timeout={300}
-      classNames="textAreaDelay"
-      unmountOnExit
-    >
-      <div>
-        <CustomStyleTextarea
-          isErrorText={isErrorText}
-          spellcheck
-          placeholder={`${placeholder}...`}
-          maxLength={maxLength}
-          autocomplete="off"
-          autocapitalize="sentences"
-          onChange={e => handleOnChange(e)}
-          value={value}
-        />
-        {isErrorText && (
-          <ErrorText>
-            {
-              "W tekście nie może być następujących znaków: $, #, %, &, *, (, ), /, [, ], +, -, |"
-            }
-          </ErrorText>
-        )}
-      </div>
-    </CSSTransition>
+    <div>
+      <CustomStyleTextarea
+        isErrorText={isErrorText}
+        spellcheck
+        placeholder={`${placeholder}...`}
+        maxLength={maxLength}
+        autocomplete="off"
+        autocapitalize="sentences"
+        onChange={e => handleOnChange(e)}
+        value={value}
+      />
+      {isErrorText && (
+        <ErrorText>
+          {
+            "W tekście nie może być następujących znaków: $, #, %, &, *, (, ), /, [, ], +, -, |"
+          }
+        </ErrorText>
+      )}
+    </div>
   )
 }
 export default TextareaCustom

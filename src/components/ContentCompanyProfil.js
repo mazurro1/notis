@@ -1,14 +1,15 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
-import { MdEdit, MdPhone } from "react-icons/md"
+import { MdEdit } from "react-icons/md"
 import InputCustom from "./InputCustom"
 import OpinionAndAdressContent from "./ItemsContentCompanyProfil/OpinionAndAdressContent"
 import OurWorkersContent from "./ItemsContentCompanyProfil/OurWorkersContent"
 import OurLinksContent from "./ItemsContentCompanyProfil/OurLinksContent"
 import ColumnItemTextarea from "./ItemsContentCompanyProfil/ColumnItemTextarea"
+import { CSSTransition } from "react-transition-group"
+import OpeningHoursContent from "./ItemsContentCompanyProfil/OpeningHoursContent"
 
 const TextH1 = styled.div`
   position: relative;
@@ -69,6 +70,7 @@ const RightColumnItem = styled.div`
   padding-bottom: ${props => (props.isCompanyEditProfil ? "50px" : "10px")};
   min-height: ${props => (props.isCompanyEditProfil ? "240px" : "auto")};
   overflow: hidden;
+  height: auto;
 `
 
 const TitleRightColumn = styled.h2`
@@ -84,34 +86,6 @@ const TitleRightColumn = styled.h2`
 const ParagraphRightColumn = styled.p`
   display: block;
   font-size: 0.9rem;
-`
-
-const OpenDate = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-`
-
-const DayMonth = styled.div`
-  font-size: 1.1rem;
-  color: ${props =>
-    props.isActualDate
-      ? props.isCompanyEditProfil
-        ? Colors.secondColor
-        : Colors.buttonIconColor
-      : ""};
-`
-
-const DayDate = styled.div`
-  text-align: right;
-  color: ${props =>
-    props.isActualDate
-      ? props.isCompanyEditProfil
-        ? Colors.secondColor
-        : Colors.buttonIconColor
-      : ""};
 `
 
 const ButtonEditPosition = styled.div`
@@ -136,6 +110,13 @@ const BackGroundImageCustomUrl = styled.div`
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
 `
 
+const SaveChangesPosition = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`
+
 const ContentCompanyProfil = ({
   company = null,
   isAdmin = false,
@@ -147,21 +128,96 @@ const ContentCompanyProfil = ({
   const [editRezerwationText, setEditRezerwationText] = useState(false)
   const [textRezerwationText, setTextRezerwation] = useState("")
   const [editLinks, setEditLinks] = useState(false)
-  const [textLinks, setTextLinks] = useState("")
+  const [editedWorkers, setEditedWorkers] = useState([])
+  const [editedAdress, setEditedAdress] = useState({
+    city: null,
+    discrict: null,
+    adress: null,
+    phone: null,
+  })
+  const [editedLinks, setEditedLinks] = useState({
+    facebook: null,
+    instagram: null,
+    website: null,
+  })
 
   const handleEdit = setChange => {
     setChange(prevState => !prevState)
   }
-
-  const date = new Date()
-  const actualDay = date.getDay()
 
   const companyEditProfilProps = {
     isCompanyEditProfil: isCompanyEditProfil && isAdmin,
     // isCompanyEditProfil: false,
   }
 
-  const isOpeningDays = !!company.openingDays
+  const handleAddEditWorker = (action, indexWorker, specializationText) => {
+    if (action === "save") {
+      const oldWorkers = [...editedWorkers]
+      const isIndexWorker = oldWorkers.findIndex(
+        item => item.indexWorker === indexWorker
+      )
+      if (isIndexWorker > 0) {
+        oldWorkers[isIndexWorker].specializationText = specializationText
+      } else {
+        const newWorker = {
+          indexWorker: indexWorker,
+          specializationText: specializationText,
+        }
+        oldWorkers.push(newWorker)
+      }
+      setEditedWorkers(oldWorkers)
+    } else if (action === "delete") {
+      const allNewWorkers = [...editedWorkers].filter(
+        item => item.indexWorker !== indexWorker
+      )
+      setEditedWorkers(allNewWorkers)
+    }
+  }
+
+  const handleChangeUpodateAdress = (
+    updateCityInput,
+    updateDiscrictInput,
+    updateAdressInput,
+    updatePhoneInput
+  ) => {
+    setEditedAdress({
+      city: updateCityInput,
+      discrict: updateDiscrictInput,
+      adress: updateAdressInput,
+      phone: updatePhoneInput,
+    })
+  }
+
+  const handleSaveLinks = (
+    newFacebookLink,
+    newInstagramLink,
+    newWebsiteLink
+  ) => {
+    setEditedLinks({
+      facebook: newFacebookLink,
+      instagram: newInstagramLink,
+      website: newWebsiteLink,
+    })
+  }
+
+  const isChangesInAdress =
+    editedAdress.city !== null ||
+    editedAdress.discrict !== null ||
+    editedAdress.adress !== null ||
+    editedAdress.phone !== null
+
+  const isChangesInLinks =
+    editedLinks.facebook !== null ||
+    editedLinks.instagram !== null ||
+    editedLinks.website !== null
+
+  const isAnyChanges =
+    editedWorkers.length > 0 ||
+    !!textAboutUs ||
+    !!textRezerwationText ||
+    isChangesInAdress ||
+    isChangesInLinks
+
   return (
     <div>
       <TextH1 {...companyEditProfilProps}>{company.name}</TextH1>
@@ -183,6 +239,7 @@ const ContentCompanyProfil = ({
               ButtonEditPosition={ButtonEditPosition}
               editable={editOpinionAndAdress}
               onClickEdit={() => handleEdit(setEditOpinionAndAdress)}
+              handleChangeUpodateAdress={handleChangeUpodateAdress}
             />
           </RightColumnItem>
           <InputCustom />
@@ -201,147 +258,13 @@ const ContentCompanyProfil = ({
             />
           </RightColumnItem>
           <RightColumnItem {...companyEditProfilProps}>
-            <TitleRightColumn {...companyEditProfilProps}>
-              GODZINY OTWARCIA
-            </TitleRightColumn>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 1}
-                {...companyEditProfilProps}
-              >
-                Poniedziałek:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 1}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.mon.start} - ${company.openingDays.mon.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 2}
-                {...companyEditProfilProps}
-              >
-                Wtorek:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 2}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.tue.start} - ${company.openingDays.tue.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 3}
-                {...companyEditProfilProps}
-              >
-                Środa:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 3}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.wed.start} - ${company.openingDays.wed.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 4}
-                {...companyEditProfilProps}
-              >
-                Czwartek:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 4}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.thu.start} - ${company.openingDays.thu.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 5}
-                {...companyEditProfilProps}
-              >
-                Piątek:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 5}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.fri.start} - ${company.openingDays.fri.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 6}
-                {...companyEditProfilProps}
-              >
-                Sobota:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 6}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.sat.start} - ${company.openingDays.sat.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            <OpenDate>
-              <DayMonth
-                isActualDate={actualDay === 0}
-                {...companyEditProfilProps}
-              >
-                Niedziela:
-              </DayMonth>
-              <DayDate
-                isActualDate={actualDay === 0}
-                {...companyEditProfilProps}
-              >
-                {isOpeningDays
-                  ? company.openingDays.disabled
-                    ? "nieczynne"
-                    : `${company.openingDays.sun.start} - ${company.openingDays.sun.end}`
-                  : "00:00 - 00:00"}
-              </DayDate>
-            </OpenDate>
-            {isCompanyEditProfil && (
-              <ButtonEditPosition>
-                <ButtonIcon
-                  title="Edytuj"
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                />
-              </ButtonEditPosition>
-            )}
+            <OpeningHoursContent
+              TitleRightColumn={TitleRightColumn}
+              ButtonEditPosition={ButtonEditPosition}
+              {...companyEditProfilProps}
+              companyEditProfilProps={companyEditProfilProps}
+              company={company}
+            />
           </RightColumnItem>
           <RightColumnItem {...companyEditProfilProps}>
             <OurWorkersContent
@@ -352,6 +275,8 @@ const ContentCompanyProfil = ({
               workers={company.workers}
               owner={company.owner}
               companyId={company._id}
+              ownerSpecialization={company.ownerSpecialization}
+              handleAddEditWorker={handleAddEditWorker}
             />
           </RightColumnItem>
 
@@ -378,20 +303,44 @@ const ContentCompanyProfil = ({
             <RightColumnItem {...companyEditProfilProps}>
               <OurLinksContent
                 TitleRightColumn={TitleRightColumn}
-                ParagraphRightColumn={ParagraphRightColumn}
                 companyEditProfilProps={companyEditProfilProps}
                 {...companyEditProfilProps}
                 ButtonEditPosition={ButtonEditPosition}
-                title={company.reserationText}
                 editable={editLinks}
                 onClickEdit={() => handleEdit(setEditLinks)}
-                setTextEditedChange={setTextLinks}
-                textEdited={textLinks}
+                handleSaveLinks={handleSaveLinks}
+                linkFacebook={
+                  !!company.linkFacebook ? company.linkFacebook : ""
+                }
+                linkiWebsite={
+                  !!company.linkiWebsite ? company.linkiWebsite : ""
+                }
+                linkInstagram={
+                  !!company.linkInstagram ? company.linkInstagram : ""
+                }
               />
             </RightColumnItem>
           )}
         </RightColumn>
       </ContentDiv>
+      <CSSTransition
+        in={isCompanyEditProfil && isAnyChanges}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <SaveChangesPosition>
+          <ButtonIcon
+            title="Zapisz zmiany"
+            uppercase
+            fontIconSize="40"
+            fontSize="28"
+            icon={<MdEdit />}
+            customColorButton="#2e7d32"
+            customColorIcon="#43a047"
+          />
+        </SaveChangesPosition>
+      </CSSTransition>
     </div>
   )
 }

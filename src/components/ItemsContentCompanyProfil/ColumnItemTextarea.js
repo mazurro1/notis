@@ -5,9 +5,46 @@ import TextareaCustom from "../TextareaCustom"
 import TextDelay from "../TextDelay"
 import styled from "styled-components"
 import { checkIfBadValue } from "../../common/Functions"
+import { CSSTransition } from "react-transition-group"
 
-const MarginButtonSave = styled.div`
+const ButtonPosition = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+const ButtonMargin = styled.div`
   margin-left: 5px;
+`
+
+const ButtonSubmit = styled.button`
+  border: none;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+`
+
+const BackgroundEdit = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const BackgroundEditContent = styled.div`
+  width: 90%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 90%;
+  overflow-y: auto;
 `
 
 const ColumnItemTextarea = ({
@@ -41,37 +78,36 @@ const ColumnItemTextarea = ({
     }
   }
 
-  const handleSaveButton = () => {
-    if (!isErrorText) {
+  const handleSaveButton = e => {
+    e.preventDefault()
+    if (!isErrorText && textTitle !== title) {
       setTextEditedChange(textTitle)
       onClickEdit()
     }
   }
 
-  const handleResetButton = () => {
+  const handleResetButton = e => {
     setTextEditedChange(null)
     handleTextAbout(title)
     onClickEdit()
     setIsErrorText(false)
   }
 
+  const handleClickContent = e => {
+    e.stopPropagation()
+  }
+
+  const disabledSave = textTitle === title || isErrorText
+
   return (
     <>
       <TitleRightColumn isCompanyEditProfil={isCompanyEditProfil}>
         {titleColumnItem}
       </TitleRightColumn>
-      <TextDelay textActive={!editable}>
-        <ParagraphRightColumn>{textTitle}</ParagraphRightColumn>
-      </TextDelay>
-      <TextareaCustom
-        textareaActive={editable}
-        value={textTitle}
-        onChange={handleTextAboutOnChange}
-        maxLength={1000}
-        isErrorText={isErrorText}
-      />
-      {isCompanyEditProfil ? (
-        !editable ? (
+      <ParagraphRightColumn>{textTitle}</ParagraphRightColumn>
+
+      {isCompanyEditProfil && (
+        <>
           <ButtonEditPosition>
             <ButtonIcon
               title="Edytuj"
@@ -83,34 +119,58 @@ const ColumnItemTextarea = ({
               onClick={handleEdit}
             />
           </ButtonEditPosition>
-        ) : (
-          <>
-            <ButtonEditPosition>
-              <ButtonIcon
-                title="Cofnij"
-                uppercase
-                fontIconSize="25"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                onClick={handleResetButton}
-              />
-              <MarginButtonSave>
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                  onClick={handleSaveButton}
-                  disabled={isErrorText}
-                />
-              </MarginButtonSave>
-            </ButtonEditPosition>
-          </>
-        )
-      ) : null}
+          <CSSTransition
+            in={editable}
+            timeout={400}
+            classNames="popup"
+            unmountOnExit
+          >
+            <BackgroundEdit onClick={handleResetButton}>
+              <BackgroundEditContent onClick={handleClickContent}>
+                <form onSubmit={handleSaveButton}>
+                  <TextareaCustom
+                    textareaActive={editable}
+                    value={textTitle}
+                    onChange={handleTextAboutOnChange}
+                    maxLength={1000}
+                    isErrorText={isErrorText}
+                  />
+                  <ButtonPosition>
+                    <ButtonMargin>
+                      <ButtonSubmit>
+                        <ButtonIcon
+                          title="Cofnij"
+                          uppercase
+                          fontIconSize="25"
+                          fontSize="14"
+                          icon={<MdEdit />}
+                          customColorButton="#c62828"
+                          customColorIcon="#f44336"
+                          onClick={handleResetButton}
+                        />
+                      </ButtonSubmit>
+                    </ButtonMargin>
+                    <ButtonSubmit type="submit">
+                      <ButtonMargin>
+                        <ButtonIcon
+                          title="Zapisz"
+                          uppercase
+                          fontIconSize="25"
+                          fontSize="14"
+                          icon={<MdEdit />}
+                          customColorButton="#2e7d32"
+                          customColorIcon="#43a047"
+                          disabled={disabledSave}
+                        />
+                      </ButtonMargin>
+                    </ButtonSubmit>
+                  </ButtonPosition>
+                </form>
+              </BackgroundEditContent>
+            </BackgroundEdit>
+          </CSSTransition>
+        </>
+      )}
     </>
   )
 }
