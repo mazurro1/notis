@@ -41,3 +41,36 @@ export const validURL = url => {
   )
   return !!pattern.test(url)
 }
+
+export const convertLinkToHttps = link => {
+  const isHttps = link.includes("https://")
+  const isHttp = link.includes("http://")
+  const linkWithHttps = isHttps ? link : isHttp ? link : `https://${link}`
+
+  return linkWithHttps
+}
+
+export const getCategories = (items, propName) => {
+  let tempItems = items.map(item => {
+    return item[propName]
+  })
+  let tempCategories = new Set(tempItems)
+  let categories = Array.from(tempCategories)
+
+  return categories
+}
+
+export const categoryItemsMenu = (categories, items) => {
+  let allItems = []
+  categories.forEach(itemCategory => {
+    const filterItemsToCategory = items.filter(
+      item => item.serviceCategory === itemCategory
+    )
+    const newAllItem = {
+      category: itemCategory,
+      items: filterItemsToCategory,
+    }
+    allItems.push(newAllItem)
+  })
+  return allItems
+}
