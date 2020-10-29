@@ -33,6 +33,7 @@
     "gsap": "^3.5.1",
     "intersection-observer": "^0.11.0",
     "react": "^16.12.0",
+    "react-collapse": "^5.0.1",
     "react-dom": "^16.12.0",
     "react-icons": "^3.11.0",
     "react-input-checkbox": "^0.1.6",

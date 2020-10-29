@@ -132,7 +132,7 @@ const WorkerItem = ({
 
   const handleDeleteUser = () => {
     dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, userToken))
-    handleAddEditWorker("delete", item.user.id, inputSpecialization)
+    handleAddEditWorker("delete", item.user._id, inputSpecialization)
   }
 
   const handleSentAgainEmailVeryfication = () => {
@@ -148,16 +148,16 @@ const WorkerItem = ({
   const handleSaveSpecialization = () => {
     setUserEditItem(false)
     if (inputSpecialization !== item.specialization) {
-      handleAddEditWorker("save", item.user.id, inputSpecialization)
+      handleAddEditWorker("save", item.user._id, inputSpecialization)
     } else {
-      handleAddEditWorker("delete", item.user.id, inputSpecialization)
+      handleAddEditWorker("delete", item.user._id, inputSpecialization)
     }
   }
 
   const handleEditSpecializationReset = () => {
     setInputSpeciailization(item.specialization)
     setUserEditItem(false)
-    handleAddEditWorker("delete", item.user.id, inputSpecialization)
+    handleAddEditWorker("delete", item.user._id, inputSpecialization)
   }
 
   return (
@@ -210,7 +210,9 @@ const WorkerItem = ({
             classNames="popup"
             unmountOnExit
           >
-            <EditUserBackground onClick={handleUserItemEdit}>
+            <EditUserBackground
+            // onClick={handleEditSpecializationReset}
+            >
               <EditUserBackgroundContent onClick={handleClickContent}>
                 <InputStyles>
                   <InputIcon
@@ -248,7 +250,7 @@ const WorkerItem = ({
                   </ButtonStyles>
                 </ButtonContentEdit>
                 <DeleteIconPosition>
-                  <DeleteIconStyle onClick={handleUserItemEdit}>
+                  <DeleteIconStyle onClick={handleEditSpecializationReset}>
                     <MdClose />
                   </DeleteIconStyle>
                 </DeleteIconPosition>
@@ -261,7 +263,9 @@ const WorkerItem = ({
             classNames="popup"
             unmountOnExit
           >
-            <EditUserBackground onClick={handleUserConfirmDelete}>
+            <EditUserBackground
+            // onClick={handleUserConfirmDelete}
+            >
               <EditUserBackgroundContent onClick={handleClickContent} noBg>
                 <ButtonContent>
                   <ButtonDeleteStyle>

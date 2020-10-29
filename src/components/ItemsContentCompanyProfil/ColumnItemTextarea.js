@@ -2,10 +2,18 @@ import React, { useState } from "react"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import TextareaCustom from "../TextareaCustom"
-import TextDelay from "../TextDelay"
 import styled from "styled-components"
 import { checkIfBadValue } from "../../common/Functions"
 import { CSSTransition } from "react-transition-group"
+import { FaArrowLeft, FaSave } from "react-icons/fa"
+
+const HeightComponentLinks = styled.div`
+  padding-bottom: ${props =>
+    props.isCompanyEditProfil && props.editable ? "80px" : "auto"};
+  transition-property: padding-bottom;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+`
 
 const ButtonPosition = styled.div`
   display: flex;
@@ -100,7 +108,10 @@ const ColumnItemTextarea = ({
   const disabledSave = textTitle === title || isErrorText
 
   return (
-    <>
+    <HeightComponentLinks
+      isCompanyEditProfil={isCompanyEditProfil}
+      editable={editable}
+    >
       <TitleRightColumn isCompanyEditProfil={isCompanyEditProfil}>
         {titleColumnItem}
       </TitleRightColumn>
@@ -125,7 +136,9 @@ const ColumnItemTextarea = ({
             classNames="popup"
             unmountOnExit
           >
-            <BackgroundEdit onClick={handleResetButton}>
+            <BackgroundEdit
+            // onClick={handleResetButton}
+            >
               <BackgroundEditContent onClick={handleClickContent}>
                 <form onSubmit={handleSaveButton}>
                   <TextareaCustom
@@ -141,9 +154,9 @@ const ColumnItemTextarea = ({
                         <ButtonIcon
                           title="Cofnij"
                           uppercase
-                          fontIconSize="25"
+                          fontIconSize="16"
                           fontSize="14"
-                          icon={<MdEdit />}
+                          icon={<FaArrowLeft />}
                           customColorButton="#c62828"
                           customColorIcon="#f44336"
                           onClick={handleResetButton}
@@ -155,9 +168,9 @@ const ColumnItemTextarea = ({
                         <ButtonIcon
                           title="Zapisz"
                           uppercase
-                          fontIconSize="25"
+                          fontIconSize="16"
                           fontSize="14"
-                          icon={<MdEdit />}
+                          icon={<FaSave />}
                           customColorButton="#2e7d32"
                           customColorIcon="#43a047"
                           disabled={disabledSave}
@@ -171,7 +184,7 @@ const ColumnItemTextarea = ({
           </CSSTransition>
         </>
       )}
-    </>
+    </HeightComponentLinks>
   )
 }
 export default ColumnItemTextarea

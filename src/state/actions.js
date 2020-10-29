@@ -447,6 +447,14 @@ export const fetchResetPassword = (email, password, codeReset) => {
 // COMPANY ACTIONS
 
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
+export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
+
+export const resetEditCompany = value => {
+  return {
+    type: RESET_EDIT_COMPANY,
+    value: value,
+  }
+}
 
 export const replaceCompanyData = data => {
   return {
@@ -748,6 +756,57 @@ export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas usuwania pracownika.", "red"))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
+export const fetchUpdateCompanyProfil = (
+  token,
+  companyId,
+  textAboutUsToSent,
+  textRezerwationTextToSent,
+  editedWorkersToSent,
+  editedAdressToSent,
+  editedLinksToSent,
+  ownerSpecializationToSent,
+  openingHoursToSentFinall,
+  companyPaused
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/update-company-profil`,
+        {
+          companyId: companyId,
+          textAboutUs: textAboutUsToSent,
+          textRezerwation: textRezerwationTextToSent,
+          ownerSpecialization: ownerSpecializationToSent,
+          editedWorkers: editedWorkersToSent,
+          editedAdress: editedAdressToSent,
+          editedLinks: editedLinksToSent,
+          openingHours: openingHoursToSentFinall,
+          companyPaused: companyPaused,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Zaktualizowano profil firmowy.", "green"))
+        dispatch(fetchCompanyData(companyId, token))
+        dispatch(resetEditCompany(true))
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas aktualizowania profilu firmowego.", "red")
+        )
+        dispatch(resetEditCompany(false))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)

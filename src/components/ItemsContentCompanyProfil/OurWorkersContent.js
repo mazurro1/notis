@@ -1,15 +1,14 @@
 import React, { useState } from "react"
 import ButtonIcon from "../ButtonIcon"
 import styled from "styled-components"
-import { MdEdit } from "react-icons/md"
-import { FaUser, FaUserPlus } from "react-icons/fa"
-import { MdEmail, MdClose } from "react-icons/md"
 import { Colors } from "../../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { fetchAddWorkerToCompany } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
+import { MdEdit, MdEmail, MdClose, MdDone, MdArrowBack } from "react-icons/md"
+import { FaUser, FaUserPlus, FaArrowLeft } from "react-icons/fa"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "flex")};
@@ -172,6 +171,41 @@ const CloseAddWorkers = styled.div`
   }
 `
 
+const ButtonContentEdit = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+`
+
+const ButtonStyles = styled.div`
+  display: inline-block;
+`
+const DeleteIconPosition = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`
+
+const DeleteIconStyle = styled.div`
+  color: black;
+  padding: 5px;
+  padding-bottom: 0;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`
+const InputStyles = styled.div`
+  input {
+    padding: 5px 10px;
+  }
+`
+
 const OurWorkersContent = ({
   TitleRightColumn,
   ButtonEditPosition,
@@ -182,9 +216,14 @@ const OurWorkersContent = ({
   ownerSpecialization = "",
   companyId = "",
   handleAddEditWorker,
+  handleSaveOwnerSpecialization,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
+  const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
+    ownerSpecialization
+  )
+  const [ownerEdit, setOwnerEdit] = useState(false)
   const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
@@ -210,6 +249,29 @@ const OurWorkersContent = ({
 
   const handleClickContentAddWorkers = e => {
     e.stopPropagation()
+  }
+
+  const handleClickContent = e => {
+    e.stopPropagation()
+  }
+
+  const handleClickOwnerEdit = () => {
+    setOwnerEdit(prevState => !prevState)
+  }
+
+  const handleResetOwnerSpecialization = () => {
+    setOwnerEdit(false)
+    handleSaveOwnerSpecialization(null)
+    setInputSpecializationOwner(ownerSpecialization)
+  }
+
+  const handleInputOnChange = e => {
+    setInputSpecializationOwner(e.target.value)
+  }
+
+  const handleSaveSpecialization = () => {
+    handleSaveOwnerSpecialization(inputSpecializationOwner)
+    setOwnerEdit(false)
   }
 
   const mapWorkers = workers.map((item, index) => {
@@ -246,12 +308,71 @@ const OurWorkersContent = ({
             <FaUser />
           </WorkerCircle>
           <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
-          <WorkerSpecjalization>{ownerSpecialization}</WorkerSpecjalization>
-          <EditUserStyle>
-            <EditIconStyle>
-              <MdEdit />
-            </EditIconStyle>
-          </EditUserStyle>
+          <WorkerSpecjalization>
+            {inputSpecializationOwner}
+          </WorkerSpecjalization>
+          {isCompanyEditProfil && (
+            <>
+              <EditUserStyle>
+                <EditIconStyle onClick={handleClickOwnerEdit}>
+                  <MdEdit />
+                </EditIconStyle>
+              </EditUserStyle>
+              <CSSTransition
+                in={ownerEdit}
+                timeout={400}
+                classNames="popup"
+                unmountOnExit
+              >
+                <EditUserBackground onClick={handleResetOwnerSpecialization}>
+                  <EditUserBackgroundContent onClick={handleClickContent}>
+                    <InputStyles>
+                      <InputIcon
+                        placeholder="Stanowisko"
+                        value={inputSpecializationOwner}
+                        secondColor
+                        onChange={handleInputOnChange}
+                      />
+                    </InputStyles>
+                    <ButtonContentEdit>
+                      <ButtonStyles>
+                        <ButtonIcon
+                          title="Cofnij"
+                          uppercase
+                          fontIconSize="16"
+                          fontSize="14"
+                          icon={<FaArrowLeft />}
+                          onClick={handleResetOwnerSpecialization}
+                          customColorButton="#c62828"
+                          customColorIcon="#f44336"
+                        />
+                      </ButtonStyles>
+                      <ButtonStyles>
+                        <ButtonIcon
+                          title="Akceptuj"
+                          uppercase
+                          fontIconSize="20"
+                          fontSize="14"
+                          icon={<MdDone />}
+                          onClick={handleSaveSpecialization}
+                          customColorButton="#2e7d32"
+                          customColorIcon="#43a047"
+                          disabled={
+                            inputSpecializationOwner === ownerSpecialization
+                          }
+                        />
+                      </ButtonStyles>
+                    </ButtonContentEdit>
+                    <DeleteIconPosition>
+                      <DeleteIconStyle onClick={handleResetOwnerSpecialization}>
+                        <MdClose />
+                      </DeleteIconStyle>
+                    </DeleteIconPosition>
+                  </EditUserBackgroundContent>
+                </EditUserBackground>
+              </CSSTransition>
+            </>
+          )}
         </WorkerItemStyle>
         {mapWorkers}
       </WorkerContent>
@@ -274,7 +395,9 @@ const OurWorkersContent = ({
         classNames="popup"
         unmountOnExit
       >
-        <PositionAddWorkers onClick={handleOnClickBg}>
+        <PositionAddWorkers
+        // onClick={handleOnClickBg}
+        >
           <ContentAddWorkers onClick={handleClickContentAddWorkers}>
             <form onSubmit={handleSentInvation}>
               <InputIcon

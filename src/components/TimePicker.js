@@ -9,8 +9,12 @@ const ButtonConfirmDate = styled.div`
   background-color: #f4f4f4;
 `
 
-const TimePickerContent = ({ handleResetTakeData, setSelectedTime }) => {
-  const [time, setTime] = useState(null)
+const TimePickerContent = ({
+  handleResetTakeData,
+  setSelectedTime,
+  timeTimePicker = null,
+}) => {
+  const [time, setTime] = useState(timeTimePicker)
 
   useEffect(() => {
     if (!!!time) {

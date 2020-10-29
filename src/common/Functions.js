@@ -68,9 +68,69 @@ export const categoryItemsMenu = (categories, items) => {
     )
     const newAllItem = {
       category: itemCategory,
+      oldCategory: itemCategory,
       items: filterItemsToCategory,
     }
     allItems.push(newAllItem)
   })
   return allItems
+}
+
+export const replacingEditedNamesAndAddingNewOnes = (
+  allOldItems,
+  editedItems,
+  lastName,
+  newName,
+  itemField
+) => {
+  const prevServicesFromServer = [...allOldItems]
+  let oldCategoryNameInItems = prevServicesFromServer.filter(
+    item => item[itemField] === lastName
+  )
+
+  if (oldCategoryNameInItems.length > 0) {
+    oldCategoryNameInItems = oldCategoryNameInItems.map(item => {
+      item[itemField] = newName
+      return item
+    })
+
+    //is in edit services new services
+    const prevEditedItemsServices = [...editedItems]
+    if (prevEditedItemsServices.length === 0) {
+      return oldCategoryNameInItems
+    } else {
+      const convertedEditedItems = prevEditedItemsServices.map(item => {
+        const isInThis = oldCategoryNameInItems.findIndex(newEditedItem => {
+          if (!!item._id && !!newEditedItem._id) {
+            return item._id === newEditedItem._id
+          } else {
+            return item[itemField] === newEditedItem[itemField]
+          }
+        })
+        if (isInThis >= 0) {
+          oldCategoryNameInItems[isInThis][itemField] = newName
+          return oldCategoryNameInItems[isInThis]
+        } else {
+          return item
+        }
+      })
+
+      const otherItemsToSaveInEdit = oldCategoryNameInItems.filter(item => {
+        const isIn = prevEditedItemsServices.some(editedItem => {
+          if (!!item._id && !!editedItem._id) {
+            return item._id === editedItem._id
+          } else {
+            return item[itemField] === editedItem[itemField]
+          }
+        })
+        return !isIn
+      })
+
+      const allNewEditedItems = [
+        ...convertedEditedItems,
+        ...otherItemsToSaveInEdit,
+      ]
+      return allNewEditedItems
+    }
+  }
 }

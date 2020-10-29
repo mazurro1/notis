@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit, MdPhoneAndroid } from "react-icons/md"
+import { MdEdit } from "react-icons/md"
 import { FaFacebook, FaInstagram, FaChrome } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import InputIcon from "../InputIcon"
 import { Colors } from "../../common/Colors"
-import { validURL } from "../../common/Functions"
+import { validURL, convertLinkToHttps } from "../../common/Functions"
+import { FaArrowLeft, FaSave } from "react-icons/fa"
 
 const ButtonPosition = styled.div`
   display: flex;
@@ -49,7 +50,11 @@ const BackgroundEditContent = styled.div`
 `
 
 const HeightComponentLinks = styled.div`
-  min-height: ${props => (props.isCompanyEditProfil ? "220px" : "auto")};
+  padding-bottom: ${props =>
+    props.isCompanyEditProfil && props.editable ? "190px" : "auto"};
+  transition-property: padding-bottom;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const PositionLinksSites = styled.div`
@@ -72,7 +77,8 @@ const IconLinkToSite = styled.button`
   transition-timing-function: ease;
 
   &:hover {
-    color: #ed6c0c;
+    color: ${props =>
+      props.isCompanyEditProfil ? "#ed6c0c" : Colors.buttonColor};
   }
 `
 
@@ -100,35 +106,45 @@ const OurLinksContent = ({
   const isUrlInstagram = validURL(instagramInput)
   const isUrlWebsite = validURL(websiteInput)
 
-  console.log(isUrlFacebook)
-
   const disabledButtonSave =
     (facebookInput !== linkFacebook ||
       instagramInput !== linkFacebook ||
       websiteInput !== linkiWebsite) &&
-    (isUrlFacebook || isUrlInstagram || isUrlWebsite)
+    (isUrlFacebook || facebookInput.length === 0) &&
+    (isUrlInstagram || instagramInput.length === 0) &&
+    (isUrlWebsite || websiteInput.length === 0)
 
   const handleSaveButton = e => {
     e.preventDefault()
 
     if (disabledButtonSave) {
+      const facebookInputWithHttps = convertLinkToHttps(facebookInput)
+      const instagramInputWithHttps = convertLinkToHttps(instagramInput)
+      const websiteInputWithHttps = convertLinkToHttps(websiteInput)
+
       onClickEdit()
       const newFacebookLink =
-        facebookInput !== linkFacebook
+        facebookInput.length === 0
+          ? ""
+          : facebookInputWithHttps !== linkFacebook
           ? isUrlFacebook
-            ? facebookInput
+            ? facebookInputWithHttps
             : null
           : null
       const newInstagramLink =
-        instagramInput !== linkInstagram
+        instagramInput.length === 0
+          ? ""
+          : instagramInputWithHttps !== linkInstagram
           ? isUrlInstagram
-            ? linkInstagram
+            ? instagramInputWithHttps
             : null
           : null
       const newWebsiteLink =
-        websiteInput !== linkiWebsite
+        websiteInput.length === 0
+          ? ""
+          : websiteInputWithHttps !== linkiWebsite
           ? isUrlWebsite
-            ? websiteInput
+            ? websiteInputWithHttps
             : null
           : null
       handleSaveLinks(newFacebookLink, newInstagramLink, newWebsiteLink)
@@ -159,12 +175,16 @@ const OurLinksContent = ({
   }
 
   return (
-    <HeightComponentLinks isCompanyEditProfil={isCompanyEditProfil}>
+    <HeightComponentLinks
+      isCompanyEditProfil={isCompanyEditProfil}
+      editable={editable}
+    >
       <TitleRightColumn {...companyEditProfilProps}>LINKI</TitleRightColumn>
       <PositionLinksSites>
         {!!facebookInput && isUrlFacebook && (
           <div>
             <IconLinkToSite
+              isCompanyEditProfil={isCompanyEditProfil}
               color="#3b5998"
               onClick={() => handleOpenInNewWindow(facebookInput)}
             >
@@ -175,6 +195,7 @@ const OurLinksContent = ({
         {!!instagramInput && isUrlInstagram && (
           <div>
             <IconLinkToSite
+              isCompanyEditProfil={isCompanyEditProfil}
               color="#dd2a7b"
               onClick={() => handleOpenInNewWindow(instagramInput)}
             >
@@ -185,7 +206,12 @@ const OurLinksContent = ({
         {!!websiteInput && websiteInput && (
           <div>
             <IconLinkToSite
-              color={Colors.secondColor}
+              isCompanyEditProfil={isCompanyEditProfil}
+              color={
+                isCompanyEditProfil
+                  ? Colors.secondColor
+                  : Colors.buttonIconColor
+              }
               onClick={() => handleOpenInNewWindow(websiteInput)}
             >
               <FaChrome />
@@ -214,7 +240,9 @@ const OurLinksContent = ({
             classNames="popup"
             unmountOnExit
           >
-            <BackgroundEdit onClick={handleResetButton}>
+            <BackgroundEdit
+            // onClick={handleResetButton}
+            >
               <BackgroundEditContent onClick={handleClickContent}>
                 <form onSubmit={handleSaveButton}>
                   <InputIcon
@@ -247,9 +275,9 @@ const OurLinksContent = ({
                         <ButtonIcon
                           title="Cofnij"
                           uppercase
-                          fontIconSize="20"
+                          fontIconSize="16"
                           fontSize="12"
-                          icon={<MdEdit />}
+                          icon={<FaArrowLeft />}
                           customColorButton="#c62828"
                           customColorIcon="#f44336"
                           onClick={handleResetButton}
@@ -261,9 +289,9 @@ const OurLinksContent = ({
                         <ButtonIcon
                           title="Zapisz"
                           uppercase
-                          fontIconSize="25"
+                          fontIconSize="16"
                           fontSize="14"
-                          icon={<MdEdit />}
+                          icon={<FaSave />}
                           customColorButton="#2e7d32"
                           customColorIcon="#43a047"
                           disabled={!disabledButtonSave}

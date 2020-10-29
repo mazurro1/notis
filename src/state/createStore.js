@@ -29,6 +29,7 @@ import {
   //COMPANY
   //COMPANY
   REPLACE_COMPANY_DATA,
+  RESET_EDIT_COMPANY,
 } from "./actions"
 
 const initialState = {
@@ -155,6 +156,12 @@ const initialState = {
   ],
   loadingPlaces: false,
   alerts: [],
+  //COMPANY
+  //COMPANY
+  //COMPANY
+  //COMPANY
+  //COMPANY
+  resetCompany: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -309,7 +316,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: newUserCompany,
       }
-
+    case RESET_EDIT_COMPANY:
+      return {
+        ...state,
+        resetCompany: action.value,
+      }
     default:
       return state
   }

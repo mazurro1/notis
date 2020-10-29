@@ -4,19 +4,32 @@ import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit, MdPhone } from "react-icons/md"
 import InputIcon from "../InputIcon"
-import {
-  MdAccountBox,
-  MdEmail,
-  MdPhoneAndroid,
-  MdLocationOn,
-  MdWork,
-  MdLocationCity,
-} from "react-icons/md"
+import { MdPhoneAndroid, MdLocationOn, MdLocationCity } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
+import { Checkbox } from "react-input-checkbox"
+import { FaArrowLeft, FaSave } from "react-icons/fa"
+
+const TextCheckbox = styled.span`
+  padding-left: 10px;
+  font-weight: 600;
+  user-select: none;
+`
+
+const CheckboxStyle = styled.div`
+  margin-bottom: 30px;
+  margin-top: 10px;
+  .material-checkbox__input:checked + .material-checkbox__image {
+    background-color: #c62828;
+  }
+`
 
 const HeightComponent = styled.div`
-  min-height: ${props => (props.isCompanyEditProfil ? "290px" : "auto")};
+  padding-bottom: ${props =>
+    props.isCompanyEditProfil && props.editable ? "170px" : "auto"};
+  transition-property: padding-bottom;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const ButtonPosition = styled.div`
@@ -130,6 +143,13 @@ const ButtonSubmit = styled.button`
   background-color: white;
 `
 
+const IsCompanyPaused = styled.div`
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: ${props => props.color};
+`
+
 const OpinionAndAdressContent = ({
   city = "",
   district = "",
@@ -143,17 +163,21 @@ const OpinionAndAdressContent = ({
   editable = false,
   onClickEdit = () => {},
   handleChangeUpodateAdress,
+  setCompanyPaused,
+  pauseCompany = true,
 }) => {
   const [cityInput, setCityInput] = useState(city)
   const [discrictInput, setDiscrictInput] = useState(district)
   const [adressInput, setAdressInput] = useState(adress)
   const [phoneInput, setPhoneInput] = useState(phone)
+  const [companyPausedItem, setCompanyPausedItem] = useState(pauseCompany)
 
   const disabledButtonSubmit =
     cityInput !== city ||
     discrictInput !== district ||
     adressInput !== adress ||
-    phoneInput !== phone
+    phoneInput !== phone ||
+    companyPausedItem !== pauseCompany
 
   const handleOnSubmit = e => {
     e.preventDefault()
@@ -169,6 +193,11 @@ const OpinionAndAdressContent = ({
         updateAdressInput,
         updatePhoneInput
       )
+      if (pauseCompany === companyPausedItem) {
+        setCompanyPaused(null)
+      } else {
+        setCompanyPaused(!pauseCompany)
+      }
       onClickEdit()
     }
   }
@@ -184,6 +213,8 @@ const OpinionAndAdressContent = ({
     setAdressInput(adress)
     setPhoneInput(phone)
     handleChangeUpodateAdress(null, null, null, null)
+    setCompanyPausedItem(pauseCompany)
+    setCompanyPaused(null)
   }
 
   const handleEdit = () => {
@@ -192,6 +223,10 @@ const OpinionAndAdressContent = ({
 
   const handleClickContentAddWorkers = e => {
     e.stopPropagation()
+  }
+
+  const handleChangeCheckbox = () => {
+    setCompanyPausedItem(prevState => !prevState)
   }
 
   const phoneNumberRender = `${phoneInput.charAt(0)}${phoneInput.charAt(
@@ -203,7 +238,23 @@ const OpinionAndAdressContent = ({
   )}${phoneInput.charAt(8)}`
 
   return (
-    <HeightComponent isCompanyEditProfil={isCompanyEditProfil}>
+    <HeightComponent
+      isCompanyEditProfil={isCompanyEditProfil}
+      editable={editable}
+    >
+      {isCompanyEditProfil ? (
+        companyPausedItem ? (
+          <IsCompanyPaused color="#f44336">
+            Działalność wstrzymana
+          </IsCompanyPaused>
+        ) : (
+          <IsCompanyPaused color="#43a047">Działalność aktywna</IsCompanyPaused>
+        )
+      ) : companyPausedItem ? (
+        <IsCompanyPaused color="#f44336">
+          Działalność wstrzymana
+        </IsCompanyPaused>
+      ) : null}
       <OpinionsAndAdress>
         <AdressContent>
           <TitleRightColumn isCompanyEditProfil={isCompanyEditProfil} adress>
@@ -247,7 +298,7 @@ const OpinionAndAdressContent = ({
             classNames="popup"
             unmountOnExit
           >
-            <BackgroundEdit onClick={handleResetInputs}>
+            <BackgroundEdit>
               <BackgroundEditContent onClick={handleClickContentAddWorkers}>
                 <form onSubmit={handleOnSubmit}>
                   <InputIcon
@@ -286,29 +337,38 @@ const OpinionAndAdressContent = ({
                     value={phoneInput}
                     required
                   />
+                  <CheckboxStyle>
+                    <Checkbox
+                      theme="material-checkbox"
+                      value={companyPausedItem}
+                      onChange={handleChangeCheckbox}
+                    >
+                      <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
+                    </Checkbox>
+                  </CheckboxStyle>
                   <ButtonPosition>
                     <ButtonMargin>
-                      <ButtonSubmit>
+                      <>
                         <ButtonIcon
                           title="Cofnij"
                           uppercase
-                          fontIconSize="25"
-                          fontSize="14"
-                          icon={<MdEdit />}
+                          fontIconSize="16"
+                          fontSize="12"
+                          icon={<FaArrowLeft />}
                           customColorButton="#c62828"
                           customColorIcon="#f44336"
                           onClick={handleResetInputs}
                         />
-                      </ButtonSubmit>
+                      </>
                     </ButtonMargin>
                     <ButtonSubmit type="submit">
                       <ButtonMargin>
                         <ButtonIcon
                           title="Zapisz"
                           uppercase
-                          fontIconSize="25"
+                          fontIconSize="16"
                           fontSize="14"
-                          icon={<MdEdit />}
+                          icon={<FaSave />}
                           customColorButton="#2e7d32"
                           customColorIcon="#43a047"
                           disabled={!disabledButtonSubmit}
