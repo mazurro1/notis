@@ -773,7 +773,8 @@ export const fetchUpdateCompanyProfil = (
   editedLinksToSent,
   ownerSpecializationToSent,
   openingHoursToSentFinall,
-  companyPaused
+  companyPaused,
+  services
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -790,6 +791,7 @@ export const fetchUpdateCompanyProfil = (
           editedLinks: editedLinksToSent,
           openingHours: openingHoursToSentFinall,
           companyPaused: companyPaused,
+          services: services,
         },
         {
           headers: {

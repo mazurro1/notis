@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
@@ -9,6 +9,7 @@ import {
   MdReorder,
   MdAccessTime,
   MdArrowBack,
+  MdDeleteForever,
 } from "react-icons/md"
 import { FaDollarSign } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
@@ -29,6 +30,7 @@ const ServiceItem = styled.div`
   justify-content: flex-start;
   align-items: center;
   user-select: none;
+  overflow: hidden;
   padding-bottom: ${props => (props.clickEdit ? "450px" : "auto")};
   transition-property: background-color, padding-bottom;
   transition-duration: 0.3s;
@@ -97,15 +99,57 @@ const ServicesItem = ({
   ButtonsAddPosition,
   ButtonMargin,
   ButtonMarginSubmit,
+  handleChangeSaveEdit,
+  ButtonsDeletePosition,
+  handleDeleteServiceItem,
+  handleResetItemToFromServer,
 }) => {
   const [clickEdit, setClickEdit] = useState(false)
-  const [extraPrice, setExtraPrice] = useState(itemServices.extraCost)
-  const [extraTime, setExtraTime] = useState(itemServices.extraTime)
-  const [titleInput, setInputTitle] = useState(itemServices.serviceName)
-  const [contentInput, setContentInput] = useState(itemServices.serviceText)
-  const [timeInput, setTimeInput] = useState(itemServices.time)
-  const [priceInput, setPriceInput] = useState(itemServices.serviceCost)
-  console.log(itemServices)
+  const [clickButtonDelete, setClickButtonDelete] = useState(false)
+  const [extraPrice, setExtraPrice] = useState(false)
+  const [extraTime, setExtraTime] = useState(false)
+  const [titleInput, setInputTitle] = useState("")
+  const [contentInput, setContentInput] = useState("")
+  const [timeInput, setTimeInput] = useState("")
+  const [priceInput, setPriceInput] = useState("")
+
+  const disabledSaveButton =
+    extraPrice === itemServices.extraCost &&
+    extraTime === itemServices.extraTime &&
+    titleInput === itemServices.serviceName &&
+    contentInput === itemServices.serviceText &&
+    timeInput === itemServices.time &&
+    priceInput === itemServices.serviceCost
+
+  useEffect(() => {
+    setExtraPrice(itemServices.extraCost)
+    setExtraTime(itemServices.extraTime)
+    setInputTitle(itemServices.serviceName)
+    setContentInput(itemServices.serviceText)
+    setTimeInput(itemServices.time)
+    setPriceInput(itemServices.serviceCost)
+  }, [itemServices])
+
+  const handleResetEdit = () => {
+    setExtraPrice(itemServices.extraCost)
+    setExtraTime(itemServices.extraTime)
+    setInputTitle(itemServices.serviceName)
+    setContentInput(itemServices.serviceText)
+    setTimeInput(itemServices.time)
+    setPriceInput(itemServices.serviceCost)
+    handleResetItemToFromServer(itemServices._id, itemServices.serviceCategory)
+    setClickEdit(false)
+  }
+
+  const handleClickDelete = () => {
+    setClickButtonDelete(prevState => !prevState)
+  }
+
+  const handleConfirmDeleteItem = () => {
+    handleDeleteServiceItem(itemServices._id, itemServices.serviceCategory)
+    setClickButtonDelete(false)
+  }
+
   const handleChangeInput = (e, setChange) => {
     setChange(e.target.value)
   }
@@ -116,6 +160,23 @@ const ServicesItem = ({
 
   const handleClickEdit = () => {
     setClickEdit(prevState => !prevState)
+  }
+
+  const handleSaveEdit = e => {
+    e.preventDefault()
+    if (!disabledSaveButton) {
+      handleChangeSaveEdit(
+        itemServices._id,
+        titleInput,
+        contentInput,
+        timeInput,
+        extraTime,
+        priceInput,
+        extraPrice,
+        itemServices.serviceCategory
+      )
+      setClickEdit(false)
+    }
   }
 
   let timeService = ""
@@ -154,15 +215,31 @@ const ServicesItem = ({
       </LeftContent>
       <RightContent>
         {isCompanyEditProfil ? (
-          <ButtonIcon
-            title="Edytuj"
-            uppercase
-            fontIconSize="40"
-            fontSize="14"
-            icon={<MdEdit />}
-            secondColors={isCompanyEditProfil}
-            onClick={handleClickEdit}
-          />
+          <>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Edytuj"
+                uppercase
+                fontIconSize="40"
+                fontSize="14"
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Usuń"
+                uppercase
+                fontIconSize="40"
+                fontSize="14"
+                icon={<MdEdit />}
+                customColorButton="#c62828"
+                customColorIcon="#f44336"
+                onClick={handleClickDelete}
+              />
+            </ButtonMargin>
+          </>
         ) : (
           <ButtonIcon
             title="Rezerwuj"
@@ -184,9 +261,7 @@ const ServicesItem = ({
         <BackgroundEdit>
           <BackgroundEditContent onClick={handleClickContent}>
             Edytuj podkategorie
-            <form
-            // onSubmit={handleAddItem}
-            >
+            <form onSubmit={handleSaveEdit}>
               <InputIcon
                 icon={<MdTitle />}
                 placeholder="Tytuł"
@@ -249,7 +324,7 @@ const ServicesItem = ({
                     fontIconSize="40"
                     fontSize="13"
                     icon={<MdArrowBack />}
-                    onClick={handleClickEdit}
+                    onClick={handleResetEdit}
                     customColorButton="#c62828"
                     customColorIcon="#f44336"
                   />
@@ -263,10 +338,49 @@ const ServicesItem = ({
                     icon={<MdLibraryAdd />}
                     customColorButton="#2e7d32"
                     customColorIcon="#43a047"
+                    disabled={disabledSaveButton}
                   />
                 </ButtonMarginSubmit>
               </ButtonsAddPosition>
             </form>
+          </BackgroundEditContent>
+        </BackgroundEdit>
+      </CSSTransition>
+
+      <CSSTransition
+        in={clickButtonDelete}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <BackgroundEdit>
+          <BackgroundEditContent onClick={handleClickContent} transparent>
+            <ButtonsDeletePosition>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="40"
+                  fontSize="14"
+                  icon={<MdArrowBack />}
+                  customColorButton="#2e7d32"
+                  customColorIcon="#43a047"
+                  onClick={handleClickDelete}
+                />
+              </ButtonMargin>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Usuń"
+                  uppercase
+                  fontIconSize="40"
+                  fontSize="14"
+                  icon={<MdDeleteForever />}
+                  customColorButton="#c62828"
+                  customColorIcon="#f44336"
+                  onClick={handleConfirmDeleteItem}
+                />
+              </ButtonMargin>
+            </ButtonsDeletePosition>
           </BackgroundEditContent>
         </BackgroundEdit>
       </CSSTransition>

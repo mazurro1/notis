@@ -300,6 +300,12 @@ const ContentCompanyProfil = ({
 
       const companyPausedToSent =
         companyPaused !== company.pauseCompany ? companyPaused : null
+
+      const services = {
+        deleted: deletedItemsServices,
+        edited: editedItemsServices,
+        new: newItemsServices,
+      }
       dispatch(
         fetchUpdateCompanyProfil(
           user.token,
@@ -311,7 +317,8 @@ const ContentCompanyProfil = ({
           editedLinksToSent,
           ownerSpecializationToSent,
           openingHoursToSentFinall,
-          companyPausedToSent
+          companyPausedToSent,
+          services
         )
       )
       setCompanyPaused(null)
@@ -324,56 +331,13 @@ const ContentCompanyProfil = ({
         <LeftColumn>
           <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
           <AllCategoryOfServices
-            // services={company.services}
             newItemsServices={newItemsServices}
             setNewItemsServices={setNewItemsServices}
             editedItemsServices={editedItemsServices}
             setEditedItemsServices={setEditedItemsServices}
             deletedItemsServices={deletedItemsServices}
             setDeletedItemsServices={setDeletedItemsServices}
-            services={[
-              {
-                _id: "123123",
-                serviceCategory: "Włosy",
-                serviceName: "Kolor włosów",
-                serviceText: "Malujemy włosy",
-                serviceCost: "120",
-                time: "60",
-                extraCost: false,
-                extraTime: false,
-              },
-              {
-                _id: "123124",
-                serviceCategory: "Włosy",
-                serviceName: "Kolor włosów1",
-                serviceText:
-                  "Jeżeli nie mamy opcji wklejamy sameo stringa w module.export -> gatsby-plugin-styled-components. Style możemy trzymać najlepiej w oddzielnym pliku np styles i się do niego odwoływać do propsów. Jeżeli nie mamy opcji wklejamy sameo stringa w module.export -> gatsby-plugin-styled-components. Style możemy trzymać najlepiej w oddzielnym pliku np styles i się do niego odwoływać do propsów.",
-                serviceCost: "150",
-                time: "160",
-                extraCost: true,
-                extraTime: true,
-              },
-              {
-                _id: "123125",
-                serviceCategory: "Paznokcie",
-                serviceName: "Hybryda",
-                serviceText: "Malowanie paznokci",
-                serviceCost: "220",
-                time: "120",
-                extraCost: false,
-                extraTime: false,
-              },
-              {
-                _id: "123126",
-                serviceCategory: "Paznokcie",
-                serviceName: "Baza",
-                serviceText: "Malowanie paznokci",
-                serviceCost: "100",
-                time: "50",
-                extraCost: true,
-                extraTime: true,
-              },
-            ]}
+            services={company.services}
             {...companyEditProfilProps}
           />
         </LeftColumn>

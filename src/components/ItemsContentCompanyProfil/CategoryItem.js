@@ -193,6 +193,9 @@ const CategoryItem = ({
   handleDeleteAllCategory,
   handleChangeNameCategory,
   handleResetCategoryName,
+  handleChangeSaveEdit,
+  handleDeleteServiceItem,
+  handleResetItemToFromServer,
 }) => {
   const [collapseActive, setCollapseActive] = useState(true)
   const [clickDelete, setClickDelete] = useState(false)
@@ -205,6 +208,9 @@ const CategoryItem = ({
   const [timeInput, setTimeInput] = useState("")
   const [priceInput, setPriceInput] = useState("")
   const [categoryTitle, setCategoryTitle] = useState("")
+
+  const disabledCategorySave =
+    categoryTitle.toLowerCase() === item.category.toLowerCase()
 
   useEffect(() => {
     setCategoryTitle(item.category)
@@ -252,6 +258,14 @@ const CategoryItem = ({
       !!priceInput
     ) {
       setClickAdd(false)
+
+      setExtraPrice(false)
+      setExtraTime(false)
+      setInputTitle("")
+      setContentInput("")
+      setTimeInput("")
+      setPriceInput("")
+
       handleAddItemInCategory(
         item.category,
         titleInput,
@@ -272,8 +286,10 @@ const CategoryItem = ({
 
   const handleChangeCategoryTitle = e => {
     e.preventDefault()
-    setClickEdit(false)
-    handleChangeNameCategory(categoryTitle, item.oldCategory, item.category)
+    if (!disabledCategorySave) {
+      setClickEdit(false)
+      handleChangeNameCategory(categoryTitle, item.oldCategory, item.category)
+    }
   }
 
   const servicesMap = item.items.map((itemServices, indexSerives) => {
@@ -292,6 +308,10 @@ const CategoryItem = ({
         ButtonsAddPosition={ButtonsAddPosition}
         ButtonMargin={ButtonMargin}
         ButtonMarginSubmit={ButtonMarginSubmit}
+        handleChangeSaveEdit={handleChangeSaveEdit}
+        ButtonsDeletePosition={ButtonsDeletePosition}
+        handleDeleteServiceItem={handleDeleteServiceItem}
+        handleResetItemToFromServer={handleResetItemToFromServer}
       />
     )
   })
@@ -417,6 +437,7 @@ const CategoryItem = ({
                           customColorButton="#2e7d32"
                           customColorIcon="#43a047"
                           disabled={categoryTitle === item.category}
+                          disabled={disabledCategorySave}
                         />
                       </ButtonMarginSubmit>
                     </ButtonsAddPosition>
@@ -450,7 +471,6 @@ const CategoryItem = ({
                       value={contentInput}
                       type="text"
                       onChange={e => handleChangeInput(e, setContentInput)}
-                      required
                     />
                     <InputIcon
                       icon={<MdAccessTime />}

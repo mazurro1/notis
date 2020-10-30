@@ -3,6 +3,8 @@ import {
   getCategories,
   categoryItemsMenu,
   replacingEditedNamesAndAddingNewOnes,
+  replacingEditedNamesAndAddingNewOnes2,
+  compareTwoArray,
 } from "../../common/Functions"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
@@ -130,18 +132,20 @@ const AllCategoryOfServices = ({
 
   const handleAddCategory = e => {
     e.preventDefault()
-    const prevAllCategoriesWithItems = [...allCategoriesWithItems]
-    const newItem = {
-      oldCategory: newCategoryTitle,
-      category: newCategoryTitle,
-      items: [],
+    if (!disabledAddCategoryButton) {
+      const prevAllCategoriesWithItems = [...allCategoriesWithItems]
+      const newItem = {
+        oldCategory: newCategoryTitle,
+        category: newCategoryTitle,
+        items: [],
+      }
+      prevAllCategoriesWithItems.push(newItem)
+      const prevAllCategories = [...allCategories, newCategoryTitle]
+      setAllCategories(prevAllCategories)
+      setAllCategoriesWithItems(prevAllCategoriesWithItems)
+      setNewCategoryTitle("")
+      setClickAddCategory(false)
     }
-    prevAllCategoriesWithItems.push(newItem)
-    const prevAllCategories = [...allCategories, newCategoryTitle]
-    setAllCategories(prevAllCategories)
-    setAllCategoriesWithItems(prevAllCategoriesWithItems)
-    setNewCategoryTitle("")
-    setClickAddCategory(false)
   }
 
   const handleAddItemInCategory = (
@@ -193,12 +197,28 @@ const AllCategoryOfServices = ({
   const handleDeleteAllCategory = (category, actualCategory) => {
     //deleted from server
     const prevServices = [...services]
-    const deletedCategoryFromServer = prevServices.filter(
+    const prevDeletedItemsFromServer = [...deletedItemsServices]
+
+    let deletedCategoryFromServer = prevServices.filter(
       item => item.serviceCategory === category
     )
+    deletedCategoryFromServer = deletedCategoryFromServer.map(item => {
+      return {
+        _id: item._id,
+      }
+    })
+
+    deletedCategoryFromServer = deletedCategoryFromServer.filter(item => {
+      const ifInDeletedItems = prevDeletedItemsFromServer.some(
+        itemDeleted => itemDeleted._id === item._id
+      )
+      return !ifInDeletedItems
+    })
+    //check is in deleted items
+
     if (deletedCategoryFromServer.length > 0) {
       const allDeletedItems = [
-        ...deletedItemsServices,
+        ...prevDeletedItemsFromServer,
         ...deletedCategoryFromServer,
       ]
       setDeletedItemsServices(allDeletedItems)
@@ -260,15 +280,24 @@ const AllCategoryOfServices = ({
       setAllCategoriesWithItems(prevAllAllItemsCategories)
     }
 
-    const newEditedItems = replacingEditedNamesAndAddingNewOnes(
+    const newEditedItems = replacingEditedNamesAndAddingNewOnes2(
       services,
       editedItemsServices,
       oldCategoryTitle,
       newCategoryTitle,
       "serviceCategory"
     )
+
     if (!!newEditedItems) {
-      setEditedItemsServices(newEditedItems)
+      const prevDeletedId = [...deletedItemsServices]
+      const filterItems = newEditedItems.filter(item => {
+        const isInDeleted = prevDeletedId.some(
+          itemDeleted => itemDeleted._id === item._id
+        )
+        return !isInDeleted
+      })
+
+      setEditedItemsServices(filterItems)
     }
 
     //name from new services
@@ -287,17 +316,21 @@ const AllCategoryOfServices = ({
 
   const handleResetCategoryName = (oldCategory, newCategory, prevCategory) => {
     //reset edited items
-    const newEditedItems = replacingEditedNamesAndAddingNewOnes(
-      services,
-      editedItemsServices,
+    const prevEditedItemsServices = [...editedItemsServices]
+    const prevServices = [...services]
+    const newEditedItems = replacingEditedNamesAndAddingNewOnes2(
+      prevServices,
+      prevEditedItemsServices,
       oldCategory,
       oldCategory,
-      "serviceCategory"
+      "serviceCategory",
+      newCategory
     )
-    if (!!newEditedItems) {
-      setEditedItemsServices(newEditedItems)
-    }
 
+    if (!!newEditedItems) {
+      const compareResult = compareTwoArray(newEditedItems, prevServices)
+      setEditedItemsServices(compareResult)
+    }
     //reset new items
     const newNewItems = replacingEditedNamesAndAddingNewOnes(
       newItemsServices,
@@ -334,6 +367,200 @@ const AllCategoryOfServices = ({
     }
   }
 
+  const handleChangeSaveEdit = (
+    itemId,
+    title,
+    content,
+    time,
+    extraTime,
+    price,
+    extraPrice,
+    serviceCategory
+  ) => {
+    const prevEditedItems = [...editedItemsServices]
+    const prevNewItems = [...newItemsServices]
+    const findIndexInEdited = prevEditedItems.findIndex(
+      item => item._id === itemId
+    )
+
+    const findIndexInNewItems = prevNewItems.findIndex(
+      item => item._id === itemId
+    )
+
+    if (findIndexInNewItems >= 0) {
+      //change in new items
+      prevNewItems[findIndexInNewItems].serviceName = title
+      prevNewItems[findIndexInNewItems].serviceText = content
+      prevNewItems[findIndexInNewItems].serviceCost = price
+      prevNewItems[findIndexInNewItems].time = time
+      prevNewItems[findIndexInNewItems].extraCost = extraPrice
+      prevNewItems[findIndexInNewItems].extraTime = extraTime
+      setNewItemsServices(prevNewItems)
+    } else {
+      if (findIndexInEdited >= 0) {
+        //change in edited items
+        prevEditedItems[findIndexInEdited].serviceName = title
+        prevEditedItems[findIndexInEdited].serviceText = content
+        prevEditedItems[findIndexInEdited].serviceCost = price
+        prevEditedItems[findIndexInEdited].time = time
+        prevEditedItems[findIndexInEdited].extraCost = extraPrice
+        prevEditedItems[findIndexInEdited].extraTime = extraTime
+        setEditedItemsServices(prevEditedItems)
+      } else {
+        const newItem = {
+          _id: itemId,
+          serviceCategory: serviceCategory,
+          serviceName: title,
+          serviceText: content,
+          serviceCost: price,
+          time: time,
+          extraCost: extraPrice,
+          extraTime: extraTime,
+        }
+        prevEditedItems.push(newItem)
+        setEditedItemsServices(prevEditedItems)
+      }
+    }
+
+    //change in creator items
+    // allCategoriesWithItems, setAllCategoriesWithItems
+    const prevAllItems = [...allCategoriesWithItems]
+    const itemCategoryIndex = prevAllItems.findIndex(
+      item => item.oldCategory === serviceCategory
+    )
+    if (itemCategoryIndex >= 0) {
+      const findIndexItemInCategory = prevAllItems[
+        itemCategoryIndex
+      ].items.findIndex(itemItems => itemItems._id === itemId)
+      if (findIndexItemInCategory >= 0) {
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].extraCost = extraPrice
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].extraTime = extraTime
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].serviceCategory = serviceCategory
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].serviceCost = price
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].serviceName = title
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].serviceText = content
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].time = time
+
+        setAllCategoriesWithItems(prevAllItems)
+      }
+    }
+  }
+
+  const handleDeleteServiceItem = (itemId, serviceCategory) => {
+    //check in new
+    const prevNewItems = [...newItemsServices]
+    const isInNewItems = prevNewItems.some(item => item._id === itemId)
+    if (isInNewItems) {
+      const newNewItems = prevNewItems.filter(item => item._id !== itemId)
+      setNewItemsServices(newNewItems)
+    } else {
+      //if in not in new add to deleted
+      const prevDeletedItems = [...deletedItemsServices]
+      const ifIsInDeleted = prevDeletedItems.some(item => item._id === itemId)
+      if (!ifIsInDeleted) {
+        const newItem = {
+          _id: itemId,
+        }
+        prevDeletedItems.push(newItem)
+        setDeletedItemsServices(prevDeletedItems)
+      }
+      //check in edited
+      const prevEditedItems = [...editedItemsServices]
+      const isInEditedItems = prevEditedItems.some(item => item._id === itemId)
+      if (isInEditedItems) {
+        const filterEditedItems = prevEditedItems.filter(
+          item => item._id !== itemId
+        )
+        setEditedItemsServices(filterEditedItems)
+      }
+    }
+    //delete from creator
+    const prevAllCategoryWithItems = [...allCategoriesWithItems]
+    let findIndexCategory = prevAllCategoryWithItems.findIndex(
+      item => item.oldCategory === serviceCategory
+    )
+    if (findIndexCategory < 0) {
+      findIndexCategory = prevAllCategoryWithItems.findIndex(
+        item => item.category === serviceCategory
+      )
+    }
+
+    if (findIndexCategory >= 0) {
+      const filterItemsInAllCategory = prevAllCategoryWithItems[
+        findIndexCategory
+      ].items.filter(item => item._id !== itemId)
+      prevAllCategoryWithItems[
+        findIndexCategory
+      ].items = filterItemsInAllCategory
+      setAllCategoriesWithItems(prevAllCategoryWithItems)
+    }
+  }
+
+  const handleResetItemToFromServer = (itemId, itemCategory) => {
+    //take item from server and replace in creator and delete from edited
+    const prevEditedItems = [...editedItemsServices]
+    const prevServices = [...services]
+
+    const isInEdited = prevEditedItems.some(item => item._id === itemId)
+    if (isInEdited) {
+      const prevEditedItemsInEdit = [...editedItemsServices]
+      const selectedItemFromServerToEdit = prevServices.find(
+        item => item._id === itemId
+      )
+      const indexEditedToFirstVersion = prevEditedItemsInEdit.findIndex(
+        item => item._id === itemId
+      )
+      const prevEditedCategory = prevEditedItemsInEdit.find(
+        item => item._id === itemId
+      )
+      selectedItemFromServerToEdit.serviceCategory =
+        prevEditedCategory.serviceCategory
+      prevEditedItemsInEdit[
+        indexEditedToFirstVersion
+      ] = selectedItemFromServerToEdit
+      setEditedItemsServices(prevEditedItemsInEdit)
+    }
+
+    //take item from server
+    const selectedItemFromServer = prevServices.find(
+      item => item._id === itemId
+    )
+    if (!!selectedItemFromServer) {
+      const prevAllCategoriesWithItems = [...allCategoriesWithItems]
+      const findIndexCategory = prevAllCategoriesWithItems.findIndex(
+        item => item.oldCategory === itemCategory
+      )
+      if (findIndexCategory >= 0) {
+        const replaceItemIndex = prevAllCategoriesWithItems[
+          findIndexCategory
+        ].items.findIndex(item => item._id === itemId)
+
+        if (replaceItemIndex >= 0) {
+          prevAllCategoriesWithItems[findIndexCategory].items[
+            replaceItemIndex
+          ] = selectedItemFromServer
+          setAllCategoriesWithItems(prevAllCategoriesWithItems)
+        }
+      }
+    }
+
+    // allCategoriesWithItems, setAllCategoriesWithItems
+  }
+
   const mapCategories = allCategoriesWithItems.map((item, index) => {
     return (
       <CategoryItem
@@ -345,6 +572,9 @@ const AllCategoryOfServices = ({
         handleDeleteAllCategory={handleDeleteAllCategory}
         handleChangeNameCategory={handleChangeNameCategory}
         handleResetCategoryName={handleResetCategoryName}
+        handleChangeSaveEdit={handleChangeSaveEdit}
+        handleDeleteServiceItem={handleDeleteServiceItem}
+        handleResetItemToFromServer={handleResetItemToFromServer}
       />
     )
   })

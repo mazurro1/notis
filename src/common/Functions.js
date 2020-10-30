@@ -134,3 +134,83 @@ export const replacingEditedNamesAndAddingNewOnes = (
     }
   }
 }
+
+export const replacingEditedNamesAndAddingNewOnes2 = (
+  allOldItems,
+  editedItems,
+  lastName,
+  newName,
+  itemField,
+  newCategory
+) => {
+  console.log(editedItems)
+  const prevServicesFromServer = [...allOldItems]
+  let oldCategoryNameInItems = prevServicesFromServer.filter(
+    item => item[itemField] === lastName
+  )
+
+  if (oldCategoryNameInItems.length > 0) {
+    oldCategoryNameInItems = oldCategoryNameInItems.map(item => {
+      item[itemField] = newName
+      return item
+    })
+
+    //is in edit services new services
+    const prevEditedItemsServices = [...editedItems]
+    if (prevEditedItemsServices.length === 0) {
+      return oldCategoryNameInItems
+    } else {
+      const convertedEditedItems = prevEditedItemsServices.map(item => {
+        const isInThis = oldCategoryNameInItems.findIndex(newEditedItem => {
+          if (!!item._id && !!newEditedItem._id) {
+            return item._id === newEditedItem._id
+          } else {
+            return item[itemField] === newEditedItem[itemField]
+          }
+        })
+        if (isInThis >= 0) {
+          let returnedValue = {}
+          oldCategoryNameInItems.forEach(itemOld => {
+            if (itemOld[itemField] === newName && itemOld._id === item._id) {
+              item[itemField] = newName
+              returnedValue = item
+            }
+          })
+          return returnedValue
+        } else {
+          return item
+        }
+      })
+      const otherItemsToSaveInEdit = oldCategoryNameInItems.filter(item => {
+        const isIn = prevEditedItemsServices.some(editedItem => {
+          if (!!item._id && !!editedItem._id) {
+            return item._id === editedItem._id
+          } else {
+            return item[itemField] === editedItem[itemField]
+          }
+        })
+        return !isIn
+      })
+
+      const allNewEditedItems = [
+        ...convertedEditedItems,
+        ...otherItemsToSaveInEdit,
+      ]
+      return allNewEditedItems
+    }
+  }
+}
+
+export const compareTwoArray = (arrayFirst, arraySecond) => {
+  const result = []
+  arrayFirst.forEach(itemFirst => {
+    const isInArray = arraySecond.some(itemSecond => {
+      const isTheSame = JSON.stringify(itemSecond) == JSON.stringify(itemFirst)
+      return isTheSame
+    })
+    if (!isInArray) {
+      result.push(itemFirst)
+    }
+  })
+  return result
+}
