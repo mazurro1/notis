@@ -5,9 +5,12 @@ import {
   replacingEditedNamesAndAddingNewOnes,
   replacingEditedNamesAndAddingNewOnes2,
   compareTwoArray,
+  sortItemsInArray,
+  changeCategoryToInWorker,
+  selectOtherItemsInFirstArray,
+  compareEditedArrayToServerArrayAndReturnNotCompareItems,
 } from "../../common/Functions"
 import styled from "styled-components"
-import { Colors } from "../../common/Colors"
 import { MdAddBox, MdTitle, MdArrowBack } from "react-icons/md"
 import CategoryItem from "./CategoryItem"
 import ReactTooltip from "react-tooltip"
@@ -15,6 +18,7 @@ import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { CSSTransition } from "react-transition-group"
 import sal from "sal.js"
+import { useSelector } from "react-redux"
 
 const AddCategory = styled.div`
   position: relative;
@@ -91,13 +95,20 @@ const AllCategoryOfServices = ({
   setEditedItemsServices,
   deletedItemsServices,
   setDeletedItemsServices,
+  setAllCategoriesWithItems,
+  allCategoriesWithItems = [],
+  editedWorkers,
+  setEditedWorkers,
+  workersFromServer,
+  handleAddEditWorker,
+  company,
 }) => {
-  const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
   const [allCategories, setAllCategories] = useState([])
   const [isFirstRender, setIsFirstRender] = useState(true)
 
   const [clickAddCategory, setClickAddCategory] = useState(false)
   const [newCategoryTitle, setNewCategoryTitle] = useState("")
+  const resetCompany = useSelector(state => state.resetCompany)
 
   useEffect(() => {
     sal({
@@ -107,10 +118,14 @@ const AllCategoryOfServices = ({
   }, [services, allCategoriesWithItems])
 
   useEffect(() => {
-    if (isFirstRender) {
+    if (isFirstRender || resetCompany) {
+      setNewItemsServices([])
+      setEditedItemsServices([])
+      setDeletedItemsServices([])
       const categories = getCategories(services, "serviceCategory")
       const items = categoryItemsMenu(categories, services)
-      setAllCategoriesWithItems(items)
+      const sortedItems = sortItemsInArray([...items], "category")
+      setAllCategoriesWithItems(sortedItems)
       setAllCategories(categories)
       setIsFirstRender(false)
     }
@@ -120,6 +135,7 @@ const AllCategoryOfServices = ({
     setAllCategories,
     isFirstRender,
     setIsFirstRender,
+    resetCompany,
   ])
 
   const handleClickContent = e => {
@@ -251,6 +267,114 @@ const AllCategoryOfServices = ({
       item => item.serviceCategory !== actualCategory
     )
     setEditedItemsServices(deleteFromEdited)
+
+    //search if user has category and remove this category in edit worker
+    const workerEdited = editedWorkers.map(editedWorker => {
+      const isInCategory = editedWorker.servicesCategory.some(categoryItem => {
+        if (categoryItem === actualCategory || categoryItem === category) {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      if (isInCategory) {
+        const otherCategiriesWorkerEdited = [
+          ...editedWorker.servicesCategory,
+        ].filter(workerServiceCategory => {
+          if (
+            workerServiceCategory === actualCategory ||
+            workerServiceCategory === category
+          ) {
+            return false
+          } else {
+            return true
+          }
+        })
+        editedWorker.servicesCategory = otherCategiriesWorkerEdited
+      }
+      return editedWorker
+    })
+
+    //filter when edited worker === worker from server
+    if (workerEdited.length > 0) {
+      const finallWorkersEditer = []
+      workerEdited.forEach(worker => {
+        let findWorkerFromServer = {}
+        ;[...workersFromServer].forEach(item => {
+          if (item.user._id === worker.indexWorker) {
+            const newWorkerFromServer = {
+              indexWorker: item.user._id,
+              specializationText: item.specialization,
+              servicesCategory: item.servicesCategory,
+            }
+            findWorkerFromServer = newWorkerFromServer
+          }
+        })
+        if (!!findWorkerFromServer) {
+          const workerEqualServer =
+            JSON.stringify(worker) == JSON.stringify(findWorkerFromServer)
+          if (!workerEqualServer) {
+            finallWorkersEditer.push(worker)
+          }
+        } else {
+          finallWorkersEditer.push(worker)
+        }
+      })
+      setEditedWorkers(finallWorkersEditer)
+    }
+
+    //search if user has category and remove this category in worker from server
+    const mapWorkerFromServer = [...workersFromServer].map(item => {
+      const worker = {
+        indexWorker: item.user._id,
+        specializationText: item.specialization,
+        servicesCategory: item.servicesCategory,
+      }
+      return worker
+    })
+
+    const filteredWorkersFromServerToEdited = [...mapWorkerFromServer].filter(
+      item => {
+        const isInEdited = editedWorkers.some(edited => {
+          return edited.indexWorker === item.indexWorker
+        })
+        return !isInEdited
+      }
+    )
+
+    const finallNewEditedWorkers = []
+    filteredWorkersFromServerToEdited.map(workerServer => {
+      const isInCategory = workerServer.servicesCategory.some(categoryItem => {
+        if (categoryItem === actualCategory || categoryItem === category) {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      if (isInCategory) {
+        const otherCategiriesWorkerEdited = [
+          ...workerServer.servicesCategory,
+        ].filter(workerServiceCategory => {
+          if (
+            workerServiceCategory === actualCategory ||
+            workerServiceCategory === category
+          ) {
+            return false
+          } else {
+            return true
+          }
+        })
+        workerServer.servicesCategory = otherCategiriesWorkerEdited
+        finallNewEditedWorkers.push(workerServer)
+      }
+    })
+
+    if (filteredWorkersFromServerToEdited.length > 0) {
+      const allEditedWorkers = [...editedWorkers, ...finallNewEditedWorkers]
+      setEditedWorkers(allEditedWorkers)
+    }
   }
 
   const handleChangeNameCategory = (
@@ -283,7 +407,7 @@ const AllCategoryOfServices = ({
     const newEditedItems = replacingEditedNamesAndAddingNewOnes2(
       services,
       editedItemsServices,
-      oldCategoryTitle,
+      oldChangedCategory,
       newCategoryTitle,
       "serviceCategory"
     )
@@ -312,23 +436,63 @@ const AllCategoryOfServices = ({
     if (!!newNewItems) {
       setNewItemsServices(newNewItems)
     }
+
+    //change category name in edit worker
+    const editedEditedWorkers = changeCategoryToInWorker(
+      editedWorkers,
+      "servicesCategory",
+      oldChangedCategory,
+      newCategoryTitle
+    )
+
+    const prevWorkerFromServer = []
+
+    workersFromServer.forEach(workerX => {
+      const newWorker = {
+        indexWorker: workerX.user._id,
+        specializationText: workerX.specialization,
+        servicesCategory: [...workerX.servicesCategory],
+      }
+      prevWorkerFromServer.push(newWorker)
+    })
+
+    const newEditedWorkersToEdit = selectOtherItemsInFirstArray(
+      [...prevWorkerFromServer],
+      [...editedEditedWorkers],
+      "indexWorker"
+    )
+
+    const newEditedWorkers = changeCategoryToInWorker(
+      [...newEditedWorkersToEdit],
+      "servicesCategory",
+      oldChangedCategory,
+      newCategoryTitle,
+      workersFromServer
+    )
+
+    const allEditedWorkers = [...editedEditedWorkers, ...newEditedWorkers]
+
+    const comparedItemEdited = compareEditedArrayToServerArrayAndReturnNotCompareItems(
+      allEditedWorkers,
+      "indexWorker",
+      workersFromServer
+    )
+
+    setEditedWorkers(comparedItemEdited)
   }
 
   const handleResetCategoryName = (oldCategory, newCategory, prevCategory) => {
     //reset edited items
-    const prevEditedItemsServices = [...editedItemsServices]
-    const prevServices = [...services]
     const newEditedItems = replacingEditedNamesAndAddingNewOnes2(
-      prevServices,
-      prevEditedItemsServices,
+      services,
+      editedItemsServices,
+      newCategory,
       oldCategory,
-      oldCategory,
-      "serviceCategory",
-      newCategory
+      "serviceCategory"
     )
-
+    console.log(newEditedItems)
     if (!!newEditedItems) {
-      const compareResult = compareTwoArray(newEditedItems, prevServices)
+      const compareResult = compareTwoArray(newEditedItems, services)
       setEditedItemsServices(compareResult)
     }
     //reset new items
@@ -365,6 +529,22 @@ const AllCategoryOfServices = ({
       ].category = oldCategory
       setAllCategoriesWithItems(prevAllAllItemsCategories)
     }
+
+    //reset category name in edit worker
+    const editedEditedWorkers = changeCategoryToInWorker(
+      editedWorkers,
+      "servicesCategory",
+      newCategory,
+      oldCategory
+    )
+
+    const comparedItemEdited = compareEditedArrayToServerArrayAndReturnNotCompareItems(
+      editedEditedWorkers,
+      "indexWorker",
+      workersFromServer
+    )
+
+    setEditedWorkers(comparedItemEdited)
   }
 
   const handleChangeSaveEdit = (

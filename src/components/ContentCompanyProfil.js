@@ -13,6 +13,9 @@ import OpeningHoursContent from "./ItemsContentCompanyProfil/OpeningHoursContent
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUpdateCompanyProfil, resetEditCompany } from "../state/actions"
 import AllCategoryOfServices from "./ItemsContentCompanyProfil/AllCategoryOfServices"
+import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
+import { MdEdit } from "react-icons/md"
+import ReactTooltip from "react-tooltip"
 
 const TextH1 = styled.div`
   position: relative;
@@ -118,6 +121,23 @@ const SaveChangesPosition = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
+`
+
+const EditModeToChange = styled.div`
+  display: inline-block;
+  background-color: #424242;
+  padding: 8px;
+  padding-bottom: 0px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    background-color: ${Colors.navDownBackground};
+  }
 `
 
 const ContentCompanyProfil = ({
@@ -125,6 +145,8 @@ const ContentCompanyProfil = ({
   isAdmin = false,
   isCompanyEditProfil = false,
 }) => {
+  const [editMode, setEditMode] = useState(false)
+  const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
   const [editOpinionAndAdress, setEditOpinionAndAdress] = useState(false)
   const [editAboutUs, setEditAboutUs] = useState(false)
   const [textAboutUs, setTextAboutUs] = useState("")
@@ -134,6 +156,7 @@ const ContentCompanyProfil = ({
   const [companyPaused, setCompanyPaused] = useState(null)
   const [editedWorkers, setEditedWorkers] = useState([])
   const [editedAdress, setEditedAdress] = useState({
+    companyName: null,
     city: null,
     discrict: null,
     adress: null,
@@ -155,7 +178,7 @@ const ContentCompanyProfil = ({
   console.log("deleted from server", deletedItemsServices)
   console.log("new services", newItemsServices)
   console.log("edited services from server", editedItemsServices)
-
+  console.log("edited workers", editedWorkers)
   const user = useSelector(state => state.user)
   const resetCompany = useSelector(state => state.resetCompany)
 
@@ -163,10 +186,14 @@ const ContentCompanyProfil = ({
 
   useEffect(() => {
     if (!!resetCompany) {
+      setDeletedItemsServices([])
+      setNewItemsServices([])
+      setEditedItemsServices([])
       setTextAboutUs("")
       setTextRezerwation("")
       setEditedWorkers([])
       setEditedAdress({
+        companyName: null,
         city: null,
         discrict: null,
         adress: null,
@@ -193,41 +220,86 @@ const ContentCompanyProfil = ({
   }
 
   const companyEditProfilProps = {
-    isCompanyEditProfil: isCompanyEditProfil && isAdmin,
-    // isCompanyEditProfil: false,
+    isCompanyEditProfil: isCompanyEditProfil && isAdmin && editMode,
   }
 
-  const handleAddEditWorker = (action, indexWorker, specializationText) => {
+  const handleAddEditWorker = (
+    action,
+    indexWorker,
+    specializationText,
+    workerServicesCategory = []
+  ) => {
     if (action === "save") {
       const oldWorkers = [...editedWorkers]
       const isIndexWorker = oldWorkers.findIndex(
         item => item.indexWorker === indexWorker
       )
-      if (isIndexWorker > 0) {
+      if (isIndexWorker >= 0) {
         oldWorkers[isIndexWorker].specializationText = specializationText
+        oldWorkers[isIndexWorker].servicesCategory = workerServicesCategory
       } else {
         const newWorker = {
           indexWorker: indexWorker,
           specializationText: specializationText,
+          servicesCategory: workerServicesCategory,
         }
         oldWorkers.push(newWorker)
       }
-      setEditedWorkers(oldWorkers)
-    } else if (action === "delete") {
-      const allNewWorkers = [...editedWorkers].filter(
-        item => item.indexWorker !== indexWorker
+      const newOldWorkers = compareEditedArrayToServerArrayAndReturnNotCompareItems(
+        oldWorkers,
+        "indexWorker",
+        [...company.workers]
       )
-      setEditedWorkers(allNewWorkers)
+      setEditedWorkers(newOldWorkers)
+    } else if (action === "delete") {
+      const itemFromServer = [...company.workers].find(
+        worker => worker.user._id === indexWorker
+      )
+      const workersIndex = [...editedWorkers].findIndex(
+        item => item.indexWorker === indexWorker
+      )
+
+      let newEditWorkers = [...editedWorkers]
+
+      if (workersIndex >= 0 && !!itemFromServer) {
+        newEditWorkers[workersIndex].specializationText =
+          itemFromServer.specialization
+        if (workerServicesCategory.length > 0) {
+          newEditWorkers[workersIndex].servicesCategory = workerServicesCategory
+        }
+      } else {
+        newEditWorkers = newEditWorkers.filter(
+          item => item.indexWorker !== indexWorker
+        )
+      }
+      const newEditedItems = compareEditedArrayToServerArrayAndReturnNotCompareItems(
+        newEditWorkers,
+        "indexWorker",
+        [...company.workers]
+      )
+      setEditedWorkers(newEditedItems)
     }
   }
 
+  const handleClickEditMode = () => {
+    setEditMode(prevState => !prevState)
+
+    setEditOpinionAndAdress(false)
+    setEditAboutUs(false)
+    setEditRezerwationText(false)
+    setEditLinks(false)
+    setChangesTimeOpen(false)
+  }
+
   const handleChangeUpodateAdress = (
+    updateNompanyNameInput,
     updateCityInput,
     updateDiscrictInput,
     updateAdressInput,
     updatePhoneInput
   ) => {
     setEditedAdress({
+      companyName: updateNompanyNameInput,
       city: updateCityInput,
       discrict: updateDiscrictInput,
       adress: updateAdressInput,
@@ -252,6 +324,7 @@ const ContentCompanyProfil = ({
   }
 
   const isChangesInAdress =
+    editedAdress.companyName !== null ||
     editedAdress.city !== null ||
     editedAdress.discrict !== null ||
     editedAdress.adress !== null ||
@@ -326,7 +399,17 @@ const ContentCompanyProfil = ({
   }
   return (
     <div>
-      <TextH1 {...companyEditProfilProps}>{company.name}</TextH1>
+      <TextH1 {...companyEditProfilProps}>
+        {company.name}
+        <EditModeToChange
+          data-tip
+          data-for="editMode"
+          data-place="bottom"
+          onClick={handleClickEditMode}
+        >
+          <MdEdit />
+        </EditModeToChange>
+      </TextH1>
       <ContentDiv>
         <LeftColumn>
           <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
@@ -338,7 +421,14 @@ const ContentCompanyProfil = ({
             deletedItemsServices={deletedItemsServices}
             setDeletedItemsServices={setDeletedItemsServices}
             services={company.services}
+            allCategoriesWithItems={allCategoriesWithItems}
+            setAllCategoriesWithItems={setAllCategoriesWithItems}
             {...companyEditProfilProps}
+            editedWorkers={editedWorkers}
+            setEditedWorkers={setEditedWorkers}
+            workersFromServer={[...company.workers]}
+            handleAddEditWorker={handleAddEditWorker}
+            company={company}
           />
         </LeftColumn>
         <RightColumn>
@@ -346,6 +436,7 @@ const ContentCompanyProfil = ({
             <OpinionAndAdressContent
               {...companyEditProfilProps}
               city={company.city}
+              companyName={company.name}
               district={company.district}
               adress={company.adress}
               TitleRightColumn={TitleRightColumn}
@@ -392,12 +483,15 @@ const ContentCompanyProfil = ({
               companyEditProfilProps={companyEditProfilProps}
               {...companyEditProfilProps}
               ButtonEditPosition={ButtonEditPosition}
-              workers={company.workers}
+              workers={[...company.workers]}
               owner={company.owner}
               companyId={company._id}
               ownerSpecialization={company.ownerSpecialization}
               handleAddEditWorker={handleAddEditWorker}
               handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
+              allCategoriesWithItems={allCategoriesWithItems}
+              editedWorkers={editedWorkers}
+              setEditedWorkers={setEditedWorkers}
             />
           </RightColumnItem>
 
@@ -463,6 +557,9 @@ const ContentCompanyProfil = ({
           />
         </SaveChangesPosition>
       </CSSTransition>
+      <ReactTooltip id="editMode" effect="float" multiline={true}>
+        <span>Tryb edycji.</span>
+      </ReactTooltip>
     </div>
   )
 }

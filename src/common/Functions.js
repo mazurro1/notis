@@ -140,10 +140,8 @@ export const replacingEditedNamesAndAddingNewOnes2 = (
   editedItems,
   lastName,
   newName,
-  itemField,
-  newCategory
+  itemField
 ) => {
-  console.log(editedItems)
   const prevServicesFromServer = [...allOldItems]
   let oldCategoryNameInItems = prevServicesFromServer.filter(
     item => item[itemField] === lastName
@@ -210,6 +208,83 @@ export const compareTwoArray = (arrayFirst, arraySecond) => {
     })
     if (!isInArray) {
       result.push(itemFirst)
+    }
+  })
+  return result
+}
+
+export const sortItemsInArray = (arrayToSort, itemName) => {
+  arrayToSort.sort((a, b) => {
+    const firstItemToSort = a[itemName].toLowerCase()
+    const secondItemToSort = b[itemName].toLowerCase()
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+  return arrayToSort
+}
+
+export const changeCategoryToInWorker = (
+  arrayWorkers,
+  arrayName,
+  prevNameCategory,
+  newNameCategory
+) => {
+  const newArray = []
+  ;[...arrayWorkers].forEach(worker => {
+    const indexCategory = worker[arrayName].findIndex(
+      category => category === prevNameCategory
+    )
+    if (indexCategory >= 0) {
+      worker[arrayName][indexCategory] = newNameCategory
+    }
+    newArray.push(worker)
+  })
+  return [...newArray]
+}
+
+export const selectOtherItemsInFirstArray = (
+  firstArray,
+  secondArray,
+  itemToCompare
+) => {
+  const result = []
+  firstArray.forEach(first => {
+    const isInSecondArray = secondArray.some(
+      second => second[itemToCompare] === first[itemToCompare]
+    )
+    if (!isInSecondArray) {
+      result.push(first)
+    }
+  })
+  return result
+}
+
+export const compareEditedArrayToServerArrayAndReturnNotCompareItems = (
+  arrayEdited,
+  idNameToFind,
+  workersFromServer
+) => {
+  const prevWorkers = []
+  workersFromServer.forEach(workerX => {
+    const newWorker = {
+      indexWorker: workerX.user._id,
+      specializationText: workerX.specialization,
+      servicesCategory: [...workerX.servicesCategory],
+    }
+    prevWorkers.push(newWorker)
+  })
+
+  const result = []
+  arrayEdited.forEach(edited => {
+    const itemFromServer = prevWorkers.find(
+      server => server[idNameToFind] === edited[idNameToFind]
+    )
+    if (!!itemFromServer) {
+      const isTheSame = JSON.stringify(edited) == JSON.stringify(itemFromServer)
+      if (!isTheSame) {
+        result.push(edited)
+      }
     }
   })
   return result

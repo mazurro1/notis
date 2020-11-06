@@ -204,11 +204,11 @@ const ServicesItem = ({
           {itemServices.serviceName}
           <PriceService isCompanyEditProfil={isCompanyEditProfil}>
             {`${itemServices.serviceCost}zł ${
-              itemServices.extraCost ? "+/-" : ""
+              itemServices.extraCost ? "+" : ""
             }`}
           </PriceService>
           <PriceService isCompanyEditProfil={isCompanyEditProfil} otherColor>
-            {`${timeService} ${itemServices.extraTime ? "+/-" : ""}`}
+            {`${timeService} ${itemServices.extraTime ? "+" : ""}`}
           </PriceService>
         </TitleService>
         <ServiceParagraph>{itemServices.serviceText}</ServiceParagraph>

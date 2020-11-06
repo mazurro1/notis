@@ -31,6 +31,11 @@ const WorkerItemStyle = styled.div`
   overflow: hidden;
   min-height: 105px;
   min-width: 130px;
+  padding-bottom: ${props =>
+    props.userEditItem ? `${props.selectHeight + 260}px` : "10px"};
+  transition-property: padding-bottom;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const EditUserBackground = styled.div`
@@ -54,6 +59,9 @@ const EditUserBackgroundContent = styled.div`
   border-radius: 5px;
   padding: 5px;
   font-size: 0.9rem;
+  transition-property: height;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const EditUserStyle = styled.div`
@@ -217,6 +225,9 @@ const OurWorkersContent = ({
   companyId = "",
   handleAddEditWorker,
   handleSaveOwnerSpecialization,
+  allCategoriesWithItems,
+  editedWorkers,
+  setEditedWorkers,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
@@ -275,6 +286,10 @@ const OurWorkersContent = ({
   }
 
   const mapWorkers = workers.map((item, index) => {
+    const selectEditedWorker = [...editedWorkers].find(edited => {
+      return edited.indexWorker === item.user._id
+    })
+    const finallEditedWorker = !!selectEditedWorker ? selectEditedWorker : null
     return (
       <WorkerItem
         index={index}
@@ -293,6 +308,8 @@ const OurWorkersContent = ({
         companyId={companyId}
         userToken={user.token}
         handleAddEditWorker={handleAddEditWorker}
+        allCategoriesWithItems={allCategoriesWithItems}
+        editedWorkers={finallEditedWorker}
       />
     )
   })
@@ -303,7 +320,7 @@ const OurWorkersContent = ({
         NASI PRACOWNICY
       </TitleRightColumn>
       <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
-        <WorkerItemStyle>
+        <WorkerItemStyle userEditItem={ownerEdit}>
           <WorkerCircle isCompanyEditProfil={isCompanyEditProfil}>
             <FaUser />
           </WorkerCircle>

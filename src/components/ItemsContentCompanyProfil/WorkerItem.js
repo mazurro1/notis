@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import {
   MdEdit,
   MdDelete,
@@ -8,6 +8,7 @@ import {
   MdClose,
   MdDone,
 } from "react-icons/md"
+import SelectCustom from "../SelectCustom"
 
 import { FaUser, FaArrowLeft } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
@@ -93,6 +94,11 @@ const DeleteIconStyle = styled.div`
   }
 `
 
+const SelectStyle = styled.div`
+  margin-bottom: 120px;
+  margin-top: 20px;
+`
+
 const WorkerItem = ({
   item,
   isCompanyEditProfil,
@@ -109,12 +115,122 @@ const WorkerItem = ({
   userToken,
   index,
   handleAddEditWorker,
+  allCategoriesWithItems,
+  editedWorkers,
 }) => {
   const [userEditItem, setUserEditItem] = useState(false)
   const [userConfirmDelete, setUserConfirmDelete] = useState(false)
   const [inputSpecialization, setInputSpeciailization] = useState(
     item.specialization
   )
+  const [allCategories, setAllCategories] = useState([])
+  const [workerServicesCategory, setWorkerServicesCategory] = useState([])
+  const [selectHeight, setSelectHeight] = useState(0)
+  const [resetServicesCategory, setResetServicesCategory] = useState(false)
+  const selectRef = useRef(null)
+
+  // const mapedWorkerServicesCategory = [...workerServicesCategory].map(item => {
+  //   return item.label
+  // })
+
+  // const disabledButtonAccept =
+  //   inputSpecialization !== item.specialization
+
+  // useEffect(() => {
+  //   if (!!resetServicesCategory) {
+  //     console.log("render")
+  //     const itemServicesCategory = !!item.servicesCategory
+  //       ? item.servicesCategory
+  //       : []
+  //     const mapedWorkerServicesCategoryFromServer = [
+  //       ...itemServicesCategory,
+  //     ].map(item => {
+  //       return {
+  //         value: item,
+  //         label: item,
+  //       }
+  //     })
+  //     setWorkerServicesCategory(mapedWorkerServicesCategoryFromServer)
+  //     setResetServicesCategory(false)
+  //   }
+  // }, [resetServicesCategory])
+
+  useEffect(() => {
+    if (!!item.servicesCategory) {
+      if (item.servicesCategory.length > 0) {
+        const valuePadding = allCategoriesWithItems.length * 23 + 15
+        setSelectHeight(valuePadding)
+      }
+    }
+  }, [item, setSelectHeight])
+
+  useEffect(() => {
+    if (!!selectRef.current) {
+      setSelectHeight(selectRef.current.clientHeight)
+    }
+  }, [selectRef, workerServicesCategory, item])
+
+  useEffect(() => {
+    if (allCategoriesWithItems.length > 0 || !!resetServicesCategory) {
+      const newCategories = allCategoriesWithItems.map(item => {
+        const newItem = {
+          value: item.oldCategory,
+          label: item.category,
+        }
+        return newItem
+      })
+
+      //take all categories
+      const allCategories = []
+      allCategoriesWithItems.forEach(item => {
+        if (item.items.length > 0) {
+          allCategories.push(item.category)
+        }
+      })
+
+      //actualizate when category was deleted
+      let allWorkerServicesCategory = [...workerServicesCategory]
+      const actualServicesCategory = !!editedWorkers
+        ? editedWorkers
+        : !!item.servicesCategory
+        ? item.servicesCategory
+        : []
+      if (allWorkerServicesCategory.length === 0) {
+        const workerServicesCategory = actualServicesCategory.map(item => {
+          return {
+            label: item,
+            value: item,
+          }
+        })
+        allWorkerServicesCategory = [...workerServicesCategory]
+      }
+
+      //change label when category was actualizated
+      const newWorkerServicesCategory = [...allWorkerServicesCategory]
+      if (newWorkerServicesCategory.length > 0 || !!actualServicesCategory) {
+        newWorkerServicesCategory.forEach((item, index) => {
+          newCategories.forEach(itemCategory => {
+            if (itemCategory.value === item.value) {
+              newWorkerServicesCategory[index].label = itemCategory.label
+            }
+          })
+        })
+
+        //filter categories worker
+        const filteredArrayAllCategories = newWorkerServicesCategory.filter(
+          item => {
+            const isCategoryInWorkerArr = allCategories.some(
+              category => category === item.label
+            )
+            return isCategoryInWorkerArr
+          }
+        )
+        //actualizate selected category user
+        setWorkerServicesCategory(filteredArrayAllCategories)
+      }
+      setAllCategories(newCategories)
+    }
+  }, [allCategoriesWithItems, item])
 
   const dispatch = useDispatch()
 
@@ -147,21 +263,75 @@ const WorkerItem = ({
 
   const handleSaveSpecialization = () => {
     setUserEditItem(false)
-    if (inputSpecialization !== item.specialization) {
-      handleAddEditWorker("save", item.user._id, inputSpecialization)
-    } else {
-      handleAddEditWorker("delete", item.user._id, inputSpecialization)
+
+    // if (disabledButtonAccept) {
+    const inputSpecializationValue =
+      inputSpecialization !== item.specialization
+        ? inputSpecialization
+        : item.specialization
+
+    const workerServicesCategoryToSent = workerServicesCategory.map(
+      item => item.label
+    )
+
+    let workerCategoryDefaultFromServer = []
+    // if (!!item.servicesCategory && serviceCategoriesIsEqual) {
+    if (!!item.servicesCategory) {
+      if (item.servicesCategory.length > 0) {
+        const workerServicesCategory = item.servicesCategory.map(item => {
+          return item
+        })
+        workerCategoryDefaultFromServer = workerServicesCategory
+      }
     }
+
+    // const workerServicesCategoryValue = !serviceCategoriesIsEqual
+    //   ? workerServicesCategoryToSent
+    //   : workerCategoryDefaultFromServer
+
+    const workerServicesCategoryValue = workerServicesCategoryToSent
+
+    handleAddEditWorker(
+      "save",
+      item.user._id,
+      inputSpecializationValue,
+      workerServicesCategoryValue
+    )
+    // }
   }
 
   const handleEditSpecializationReset = () => {
+    let actualServicesCategory = workerServicesCategory
+    if (!!editedWorkers) {
+      actualServicesCategory = editedWorkers.servicesCategory.map(item => {
+        return {
+          label: item,
+          value: item,
+        }
+      })
+    }
     setInputSpeciailization(item.specialization)
     setUserEditItem(false)
-    handleAddEditWorker("delete", item.user._id, inputSpecialization)
+    const mapLebelValueToCategory = actualServicesCategory.map(
+      item => item.label
+    )
+    handleAddEditWorker(
+      "delete",
+      item.user._id,
+      inputSpecialization,
+      mapLebelValueToCategory
+    )
+    setWorkerServicesCategory(actualServicesCategory)
+    setResetServicesCategory(true)
+  }
+
+  const handleChangeSelect = value => {
+    const valueToSave = !!value ? value : []
+    setWorkerServicesCategory(valueToSave)
   }
 
   return (
-    <WorkerItemStyle>
+    <WorkerItemStyle userEditItem={userEditItem} selectHeight={selectHeight}>
       <WorkerCircle isCompanyEditProfil={isCompanyEditProfil}>
         <FaUser />
       </WorkerCircle>
@@ -214,6 +384,7 @@ const WorkerItem = ({
             // onClick={handleEditSpecializationReset}
             >
               <EditUserBackgroundContent onClick={handleClickContent}>
+                Stanowisko
                 <InputStyles>
                   <InputIcon
                     placeholder="Stanowisko"
@@ -222,6 +393,25 @@ const WorkerItem = ({
                     onChange={handleInputOnChange}
                   />
                 </InputStyles>
+                {allCategories.length > 0 && (
+                  <>
+                    <SelectStyle ref={selectRef}>
+                      Wykonywane usługi
+                      <SelectCustom
+                        widthAuto
+                        defaultMenuIsOpen={false}
+                        secondColor
+                        options={allCategories}
+                        handleChange={handleChangeSelect}
+                        value={workerServicesCategory}
+                        placeholder="Usługi..."
+                        isMulti
+                        closeMenuOnSelect={false}
+                        menuIsOpen
+                      />
+                    </SelectStyle>
+                  </>
+                )}
                 <ButtonContentEdit>
                   <ButtonStyles>
                     <ButtonIcon
@@ -245,7 +435,7 @@ const WorkerItem = ({
                       onClick={handleSaveSpecialization}
                       customColorButton="#2e7d32"
                       customColorIcon="#43a047"
-                      disabled={inputSpecialization === item.specialization}
+                      // disabled={!disabledButtonAccept}
                     />
                   </ButtonStyles>
                 </ButtonContentEdit>
@@ -263,9 +453,7 @@ const WorkerItem = ({
             classNames="popup"
             unmountOnExit
           >
-            <EditUserBackground
-            // onClick={handleUserConfirmDelete}
-            >
+            <EditUserBackground>
               <EditUserBackgroundContent onClick={handleClickContent} noBg>
                 <ButtonContent>
                   <ButtonDeleteStyle>

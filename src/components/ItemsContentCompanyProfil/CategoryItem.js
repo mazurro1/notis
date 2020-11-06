@@ -19,6 +19,7 @@ import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
+import { useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
   position: relative;
@@ -208,13 +209,14 @@ const CategoryItem = ({
   const [timeInput, setTimeInput] = useState("")
   const [priceInput, setPriceInput] = useState("")
   const [categoryTitle, setCategoryTitle] = useState("")
+  const resetCompany = useSelector(state => state.resetCompany)
 
   const disabledCategorySave =
     categoryTitle.toLowerCase() === item.category.toLowerCase()
 
   useEffect(() => {
     setCategoryTitle(item.category)
-  }, [index, item])
+  }, [index, item, resetCompany])
 
   const handleClickArrow = () => {
     setCollapseActive(prevState => !prevState)

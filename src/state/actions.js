@@ -622,12 +622,14 @@ export const fetchCompanyData = (companyId, token) => {
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)
+        dispatch(resetEditCompany(true))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas ładowania konta firmowego.", "red"))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)
+        dispatch(resetEditCompany(false))
       })
   }
 }
@@ -802,7 +804,6 @@ export const fetchUpdateCompanyProfil = (
       .then(response => {
         dispatch(addAlertItem("Zaktualizowano profil firmowy.", "green"))
         dispatch(fetchCompanyData(companyId, token))
-        dispatch(resetEditCompany(true))
       })
       .catch(error => {
         dispatch(

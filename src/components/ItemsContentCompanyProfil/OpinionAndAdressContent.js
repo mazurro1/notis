@@ -4,7 +4,12 @@ import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit, MdPhone } from "react-icons/md"
 import InputIcon from "../InputIcon"
-import { MdPhoneAndroid, MdLocationOn, MdLocationCity } from "react-icons/md"
+import {
+  MdPhoneAndroid,
+  MdLocationOn,
+  MdLocationCity,
+  MdWork,
+} from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import { Checkbox } from "react-input-checkbox"
@@ -26,7 +31,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "170px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "240px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -133,7 +138,6 @@ const BackgroundEditContent = styled.div`
   padding: 10px;
   border-radius: 5px;
   max-height: 90%;
-  overflow-y: auto;
 `
 
 const ButtonSubmit = styled.button`
@@ -165,7 +169,9 @@ const OpinionAndAdressContent = ({
   handleChangeUpodateAdress,
   setCompanyPaused,
   pauseCompany = true,
+  companyName = "",
 }) => {
+  const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
   const [discrictInput, setDiscrictInput] = useState(district)
   const [adressInput, setAdressInput] = useState(adress)
@@ -173,6 +179,7 @@ const OpinionAndAdressContent = ({
   const [companyPausedItem, setCompanyPausedItem] = useState(pauseCompany)
 
   const disabledButtonSubmit =
+    companyNameInput !== companyName ||
     cityInput !== city ||
     discrictInput !== district ||
     adressInput !== adress ||
@@ -187,7 +194,10 @@ const OpinionAndAdressContent = ({
         discrictInput !== district ? discrictInput : null
       const updateAdressInput = adressInput !== adress ? adressInput : null
       const updatePhoneInput = phoneInput !== phone ? phoneInput : null
+      const updateNompanyNameInput =
+        companyNameInput !== companyName ? companyNameInput : null
       handleChangeUpodateAdress(
+        updateNompanyNameInput,
         updateCityInput,
         updateDiscrictInput,
         updateAdressInput,
@@ -208,11 +218,12 @@ const OpinionAndAdressContent = ({
 
   const handleResetInputs = () => {
     onClickEdit()
+    setCompanyNameInput(companyName)
     setCityInput(city)
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
-    handleChangeUpodateAdress(null, null, null, null)
+    handleChangeUpodateAdress(null, null, null, null, null)
     setCompanyPausedItem(pauseCompany)
     setCompanyPaused(null)
   }
@@ -301,6 +312,15 @@ const OpinionAndAdressContent = ({
             <BackgroundEdit>
               <BackgroundEditContent onClick={handleClickContentAddWorkers}>
                 <form onSubmit={handleOnSubmit}>
+                  <InputIcon
+                    icon={<MdWork />}
+                    placeholder="Nazwa firmy"
+                    type="text"
+                    secondColor
+                    onChange={e => handleChangeInputs(e, setCompanyNameInput)}
+                    value={companyNameInput}
+                    required
+                  />
                   <InputIcon
                     icon={<MdLocationCity />}
                     placeholder="Miejscowość"
