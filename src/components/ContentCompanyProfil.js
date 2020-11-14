@@ -11,7 +11,11 @@ import ColumnItemTextarea from "./ItemsContentCompanyProfil/ColumnItemTextarea"
 import { CSSTransition } from "react-transition-group"
 import OpeningHoursContent from "./ItemsContentCompanyProfil/OpeningHoursContent"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchUpdateCompanyProfil, resetEditCompany } from "../state/actions"
+import {
+  fetchUpdateCompanyProfil,
+  resetEditCompany,
+  changeReserwationValue,
+} from "../state/actions"
 import AllCategoryOfServices from "./ItemsContentCompanyProfil/AllCategoryOfServices"
 import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
 import { MdEdit } from "react-icons/md"
@@ -51,6 +55,28 @@ const LeftColumn = styled.div`
   @media all and (min-width: 991px) {
     width: 70%;
   }
+`
+
+const BackgroundEdit = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const BackgroundEditContent = styled.div`
+  width: 90%;
+  background-color: ${props => (props.transparent ? "transparent" : "white")};
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 90%;
+  color: black;
 `
 
 const RightColumn = styled.div`
@@ -125,7 +151,9 @@ const SaveChangesPosition = styled.div`
 `
 
 const EditModeToChange = styled.div`
-  display: inline-block;
+  position: absolute;
+  right: -50px;
+  top: 5px;
   background-color: #424242;
   padding: 8px;
   padding-bottom: 0px;
@@ -167,7 +195,9 @@ const ContentCompanyProfil = ({
     instagram: null,
     website: null,
   })
+  const [reservationEveryTime, setReservationEveryTime] = useState(null)
   const [newOwnerSpecialization, setNewOwnerSpecialization] = useState(null)
+  const [newOwnerServicesCategory, setNewOwnerServicesCategory] = useState(null)
   const [changesTimeOpen, setChangesTimeOpen] = useState(false)
   const [openingHoursToSent, setOpeningHoursToSent] = useState(false)
 
@@ -179,6 +209,8 @@ const ContentCompanyProfil = ({
   console.log("new services", newItemsServices)
   console.log("edited services from server", editedItemsServices)
   console.log("edited workers", editedWorkers)
+  console.log("newOwnerSpecialization", newOwnerSpecialization)
+
   const user = useSelector(state => state.user)
   const resetCompany = useSelector(state => state.resetCompany)
 
@@ -186,6 +218,7 @@ const ContentCompanyProfil = ({
 
   useEffect(() => {
     if (!!resetCompany) {
+      setReservationEveryTime(null)
       setDeletedItemsServices([])
       setNewItemsServices([])
       setEditedItemsServices([])
@@ -205,6 +238,7 @@ const ContentCompanyProfil = ({
         website: null,
       })
       setNewOwnerSpecialization(null)
+      setNewOwnerServicesCategory(null)
       setOpeningHoursToSent(false)
       setChangesTimeOpen(false)
       dispatch(resetEditCompany(false))
@@ -319,8 +353,46 @@ const ContentCompanyProfil = ({
     })
   }
 
-  const handleSaveOwnerSpecialization = specialization => {
-    setNewOwnerSpecialization(specialization)
+  const handleSaveOwnerSpecialization = (specialization, servicesCategory) => {
+    const checkOwnerSpecialization =
+      company.ownerSpecialization === specialization ? null : specialization
+
+    const ownerCategoryCheck = !!company.ownerSerwiceCategory
+      ? company.ownerSerwiceCategory
+      : []
+
+    const isTheSameOwnerCategory =
+      JSON.stringify(servicesCategory) == JSON.stringify(ownerCategoryCheck)
+
+    const resultOwnerCategory = isTheSameOwnerCategory ? null : servicesCategory
+
+    setNewOwnerSpecialization(checkOwnerSpecialization)
+    setNewOwnerServicesCategory(resultOwnerCategory)
+  }
+
+  const handleClickReserwation = (itemServices, companyId) => {
+    const ownerCategoryToSent = !!company.ownerSerwiceCategory
+      ? company.ownerSerwiceCategory
+      : []
+
+    const ownerSpecializationToSent = !!company.ownerSpecialization
+      ? company.ownerSpecialization
+      : ""
+
+    const ownerData = {
+      ownerCategory: ownerCategoryToSent,
+      specialization: ownerSpecializationToSent,
+      name: company.owner.name,
+      surname: company.owner.surname,
+      ownerId: company.owner._id,
+    }
+    const valueWithCompanyId = {
+      ...itemServices,
+      companyId: companyId,
+      workers: company.workers,
+      ownerData: ownerData,
+    }
+    dispatch(changeReserwationValue(valueWithCompanyId))
   }
 
   const isChangesInAdress =
@@ -336,7 +408,9 @@ const ContentCompanyProfil = ({
     editedLinks.website !== null
 
   const isAnyChanges =
+    newOwnerServicesCategory !== null ||
     editedWorkers.length > 0 ||
+    !!reservationEveryTime ||
     !!textAboutUs ||
     !!textRezerwationText ||
     isChangesInAdress ||
@@ -391,12 +465,23 @@ const ContentCompanyProfil = ({
           ownerSpecializationToSent,
           openingHoursToSentFinall,
           companyPausedToSent,
-          services
+          services,
+          reservationEveryTime,
+          newOwnerServicesCategory
         )
       )
       setCompanyPaused(null)
     }
   }
+
+  const filteredAllCategoriesWithItems = allCategoriesWithItems.filter(item => {
+    if (item.items.length > 0) {
+      return true
+    } else {
+      return false
+    }
+  })
+
   return (
     <div>
       <TextH1 {...companyEditProfilProps}>
@@ -427,8 +512,11 @@ const ContentCompanyProfil = ({
             editedWorkers={editedWorkers}
             setEditedWorkers={setEditedWorkers}
             workersFromServer={[...company.workers]}
-            handleAddEditWorker={handleAddEditWorker}
-            company={company}
+            handleClickReserwation={handleClickReserwation}
+            companyId={company._id}
+            newOwnerServicesCategory={newOwnerServicesCategory}
+            setNewOwnerServicesCategory={setNewOwnerServicesCategory}
+            ownerSerwiceCategory={company.ownerSerwiceCategory}
           />
         </LeftColumn>
         <RightColumn>
@@ -449,6 +537,8 @@ const ContentCompanyProfil = ({
               onClickEdit={() => handleEdit(setEditOpinionAndAdress)}
               handleChangeUpodateAdress={handleChangeUpodateAdress}
               setCompanyPaused={setCompanyPaused}
+              setReservationEveryTime={setReservationEveryTime}
+              reservationEveryTimeServer={company.reservationEveryTime}
             />
           </RightColumnItem>
           <InputCustom />
@@ -489,9 +579,10 @@ const ContentCompanyProfil = ({
               ownerSpecialization={company.ownerSpecialization}
               handleAddEditWorker={handleAddEditWorker}
               handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
-              allCategoriesWithItems={allCategoriesWithItems}
+              allCategoriesWithItems={filteredAllCategoriesWithItems}
               editedWorkers={editedWorkers}
-              setEditedWorkers={setEditedWorkers}
+              ownerSerwiceCategory={company.ownerSerwiceCategory}
+              newOwnerServicesCategory={newOwnerServicesCategory}
             />
           </RightColumnItem>
 

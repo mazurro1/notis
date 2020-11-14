@@ -29,6 +29,7 @@ import {
   changeUserProfilVisible,
   changeRemindPasswordVisible,
   changeCreateCompanyVisible,
+  changeReserwationValue,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -38,6 +39,7 @@ import ActiveAccount from "./ActiveAccount"
 import UserProfil from "./UserProfil"
 import RemindPassword from "./RemindPassword"
 import CreateCompany from "./CreateCompany"
+import Reserwation from "./Reserwation"
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -159,6 +161,8 @@ const Navigation = ({ children, isMainPage }) => {
   const industries = useSelector(state => state.industries)
   const page = useSelector(state => state.page)
   const user = useSelector(state => state.user)
+  const reserwationEnable = useSelector(state => state.reserwationEnable)
+  const reserwationData = useSelector(state => state.reserwationData)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
@@ -255,6 +259,10 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleCreateCompany = () => {
     dispatch(changeCreateCompanyVisible(!createCompanyVisible))
+  }
+
+  const handleCloseReserwation = () => {
+    dispatch(changeReserwationValue(null))
   }
 
   const mapIndustries = Industries.map((item, index) => {
@@ -384,6 +392,19 @@ const Navigation = ({ children, isMainPage }) => {
       maxWidth="400"
     >
       <CreateCompany />
+    </Popup>
+  )
+
+  const PopupReserwation = (
+    <Popup
+      popupEnable={reserwationEnable}
+      handleClose={handleCloseReserwation}
+      noContent
+    >
+      <Reserwation
+        reserwationData={reserwationData}
+        handleCloseReserwation={handleCloseReserwation}
+      />
     </Popup>
   )
 
@@ -540,6 +561,7 @@ const Navigation = ({ children, isMainPage }) => {
     <>
       <Spinner spinnerEnable={spinnerEnable} />
       <Alerts />
+      {PopupReserwation}
       {PopupActiveAccount}
       {PopupRemindPassword}
       {PopupLogin}

@@ -197,6 +197,8 @@ const CategoryItem = ({
   handleChangeSaveEdit,
   handleDeleteServiceItem,
   handleResetItemToFromServer,
+  handleClickReserwation,
+  companyId,
 }) => {
   const [collapseActive, setCollapseActive] = useState(true)
   const [clickDelete, setClickDelete] = useState(false)
@@ -314,6 +316,8 @@ const CategoryItem = ({
         ButtonsDeletePosition={ButtonsDeletePosition}
         handleDeleteServiceItem={handleDeleteServiceItem}
         handleResetItemToFromServer={handleResetItemToFromServer}
+        handleClickReserwation={handleClickReserwation}
+        companyId={companyId}
       />
     )
   })
@@ -419,7 +423,7 @@ const CategoryItem = ({
                     <ButtonsAddPosition>
                       <ButtonMargin>
                         <ButtonIcon
-                          title="Anuluj"
+                          title="Cofnij"
                           uppercase
                           fontIconSize="40"
                           fontSize="13"
@@ -431,7 +435,7 @@ const CategoryItem = ({
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
                         <ButtonIcon
-                          title="Dodaj"
+                          title="Zapisz"
                           uppercase
                           fontIconSize="20"
                           fontSize="15"

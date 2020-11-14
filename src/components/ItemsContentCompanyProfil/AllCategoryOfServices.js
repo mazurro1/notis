@@ -100,8 +100,11 @@ const AllCategoryOfServices = ({
   editedWorkers,
   setEditedWorkers,
   workersFromServer,
-  handleAddEditWorker,
-  company,
+  handleClickReserwation,
+  companyId,
+  newOwnerServicesCategory,
+  setNewOwnerServicesCategory,
+  ownerSerwiceCategory = [],
 }) => {
   const [allCategories, setAllCategories] = useState([])
   const [isFirstRender, setIsFirstRender] = useState(true)
@@ -211,6 +214,17 @@ const AllCategoryOfServices = ({
   }
 
   const handleDeleteAllCategory = (category, actualCategory) => {
+    //deletef from owner category
+    const actualOwnerCategory = !!newOwnerServicesCategory
+      ? [...newOwnerServicesCategory]
+      : [...ownerSerwiceCategory]
+
+    const filterNewOwnerCategory = actualOwnerCategory.filter(
+      category => category !== actualCategory
+    )
+
+    setNewOwnerServicesCategory(filterNewOwnerCategory)
+
     //deleted from server
     const prevServices = [...services]
     const prevDeletedItemsFromServer = [...deletedItemsServices]
@@ -382,6 +396,21 @@ const AllCategoryOfServices = ({
     oldCategoryTitle,
     oldChangedCategory
   ) => {
+    //name in owner category
+    const actualOwnerCategory = !!newOwnerServicesCategory
+      ? [...newOwnerServicesCategory]
+      : [...ownerSerwiceCategory]
+
+    const mapedNewOwnerCategory = actualOwnerCategory.map(category => {
+      if (category === oldChangedCategory) {
+        return newCategoryTitle
+      } else {
+        return category
+      }
+    })
+
+    setNewOwnerServicesCategory(mapedNewOwnerCategory)
+
     //name from creator category
     const prevAllCategories = [...allCategories]
     const indexFilterCategory = prevAllCategories.findIndex(
@@ -482,6 +511,29 @@ const AllCategoryOfServices = ({
   }
 
   const handleResetCategoryName = (oldCategory, newCategory, prevCategory) => {
+    //reset category in owner category
+    const actualOwnerCategory = !!newOwnerServicesCategory
+      ? [...newOwnerServicesCategory]
+      : [...ownerSerwiceCategory]
+
+    const mapedNewOwnerCategory = actualOwnerCategory.map(category => {
+      if (category === prevCategory) {
+        return oldCategory
+      } else {
+        return category
+      }
+    })
+
+    const isTheSameOwnerCategory =
+      JSON.stringify(mapedNewOwnerCategory) ==
+      JSON.stringify(ownerSerwiceCategory)
+
+    const resultOwnerCategory = isTheSameOwnerCategory
+      ? null
+      : mapedNewOwnerCategory
+
+    setNewOwnerServicesCategory(resultOwnerCategory)
+
     //reset edited items
     const newEditedItems = replacingEditedNamesAndAddingNewOnes2(
       services,
@@ -490,7 +542,7 @@ const AllCategoryOfServices = ({
       oldCategory,
       "serviceCategory"
     )
-    console.log(newEditedItems)
+
     if (!!newEditedItems) {
       const compareResult = compareTwoArray(newEditedItems, services)
       setEditedItemsServices(compareResult)
@@ -755,6 +807,8 @@ const AllCategoryOfServices = ({
         handleChangeSaveEdit={handleChangeSaveEdit}
         handleDeleteServiceItem={handleDeleteServiceItem}
         handleResetItemToFromServer={handleResetItemToFromServer}
+        handleClickReserwation={handleClickReserwation}
+        companyId={companyId}
       />
     )
   })

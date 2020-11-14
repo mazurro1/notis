@@ -117,43 +117,18 @@ const WorkerItem = ({
   handleAddEditWorker,
   allCategoriesWithItems,
   editedWorkers,
+  allCategories,
+  setAllCategories,
 }) => {
   const [userEditItem, setUserEditItem] = useState(false)
   const [userConfirmDelete, setUserConfirmDelete] = useState(false)
   const [inputSpecialization, setInputSpeciailization] = useState(
     item.specialization
   )
-  const [allCategories, setAllCategories] = useState([])
   const [workerServicesCategory, setWorkerServicesCategory] = useState([])
   const [selectHeight, setSelectHeight] = useState(0)
   const [resetServicesCategory, setResetServicesCategory] = useState(false)
   const selectRef = useRef(null)
-
-  // const mapedWorkerServicesCategory = [...workerServicesCategory].map(item => {
-  //   return item.label
-  // })
-
-  // const disabledButtonAccept =
-  //   inputSpecialization !== item.specialization
-
-  // useEffect(() => {
-  //   if (!!resetServicesCategory) {
-  //     console.log("render")
-  //     const itemServicesCategory = !!item.servicesCategory
-  //       ? item.servicesCategory
-  //       : []
-  //     const mapedWorkerServicesCategoryFromServer = [
-  //       ...itemServicesCategory,
-  //     ].map(item => {
-  //       return {
-  //         value: item,
-  //         label: item,
-  //       }
-  //     })
-  //     setWorkerServicesCategory(mapedWorkerServicesCategoryFromServer)
-  //     setResetServicesCategory(false)
-  //   }
-  // }, [resetServicesCategory])
 
   useEffect(() => {
     if (!!item.servicesCategory) {
@@ -191,18 +166,19 @@ const WorkerItem = ({
       //actualizate when category was deleted
       let allWorkerServicesCategory = [...workerServicesCategory]
       const actualServicesCategory = !!editedWorkers
-        ? editedWorkers
+        ? editedWorkers.servicesCategory
         : !!item.servicesCategory
         ? item.servicesCategory
         : []
+
       if (allWorkerServicesCategory.length === 0) {
-        const workerServicesCategory = actualServicesCategory.map(item => {
+        const workerServicesCategoryMaped = actualServicesCategory.map(item => {
           return {
             label: item,
             value: item,
           }
         })
-        allWorkerServicesCategory = [...workerServicesCategory]
+        allWorkerServicesCategory = [...workerServicesCategoryMaped]
       }
 
       //change label when category was actualizated

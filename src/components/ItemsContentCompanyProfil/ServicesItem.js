@@ -103,6 +103,8 @@ const ServicesItem = ({
   ButtonsDeletePosition,
   handleDeleteServiceItem,
   handleResetItemToFromServer,
+  handleClickReserwation,
+  companyId,
 }) => {
   const [clickEdit, setClickEdit] = useState(false)
   const [clickButtonDelete, setClickButtonDelete] = useState(false)
@@ -248,7 +250,7 @@ const ServicesItem = ({
             fontSize="14"
             icon={<MdEdit />}
             secondColors={isCompanyEditProfil}
-            //   onClick={handleSaveChanges}
+            onClick={() => handleClickReserwation(itemServices, companyId)}
           />
         )}
       </RightContent>

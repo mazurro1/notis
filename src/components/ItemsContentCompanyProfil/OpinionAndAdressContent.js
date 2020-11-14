@@ -14,6 +14,7 @@ import { FaMapSigns } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
+import { ReserwationDelay } from "../../common/ReserwationDelay"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -31,7 +32,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "240px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "300px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -154,6 +155,35 @@ const IsCompanyPaused = styled.div`
   color: ${props => props.color};
 `
 
+const ReserwationItem = styled.div`
+  height: 30px;
+  width: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: ${props =>
+    props.active ? Colors.buttonIconColor : Colors.buttonColor};
+  border-radius: 5px;
+  margin: 5px;
+  color: white;
+  cursor: pointer;
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  user-select: none;
+  &:hover {
+    transform: scale(1.2);
+  }
+`
+
+const AllReserwationTime = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
 const OpinionAndAdressContent = ({
   city = "",
   district = "",
@@ -170,6 +200,8 @@ const OpinionAndAdressContent = ({
   setCompanyPaused,
   pauseCompany = true,
   companyName = "",
+  setReservationEveryTime,
+  reservationEveryTimeServer = 5,
 }) => {
   const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
@@ -177,8 +209,12 @@ const OpinionAndAdressContent = ({
   const [adressInput, setAdressInput] = useState(adress)
   const [phoneInput, setPhoneInput] = useState(phone)
   const [companyPausedItem, setCompanyPausedItem] = useState(pauseCompany)
+  const [reserwationEver, setReserwationEver] = useState(
+    reservationEveryTimeServer
+  )
 
   const disabledButtonSubmit =
+    reserwationEver !== reservationEveryTimeServer ||
     companyNameInput !== companyName ||
     cityInput !== city ||
     discrictInput !== district ||
@@ -208,6 +244,11 @@ const OpinionAndAdressContent = ({
       } else {
         setCompanyPaused(!pauseCompany)
       }
+      if (reserwationEver !== reservationEveryTimeServer) {
+        setReservationEveryTime(reserwationEver)
+      } else {
+        setReservationEveryTime(null)
+      }
       onClickEdit()
     }
   }
@@ -226,6 +267,8 @@ const OpinionAndAdressContent = ({
     handleChangeUpodateAdress(null, null, null, null, null)
     setCompanyPausedItem(pauseCompany)
     setCompanyPaused(null)
+    setReservationEveryTime(null)
+    setReserwationEver(reservationEveryTimeServer)
   }
 
   const handleEdit = () => {
@@ -239,6 +282,23 @@ const OpinionAndAdressContent = ({
   const handleChangeCheckbox = () => {
     setCompanyPausedItem(prevState => !prevState)
   }
+
+  const handleClickReserwationEver = item => {
+    setReserwationEver(item)
+  }
+
+  const mapReserwationDelay = ReserwationDelay.map((item, index) => {
+    const isActive = reserwationEver === item
+    return (
+      <ReserwationItem
+        key={index}
+        active={isActive}
+        onClick={() => handleClickReserwationEver(item)}
+      >
+        <div>{item}</div>
+      </ReserwationItem>
+    )
+  })
 
   const phoneNumberRender = `${phoneInput.charAt(0)}${phoneInput.charAt(
     1
@@ -357,6 +417,8 @@ const OpinionAndAdressContent = ({
                     value={phoneInput}
                     required
                   />
+                  Rezerwacja co:
+                  <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
                   <CheckboxStyle>
                     <Checkbox
                       theme="material-checkbox"

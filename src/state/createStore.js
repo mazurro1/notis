@@ -30,6 +30,7 @@ import {
   //COMPANY
   REPLACE_COMPANY_DATA,
   RESET_EDIT_COMPANY,
+  CHANGE_RESERWATION_VALUE,
 } from "./actions"
 
 const initialState = {
@@ -162,6 +163,8 @@ const initialState = {
   //COMPANY
   //COMPANY
   resetCompany: false,
+  reserwationData: {},
+  reserwationEnable: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -306,6 +309,28 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_RESERWATION_VALUE:
+      const reserwationEnable = !!action.value ? true : false
+      const itemReserwation = !!action.value ? action.value : {}
+      if (!!action.value) {
+        return {
+          ...state,
+          reserwationData: itemReserwation,
+          reserwationEnable: reserwationEnable,
+        }
+      } else {
+        setTimeout(() => {
+          return {
+            ...state,
+            reserwationData: itemReserwation,
+          }
+        }, 400)
+        return {
+          ...state,
+          reserwationEnable: reserwationEnable,
+        }
+      }
 
     case REPLACE_COMPANY_DATA:
       const newUserCompany = { ...state.user }

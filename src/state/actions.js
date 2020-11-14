@@ -448,6 +448,14 @@ export const fetchResetPassword = (email, password, codeReset) => {
 
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
 export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
+export const CHANGE_RESERWATION_VALUE = "CHANGE_RESERWATION_VALUE"
+
+export const changeReserwationValue = value => {
+  return {
+    type: CHANGE_RESERWATION_VALUE,
+    value: value,
+  }
+}
 
 export const resetEditCompany = value => {
   return {
@@ -776,7 +784,9 @@ export const fetchUpdateCompanyProfil = (
   ownerSpecializationToSent,
   openingHoursToSentFinall,
   companyPaused,
-  services
+  services,
+  reservationEveryTime,
+  newOwnerServicesCategory
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -794,6 +804,8 @@ export const fetchUpdateCompanyProfil = (
           openingHours: openingHoursToSentFinall,
           companyPaused: companyPaused,
           services: services,
+          reservationEveryTime: reservationEveryTime,
+          ownerSerwiceCategory: newOwnerServicesCategory,
         },
         {
           headers: {
@@ -810,6 +822,55 @@ export const fetchUpdateCompanyProfil = (
           addAlertItem("Błąd podczas aktualizowania profilu firmowego.", "red")
         )
         dispatch(resetEditCompany(false))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+  }
+}
+
+export const fetchDoReserwation = (
+  token,
+  companyId,
+  workerId,
+  dateStart,
+  dateFull,
+  costReserwation,
+  timeReserwation,
+  serviceName,
+  extraCost,
+  extraTime
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-reserwation`,
+        {
+          workerId: workerId,
+          companyId: companyId,
+          dateStart: dateStart,
+          dateFull: dateFull,
+          costReserwation: costReserwation,
+          timeReserwation: timeReserwation,
+          serviceName: serviceName,
+          extraCost: extraCost,
+          extraTime: extraTime,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Dokonano rezerwacji.", "green"))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas robienia rezerwacji.", "red"))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)

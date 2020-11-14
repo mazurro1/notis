@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
 import { MdEdit, MdEmail, MdClose, MdDone, MdArrowBack } from "react-icons/md"
 import { FaUser, FaUserPlus, FaArrowLeft } from "react-icons/fa"
+import SelectCustom from "../SelectCustom"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "flex")};
@@ -196,6 +197,11 @@ const DeleteIconPosition = styled.div`
   right: 0;
 `
 
+const SelectStyle = styled.div`
+  margin-bottom: 120px;
+  margin-top: 20px;
+`
+
 const DeleteIconStyle = styled.div`
   color: black;
   padding: 5px;
@@ -227,15 +233,50 @@ const OurWorkersContent = ({
   handleSaveOwnerSpecialization,
   allCategoriesWithItems,
   editedWorkers,
-  setEditedWorkers,
+  ownerSerwiceCategory = [],
+  newOwnerServicesCategory,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
+  const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
+  const [allCategories, setAllCategories] = useState([])
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
     ownerSpecialization
   )
+  const [selectHeight, setSelectHeight] = useState(0)
   const [ownerEdit, setOwnerEdit] = useState(false)
   const user = useSelector(state => state.user)
+  const selectRef = useRef(null)
+
+  useEffect(() => {
+    const selectActualRenderOwnerCategory = !!newOwnerServicesCategory
+      ? newOwnerServicesCategory
+      : ownerSerwiceCategory
+    const mapServiceCategoryOwner = selectActualRenderOwnerCategory.map(
+      item => {
+        return {
+          label: item,
+          value: item,
+        }
+      }
+    )
+    setOwnerServicesCategory(mapServiceCategoryOwner)
+  }, [ownerSerwiceCategory, newOwnerServicesCategory])
+
+  useEffect(() => {
+    if (!!ownerServicesCategory) {
+      if (ownerServicesCategory.length > 0) {
+        const valuePadding = allCategoriesWithItems.length * 23 + 15
+        setSelectHeight(valuePadding)
+      }
+    }
+  }, [ownerServicesCategory, setSelectHeight])
+
+  useEffect(() => {
+    if (!!selectRef.current) {
+      setSelectHeight(selectRef.current.clientHeight)
+    }
+  }, [selectRef, ownerServicesCategory])
 
   const dispatch = useDispatch()
 
@@ -272,7 +313,14 @@ const OurWorkersContent = ({
 
   const handleResetOwnerSpecialization = () => {
     setOwnerEdit(false)
-    handleSaveOwnerSpecialization(null)
+    const mapServiceCategoryOwner = ownerSerwiceCategory.map(item => {
+      return {
+        label: item,
+        value: item,
+      }
+    })
+    setOwnerServicesCategory(mapServiceCategoryOwner)
+    handleSaveOwnerSpecialization(null, null)
     setInputSpecializationOwner(ownerSpecialization)
   }
 
@@ -281,8 +329,20 @@ const OurWorkersContent = ({
   }
 
   const handleSaveSpecialization = () => {
-    handleSaveOwnerSpecialization(inputSpecializationOwner)
+    let toSaveOwnerServiceCategory = ownerServicesCategory
+    if (!!ownerServicesCategory) {
+      toSaveOwnerServiceCategory = ownerServicesCategory.map(item => item.label)
+    }
+    handleSaveOwnerSpecialization(
+      inputSpecializationOwner,
+      toSaveOwnerServiceCategory
+    )
     setOwnerEdit(false)
+  }
+
+  const handleChangeSelectOwner = value => {
+    const valueToSave = !!value ? value : []
+    setOwnerServicesCategory(valueToSave)
   }
 
   const mapWorkers = workers.map((item, index) => {
@@ -310,6 +370,8 @@ const OurWorkersContent = ({
         handleAddEditWorker={handleAddEditWorker}
         allCategoriesWithItems={allCategoriesWithItems}
         editedWorkers={finallEditedWorker}
+        allCategories={allCategories}
+        setAllCategories={setAllCategories}
       />
     )
   })
@@ -320,7 +382,7 @@ const OurWorkersContent = ({
         NASI PRACOWNICY
       </TitleRightColumn>
       <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
-        <WorkerItemStyle userEditItem={ownerEdit}>
+        <WorkerItemStyle userEditItem={ownerEdit} selectHeight={selectHeight}>
           <WorkerCircle isCompanyEditProfil={isCompanyEditProfil}>
             <FaUser />
           </WorkerCircle>
@@ -343,6 +405,7 @@ const OurWorkersContent = ({
               >
                 <EditUserBackground onClick={handleResetOwnerSpecialization}>
                   <EditUserBackgroundContent onClick={handleClickContent}>
+                    Stanowisko
                     <InputStyles>
                       <InputIcon
                         placeholder="Stanowisko"
@@ -351,6 +414,25 @@ const OurWorkersContent = ({
                         onChange={handleInputOnChange}
                       />
                     </InputStyles>
+                    {allCategories.length > 0 && (
+                      <>
+                        <SelectStyle>
+                          Wykonywane usługi
+                          <SelectCustom
+                            widthAuto
+                            defaultMenuIsOpen={false}
+                            secondColor
+                            options={allCategories}
+                            handleChange={handleChangeSelectOwner}
+                            value={ownerServicesCategory}
+                            placeholder="Usługi..."
+                            isMulti
+                            closeMenuOnSelect={false}
+                            menuIsOpen
+                          />
+                        </SelectStyle>
+                      </>
+                    )}
                     <ButtonContentEdit>
                       <ButtonStyles>
                         <ButtonIcon
@@ -374,9 +456,9 @@ const OurWorkersContent = ({
                           onClick={handleSaveSpecialization}
                           customColorButton="#2e7d32"
                           customColorIcon="#43a047"
-                          disabled={
-                            inputSpecializationOwner === ownerSpecialization
-                          }
+                          // disabled={
+                          //   inputSpecializationOwner === ownerSpecialization
+                          // }
                         />
                       </ButtonStyles>
                     </ButtonContentEdit>
