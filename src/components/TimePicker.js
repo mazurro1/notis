@@ -3,18 +3,53 @@ import TimeKeeper from "react-timekeeper"
 import styled from "styled-components"
 import ButtonIcon from "./ButtonIcon"
 import { MdDoneAll } from "react-icons/md"
+import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const ButtonConfirmDate = styled.div`
   padding: 5px;
   background-color: #f4f4f4;
 `
 
+const MaxWidth = styled.div`
+  .react-timekeeper {
+    width: 100% !important;
+  }
+  .react-timekeeper__tb-hour {
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+
+  .react-timekeeper__tb-minute {
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+
+  .react-timekeeper__tb-hour--active {
+    color: ${props =>
+      props.secondColor
+        ? Colors(props.colorBlind).secondColor
+        : Colors(props.colorBlind).primaryColor};
+  }
+
+  .react-timekeeper__tb-minute--active {
+    color: ${props =>
+      props.secondColor
+        ? Colors(props.colorBlind).secondColor
+        : Colors(props.colorBlind).primaryColor};
+  }
+`
+
 const TimePickerContent = ({
   handleResetTakeData,
   setSelectedTime,
   timeTimePicker = null,
+  secondColor = false,
 }) => {
   const [time, setTime] = useState(timeTimePicker)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   useEffect(() => {
     if (!!!time) {
@@ -34,7 +69,7 @@ const TimePickerContent = ({
   }
 
   return (
-    <div>
+    <MaxWidth secondColor={secondColor} colorBlind={colorBlind}>
       {!!time && (
         <TimeKeeper
           hour24Mode
@@ -51,12 +86,13 @@ const TimePickerContent = ({
                 fontSize="20"
                 icon={<MdDoneAll />}
                 onClick={handleClose}
+                secondColors={secondColor}
               />
             </ButtonConfirmDate>
           )}
         />
       )}
-    </div>
+    </MaxWidth>
   )
 }
 export default TimePickerContent

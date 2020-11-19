@@ -23,6 +23,7 @@ import {
   CHANGE_REMIND_PASSWORD_VISIBLE,
   CHANGE_REMIND_PASSWORD_EMAIL_SENT,
   CHANGE_CREATE_COMPANY_VISIBLE,
+  CHANGE_BLIND_STYLE,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -31,9 +32,11 @@ import {
   REPLACE_COMPANY_DATA,
   RESET_EDIT_COMPANY,
   CHANGE_RESERWATION_VALUE,
+  CHANGE_EDIT_WORKER_HOURS,
 } from "./actions"
 
 const initialState = {
+  colorBlind: false,
   user: null,
   userPhone: null,
   page: 1,
@@ -165,10 +168,17 @@ const initialState = {
   resetCompany: false,
   reserwationData: {},
   reserwationEnable: false,
+  editWorkerHours: false,
+  editWorkerHoursData: null,
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_BLIND_STYLE:
+      return {
+        ...state,
+        colorBlind: !state.colorBlind,
+      }
     case CHANGE_CREATE_COMPANY_VISIBLE:
       return {
         ...state,
@@ -309,6 +319,26 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_EDIT_WORKER_HOURS:
+      if (!!action.item) {
+        return {
+          ...state,
+          editWorkerHours: action.value,
+          editWorkerHoursData: action.item,
+        }
+      } else {
+        setTimeout(() => {
+          return {
+            ...state,
+            editWorkerHoursData: action.item,
+          }
+        }, 400)
+        return {
+          ...state,
+          editWorkerHours: action.value,
+        }
+      }
 
     case CHANGE_RESERWATION_VALUE:
       const reserwationEnable = !!action.value ? true : false

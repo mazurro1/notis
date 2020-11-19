@@ -7,7 +7,7 @@ import InputIcon from "../InputIcon"
 import { fetchAddWorkerToCompany } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
-import { MdEdit, MdEmail, MdClose, MdDone, MdArrowBack } from "react-icons/md"
+import { MdEdit, MdEmail, MdClose, MdDone } from "react-icons/md"
 import { FaUser, FaUserPlus, FaArrowLeft } from "react-icons/fa"
 import SelectCustom from "../SelectCustom"
 
@@ -76,16 +76,17 @@ const EditIconStyle = styled.div`
   padding: 5px;
   padding-bottom: 0px;
   border-radius: 5px;
-  background-color: ${Colors.secondColor};
+  background-color: ${props => Colors(props.colorBlind).secondColor};
   color: white;
   margin: 5px;
+  margin-left: 0;
   cursor: pointer;
   transition-property: background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
   &:hover {
-    background-color: #ed6c0c;
+    background-color: ${props => Colors(props.colorBlind).secondDarkColor};
   }
 `
 
@@ -94,7 +95,7 @@ const DeleteUserIconStyle = styled.div`
   padding: 5px;
   padding-bottom: 0px;
   border-radius: 5px;
-  background-color: #f44336;
+  background-color: ${props => Colors(props.colorBlind).dangerColor};
   color: white;
   margin: 5px;
   cursor: pointer;
@@ -104,13 +105,15 @@ const DeleteUserIconStyle = styled.div`
   transition-timing-function: ease;
 
   &:hover {
-    background-color: #c62828;
+    background-color: ${props => Colors(props.colorBlind).dangerColorDark};
   }
 `
 
 const WorkerCircle = styled.div`
   background-color: ${props =>
-    props.isCompanyEditProfil ? Colors.secondColor : Colors.buttonIconColor};
+    props.isCompanyEditProfil
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).primaryColor};
   border-radius: 50%;
   height: 50px;
   width: 50px;
@@ -235,6 +238,9 @@ const OurWorkersContent = ({
   editedWorkers,
   ownerSerwiceCategory = [],
   newOwnerServicesCategory,
+  company,
+  editMode,
+  colorBlind,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
@@ -247,6 +253,10 @@ const OurWorkersContent = ({
   const [ownerEdit, setOwnerEdit] = useState(false)
   const user = useSelector(state => state.user)
   const selectRef = useRef(null)
+
+  useEffect(() => {
+    setOwnerEdit(false)
+  }, [editMode])
 
   useEffect(() => {
     const selectActualRenderOwnerCategory = !!newOwnerServicesCategory
@@ -372,18 +382,24 @@ const OurWorkersContent = ({
         editedWorkers={finallEditedWorker}
         allCategories={allCategories}
         setAllCategories={setAllCategories}
+        company={company}
+        editMode={editMode}
+        colorBlind={colorBlind}
       />
     )
   })
 
   return (
     <>
-      <TitleRightColumn {...companyEditProfilProps}>
+      <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
         NASI PRACOWNICY
       </TitleRightColumn>
       <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
         <WorkerItemStyle userEditItem={ownerEdit} selectHeight={selectHeight}>
-          <WorkerCircle isCompanyEditProfil={isCompanyEditProfil}>
+          <WorkerCircle
+            isCompanyEditProfil={isCompanyEditProfil}
+            colorBlind={colorBlind}
+          >
             <FaUser />
           </WorkerCircle>
           <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
@@ -393,7 +409,10 @@ const OurWorkersContent = ({
           {isCompanyEditProfil && (
             <>
               <EditUserStyle>
-                <EditIconStyle onClick={handleClickOwnerEdit}>
+                <EditIconStyle
+                  onClick={handleClickOwnerEdit}
+                  colorBlind={colorBlind}
+                >
                   <MdEdit />
                 </EditIconStyle>
               </EditUserStyle>
@@ -442,8 +461,8 @@ const OurWorkersContent = ({
                           fontSize="14"
                           icon={<FaArrowLeft />}
                           onClick={handleResetOwnerSpecialization}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                         />
                       </ButtonStyles>
                       <ButtonStyles>
@@ -454,8 +473,10 @@ const OurWorkersContent = ({
                           fontSize="14"
                           icon={<MdDone />}
                           onClick={handleSaveSpecialization}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                           // disabled={
                           //   inputSpecializationOwner === ownerSpecialization
                           // }
@@ -516,8 +537,8 @@ const OurWorkersContent = ({
                     fontIconSize="20"
                     fontSize="14"
                     icon={<MdEmail />}
-                    customColorButton="#2e7d32"
-                    customColorIcon="#43a047"
+                    customColorButton={Colors(colorBlind).successColorDark}
+                    customColorIcon={Colors(colorBlind).successColor}
                     disabled={!!!emailInput}
                   />
                 </ButtonAddWorker>

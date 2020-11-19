@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect } from "react"
 import {
   getCategories,
@@ -19,10 +20,11 @@ import InputIcon from "../InputIcon"
 import { CSSTransition } from "react-transition-group"
 import sal from "sal.js"
 import { useSelector } from "react-redux"
+import { Colors } from "../../common/Colors"
 
 const AddCategory = styled.div`
   position: relative;
-  background-color: #43a047;
+  background-color: ${props => Colors(props.colorBlind).successColor};
   border-radius: 5px;
   display: flex;
   flex-direction: row;
@@ -36,7 +38,7 @@ const AddCategory = styled.div`
   overflow: hidden;
   cursor: ${props => (props.clickAddCategory ? "default" : "pointer")};
   &:hover {
-    background-color: #2e7d32;
+    background-color: ${props => Colors(props.colorBlind).successColorDark};
   }
 `
 
@@ -112,6 +114,7 @@ const AllCategoryOfServices = ({
   const [clickAddCategory, setClickAddCategory] = useState(false)
   const [newCategoryTitle, setNewCategoryTitle] = useState("")
   const resetCompany = useSelector(state => state.resetCompany)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   useEffect(() => {
     sal({
@@ -358,7 +361,7 @@ const AllCategoryOfServices = ({
     )
 
     const finallNewEditedWorkers = []
-    filteredWorkersFromServerToEdited.map(workerServer => {
+    filteredWorkersFromServerToEdited.forEach(workerServer => {
       const isInCategory = workerServer.servicesCategory.some(categoryItem => {
         if (categoryItem === actualCategory || categoryItem === category) {
           return true
@@ -829,6 +832,7 @@ const AllCategoryOfServices = ({
             data-for="addNewCategory"
             onClick={handleClickAddCategory}
             clickAddCategory={clickAddCategory}
+            colorBlind={colorBlind}
           >
             <IconAddCategory>
               <MdAddBox />
@@ -861,8 +865,8 @@ const AllCategoryOfServices = ({
                           fontSize="13"
                           icon={<MdArrowBack />}
                           onClick={handleClickAddCategory}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                         />
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
@@ -872,8 +876,10 @@ const AllCategoryOfServices = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdAddBox />}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                           disabled={disabledAddCategoryButton}
                         />
                       </ButtonMarginSubmit>

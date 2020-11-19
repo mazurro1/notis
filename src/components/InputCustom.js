@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "./InputIcon"
+import { useSelector } from "react-redux"
 
 const CustomStyleInput = styled(InputIcon)`
   /* border: 2px solid #f5f4f5;
@@ -13,7 +14,7 @@ const CustomStyleInput = styled(InputIcon)`
   transition-timing-function: ease; */
 
   &:focus {
-    border: 2px solid ${Colors.secondColor};
+    border: 2px solid ${props => Colors(props.colorBlind).secondColor};
   }
 `
 
@@ -24,6 +25,7 @@ const InputCustom = ({
   value = "",
 }) => {
   const [areaActive, setAreaActive] = useState(false)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   useEffect(() => {
     if (inputActive) {
@@ -47,6 +49,7 @@ const InputCustom = ({
         value={value}
         secondColor
         onChange={onChange}
+        colorBlind={colorBlind}
       />
     </CSSTransition>
   )

@@ -3,6 +3,7 @@ import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { CgSpinner } from "react-icons/cg"
 import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const PopupWindow = styled.div`
   position: fixed;
@@ -24,13 +25,14 @@ const SpinnerDiv = styled.div`
   animation-duration: 0.9s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  color: ${Colors.buttonIconColor};
+  color: ${props => Colors(props.colorBlind).primaryColor};
   font-size: 3rem;
   height: 52px;
   width: 48px;
 `
 
 const Spinner = ({ spinnerEnable = false }) => {
+  const colorBlind = useSelector(state => state.colorBlind)
   return (
     <CSSTransition
       in={spinnerEnable}
@@ -39,7 +41,7 @@ const Spinner = ({ spinnerEnable = false }) => {
       unmountOnExit
     >
       <PopupWindow>
-        <SpinnerDiv>
+        <SpinnerDiv colorBlind={colorBlind}>
           <CgSpinner />
         </SpinnerDiv>
       </PopupWindow>

@@ -32,12 +32,12 @@ const RegulationsText = styled.div`
   text-align: center;
   margin-top: 20px;
   a {
-    color: ${Colors.buttonIconColor};
+    color: ${props => Colors(props.colorBlind).primaryColor};
     transition-property: color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
     &:hover {
-      color: ${Colors.buttonColor};
+      color: ${props => Colors(props.colorBlind).primaryColorDark};
     }
   }
 `
@@ -50,6 +50,7 @@ const CreateCompany = () => {
   const [discrictInput, setDiscrictInput] = useState("")
   const [adressInput, setAdressInput] = useState("")
   const user = useSelector(state => state.user)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const dispatch = useDispatch()
 
@@ -133,7 +134,7 @@ const CreateCompany = () => {
         onChange={e => handleChange(e, setPhoneInput)}
       />
 
-      <RegulationsText>
+      <RegulationsText colorBlind={colorBlind}>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>

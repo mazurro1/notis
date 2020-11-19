@@ -78,7 +78,9 @@ const IconLinkToSite = styled.button`
 
   &:hover {
     color: ${props =>
-      props.isCompanyEditProfil ? "#ed6c0c" : Colors.buttonColor};
+      props.isCompanyEditProfil
+        ? Colors(props.colorBlind).secondDarkColor
+        : Colors(props.colorBlind).primaryColorDark};
   }
 `
 
@@ -93,6 +95,7 @@ const OurLinksContent = ({
   linkiWebsite,
   linkInstagram,
   handleSaveLinks,
+  colorBlind,
 }) => {
   const [facebookInput, setFacebookInput] = useState(linkFacebook)
   const [instagramInput, setInstagramInput] = useState(linkInstagram)
@@ -179,7 +182,9 @@ const OurLinksContent = ({
       isCompanyEditProfil={isCompanyEditProfil}
       editable={editable}
     >
-      <TitleRightColumn {...companyEditProfilProps}>LINKI</TitleRightColumn>
+      <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
+        LINKI
+      </TitleRightColumn>
       <PositionLinksSites>
         {!!facebookInput && isUrlFacebook && (
           <div>
@@ -187,6 +192,7 @@ const OurLinksContent = ({
               isCompanyEditProfil={isCompanyEditProfil}
               color="#3b5998"
               onClick={() => handleOpenInNewWindow(facebookInput)}
+              colorBlind={colorBlind}
             >
               <FaFacebook />
             </IconLinkToSite>
@@ -198,6 +204,7 @@ const OurLinksContent = ({
               isCompanyEditProfil={isCompanyEditProfil}
               color="#dd2a7b"
               onClick={() => handleOpenInNewWindow(instagramInput)}
+              colorBlind={colorBlind}
             >
               <FaInstagram />
             </IconLinkToSite>
@@ -206,11 +213,12 @@ const OurLinksContent = ({
         {!!websiteInput && websiteInput && (
           <div>
             <IconLinkToSite
+              colorBlind={colorBlind}
               isCompanyEditProfil={isCompanyEditProfil}
               color={
                 isCompanyEditProfil
-                  ? Colors.secondColor
-                  : Colors.buttonIconColor
+                  ? Colors(colorBlind).secondColor
+                  : Colors(colorBlind).primaryColor
               }
               onClick={() => handleOpenInNewWindow(websiteInput)}
             >
@@ -278,8 +286,8 @@ const OurLinksContent = ({
                           fontIconSize="16"
                           fontSize="12"
                           icon={<FaArrowLeft />}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                           onClick={handleResetButton}
                         />
                       </ButtonMargin>
@@ -292,8 +300,10 @@ const OurLinksContent = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaSave />}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                           disabled={!disabledButtonSave}
                         />
                       </ButtonMargin>

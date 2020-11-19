@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Lato|Poppins");
 @import "./node_modules/sal.js/dist/sal.css";
+@import "./node_modules/react-big-calendar/lib/css/react-big-calendar.css";
+
 :root {
   --primaryColor: #3fd0d4;
   --mainWhite: #fff;
@@ -45,6 +47,12 @@ a {
 }
 p {
   margin-bottom: 1.25rem;
+}
+
+div {
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: inline;
 }
 
 button:focus {
@@ -445,4 +453,10 @@ textarea:active {
 
 .ReactCollapse--collapse {
   transition: height 500ms ease;
+}
+
+.rbc-time-header-gutter {
+  width: 53.7188px !important;
+  min-width: 53.7188px !important;
+  max-width: 53.7188px !important;
 }

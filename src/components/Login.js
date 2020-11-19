@@ -32,7 +32,7 @@ const ButtonFacebook = styled.div`
 `
 
 const TextCheckbox = styled.span`
-  color: ${Colors.buttonIconColor};
+  color: ${props => Colors(props.colorBlind).primaryColor};
   padding-left: 10px;
   font-weight: 600;
   user-select: none;
@@ -46,6 +46,7 @@ const LoginContent = () => {
   const [emailInput, setEmailInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
   const [checkboxAutoLogin, setCheckboxAutoLogin] = useState(false)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
@@ -101,7 +102,9 @@ const LoginContent = () => {
             value={checkboxAutoLogin}
             onChange={handleChangeCheckbox}
           >
-            <TextCheckbox>Zapamiętaj użytkownika</TextCheckbox>
+            <TextCheckbox colorBlind={colorBlind}>
+              Zapamiętaj użytkownika
+            </TextCheckbox>
           </Checkbox>
         </CheckboxStyle>
         <ButtonMargin>

@@ -30,6 +30,8 @@ import {
   changeRemindPasswordVisible,
   changeCreateCompanyVisible,
   changeReserwationValue,
+  changeEditWorkerHours,
+  changeBlindStyle,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -40,6 +42,11 @@ import UserProfil from "./UserProfil"
 import RemindPassword from "./RemindPassword"
 import CreateCompany from "./CreateCompany"
 import Reserwation from "./Reserwation"
+import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
+
+const BackgroundColorPage = styled.div`
+  background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
+`
 
 const WrapperNavigation = styled.div`
   position: sticky;
@@ -47,7 +54,7 @@ const WrapperNavigation = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background-color: ${Colors.navBackground};
+  background-color: ${props => Colors(props.colorBlind).navBackground};
   padding-top: 10px;
   padding-bottom: 10px;
 `
@@ -57,13 +64,13 @@ const WrapperNavigationUnder = styled.div`
   z-index: 90;
   left: 0;
   right: 0;
-  background-color: ${Colors.navDownBackground};
+  background-color: ${props => Colors(props.colorBlind).navDownBackground};
   padding-top: 20px;
   padding-bottom: 10px;
 `
 
 const NavigationDiv = styled.div`
-  color: ${Colors.navText};
+  color: ${props => Colors(props.colorBlind).navText};
   /* max-width: 900px; */
   max-width: 1200px;
   margin: 0 auto;
@@ -141,13 +148,16 @@ const Navigation = ({ children, isMainPage }) => {
   const [popupTakePlace, setPopupTakePlace] = useState(false)
   const [isDataActive, setIsDataActive] = useState(true)
   const [isTimeActive, setIsTimeActive] = useState(false)
-  const [selectedDate, setSelectedDate] = useState()
-  const [selectedTime, setSelectedTime] = useState()
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedTime, setSelectedTime] = useState(null)
   const [selectedDateAndTime, setSelectedDateAndTime] = useState("")
   const [selectedName, setSelectedName] = useState("")
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
 
+  const colorBlind = useSelector(state => state.colorBlind)
+  const editWorkerHours = useSelector(state => state.editWorkerHours)
+  const editWorkerHoursData = useSelector(state => state.editWorkerHoursData)
   const createCompanyVisible = useSelector(state => state.createCompanyVisible)
   const registrationVisible = useSelector(state => state.registrationVisible)
   const loginVisible = useSelector(state => state.loginVisible)
@@ -265,6 +275,10 @@ const Navigation = ({ children, isMainPage }) => {
     dispatch(changeReserwationValue(null))
   }
 
+  const handleBlindStyleClick = () => {
+    dispatch(changeBlindStyle())
+  }
+
   const mapIndustries = Industries.map((item, index) => {
     return (
       <PaddingRight key={index}>
@@ -285,7 +299,7 @@ const Navigation = ({ children, isMainPage }) => {
       classNames="popup3"
       unmountOnExit
     >
-      <WrapperNavigationUnder>
+      <WrapperNavigationUnder colorBlind={colorBlind}>
         <NavigationDiv>
           <AllInputs>
             <ButtonTakeData
@@ -323,6 +337,16 @@ const Navigation = ({ children, isMainPage }) => {
         </NavigationDiv>
       </WrapperNavigationUnder>
     </CSSTransition>
+  )
+
+  const PopupWorkerEditHours = (
+    <Popup
+      popupEnable={editWorkerHours}
+      handleClose={() => dispatch(changeEditWorkerHours(false, null))}
+      noContent
+    >
+      <BigCalendarWorkerHours item={editWorkerHoursData} />
+    </Popup>
   )
 
   const PopupSort = (
@@ -511,6 +535,15 @@ const Navigation = ({ children, isMainPage }) => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
+          title="tryb dla daltonistów"
+          uppercase
+          fontIconSize="35"
+          fontSize="16"
+          onClick={handleBlindStyleClick}
+        />
+      </ButtonNavStyle>
+      <ButtonNavStyle>
+        <ButtonIcon
           title={`${user.userName} ${user.userSurname}`}
           uppercase
           fontIconSize="20"
@@ -525,8 +558,8 @@ const Navigation = ({ children, isMainPage }) => {
           uppercase
           fontIconSize="26"
           fontSize="16"
-          customColorButton="#c62828"
-          customColorIcon="#f44336"
+          customColorButton={Colors(colorBlind).dangerColorDark}
+          customColorIcon={Colors(colorBlind).dangerColor}
           icon={<MdPowerSettingsNew />}
           onClick={handleLogout}
         />
@@ -534,6 +567,15 @@ const Navigation = ({ children, isMainPage }) => {
     </>
   ) : (
     <>
+      <ButtonNavStyle>
+        <ButtonIcon
+          title="tryb dla daltonistów"
+          uppercase
+          fontIconSize="35"
+          fontSize="16"
+          onClick={handleBlindStyleClick}
+        />
+      </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
           title="zarejestruj się"
@@ -558,9 +600,10 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   return (
-    <>
+    <BackgroundColorPage className="heightElement" colorBlind={colorBlind}>
       <Spinner spinnerEnable={spinnerEnable} />
       <Alerts />
+      {PopupWorkerEditHours}
       {PopupReserwation}
       {PopupActiveAccount}
       {PopupRemindPassword}
@@ -573,8 +616,8 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupFilter}
       {PopupLocalization}
       {PopupUserProfil}
-      <WrapperNavigation>
-        <NavigationDiv>
+      <WrapperNavigation colorBlind={colorBlind}>
+        <NavigationDiv colorBlind={colorBlind}>
           <NavigationItems>
             <LogoStyle>
               <LinkEffect text="NOTISE" path="/" />
@@ -592,7 +635,7 @@ const Navigation = ({ children, isMainPage }) => {
       >
         {children}
       </PaddingContent>
-    </>
+    </BackgroundColorPage>
   )
 }
 

@@ -4,18 +4,19 @@ import styled from "styled-components"
 import { Routes } from "../common/Routes"
 import { FaFacebookSquare } from "react-icons/fa"
 import { LinkEffect } from "../common/LinkEffect"
+import { useSelector } from "react-redux"
 
 const WrapperFooter = styled.div`
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
-  background-color: ${Colors.navBackground};
+  background-color: ${props => Colors(props.colorBlind).navBackground};
 `
 
 const FooterDiv = styled.div`
-  color: ${Colors.navText};
-  background-color: ${Colors.navBackground};
+  color: ${props => Colors(props.colorBlind).navText};
+  background-color: ${props => Colors(props.colorBlind).navBackground};
   max-width: 900px;
   margin: 0 auto;
   padding-bottom: 30px;
@@ -50,7 +51,7 @@ const LinkRoutes = styled.div`
     transition-timing-function: ease-in-out;
 
     &:hover {
-      color: ${Colors.buttonIconColor};
+      color: ${props => Colors(props.colorBlind).primaryColor};
     }
   }
 `
@@ -66,21 +67,22 @@ const FacebookIcon = styled.div`
     color: white;
 
     &:hover {
-      color: ${Colors.buttonIconColor};
+      color: ${props => Colors(props.colorBlind).primaryColor};
     }
   }
 `
 
 const Footer = () => {
+  const colorBlind = useSelector(state => state.colorBlind)
   const mapRoutes = Routes.map((item, index) => {
     return <LinkEffect path={item.path} key={index} text={item.name} />
   })
 
   return (
-    <WrapperFooter>
-      <FooterDiv>
-        <LinkRoutes>{mapRoutes}</LinkRoutes>
-        <FacebookIcon>
+    <WrapperFooter colorBlind={colorBlind}>
+      <FooterDiv colorBlind={colorBlind}>
+        <LinkRoutes colorBlind={colorBlind}>{mapRoutes}</LinkRoutes>
+        <FacebookIcon colorBlind={colorBlind}>
           <a href="https://www.facebook.com/" target="__blank">
             <FaFacebookSquare />
           </a>

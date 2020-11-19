@@ -1,11 +1,68 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Colors } from "../common/Colors"
 import styled from "styled-components"
 import SelectDataCalendar from "./SelectDataCalendar"
 import { MdClose } from "react-icons/md"
-import { fetchDoReserwation } from "../state/actions"
+import { fetchDoReserwation, fetchWorkerDisabledHours } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { FaUser } from "react-icons/fa"
+import { CSSTransition } from "react-transition-group"
+import ButtonIcon from "../components/ButtonIcon"
+import { FaCalendarDay } from "react-icons/fa"
+import { getMonthAndReturn } from "../common/Functions"
+
+const ServiceItem = styled.div`
+  position: relative;
+  background-color: #f5f4f5;
+  padding: 10px;
+  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin: 5px 5px;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  user-select: none;
+  overflow: hidden;
+  transition-property: background-color, padding-bottom;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+`
+
+const TitleService = styled.div`
+  font-weight: bold;
+  font-size: 1.1rem;
+`
+
+const ServiceParagraph = styled.p`
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+`
+
+const LeftContent = styled.div`
+  width: 80%;
+`
+
+const PriceService = styled.span`
+  background-color: red;
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  font-weight: 500;
+  color: white;
+  margin-left: 10px;
+  border-radius: 5px;
+  background-color: ${props =>
+    props.isCompanyEditProfil
+      ? props.otherColor
+        ? Colors(props.colorBlind).darkColor
+        : Colors(props.colorBlind).secondDarkColor
+      : props.otherColor
+      ? Colors(props.colorBlind).darkColor
+      : Colors(props.colorBlind).primaryColorDark};
+`
 
 const ItemSummary = styled.div`
   position: relative;
@@ -22,7 +79,7 @@ const TextReserwation = styled.div`
   font-size: 1.2rem;
   margin-bottom: 5px;
   span {
-    color: ${Colors.buttonIconColor};
+    color: ${props => Colors(props.colorBlind).primaryColor};
   }
 `
 
@@ -31,13 +88,13 @@ const SummaryReserwationText = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  border-bottom: 2px solid ${Colors.buttonColor};
   font-size: 1.4rem;
   margin-bottom: 10px;
-  background-color: ${Colors.buttonColor};
+  background-color: ${props => Colors(props.colorBlind).primaryColorDark};
   padding: 5px 10px;
   color: white;
   padding-right: 30px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2) inset;
 `
 
 const ClosePopup = styled.div`
@@ -46,12 +103,12 @@ const ClosePopup = styled.div`
   right: 5px;
   cursor: pointer;
   font-size: 1.5rem;
-  color: white;
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+  color: white;
   &:hover {
-    color: ${Colors.buttonIconColor};
+    color: ${props => Colors(props.colorBlind).primaryColor};
   }
 `
 
@@ -68,36 +125,39 @@ const WorkerItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f5f4f5;
+  background-color: ${props =>
+    props.active ? Colors(props.colorBlind).primaryColor : "#f5f4f5"};
   padding: 10px;
   border-radius: 5px;
   margin: 5px;
   margin-top: 0;
   cursor: pointer;
-  transition-property: background-color, color;
+  color: ${props => (props.active ? "white" : "")};
+  transition-property: transform, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+  user-select: none;
 
   svg {
     font-size: 2rem;
-    color: ${Colors.buttonIconColor};
+    color: ${props =>
+      props.active ? "white" : Colors(props.colorBlind).primaryColor};
     transition-property: color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
   }
 
   &:hover {
-    background-color: ${Colors.buttonIconColor};
-    color: white;
-
-    svg {
-      color: white;
-    }
+    transform: scale(0.9);
   }
 `
 
 const WorkerSpecializationStyle = styled.div`
   font-size: 0.8rem;
+`
+
+const ButtonIconStyle = styled.div`
+  display: inline-block;
 `
 
 const Reserwation = ({
@@ -114,38 +174,73 @@ const Reserwation = ({
     workers: [],
   },
 }) => {
+  const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
+  const [isDataActive, setIsDataActive] = useState(false)
+  const [isOtherActive, setIsOtherActive] = useState(true)
+  const [selectedDate, setSelectedDate] = useState(null)
   const user = useSelector(state => state.user)
+  const colorBlind = useSelector(state => state.colorBlind)
   const dispatch = useDispatch()
 
-  const handleDoReserwation = () => {
-    console.log(reserwationData)
-    // dispatch(
-    //   fetchDoReserwation(
-    //     user.token,
-    //     reserwationData.companyId,
-    //     "5f8ddf33c6f4ff379c6aee23", //workerId
-    //     "11:41", //dateStart
-    //     "17-12-2020", //dateFull
-    //     reserwationData.serviceCost,
-    //     reserwationData.time,
-    //     reserwationData.serviceName,
-    //     reserwationData.extraCost,
-    //     reserwationData.extraTime
-    //   )
-    // )
+  useEffect(() => {
+    if (!!selectedDate && !!selectedWorkerUserId) {
+      const selectedDay = selectedDate.getDate()
+      const selectedMonth = selectedDate.getMonth() + 1
+      const selectedYear = selectedDate.getFullYear()
+      dispatch(
+        fetchWorkerDisabledHours(
+          user.token,
+          reserwationData.companyId,
+          selectedWorkerUserId,
+          selectedDay,
+          selectedMonth,
+          selectedYear
+        )
+      )
+    }
+  }, [selectedDate, selectedWorkerUserId])
 
-    //  dispatch(
-    //    fetchDoReserwation(
-    //      user.token,
-    //      reserwationData.companyId,
-    //      "5f8ddf33c6f4ff379c6aee23", //workerId
-    //      "15:49", //dateStart
-    //      "17-12-2020", //dateFull
-    //      reserwationData.serviceCost,
-    //      reserwationData.time,
-    //      reserwationData.serviceName
-    //    )
-    //  )
+  const handleSelectDay = () => {
+    setIsOtherActive(false)
+    setTimeout(() => {
+      setIsDataActive(true)
+    }, 500)
+  }
+
+  const handleDoReserwation = () => {
+    if (!!selectedDate && !!selectedWorkerUserId) {
+      const selectedDay = selectedDate.getDate()
+      const selectedMonth = selectedDate.getMonth() + 1
+      const selectedYear = selectedDate.getFullYear()
+      const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
+      dispatch(
+        fetchDoReserwation(
+          user.token,
+          reserwationData.companyId,
+          selectedWorkerUserId, //workerUserId
+          "13:00", //dateStart
+          dateFullToSent, //dateFull
+          reserwationData.serviceCost,
+          reserwationData.time,
+          reserwationData.serviceName,
+          reserwationData.extraCost,
+          reserwationData.extraTime
+        )
+      )
+    }
+  }
+
+  const handleSelectWorker = workerUserId => {
+    if (!!selectedWorkerUserId) {
+      if (selectedWorkerUserId === workerUserId) {
+        setSelectedWorkerUserId(null)
+        setSelectedDate(null)
+      } else {
+        setSelectedWorkerUserId(workerUserId)
+      }
+    } else {
+      setSelectedWorkerUserId(workerUserId)
+    }
   }
 
   let timeService = ""
@@ -166,9 +261,17 @@ const Reserwation = ({
     item => item === reserwationData.serviceCategory
   )
 
+  const ownerIsSelected = !!selectedWorkerUserId
+    ? selectedWorkerUserId === reserwationData.ownerData.ownerId
+    : false
+
   const ownerWorkerToSelect = ownerHasServiceCategory &&
     !!reserwationData.ownerData && (
-      <WorkerItem>
+      <WorkerItem
+        onClick={() => handleSelectWorker(reserwationData.ownerData.ownerId)}
+        active={ownerIsSelected}
+        colorBlind={colorBlind}
+      >
         <div>
           <FaUser />
         </div>
@@ -189,8 +292,19 @@ const Reserwation = ({
   })
 
   const mapWorkersToSelect = filterWorkers.map((worker, index) => {
+    const workerIsSelected = !!selectedWorkerUserId
+      ? selectedWorkerUserId === worker.user._id
+      : false
+
+    console.log(worker)
+
     return (
-      <WorkerItem key={index}>
+      <WorkerItem
+        key={index}
+        onClick={() => handleSelectWorker(worker.user._id)}
+        active={workerIsSelected}
+        colorBlind={colorBlind}
+      >
         <div>
           <FaUser />
         </div>
@@ -204,41 +318,97 @@ const Reserwation = ({
     )
   })
 
-  return (
-    <ItemSummary>
-      <SummaryReserwationText>Podsumowanie Rezerwacji</SummaryReserwationText>
-      <TextReserwation>
-        Nazwa usługi: <span>{reserwationData.serviceName}</span>
-      </TextReserwation>
-      <TextReserwation>
-        Koszt:{" "}
-        <span>
-          {!!reserwationData.serviceCost ? reserwationData.serviceCost : ""}
-          zł
-          {reserwationData.extraCost ? " +" : ""}
-        </span>
-      </TextReserwation>
-      <TextReserwation>
-        Czas:{" "}
-        <span>
-          {!!timeService
-            ? `${timeService}${reserwationData.extraTime ? " +" : ""}`
-            : ""}
-        </span>
-      </TextReserwation>
-      <TextReserwation>Wybierz pracownika:</TextReserwation>
-      <ContentWorkers>
-        {ownerWorkerToSelect}
-        {mapWorkersToSelect}
-      </ContentWorkers>
+  let selectedDateDay = ""
+  let selectedDateYear = ""
+  let selectedDateFullMonth = ""
+  let selectedDateMonth = ""
 
-      <button>Wybierz dzień</button>
-      <TextReserwation>Wybierz godzinę:</TextReserwation>
-      <button onClick={handleDoReserwation}>Rezerwuj</button>
-      <ClosePopup onClick={handleCloseReserwation}>
-        <MdClose />
-      </ClosePopup>
-    </ItemSummary>
+  if (!!selectedDate) {
+    selectedDateDay = selectedDate.getDate()
+    selectedDateMonth = getMonthAndReturn(selectedDate.getDay())
+    selectedDateYear = selectedDate.getFullYear()
+    selectedDateFullMonth = selectedDate.getMonth() + 1
+  }
+
+  return (
+    <>
+      <CSSTransition
+        in={isOtherActive}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <ItemSummary>
+          <SummaryReserwationText colorBlind={colorBlind}>
+            Rezerwacja
+          </SummaryReserwationText>
+          <ServiceItem>
+            <LeftContent>
+              <TitleService>
+                {reserwationData.serviceName}
+                <PriceService colorBlind={colorBlind}>
+                  {`${reserwationData.serviceCost}zł ${
+                    reserwationData.extraCost ? "+" : ""
+                  }`}
+                </PriceService>
+                <PriceService otherColor colorBlind={colorBlind}>
+                  {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
+                </PriceService>
+              </TitleService>
+              <ServiceParagraph>{reserwationData.serviceText}</ServiceParagraph>
+            </LeftContent>
+          </ServiceItem>
+          <TextReserwation colorBlind={colorBlind}>
+            Wybierz pracownika:
+          </TextReserwation>
+          <ContentWorkers>
+            {ownerWorkerToSelect}
+            {mapWorkersToSelect}
+          </ContentWorkers>
+          <TextReserwation colorBlind={colorBlind}>
+            Wybierz dzień:
+          </TextReserwation>
+
+          <ButtonIconStyle>
+            <ButtonIcon
+              title={
+                selectedDate
+                  ? `${selectedDateMonth} ${selectedDateDay}-${selectedDateFullMonth}-${selectedDateYear}`
+                  : "Wybierz dzień"
+              }
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarDay />}
+              onClick={handleSelectDay}
+              uppercase
+              disabled={!!!selectedWorkerUserId}
+            />
+          </ButtonIconStyle>
+
+          <TextReserwation colorBlind={colorBlind}>
+            Wybierz godzinę:
+          </TextReserwation>
+          <button onClick={handleDoReserwation}>Rezerwuj</button>
+          <ClosePopup onClick={handleCloseReserwation} colorBlind={colorBlind}>
+            <MdClose />
+          </ClosePopup>
+        </ItemSummary>
+      </CSSTransition>
+      <CSSTransition
+        in={isDataActive}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <div>
+          <SelectDataCalendar
+            setActualCalendarDate={setSelectedDate}
+            setIsDataActive={setIsDataActive}
+            setIsTimeActive={setIsOtherActive}
+          />
+        </div>
+      </CSSTransition>
+    </>
   )
 }
 export default Reserwation

@@ -6,7 +6,7 @@ import { Site } from "../common/Site"
 // USER ACTIONS
 // USER ACTIONS
 // USER ACTIONS
-
+export const CHANGE_BLIND_STYLE = "CHANGE_BLIND_STYLE"
 export const CHANGE_SORT_VISIBLE = "CHANGE_SORT_VISIBLE"
 export const CHANGE_FILTER_VISIBLE = "CHANGE_FILTER_VISIBLE"
 export const CHANGE_LOCALIZATION_VISIBLE = "CHANGE_LOCALIZATION_VISIBLE"
@@ -28,6 +28,12 @@ export const CHANGE_REMIND_PASSWORD_VISIBLE = "CHANGE_REMIND_PASSWORD_VISIBLE"
 export const CHANGE_REMIND_PASSWORD_EMAIL_SENT =
   "CHANGE_REMIND_PASSWORD_EMAIL_SENT"
 export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
+
+export const changeBlindStyle = () => {
+  return {
+    type: CHANGE_BLIND_STYLE,
+  }
+}
 
 export const changeCreateCompanyVisible = value => {
   return {
@@ -446,9 +452,18 @@ export const fetchResetPassword = (email, password, codeReset) => {
 // COMPANY ACTIONS
 // COMPANY ACTIONS
 
+export const CHANGE_EDIT_WORKER_HOURS = "EDIT_WORKER_HOURS"
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
 export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
 export const CHANGE_RESERWATION_VALUE = "CHANGE_RESERWATION_VALUE"
+
+export const changeEditWorkerHours = (value, item) => {
+  return {
+    type: CHANGE_EDIT_WORKER_HOURS,
+    value: value,
+    item: item,
+  }
+}
 
 export const changeReserwationValue = value => {
   return {
@@ -832,7 +847,7 @@ export const fetchUpdateCompanyProfil = (
 export const fetchDoReserwation = (
   token,
   companyId,
-  workerId,
+  workerUserId,
   dateStart,
   dateFull,
   costReserwation,
@@ -847,7 +862,7 @@ export const fetchDoReserwation = (
       .post(
         `${Site.serverUrl}/add-reserwation`,
         {
-          workerId: workerId,
+          workerUserId: workerUserId,
           companyId: companyId,
           dateStart: dateStart,
           dateFull: dateFull,
@@ -875,5 +890,37 @@ export const fetchDoReserwation = (
           dispatch(changeSpinner(false))
         }, 1000)
       })
+  }
+}
+
+export const fetchWorkerDisabledHours = (
+  token,
+  companyId,
+  selectedWorkerUserId,
+  selectedDay,
+  selectedMonth,
+  selectedYear
+) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/get-worker-disabled-hours`,
+        {
+          workerUserId: selectedWorkerUserId,
+          companyId: companyId,
+          selectedDay: selectedDay,
+          selectedMonth: selectedMonth,
+          selectedYear: selectedYear,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {})
   }
 }

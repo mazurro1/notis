@@ -4,6 +4,7 @@ import "./style/base_style.css"
 import "./style/date_picker.css"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const StyleSimpleReactCalendar = styled.div`
   position: relative;
@@ -25,7 +26,7 @@ const StyleSimpleReactCalendar = styled.div`
     transition-duration: 0.3s;
     transition-timing-function: ease; */
     &:hover {
-      background-color: ${Colors.buttonColor};
+      background-color: ${props => Colors(props.colorBlind).primaryColorDark};
       color: white;
     }
   }
@@ -58,11 +59,13 @@ const StyleSimpleReactCalendar = styled.div`
   }
 
   .date_picker-week-day.is-selected::before {
-    background-color: ${Colors.buttonColor} !important;
+    background-color: ${props =>
+      Colors(props.colorBlind).primaryColorDark} !important;
     box-shadow: none;
   }
   .date_picker-week-day.is-selected:hover::before {
-    background-color: ${Colors.buttonIconColor} !important;
+    background-color: ${props =>
+      Colors(props.colorBlind).primaryColor} !important;
     box-shadow: none;
   }
 
@@ -70,11 +73,11 @@ const StyleSimpleReactCalendar = styled.div`
     transition-property: background-color, color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
-    background-color: ${Colors.buttonColor};
+    background-color: ${props => Colors(props.colorBlind).primaryColorDark};
     border: none;
     color: white !important;
     &:hover {
-      background-color: ${Colors.buttonIconColor};
+      background-color: ${props => Colors(props.colorBlind).primaryColor};
     }
   }
   .date_picker-header_button.is-next:before,
@@ -88,9 +91,10 @@ const SelectDataCalendar = ({
   setActualCalendarDate,
   disabledDatas = [],
   setIsDataActive,
-  setIsTimeActive,
+  setIsTimeActive = () => {},
   activeMonth = new Date(),
 }) => {
+  const colorBlind = useSelector(state => state.colorBlind)
   const data = new Date()
   const prevYeat = new Date(data.getFullYear(), data.getMonth(), data.getDate())
   const nextYear = new Date(
@@ -107,7 +111,7 @@ const SelectDataCalendar = ({
     }, 500)
   }
   return (
-    <StyleSimpleReactCalendar>
+    <StyleSimpleReactCalendar colorBlind={colorBlind}>
       <SimpleReactCalendar
         activeMonth={activeMonth}
         blockClassName="date_picker"

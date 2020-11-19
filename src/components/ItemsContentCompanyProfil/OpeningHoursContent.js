@@ -1,9 +1,11 @@
+/*eslint-disable eqeqeq*/
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import OpeningHoursItem from "./OpeningHoursItem"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
+import { Colors } from "../../common/Colors"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -17,8 +19,14 @@ const OpeningHoursContent = ({
   company,
   setChangesTimeOpen,
   setOpeningHoursToSent,
+  editMode,
+  colorBlind,
 }) => {
   const [editable, setEditable] = useState(false)
+  useEffect(() => {
+    setEditable(false)
+  }, [editMode])
+
   const hoursDate = {
     mon: {
       dayValue: "1",
@@ -248,7 +256,7 @@ const OpeningHoursContent = ({
   return (
     <>
       <>
-        <TitleRightColumn {...companyEditProfilProps}>
+        <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
           GODZINY OTWARCIA
         </TitleRightColumn>
         {arrayHoursData.length > 0 && mapDayHours}
@@ -263,8 +271,8 @@ const OpeningHoursContent = ({
                     fontIconSize="16"
                     fontSize="14"
                     icon={<FaArrowLeft />}
-                    customColorButton="#c62828"
-                    customColorIcon="#f44336"
+                    customColorButton={Colors(colorBlind).dangerColorDark}
+                    customColorIcon={Colors(colorBlind).dangerColor}
                     onClick={handleResetValues}
                   />
                 </MarginButton>
@@ -275,8 +283,8 @@ const OpeningHoursContent = ({
                     fontIconSize="16"
                     fontSize="14"
                     icon={<FaSave />}
-                    customColorButton="#2e7d32"
-                    customColorIcon="#43a047"
+                    customColorButton={Colors(colorBlind).successColorDark}
+                    customColorIcon={Colors(colorBlind).successColor}
                     onClick={handleClickEdit}
                   />
                 </MarginButton>

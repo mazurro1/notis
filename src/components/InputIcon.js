@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const InputStyled = styled.input`
   padding: 15px 15px;
@@ -12,8 +13,8 @@ const InputStyled = styled.input`
   border-bottom: ${props =>
     props.inputActive
       ? props.secondColor
-        ? `2px solid ${Colors.secondColor}`
-        : `2px solid ${Colors.buttonIconColor}`
+        ? `2px solid ${Colors(props.colorBlind).secondColor}`
+        : `2px solid ${Colors(props.colorBlind).primaryColor}`
       : "2px solid #bdbdbd"};
   width: 100%;
   color: #212121;
@@ -56,8 +57,8 @@ const IconInput = styled.div`
   color: ${props =>
     props.inputActive
       ? props.secondColor
-        ? Colors.secondColor
-        : Colors.buttonIconColor
+        ? Colors(props.colorBlind).secondColor
+        : Colors(props.colorBlind).primaryColor
       : "#bdbdbd"};
   transition-property: color;
   transition-duration: 0.3s;
@@ -76,6 +77,7 @@ const InputIcon = ({
   required = false,
 }) => {
   const [inputActive, setInputActive] = useState(false)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const handleOnFocus = () => {
     setInputActive(true)
@@ -98,9 +100,14 @@ const InputIcon = ({
         max={max}
         secondColor={secondColor}
         required={required}
+        colorBlind={colorBlind}
       />
       {!!icon && (
-        <IconInput inputActive={inputActive} secondColor={secondColor}>
+        <IconInput
+          inputActive={inputActive}
+          secondColor={secondColor}
+          colorBlind={colorBlind}
+        >
           {icon}
         </IconInput>
       )}

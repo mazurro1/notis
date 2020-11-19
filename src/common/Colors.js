@@ -1,12 +1,21 @@
-export const Colors = {
-  navBackground: "#212121",
-  navDownBackground: "#282828",
-  navText: "white",
-  // secondColor: "#ed6c0c",
-  secondColor: "#f7a52c",
-  buttonIconColor: "#5ec2d7",
-  buttonColor: "#0597a7",
-  buttonColorDark: "#424242",
-  buttonColorSecond: "#ed6c0c",
-  buttonIconColorSecond: "#f7a52c",
+export const Colors = (colorBlind = false) => {
+  const colorBlindHex = "#ffeb3b"
+  const colorBlindDarkHex = "#fdd835"
+  const backgroundColorBlind = "#313131"
+
+  return {
+    backgroundColorPage: colorBlind ? backgroundColorBlind : "white",
+    navBackground: "#212121",
+    navDownBackground: "#282828",
+    navText: "white",
+    primaryColor: colorBlind ? colorBlindHex : "#5ec2d7",
+    primaryColorDark: colorBlind ? colorBlindDarkHex : "#0597a7",
+    secondColor: colorBlind ? colorBlindHex : "#f7a52c",
+    secondDarkColor: colorBlind ? colorBlindDarkHex : "#ed6c0c",
+    darkColor: "#424242",
+    dangerColor: colorBlind ? colorBlindHex : "#f44336",
+    dangerColorDark: colorBlind ? colorBlindDarkHex : "#c62828",
+    successColor: colorBlind ? colorBlindHex : "#43a047",
+    successColorDark: colorBlind ? colorBlindDarkHex : "#2e7d32",
+  }
 }

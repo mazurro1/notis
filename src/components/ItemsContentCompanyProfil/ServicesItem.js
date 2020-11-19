@@ -71,11 +71,14 @@ const PriceService = styled.span`
   background-color: ${props =>
     props.isCompanyEditProfil
       ? props.otherColor
-        ? "#424242"
-        : "#ed6c0c"
+        ? Colors(props.colorBlind).dangerColor
+        : Colors(props.colorBlind).secondDarkColor
       : props.otherColor
-      ? "#424242"
-      : Colors.buttonColor};
+      ? Colors(props.colorBlind).dangerColor
+      : Colors(props.colorBlind).primaryColorDark};
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: inline;
 `
 
 const TextCheckbox = styled.span`
@@ -105,6 +108,7 @@ const ServicesItem = ({
   handleResetItemToFromServer,
   handleClickReserwation,
   companyId,
+  colorBlind,
 }) => {
   const [clickEdit, setClickEdit] = useState(false)
   const [clickButtonDelete, setClickButtonDelete] = useState(false)
@@ -204,12 +208,19 @@ const ServicesItem = ({
       <LeftContent>
         <TitleService>
           {itemServices.serviceName}
-          <PriceService isCompanyEditProfil={isCompanyEditProfil}>
+          <PriceService
+            isCompanyEditProfil={isCompanyEditProfil}
+            colorBlind={colorBlind}
+          >
             {`${itemServices.serviceCost}zł ${
               itemServices.extraCost ? "+" : ""
             }`}
           </PriceService>
-          <PriceService isCompanyEditProfil={isCompanyEditProfil} otherColor>
+          <PriceService
+            isCompanyEditProfil={isCompanyEditProfil}
+            otherColor
+            colorBlind={colorBlind}
+          >
             {`${timeService} ${itemServices.extraTime ? "+" : ""}`}
           </PriceService>
         </TitleService>
@@ -236,8 +247,8 @@ const ServicesItem = ({
                 fontIconSize="40"
                 fontSize="14"
                 icon={<MdEdit />}
-                customColorButton="#c62828"
-                customColorIcon="#f44336"
+                customColorButton={Colors(colorBlind).dangerColorDark}
+                customColorIcon={Colors(colorBlind).dangerColor}
                 onClick={handleClickDelete}
               />
             </ButtonMargin>
@@ -291,7 +302,7 @@ const ServicesItem = ({
                 onChange={e => handleChangeInput(e, setTimeInput)}
                 required
               />
-              <CheckboxStyle>
+              <CheckboxStyle colorBlind={colorBlind}>
                 <Checkbox
                   theme="material-checkbox"
                   value={extraTime}
@@ -309,7 +320,7 @@ const ServicesItem = ({
                 onChange={e => handleChangeInput(e, setPriceInput)}
                 required
               />
-              <CheckboxStyle>
+              <CheckboxStyle colorBlind={colorBlind}>
                 <Checkbox
                   theme="material-checkbox"
                   value={extraPrice}
@@ -327,8 +338,8 @@ const ServicesItem = ({
                     fontSize="13"
                     icon={<MdArrowBack />}
                     onClick={handleResetEdit}
-                    customColorButton="#c62828"
-                    customColorIcon="#f44336"
+                    customColorButton={Colors(colorBlind).dangerColorDark}
+                    customColorIcon={Colors(colorBlind).dangerColor}
                   />
                 </ButtonMargin>
                 <ButtonMarginSubmit type="submit">
@@ -338,8 +349,8 @@ const ServicesItem = ({
                     fontIconSize="20"
                     fontSize="15"
                     icon={<MdLibraryAdd />}
-                    customColorButton="#2e7d32"
-                    customColorIcon="#43a047"
+                    customColorButton={Colors(colorBlind).successColorDark}
+                    customColorIcon={Colors(colorBlind).successColor}
                     disabled={disabledSaveButton}
                   />
                 </ButtonMarginSubmit>
@@ -365,8 +376,8 @@ const ServicesItem = ({
                   fontIconSize="40"
                   fontSize="14"
                   icon={<MdArrowBack />}
-                  customColorButton="#2e7d32"
-                  customColorIcon="#43a047"
+                  customColorButton={Colors(colorBlind).successColorDark}
+                  customColorIcon={Colors(colorBlind).successColor}
                   onClick={handleClickDelete}
                 />
               </ButtonMargin>
@@ -377,8 +388,8 @@ const ServicesItem = ({
                   fontIconSize="40"
                   fontSize="14"
                   icon={<MdDeleteForever />}
-                  customColorButton="#c62828"
-                  customColorIcon="#f44336"
+                  customColorButton={Colors(colorBlind).dangerColorDark}
+                  customColorIcon={Colors(colorBlind).dangerColor}
                   onClick={handleConfirmDeleteItem}
                 />
               </ButtonMargin>

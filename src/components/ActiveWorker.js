@@ -1,6 +1,5 @@
 import React, { useEffect } from "react"
 import "../../style.css"
-import styled from "styled-components"
 import { fetchConfirmAddWorkerToCompany } from "../state/actions"
 import { useDispatch } from "react-redux"
 

@@ -39,7 +39,7 @@ const CheckboxStyle = styled.div`
   margin-bottom: 10px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${Colors.secondColor};
+    background-color: ${props => Colors(props.colorBlind).secondColor};
   }
 `
 
@@ -48,7 +48,9 @@ const TitleCategory = styled.div`
   font-size: 1.25rem;
   color: white;
   background-color: ${props =>
-    props.isCompanyEditProfil ? Colors.secondColor : Colors.buttonIconColor};
+    props.isCompanyEditProfil
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).primaryColor};
   padding: 10px;
   border-radius: 5px;
   padding-right: ${props => (props.isCompanyEditProfil ? "190px" : "50px")};
@@ -62,7 +64,7 @@ const TitleCategory = styled.div`
       : "10px"};
   overflow: hidden;
   user-select: none;
-  transition-property: padding-bottom;
+  transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
 `
@@ -212,6 +214,7 @@ const CategoryItem = ({
   const [priceInput, setPriceInput] = useState("")
   const [categoryTitle, setCategoryTitle] = useState("")
   const resetCompany = useSelector(state => state.resetCompany)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const disabledCategorySave =
     categoryTitle.toLowerCase() === item.category.toLowerCase()
@@ -318,6 +321,7 @@ const CategoryItem = ({
         handleResetItemToFromServer={handleResetItemToFromServer}
         handleClickReserwation={handleClickReserwation}
         companyId={companyId}
+        colorBlind={colorBlind}
       />
     )
   })
@@ -333,6 +337,7 @@ const CategoryItem = ({
         clickDelete={clickDelete}
         clickAdd={clickAdd}
         clickEdit={clickEdit}
+        colorBlind={colorBlind}
       >
         {item.category}
         <IconArrowPosition
@@ -381,8 +386,8 @@ const CategoryItem = ({
                         fontIconSize="40"
                         fontSize="14"
                         icon={<MdArrowBack />}
-                        customColorButton="#2e7d32"
-                        customColorIcon="#43a047"
+                        customColorButton={Colors(colorBlind).successColorDark}
+                        customColorIcon={Colors(colorBlind).successColor}
                         onClick={handleClickDelete}
                       />
                     </ButtonMargin>
@@ -393,8 +398,8 @@ const CategoryItem = ({
                         fontIconSize="40"
                         fontSize="14"
                         icon={<MdDeleteForever />}
-                        customColorButton="#c62828"
-                        customColorIcon="#f44336"
+                        customColorButton={Colors(colorBlind).dangerColorDark}
+                        customColorIcon={Colors(colorBlind).dangerColor}
                         onClick={handleDeleteCategory}
                       />
                     </ButtonMargin>
@@ -429,8 +434,8 @@ const CategoryItem = ({
                           fontSize="13"
                           icon={<MdArrowBack />}
                           onClick={handleResetCategory}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                         />
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
@@ -440,9 +445,10 @@ const CategoryItem = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdLibraryAdd />}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
-                          disabled={categoryTitle === item.category}
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                           disabled={disabledCategorySave}
                         />
                       </ButtonMarginSubmit>
@@ -487,7 +493,7 @@ const CategoryItem = ({
                       onChange={e => handleChangeInput(e, setTimeInput)}
                       required
                     />
-                    <CheckboxStyle>
+                    <CheckboxStyle colorBlind={colorBlind}>
                       <Checkbox
                         theme="material-checkbox"
                         value={extraTime}
@@ -505,7 +511,7 @@ const CategoryItem = ({
                       onChange={e => handleChangeInput(e, setPriceInput)}
                       required
                     />
-                    <CheckboxStyle>
+                    <CheckboxStyle colorBlind={colorBlind}>
                       <Checkbox
                         theme="material-checkbox"
                         value={extraPrice}
@@ -523,8 +529,8 @@ const CategoryItem = ({
                           fontSize="13"
                           icon={<MdArrowBack />}
                           onClick={handleClickAdd}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                         />
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
@@ -534,8 +540,10 @@ const CategoryItem = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdLibraryAdd />}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                         />
                       </ButtonMarginSubmit>
                     </ButtonsAddPosition>

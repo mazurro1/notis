@@ -23,7 +23,7 @@ const TextToUser = styled.div`
     font-size: 1.4rem;
   }
   span {
-    color: ${Colors.buttonIconColor};
+    color: ${props => Colors(props.colorBlind).primaryColor};
     padding-left: 10px;
     font-weight: 600;
     user-select: none;
@@ -51,6 +51,7 @@ const UserProfil = () => {
   const [checkboxPassword, setCheckboxPassword] = useState(false)
   const user = useSelector(state => state.user)
   const userPhone = useSelector(state => state.userPhone)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const dispatch = useDispatch()
 
@@ -105,7 +106,7 @@ const UserProfil = () => {
     <ProfilStyle>
       {tooltipButton}
       <h1>Dane użytkownika:</h1>
-      <TextToUser>
+      <TextToUser colorBlind={colorBlind}>
         <div>
           <h1>
             Twoje imię: <span>{!!user ? user.userName : ""}</span>

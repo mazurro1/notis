@@ -3,6 +3,7 @@ import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { MdClose } from "react-icons/md"
 import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const PopupWindow = styled.div`
   position: fixed;
@@ -41,7 +42,7 @@ const ClosePopup = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    color: ${Colors.buttonColor};
+    color: ${props => Colors(props.colorBlind).primaryColorDark};
   }
 `
 
@@ -63,6 +64,7 @@ const Popup = ({
   noContent = false,
   fullScreen = false,
 }) => {
+  const colorBlind = useSelector(state => state.colorBlind)
   const handleOnClick = e => {
     handleClose()
   }
@@ -87,7 +89,7 @@ const Popup = ({
       fullScreen={fullScreen}
     >
       {children}
-      <ClosePopup onClick={handleOnClick}>
+      <ClosePopup onClick={handleOnClick} colorBlind={colorBlind}>
         <MdClose />
       </ClosePopup>
     </PopupContent>

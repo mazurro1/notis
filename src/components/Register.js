@@ -8,7 +8,7 @@ import ReactTooltip from "react-tooltip"
 import { FaUserPlus } from "react-icons/fa"
 import ButtonIcon from "./ButtonIcon"
 import { fetchRegisterUser } from "../state/actions"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -24,12 +24,12 @@ const RegulationsText = styled.div`
   text-align: center;
   margin-top: 20px;
   a {
-    color: ${Colors.buttonIconColor};
+    color: ${props => Colors(props.colorBlind).primaryColor};
     transition-property: color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
     &:hover {
-      color: ${Colors.buttonColor};
+      color: ${props => Colors(props.colorBlind).primaryColorDark};
     }
   }
 `
@@ -41,6 +41,7 @@ const RegisterContent = () => {
   const [phoneInput, setPhoneInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
   const [repeatPasswordInput, setRepeatPasswordInput] = useState("")
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const dispatch = useDispatch()
 
@@ -117,7 +118,7 @@ const RegisterContent = () => {
         type="password"
         onChange={e => handleChange(e, setRepeatPasswordInput)}
       />
-      <RegulationsText>
+      <RegulationsText colorBlind={colorBlind}>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>

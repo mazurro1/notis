@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { MdClose } from "react-icons/md"
 import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const DivTakeData = styled.div`
   position: relative;
@@ -51,7 +52,7 @@ const IconResetDate = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    color: ${Colors.buttonColor};
+    color: ${props => Colors(props.colorBlind).primaryColorDark};
   }
 `
 
@@ -64,6 +65,7 @@ const ButtonTakeData = ({
 }) => {
   const [mouseClick, setMouseClick] = useState(false)
   const [numberScale, setNumberScale] = useState(1)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const handleOnClick = () => {
     setMouseClick(true)
@@ -90,7 +92,7 @@ const ButtonTakeData = ({
       <IconStyle>{icon}</IconStyle>
       {text}
       {resetTextEnable && (
-        <IconResetDate onClick={handleResetText}>
+        <IconResetDate onClick={handleResetText} colorBlind={colorBlind}>
           <MdClose />
         </IconResetDate>
       )}

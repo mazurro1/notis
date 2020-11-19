@@ -6,9 +6,7 @@ exports.wrapPageElement = ({ element, props }) => {
   const isMainPage = props.location.pathname === "/"
   return (
     <>
-      <Navigation isMainPage={isMainPage}>
-        <div className="heightElement">{element}</div>
-      </Navigation>
+      <Navigation isMainPage={isMainPage}>{element}</Navigation>
       <Footer />
     </>
   )

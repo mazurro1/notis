@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react"
+import React from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
-import { CSSTransition } from "react-transition-group"
+import { useSelector } from "react-redux"
 
 const CustomStyleTextarea = styled.textarea`
   max-width: 100%;
@@ -9,7 +9,9 @@ const CustomStyleTextarea = styled.textarea`
   min-height: 100px;
   max-height: 300px;
   border: ${props =>
-    props.isErrorText ? "2px solid #f44336" : "2px solid #f5f4f5"};
+    props.isErrorText
+      ? `2px solid ${Colors(props.colorBlind).dangerColor}`
+      : "2px solid #f5f4f5"};
   border-radius: 5px;
   padding: 10px;
   word-wrap: break-word;
@@ -27,32 +29,18 @@ const CustomStyleTextarea = styled.textarea`
 const ErrorText = styled.div`
   font-size: 0.75rem;
   font-weight: bold;
-  color: #f44336;
+  color: ${props => Colors(props.colorBlind).dangerColor};
   padding-left: 10px;
 `
 
 const TextareaCustom = ({
   placeholder = "Uzupełnij pole",
   maxLength = "",
-  textareaActive = false,
   onChange = () => {},
   value = "",
   isErrorText = false,
 }) => {
-  const [areaActive, setAreaActive] = useState(false)
-  const timerToClearSomewhere = useRef(null)
-
-  useEffect(() => {
-    if (textareaActive) {
-      timerToClearSomewhere.current = setTimeout(() => {
-        setAreaActive(true)
-      }, 400)
-    } else {
-      clearTimeout(timerToClearSomewhere.current)
-      setAreaActive(false)
-    }
-  }, [textareaActive])
-
+  const colorBlind = useSelector(state => state.colorBlind)
   const handleOnChange = e => {
     onChange(e)
   }
@@ -68,9 +56,10 @@ const TextareaCustom = ({
         autocapitalize="sentences"
         onChange={e => handleOnChange(e)}
         value={value}
+        colorBlind={colorBlind}
       />
       {isErrorText && (
-        <ErrorText>
+        <ErrorText colorBlind={colorBlind}>
           {
             "W tekście nie może być następujących znaków: $, #, %, &, *, (, ), /, [, ], +, -, |"
           }

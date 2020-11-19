@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
+import { useSelector } from "react-redux"
 
 const ButtonStyle = styled.div`
   position: relative;
@@ -11,19 +12,19 @@ const ButtonStyle = styled.div`
   background-color: ${props =>
     props.mouseOn && !props.icon
       ? props.secondColors
-        ? Colors.buttonIconColorSecond
-        : Colors.buttonIconColor
+        ? Colors(props.colorBlind).secondColor
+        : Colors(props.colorBlind).primaryColor
       : props.disabled
       ? "#e0e0e0"
       : props.buttonBgDark && props.icon
-      ? Colors.navDownBackground
+      ? Colors(props.colorBlind).navDownBackground
       : props.secondColors
-      ? Colors.buttonColorSecond
+      ? Colors(props.colorBlind).secondDarkColor
       : props.buttonBgDark
-      ? Colors.buttonColorDark
+      ? Colors(props.colorBlind).darkColor
       : props.customColorButton
       ? props.customColorButton
-      : Colors.buttonColor};
+      : Colors(props.colorBlind).primaryColorDark};
   color: black;
   overflow: hidden;
   color: white;
@@ -50,21 +51,21 @@ const IconStyle = styled.div`
   background-color: ${props =>
     props.mouseClick
       ? props.secondColors
-        ? Colors.buttonColorSecond
+        ? Colors(props.colorBlind).secondDarkColor
         : props.customColorIcon
         ? props.customColorIcon
         : props.buttonBgDark
-        ? Colors.buttonColorDark
-        : Colors.buttonColor
+        ? Colors(props.colorBlind).darkColor
+        : Colors(props.colorBlind).primaryColorDark
       : props.disabled
       ? "#bdbdbd"
       : props.secondColors
-      ? Colors.buttonIconColorSecond
+      ? Colors(props.colorBlind).secondColor
       : props.buttonBgDark
-      ? Colors.buttonColorDark
+      ? Colors(props.colorBlind).darkColor
       : props.customColorIcon
       ? props.customColorIcon
-      : Colors.buttonIconColor};
+      : Colors(props.colorBlind).primaryColor};
   transform: ${props =>
     props.mouseOn ? `scale(${props.numberScale})` : "scale(1)"};
   transition-property: transform, background-color;
@@ -110,6 +111,7 @@ const ButtonIcon = ({
   const [numberScale, setNumberScale] = useState(1)
   const refButton = useRef(null)
   const timerToClearSomewhere = useRef(null)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   useEffect(() => {
     if (mouseClick) {
@@ -155,6 +157,7 @@ const ButtonIcon = ({
         buttonBgDark={buttonBgDark}
         disabled={disabled}
         customColorIcon={customColorIcon}
+        colorBlind={colorBlind}
       />
       <OnlyIcon fontIconSize={fontIconSize}>{iconRender}</OnlyIcon>
     </>
@@ -175,6 +178,7 @@ const ButtonIcon = ({
       buttonBgDark={buttonBgDark}
       disabled={disabled}
       customColorButton={customColorButton}
+      colorBlind={colorBlind}
     >
       {allIcon}
       <TextStyle>{title}</TextStyle>

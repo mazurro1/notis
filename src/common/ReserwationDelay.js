@@ -1,1 +1,1 @@
-export const ReserwationDelay = [5, 10, 15, 20, 30]
+export const ReserwationDelay = [5, 10, 15, 30]

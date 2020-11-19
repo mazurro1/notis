@@ -7,6 +7,7 @@ import {
   MdEmail,
   MdClose,
   MdDone,
+  MdTimelapse,
 } from "react-icons/md"
 import SelectCustom from "../SelectCustom"
 
@@ -15,6 +16,7 @@ import { CSSTransition } from "react-transition-group"
 import {
   fetchDeleteUserFromCompany,
   fetchAddAgainWorkerToCompany,
+  changeEditWorkerHours,
 } from "../../state/actions"
 import { useDispatch } from "react-redux"
 import styled from "styled-components"
@@ -36,13 +38,18 @@ const IconVeryfiedUser = styled.div`
   font-size: 1.6rem;
   cursor: ${props => (props.email ? "pointer" : "")};
   color: ${props =>
-    props.active ? "#43a047" : props.email ? Colors.secondColor : "#f44336"};
+    props.active
+      ? Colors(props.colorBlind).successColor
+      : props.email
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).dangerColor};
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
   &:hover {
-    color: ${props => (props.email ? "#ed6c0c" : "")};
+    color: ${props =>
+      props.email ? Colors(props.colorBlind).secondDarkColor : ""};
   }
 `
 
@@ -53,7 +60,7 @@ const InputStyles = styled.div`
 `
 
 const ButtonDeleteStyle = styled.div`
-  padding: 5px;
+  padding: 2.5px;
 `
 
 const ButtonContent = styled.div`
@@ -119,7 +126,11 @@ const WorkerItem = ({
   editedWorkers,
   allCategories,
   setAllCategories,
+  company,
+  editMode,
+  colorBlind,
 }) => {
+  const [chooseTimeWorker, setChooseTimeWorker] = useState(false)
   const [userEditItem, setUserEditItem] = useState(false)
   const [userConfirmDelete, setUserConfirmDelete] = useState(false)
   const [inputSpecialization, setInputSpeciailization] = useState(
@@ -131,13 +142,19 @@ const WorkerItem = ({
   const selectRef = useRef(null)
 
   useEffect(() => {
+    setUserEditItem(false)
+    setUserConfirmDelete(false)
+    setChooseTimeWorker(false)
+  }, [editMode])
+
+  useEffect(() => {
     if (!!item.servicesCategory) {
       if (item.servicesCategory.length > 0) {
         const valuePadding = allCategoriesWithItems.length * 23 + 15
         setSelectHeight(valuePadding)
       }
     }
-  }, [item, setSelectHeight])
+  }, [item, setSelectHeight, allCategoriesWithItems.length])
 
   useEffect(() => {
     if (!!selectRef.current) {
@@ -206,12 +223,16 @@ const WorkerItem = ({
       }
       setAllCategories(newCategories)
     }
-  }, [allCategoriesWithItems, item])
+  }, [allCategoriesWithItems, item, setAllCategories])
 
   const dispatch = useDispatch()
 
   const handleUserConfirmDelete = () => {
     setUserConfirmDelete(prevState => !prevState)
+  }
+
+  const handleChooseTimeWorker = () => {
+    setChooseTimeWorker(prevState => !prevState)
   }
 
   const handleUserItemEdit = () => {
@@ -249,21 +270,6 @@ const WorkerItem = ({
     const workerServicesCategoryToSent = workerServicesCategory.map(
       item => item.label
     )
-
-    let workerCategoryDefaultFromServer = []
-    // if (!!item.servicesCategory && serviceCategoriesIsEqual) {
-    if (!!item.servicesCategory) {
-      if (item.servicesCategory.length > 0) {
-        const workerServicesCategory = item.servicesCategory.map(item => {
-          return item
-        })
-        workerCategoryDefaultFromServer = workerServicesCategory
-      }
-    }
-
-    // const workerServicesCategoryValue = !serviceCategoriesIsEqual
-    //   ? workerServicesCategoryToSent
-    //   : workerCategoryDefaultFromServer
 
     const workerServicesCategoryValue = workerServicesCategoryToSent
 
@@ -306,9 +312,20 @@ const WorkerItem = ({
     setWorkerServicesCategory(valueToSave)
   }
 
+  const handleUserTimeWork = () => {
+    const itemsToSent = {
+      ...item,
+      company: company,
+    }
+    dispatch(changeEditWorkerHours(true, itemsToSent))
+  }
+
   return (
     <WorkerItemStyle userEditItem={userEditItem} selectHeight={selectHeight}>
-      <WorkerCircle isCompanyEditProfil={isCompanyEditProfil}>
+      <WorkerCircle
+        isCompanyEditProfil={isCompanyEditProfil}
+        colorBlind={colorBlind}
+      >
         <FaUser />
       </WorkerCircle>
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
@@ -317,9 +334,21 @@ const WorkerItem = ({
         <>
           <EditUserStyle>
             <EditIconStyle
+              onClick={handleChooseTimeWorker}
+              // onClick={handleUserTimeWork}
+              data-tip
+              data-for={`timeWorkUser${index}`}
+              data-place="left"
+              colorBlind={colorBlind}
+            >
+              <MdTimelapse />
+            </EditIconStyle>
+            <EditIconStyle
               onClick={handleUserItemEdit}
               data-tip
               data-for={`editUser${index}`}
+              data-place="left"
+              colorBlind={colorBlind}
             >
               <MdEdit />
             </EditIconStyle>
@@ -327,6 +356,8 @@ const WorkerItem = ({
               onClick={handleUserConfirmDelete}
               data-tip
               data-for={`deleteUser${index}`}
+              data-place="left"
+              colorBlind={colorBlind}
             >
               <MdDelete />
             </DeleteUserIconStyle>
@@ -336,6 +367,7 @@ const WorkerItem = ({
               active={item.active}
               data-tip
               data-for={`alertActive${index}`}
+              colorBlind={colorBlind}
             >
               {item.active ? <MdVerifiedUser /> : <MdError />}
             </IconVeryfiedUser>
@@ -345,6 +377,7 @@ const WorkerItem = ({
                 onClick={handleSentAgainEmailVeryfication}
                 data-tip
                 data-for={`sentAgainEmail${index}`}
+                colorBlind={colorBlind}
               >
                 <MdEmail />
               </IconVeryfiedUser>
@@ -397,8 +430,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleEditSpecializationReset}
-                      customColorButton="#c62828"
-                      customColorIcon="#f44336"
+                      customColorButton={Colors(colorBlind).dangerColorDark}
+                      customColorIcon={Colors(colorBlind).dangerColor}
                     />
                   </ButtonStyles>
                   <ButtonStyles>
@@ -409,8 +442,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<MdDone />}
                       onClick={handleSaveSpecialization}
-                      customColorButton="#2e7d32"
-                      customColorIcon="#43a047"
+                      customColorButton={Colors(colorBlind).successColorDark}
+                      customColorIcon={Colors(colorBlind).successColor}
                       // disabled={!disabledButtonAccept}
                     />
                   </ButtonStyles>
@@ -440,8 +473,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleUserConfirmDelete}
-                      customColorButton="#2e7d32"
-                      customColorIcon="#43a047"
+                      customColorButton={Colors(colorBlind).successColorDark}
+                      customColorIcon={Colors(colorBlind).successColor}
                     />
                   </ButtonDeleteStyle>
                   <ButtonDeleteStyle>
@@ -452,36 +485,98 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<MdDelete />}
                       onClick={handleDeleteUser}
-                      customColorButton="#c62828"
-                      customColorIcon="#f44336"
+                      customColorButton={Colors(colorBlind).dangerColorDark}
+                      customColorIcon={Colors(colorBlind).dangerColor}
                     />
                   </ButtonDeleteStyle>
                 </ButtonContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
+          <CSSTransition
+            in={chooseTimeWorker}
+            timeout={400}
+            classNames="popup"
+            unmountOnExit
+          >
+            <EditUserBackground>
+              <EditUserBackgroundContent onClick={handleClickContent} noBg>
+                <ButtonContent>
+                  <ButtonDeleteStyle>
+                    <ButtonIcon
+                      title="Stały czas pracy"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<FaArrowLeft />}
+                      onClick={handleChooseTimeWorker}
+                      secondColors
+                    />
+                  </ButtonDeleteStyle>
+                  <ButtonDeleteStyle>
+                    <ButtonIcon
+                      title="Zmienny czas pracy"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<FaArrowLeft />}
+                      onClick={handleUserTimeWork}
+                      secondColors
+                    />
+                  </ButtonDeleteStyle>
+                  <ButtonDeleteStyle>
+                    <ButtonIcon
+                      title="Wróć"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<FaArrowLeft />}
+                      onClick={handleChooseTimeWorker}
+                      customColorButton={Colors(colorBlind).dangerColorDark}
+                      customColorIcon={Colors(colorBlind).dangerColor}
+                    />
+                  </ButtonDeleteStyle>
+                </ButtonContent>
+              </EditUserBackgroundContent>
+            </EditUserBackground>
+          </CSSTransition>
+          <ReactTooltip
+            id={`alertActive${index}`}
+            effect="float"
+            multiline={true}
+          >
+            {item.active ? (
+              <span>Użytkownik potwierdzony</span>
+            ) : (
+              <span>Użytkownik nie potwierdzony</span>
+            )}
+          </ReactTooltip>
+          <ReactTooltip
+            id={`sentAgainEmail${index}`}
+            effect="float"
+            multiline={true}
+          >
+            <span>Wyślij ponownie email weryfikacyjny</span>
+          </ReactTooltip>
+          <ReactTooltip
+            id={`timeWorkUser${index}`}
+            effect="float"
+            multiline={true}
+          >
+            <span>Edytuj godziny pracy pracownika</span>
+          </ReactTooltip>
+          <ReactTooltip id={`editUser${index}`} effect="float" multiline={true}>
+            <span>Edytuj stanowisko pracownika</span>
+          </ReactTooltip>
+          <ReactTooltip
+            id={`deleteUser${index}`}
+            effect="float"
+            multiline={true}
+          >
+            <span>Usuń pracownika</span>
+          </ReactTooltip>
         </>
       )}
-      <ReactTooltip id={`alertActive${index}`} effect="float" multiline={true}>
-        {item.active ? (
-          <span>Użytkownik potwierdzony</span>
-        ) : (
-          <span>Użytkownik nie potwierdzony</span>
-        )}
-      </ReactTooltip>
-      <ReactTooltip
-        id={`sentAgainEmail${index}`}
-        effect="float"
-        multiline={true}
-      >
-        <span>Wyślij ponownie email weryfikacyjny</span>
-      </ReactTooltip>
-      <ReactTooltip id={`editUser${index}`} effect="float" multiline={true}>
-        <span>Edytuj stanowisko pracownika</span>
-      </ReactTooltip>
-      <ReactTooltip id={`deleteUser${index}`} effect="float" multiline={true}>
-        <span>Usuń pracownika</span>
-      </ReactTooltip>
     </WorkerItemStyle>
   )
 }

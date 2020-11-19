@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 export const checkIfBadValue = value => {
   const textHaveVal1 = value.includes("$")
   const textHaveVal2 = value.includes("#")
@@ -288,4 +289,155 @@ export const compareEditedArrayToServerArrayAndReturnNotCompareItems = (
     }
   })
   return result
+}
+
+export const getMonthAndReturn = intMonth => {
+  let monthToReturn = ""
+  switch (intMonth) {
+    case 0:
+      monthToReturn = "Niedz"
+      break
+    case 1:
+      monthToReturn = "Pon"
+      break
+
+    case 2:
+      monthToReturn = "Wt"
+      break
+    case 3:
+      monthToReturn = "Śr"
+      break
+    case 4:
+      monthToReturn = "Czw"
+      break
+    case 5:
+      monthToReturn = "Pt"
+      break
+    case 6:
+      monthToReturn = "Sob"
+      break
+
+    default:
+      monthToReturn = ""
+  }
+
+  return monthToReturn
+}
+
+export const getMonthAndReturnEng = intMonth => {
+  let monthToReturn = ""
+  switch (intMonth) {
+    case 0:
+      monthToReturn = "sun"
+      break
+    case 1:
+      monthToReturn = "mon"
+      break
+
+    case 2:
+      monthToReturn = "tue"
+      break
+    case 3:
+      monthToReturn = "wed"
+      break
+    case 4:
+      monthToReturn = "thu"
+      break
+    case 5:
+      monthToReturn = "fri"
+      break
+    case 6:
+      monthToReturn = "sat"
+      break
+
+    default:
+      monthToReturn = ""
+  }
+
+  return monthToReturn
+}
+
+export const getMonthNamePl = intMonth => {
+  let monthToReturn = ""
+  switch (intMonth) {
+    case 0:
+      monthToReturn = "Styczeń"
+      break
+    case 1:
+      monthToReturn = "Luty"
+      break
+
+    case 2:
+      monthToReturn = "Marzec"
+      break
+    case 3:
+      monthToReturn = "Kwiecień"
+      break
+    case 4:
+      monthToReturn = "Maj"
+      break
+    case 5:
+      monthToReturn = "Czerwiec"
+      break
+    case 6:
+      monthToReturn = "Lipiec"
+      break
+    case 7:
+      monthToReturn = "Sierpień"
+      break
+    case 8:
+      monthToReturn = "Wrzesień"
+      break
+    case 9:
+      monthToReturn = "Październik"
+      break
+    case 10:
+      monthToReturn = "Listopad"
+      break
+    case 11:
+      monthToReturn = "Grudzień"
+      break
+
+    default:
+      monthToReturn = "Miesiąc"
+  }
+
+  return monthToReturn
+}
+
+export const checkAndReturnMinAndMaxValueFromDaysHours = openingDays => {
+  let maxNumber = 0
+  let minNumber = 1440
+
+  const transformedHoursData = []
+  for (const key in openingDays) {
+    transformedHoursData.push({
+      start: openingDays[key].start,
+      end: openingDays[key].end,
+      disabled: openingDays[key].disabled,
+    })
+  }
+  transformedHoursData.forEach(item => {
+    if (!item.disabled) {
+      const arrEnd = item.end.split(":")
+      const arrStart = item.start.split(":")
+      const valueEnd = Number(arrEnd[0]) * 60 + Number(arrEnd[1])
+      const valueStart = Number(arrStart[0]) * 60 + Number(arrStart[1])
+      if (valueEnd > maxNumber) {
+        maxNumber = valueEnd
+      }
+      if (valueStart < minNumber) {
+        minNumber = valueStart
+      }
+    }
+  })
+
+  const hoursEnd = Math.round(maxNumber / 60)
+  const hoursStart = Math.round(minNumber / 60)
+  const maxHours = `${hoursEnd}:${maxNumber % 60}`
+  const minHours = `${hoursStart}:${minNumber % 60}`
+  return {
+    maxHours: maxHours,
+    minHours: minHours,
+  }
 }

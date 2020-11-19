@@ -6,6 +6,7 @@ import styled from "styled-components"
 import { checkIfBadValue } from "../../common/Functions"
 import { CSSTransition } from "react-transition-group"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
+import { Colors } from "../../common/Colors"
 
 const HeightComponentLinks = styled.div`
   padding-bottom: ${props =>
@@ -66,6 +67,7 @@ const ColumnItemTextarea = ({
   onClickEdit = () => {},
   setTextEditedChange,
   textEdited,
+  colorBlind,
 }) => {
   const [textTitle, handleTextAbout] = useState(textEdited ? textEdited : title)
   const [isErrorText, setIsErrorText] = useState(false)
@@ -112,7 +114,10 @@ const ColumnItemTextarea = ({
       isCompanyEditProfil={isCompanyEditProfil}
       editable={editable}
     >
-      <TitleRightColumn isCompanyEditProfil={isCompanyEditProfil}>
+      <TitleRightColumn
+        isCompanyEditProfil={isCompanyEditProfil}
+        colorBlind={colorBlind}
+      >
         {titleColumnItem}
       </TitleRightColumn>
       <ParagraphRightColumn>{textTitle}</ParagraphRightColumn>
@@ -157,8 +162,8 @@ const ColumnItemTextarea = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaArrowLeft />}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                           onClick={handleResetButton}
                         />
                       </ButtonSubmit>
@@ -171,8 +176,10 @@ const ColumnItemTextarea = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaSave />}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                           disabled={disabledSave}
                         />
                       </ButtonMargin>

@@ -4,6 +4,7 @@ import { Colors } from "../common/Colors"
 import ButtonIcon from "../components/ButtonIcon"
 import { CSSTransition } from "react-transition-group"
 import { MdWork } from "react-icons/md"
+import { useSelector } from "react-redux"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -32,8 +33,6 @@ const PlaceImage = styled.div`
   position: relative;
   width: 35%;
   min-width: 200px;
-  /* border-right: 1px solid #757575; */
-  /* border-right: 1px solid ${Colors.buttonColor}; */
   img {
     height: 100%;
     width: 100%;
@@ -59,7 +58,7 @@ const PlaceContent = styled.div`
 
   h6 {
     display: inline;
-    border-bottom: 2px solid ${Colors.buttonIconColor};
+    border-bottom: 2px solid ${props => Colors(props.colorBlind).primaryColor};
     padding-bottom: 5px;
   }
 
@@ -107,7 +106,7 @@ const OpinionMainDiv = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  background-color: ${Colors.navBackground};
+  background-color: ${props => Colors(props.colorBlind).navBackground};
   border-bottom-left-radius: 5px;
   border-top-right-radius: 5px;
   color: white;
@@ -125,7 +124,7 @@ const OpinionBottom = styled.div`
   left: 0;
   right: 0;
   font-size: 0.8rem;
-  background-color: #424242;
+  background-color: ${props => Colors(props.colorBlind).darkColor};
   padding: 2px 5px;
   border-bottom-left-radius: 5px;
   text-align: center;
@@ -164,6 +163,7 @@ const SerivesDiv = styled.div`
 
 const PlacesItem = ({ item, filters, index }) => {
   const [servicesVisible, setServicesVisible] = useState(false)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const handleServicesVisible = () => {
     setServicesVisible(prevValue => !prevValue)
@@ -221,7 +221,7 @@ const PlacesItem = ({ item, filters, index }) => {
       <PlaceImage>
         <BackGroundImageCustomUrl url={item.image} />
       </PlaceImage>
-      <PlaceContent>
+      <PlaceContent colorBlind={colorBlind}>
         <h1>{item.name}</h1>
         <MarginBottomTitle>
           <h6>{item.adress}</h6>
@@ -230,9 +230,11 @@ const PlacesItem = ({ item, filters, index }) => {
 
         {renderSelectedFilter}
 
-        <OpinionMainDiv>
+        <OpinionMainDiv colorBlind={colorBlind}>
           <PaddingOpinion>{item.avarageOpinions}</PaddingOpinion>
-          <OpinionBottom>Opinie: {item.countOpinions}</OpinionBottom>
+          <OpinionBottom colorBlind={colorBlind}>
+            Opinie: {item.countOpinions}
+          </OpinionBottom>
         </OpinionMainDiv>
         <ButtonReservContent>
           <ButtonReserv services>

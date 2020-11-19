@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
@@ -26,7 +27,7 @@ const TextH1 = styled.div`
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
-  color: ${Colors.navDownBackground};
+  color: ${props => Colors(props.colorBlind).navDownBackground};
   padding: 5px 10px;
   padding-left: 25px;
   text-transform: uppercase;
@@ -37,7 +38,9 @@ const TextH1 = styled.div`
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: ${props =>
-    props.isCompanyEditProfil ? Colors.secondColor : Colors.buttonIconColor};
+    props.isCompanyEditProfil
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).primaryColor};
 `
 
 const ContentDiv = styled.div`
@@ -55,28 +58,6 @@ const LeftColumn = styled.div`
   @media all and (min-width: 991px) {
     width: 70%;
   }
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => (props.transparent ? "transparent" : "white")};
-  padding: 10px;
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
 `
 
 const RightColumn = styled.div`
@@ -112,7 +93,9 @@ const TitleRightColumn = styled.h2`
   word-wrap: break-word;
   border-bottom: 2px solid
     ${props =>
-      props.isCompanyEditProfil ? Colors.secondColor : Colors.buttonIconColor};
+      props.isCompanyEditProfil
+        ? Colors(props.colorBlind).secondColor
+        : Colors(props.colorBlind).primaryColor};
 `
 
 const ParagraphRightColumn = styled.p`
@@ -154,7 +137,7 @@ const EditModeToChange = styled.div`
   position: absolute;
   right: -50px;
   top: 5px;
-  background-color: #424242;
+  background-color: ${props => Colors(props.colorBlind).darkColor};
   padding: 8px;
   padding-bottom: 0px;
   border-radius: 50%;
@@ -164,7 +147,7 @@ const EditModeToChange = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    background-color: ${Colors.navDownBackground};
+    background-color: ${props => Colors(props.colorBlind).navDownBackground};
   }
 `
 
@@ -212,6 +195,7 @@ const ContentCompanyProfil = ({
   console.log("newOwnerSpecialization", newOwnerSpecialization)
 
   const user = useSelector(state => state.user)
+  const colorBlind = useSelector(state => state.colorBlind)
   const resetCompany = useSelector(state => state.resetCompany)
 
   const dispatch = useDispatch()
@@ -484,13 +468,14 @@ const ContentCompanyProfil = ({
 
   return (
     <div>
-      <TextH1 {...companyEditProfilProps}>
+      <TextH1 {...companyEditProfilProps} colorBlind={colorBlind}>
         {company.name}
         <EditModeToChange
           data-tip
           data-for="editMode"
           data-place="bottom"
           onClick={handleClickEditMode}
+          colorBlind={colorBlind}
         >
           <MdEdit />
         </EditModeToChange>
@@ -539,6 +524,7 @@ const ContentCompanyProfil = ({
               setCompanyPaused={setCompanyPaused}
               setReservationEveryTime={setReservationEveryTime}
               reservationEveryTimeServer={company.reservationEveryTime}
+              colorBlind={colorBlind}
             />
           </RightColumnItem>
           <InputCustom />
@@ -554,6 +540,7 @@ const ContentCompanyProfil = ({
               onClickEdit={() => handleEdit(setEditAboutUs)}
               setTextEditedChange={setTextAboutUs}
               textEdited={textAboutUs}
+              colorBlind={colorBlind}
             />
           </RightColumnItem>
           <RightColumnItem {...companyEditProfilProps}>
@@ -565,6 +552,8 @@ const ContentCompanyProfil = ({
               company={company}
               setChangesTimeOpen={setChangesTimeOpen}
               setOpeningHoursToSent={setOpeningHoursToSent}
+              editMode={editMode}
+              colorBlind={colorBlind}
             />
           </RightColumnItem>
           <RightColumnItem {...companyEditProfilProps}>
@@ -583,6 +572,9 @@ const ContentCompanyProfil = ({
               editedWorkers={editedWorkers}
               ownerSerwiceCategory={company.ownerSerwiceCategory}
               newOwnerServicesCategory={newOwnerServicesCategory}
+              company={company}
+              editMode={editMode}
+              colorBlind={colorBlind}
             />
           </RightColumnItem>
 
@@ -599,6 +591,7 @@ const ContentCompanyProfil = ({
                 onClickEdit={() => handleEdit(setEditRezerwationText)}
                 setTextEditedChange={setTextRezerwation}
                 textEdited={textRezerwationText}
+                colorBlind={colorBlind}
               />
             </RightColumnItem>
           )}
@@ -613,6 +606,7 @@ const ContentCompanyProfil = ({
                 {...companyEditProfilProps}
                 ButtonEditPosition={ButtonEditPosition}
                 editable={editLinks}
+                colorBlind={colorBlind}
                 onClickEdit={() => handleEdit(setEditLinks)}
                 handleSaveLinks={handleSaveLinks}
                 linkFacebook={
@@ -642,8 +636,8 @@ const ContentCompanyProfil = ({
             fontIconSize="40"
             fontSize="28"
             icon={<FaSave />}
-            customColorButton="#2e7d32"
-            customColorIcon="#43a047"
+            customColorButton={Colors(colorBlind).successColorDark}
+            customColorIcon={Colors(colorBlind).successColor}
             onClick={handleSaveChanges}
           />
         </SaveChangesPosition>

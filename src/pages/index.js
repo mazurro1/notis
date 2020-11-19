@@ -10,12 +10,11 @@ import {
   changeFilterVisible,
   changeLocaliaztionVisible,
   changeLoadingPlaces,
-  
 } from "../state/actions"
-import {Colors} from '../common/Colors'
-import sal from 'sal.js'
+import { Colors } from "../common/Colors"
+import sal from "sal.js"
 import { CSSTransition } from "react-transition-group"
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { LinkEffect } from "../common/LinkEffect"
 
 const ButtonsFilters = styled.div`
@@ -36,7 +35,7 @@ const TextH1 = styled.div`
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
-  color: ${Colors.navDownBackground};
+  color: ${props => Colors(props.colorBlind).navDownBackground};
   padding: 5px 10px;
   padding-left: 25px;
   margin-bottom: 10px;
@@ -47,7 +46,7 @@ const TextH1 = styled.div`
   color: white;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  background-color: ${Colors.buttonIconColor};
+  background-color: ${props => Colors(props.colorBlind).primaryColor};
 `
 
 const Home = () => {
@@ -57,11 +56,12 @@ const Home = () => {
   const localization = useSelector(state => state.localization)
   const industries = useSelector(state => state.industries)
   const loadingPlaces = useSelector(state => state.loadingPlaces)
+  const colorBlind = useSelector(state => state.colorBlind)
 
   const contentRef = useRef(null)
 
-  useEffect(()=>{
-    const heightContent = contentRef.current.clientHeight;
+  useEffect(() => {
+    const heightContent = contentRef.current.clientHeight
     // window.scrollTo(heightContent)
     console.log(heightContent)
   }, [contentRef])
@@ -72,7 +72,7 @@ const Home = () => {
     // console.log(currPos.y)
   })
 
-  useEffect(()=>{
+  useEffect(() => {
     sal({
       threshold: 0.1,
       once: false,
@@ -80,10 +80,16 @@ const Home = () => {
   }, [loadingPlaces])
 
   const mapPlacesData = placesData.map((item, index) => {
-    return <PlacesItem key={item.id} item={item} filters={filters} index={index}/>
+    return (
+      <PlacesItem key={item.id} item={item} filters={filters} index={index} />
+    )
   })
 
-  const industriesText = !!industries ? <TextH1>{industries}</TextH1> : <TextH1>Wszystko</TextH1>
+  const industriesText = !!industries ? (
+    <TextH1 colorBlind={colorBlind}>{industries}</TextH1>
+  ) : (
+    <TextH1 colorBlind={colorBlind}>Wszystko</TextH1>
+  )
 
   return (
     <div ref={contentRef}>
@@ -112,7 +118,9 @@ const Home = () => {
         <ButtonMargin>
           <ButtonIcon
             title={
-              !!localization ? `lokalizacja: ${localization.label}` : "lokalizacja"
+              !!localization
+                ? `lokalizacja: ${localization.label}`
+                : "lokalizacja"
             }
             uppercase
             fontIconSize="35"
@@ -123,24 +131,34 @@ const Home = () => {
         </ButtonMargin>
       </ButtonsFilters>
       <div>
-        <button onClick={()=>{dispatch(changeLoadingPlaces(true))}}>load places true</button>
+        <button
+          onClick={() => {
+            dispatch(changeLoadingPlaces(true))
+          }}
+        >
+          load places true
+        </button>
       </div>
       <div>
-        <button onClick={()=>{dispatch(changeLoadingPlaces(false))}}>load places false</button>
+        <button
+          onClick={() => {
+            dispatch(changeLoadingPlaces(false))
+          }}
+        >
+          load places false
+        </button>
       </div>
       <div>
         <LinkEffect text={<button>company</button>} path="/company-profil" />
       </div>
       <CSSTransition
-      in={!loadingPlaces}
-      timeout={400}
-      classNames="popup"
-      unmountOnExit
-    >
-      <div>
-        {mapPlacesData}
-      </div>
-    </CSSTransition>
+        in={!loadingPlaces}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <div>{mapPlacesData}</div>
+      </CSSTransition>
     </div>
   )
 }

@@ -15,6 +15,7 @@ import { CSSTransition } from "react-transition-group"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
+import { useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -26,7 +27,7 @@ const CheckboxStyle = styled.div`
   margin-bottom: 30px;
   margin-top: 10px;
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: #c62828;
+    background-color: ${props => Colors(props.colorBlind).dangerColorDark};
   }
 `
 
@@ -72,7 +73,7 @@ const OpinionsContent = styled.div`
 `
 
 const OpinionUp = styled.div`
-  background-color: ${Colors.navBackground};
+  background-color: ${props => Colors(props.colorBlind).navBackground};
   color: white;
   text-align: center;
   font-size: 1.5rem;
@@ -85,7 +86,7 @@ const OpininPadding = styled.div`
 `
 
 const OpinionDown = styled.div`
-  background-color: #424242;
+  background-color: ${props => Colors(props.colorBlind).darkColor};
   font-size: 0.9rem;
   padding: 2px 15px;
   border-bottom-left-radius: 5px;
@@ -109,7 +110,9 @@ const CirclePhone = styled.div`
   top: 3px;
   border-radius: 50%;
   background-color: ${props =>
-    props.isCompanyEditProfil ? Colors.secondColor : Colors.buttonIconColor};
+    props.isCompanyEditProfil
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).primaryColor};
   height: 40px;
   width: 40px;
   display: inline-flex;
@@ -163,7 +166,9 @@ const ReserwationItem = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${props =>
-    props.active ? Colors.buttonIconColor : Colors.buttonColor};
+    props.active
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).secondDarkColor};
   border-radius: 5px;
   margin: 5px;
   color: white;
@@ -213,6 +218,7 @@ const OpinionAndAdressContent = ({
     reservationEveryTimeServer
   )
 
+  const colorBlind = useSelector(state => state.colorBlind)
   const disabledButtonSubmit =
     reserwationEver !== reservationEveryTimeServer ||
     companyNameInput !== companyName ||
@@ -294,6 +300,7 @@ const OpinionAndAdressContent = ({
         key={index}
         active={isActive}
         onClick={() => handleClickReserwationEver(item)}
+        colorBlind={colorBlind}
       >
         <div>{item}</div>
       </ReserwationItem>
@@ -315,14 +322,16 @@ const OpinionAndAdressContent = ({
     >
       {isCompanyEditProfil ? (
         companyPausedItem ? (
-          <IsCompanyPaused color="#f44336">
+          <IsCompanyPaused color={Colors(colorBlind).dangerColor}>
             Działalność wstrzymana
           </IsCompanyPaused>
         ) : (
-          <IsCompanyPaused color="#43a047">Działalność aktywna</IsCompanyPaused>
+          <IsCompanyPaused color={Colors(colorBlind).successColor}>
+            Działalność aktywna
+          </IsCompanyPaused>
         )
       ) : companyPausedItem ? (
-        <IsCompanyPaused color="#f44336">
+        <IsCompanyPaused color={Colors(colorBlind).dangerColor}>
           Działalność wstrzymana
         </IsCompanyPaused>
       ) : null}
@@ -336,15 +345,20 @@ const OpinionAndAdressContent = ({
         </AdressContent>
         <OpinionsContent>
           <OpinionRight>
-            <OpinionUp>
+            <OpinionUp colorBlind={colorBlind}>
               <OpininPadding>{opinionsValue}</OpininPadding>
-              <OpinionDown>Opinie: {opinionsCount}</OpinionDown>
+              <OpinionDown colorBlind={colorBlind}>
+                Opinie: {opinionsCount}
+              </OpinionDown>
             </OpinionUp>
           </OpinionRight>
         </OpinionsContent>
       </OpinionsAndAdress>
       <TelephoneDiv>
-        <CirclePhone isCompanyEditProfil={isCompanyEditProfil}>
+        <CirclePhone
+          isCompanyEditProfil={isCompanyEditProfil}
+          colorBlind={colorBlind}
+        >
           <MdPhone />
         </CirclePhone>
         {phoneNumberRender}
@@ -419,7 +433,7 @@ const OpinionAndAdressContent = ({
                   />
                   Rezerwacja co:
                   <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
-                  <CheckboxStyle>
+                  <CheckboxStyle colorBlind={colorBlind}>
                     <Checkbox
                       theme="material-checkbox"
                       value={companyPausedItem}
@@ -437,8 +451,8 @@ const OpinionAndAdressContent = ({
                           fontIconSize="16"
                           fontSize="12"
                           icon={<FaArrowLeft />}
-                          customColorButton="#c62828"
-                          customColorIcon="#f44336"
+                          customColorButton={Colors(colorBlind).dangerColorDark}
+                          customColorIcon={Colors(colorBlind).dangerColor}
                           onClick={handleResetInputs}
                         />
                       </>
@@ -451,8 +465,10 @@ const OpinionAndAdressContent = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaSave />}
-                          customColorButton="#2e7d32"
-                          customColorIcon="#43a047"
+                          customColorButton={
+                            Colors(colorBlind).successColorDark
+                          }
+                          customColorIcon={Colors(colorBlind).successColor}
                           disabled={!disabledButtonSubmit}
                         />
                       </ButtonMargin>
