@@ -35,7 +35,7 @@ const TextH1 = styled.div`
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
-  color: ${props => Colors(props.colorBlind).navDownBackground};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   padding: 5px 10px;
   padding-left: 25px;
   margin-bottom: 10px;
@@ -43,7 +43,6 @@ const TextH1 = styled.div`
   font-size: 2rem;
   letter-spacing: 0.5rem;
   text-align: center;
-  color: white;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: ${props => Colors(props.colorBlind).primaryColor};

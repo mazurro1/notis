@@ -15,6 +15,8 @@ import { fetchEditUser } from "../state/actions"
 
 const ProfilStyle = styled.div`
   padding: 20px;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
 `
 
 const TextToUser = styled.div`
@@ -103,7 +105,7 @@ const UserProfil = () => {
     ))
 
   return (
-    <ProfilStyle>
+    <ProfilStyle colorBlind={colorBlind}>
       {tooltipButton}
       <h1>Dane użytkownika:</h1>
       <TextToUser colorBlind={colorBlind}>

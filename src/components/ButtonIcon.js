@@ -17,7 +17,7 @@ const ButtonStyle = styled.div`
       : props.disabled
       ? "#e0e0e0"
       : props.buttonBgDark && props.icon
-      ? Colors(props.colorBlind).navDownBackground
+      ? Colors(props.colorBlind).darkColorDark
       : props.secondColors
       ? Colors(props.colorBlind).secondDarkColor
       : props.buttonBgDark
@@ -82,7 +82,7 @@ const OnlyIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   font-size: ${props => props.fontIconSize + "px"};
   padding: 5px;
 `
@@ -91,6 +91,7 @@ const TextStyle = styled.div`
   position: relative;
   z-index: 10;
   text-align: center;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
 `
 
 const ButtonIcon = ({
@@ -159,7 +160,9 @@ const ButtonIcon = ({
         customColorIcon={customColorIcon}
         colorBlind={colorBlind}
       />
-      <OnlyIcon fontIconSize={fontIconSize}>{iconRender}</OnlyIcon>
+      <OnlyIcon fontIconSize={fontIconSize} colorBlind={colorBlind}>
+        {iconRender}
+      </OnlyIcon>
     </>
   )
 
@@ -181,7 +184,7 @@ const ButtonIcon = ({
       colorBlind={colorBlind}
     >
       {allIcon}
-      <TextStyle>{title}</TextStyle>
+      <TextStyle colorBlind={colorBlind}>{title}</TextStyle>
     </ButtonStyle>
   )
 }

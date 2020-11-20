@@ -8,7 +8,7 @@ import { useSelector } from "react-redux"
 
 const PlaceItem = styled.div`
   position: relative;
-  background-color: #f5f4f5;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
   border-radius: 5px;
   margin: 7px;
   margin-top: 50px;
@@ -19,6 +19,7 @@ const PlaceItem = styled.div`
   flex-wrap: wrap;
   margin-bottom: 50px;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   /* border: 1px solid #b2ebf2; */
   overflow: hidden;
   @media all and (max-width: 920px) {
@@ -106,10 +107,10 @@ const OpinionMainDiv = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  background-color: ${props => Colors(props.colorBlind).navBackground};
+  background-color: ${props => Colors(props.colorBlind).opinionColorUp};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   border-bottom-left-radius: 5px;
   border-top-right-radius: 5px;
-  color: white;
   font-size: 1.6rem;
 `
 
@@ -124,7 +125,7 @@ const OpinionBottom = styled.div`
   left: 0;
   right: 0;
   font-size: 0.8rem;
-  background-color: ${props => Colors(props.colorBlind).darkColor};
+  background-color: ${props => Colors(props.colorBlind).opinionColorDown};
   padding: 2px 5px;
   border-bottom-left-radius: 5px;
   text-align: center;
@@ -212,60 +213,61 @@ const PlacesItem = ({ item, filters, index }) => {
   )
 
   return (
-    <PlaceItem
-      key={item.id}
+    <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
       data-sal-duration="1000"
       data-sal-easing="ease-out-bounce"
     >
-      <PlaceImage>
-        <BackGroundImageCustomUrl url={item.image} />
-      </PlaceImage>
-      <PlaceContent colorBlind={colorBlind}>
-        <h1>{item.name}</h1>
-        <MarginBottomTitle>
-          <h6>{item.adress}</h6>
-        </MarginBottomTitle>
-        <p>{item.title}</p>
+      <PlaceItem colorBlind={colorBlind}>
+        <PlaceImage>
+          <BackGroundImageCustomUrl url={item.image} />
+        </PlaceImage>
+        <PlaceContent colorBlind={colorBlind}>
+          <h1>{item.name}</h1>
+          <MarginBottomTitle>
+            <h6>{item.adress}</h6>
+          </MarginBottomTitle>
+          <p>{item.title}</p>
 
-        {renderSelectedFilter}
+          {renderSelectedFilter}
 
-        <OpinionMainDiv colorBlind={colorBlind}>
-          <PaddingOpinion>{item.avarageOpinions}</PaddingOpinion>
-          <OpinionBottom colorBlind={colorBlind}>
-            Opinie: {item.countOpinions}
-          </OpinionBottom>
-        </OpinionMainDiv>
-        <ButtonReservContent>
-          <ButtonReserv services>
-            <ButtonIcon
-              buttonBgDark
-              title="USŁUGI"
-              uppercase
-              fontIconSize="25"
-              icon={<MdWork />}
-              onClick={handleServicesVisible}
-            />
-          </ButtonReserv>
-          <ButtonReserv>
-            <ButtonIcon
-              title="REZERWUJ"
-              uppercase
-              fontIconSize="25"
-              icon={<MdWork />}
-            />
-          </ButtonReserv>
-        </ButtonReservContent>
-      </PlaceContent>
-      <CSSTransition
-        in={servicesVisible}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <SerivesDiv onClick={handleServicesVisible}>{allServices}</SerivesDiv>
-      </CSSTransition>
-    </PlaceItem>
+          <OpinionMainDiv colorBlind={colorBlind}>
+            <PaddingOpinion>{item.avarageOpinions}</PaddingOpinion>
+            <OpinionBottom colorBlind={colorBlind}>
+              Opinie: {item.countOpinions}
+            </OpinionBottom>
+          </OpinionMainDiv>
+          <ButtonReservContent>
+            <ButtonReserv services>
+              <ButtonIcon
+                buttonBgDark
+                title="USŁUGI"
+                uppercase
+                fontIconSize="25"
+                icon={<MdWork />}
+                onClick={handleServicesVisible}
+              />
+            </ButtonReserv>
+            <ButtonReserv>
+              <ButtonIcon
+                title="REZERWUJ"
+                uppercase
+                fontIconSize="25"
+                icon={<MdWork />}
+              />
+            </ButtonReserv>
+          </ButtonReservContent>
+        </PlaceContent>
+        <CSSTransition
+          in={servicesVisible}
+          timeout={400}
+          classNames="popup"
+          unmountOnExit
+        >
+          <SerivesDiv onClick={handleServicesVisible}>{allServices}</SerivesDiv>
+        </CSSTransition>
+      </PlaceItem>
+    </div>
   )
 }
 export default PlacesItem

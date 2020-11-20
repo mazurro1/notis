@@ -24,6 +24,7 @@ import {
   CHANGE_REMIND_PASSWORD_EMAIL_SENT,
   CHANGE_CREATE_COMPANY_VISIBLE,
   CHANGE_BLIND_STYLE,
+  CHANGE_DARK_STYLE,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -36,7 +37,10 @@ import {
 } from "./actions"
 
 const initialState = {
-  colorBlind: false,
+  colorBlind: {
+    blind: false,
+    dark: false,
+  },
   user: null,
   userPhone: null,
   page: 1,
@@ -174,10 +178,23 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case CHANGE_BLIND_STYLE:
+    case CHANGE_DARK_STYLE:
+      const newDarkStyle = {
+        blind: false,
+        dark: !state.colorBlind.dark,
+      }
       return {
         ...state,
-        colorBlind: !state.colorBlind,
+        colorBlind: newDarkStyle,
+      }
+    case CHANGE_BLIND_STYLE:
+      const newBlindStyle = {
+        blind: !state.colorBlind.blind,
+        dark: false,
+      }
+      return {
+        ...state,
+        colorBlind: newBlindStyle,
       }
     case CHANGE_CREATE_COMPANY_VISIBLE:
       return {

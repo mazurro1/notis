@@ -13,7 +13,8 @@ import { getMonthAndReturn } from "../common/Functions"
 
 const ServiceItem = styled.div`
   position: relative;
-  background-color: #f5f4f5;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   padding: 10px;
   border-radius: 5px;
   border-top-left-radius: 5px;
@@ -51,9 +52,9 @@ const PriceService = styled.span`
   font-size: 0.8rem;
   padding: 2px 5px;
   font-weight: 500;
-  color: white;
   margin-left: 10px;
   border-radius: 5px;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
       ? props.otherColor
@@ -65,8 +66,8 @@ const PriceService = styled.span`
 `
 
 const ItemSummary = styled.div`
+  background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
   position: relative;
-  background-color: white;
   padding: 10px;
   border-radius: 5px;
   max-width: 90vw;
@@ -78,6 +79,7 @@ const ItemSummary = styled.div`
 const TextReserwation = styled.div`
   font-size: 1.2rem;
   margin-bottom: 5px;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   span {
     color: ${props => Colors(props.colorBlind).primaryColor};
   }
@@ -92,7 +94,7 @@ const SummaryReserwationText = styled.div`
   margin-bottom: 10px;
   background-color: ${props => Colors(props.colorBlind).primaryColorDark};
   padding: 5px 10px;
-  color: white;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   padding-right: 30px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2) inset;
 `
@@ -106,7 +108,7 @@ const ClosePopup = styled.div`
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-  color: white;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   &:hover {
     color: ${props => Colors(props.colorBlind).primaryColor};
   }
@@ -126,13 +128,17 @@ const WorkerItem = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${props =>
-    props.active ? Colors(props.colorBlind).primaryColor : "#f5f4f5"};
+    props.active
+      ? Colors(props.colorBlind).primaryColor
+      : Colors(props.colorBlind).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   margin: 5px;
   margin-top: 0;
   cursor: pointer;
-  color: ${props => (props.active ? "white" : "")};
+  color: ${props =>
+    props.active ? "white" : Colors(props.colorBlind).textNormalBlack};
+
   transition-property: transform, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -338,11 +344,11 @@ const Reserwation = ({
         classNames="popup"
         unmountOnExit
       >
-        <ItemSummary>
+        <ItemSummary colorBlind={colorBlind}>
           <SummaryReserwationText colorBlind={colorBlind}>
             Rezerwacja
           </SummaryReserwationText>
-          <ServiceItem>
+          <ServiceItem colorBlind={colorBlind}>
             <LeftContent>
               <TitleService>
                 {reserwationData.serviceName}

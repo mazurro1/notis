@@ -46,7 +46,7 @@ const CheckboxStyle = styled.div`
 const TitleCategory = styled.div`
   position: relative;
   font-size: 1.25rem;
-  color: white;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
       ? Colors(props.colorBlind).secondColor

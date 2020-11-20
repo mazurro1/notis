@@ -27,14 +27,13 @@ const TextH1 = styled.div`
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
-  color: ${props => Colors(props.colorBlind).navDownBackground};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   padding: 5px 10px;
   padding-left: 25px;
   text-transform: uppercase;
   font-size: 2rem;
   letter-spacing: 0.5rem;
   text-align: center;
-  color: white;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: ${props =>
@@ -76,7 +75,9 @@ const RightColumnItem = styled.div`
   word-wrap: break-word;
   word-break: break-all;
   white-space: normal;
-  background-color: ${props => (props.noBg ? "" : "#f5f4f5")};
+  background-color: ${props =>
+    props.noBg ? "" : Colors(props.colorBlind).companyItemBackground};
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   border-radius: 5px;
   padding: ${props => (props.noBg ? "10px 0px" : "10px 15px")};
   margin-bottom: 20px;
@@ -147,7 +148,7 @@ const EditModeToChange = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).navDownBackground};
+    background-color: ${props => Colors(props.colorBlind).darkColorDark};
   }
 `
 
@@ -505,7 +506,11 @@ const ContentCompanyProfil = ({
           />
         </LeftColumn>
         <RightColumn>
-          <RightColumnItem noBg {...companyEditProfilProps}>
+          <RightColumnItem
+            noBg
+            {...companyEditProfilProps}
+            colorBlind={colorBlind}
+          >
             <OpinionAndAdressContent
               {...companyEditProfilProps}
               city={company.city}
@@ -528,7 +533,7 @@ const ContentCompanyProfil = ({
             />
           </RightColumnItem>
           <InputCustom />
-          <RightColumnItem {...companyEditProfilProps}>
+          <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
             <ColumnItemTextarea
               titleColumnItem="O NAS"
               TitleRightColumn={TitleRightColumn}
@@ -543,7 +548,7 @@ const ContentCompanyProfil = ({
               colorBlind={colorBlind}
             />
           </RightColumnItem>
-          <RightColumnItem {...companyEditProfilProps}>
+          <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
             <OpeningHoursContent
               TitleRightColumn={TitleRightColumn}
               ButtonEditPosition={ButtonEditPosition}
@@ -556,7 +561,7 @@ const ContentCompanyProfil = ({
               colorBlind={colorBlind}
             />
           </RightColumnItem>
-          <RightColumnItem {...companyEditProfilProps}>
+          <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
             <OurWorkersContent
               TitleRightColumn={TitleRightColumn}
               companyEditProfilProps={companyEditProfilProps}
@@ -579,7 +584,10 @@ const ContentCompanyProfil = ({
           </RightColumnItem>
 
           {(company.reserationText || isCompanyEditProfil) && (
-            <RightColumnItem {...companyEditProfilProps}>
+            <RightColumnItem
+              {...companyEditProfilProps}
+              colorBlind={colorBlind}
+            >
               <ColumnItemTextarea
                 titleColumnItem="ZASADY REZERWACJI"
                 TitleRightColumn={TitleRightColumn}
@@ -599,7 +607,10 @@ const ContentCompanyProfil = ({
             !!company.linkiWebsite ||
             !!company.linkInstagram ||
             isCompanyEditProfil) && (
-            <RightColumnItem {...companyEditProfilProps}>
+            <RightColumnItem
+              {...companyEditProfilProps}
+              colorBlind={colorBlind}
+            >
               <OurLinksContent
                 TitleRightColumn={TitleRightColumn}
                 companyEditProfilProps={companyEditProfilProps}

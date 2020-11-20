@@ -40,6 +40,15 @@ const TextCheckbox = styled.span`
 
 const CheckboxStyle = styled.div`
   margin-top: 20px;
+
+  .material-checkbox__input:checked + .material-checkbox__image {
+    background-color: ${props => Colors(props.colorBlind).secondColor};
+  }
+
+  span {
+    color: ${props => Colors(props.colorBlind).textNormalBlack};
+    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+  }
 `
 
 const LoginContent = () => {
@@ -96,7 +105,7 @@ const LoginContent = () => {
           type="password"
           onChange={e => handleChange(e, setPasswordInput)}
         />
-        <CheckboxStyle>
+        <CheckboxStyle colorBlind={colorBlind}>
           <Checkbox
             theme="material-checkbox"
             value={checkboxAutoLogin}

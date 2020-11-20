@@ -11,30 +11,36 @@ const StyleSimpleReactCalendar = styled.div`
   transform: translate(0px, 0px) !important;
   opacity: 1;
   .date_picker {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: ${props => Colors(props.colorBlind).calendarBackground};
     max-width: 300px;
     min-height: 420px;
     box-shadow: 0 0 35px 10px rgba(0, 0, 0, 0.2);
     opacity: 1;
+    border: none;
   }
+
+  .date_picker-month_header_title {
+    color: ${props => Colors(props.colorBlind).calendarActiveDate};
+  }
+
   .date_picker-week-day {
     background-color: transparent;
   }
-
   .date_picker-week-day.is-selectable {
-    /* transition-property: background-color, color;
-    transition-duration: 0.3s;
-    transition-timing-function: ease; */
+    color: ${props => Colors(props.colorBlind).calendarActiveDate};
     &:hover {
       background-color: ${props => Colors(props.colorBlind).primaryColorDark};
-      color: white;
+      color: ${props => Colors(props.colorBlind).textNormalWhite};
     }
+  }
+
+  .date_picker-week-day.is-not_selectable {
+    color: ${props => Colors(props.colorBlind).calendarDisabledDate} !important;
   }
 
   .is-disabled {
     background-color: #e0e0e0 !important;
     border-radius: 50%;
-    color: white;
     cursor: no-drop;
   }
 
@@ -75,14 +81,14 @@ const StyleSimpleReactCalendar = styled.div`
     transition-timing-function: ease;
     background-color: ${props => Colors(props.colorBlind).primaryColorDark};
     border: none;
-    color: white !important;
+    color: ${props => Colors(props.colorBlind).textNormalWhite} !important;
     &:hover {
       background-color: ${props => Colors(props.colorBlind).primaryColor};
     }
   }
   .date_picker-header_button.is-next:before,
   .date_picker-header_button.is-prev:before {
-    color: white !important;
+    color: ${props => Colors(props.colorBlind).textNormalWhite} !important;
   }
 `
 

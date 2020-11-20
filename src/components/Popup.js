@@ -29,6 +29,7 @@ const PopupContent = styled.div`
   padding: 10px 15px;
   overflow-y: auto;
   max-height: 90vh;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
 `
 
 const ClosePopup = styled.div`
@@ -87,6 +88,7 @@ const Popup = ({
       maxWidth={maxWidth}
       onClick={handleOnClickContent}
       fullScreen={fullScreen}
+      colorBlind={colorBlind}
     >
       {children}
       <ClosePopup onClick={handleOnClick} colorBlind={colorBlind}>

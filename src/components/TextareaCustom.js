@@ -11,7 +11,9 @@ const CustomStyleTextarea = styled.textarea`
   border: ${props =>
     props.isErrorText
       ? `2px solid ${Colors(props.colorBlind).dangerColor}`
-      : "2px solid #f5f4f5"};
+      : `2px solid ${Colors(props.colorBlind).textNormalBlack}`};
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   border-radius: 5px;
   padding: 10px;
   word-wrap: break-word;

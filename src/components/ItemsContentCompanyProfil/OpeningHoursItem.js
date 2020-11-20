@@ -22,6 +22,11 @@ const CheckboxStyle = styled.div`
   .material-checkbox__input:checked + .material-checkbox__image {
     background-color: ${props => Colors(props.colorBlind).secondColor};
   }
+
+  span {
+    color: ${props => Colors(props.colorBlind).textNormalBlack};
+    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+  }
 `
 
 const HeightComponent = styled.div`
@@ -51,7 +56,7 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   position: relative;
   width: 90%;
-  background-color: white;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
   padding: ${props => (props.active ? "0px" : "10px")};
   border-radius: 5px;
   max-height: 90%;
@@ -238,7 +243,10 @@ const OpeningHoursItem = ({
         unmountOnExit
       >
         <BackgroundEdit>
-          <BackgroundEditContent onClick={handleClickContent}>
+          <BackgroundEditContent
+            onClick={handleClickContent}
+            colorBlind={colorBlind}
+          >
             <h3>{item.dayName}</h3>
             <ButtonsTimePicker>
               <ButtonTimePickerStyle>
@@ -315,6 +323,7 @@ const OpeningHoursItem = ({
           <BackgroundEditContent
             onClick={handleClickContent}
             active={activeTimePickerOpen}
+            colorBlind={colorBlind}
           >
             <TimePickerContent
               handleResetTakeData={handleResetOpenTimePicker}
@@ -335,6 +344,7 @@ const OpeningHoursItem = ({
           <BackgroundEditContent
             onClick={handleClickContent}
             active={activeTimePickerClose}
+            colorBlind={colorBlind}
           >
             <TimePickerContent
               handleResetTakeData={handleResetCloseTimePicker}

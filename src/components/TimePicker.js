@@ -8,13 +8,30 @@ import { useSelector } from "react-redux"
 
 const ButtonConfirmDate = styled.div`
   padding: 5px;
-  background-color: #f4f4f4;
+  background-color: ${props =>
+    Colors(props.colorBlind).timePickerTopBackground};
 `
 
 const MaxWidth = styled.div`
   .react-timekeeper {
     width: 100% !important;
   }
+
+  .react-timekeeper__top-bar {
+    background-color: ${props =>
+      Colors(props.colorBlind).timePickerTopBackground};
+  }
+
+  .react-timekeeper__clock-wrapper {
+    background-color: ${props =>
+      Colors(props.colorBlind).timePickerBottomBackground};
+  }
+
+  .react-timekeeper__clock {
+    background-color: ${props =>
+      Colors(props.colorBlind).timePickerTopBackground};
+  }
+
   .react-timekeeper__tb-hour {
     transition-property: color;
     transition-duration: 0.3s;
@@ -78,7 +95,7 @@ const TimePickerContent = ({
           closeOnMinuteSelect
           onChange={handleTimeOnChange}
           doneButton={newTime => (
-            <ButtonConfirmDate>
+            <ButtonConfirmDate colorBlind={colorBlind}>
               <ButtonIcon
                 title="ZATWIERDŹ"
                 uppercase

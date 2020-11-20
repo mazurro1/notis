@@ -18,7 +18,10 @@ import { Checkbox } from "react-input-checkbox"
 
 const ServiceItem = styled.div`
   position: relative;
-  background-color: ${props => (props.clickDelete ? "#ffebee" : "#f5f4f5")};
+  background-color: ${props =>
+    props.clickDelete && !props.colorBlind
+      ? "#ffebee"
+      : Colors(props.colorBlind).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   border-top-left-radius: ${props => (props.index ? "0px" : "5px")};
@@ -32,7 +35,8 @@ const ServiceItem = styled.div`
   user-select: none;
   overflow: hidden;
   padding-bottom: ${props => (props.clickEdit ? "450px" : "auto")};
-  transition-property: background-color, padding-bottom;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -76,6 +80,8 @@ const PriceService = styled.span`
       : props.otherColor
       ? Colors(props.colorBlind).dangerColor
       : Colors(props.colorBlind).primaryColorDark};
+
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: inline;
@@ -204,6 +210,7 @@ const ServicesItem = ({
       index={index === 0}
       clickDelete={clickDelete}
       clickEdit={clickEdit}
+      colorBlind={colorBlind}
     >
       <LeftContent>
         <TitleService>

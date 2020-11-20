@@ -7,6 +7,7 @@ import { Site } from "../common/Site"
 // USER ACTIONS
 // USER ACTIONS
 export const CHANGE_BLIND_STYLE = "CHANGE_BLIND_STYLE"
+export const CHANGE_DARK_STYLE = "CHANGE_DARK_STYLE"
 export const CHANGE_SORT_VISIBLE = "CHANGE_SORT_VISIBLE"
 export const CHANGE_FILTER_VISIBLE = "CHANGE_FILTER_VISIBLE"
 export const CHANGE_LOCALIZATION_VISIBLE = "CHANGE_LOCALIZATION_VISIBLE"
@@ -32,6 +33,12 @@ export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
 export const changeBlindStyle = () => {
   return {
     type: CHANGE_BLIND_STYLE,
+  }
+}
+
+export const changeDarkStyle = () => {
+  return {
+    type: CHANGE_DARK_STYLE,
   }
 }
 

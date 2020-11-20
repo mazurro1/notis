@@ -29,6 +29,10 @@ const CheckboxStyle = styled.div`
   .material-checkbox__input:checked + .material-checkbox__image {
     background-color: ${props => Colors(props.colorBlind).dangerColorDark};
   }
+  span {
+    color: ${props => Colors(props.colorBlind).textNormalBlack};
+    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+  }
 `
 
 const HeightComponent = styled.div`
@@ -73,8 +77,8 @@ const OpinionsContent = styled.div`
 `
 
 const OpinionUp = styled.div`
-  background-color: ${props => Colors(props.colorBlind).navBackground};
-  color: white;
+  background-color: ${props => Colors(props.colorBlind).opinionColorUp};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   text-align: center;
   font-size: 1.5rem;
   border-top-right-radius: 5px;
@@ -86,7 +90,8 @@ const OpininPadding = styled.div`
 `
 
 const OpinionDown = styled.div`
-  background-color: ${props => Colors(props.colorBlind).darkColor};
+  background-color: ${props => Colors(props.colorBlind).opinionColorDown};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   font-size: 0.9rem;
   padding: 2px 15px;
   border-bottom-left-radius: 5px;
@@ -138,7 +143,7 @@ const BackgroundEdit = styled.div`
 
 const BackgroundEditContent = styled.div`
   width: 90%;
-  background-color: white;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   max-height: 90%;
@@ -148,7 +153,7 @@ const ButtonSubmit = styled.button`
   border: none;
   padding: 0;
   margin: 0;
-  background-color: white;
+  background-color: transparent;
 `
 
 const IsCompanyPaused = styled.div`
@@ -173,7 +178,8 @@ const ReserwationItem = styled.div`
   margin: 5px;
   color: white;
   cursor: pointer;
-  transition-property: transform;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  transition-property: transform, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
   user-select: none;
@@ -384,7 +390,10 @@ const OpinionAndAdressContent = ({
             unmountOnExit
           >
             <BackgroundEdit>
-              <BackgroundEditContent onClick={handleClickContentAddWorkers}>
+              <BackgroundEditContent
+                onClick={handleClickContentAddWorkers}
+                colorBlind={colorBlind}
+              >
                 <form onSubmit={handleOnSubmit}>
                   <InputIcon
                     icon={<MdWork />}

@@ -69,6 +69,7 @@ const IconAddCategory = styled.div`
   padding-bottom: 0px;
   color: white;
   font-size: 2rem;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
 `
 
 const ButtonsAddPosition = styled.div`
@@ -834,7 +835,7 @@ const AllCategoryOfServices = ({
             clickAddCategory={clickAddCategory}
             colorBlind={colorBlind}
           >
-            <IconAddCategory>
+            <IconAddCategory colorBlind={colorBlind}>
               <MdAddBox />
             </IconAddCategory>
 

@@ -31,7 +31,7 @@ const ButtonSubmit = styled.button`
   border: none;
   padding: 0;
   margin: 0;
-  background-color: white;
+  background-color: transparent;
 `
 
 const BackgroundEdit = styled.div`
@@ -49,7 +49,7 @@ const BackgroundEdit = styled.div`
 
 const BackgroundEditContent = styled.div`
   width: 90%;
-  background-color: white;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   max-height: 90%;
@@ -144,7 +144,10 @@ const ColumnItemTextarea = ({
             <BackgroundEdit
             // onClick={handleResetButton}
             >
-              <BackgroundEditContent onClick={handleClickContent}>
+              <BackgroundEditContent
+                onClick={handleClickContent}
+                colorBlind={colorBlind}
+              >
                 <form onSubmit={handleSaveButton}>
                   <TextareaCustom
                     textareaActive={editable}

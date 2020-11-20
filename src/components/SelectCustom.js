@@ -16,6 +16,7 @@ const SelectDiv = styled.div`
           ? Colors(props.colorBlind).secondColor
           : Colors(props.colorBlind).primaryColor} !important;
       box-shadow: none;
+      color: ${props => Colors(props.colorBlind).textBlack};
     }
   }
 `
@@ -54,7 +55,10 @@ const SelectCustom = ({
   })
 
   const colourStyles = {
-    control: styles => ({ ...styles, backgroundColor: "white" }),
+    control: styles => ({
+      ...styles,
+      backgroundColor: Colors(colorBlind).companyItemBackground,
+    }),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
       const color = chroma(Colors(colorBlind).primaryColor)
       return {

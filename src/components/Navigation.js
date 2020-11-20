@@ -32,6 +32,7 @@ import {
   changeReserwationValue,
   changeEditWorkerHours,
   changeBlindStyle,
+  changeDarkStyle,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -43,6 +44,34 @@ import RemindPassword from "./RemindPassword"
 import CreateCompany from "./CreateCompany"
 import Reserwation from "./Reserwation"
 import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
+import Switch from "react-switch"
+
+const SpanSwitch = styled.span`
+  font-size: 0.8rem;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 0;
+`
+
+const LabelStyle = styled.div`
+  text-align: center;
+  padding-top: 20px;
+`
+
+const ButtonNavStyle = styled.div`
+  position: relative;
+  padding: 10px 0;
+  padding-left: 10px;
+  min-width: 140px;
+  user-select: none;
+`
+
+const WidthTimePicker = styled.div`
+  background-color: transparent;
+  min-width: 280px;
+  max-width: 90%;
+`
 
 const BackgroundColorPage = styled.div`
   background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
@@ -91,11 +120,6 @@ const NavigationItems = styled.div`
   align-items: center;
   flex-wrap: wrap;
   padding-left: 200px;
-`
-
-const ButtonNavStyle = styled.div`
-  padding: 10px 0;
-  padding-left: 10px;
 `
 
 const UnderMenuIndustries = styled.div`
@@ -279,6 +303,10 @@ const Navigation = ({ children, isMainPage }) => {
     dispatch(changeBlindStyle())
   }
 
+  const handleDarkStyleClick = () => {
+    dispatch(changeDarkStyle())
+  }
+
   const mapIndustries = Industries.map((item, index) => {
     return (
       <PaddingRight key={index}>
@@ -456,10 +484,12 @@ const Navigation = ({ children, isMainPage }) => {
         classNames="popup"
         unmountOnExit
       >
-        <TimePickerContent
-          handleResetTakeData={handleResetTakeData}
-          setSelectedTime={setSelectedTime}
-        />
+        <WidthTimePicker>
+          <TimePickerContent
+            handleResetTakeData={handleResetTakeData}
+            setSelectedTime={setSelectedTime}
+          />
+        </WidthTimePicker>
       </CSSTransition>
     </Popup>
   )
@@ -535,15 +565,6 @@ const Navigation = ({ children, isMainPage }) => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
-          title="tryb dla daltonistów"
-          uppercase
-          fontIconSize="35"
-          fontSize="16"
-          onClick={handleBlindStyleClick}
-        />
-      </ButtonNavStyle>
-      <ButtonNavStyle>
-        <ButtonIcon
           title={`${user.userName} ${user.userSurname}`}
           uppercase
           fontIconSize="20"
@@ -567,15 +588,6 @@ const Navigation = ({ children, isMainPage }) => {
     </>
   ) : (
     <>
-      <ButtonNavStyle>
-        <ButtonIcon
-          title="tryb dla daltonistów"
-          uppercase
-          fontIconSize="35"
-          fontSize="16"
-          onClick={handleBlindStyleClick}
-        />
-      </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
           title="zarejestruj się"
@@ -623,6 +635,38 @@ const Navigation = ({ children, isMainPage }) => {
               <LinkEffect text="NOTISE" path="/" />
             </LogoStyle>
             <ButtonsNav>
+              <ButtonNavStyle>
+                <LabelStyle>
+                  <SpanSwitch>Tryb ciemny</SpanSwitch>
+                  <Switch
+                    onChange={handleDarkStyleClick}
+                    checked={colorBlind.dark}
+                    activeBoxShadow={`0 0 2px 3px ${
+                      Colors(colorBlind).primaryColor
+                    }`}
+                    onColor={Colors(colorBlind).primaryColor}
+                    height={22}
+                    uncheckedIcon
+                    checkedIcon
+                  />
+                </LabelStyle>
+              </ButtonNavStyle>
+              <ButtonNavStyle>
+                <LabelStyle>
+                  <SpanSwitch>Tryb dla daltonistów</SpanSwitch>
+                  <Switch
+                    onChange={handleBlindStyleClick}
+                    checked={colorBlind.blind}
+                    activeBoxShadow={`0 0 2px 3px ${
+                      Colors(colorBlind).primaryColor
+                    }`}
+                    onColor={Colors(colorBlind).primaryColor}
+                    height={22}
+                    uncheckedIcon
+                    checkedIcon
+                  />
+                </LabelStyle>
+              </ButtonNavStyle>
               {renderCompanyOrCreateCompany}
               {renderButtonsUp}
             </ButtonsNav>

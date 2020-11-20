@@ -17,13 +17,13 @@ const InputStyled = styled.input`
         : `2px solid ${Colors(props.colorBlind).primaryColor}`
       : "2px solid #bdbdbd"};
   width: 100%;
-  color: #212121;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   background-color: transparent;
-  transition-property: border-bottom;
+  transition-property: border-bottom, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
   ::placeholder {
-    color: #757575;
+    /* color: #757575; */
     padding-right: 50px;
     padding-left: 5px;
   }
@@ -32,6 +32,16 @@ const InputStyled = styled.input`
   &:focus {
     outline: none;
     /* border: none; */
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    box-shadow: 0 0 0 30px
+      ${props => Colors(props.colorBlind).companyItemBackground} inset !important;
+    -webkit-text-fill-color: ${props =>
+      Colors(props.colorBlind).textNormalBlack} !important;
   }
 `
 

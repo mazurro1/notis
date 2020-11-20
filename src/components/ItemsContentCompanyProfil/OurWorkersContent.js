@@ -25,7 +25,10 @@ const WorkerItemStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: ${props =>
+    props.colorBlind.blind || props.colorBlind.dark
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(255, 255, 255, 0.8)"};
   padding: 10px 10px 5px 10px;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -56,7 +59,10 @@ const EditUserBackground = styled.div`
 const EditUserBackgroundContent = styled.div`
   position: relative;
   width: 90%;
-  background-color: ${props => (props.noBg ? "transparent" : "white")};
+  background-color: ${props =>
+    props.noBg
+      ? "transparent"
+      : Colors(props.colorBlind).companyItemBackground};
   border-radius: 5px;
   padding: 5px;
   font-size: 0.9rem;
@@ -77,11 +83,11 @@ const EditIconStyle = styled.div`
   padding-bottom: 0px;
   border-radius: 5px;
   background-color: ${props => Colors(props.colorBlind).secondColor};
-  color: white;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   margin: 5px;
   margin-left: 0;
   cursor: pointer;
-  transition-property: background-color;
+  transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
@@ -96,11 +102,11 @@ const DeleteUserIconStyle = styled.div`
   padding-bottom: 0px;
   border-radius: 5px;
   background-color: ${props => Colors(props.colorBlind).dangerColor};
-  color: white;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   margin: 5px;
   cursor: pointer;
   margin-left: 0px;
-  transition-property: background-color;
+  transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
@@ -114,10 +120,10 @@ const WorkerCircle = styled.div`
     props.isCompanyEditProfil
       ? Colors(props.colorBlind).secondColor
       : Colors(props.colorBlind).primaryColor};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
   border-radius: 50%;
   height: 50px;
   width: 50px;
-  color: white;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -147,8 +153,8 @@ const PositionAddWorkers = styled.div`
 
 const ContentAddWorkers = styled.div`
   position: relative;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
   width: 90%;
-  background-color: white;
   padding: 10px;
   border-radius: 5px;
 `
@@ -156,12 +162,14 @@ const ContentAddWorkers = styled.div`
 const ButtonSentPosition = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+  margin: 5px;
 `
 
 const ButtonAddWorker = styled.button`
   border: none;
+  background-color: transparent;
   &:active,
   &:focus {
     outline: none;
@@ -395,7 +403,11 @@ const OurWorkersContent = ({
         NASI PRACOWNICY
       </TitleRightColumn>
       <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
-        <WorkerItemStyle userEditItem={ownerEdit} selectHeight={selectHeight}>
+        <WorkerItemStyle
+          userEditItem={ownerEdit}
+          selectHeight={selectHeight}
+          colorBlind={colorBlind}
+        >
           <WorkerCircle
             isCompanyEditProfil={isCompanyEditProfil}
             colorBlind={colorBlind}
@@ -423,7 +435,10 @@ const OurWorkersContent = ({
                 unmountOnExit
               >
                 <EditUserBackground onClick={handleResetOwnerSpecialization}>
-                  <EditUserBackgroundContent onClick={handleClickContent}>
+                  <EditUserBackgroundContent
+                    onClick={handleClickContent}
+                    colorBlind={colorBlind}
+                  >
                     Stanowisko
                     <InputStyles>
                       <InputIcon
@@ -518,7 +533,10 @@ const OurWorkersContent = ({
         <PositionAddWorkers
         // onClick={handleOnClickBg}
         >
-          <ContentAddWorkers onClick={handleClickContentAddWorkers}>
+          <ContentAddWorkers
+            onClick={handleClickContentAddWorkers}
+            colorBlind={colorBlind}
+          >
             <form onSubmit={handleSentInvation}>
               <InputIcon
                 icon={<FaUserPlus />}
@@ -529,6 +547,16 @@ const OurWorkersContent = ({
                 onChange={e => handleChange(e, setEmailInput)}
                 required
               />
+              <ButtonSentPosition>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<MdEmail />}
+                  onClick={handleOnClickBg}
+                />
+              </ButtonSentPosition>
               <ButtonSentPosition>
                 <ButtonAddWorker type="submit">
                   <ButtonIcon

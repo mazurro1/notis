@@ -89,7 +89,7 @@ const DeleteIconPosition = styled.div`
 `
 
 const DeleteIconStyle = styled.div`
-  color: black;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
   padding: 5px;
   padding-bottom: 0;
   cursor: pointer;
@@ -321,7 +321,11 @@ const WorkerItem = ({
   }
 
   return (
-    <WorkerItemStyle userEditItem={userEditItem} selectHeight={selectHeight}>
+    <WorkerItemStyle
+      userEditItem={userEditItem}
+      selectHeight={selectHeight}
+      colorBlind={colorBlind}
+    >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
         colorBlind={colorBlind}
@@ -392,7 +396,10 @@ const WorkerItem = ({
             <EditUserBackground
             // onClick={handleEditSpecializationReset}
             >
-              <EditUserBackgroundContent onClick={handleClickContent}>
+              <EditUserBackgroundContent
+                onClick={handleClickContent}
+                colorBlind={colorBlind}
+              >
                 Stanowisko
                 <InputStyles>
                   <InputIcon
@@ -449,7 +456,10 @@ const WorkerItem = ({
                   </ButtonStyles>
                 </ButtonContentEdit>
                 <DeleteIconPosition>
-                  <DeleteIconStyle onClick={handleEditSpecializationReset}>
+                  <DeleteIconStyle
+                    onClick={handleEditSpecializationReset}
+                    colorBlind={colorBlind}
+                  >
                     <MdClose />
                   </DeleteIconStyle>
                 </DeleteIconPosition>
@@ -463,7 +473,11 @@ const WorkerItem = ({
             unmountOnExit
           >
             <EditUserBackground>
-              <EditUserBackgroundContent onClick={handleClickContent} noBg>
+              <EditUserBackgroundContent
+                onClick={handleClickContent}
+                noBg
+                colorBlind={colorBlind}
+              >
                 <ButtonContent>
                   <ButtonDeleteStyle>
                     <ButtonIcon
@@ -500,7 +514,11 @@ const WorkerItem = ({
             unmountOnExit
           >
             <EditUserBackground>
-              <EditUserBackgroundContent onClick={handleClickContent} noBg>
+              <EditUserBackgroundContent
+                onClick={handleClickContent}
+                noBg
+                colorBlind={colorBlind}
+              >
                 <ButtonContent>
                   <ButtonDeleteStyle>
                     <ButtonIcon

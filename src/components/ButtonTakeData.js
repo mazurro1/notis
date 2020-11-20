@@ -8,13 +8,14 @@ const DivTakeData = styled.div`
   position: relative;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 5px;
-  color: #757575;
+  color: ${props => Colors(props.colorBlind).selectDateNavigationText};
   font-size: 16px;
   user-select: none;
   padding: 13px 0;
   padding-left: 50px;
   padding-right: ${props => (props.resetTextEnable ? "40px" : "20px")};
-  background-color: #fff;
+  background-color: ${props =>
+    Colors(props.colorBlind).selectDateNavigationBackground};
   cursor: pointer;
   margin-bottom: 5px;
   margin-right: 10px;
@@ -25,7 +26,8 @@ const DivTakeData = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    background-color: #e0e0e0;
+    background-color: ${props =>
+      Colors(props.colorBlind).selectDateNavigationBackgroundHover};
   }
 `
 
@@ -39,7 +41,7 @@ const IconStyle = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 25px;
-  color: #757575;
+  color: ${props => Colors(props.colorBlind).selectDateNavigationText};
 `
 
 const IconResetDate = styled.div`
@@ -88,8 +90,9 @@ const ButtonTakeData = ({
       mouseClick={mouseClick}
       numberScale={numberScale}
       resetTextEnable={resetTextEnable}
+      colorBlind={colorBlind}
     >
-      <IconStyle>{icon}</IconStyle>
+      <IconStyle colorBlind={colorBlind}>{icon}</IconStyle>
       {text}
       {resetTextEnable && (
         <IconResetDate onClick={handleResetText} colorBlind={colorBlind}>
