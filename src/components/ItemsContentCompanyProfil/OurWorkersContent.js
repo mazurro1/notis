@@ -36,7 +36,11 @@ const WorkerItemStyle = styled.div`
   min-height: 105px;
   min-width: 130px;
   padding-bottom: ${props =>
-    props.userEditItem ? `${props.selectHeight + 260}px` : "10px"};
+    props.editConstTimeWorker
+      ? "340px"
+      : props.userEditItem
+      ? `${props.selectHeight + 260}px`
+      : "10px"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -57,7 +61,7 @@ const EditUserBackground = styled.div`
 `
 
 const EditUserBackgroundContent = styled.div`
-  position: relative;
+  position: ${props => (props.noRelative ? "" : "relative")};
   width: 90%;
   background-color: ${props =>
     props.noBg
@@ -249,6 +253,8 @@ const OurWorkersContent = ({
   company,
   editMode,
   colorBlind,
+  editedWorkersHours,
+  setEditedWorkersHours,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
@@ -261,7 +267,6 @@ const OurWorkersContent = ({
   const [ownerEdit, setOwnerEdit] = useState(false)
   const user = useSelector(state => state.user)
   const selectRef = useRef(null)
-
   useEffect(() => {
     setOwnerEdit(false)
   }, [editMode])
@@ -367,7 +372,12 @@ const OurWorkersContent = ({
     const selectEditedWorker = [...editedWorkers].find(edited => {
       return edited.indexWorker === item.user._id
     })
+    const selectEditedWorkersHours = editedWorkersHours.find(
+      itemHours => itemHours.indexWorker === item.user._id
+    )
+
     const finallEditedWorker = !!selectEditedWorker ? selectEditedWorker : null
+
     return (
       <WorkerItem
         index={index}
@@ -393,6 +403,9 @@ const OurWorkersContent = ({
         company={company}
         editMode={editMode}
         colorBlind={colorBlind}
+        editedWorkersHours={editedWorkersHours}
+        setEditedWorkersHours={setEditedWorkersHours}
+        selectEditedWorkersHours={selectEditedWorkersHours}
       />
     )
   })

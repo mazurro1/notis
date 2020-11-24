@@ -85,6 +85,9 @@ const RightColumnItem = styled.div`
   /* min-height: ${props => (props.isCompanyEditProfil ? "240px" : "auto")}; */
   overflow: hidden;
   height: auto;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const TitleRightColumn = styled.h2`
@@ -167,6 +170,7 @@ const ContentCompanyProfil = ({
   const [editLinks, setEditLinks] = useState(false)
   const [companyPaused, setCompanyPaused] = useState(null)
   const [editedWorkers, setEditedWorkers] = useState([])
+  const [editedWorkersHours, setEditedWorkersHours] = useState([])
   const [editedAdress, setEditedAdress] = useState({
     companyName: null,
     city: null,
@@ -189,11 +193,12 @@ const ContentCompanyProfil = ({
   const [newItemsServices, setNewItemsServices] = useState([])
   const [editedItemsServices, setEditedItemsServices] = useState([])
 
-  console.log("deleted from server", deletedItemsServices)
-  console.log("new services", newItemsServices)
-  console.log("edited services from server", editedItemsServices)
+  // console.log("deleted from server", deletedItemsServices)
+  // console.log("new services", newItemsServices)
+  // console.log("edited services from server", editedItemsServices)
   console.log("edited workers", editedWorkers)
-  console.log("newOwnerSpecialization", newOwnerSpecialization)
+  console.log("edited workers hours", editedWorkersHours)
+  // console.log("newOwnerSpecialization", newOwnerSpecialization)
 
   const user = useSelector(state => state.user)
   const colorBlind = useSelector(state => state.colorBlind)
@@ -210,6 +215,7 @@ const ContentCompanyProfil = ({
       setTextAboutUs("")
       setTextRezerwation("")
       setEditedWorkers([])
+      setEditedWorkersHours([])
       setEditedAdress({
         companyName: null,
         city: null,
@@ -404,6 +410,7 @@ const ContentCompanyProfil = ({
     changesTimeOpen ||
     newItemsServices.length > 0 ||
     editedItemsServices.length > 0 ||
+    editedWorkersHours.length > 0 ||
     deletedItemsServices.length > 0 ||
     (companyPaused !== company.pauseCompany && companyPaused !== null)
 
@@ -438,6 +445,7 @@ const ContentCompanyProfil = ({
         edited: editedItemsServices,
         new: newItemsServices,
       }
+
       dispatch(
         fetchUpdateCompanyProfil(
           user.token,
@@ -452,7 +460,8 @@ const ContentCompanyProfil = ({
           companyPausedToSent,
           services,
           reservationEveryTime,
-          newOwnerServicesCategory
+          newOwnerServicesCategory,
+          editedWorkersHours
         )
       )
       setCompanyPaused(null)
@@ -580,6 +589,8 @@ const ContentCompanyProfil = ({
               company={company}
               editMode={editMode}
               colorBlind={colorBlind}
+              editedWorkersHours={editedWorkersHours}
+              setEditedWorkersHours={setEditedWorkersHours}
             />
           </RightColumnItem>
 

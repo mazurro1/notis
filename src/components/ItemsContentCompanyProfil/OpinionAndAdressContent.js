@@ -343,7 +343,11 @@ const OpinionAndAdressContent = ({
       ) : null}
       <OpinionsAndAdress>
         <AdressContent>
-          <TitleRightColumn isCompanyEditProfil={isCompanyEditProfil} adress>
+          <TitleRightColumn
+            isCompanyEditProfil={isCompanyEditProfil}
+            adress
+            colorBlind={colorBlind}
+          >
             <DivInlineBlock> {`${cityInput},`}</DivInlineBlock>
             <DivInlineBlock>{`${discrictInput},`}</DivInlineBlock>
             <DivInlineBlock> {`${adressInput}`}</DivInlineBlock>

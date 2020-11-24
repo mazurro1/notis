@@ -10,8 +10,13 @@ import {
   MdTimelapse,
 } from "react-icons/md"
 import SelectCustom from "../SelectCustom"
-
-import { FaUser, FaArrowLeft } from "react-icons/fa"
+import ConstTimeWorkTime from "./ConstTimeWorkTime"
+import {
+  FaUser,
+  FaArrowLeft,
+  FaCalendarAlt,
+  FaCalendarWeek,
+} from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import {
   fetchDeleteUserFromCompany,
@@ -129,16 +134,22 @@ const WorkerItem = ({
   company,
   editMode,
   colorBlind,
+  editedWorkersHours,
+  setEditedWorkersHours,
+  selectEditedWorkersHours,
 }) => {
+  const [constTimeWorker, setConstTimeWorker] = useState(false)
   const [chooseTimeWorker, setChooseTimeWorker] = useState(false)
   const [userEditItem, setUserEditItem] = useState(false)
   const [userConfirmDelete, setUserConfirmDelete] = useState(false)
   const [inputSpecialization, setInputSpeciailization] = useState(
     item.specialization
   )
+  const [editConstTimeWorker, setEditConstTimeWorker] = useState(false)
   const [workerServicesCategory, setWorkerServicesCategory] = useState([])
   const [selectHeight, setSelectHeight] = useState(0)
   const [resetServicesCategory, setResetServicesCategory] = useState(false)
+  const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
   const selectRef = useRef(null)
 
   useEffect(() => {
@@ -261,7 +272,6 @@ const WorkerItem = ({
   const handleSaveSpecialization = () => {
     setUserEditItem(false)
 
-    // if (disabledButtonAccept) {
     const inputSpecializationValue =
       inputSpecialization !== item.specialization
         ? inputSpecialization
@@ -279,7 +289,6 @@ const WorkerItem = ({
       inputSpecializationValue,
       workerServicesCategoryValue
     )
-    // }
   }
 
   const handleEditSpecializationReset = () => {
@@ -320,11 +329,131 @@ const WorkerItem = ({
     dispatch(changeEditWorkerHours(true, itemsToSent))
   }
 
+  const handleResetDay = (itemWorkerId, dayOfTheWeek) => {
+    const newEditedWorkersHours = [...editedWorkersHours]
+    const indexEditedWorker = editedWorkersHours.findIndex(
+      item => item.indexWorker === itemWorkerId
+    )
+    if (indexEditedWorker >= 0) {
+      const filterEditedDays = newEditedWorkersHours[
+        indexEditedWorker
+      ].constantWorkingHours.filter(item => item.dayOfTheWeek !== dayOfTheWeek)
+      if (
+        filterEditedDays.length > 0 ||
+        newEditedWorkersHours[indexEditedWorker].noConstantWorkingHours.length >
+          0
+      ) {
+        newEditedWorkersHours[
+          indexEditedWorker
+        ].constantWorkingHours = filterEditedDays
+        setEditedWorkersHours(newEditedWorkersHours)
+      } else {
+        const deleteWorkerInEditedWorkerHours = editedWorkersHours.filter(
+          item => item.indexWorker !== itemWorkerId
+        )
+        setEditedWorkersHours(deleteWorkerInEditedWorkerHours)
+      }
+    }
+  }
+
+  const handleCancelConstTimeWork = itemWorkerId => {
+    const filterToSaveWorkers = toSaveWorkerHours.filter(
+      item => item.indexWorker !== itemWorkerId
+    )
+    const filterEditedWorkers = editedWorkersHours.filter(
+      item => item.indexWorker !== itemWorkerId
+    )
+    setEditedWorkersHours(filterEditedWorkers)
+    setToSaveWorkerHours(filterToSaveWorkers)
+    setConstTimeWorker(false)
+    setChooseTimeWorker(true)
+    setEditConstTimeWorker(false)
+  }
+
+  const handleSaveConstTimeWork = itemWorkerId => {
+    const newEditedWorkersHoursSave = [...editedWorkersHours]
+    const filterNewEditedWorkers = toSaveWorkerHours.find(
+      item => item.indexWorker === itemWorkerId
+    )
+
+    const indexEditedWorkers = editedWorkersHours.findIndex(
+      item => item.indexWorker === itemWorkerId
+    )
+    if (!!filterNewEditedWorkers) {
+      if (indexEditedWorkers >= 0) {
+        newEditedWorkersHoursSave[indexEditedWorkers] = filterNewEditedWorkers
+        setEditedWorkersHours(newEditedWorkersHoursSave)
+      } else {
+        const allEditedWorkers = [...editedWorkersHours, filterNewEditedWorkers]
+        setEditedWorkersHours(allEditedWorkers)
+      }
+    }
+    setConstTimeWorker(false)
+    setChooseTimeWorker(true)
+    setEditConstTimeWorker(false)
+  }
+
+  const handleSaveConstTimeWorkItem = item => {
+    const newToSaveWorkerHours = [...toSaveWorkerHours]
+    const selectedIndexWorker = toSaveWorkerHours.find(
+      itemToSaveWorker => itemToSaveWorker.indexWorker === item.indexWorker
+    )
+    const selectedWorkerIndex = toSaveWorkerHours.findIndex(
+      itemToSaveWorker => itemToSaveWorker.indexWorker === item.indexWorker
+    )
+    if (!!selectedIndexWorker) {
+      const indexInArray = selectedIndexWorker.constantWorkingHours.findIndex(
+        workingHour => workingHour.dayOfTheWeek === item.dayToSave.dayOfTheWeek
+      )
+      if (indexInArray >= 0) {
+        newToSaveWorkerHours[selectedWorkerIndex].constantWorkingHours[
+          indexInArray
+        ] = item.dayToSave
+      } else {
+        newToSaveWorkerHours[selectedWorkerIndex].constantWorkingHours.push(
+          item.dayToSave
+        )
+      }
+      setToSaveWorkerHours(newToSaveWorkerHours)
+    } else {
+      const newWorker = {
+        indexWorker: item.indexWorker,
+        constantWorkingHours: [item.dayToSave],
+        noConstantWorkingHours: [],
+      }
+      const allWorkers = [...newToSaveWorkerHours, newWorker]
+      setToSaveWorkerHours(allWorkers)
+    }
+  }
+
+  const handleCloseConstTimeWorkItem = (indexWorker, dayOfTheWeek) => {
+    const newToSaveWorkerHours = [...toSaveWorkerHours]
+    const indexWorkerInArray = toSaveWorkerHours.findIndex(
+      item => item.indexWorker === indexWorker
+    )
+    if (indexWorkerInArray >= 0) {
+      const filterArray = newToSaveWorkerHours[
+        indexWorkerInArray
+      ].constantWorkingHours.filter(item => item.dayOfTheWeek !== dayOfTheWeek)
+      newToSaveWorkerHours[
+        indexWorkerInArray
+      ].constantWorkingHours = filterArray
+    }
+    setToSaveWorkerHours(newToSaveWorkerHours)
+  }
+
+  const handleConstTimeWork = () => {
+    setChooseTimeWorker(false)
+    setConstTimeWorker(true)
+    setEditConstTimeWorker(true)
+  }
+
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
       selectHeight={selectHeight}
       colorBlind={colorBlind}
+      editConstTimeWorker={editConstTimeWorker}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
@@ -520,24 +649,32 @@ const WorkerItem = ({
                 colorBlind={colorBlind}
               >
                 <ButtonContent>
-                  <ButtonDeleteStyle>
+                  <ButtonDeleteStyle
+                    data-tip
+                    data-for={`constTimeWork${index}`}
+                    data-place="top"
+                  >
                     <ButtonIcon
                       title="Stały czas pracy"
                       uppercase
                       fontIconSize="16"
                       fontSize="14"
-                      icon={<FaArrowLeft />}
-                      onClick={handleChooseTimeWorker}
+                      icon={<FaCalendarWeek />}
+                      onClick={handleConstTimeWork}
                       secondColors
                     />
                   </ButtonDeleteStyle>
-                  <ButtonDeleteStyle>
+                  <ButtonDeleteStyle
+                    data-tip
+                    data-for={`timeWork${index}`}
+                    data-place="top"
+                  >
                     <ButtonIcon
                       title="Zmienny czas pracy"
                       uppercase
                       fontIconSize="16"
                       fontSize="14"
-                      icon={<FaArrowLeft />}
+                      icon={<FaCalendarAlt />}
                       onClick={handleUserTimeWork}
                       secondColors
                     />
@@ -554,10 +691,43 @@ const WorkerItem = ({
                       customColorIcon={Colors(colorBlind).dangerColor}
                     />
                   </ButtonDeleteStyle>
+                  <ReactTooltip
+                    id={`constTimeWork${index}`}
+                    effect="float"
+                    multiline={true}
+                  >
+                    <span>Ustaw czas pracy pracownika</span>
+                  </ReactTooltip>
+                  <ReactTooltip
+                    id={`timeWork${index}`}
+                    effect="float"
+                    multiline={true}
+                  >
+                    <span>
+                      Ustaw czas pracy pracownika w innych dniach itp itd
+                    </span>
+                  </ReactTooltip>
                 </ButtonContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
+          <ConstTimeWorkTime
+            constTimeWorker={constTimeWorker}
+            handleClickContent={handleClickContent}
+            colorBlind={colorBlind}
+            EditUserBackground={EditUserBackground}
+            EditUserBackgroundContent={EditUserBackgroundContent}
+            ButtonContent={ButtonContent}
+            ButtonDeleteStyle={ButtonDeleteStyle}
+            handleCancelConstTimeWork={handleCancelConstTimeWork}
+            itemWorker={item}
+            handleSaveConstTimeWorkItem={handleSaveConstTimeWorkItem}
+            handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
+            handleSaveConstTimeWork={handleSaveConstTimeWork}
+            editedWorkersHours={editedWorkersHours}
+            selectEditedWorkersHours={selectEditedWorkersHours}
+            handleResetDay={handleResetDay}
+          />
           <ReactTooltip
             id={`alertActive${index}`}
             effect="float"

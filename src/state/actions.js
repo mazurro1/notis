@@ -808,7 +808,8 @@ export const fetchUpdateCompanyProfil = (
   companyPaused,
   services,
   reservationEveryTime,
-  newOwnerServicesCategory
+  newOwnerServicesCategory,
+  editedWorkersHours
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -828,6 +829,7 @@ export const fetchUpdateCompanyProfil = (
           services: services,
           reservationEveryTime: reservationEveryTime,
           ownerSerwiceCategory: newOwnerServicesCategory,
+          editedWorkersHours: editedWorkersHours,
         },
         {
           headers: {

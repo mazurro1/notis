@@ -5,6 +5,7 @@ import ButtonIcon from "./ButtonIcon"
 import { MdDoneAll } from "react-icons/md"
 import { Colors } from "../common/Colors"
 import { useSelector } from "react-redux"
+import moment from "moment"
 
 const ButtonConfirmDate = styled.div`
   padding: 5px;
@@ -60,19 +61,19 @@ const MaxWidth = styled.div`
 `
 
 const TimePickerContent = ({
-  handleResetTakeData,
+  handleResetTakeData = () => {},
   setSelectedTime,
   timeTimePicker = null,
   secondColor = false,
 }) => {
   const [time, setTime] = useState(timeTimePicker)
   const colorBlind = useSelector(state => state.colorBlind)
-
+  moment().format(moment.HTML5_FMT.TIME)
   useEffect(() => {
     if (!!!time) {
       const date = new Date()
-      const actualTime = `${date.getHours()}:${date.getMinutes()}`
-      setTime(actualTime)
+      const timeToPicker = moment(date).format(moment.HTML5_FMT.TIME)
+      setTime(timeToPicker)
     }
   }, [time])
 
