@@ -373,7 +373,10 @@ const Navigation = ({ children, isMainPage }) => {
       handleClose={() => dispatch(changeEditWorkerHours(false, null))}
       noContent
     >
-      <BigCalendarWorkerHours item={editWorkerHoursData} />
+      <BigCalendarWorkerHours
+        item={editWorkerHoursData}
+        handleClose={() => dispatch(changeEditWorkerHours(false, null))}
+      />
     </Popup>
   )
 

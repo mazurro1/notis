@@ -254,7 +254,6 @@ const OurWorkersContent = ({
   editMode,
   colorBlind,
   editedWorkersHours,
-  setEditedWorkersHours,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
@@ -404,7 +403,6 @@ const OurWorkersContent = ({
         editMode={editMode}
         colorBlind={colorBlind}
         editedWorkersHours={editedWorkersHours}
-        setEditedWorkersHours={setEditedWorkersHours}
         selectEditedWorkersHours={selectEditedWorkersHours}
       />
     )

@@ -324,6 +324,39 @@ export const getMonthAndReturn = intMonth => {
   return monthToReturn
 }
 
+export const getMonthAndReturnFull = intMonth => {
+  let monthToReturn = ""
+  switch (intMonth) {
+    case 0:
+      monthToReturn = "Niedziela"
+      break
+    case 1:
+      monthToReturn = "Poniedziałek"
+      break
+
+    case 2:
+      monthToReturn = "Wtorek"
+      break
+    case 3:
+      monthToReturn = "Środa"
+      break
+    case 4:
+      monthToReturn = "Czwartek"
+      break
+    case 5:
+      monthToReturn = "Piątek"
+      break
+    case 6:
+      monthToReturn = "Sobota"
+      break
+
+    default:
+      monthToReturn = ""
+  }
+
+  return monthToReturn
+}
+
 export const getMonthAndReturnEng = intMonth => {
   let monthToReturn = ""
   switch (intMonth) {

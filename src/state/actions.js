@@ -463,6 +463,14 @@ export const CHANGE_EDIT_WORKER_HOURS = "EDIT_WORKER_HOURS"
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
 export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
 export const CHANGE_RESERWATION_VALUE = "CHANGE_RESERWATION_VALUE"
+export const CHANGE_EDITED_WORKER_HOURS = "CHANGE_EDITED_WORKER_HOURS"
+
+export const changeEditedWorkerHours = item => {
+  return {
+    type: CHANGE_EDITED_WORKER_HOURS,
+    item: item,
+  }
+}
 
 export const changeEditWorkerHours = (value, item) => {
   return {

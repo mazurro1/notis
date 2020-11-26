@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Calendar, momentLocalizer } from "react-big-calendar"
 import moment from "moment"
 import styled from "styled-components"
@@ -12,7 +12,9 @@ import {
 import ButtonIcon from "./ButtonIcon"
 import { MdWork } from "react-icons/md"
 import { FaCalendarDay, FaCalendarPlus, FaCalendarMinus } from "react-icons/fa"
-import { useSelector } from "react-redux"
+import CalendarEventItemClicked from "./CalendarEventItemClicked"
+import { useSelector, useDispatch } from "react-redux"
+import { changeEditedWorkerHours } from "../state/actions"
 
 const BackgroundContentCalendar = styled.div`
   position: relative;
@@ -32,13 +34,24 @@ const BackgroundCalendarStyle = styled.div`
   opacity: 0.95;
   margin-bottom: 10px;
 
+  .disabled-holiday-event {
+    background-color: ${props =>
+      Colors(props.colorBlind).dangerColorDark} !important;
+  }
   .rbc-time-view {
     border: none;
   }
   .rbc-event {
-    background-color: #f7a52c;
+    background-color: ${props => Colors(props.colorBlind).secondColor};
     border: none;
     border-radius: 5px;
+    transition-property: background-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+
+    &:hover {
+      background-color: ${props => Colors(props.colorBlind).secondDarkColor};
+    }
   }
 
   .rbc-allday-cell {
@@ -63,6 +76,11 @@ const BackgroundCalendarStyle = styled.div`
   }
   .rbc-day-slot .rbc-time-slot {
     border-top: none !important;
+  }
+
+  .rbc-day-slot .rbc-no-disabled-active-holiday {
+    background-color: ${props => Colors(props.colorBlind).dangerColor};
+    border-left: 1px solid #e0e0e0 !important;
   }
   .rbc-day-slot .rbc-no-disabled-active {
     /* border-left: 1px solid red;
@@ -134,10 +152,78 @@ const TitleMonthYearContent = styled.div`
   font-size: 1.6rem;
 `
 
-const BigCalendarWorkerHours = ({ item }) => {
+const ButtonsPosition = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+const ButtonItemStyle = styled.div`
+  margin-left: 10px;
+`
+
+const BigCalendarWorkerHours = ({ item, handleClose }) => {
   const [date, setDate] = useState(new Date())
+  const [selectedEventOpen, setSelectedEventOpen] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [newEvent, setNewEvent] = useState(null)
+  const [newEventOpen, setNewEventOpen] = useState(null)
+  const [newEvents, setNewEvents] = useState([])
+  const [deletedEventsIds, setDeletedEventsIds] = useState([])
+  const [allEvents, setAllEvents] = useState([])
+  const editedWorkersHours = useSelector(state => state.editedWorkersHours)
   const colorBlind = useSelector(state => state.colorBlind)
-  console.log(item)
+  const timerToClearNew = useRef(null)
+  const timerToClearEdited = useRef(null)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!!item && allEvents.length === 0) {
+      const mapItemNoConstantWorkingHoursDate = item.noConstantWorkingHours.map(
+        itemMaped => {
+          const itemMapedResult = {
+            end: new Date(itemMaped.end),
+            start: new Date(itemMaped.start),
+            fullDate: itemMaped.fullDate,
+            _id: itemMaped._id,
+            holidays: itemMaped.holidays,
+          }
+          return itemMapedResult
+        }
+      )
+      const selectEditedWorker = editedWorkersHours.find(
+        workerEdited => workerEdited.indexWorker === item.user._id
+      )
+      if (!!selectEditedWorker) {
+        const filterItemNoConstantWorkingHours = mapItemNoConstantWorkingHoursDate.filter(
+          itemHour => {
+            const isIdInDeleted = selectEditedWorker.noConstantWorkingHours.deletedEventsIds.some(
+              deletedEventsIds => {
+                return deletedEventsIds === itemHour._id
+              }
+            )
+            return !isIdInDeleted
+          }
+        )
+
+        let userEditedNewEvents = []
+        if (!!selectEditedWorker) {
+          userEditedNewEvents =
+            selectEditedWorker.noConstantWorkingHours.newEvents
+        }
+
+        const allItemsAndFilter = [
+          ...filterItemNoConstantWorkingHours,
+          ...userEditedNewEvents,
+        ]
+        setAllEvents(allItemsAndFilter)
+      } else {
+        setAllEvents(mapItemNoConstantWorkingHoursDate)
+      }
+    }
+  }, [editedWorkersHours, item])
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
     item.company.openingDays
@@ -188,6 +274,14 @@ const BigCalendarWorkerHours = ({ item }) => {
 
   const handleSlotPropGetter = date => {
     const takeDateStart = new Date(date)
+    const getterDay = takeDateStart.getDate()
+    const getterMonth = takeDateStart.getMonth() + 1
+    const getterYear = takeDateStart.getFullYear()
+    const getterFullDate = `${getterDay}-${getterMonth}-${getterYear}`
+    const findInAllEvents = allEvents.find(
+      item => item.fullDate === getterFullDate
+    )
+
     const selectedDayToCompany = getMonthAndReturnEng(takeDateStart.getDay())
     const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
     const arrSerwerMaxHours = selectedHoursCompany.end.split(":")
@@ -203,8 +297,21 @@ const BigCalendarWorkerHours = ({ item }) => {
       calendarDate < numberMax &&
       !selectedHoursCompany.disabled
     ) {
-      return {
-        className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active",
+      if (!!findInAllEvents) {
+        // if (!!findInAllEvents.holidays) {
+        // return {
+        //   className:
+        //     "rbc-day-slot rbc-time-slot rbc-no-disabled-active-holiday",
+        // }
+        // } else {
+        return {
+          className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active",
+        }
+        // }
+      } else {
+        return {
+          className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active",
+        }
       }
     } else {
       return {
@@ -213,8 +320,20 @@ const BigCalendarWorkerHours = ({ item }) => {
     }
   }
 
-  const handleOnSelectSlot = x => {
-    console.log(x)
+  const handleEventPropGetter = event => {
+    if (!!event.holidays) {
+      return {
+        className: "disabled-holiday-event",
+      }
+    }
+  }
+
+  const handleOnSelectSlot = eventItem => {
+    if (eventItem.slots.length > 2) {
+      clearInterval(timerToClearNew.current)
+      setNewEvent(eventItem)
+      setNewEventOpen(true)
+    }
   }
 
   const handleChangeDate = value => {
@@ -239,6 +358,146 @@ const BigCalendarWorkerHours = ({ item }) => {
     }
   }
 
+  const handleClickEvent = eventItem => {
+    clearInterval(timerToClearEdited.current)
+    setSelectedEvent(eventItem)
+    setSelectedEventOpen(true)
+  }
+
+  const handleClosePopupEventItem = () => {
+    timerToClearEdited.current = setTimeout(() => {
+      setSelectedEvent(null)
+    }, 400)
+    setSelectedEventOpen(false)
+  }
+
+  const handleCloseNewEventItem = () => {
+    timerToClearNew.current = setTimeout(() => {
+      setNewEvent(null)
+    }, 400)
+    setNewEventOpen(false)
+  }
+
+  const handleCloseCalendar = () => {
+    handleClose()
+    setDeletedEventsIds([])
+    setAllEvents([])
+  }
+
+  const handleDeleteNoConstTimeworkToSave = selectedEvent => {
+    const filterNewEvents = newEvents.filter(
+      item => item._id !== selectedEvent._id
+    )
+    setNewEvents(filterNewEvents)
+    const filterNewEventsFromServer = allEvents.filter(
+      item => item._id !== selectedEvent._id
+    )
+    setAllEvents(filterNewEventsFromServer)
+    if (!!!selectedEvent.isNew) {
+      const deletedIds = [...deletedEventsIds, selectedEvent._id]
+      setDeletedEventsIds(deletedIds)
+    }
+  }
+
+  const handleCreateNoConstTimeworkToSave = (
+    selectedEvent,
+    eventToDelete,
+    isHolidays = false
+  ) => {
+    const itemDay = selectedEvent.start.getDate()
+    const itemMonth = selectedEvent.start.getMonth() + 1
+    const itemYear = selectedEvent.start.getFullYear()
+    const itemFullDate = `${itemDay}-${itemMonth}-${itemYear}`
+
+    const selectedDayToCompany = getMonthAndReturnEng(
+      selectedEvent.start.getDay()
+    )
+    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
+    const companyDateStart = selectedHoursCompany.start.split(":")
+    const companyDateEnd = selectedHoursCompany.end.split(":")
+
+    const newCreatedItem = {
+      _id: Math.floor(100000 + Math.random() * 900000),
+      fullDate: itemFullDate,
+      isNew: true,
+      start: !!!isHolidays
+        ? selectedEvent.start
+        : new Date(
+            new Date(
+              new Date(selectedEvent.start).setHours(companyDateStart[0])
+            ).setMinutes(companyDateStart[1])
+          ),
+      end: !!!isHolidays
+        ? selectedEvent.end
+        : new Date(
+            new Date(
+              new Date(selectedEvent.start).setHours(companyDateEnd[0])
+            ).setMinutes(companyDateEnd[1])
+          ),
+      holidays: isHolidays,
+    }
+    const filterNewEvents = !!eventToDelete
+      ? newEvents.filter(item => item._id !== eventToDelete._id)
+      : newEvents
+    const filterAllEvents = !!eventToDelete
+      ? allEvents.filter(item => item._id !== eventToDelete._id)
+      : allEvents
+    const allNewEvents = [...filterNewEvents, newCreatedItem]
+    setNewEvents(allNewEvents)
+    const allNewEventsAndFromServer = [...filterAllEvents, newCreatedItem]
+    setAllEvents(allNewEventsAndFromServer)
+    if (!!eventToDelete) {
+      if (!!!eventToDelete.isNew) {
+        const deletedIds = [...deletedEventsIds, eventToDelete._id]
+        setDeletedEventsIds(deletedIds)
+      }
+    }
+  }
+
+  const handleSaveNoConstTimework = () => {
+    const newEditedWorkersHours = [...editedWorkersHours]
+    const indexWorkerHours = editedWorkersHours.findIndex(
+      itemEditedWorkerHours =>
+        itemEditedWorkerHours.indexWorker === item.user._id
+    )
+    if (indexWorkerHours >= 0) {
+      const allDeletedIds = [
+        ...newEditedWorkersHours[indexWorkerHours].noConstantWorkingHours
+          .deletedEventsIds,
+        ...deletedEventsIds,
+      ]
+      const allNewEvents = [
+        ...newEditedWorkersHours[indexWorkerHours].noConstantWorkingHours
+          .newEvents,
+        ...newEvents,
+      ]
+      newEditedWorkersHours[
+        indexWorkerHours
+      ].noConstantWorkingHours.deletedEventsIds = allDeletedIds
+      newEditedWorkersHours[
+        indexWorkerHours
+      ].noConstantWorkingHours.newEvents = allNewEvents
+      dispatch(changeEditedWorkerHours(newEditedWorkersHours))
+    } else {
+      const newEditedWorker = {
+        constantWorkingHours: [],
+        indexWorker: item.user._id,
+        noConstantWorkingHours: {
+          deletedEventsIds: [...deletedEventsIds],
+          newEvents: [...newEvents],
+        },
+      }
+      const allNewEditedWorkerHours = [
+        ...newEditedWorkersHours,
+        newEditedWorker,
+      ]
+      dispatch(changeEditedWorkerHours(allNewEditedWorkerHours))
+    }
+    setNewEvents([])
+    setDeletedEventsIds([])
+    handleClose()
+  }
+
   const slotsValue =
     item.company.reservationEveryTime === 5
       ? 10
@@ -252,148 +511,6 @@ const BigCalendarWorkerHours = ({ item }) => {
   const takeDateYear = date.getFullYear()
   const selectMonthName = getMonthNamePl(takeDateDayToday)
   const finnalDate = `${selectMonthName} ${takeDateYear}`
-
-  console.log(selectedDayString)
-  const myEvents = [
-    {
-      id: 1,
-      title: "Long Event",
-      start: new Date(2015, 3, 7),
-      end: new Date(2015, 3, 10),
-    },
-
-    {
-      id: 2,
-      title: "DTS STARTS",
-      start: new Date(2016, 2, 13, 0, 0, 0),
-      end: new Date(2016, 2, 20, 0, 0, 0),
-    },
-
-    {
-      id: 3,
-      title: "DTS ENDS",
-      start: new Date(2016, 10, 6, 0, 0, 0),
-      end: new Date(2016, 10, 13, 0, 0, 0),
-    },
-
-    {
-      id: 4,
-      title: "Some Event",
-      start: new Date(2015, 3, 9, 0, 0, 0),
-      end: new Date(2015, 3, 10, 0, 0, 0),
-    },
-    {
-      id: 6,
-      title: "Meeting",
-      start: new Date(2015, 3, 12, 10, 30, 0, 0),
-      end: new Date(2015, 3, 12, 12, 30, 0, 0),
-      desc: "Pre-meeting meeting, to prepare for the meeting",
-    },
-    {
-      id: 7,
-      title: "Lunch",
-      start: new Date(2015, 3, 12, 12, 0, 0, 0),
-      end: new Date(2015, 3, 12, 13, 0, 0, 0),
-      desc: "Power lunch",
-    },
-    {
-      id: 8,
-      title: "Meeting",
-      start: new Date(2015, 3, 12, 14, 0, 0, 0),
-      end: new Date(2015, 3, 12, 15, 0, 0, 0),
-    },
-    {
-      id: 9,
-      title: "Happy Hour",
-      start: new Date(2015, 3, 12, 17, 0, 0, 0),
-      end: new Date(2015, 3, 12, 17, 30, 0, 0),
-      desc: "Most important meal of the day",
-    },
-    {
-      id: 10,
-      title: "Dinner",
-      start: new Date(2015, 3, 12, 20, 0, 0, 0),
-      end: new Date(2015, 3, 12, 21, 0, 0, 0),
-    },
-    {
-      id: 11,
-      title: "Birthday Party",
-      start: new Date(2015, 3, 13, 7, 0, 0),
-      end: new Date(2015, 3, 13, 10, 30, 0),
-    },
-    {
-      id: 12,
-      title: "Late Night Event",
-      start: new Date(2015, 3, 17, 19, 30, 0),
-      end: new Date(2015, 3, 18, 2, 0, 0),
-    },
-    {
-      id: 12.5,
-      title: "Late Same Night Event",
-      start: new Date(2015, 3, 17, 19, 30, 0),
-      end: new Date(2015, 3, 17, 23, 30, 0),
-    },
-    {
-      id: 13,
-      title: "Multi-day Event",
-      start: new Date(2015, 3, 20, 19, 30, 0),
-      end: new Date(2015, 3, 22, 2, 0, 0),
-    },
-    {
-      id: 14,
-      title: "Today",
-      start: new Date(new Date().setHours(new Date().getHours() - 10)),
-      end: new Date(new Date().setHours(new Date().getHours() - 7)),
-    },
-    {
-      id: 16,
-      title: "Video Record",
-      start: new Date(2015, 3, 14, 15, 30, 0),
-      end: new Date(2015, 3, 14, 19, 0, 0),
-    },
-    {
-      id: 17,
-      title: "Dutch Song Producing",
-      start: new Date(2015, 3, 14, 16, 30, 0),
-      end: new Date(2015, 3, 14, 20, 0, 0),
-    },
-    {
-      id: 18,
-      title: "Itaewon Halloween Meeting",
-      start: new Date(2015, 3, 14, 16, 30, 0),
-      end: new Date(2015, 3, 14, 17, 30, 0),
-    },
-    {
-      id: 19,
-      title: "Online Coding Test",
-      start: new Date(2015, 3, 14, 17, 30, 0),
-      end: new Date(2015, 3, 14, 20, 30, 0),
-    },
-    {
-      id: 20,
-      title: "An overlapped Event",
-      start: new Date(2015, 3, 14, 17, 0, 0),
-      end: new Date(2015, 3, 14, 18, 30, 0),
-    },
-    {
-      id: 21,
-      title: "Phone Interview",
-      start: new Date(2015, 3, 14, 17, 0, 0),
-      end: new Date(2015, 3, 14, 18, 30, 0),
-    },
-    {
-      id: 22,
-      title: "Cooking Class",
-      start: new Date(2015, 3, 14, 17, 30, 0),
-      end: new Date(2015, 3, 14, 19, 0, 0),
-    },
-    {
-      id: 23,
-      title: "Go to the gym",
-      start: new Date(2015, 3, 14, 18, 30, 0),
-      end: new Date(2015, 3, 14, 20, 0, 0),
-    },
-  ]
 
   return (
     <BackgroundContentCalendar>
@@ -443,14 +560,12 @@ const BigCalendarWorkerHours = ({ item }) => {
           views={["week"]}
           selectable
           localizer={localizer}
-          events={myEvents}
+          events={allEvents}
           defaultView="week"
           date={date}
           onNavigate={date => {
             setDate(date)
           }}
-          // scrollToTime={new Date(2020, 0, 1, 6)}
-          // defaultDate={new Date()}
           startAccessor="start"
           endAccessor="end"
           timeslots={slotsValue}
@@ -461,16 +576,52 @@ const BigCalendarWorkerHours = ({ item }) => {
           onSelectSlot={handleOnSelectSlot} // zdarzenie po zaznaczeniu okresu
           onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
           slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
+          onSelectEvent={handleClickEvent}
+          eventPropGetter={handleEventPropGetter}
         />
       </BackgroundCalendarStyle>
-      <ButtonIcon
-        title="Zapisz"
-        uppercase
-        fontIconSize="25"
-        fontSize="16"
-        icon={<MdWork />}
-        secondColors
-        // onClick={() => handleChangeDate("today")}
+      <ButtonsPosition>
+        <ButtonItemStyle>
+          <ButtonIcon
+            title="Anuluj"
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<MdWork />}
+            customColorButton={Colors(colorBlind).dangerColorDark}
+            customColorIcon={Colors(colorBlind).dangerColor}
+            onClick={handleCloseCalendar}
+          />
+        </ButtonItemStyle>
+        <ButtonItemStyle>
+          <ButtonIcon
+            title="Zapisz"
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<MdWork />}
+            secondColors
+            onClick={handleSaveNoConstTimework}
+          />
+        </ButtonItemStyle>
+      </ButtonsPosition>
+      <CalendarEventItemClicked
+        colorBlind={colorBlind}
+        handleClosePopupEventItem={handleClosePopupEventItem}
+        selectedEvent={selectedEvent}
+        screenOpen={selectedEventOpen}
+        allEvents={allEvents}
+        handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
+        handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
+      />
+      <CalendarEventItemClicked
+        colorBlind={colorBlind}
+        handleClosePopupEventItem={handleCloseNewEventItem}
+        selectedEvent={newEvent}
+        screenOpen={newEventOpen}
+        allEvents={allEvents}
+        handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
+        handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
       />
     </BackgroundContentCalendar>
   )

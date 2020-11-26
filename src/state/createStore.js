@@ -34,6 +34,7 @@ import {
   RESET_EDIT_COMPANY,
   CHANGE_RESERWATION_VALUE,
   CHANGE_EDIT_WORKER_HOURS,
+  CHANGE_EDITED_WORKER_HOURS,
 } from "./actions"
 
 const initialState = {
@@ -174,6 +175,7 @@ const initialState = {
   reserwationEnable: false,
   editWorkerHours: false,
   editWorkerHoursData: null,
+  editedWorkersHours: [],
 }
 
 const reducer = (state = initialState, action) => {
@@ -336,7 +338,12 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
-
+    case CHANGE_EDITED_WORKER_HOURS:
+      console.log(action.item)
+      return {
+        ...state,
+        editedWorkersHours: action.item,
+      }
     case CHANGE_EDIT_WORKER_HOURS:
       if (!!action.item) {
         return {

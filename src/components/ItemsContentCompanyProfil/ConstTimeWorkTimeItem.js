@@ -191,7 +191,7 @@ const ConstTimeWorkTime = ({
                   }`
             }
             uppercase
-            fontIconSize="16"
+            fontIconSize="20"
             fontSize="14"
             icon={<MdEdit />}
             onClick={handleEditDay}

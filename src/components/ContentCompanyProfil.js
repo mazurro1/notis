@@ -16,6 +16,7 @@ import {
   fetchUpdateCompanyProfil,
   resetEditCompany,
   changeReserwationValue,
+  changeEditedWorkerHours,
 } from "../state/actions"
 import AllCategoryOfServices from "./ItemsContentCompanyProfil/AllCategoryOfServices"
 import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
@@ -170,7 +171,6 @@ const ContentCompanyProfil = ({
   const [editLinks, setEditLinks] = useState(false)
   const [companyPaused, setCompanyPaused] = useState(null)
   const [editedWorkers, setEditedWorkers] = useState([])
-  const [editedWorkersHours, setEditedWorkersHours] = useState([])
   const [editedAdress, setEditedAdress] = useState({
     companyName: null,
     city: null,
@@ -192,6 +192,7 @@ const ContentCompanyProfil = ({
   const [deletedItemsServices, setDeletedItemsServices] = useState([])
   const [newItemsServices, setNewItemsServices] = useState([])
   const [editedItemsServices, setEditedItemsServices] = useState([])
+  const editedWorkersHours = useSelector(state => state.editedWorkersHours)
 
   // console.log("deleted from server", deletedItemsServices)
   // console.log("new services", newItemsServices)
@@ -215,7 +216,7 @@ const ContentCompanyProfil = ({
       setTextAboutUs("")
       setTextRezerwation("")
       setEditedWorkers([])
-      setEditedWorkersHours([])
+      dispatch(changeEditedWorkerHours([]))
       setEditedAdress({
         companyName: null,
         city: null,
@@ -590,7 +591,6 @@ const ContentCompanyProfil = ({
               editMode={editMode}
               colorBlind={colorBlind}
               editedWorkersHours={editedWorkersHours}
-              setEditedWorkersHours={setEditedWorkersHours}
             />
           </RightColumnItem>
 

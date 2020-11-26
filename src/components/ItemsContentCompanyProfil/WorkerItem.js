@@ -22,6 +22,7 @@ import {
   fetchDeleteUserFromCompany,
   fetchAddAgainWorkerToCompany,
   changeEditWorkerHours,
+  changeEditedWorkerHours,
 } from "../../state/actions"
 import { useDispatch } from "react-redux"
 import styled from "styled-components"
@@ -135,7 +136,6 @@ const WorkerItem = ({
   editMode,
   colorBlind,
   editedWorkersHours,
-  setEditedWorkersHours,
   selectEditedWorkersHours,
 }) => {
   const [constTimeWorker, setConstTimeWorker] = useState(false)
@@ -346,12 +346,12 @@ const WorkerItem = ({
         newEditedWorkersHours[
           indexEditedWorker
         ].constantWorkingHours = filterEditedDays
-        setEditedWorkersHours(newEditedWorkersHours)
+        dispatch(changeEditedWorkerHours(newEditedWorkersHours))
       } else {
         const deleteWorkerInEditedWorkerHours = editedWorkersHours.filter(
           item => item.indexWorker !== itemWorkerId
         )
-        setEditedWorkersHours(deleteWorkerInEditedWorkerHours)
+        dispatch(changeEditedWorkerHours(deleteWorkerInEditedWorkerHours))
       }
     }
   }
@@ -363,7 +363,7 @@ const WorkerItem = ({
     const filterEditedWorkers = editedWorkersHours.filter(
       item => item.indexWorker !== itemWorkerId
     )
-    setEditedWorkersHours(filterEditedWorkers)
+    dispatch(changeEditedWorkerHours(filterEditedWorkers))
     setToSaveWorkerHours(filterToSaveWorkers)
     setConstTimeWorker(false)
     setChooseTimeWorker(true)
@@ -382,10 +382,10 @@ const WorkerItem = ({
     if (!!filterNewEditedWorkers) {
       if (indexEditedWorkers >= 0) {
         newEditedWorkersHoursSave[indexEditedWorkers] = filterNewEditedWorkers
-        setEditedWorkersHours(newEditedWorkersHoursSave)
+        dispatch(changeEditedWorkerHours(newEditedWorkersHoursSave))
       } else {
         const allEditedWorkers = [...editedWorkersHours, filterNewEditedWorkers]
-        setEditedWorkersHours(allEditedWorkers)
+        dispatch(changeEditedWorkerHours(allEditedWorkers))
       }
     }
     setConstTimeWorker(false)
@@ -419,7 +419,10 @@ const WorkerItem = ({
       const newWorker = {
         indexWorker: item.indexWorker,
         constantWorkingHours: [item.dayToSave],
-        noConstantWorkingHours: [],
+        noConstantWorkingHours: {
+          deletedEventsIds: [],
+          newEvents: [],
+        },
       }
       const allWorkers = [...newToSaveWorkerHours, newWorker]
       setToSaveWorkerHours(allWorkers)
