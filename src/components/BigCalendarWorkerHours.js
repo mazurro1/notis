@@ -10,8 +10,15 @@ import {
   getMonthNamePl,
 } from "../common/Functions"
 import ButtonIcon from "./ButtonIcon"
-import { MdWork } from "react-icons/md"
-import { FaCalendarDay, FaCalendarPlus, FaCalendarMinus } from "react-icons/fa"
+import {
+  FaCalendarDay,
+  FaCalendarPlus,
+  FaCalendarMinus,
+  FaArrowLeft,
+  FaSave,
+} from "react-icons/fa"
+import { MdInfo } from "react-icons/md"
+
 import CalendarEventItemClicked from "./CalendarEventItemClicked"
 import { useSelector, useDispatch } from "react-redux"
 import { changeEditedWorkerHours } from "../state/actions"
@@ -25,8 +32,7 @@ const BackgroundContentCalendar = styled.div`
 
 const BackgroundCalendarStyle = styled.div`
   background-color: white;
-  max-height: 80vh;
-  overflow: auto;
+  max-height: 90vh;
   max-width: 90vw;
   width: 900px;
   min-width: 800px;
@@ -34,15 +40,19 @@ const BackgroundCalendarStyle = styled.div`
   opacity: 0.95;
   margin-bottom: 10px;
 
+  .rbc-day-slot .rbc-time-work-company-active {
+    background-color: #fff3e0 !important;
+    border-left: 1px solid #e0e0e0 !important;
+  }
   .disabled-holiday-event {
-    background-color: ${props =>
-      Colors(props.colorBlind).dangerColorDark} !important;
+    background-color: #757575 !important;
   }
   .rbc-time-view {
     border: none;
   }
   .rbc-event {
     background-color: ${props => Colors(props.colorBlind).secondColor};
+    color: ${props => Colors(props.colorBlind).textNormalWhite};
     border: none;
     border-radius: 5px;
     transition-property: background-color;
@@ -120,6 +130,11 @@ const BackgroundCalendarStyle = styled.div`
   .rbc-time-header-content {
     border-left: 1px solid #e0e0e0 !important;
   }
+  .rbc-time-content {
+    .rbc-today {
+      background-color: #fff3e0;
+    }
+  }
   .rbc-time-header {
     color: white;
     background-color: ${props => Colors(props.colorBlind).navDownBackground};
@@ -141,6 +156,7 @@ const TitleMonthYear = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 `
 
 const TitleMonthYearContent = styled.div`
@@ -161,6 +177,30 @@ const ButtonsPosition = styled.div`
 
 const ButtonItemStyle = styled.div`
   margin-left: 10px;
+`
+const WarningStyle = styled.div`
+  position: relative;
+  background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+  padding: 5px 10px;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  padding-left: 50px;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  border-radius: 5px;
+`
+
+const IconWarning = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
 `
 
 const BigCalendarWorkerHours = ({ item, handleClose }) => {
@@ -320,6 +360,47 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
     }
   }
 
+  const handleSlotPropGetterOpenHoursCompany = date => {
+    const takeDateStart = new Date(date)
+    const getterDay = takeDateStart.getDate()
+    const getterMonth = takeDateStart.getMonth() + 1
+    const getterYear = takeDateStart.getFullYear()
+    const getterFullDate = `${getterDay}-${getterMonth}-${getterYear}`
+    const findInAllEvents = allEvents.find(
+      item => item.fullDate === getterFullDate
+    )
+
+    const selectedDayToCompany = getMonthAndReturnEng(takeDateStart.getDay())
+    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
+    const arrSerwerMaxHours = selectedHoursCompany.end.split(":")
+    const arrSerwerMinHours = selectedHoursCompany.start.split(":")
+    const calendarDate =
+      takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
+    const numberMax =
+      Number(arrSerwerMaxHours[0]) * 60 + Number(arrSerwerMaxHours[1])
+    const numberMin =
+      Number(arrSerwerMinHours[0]) * 60 + Number(arrSerwerMinHours[1])
+    if (
+      calendarDate >= numberMin &&
+      calendarDate < numberMax &&
+      !selectedHoursCompany.disabled
+    ) {
+      if (!!findInAllEvents) {
+        return {
+          className: "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+        }
+      } else {
+        return {
+          className: "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+        }
+      }
+    } else {
+      return {
+        className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active ",
+      }
+    }
+  }
+
   const handleEventPropGetter = event => {
     if (!!event.holidays) {
       return {
@@ -415,41 +496,49 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
     const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
     const companyDateStart = selectedHoursCompany.start.split(":")
     const companyDateEnd = selectedHoursCompany.end.split(":")
-
-    const newCreatedItem = {
+    let newCreatedItem = {
       _id: Math.floor(100000 + Math.random() * 900000),
       fullDate: itemFullDate,
       isNew: true,
-      start: !!!isHolidays
-        ? selectedEvent.start
+      start: selectedEvent.start,
+      end: selectedEvent.end,
+      holidays: isHolidays,
+    }
+    if (!!isHolidays) {
+      newCreatedItem.start = selectedHoursCompany.disabled
+        ? null
         : new Date(
             new Date(
               new Date(selectedEvent.start).setHours(companyDateStart[0])
             ).setMinutes(companyDateStart[1])
-          ),
-      end: !!!isHolidays
-        ? selectedEvent.end
+          )
+      newCreatedItem.end = selectedHoursCompany.disabled
+        ? null
         : new Date(
             new Date(
               new Date(selectedEvent.start).setHours(companyDateEnd[0])
             ).setMinutes(companyDateEnd[1])
-          ),
-      holidays: isHolidays,
+          )
     }
-    const filterNewEvents = !!eventToDelete
-      ? newEvents.filter(item => item._id !== eventToDelete._id)
-      : newEvents
-    const filterAllEvents = !!eventToDelete
-      ? allEvents.filter(item => item._id !== eventToDelete._id)
-      : allEvents
-    const allNewEvents = [...filterNewEvents, newCreatedItem]
-    setNewEvents(allNewEvents)
-    const allNewEventsAndFromServer = [...filterAllEvents, newCreatedItem]
-    setAllEvents(allNewEventsAndFromServer)
-    if (!!eventToDelete) {
-      if (!!!eventToDelete.isNew) {
-        const deletedIds = [...deletedEventsIds, eventToDelete._id]
-        setDeletedEventsIds(deletedIds)
+
+    if (!!newCreatedItem.start && !!newCreatedItem.end) {
+      const filterNewEvents = !!eventToDelete
+        ? newEvents.filter(item => item._id !== eventToDelete._id)
+        : newEvents
+      const filterAllEvents = !!eventToDelete
+        ? allEvents.filter(item => item._id !== eventToDelete._id)
+        : allEvents
+
+      const allNewEvents = [...filterNewEvents, newCreatedItem]
+      setNewEvents(allNewEvents)
+      const allNewEventsAndFromServer = [...filterAllEvents, newCreatedItem]
+      setAllEvents(allNewEventsAndFromServer)
+
+      if (!!eventToDelete) {
+        if (!!!eventToDelete.isNew) {
+          const deletedIds = [...deletedEventsIds, eventToDelete._id]
+          setDeletedEventsIds(deletedIds)
+        }
       }
     }
   }
@@ -512,6 +601,9 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
   const selectMonthName = getMonthNamePl(takeDateDayToday)
   const finnalDate = `${selectMonthName} ${takeDateYear}`
 
+  const disabledSaveCalendar =
+    newEvents.length > 0 || deletedEventsIds.length > 0
+
   return (
     <BackgroundContentCalendar>
       <TitleMonthYear>
@@ -552,10 +644,8 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
           />
         </div>
       </TitleMonthYear>
-
       <BackgroundCalendarStyle colorBlind={colorBlind}>
         <Calendar
-          //   date={new Date(2015, 11, 17)}
           culture="pl"
           views={["week"]}
           selectable
@@ -574,12 +664,21 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
           min={minHoursInCalendar} // 8.00 AM
           max={maxHoursInCalendar} // Max will be 6.00 PM!
           onSelectSlot={handleOnSelectSlot} // zdarzenie po zaznaczeniu okresu
-          onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
-          slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
+          // onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
+          // slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
+          slotPropGetter={handleSlotPropGetterOpenHoursCompany} // nadanie koloru godzin otwartych firmy
           onSelectEvent={handleClickEvent}
           eventPropGetter={handleEventPropGetter}
         />
       </BackgroundCalendarStyle>
+      <WarningStyle colorBlind={colorBlind}>
+        Uwaga tworząc tutaj dzień pracy, jest on automatycznie zastępywany
+        względem stałych godzin pracy.
+        <IconWarning colorBlind={colorBlind}>
+          <MdInfo />
+        </IconWarning>
+      </WarningStyle>
+
       <ButtonsPosition>
         <ButtonItemStyle>
           <ButtonIcon
@@ -587,7 +686,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
             uppercase
             fontIconSize="25"
             fontSize="16"
-            icon={<MdWork />}
+            icon={<FaArrowLeft />}
             customColorButton={Colors(colorBlind).dangerColorDark}
             customColorIcon={Colors(colorBlind).dangerColor}
             onClick={handleCloseCalendar}
@@ -599,9 +698,10 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
             uppercase
             fontIconSize="25"
             fontSize="16"
-            icon={<MdWork />}
+            icon={<FaSave />}
             secondColors
             onClick={handleSaveNoConstTimework}
+            disabled={!disabledSaveCalendar}
           />
         </ButtonItemStyle>
       </ButtonsPosition>
@@ -613,6 +713,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
         allEvents={allEvents}
         handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
         handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
+        itemCompanyHours={item.company.openingDays}
       />
       <CalendarEventItemClicked
         colorBlind={colorBlind}
@@ -622,6 +723,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
         allEvents={allEvents}
         handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
         handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
+        itemCompanyHours={item.company.openingDays}
       />
     </BackgroundContentCalendar>
   )

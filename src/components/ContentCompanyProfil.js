@@ -347,10 +347,12 @@ const ContentCompanyProfil = ({
 
   const handleSaveOwnerSpecialization = (specialization, servicesCategory) => {
     const checkOwnerSpecialization =
-      company.ownerSpecialization === specialization ? null : specialization
+      company.ownerData.specialization === specialization
+        ? null
+        : specialization
 
-    const ownerCategoryCheck = !!company.ownerSerwiceCategory
-      ? company.ownerSerwiceCategory
+    const ownerCategoryCheck = !!company.ownerData.servicesCategory
+      ? company.ownerData.servicesCategory
       : []
 
     const isTheSameOwnerCategory =
@@ -363,12 +365,12 @@ const ContentCompanyProfil = ({
   }
 
   const handleClickReserwation = (itemServices, companyId) => {
-    const ownerCategoryToSent = !!company.ownerSerwiceCategory
-      ? company.ownerSerwiceCategory
+    const ownerCategoryToSent = !!company.ownerData.servicesCategory
+      ? company.ownerData.servicesCategory
       : []
 
-    const ownerSpecializationToSent = !!company.ownerSpecialization
-      ? company.ownerSpecialization
+    const ownerSpecializationToSent = !!company.ownerData.specialization
+      ? company.ownerData.specialization
       : ""
 
     const ownerData = {
@@ -512,7 +514,7 @@ const ContentCompanyProfil = ({
             companyId={company._id}
             newOwnerServicesCategory={newOwnerServicesCategory}
             setNewOwnerServicesCategory={setNewOwnerServicesCategory}
-            ownerSerwiceCategory={company.ownerSerwiceCategory}
+            ownerSerwiceCategory={company.ownerData.servicesCategory}
           />
         </LeftColumn>
         <RightColumn>
@@ -580,17 +582,19 @@ const ContentCompanyProfil = ({
               workers={[...company.workers]}
               owner={company.owner}
               companyId={company._id}
-              ownerSpecialization={company.ownerSpecialization}
+              ownerSpecialization={company.ownerData.specialization}
               handleAddEditWorker={handleAddEditWorker}
               handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
               allCategoriesWithItems={filteredAllCategoriesWithItems}
               editedWorkers={editedWorkers}
-              ownerSerwiceCategory={company.ownerSerwiceCategory}
+              ownerSerwiceCategory={company.ownerData.servicesCategory}
               newOwnerServicesCategory={newOwnerServicesCategory}
               company={company}
               editMode={editMode}
               colorBlind={colorBlind}
               editedWorkersHours={editedWorkersHours}
+              isAdmin={isAdmin}
+              ownerData={company.ownerData}
             />
           </RightColumnItem>
 

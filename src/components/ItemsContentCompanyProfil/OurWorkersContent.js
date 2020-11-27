@@ -7,9 +7,9 @@ import InputIcon from "../InputIcon"
 import { fetchAddWorkerToCompany } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
-import { MdEdit, MdEmail, MdClose, MdDone } from "react-icons/md"
-import { FaUser, FaUserPlus, FaArrowLeft } from "react-icons/fa"
-import SelectCustom from "../SelectCustom"
+import { MdEmail, MdClose } from "react-icons/md"
+import { FaUserPlus } from "react-icons/fa"
+import OwnerWorker from "./OwnerWorker"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "flex")};
@@ -40,6 +40,8 @@ const WorkerItemStyle = styled.div`
       ? "340px"
       : props.userEditItem
       ? `${props.selectHeight + 260}px`
+      : props.isAdmin
+      ? "50px"
       : "10px"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
@@ -91,6 +93,7 @@ const EditIconStyle = styled.div`
   margin: 5px;
   margin-left: 0;
   cursor: pointer;
+  font-size: 1rem;
   transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -110,6 +113,7 @@ const DeleteUserIconStyle = styled.div`
   margin: 5px;
   cursor: pointer;
   margin-left: 0px;
+  font-size: 1rem;
   transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -195,44 +199,16 @@ const CloseAddWorkers = styled.div`
   }
 `
 
-const ButtonContentEdit = styled.div`
+const ButtonContent = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 `
 
-const ButtonStyles = styled.div`
-  display: inline-block;
-`
-const DeleteIconPosition = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`
-
-const SelectStyle = styled.div`
-  margin-bottom: 120px;
-  margin-top: 20px;
-`
-
-const DeleteIconStyle = styled.div`
-  color: black;
-  padding: 5px;
-  padding-bottom: 0;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-`
-const InputStyles = styled.div`
-  input {
-    padding: 5px 10px;
-  }
+const ButtonDeleteStyle = styled.div`
+  padding: 2.5px;
 `
 
 const OurWorkersContent = ({
@@ -254,6 +230,8 @@ const OurWorkersContent = ({
   editMode,
   colorBlind,
   editedWorkersHours,
+  isAdmin,
+  ownerData,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
@@ -404,9 +382,16 @@ const OurWorkersContent = ({
         colorBlind={colorBlind}
         editedWorkersHours={editedWorkersHours}
         selectEditedWorkersHours={selectEditedWorkersHours}
+        isAdmin={isAdmin}
+        ButtonContent={ButtonContent}
+        ButtonDeleteStyle={ButtonDeleteStyle}
       />
     )
   })
+
+  const selectEditedOwnerHours = editedWorkersHours.find(
+    itemHours => itemHours.indexWorker === owner._id
+  )
 
   return (
     <>
@@ -414,112 +399,37 @@ const OurWorkersContent = ({
         NASI PRACOWNICY
       </TitleRightColumn>
       <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
-        <WorkerItemStyle
-          userEditItem={ownerEdit}
-          selectHeight={selectHeight}
+        <OwnerWorker
+          {...companyEditProfilProps}
+          WorkerItemStyle={WorkerItemStyle}
+          WorkerCircle={WorkerCircle}
+          WorkerName={WorkerName}
+          WorkerSpecjalization={WorkerSpecjalization}
+          EditUserStyle={EditUserStyle}
+          EditIconStyle={EditIconStyle}
+          EditUserBackground={EditUserBackground}
+          EditUserBackgroundContent={EditUserBackgroundContent}
+          allCategories={allCategories}
           colorBlind={colorBlind}
-        >
-          <WorkerCircle
-            isCompanyEditProfil={isCompanyEditProfil}
-            colorBlind={colorBlind}
-          >
-            <FaUser />
-          </WorkerCircle>
-          <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
-          <WorkerSpecjalization>
-            {inputSpecializationOwner}
-          </WorkerSpecjalization>
-          {isCompanyEditProfil && (
-            <>
-              <EditUserStyle>
-                <EditIconStyle
-                  onClick={handleClickOwnerEdit}
-                  colorBlind={colorBlind}
-                >
-                  <MdEdit />
-                </EditIconStyle>
-              </EditUserStyle>
-              <CSSTransition
-                in={ownerEdit}
-                timeout={400}
-                classNames="popup"
-                unmountOnExit
-              >
-                <EditUserBackground onClick={handleResetOwnerSpecialization}>
-                  <EditUserBackgroundContent
-                    onClick={handleClickContent}
-                    colorBlind={colorBlind}
-                  >
-                    Stanowisko
-                    <InputStyles>
-                      <InputIcon
-                        placeholder="Stanowisko"
-                        value={inputSpecializationOwner}
-                        secondColor
-                        onChange={handleInputOnChange}
-                      />
-                    </InputStyles>
-                    {allCategories.length > 0 && (
-                      <>
-                        <SelectStyle>
-                          Wykonywane usługi
-                          <SelectCustom
-                            widthAuto
-                            defaultMenuIsOpen={false}
-                            secondColor
-                            options={allCategories}
-                            handleChange={handleChangeSelectOwner}
-                            value={ownerServicesCategory}
-                            placeholder="Usługi..."
-                            isMulti
-                            closeMenuOnSelect={false}
-                            menuIsOpen
-                          />
-                        </SelectStyle>
-                      </>
-                    )}
-                    <ButtonContentEdit>
-                      <ButtonStyles>
-                        <ButtonIcon
-                          title="Cofnij"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="14"
-                          icon={<FaArrowLeft />}
-                          onClick={handleResetOwnerSpecialization}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
-                        />
-                      </ButtonStyles>
-                      <ButtonStyles>
-                        <ButtonIcon
-                          title="Akceptuj"
-                          uppercase
-                          fontIconSize="20"
-                          fontSize="14"
-                          icon={<MdDone />}
-                          onClick={handleSaveSpecialization}
-                          customColorButton={
-                            Colors(colorBlind).successColorDark
-                          }
-                          customColorIcon={Colors(colorBlind).successColor}
-                          // disabled={
-                          //   inputSpecializationOwner === ownerSpecialization
-                          // }
-                        />
-                      </ButtonStyles>
-                    </ButtonContentEdit>
-                    <DeleteIconPosition>
-                      <DeleteIconStyle onClick={handleResetOwnerSpecialization}>
-                        <MdClose />
-                      </DeleteIconStyle>
-                    </DeleteIconPosition>
-                  </EditUserBackgroundContent>
-                </EditUserBackground>
-              </CSSTransition>
-            </>
-          )}
-        </WorkerItemStyle>
+          ButtonContent={ButtonContent}
+          ButtonDeleteStyle={ButtonDeleteStyle}
+          owner={owner}
+          ownerEdit={ownerEdit}
+          selectHeight={selectHeight}
+          inputSpecializationOwner={inputSpecializationOwner}
+          handleClickOwnerEdit={handleClickOwnerEdit}
+          handleResetOwnerSpecialization={handleResetOwnerSpecialization}
+          handleClickContent={handleClickContent}
+          handleInputOnChange={handleInputOnChange}
+          handleChangeSelectOwner={handleChangeSelectOwner}
+          ownerServicesCategory={ownerServicesCategory}
+          handleSaveSpecialization={handleSaveSpecialization}
+          company={company}
+          ownerData={ownerData}
+          selectEditedWorkersHours={selectEditedOwnerHours}
+          editedWorkersHours={editedWorkersHours}
+          isAdmin={isAdmin}
+        />
         {mapWorkers}
       </WorkerContent>
       {isCompanyEditProfil ? (

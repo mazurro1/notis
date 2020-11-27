@@ -16,6 +16,10 @@ const PopupWindow = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: ${props => (props.calendar ? "auto" : "")};
+  @media all and (max-width: 830px) {
+    display: ${props => (props.calendar ? "inline-block" : "flex")};
+  }
 `
 
 const PopupContent = styled.div`
@@ -28,7 +32,7 @@ const PopupContent = styled.div`
   border-radius: 5px;
   padding: 10px 15px;
   overflow-y: auto;
-  max-height: 90vh;
+  max-height: 80vh;
   background-color: ${props => Colors(props.colorBlind).companyItemBackground};
 `
 
@@ -64,6 +68,7 @@ const Popup = ({
   maxWidth = 900,
   noContent = false,
   fullScreen = false,
+  calendar = false,
 }) => {
   const colorBlind = useSelector(state => state.colorBlind)
   const handleOnClick = e => {
@@ -104,7 +109,9 @@ const Popup = ({
       classNames="popup"
       unmountOnExit
     >
-      <PopupWindow onClick={handleOnClick}>{contentComponent}</PopupWindow>
+      <PopupWindow onClick={handleOnClick} calendar={calendar}>
+        {contentComponent}
+      </PopupWindow>
     </CSSTransition>
   )
 }

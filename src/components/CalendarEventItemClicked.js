@@ -3,8 +3,13 @@ import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
-import { MdWork, MdClose, MdInfo, MdEdit } from "react-icons/md"
-import { getMonthNamePl, getMonthAndReturnFull } from "../common/Functions"
+import { FaSave } from "react-icons/fa"
+import { MdClose, MdInfo, MdDeleteForever } from "react-icons/md"
+import {
+  getMonthNamePl,
+  getMonthAndReturnFull,
+  getMonthAndReturnEng,
+} from "../common/Functions"
 import { Checkbox } from "react-input-checkbox"
 
 const EventItemPosition = styled.div`
@@ -78,11 +83,12 @@ const CloseEditCreateMode = styled.div`
 
 const WarningStyle = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+  background-color: #757575;
   padding: 5px 10px;
   color: ${props => Colors(props.colorBlind).textNormalWhite};
   padding-left: 50px;
   font-size: 0.8rem;
+  margin: 1px;
 `
 
 const IconWarning = styled.div`
@@ -141,6 +147,7 @@ const CalendarEventItemClicked = ({
   screenOpen,
   handleDeleteNoConstTimeworkToSave,
   handleCreateNoConstTimeworkToSave,
+  itemCompanyHours,
 }) => {
   const [dateStart, setDateStart] = useState(null)
   const [dateEnd, setDateEnd] = useState(null)
@@ -180,23 +187,42 @@ const CalendarEventItemClicked = ({
     setIsHolidays(prevState => !prevState)
   }
 
+  const handleClickSaveItem = () => {
+    handleClosePopupEventItem()
+    handleCreateNoConstTimeworkToSave(
+      selectedEvent,
+      selectedEventInAllEvent,
+      isHolidays
+    )
+  }
+
   let selectedDate = ""
   let selectMonthName = ""
   let selectedDayWeekName = ""
   let selectButtonsToEvents = null
   let selectedEventInAllEventWarning = null
+  let selectedEventInAllEventWarningExtraTime = null
   let selectedEventInAllEvent = null
   let titleEvent = ""
   let switchButtonHolidays = null
+  let isDayHoliday = null
+  let companyOpenHours = null
   if (!!selectedEvent) {
+    const selectedDayOpenCompany = getMonthAndReturnEng(
+      selectedEvent.start.getDay()
+    )
+    companyOpenHours = itemCompanyHours[selectedDayOpenCompany]
+
+    isDayHoliday = !!isHolidays && (
+      <ItemTitle colorBlind={colorBlind}>
+        Dzień wolny:
+        <span>{!!isHolidays ? "Tak" : "Nie"}</span>
+      </ItemTitle>
+    )
+
     selectedEventInAllEvent = allEvents.find(
       item => item.start.getDate() === selectedEvent.start.getDate()
     )
-
-    selectedEventInAllEventWarning =
-      !!selectedEventInAllEvent && !!selectedEvent.action
-        ? "Podczas tworzenia dotychczasowy czas pracy zostanie zastąpiony"
-        : null
 
     selectedDate = `${selectedEvent.start.getDate()}-${
       selectedEvent.start.getMonth() + 1
@@ -208,11 +234,18 @@ const CalendarEventItemClicked = ({
     const selectedDayWeek = selectedEvent.start.getDay()
     selectedDayWeekName = getMonthAndReturnFull(selectedDayWeek)
 
-    titleEvent = !!selectedEvent.action
-      ? "Tworzenie czasu pracy pracownika"
-      : "Czas pracy pracownika"
+    titleEvent = !!selectedEvent.action ? "Tworzenie czasu pracy" : "Czas pracy"
 
-    switchButtonHolidays = !!selectedEvent.action && (
+    selectedEventInAllEventWarning =
+      !!selectedEventInAllEvent && !!selectedEvent.action
+        ? "Podczas tworzenia dotychczasowy czas pracy zostanie zastąpiony"
+        : null
+
+    selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
+      ? "Uwaga czas pracy jest tworzony w dzień w którym firma jest nieczynna"
+      : null
+
+    switchButtonHolidays = !!selectedEvent.action && !companyOpenHours.disabled && (
       <CheckboxStyle colorBlind={colorBlind}>
         <Checkbox
           theme="material-checkbox"
@@ -231,17 +264,10 @@ const CalendarEventItemClicked = ({
           uppercase
           fontIconSize="20"
           fontSize="16"
-          icon={<MdWork />}
+          icon={<FaSave />}
           customColorButton={Colors(colorBlind).successColorDark}
           customColorIcon={Colors(colorBlind).successColor}
-          onClick={() => {
-            handleClosePopupEventItem()
-            handleCreateNoConstTimeworkToSave(
-              selectedEvent,
-              selectedEventInAllEvent,
-              isHolidays
-            )
-          }}
+          onClick={handleClickSaveItem}
         />
       </ButtonItemStyle>
     ) : (
@@ -252,7 +278,7 @@ const CalendarEventItemClicked = ({
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<MdWork />}
+            icon={<MdDeleteForever />}
             customColorButton={Colors(colorBlind).dangerColorDark}
             customColorIcon={Colors(colorBlind).dangerColor}
             onClick={() => {
@@ -274,6 +300,15 @@ const CalendarEventItemClicked = ({
     </WarningStyle>
   )
 
+  const warningItemExtraTime = !!selectedEventInAllEventWarningExtraTime && (
+    <WarningStyle colorBlind={colorBlind}>
+      {selectedEventInAllEventWarningExtraTime}
+      <IconWarning colorBlind={colorBlind}>
+        <MdInfo />
+      </IconWarning>
+    </WarningStyle>
+  )
+
   return (
     <CSSTransition
       in={screenOpen}
@@ -285,6 +320,7 @@ const CalendarEventItemClicked = ({
         <EventItemPositionContent colorBlind={colorBlind}>
           <TitleItemName colorBlind={colorBlind}>{titleEvent}</TitleItemName>
           {warningItem}
+          {warningItemExtraTime}
           <CloseEditCreateMode
             colorBlind={colorBlind}
             onClick={handleClosePopupEventItem}
@@ -316,10 +352,7 @@ const CalendarEventItemClicked = ({
                 </ItemTitle>
               </>
             ) : (
-              <ItemTitle colorBlind={colorBlind}>
-                Dzień wolny:
-                <span>{!!isHolidays ? "tak" : "nie"}</span>
-              </ItemTitle>
+              isDayHoliday
             )}
             {switchButtonHolidays}
             <ButtonsItemEvent>{selectButtonsToEvents}</ButtonsItemEvent>

@@ -8,6 +8,7 @@ import {
   MdClose,
   MdDone,
   MdTimelapse,
+  MdToday,
 } from "react-icons/md"
 import SelectCustom from "../SelectCustom"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
@@ -65,18 +66,6 @@ const InputStyles = styled.div`
   }
 `
 
-const ButtonDeleteStyle = styled.div`
-  padding: 2.5px;
-`
-
-const ButtonContent = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-`
-
 const ButtonContentEdit = styled.div`
   display: flex;
   flex-direction: row;
@@ -112,6 +101,43 @@ const SelectStyle = styled.div`
   margin-top: 20px;
 `
 
+const HolidayDays = styled.div`
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  user-select: none;
+`
+
+const HolidayDaysIcon = styled.div`
+  position: relative;
+  left: -2px;
+  font-size: 1.25rem;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  border-radius: 50%;
+  padding: 5px;
+  background-color: ${props =>
+    props.isCompanyEditProfil
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).primaryColor};
+  height: 30px;
+  transform: scale(1.2);
+`
+
+const HolidayDaysDay = styled.div`
+  padding: 5px 10px;
+  font-size: 1rem;
+`
+
 const WorkerItem = ({
   item,
   isCompanyEditProfil,
@@ -124,6 +150,8 @@ const WorkerItem = ({
   EditUserBackground,
   DeleteUserIconStyle,
   EditUserBackgroundContent,
+  ButtonDeleteStyle,
+  ButtonContent,
   companyId,
   userToken,
   index,
@@ -137,6 +165,7 @@ const WorkerItem = ({
   colorBlind,
   editedWorkersHours,
   selectEditedWorkersHours,
+  isAdmin,
 }) => {
   const [constTimeWorker, setConstTimeWorker] = useState(false)
   const [chooseTimeWorker, setChooseTimeWorker] = useState(false)
@@ -451,12 +480,43 @@ const WorkerItem = ({
     setEditConstTimeWorker(true)
   }
 
+  const actualYear = new Date().getFullYear()
+
+  const filterNoConstDateToCountHolidays = item.noConstantWorkingHours.filter(
+    itemHour => {
+      const yearInDate = new Date(itemHour.start).getFullYear()
+      if (actualYear === yearInDate && itemHour.holidays) {
+        return true
+      } else {
+        return false
+      }
+    }
+  ).length
+
+  const holidayDaysInYear = isAdmin && (
+    <HolidayDays
+      colorBlind={colorBlind}
+      data-tip
+      data-for={`holidays${index}`}
+      data-place="top"
+    >
+      <HolidayDaysIcon
+        colorBlind={colorBlind}
+        isCompanyEditProfil={isCompanyEditProfil}
+      >
+        <MdToday />
+      </HolidayDaysIcon>
+      <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
+    </HolidayDays>
+  )
+
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
       selectHeight={selectHeight}
       colorBlind={colorBlind}
       editConstTimeWorker={editConstTimeWorker}
+      isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
@@ -466,6 +526,7 @@ const WorkerItem = ({
       </WorkerCircle>
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecialization}</WorkerSpecjalization>
+      {holidayDaysInYear}
       {isCompanyEditProfil && (
         <>
           <EditUserStyle>
@@ -768,6 +829,9 @@ const WorkerItem = ({
           </ReactTooltip>
         </>
       )}
+      <ReactTooltip id={`holidays${index}`} effect="float" multiline={true}>
+        <span>Liczba wykorzystanych dni wolnych w roku {actualYear}</span>
+      </ReactTooltip>
     </WorkerItemStyle>
   )
 }
