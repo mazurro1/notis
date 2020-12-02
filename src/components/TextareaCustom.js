@@ -10,8 +10,8 @@ const CustomStyleTextarea = styled.textarea`
   max-height: 300px;
   border: ${props =>
     props.isErrorText
-      ? `2px solid ${Colors(props.colorBlind).dangerColor}`
-      : `2px solid ${Colors(props.colorBlind).textNormalBlack}`};
+      ? `1px solid ${Colors(props.colorBlind).dangerColor}`
+      : `1px solid ${Colors(props.colorBlind).textNormalBlack}`};
   background-color: ${props => Colors(props.colorBlind).companyItemBackground};
   color: ${props => Colors(props.colorBlind).textNormalBlack};
   border-radius: 5px;

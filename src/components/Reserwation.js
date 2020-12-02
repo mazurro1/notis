@@ -3,13 +3,19 @@ import { Colors } from "../common/Colors"
 import styled from "styled-components"
 import SelectDataCalendar from "./SelectDataCalendar"
 import { MdClose } from "react-icons/md"
-import { fetchDoReserwation, fetchWorkerDisabledHours } from "../state/actions"
+import {
+  fetchDoReserwation,
+  fetchWorkerDisabledHours,
+  avaibleDateToReserwation,
+} from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { FaUser } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "../components/ButtonIcon"
-import { FaCalendarDay } from "react-icons/fa"
+import { FaCalendarDay, FaCalendarCheck } from "react-icons/fa"
 import { getMonthAndReturn } from "../common/Functions"
+import { CgSpinner } from "react-icons/cg"
+import HoursItemReserwation from "./HoursItemReserwation"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -68,12 +74,15 @@ const PriceService = styled.span`
 const ItemSummary = styled.div`
   background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
   position: relative;
-  padding: 10px;
   border-radius: 5px;
   max-width: 90vw;
-  width: 600px;
+  width: 800px;
   padding-top: 60px;
   overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const TextReserwation = styled.div`
@@ -160,14 +169,54 @@ const WorkerItem = styled.div`
 
 const WorkerSpecializationStyle = styled.div`
   font-size: 0.8rem;
+  color: ${props =>
+    props.active
+      ? Colors(props.colorBlind).textNormalWhite
+      : Colors(props.colorBlind).textNormalBlack};
+`
+
+const WorkerNameStyle = styled.div`
+  color: ${props =>
+    props.active
+      ? Colors(props.colorBlind).textNormalWhite
+      : Colors(props.colorBlind).textNormalBlack};
 `
 
 const ButtonIconStyle = styled.div`
   display: inline-block;
 `
 
+const SpinnerToLoadAvaibleHours = styled.div`
+  height: 34px;
+  width: 32px;
+  font-size: 2rem;
+  color: ${props => Colors(props.colorBlind).primaryColor};
+  animation-name: spinner;
+  animation-duration: 0.9s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  margin-bottom: 10px;
+`
+
+const NoAvaibleHourStyle = styled.div`
+  margin-bottom: 10px;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
+`
+
+const AllAvaibleHours = styled.div`
+  max-height: 300px;
+  width: 100%;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+`
+
 const Reserwation = ({
   handleCloseReserwation,
+  reserwationEnable,
   reserwationData = {
     extraCost: false,
     extraTime: false,
@@ -180,11 +229,18 @@ const Reserwation = ({
     workers: [],
   },
 }) => {
+  const [selectedHour, setSelectedHour] = useState(null)
   const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
   const [isDataActive, setIsDataActive] = useState(false)
   const [isOtherActive, setIsOtherActive] = useState(true)
   const [selectedDate, setSelectedDate] = useState(null)
   const user = useSelector(state => state.user)
+  const avaibleHoursReserwation = useSelector(
+    state => state.avaibleHoursReserwation
+  )
+  const avaibleHoursReserwationUpdate = useSelector(
+    state => state.avaibleHoursReserwationUpdate
+  )
   const colorBlind = useSelector(state => state.colorBlind)
   const dispatch = useDispatch()
 
@@ -200,11 +256,25 @@ const Reserwation = ({
           selectedWorkerUserId,
           selectedDay,
           selectedMonth,
-          selectedYear
+          selectedYear,
+          reserwationData.time
         )
       )
     }
   }, [selectedDate, selectedWorkerUserId])
+
+  useEffect(() => {
+    if (!!!reserwationEnable) {
+      setTimeout(() => {
+        setSelectedHour(null)
+        setSelectedWorkerUserId(null)
+        setIsDataActive(null)
+        setIsOtherActive(null)
+        setSelectedDate(null)
+        dispatch(avaibleDateToReserwation([]))
+      }, 400)
+    }
+  }, [reserwationEnable])
 
   const handleSelectDay = () => {
     setIsOtherActive(false)
@@ -224,7 +294,7 @@ const Reserwation = ({
           user.token,
           reserwationData.companyId,
           selectedWorkerUserId, //workerUserId
-          "13:00", //dateStart
+          selectedHour, //dateStart
           dateFullToSent, //dateFull
           reserwationData.serviceCost,
           reserwationData.time,
@@ -241,11 +311,24 @@ const Reserwation = ({
       if (selectedWorkerUserId === workerUserId) {
         setSelectedWorkerUserId(null)
         setSelectedDate(null)
+        dispatch(avaibleDateToReserwation([]))
       } else {
         setSelectedWorkerUserId(workerUserId)
       }
     } else {
       setSelectedWorkerUserId(workerUserId)
+    }
+  }
+
+  const handleClickDateToReserw = clickedHour => {
+    if (!!selectedHour) {
+      if (selectedHour === clickedHour) {
+        setSelectedHour(null)
+      } else {
+        setSelectedHour(clickedHour)
+      }
+    } else {
+      setSelectedHour(clickedHour)
     }
   }
 
@@ -281,10 +364,13 @@ const Reserwation = ({
         <div>
           <FaUser />
         </div>
-        <div>
+        <WorkerNameStyle active={ownerIsSelected} colorBlind={colorBlind}>
           {reserwationData.ownerData.name} {reserwationData.ownerData.surname}
-        </div>
-        <WorkerSpecializationStyle>
+        </WorkerNameStyle>
+        <WorkerSpecializationStyle
+          colorBlind={colorBlind}
+          active={ownerIsSelected}
+        >
           {reserwationData.ownerData.specialization}
         </WorkerSpecializationStyle>
       </WorkerItem>
@@ -302,8 +388,6 @@ const Reserwation = ({
       ? selectedWorkerUserId === worker.user._id
       : false
 
-    console.log(worker)
-
     return (
       <WorkerItem
         key={index}
@@ -314,15 +398,74 @@ const Reserwation = ({
         <div>
           <FaUser />
         </div>
-        <div>
+        <WorkerNameStyle colorBlind={colorBlind} active={workerIsSelected}>
           {worker.user.name} {worker.user.surname}
-        </div>
-        <WorkerSpecializationStyle>
+        </WorkerNameStyle>
+        <WorkerSpecializationStyle
+          colorBlind={colorBlind}
+          active={workerIsSelected}
+        >
           {worker.specialization}
         </WorkerSpecializationStyle>
       </WorkerItem>
     )
   })
+
+  // const mapAvaibleHours = avaibleHoursReserwation.map((item, index) => {
+  //   const isHourActive = selectedHour === item
+  //   return (
+  //     <DateReserwStyle
+  //       colorBlind={colorBlind}
+  //       onClick={() => handleClickDateToReserw(item)}
+  //       active={isHourActive}
+  //       key={index}
+  //     >
+  //       {item}
+  //     </DateReserwStyle>
+  //   )
+  // })
+
+  const renderAvaibleHours = avaibleHoursReserwationUpdate ? (
+    <SpinnerToLoadAvaibleHours colorBlind={colorBlind}>
+      <CgSpinner />
+    </SpinnerToLoadAvaibleHours>
+  ) : avaibleHoursReserwation.length > 0 ? (
+    <AllAvaibleHours>
+      <HoursItemReserwation
+        colorBlind={colorBlind}
+        maxHourToFilter={12}
+        minHourToFilter={0}
+        itemsHours={avaibleHoursReserwation}
+        title="Rano:"
+        handleClickDateToReserw={handleClickDateToReserw}
+        selectedHour={selectedHour}
+      />
+      <HoursItemReserwation
+        colorBlind={colorBlind}
+        maxHourToFilter={18}
+        minHourToFilter={12}
+        itemsHours={avaibleHoursReserwation}
+        title="Po południu:"
+        handleClickDateToReserw={handleClickDateToReserw}
+        selectedHour={selectedHour}
+      />
+      <HoursItemReserwation
+        colorBlind={colorBlind}
+        maxHourToFilter={24}
+        minHourToFilter={18}
+        itemsHours={avaibleHoursReserwation}
+        title="Wieczorem:"
+        handleClickDateToReserw={handleClickDateToReserw}
+        selectedHour={selectedHour}
+      />
+    </AllAvaibleHours>
+  ) : (
+    <NoAvaibleHourStyle colorBlind={colorBlind}>
+      {!!selectedWorkerUserId && !!selectedDate
+        ? "Brak dostępnych godzin"
+        : "Aby zobaczyć dostępne godziny, musisz wybrać pracownika oraz odpowiadający Tobie termin."}
+    </NoAvaibleHourStyle>
+  )
 
   let selectedDateDay = ""
   let selectedDateYear = ""
@@ -336,6 +479,8 @@ const Reserwation = ({
     selectedDateFullMonth = selectedDate.getMonth() + 1
   }
 
+  const disabledReserwButton = !!selectedHour & !!selectedWorkerUserId
+
   return (
     <>
       <CSSTransition
@@ -345,59 +490,77 @@ const Reserwation = ({
         unmountOnExit
       >
         <ItemSummary colorBlind={colorBlind}>
-          <SummaryReserwationText colorBlind={colorBlind}>
-            Rezerwacja
-          </SummaryReserwationText>
-          <ServiceItem colorBlind={colorBlind}>
-            <LeftContent>
-              <TitleService>
-                {reserwationData.serviceName}
-                <PriceService colorBlind={colorBlind}>
-                  {`${reserwationData.serviceCost}zł ${
-                    reserwationData.extraCost ? "+" : ""
-                  }`}
-                </PriceService>
-                <PriceService otherColor colorBlind={colorBlind}>
-                  {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
-                </PriceService>
-              </TitleService>
-              <ServiceParagraph>{reserwationData.serviceText}</ServiceParagraph>
-            </LeftContent>
-          </ServiceItem>
-          <TextReserwation colorBlind={colorBlind}>
-            Wybierz pracownika:
-          </TextReserwation>
-          <ContentWorkers>
-            {ownerWorkerToSelect}
-            {mapWorkersToSelect}
-          </ContentWorkers>
-          <TextReserwation colorBlind={colorBlind}>
-            Wybierz dzień:
-          </TextReserwation>
+          <PaddingContent>
+            <SummaryReserwationText colorBlind={colorBlind}>
+              Rezerwacja
+            </SummaryReserwationText>
+            <ServiceItem colorBlind={colorBlind}>
+              <LeftContent>
+                <TitleService>
+                  {reserwationData.serviceName}
+                  <PriceService colorBlind={colorBlind}>
+                    {`${reserwationData.serviceCost}zł ${
+                      reserwationData.extraCost ? "+" : ""
+                    }`}
+                  </PriceService>
+                  <PriceService otherColor colorBlind={colorBlind}>
+                    {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
+                  </PriceService>
+                </TitleService>
+                <ServiceParagraph>
+                  {reserwationData.serviceText}
+                </ServiceParagraph>
+              </LeftContent>
+            </ServiceItem>
+            <TextReserwation colorBlind={colorBlind}>
+              Wybierz pracownika:
+            </TextReserwation>
+            <ContentWorkers>
+              {ownerWorkerToSelect}
+              {mapWorkersToSelect}
+            </ContentWorkers>
+            <TextReserwation colorBlind={colorBlind}>
+              Wybierz dzień:
+            </TextReserwation>
 
-          <ButtonIconStyle>
+            <ButtonIconStyle>
+              <ButtonIcon
+                title={
+                  selectedDate
+                    ? `${selectedDateMonth} ${selectedDateDay}-${selectedDateFullMonth}-${selectedDateYear}`
+                    : "Wybierz dzień"
+                }
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaCalendarDay />}
+                onClick={handleSelectDay}
+                uppercase
+                disabled={!!!selectedWorkerUserId}
+              />
+            </ButtonIconStyle>
+
+            <TextReserwation colorBlind={colorBlind}>
+              Wybierz godzinę:
+            </TextReserwation>
+            {renderAvaibleHours}
             <ButtonIcon
-              title={
-                selectedDate
-                  ? `${selectedDateMonth} ${selectedDateDay}-${selectedDateFullMonth}-${selectedDateYear}`
-                  : "Wybierz dzień"
-              }
+              title="Rezerwuj"
               fontIconSize="20"
               fontSize="16"
-              icon={<FaCalendarDay />}
-              onClick={handleSelectDay}
+              icon={<FaCalendarCheck />}
+              onClick={handleDoReserwation}
               uppercase
-              disabled={!!!selectedWorkerUserId}
+              customColorButton={Colors(colorBlind).successColorDark}
+              customColorIcon={Colors(colorBlind).successColor}
+              disabled={!disabledReserwButton}
             />
-          </ButtonIconStyle>
-
-          <TextReserwation colorBlind={colorBlind}>
-            Wybierz godzinę:
-          </TextReserwation>
-          <button onClick={handleDoReserwation}>Rezerwuj</button>
-          <ClosePopup onClick={handleCloseReserwation} colorBlind={colorBlind}>
-            <MdClose />
-          </ClosePopup>
+            <ClosePopup
+              onClick={handleCloseReserwation}
+              colorBlind={colorBlind}
+            >
+              <MdClose />
+            </ClosePopup>
+          </PaddingContent>
         </ItemSummary>
       </CSSTransition>
       <CSSTransition

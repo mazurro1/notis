@@ -225,6 +225,17 @@ export const sortItemsInArray = (arrayToSort, itemName) => {
   return arrayToSort
 }
 
+export const sortItemsInArrayNumber = (arrayToSort, itemName) => {
+  arrayToSort.sort((a, b) => {
+    const firstItemToSort = a[itemName]
+    const secondItemToSort = b[itemName]
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+  return arrayToSort
+}
+
 export const changeCategoryToInWorker = (
   arrayWorkers,
   arrayName,

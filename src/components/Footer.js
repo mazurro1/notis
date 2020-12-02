@@ -88,7 +88,7 @@ const Footer = () => {
           </a>
         </FacebookIcon>
         <ReservedRights>
-          © 2020 Notise Wszystkie prawa zastrzeżone
+          © 2020 Nootis Wszystkie prawa zastrzeżone
         </ReservedRights>
       </FooterDiv>
     </WrapperFooter>

@@ -22,6 +22,8 @@ import AllCategoryOfServices from "./ItemsContentCompanyProfil/AllCategoryOfServ
 import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
 import { MdEdit } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
+import DaysOffContent from "./ItemsContentCompanyProfil/DaysOffContent"
+import HappyHoursContent from "./ItemsContentCompanyProfil/HappyHoursContent"
 
 const TextH1 = styled.div`
   position: relative;
@@ -184,11 +186,14 @@ const ContentCompanyProfil = ({
     website: null,
   })
   const [reservationEveryTime, setReservationEveryTime] = useState(null)
+  const [reservationMonthTime, setReservationMonthTime] = useState(null)
   const [newOwnerSpecialization, setNewOwnerSpecialization] = useState(null)
   const [newOwnerServicesCategory, setNewOwnerServicesCategory] = useState(null)
   const [changesTimeOpen, setChangesTimeOpen] = useState(false)
   const [openingHoursToSent, setOpeningHoursToSent] = useState(false)
 
+  const [deletedDayOffToSave, setDeletedDayOffToSave] = useState([])
+  const [createdDayOffToSave, setCreatedDayOffToSave] = useState([])
   const [deletedItemsServices, setDeletedItemsServices] = useState([])
   const [newItemsServices, setNewItemsServices] = useState([])
   const [editedItemsServices, setEditedItemsServices] = useState([])
@@ -200,7 +205,8 @@ const ContentCompanyProfil = ({
   console.log("edited workers", editedWorkers)
   console.log("edited workers hours", editedWorkersHours)
   // console.log("newOwnerSpecialization", newOwnerSpecialization)
-
+  console.log("deletedDayOffToSave", deletedDayOffToSave)
+  console.log("createdDayOffToSave", createdDayOffToSave)
   const user = useSelector(state => state.user)
   const colorBlind = useSelector(state => state.colorBlind)
   const resetCompany = useSelector(state => state.resetCompany)
@@ -209,7 +215,10 @@ const ContentCompanyProfil = ({
 
   useEffect(() => {
     if (!!resetCompany) {
+      setCreatedDayOffToSave([])
+      setDeletedDayOffToSave([])
       setReservationEveryTime(null)
+      setReservationMonthTime(null)
       setDeletedItemsServices([])
       setNewItemsServices([])
       setEditedItemsServices([])
@@ -405,6 +414,7 @@ const ContentCompanyProfil = ({
     newOwnerServicesCategory !== null ||
     editedWorkers.length > 0 ||
     !!reservationEveryTime ||
+    !!reservationMonthTime ||
     !!textAboutUs ||
     !!textRezerwationText ||
     isChangesInAdress ||
@@ -415,6 +425,8 @@ const ContentCompanyProfil = ({
     editedItemsServices.length > 0 ||
     editedWorkersHours.length > 0 ||
     deletedItemsServices.length > 0 ||
+    deletedDayOffToSave.length > 0 ||
+    createdDayOffToSave.length > 0 ||
     (companyPaused !== company.pauseCompany && companyPaused !== null)
 
   const handleSaveChanges = () => {
@@ -449,6 +461,10 @@ const ContentCompanyProfil = ({
         new: newItemsServices,
       }
 
+      const deletedDayOffToSaveIsChanges =
+        deletedDayOffToSave.length > 0 ? deletedDayOffToSave : null
+      const createdDayOffToSaveIsChanges =
+        createdDayOffToSave.length > 0 ? createdDayOffToSave : null
       dispatch(
         fetchUpdateCompanyProfil(
           user.token,
@@ -463,8 +479,11 @@ const ContentCompanyProfil = ({
           companyPausedToSent,
           services,
           reservationEveryTime,
+          reservationMonthTime,
           newOwnerServicesCategory,
-          editedWorkersHours
+          editedWorkersHours,
+          createdDayOffToSaveIsChanges,
+          deletedDayOffToSaveIsChanges
         )
       )
       setCompanyPaused(null)
@@ -540,7 +559,9 @@ const ContentCompanyProfil = ({
               handleChangeUpodateAdress={handleChangeUpodateAdress}
               setCompanyPaused={setCompanyPaused}
               setReservationEveryTime={setReservationEveryTime}
+              setReservationMonthTime={setReservationMonthTime}
               reservationEveryTimeServer={company.reservationEveryTime}
+              reservationMonthServer={company.reservationMonthTime}
               colorBlind={colorBlind}
             />
           </RightColumnItem>
@@ -573,6 +594,38 @@ const ContentCompanyProfil = ({
               colorBlind={colorBlind}
             />
           </RightColumnItem>
+          {(isAdmin || isCompanyEditProfil) && (
+            <>
+              <RightColumnItem
+                {...companyEditProfilProps}
+                colorBlind={colorBlind}
+              >
+                <DaysOffContent
+                  {...companyEditProfilProps}
+                  companyEditProfilProps={companyEditProfilProps}
+                  TitleRightColumn={TitleRightColumn}
+                  colorBlind={colorBlind}
+                  ButtonEditPosition={ButtonEditPosition}
+                  setDeletedDayOffToSave={setDeletedDayOffToSave}
+                  companyDaysOff={company.daysOff}
+                  setCreatedDayOffToSave={setCreatedDayOffToSave}
+                  deletedDayOffToSave={deletedDayOffToSave}
+                  createdDayOffToSave={createdDayOffToSave}
+                />
+              </RightColumnItem>
+              <RightColumnItem
+                {...companyEditProfilProps}
+                colorBlind={colorBlind}
+              >
+                <HappyHoursContent
+                  {...companyEditProfilProps}
+                  companyEditProfilProps={companyEditProfilProps}
+                  TitleRightColumn={TitleRightColumn}
+                  colorBlind={colorBlind}
+                />
+              </RightColumnItem>
+            </>
+          )}
           <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
             <OurWorkersContent
               TitleRightColumn={TitleRightColumn}

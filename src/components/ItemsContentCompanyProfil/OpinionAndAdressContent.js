@@ -15,6 +15,7 @@ import { CSSTransition } from "react-transition-group"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
+import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
 import { useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
@@ -37,7 +38,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "300px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "500px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -165,8 +166,10 @@ const IsCompanyPaused = styled.div`
 
 const ReserwationItem = styled.div`
   height: 30px;
-  width: 50px;
+  width: 65px;
   display: flex;
+  margin-bottom: 5px;
+  margin-right: ${props => (props.index ? "0px" : "5px")};
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -175,7 +178,6 @@ const ReserwationItem = styled.div`
       ? Colors(props.colorBlind).secondColor
       : Colors(props.colorBlind).secondDarkColor};
   border-radius: 5px;
-  margin: 5px;
   color: white;
   cursor: pointer;
   color: ${props => Colors(props.colorBlind).textNormalWhite};
@@ -188,11 +190,39 @@ const ReserwationItem = styled.div`
   }
 `
 
-const AllReserwationTime = styled.div`
+const ReserwationMonth = styled.div`
+  height: 30px;
+  padding: 5px 10px;
   display: flex;
+  margin-bottom: 5px;
+  margin-right: ${props => (props.index ? "0px" : "12px")};
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  background-color: ${props =>
+    props.active
+      ? Colors(props.colorBlind).secondColor
+      : Colors(props.colorBlind).secondDarkColor};
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  transition-property: transform, background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  user-select: none;
+  font-size: 0.9rem;
+  &:hover {
+    transform: scale(1.2);
+  }
+`
+
+const AllReserwationTime = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
 `
 
 const OpinionAndAdressContent = ({
@@ -212,7 +242,9 @@ const OpinionAndAdressContent = ({
   pauseCompany = true,
   companyName = "",
   setReservationEveryTime,
-  reservationEveryTimeServer = 5,
+  setReservationMonthTime,
+  reservationEveryTimeServer,
+  reservationMonthServer,
 }) => {
   const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
@@ -223,9 +255,13 @@ const OpinionAndAdressContent = ({
   const [reserwationEver, setReserwationEver] = useState(
     reservationEveryTimeServer
   )
+  const [reserwationMonth, setReserwationMonth] = useState(
+    reservationMonthServer
+  )
 
   const colorBlind = useSelector(state => state.colorBlind)
   const disabledButtonSubmit =
+    reserwationMonth !== reservationMonthServer ||
     reserwationEver !== reservationEveryTimeServer ||
     companyNameInput !== companyName ||
     cityInput !== city ||
@@ -256,6 +292,11 @@ const OpinionAndAdressContent = ({
       } else {
         setCompanyPaused(!pauseCompany)
       }
+      if (reserwationMonth !== reservationMonthServer) {
+        setReservationMonthTime(reserwationMonth)
+      } else {
+        setReservationMonthTime(null)
+      }
       if (reserwationEver !== reservationEveryTimeServer) {
         setReservationEveryTime(reserwationEver)
       } else {
@@ -280,7 +321,9 @@ const OpinionAndAdressContent = ({
     setCompanyPausedItem(pauseCompany)
     setCompanyPaused(null)
     setReservationEveryTime(null)
+    setReservationMonthTime(null)
     setReserwationEver(reservationEveryTimeServer)
+    setReserwationMonth(reservationMonthServer)
   }
 
   const handleEdit = () => {
@@ -299,6 +342,10 @@ const OpinionAndAdressContent = ({
     setReserwationEver(item)
   }
 
+  const handleClickReserwationMonth = item => {
+    setReserwationMonth(item)
+  }
+
   const mapReserwationDelay = ReserwationDelay.map((item, index) => {
     const isActive = reserwationEver === item
     return (
@@ -307,9 +354,25 @@ const OpinionAndAdressContent = ({
         active={isActive}
         onClick={() => handleClickReserwationEver(item)}
         colorBlind={colorBlind}
+        index={index === 3}
       >
-        <div>{item}</div>
+        <div>{item} min</div>
       </ReserwationItem>
+    )
+  })
+
+  const mapReserwationDelayMonth = ReserwationDelayMonth.map((item, index) => {
+    const isActive = reserwationMonth === item.id
+    return (
+      <ReserwationMonth
+        key={index}
+        active={isActive}
+        onClick={() => handleClickReserwationMonth(item.id)}
+        colorBlind={colorBlind}
+        index={index === 11}
+      >
+        <div>{`${item.id} ${item.month}`}</div>
+      </ReserwationMonth>
     )
   })
 
@@ -446,6 +509,10 @@ const OpinionAndAdressContent = ({
                   />
                   Rezerwacja co:
                   <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
+                  Rezerwacja do:
+                  <AllReserwationTime>
+                    {mapReserwationDelayMonth}
+                  </AllReserwationTime>
                   <CheckboxStyle colorBlind={colorBlind}>
                     <Checkbox
                       theme="material-checkbox"

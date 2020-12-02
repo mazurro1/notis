@@ -138,8 +138,8 @@ const OpeningHoursItem = ({
 
   const handleResetButton = () => {
     setItemEditable(prevState => !prevState)
-    setItemTimeStart(item.start)
-    setItemTimeEnd(item.end)
+    setItemTimeStart(defaultValue.start)
+    setItemTimeEnd(defaultValue.end)
     handleResetOneDay(item, index)
   }
 

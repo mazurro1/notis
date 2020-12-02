@@ -22,6 +22,8 @@ const OpeningHoursContent = ({
   editMode,
   colorBlind,
 }) => {
+  const [openingHoursComponent, setOpeningHoursComponent] = useState(false)
+  const [changesComponent, setChangesComponent] = useState(false)
   const [editable, setEditable] = useState(false)
   useEffect(() => {
     setEditable(false)
@@ -193,11 +195,11 @@ const OpeningHoursContent = ({
       JSON.stringify(transformedHoursDataCheck) ==
       JSON.stringify(arrayHoursData)
     ) {
-      setChangesTimeOpen(false)
-      setOpeningHoursToSent(null)
+      setChangesComponent(false)
+      setOpeningHoursComponent(null)
     } else {
-      setChangesTimeOpen(true)
-      setOpeningHoursToSent(arrayHoursData)
+      setChangesComponent(true)
+      setOpeningHoursComponent(arrayHoursData)
     }
   }
 
@@ -215,7 +217,7 @@ const OpeningHoursContent = ({
     }
     setArrayHoursData(transformedHoursData)
     setEditable(false)
-    setChangesTimeOpen(false)
+    setChangesComponent(false)
   }
 
   const handleResetOneDay = (day, index) => {
@@ -232,9 +234,14 @@ const OpeningHoursContent = ({
     setArrayHoursData(newArrToResetOneDay)
   }
 
+  const handleSaveAllComponent = () => {
+    handleClickEdit()
+    setOpeningHoursToSent(openingHoursComponent)
+    setChangesTimeOpen(changesComponent)
+  }
+
   const date = new Date()
   const actualDay = date.getDay()
-
   const mapDayHours = arrayHoursData.map((item, index) => {
     return (
       <OpeningHoursItem
@@ -285,7 +292,7 @@ const OpeningHoursContent = ({
                     icon={<FaSave />}
                     customColorButton={Colors(colorBlind).successColorDark}
                     customColorIcon={Colors(colorBlind).successColor}
-                    onClick={handleClickEdit}
+                    onClick={handleSaveAllComponent}
                   />
                 </MarginButton>
               </ButtonEditPosition>

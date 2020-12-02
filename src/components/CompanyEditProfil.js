@@ -33,7 +33,6 @@ const CompanyEditProfil = () => {
   )
 
   const isAdminCompany = user.userId === user.company.owner._id
-  console.log(user.company)
   return (
     <>
       {user.company.adress && (

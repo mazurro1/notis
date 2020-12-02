@@ -482,33 +482,33 @@ const WorkerItem = ({
 
   const actualYear = new Date().getFullYear()
 
-  const filterNoConstDateToCountHolidays = item.noConstantWorkingHours.filter(
-    itemHour => {
-      const yearInDate = new Date(itemHour.start).getFullYear()
-      if (actualYear === yearInDate && itemHour.holidays) {
-        return true
-      } else {
-        return false
-      }
-    }
-  ).length
+  // const filterNoConstDateToCountHolidays = item.noConstantWorkingHours.filter(
+  //   itemHour => {
+  //     const yearInDate = new Date(itemHour.start).getFullYear()
+  //     if (actualYear === yearInDate && itemHour.holidays) {
+  //       return true
+  //     } else {
+  //       return false
+  //     }
+  //   }
+  // ).length
 
-  const holidayDaysInYear = isAdmin && (
-    <HolidayDays
-      colorBlind={colorBlind}
-      data-tip
-      data-for={`holidays${index}`}
-      data-place="top"
-    >
-      <HolidayDaysIcon
-        colorBlind={colorBlind}
-        isCompanyEditProfil={isCompanyEditProfil}
-      >
-        <MdToday />
-      </HolidayDaysIcon>
-      <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
-    </HolidayDays>
-  )
+  // const holidayDaysInYear = isAdmin && (
+  //   <HolidayDays
+  //     colorBlind={colorBlind}
+  //     data-tip
+  //     data-for={`holidays${index}`}
+  //     data-place="top"
+  //   >
+  //     <HolidayDaysIcon
+  //       colorBlind={colorBlind}
+  //       isCompanyEditProfil={isCompanyEditProfil}
+  //     >
+  //       <MdToday />
+  //     </HolidayDaysIcon>
+  //     <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
+  //   </HolidayDays>
+  // )
 
   return (
     <WorkerItemStyle
@@ -516,7 +516,7 @@ const WorkerItem = ({
       selectHeight={selectHeight}
       colorBlind={colorBlind}
       editConstTimeWorker={editConstTimeWorker}
-      isAdmin={isAdmin}
+      // isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
@@ -526,7 +526,7 @@ const WorkerItem = ({
       </WorkerCircle>
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecialization}</WorkerSpecjalization>
-      {holidayDaysInYear}
+      {/* {holidayDaysInYear} */}
       {isCompanyEditProfil && (
         <>
           <EditUserStyle>
@@ -829,9 +829,9 @@ const WorkerItem = ({
           </ReactTooltip>
         </>
       )}
-      <ReactTooltip id={`holidays${index}`} effect="float" multiline={true}>
+      {/* <ReactTooltip id={`holidays${index}`} effect="float" multiline={true}>
         <span>Liczba wykorzystanych dni wolnych w roku {actualYear}</span>
-      </ReactTooltip>
+      </ReactTooltip> */}
     </WorkerItemStyle>
   )
 }

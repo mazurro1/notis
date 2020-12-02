@@ -12,7 +12,7 @@ import { FaUserPlus } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
 
 const WorkerContent = styled.div`
-  display: ${props => (props.isCompanyEditProfil ? "block" : "flex")};
+  display: ${props => (props.isCompanyEditProfil ? "block" : "block")};
   flex-direction: row;
   justify-content: space-around;
   align-items: center;

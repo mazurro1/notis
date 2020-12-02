@@ -269,35 +269,35 @@ const OwnerWorker = ({
     user: owner,
   }
 
-  const actualYear = new Date().getFullYear()
+  // const actualYear = new Date().getFullYear()
 
-  const filterNoConstDateToCountHolidays = ownerData.noConstantWorkingHours.filter(
-    itemHour => {
-      const yearInDate = new Date(itemHour.start).getFullYear()
-      if (actualYear === yearInDate && itemHour.holidays) {
-        return true
-      } else {
-        return false
-      }
-    }
-  ).length
+  // const filterNoConstDateToCountHolidays = ownerData.noConstantWorkingHours.filter(
+  //   itemHour => {
+  //     const yearInDate = new Date(itemHour.start).getFullYear()
+  //     if (actualYear === yearInDate && itemHour.holidays) {
+  //       return true
+  //     } else {
+  //       return false
+  //     }
+  //   }
+  // ).length
 
-  const holidayDaysInYear = isAdmin && (
-    <HolidayDays
-      colorBlind={colorBlind}
-      data-tip
-      data-for={`holidaysOwner`}
-      data-place="top"
-    >
-      <HolidayDaysIcon
-        colorBlind={colorBlind}
-        isCompanyEditProfil={isCompanyEditProfil}
-      >
-        <MdToday />
-      </HolidayDaysIcon>
-      <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
-    </HolidayDays>
-  )
+  // const holidayDaysInYear = isAdmin && (
+  //   <HolidayDays
+  //     colorBlind={colorBlind}
+  //     data-tip
+  //     data-for={`holidaysOwner`}
+  //     data-place="top"
+  //   >
+  //     <HolidayDaysIcon
+  //       colorBlind={colorBlind}
+  //       isCompanyEditProfil={isCompanyEditProfil}
+  //     >
+  //       <MdToday />
+  //     </HolidayDaysIcon>
+  //     <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
+  //   </HolidayDays>
+  // )
 
   return (
     <WorkerItemStyle
@@ -305,7 +305,7 @@ const OwnerWorker = ({
       selectHeight={selectHeight}
       colorBlind={colorBlind}
       editConstTimeWorker={editConstTimeWorker}
-      isAdmin={isAdmin}
+      // isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
@@ -315,7 +315,7 @@ const OwnerWorker = ({
       </WorkerCircle>
       <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecializationOwner}</WorkerSpecjalization>
-      {holidayDaysInYear}
+      {/* {holidayDaysInYear} */}
       {isCompanyEditProfil && (
         <>
           <EditUserStyle>
@@ -517,9 +517,9 @@ const OwnerWorker = ({
           </ReactTooltip>
         </>
       )}
-      <ReactTooltip id={`holidaysOwner`} effect="float" multiline={true}>
+      {/* <ReactTooltip id={`holidaysOwner`} effect="float" multiline={true}>
         <span>Liczba wykorzystanych dni wolnych w roku {actualYear}</span>
-      </ReactTooltip>
+      </ReactTooltip> */}
     </WorkerItemStyle>
   )
 }

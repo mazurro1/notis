@@ -459,6 +459,7 @@ const Navigation = ({ children, isMainPage }) => {
     >
       <Reserwation
         reserwationData={reserwationData}
+        reserwationEnable={reserwationEnable}
         handleCloseReserwation={handleCloseReserwation}
       />
     </Popup>
@@ -636,7 +637,7 @@ const Navigation = ({ children, isMainPage }) => {
         <NavigationDiv colorBlind={colorBlind}>
           <NavigationItems>
             <LogoStyle>
-              <LinkEffect text="NOTISE" path="/" />
+              <LinkEffect text="NOOTIS" path="/" />
             </LogoStyle>
             <ButtonsNav>
               <ButtonNavStyle>

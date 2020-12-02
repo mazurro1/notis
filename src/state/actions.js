@@ -464,6 +464,23 @@ export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
 export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
 export const CHANGE_RESERWATION_VALUE = "CHANGE_RESERWATION_VALUE"
 export const CHANGE_EDITED_WORKER_HOURS = "CHANGE_EDITED_WORKER_HOURS"
+export const AVAIBLE_DATE_TO_RESERWATION = "AVAIBLE_DATE_TO_RESERWATION"
+export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
+  "AVAIBLE_DATE_TO_RESERWATION_UPDATE"
+
+export const avaibleDateToReserwationUpdate = value => {
+  return {
+    type: AVAIBLE_DATE_TO_RESERWATION_UPDATE,
+    value: value,
+  }
+}
+
+export const avaibleDateToReserwation = date => {
+  return {
+    type: AVAIBLE_DATE_TO_RESERWATION,
+    date: date,
+  }
+}
 
 export const changeEditedWorkerHours = item => {
   return {
@@ -816,8 +833,11 @@ export const fetchUpdateCompanyProfil = (
   companyPaused,
   services,
   reservationEveryTime,
+  reservationMonthTime,
   newOwnerServicesCategory,
-  editedWorkersHours
+  editedWorkersHours,
+  createdDayOffToSaveIsChanges,
+  deletedDayOffToSaveIsChanges
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -836,8 +856,11 @@ export const fetchUpdateCompanyProfil = (
           companyPaused: companyPaused,
           services: services,
           reservationEveryTime: reservationEveryTime,
+          reservationMonthTime: reservationMonthTime,
           ownerSerwiceCategory: newOwnerServicesCategory,
           editedWorkersHours: editedWorkersHours,
+          createdDayOff: createdDayOffToSaveIsChanges,
+          deletedDayOff: deletedDayOffToSaveIsChanges,
         },
         {
           headers: {
@@ -897,6 +920,7 @@ export const fetchDoReserwation = (
       )
       .then(response => {
         dispatch(addAlertItem("Dokonano rezerwacji.", "green"))
+        dispatch(changeReserwationValue(null))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)
@@ -916,9 +940,11 @@ export const fetchWorkerDisabledHours = (
   selectedWorkerUserId,
   selectedDay,
   selectedMonth,
-  selectedYear
+  selectedYear,
+  timeReserwation
 ) => {
   return dispatch => {
+    dispatch(avaibleDateToReserwationUpdate(true))
     return axios
       .post(
         `${Site.serverUrl}/get-worker-disabled-hours`,
@@ -928,6 +954,7 @@ export const fetchWorkerDisabledHours = (
           selectedDay: selectedDay,
           selectedMonth: selectedMonth,
           selectedYear: selectedYear,
+          timeReserwation: timeReserwation,
         },
         {
           headers: {
@@ -936,8 +963,16 @@ export const fetchWorkerDisabledHours = (
         }
       )
       .then(response => {
-        console.log(response)
+        setTimeout(() => {
+          dispatch(avaibleDateToReserwationUpdate(false))
+          dispatch(avaibleDateToReserwation(response.data.avaibleHours))
+        }, 1000)
       })
-      .catch(error => {})
+      .catch(error => {
+        setTimeout(() => {
+          dispatch(avaibleDateToReserwationUpdate(false))
+          dispatch(avaibleDateToReserwation([]))
+        }, 1000)
+      })
   }
 }

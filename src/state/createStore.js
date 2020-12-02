@@ -35,6 +35,8 @@ import {
   CHANGE_RESERWATION_VALUE,
   CHANGE_EDIT_WORKER_HOURS,
   CHANGE_EDITED_WORKER_HOURS,
+  AVAIBLE_DATE_TO_RESERWATION,
+  AVAIBLE_DATE_TO_RESERWATION_UPDATE,
 } from "./actions"
 
 const initialState = {
@@ -170,6 +172,8 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  avaibleHoursReserwation: [],
+  avaibleHoursReserwationUpdate: false,
   resetCompany: false,
   reserwationData: {},
   reserwationEnable: false,
@@ -338,8 +342,17 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case AVAIBLE_DATE_TO_RESERWATION_UPDATE:
+      return {
+        ...state,
+        avaibleHoursReserwationUpdate: action.value,
+      }
+    case AVAIBLE_DATE_TO_RESERWATION:
+      return {
+        ...state,
+        avaibleHoursReserwation: action.date,
+      }
     case CHANGE_EDITED_WORKER_HOURS:
-      console.log(action.item)
       return {
         ...state,
         editedWorkersHours: action.item,

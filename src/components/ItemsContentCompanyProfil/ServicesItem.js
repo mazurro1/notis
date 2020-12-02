@@ -11,7 +11,7 @@ import {
   MdArrowBack,
   MdDeleteForever,
 } from "react-icons/md"
-import { FaDollarSign } from "react-icons/fa"
+import { FaDollarSign, FaCalendarAlt } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
@@ -75,10 +75,10 @@ const PriceService = styled.span`
   background-color: ${props =>
     props.isCompanyEditProfil
       ? props.otherColor
-        ? Colors(props.colorBlind).dangerColor
+        ? Colors(props.colorBlind).darkColor
         : Colors(props.colorBlind).secondDarkColor
       : props.otherColor
-      ? Colors(props.colorBlind).dangerColor
+      ? Colors(props.colorBlind).darkColor
       : Colors(props.colorBlind).primaryColorDark};
 
   color: ${props => Colors(props.colorBlind).textNormalWhite};
@@ -264,9 +264,9 @@ const ServicesItem = ({
           <ButtonIcon
             title="Rezerwuj"
             uppercase
-            fontIconSize="40"
+            fontIconSize="18"
             fontSize="14"
-            icon={<MdEdit />}
+            icon={<FaCalendarAlt />}
             secondColors={isCompanyEditProfil}
             onClick={() => handleClickReserwation(itemServices, companyId)}
           />
