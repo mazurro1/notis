@@ -33,6 +33,7 @@ import {
   changeEditWorkerHours,
   changeBlindStyle,
   changeDarkStyle,
+  fetchAllCompanys,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -230,6 +231,7 @@ const Navigation = ({ children, isMainPage }) => {
 
   useEffect(() => {
     console.log("update")
+    dispatch(fetchAllCompanys(1))
   }, [
     selectedDateAndTime,
     selectedName,
@@ -551,7 +553,7 @@ const Navigation = ({ children, isMainPage }) => {
     ) : (
       <ButtonNavStyle>
         <LinkEffect
-          path="/company"
+          path="/your-company"
           text={
             <ButtonIcon
               title="dla firm"

@@ -459,6 +459,7 @@ export const fetchResetPassword = (email, password, codeReset) => {
 // COMPANY ACTIONS
 // COMPANY ACTIONS
 
+export const UPDATE_PLACES_DATA = "UPDATE_PLACES_DATA"
 export const CHANGE_EDIT_WORKER_HOURS = "EDIT_WORKER_HOURS"
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
 export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
@@ -467,6 +468,21 @@ export const CHANGE_EDITED_WORKER_HOURS = "CHANGE_EDITED_WORKER_HOURS"
 export const AVAIBLE_DATE_TO_RESERWATION = "AVAIBLE_DATE_TO_RESERWATION"
 export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
   "AVAIBLE_DATE_TO_RESERWATION_UPDATE"
+export const UPDATE_PATCH_COMPANY_DATA = "UPDATE_PATCH_COMPANY_DATA"
+
+export const updatePlacesData = (data) => {
+  return {
+    type: UPDATE_PLACES_DATA,
+    data: data
+  }
+}
+
+export const updatePatchCompanyData = data => {
+  return {
+    type: UPDATE_PATCH_COMPANY_DATA,
+    data: data,
+  }
+}
 
 export const avaibleDateToReserwationUpdate = value => {
   return {
@@ -973,6 +989,61 @@ export const fetchWorkerDisabledHours = (
           dispatch(avaibleDateToReserwationUpdate(false))
           dispatch(avaibleDateToReserwation([]))
         }, 1000)
+      })
+  }
+}
+
+export const fetchPathCompany = (token, companyPath) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-path`,
+        {
+          companyPath: companyPath,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updatePatchCompanyData(response.data.companyDoc))
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+      })
+      .catch(error => {
+        setTimeout(() => {
+          dispatch(changeSpinner(false))
+        }, 1000)
+        dispatch(
+          addAlertItem("Błąd podczas pobierania danych o firmie.", "red")
+        )
+      })
+  }
+}
+
+
+export const fetchAllCompanys = (page) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/all-companys`,
+        {
+          page: page,
+        },
+      )
+      .then(response => {
+        dispatch(updatePlacesData(response.data.companysDoc))
+      })
+      .catch(error => {
+       
+        dispatch(
+          addAlertItem("Błąd podczas pobierania firm.", "red")
+        )
       })
   }
 }

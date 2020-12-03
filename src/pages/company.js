@@ -1,59 +1,16 @@
 import React from "react"
-import "../../style.css"
-import styled from "styled-components"
-import ButtonIcon from "../components/ButtonIcon"
-import { MdWork } from "react-icons/md"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  changeLoginVisible,
-  changeCreateCompanyVisible,
-} from "../state/actions"
+import { Router } from "@reach/router"
+import TakeCompanyData from "../components/TakeCompanyData"
+import CompanyNoPriv from "../components/CompanyNoPriv"
 
-const MarginTop = styled.div`
-  margin-top: 30px;
-`
-
-const Company = () => {
-  const user = useSelector(state => state.user)
-  const loginVisible = useSelector(state => state.loginVisible)
-  const createCompanyVisible = useSelector(state => state.createCompanyVisible)
-
-  const dispatch = useDispatch()
-
-  const handleToLogin = () => {
-    dispatch(changeLoginVisible(!loginVisible))
-  }
-
-  const handleCreateCompany = () => {
-    dispatch(changeCreateCompanyVisible(!createCompanyVisible))
-  }
-
-  const selectButton = !!user ? (
-    !!!user.company ? (
-      <ButtonIcon
-        title="Stwórz konto firmowe"
-        uppercase
-        fontIconSize="25"
-        fontSize="20"
-        icon={<MdWork />}
-        secondColors
-        onClick={handleCreateCompany}
-      />
-    ) : (
-      "Masz już konto"
-    )
-  ) : (
-    <ButtonIcon
-      title="Zaloguj się aby stworzyć konto firmowe"
-      uppercase
-      fontIconSize="25"
-      fontSize="20"
-      icon={<MdWork />}
-      secondColors
-      onClick={handleToLogin}
-    />
+const Companys = props => {
+  console.log(props)
+  const pathHost = props.host
+  return (
+    <Router>
+      <TakeCompanyData path="/company/:pathCompany" />
+      {/* <CompanyNoPriv default /> */}
+    </Router>
   )
-
-  return <MarginTop>{selectButton}</MarginTop>
 }
-export default Company
+export default Companys

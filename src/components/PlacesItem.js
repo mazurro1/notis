@@ -5,6 +5,7 @@ import ButtonIcon from "../components/ButtonIcon"
 import { CSSTransition } from "react-transition-group"
 import { MdWork } from "react-icons/md"
 import { useSelector } from "react-redux"
+import { LinkEffect } from "../common/LinkEffect"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -211,7 +212,7 @@ const PlacesItem = ({ item, filters, index }) => {
       </UnderMenuServices>
     </CSSTransition>
   )
-
+  console.log(item)
   return (
     <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
@@ -220,21 +221,24 @@ const PlacesItem = ({ item, filters, index }) => {
     >
       <PlaceItem colorBlind={colorBlind}>
         <PlaceImage>
-          <BackGroundImageCustomUrl url={item.image} />
+          {/* <BackGroundImageCustomUrl url={item.image} /> */}
+          <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
         </PlaceImage>
         <PlaceContent colorBlind={colorBlind}>
           <h1>{item.name}</h1>
           <MarginBottomTitle>
-            <h6>{item.adress}</h6>
+            <h6>{`${item.city}, ${item.district}, ${item.adress}`}</h6>
           </MarginBottomTitle>
           <p>{item.title}</p>
 
           {renderSelectedFilter}
 
           <OpinionMainDiv colorBlind={colorBlind}>
-            <PaddingOpinion>{item.avarageOpinions}</PaddingOpinion>
+            <PaddingOpinion>
+              {item.avarageOpinions ? item.avarageOpinions : 0}
+            </PaddingOpinion>
             <OpinionBottom colorBlind={colorBlind}>
-              Opinie: {item.countOpinions}
+              Opinie: {item.countOpinions ? item.countOpinions : 0}
             </OpinionBottom>
           </OpinionMainDiv>
           <ButtonReservContent>
@@ -249,11 +253,16 @@ const PlacesItem = ({ item, filters, index }) => {
               />
             </ButtonReserv>
             <ButtonReserv>
-              <ButtonIcon
-                title="REZERWUJ"
-                uppercase
-                fontIconSize="25"
-                icon={<MdWork />}
+              <LinkEffect
+                path={`/company/${item.linkPath}`}
+                text={
+                  <ButtonIcon
+                    title="REZERWUJ"
+                    uppercase
+                    fontIconSize="25"
+                    icon={<MdWork />}
+                  />
+                }
               />
             </ButtonReserv>
           </ButtonReservContent>

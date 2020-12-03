@@ -76,11 +76,11 @@ const Home = () => {
       threshold: 0.1,
       once: false,
     })
-  }, [loadingPlaces])
+  }, [loadingPlaces, placesData])
 
   const mapPlacesData = placesData.map((item, index) => {
     return (
-      <PlacesItem key={item.id} item={item} filters={filters} index={index} />
+      <PlacesItem key={item._id} item={item} filters={filters} index={index} />
     )
   })
 
@@ -147,9 +147,7 @@ const Home = () => {
           load places false
         </button>
       </div>
-      <div>
-        <LinkEffect text={<button>company</button>} path="/company-profil" />
-      </div>
+
       <CSSTransition
         in={!loadingPlaces}
         timeout={400}

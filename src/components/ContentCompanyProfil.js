@@ -502,15 +502,17 @@ const ContentCompanyProfil = ({
     <div>
       <TextH1 {...companyEditProfilProps} colorBlind={colorBlind}>
         {company.name}
-        <EditModeToChange
-          data-tip
-          data-for="editMode"
-          data-place="bottom"
-          onClick={handleClickEditMode}
-          colorBlind={colorBlind}
-        >
-          <MdEdit />
-        </EditModeToChange>
+        {isAdmin && isCompanyEditProfil && (
+          <EditModeToChange
+            data-tip
+            data-for="editMode"
+            data-place="bottom"
+            onClick={handleClickEditMode}
+            colorBlind={colorBlind}
+          >
+            <MdEdit />
+          </EditModeToChange>
+        )}
       </TextH1>
       <ContentDiv>
         <LeftColumn>
