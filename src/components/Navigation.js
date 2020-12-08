@@ -4,7 +4,13 @@ import { Industries } from "../common/Industries"
 import ButtonIcon from "../components/ButtonIcon"
 import ButtonTakeData from "../components/ButtonTakeData"
 import styled from "styled-components"
-import { FaUserPlus, FaUser, FaSearch, FaCalendarDay } from "react-icons/fa"
+import {
+  FaUserPlus,
+  FaUser,
+  FaSearch,
+  FaCalendarDay,
+  FaShoppingBag,
+} from "react-icons/fa"
 import { MdWork, MdPowerSettingsNew } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
@@ -169,6 +175,7 @@ const PaddingContent = styled.div`
 `
 
 const Navigation = ({ children, isMainPage }) => {
+  const [historyReserwations, setHistoryReserwations] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
   const [isDataActive, setIsDataActive] = useState(true)
@@ -309,6 +316,10 @@ const Navigation = ({ children, isMainPage }) => {
     dispatch(changeDarkStyle())
   }
 
+  const handleHistoryReserwations = () => {
+    setHistoryReserwations(prevState => !prevState)
+  }
+
   const mapIndustries = Industries.map((item, index) => {
     return (
       <PaddingRight key={index}>
@@ -447,11 +458,24 @@ const Navigation = ({ children, isMainPage }) => {
     <Popup
       popupEnable={createCompanyVisible}
       handleClose={handleCreateCompany}
-      maxWidth="400"
     >
       <CreateCompany />
     </Popup>
   )
+
+  const PopupHistoryReserwations = (
+    <Popup
+      popupEnable={historyReserwations}
+      handleClose={handleHistoryReserwations}
+      maxWidth="400"
+      title="Historia rezerwacji"
+      fullScreen
+      maxWidth="800"
+    >
+      History
+    </Popup>
+  )
+
 
   const PopupReserwation = (
     <Popup
@@ -526,7 +550,11 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const PopupUserProfil = (
-    <Popup popupEnable={userProfilVisible} handleClose={handleUserProfil}>
+    <Popup
+      popupEnable={userProfilVisible}
+      handleClose={handleUserProfil}
+      title="Dane użytkownika"
+    >
       <UserProfil />
     </Popup>
   )
@@ -570,6 +598,16 @@ const Navigation = ({ children, isMainPage }) => {
 
   const renderButtonsUp = !!user ? (
     <>
+      <ButtonNavStyle>
+        <ButtonIcon
+          title="Historia rezerwacji"
+          uppercase
+          fontIconSize="20"
+          fontSize="16"
+          icon={<FaShoppingBag />}
+          onClick={handleHistoryReserwations}
+        />
+      </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
           title={`${user.userName} ${user.userSurname}`}
@@ -635,6 +673,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupFilter}
       {PopupLocalization}
       {PopupUserProfil}
+      {PopupHistoryReserwations}
       <WrapperNavigation colorBlind={colorBlind}>
         <NavigationDiv colorBlind={colorBlind}>
           <NavigationItems>

@@ -56,12 +56,14 @@ const PlaceContent = styled.div`
     font-size: 1.4rem;
     margin-bottom: 0;
     padding-right: 60px;
+    text-transform: uppercase;
   }
 
   h6 {
     display: inline;
     border-bottom: 2px solid ${props => Colors(props.colorBlind).primaryColor};
     padding-bottom: 5px;
+    font-size: 0.8rem;
   }
 
   p {
@@ -163,6 +165,10 @@ const SerivesDiv = styled.div`
   padding: 20px;
 `
 
+const NoServicesText = styled.div`
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+`
+
 const PlacesItem = ({ item, filters, index }) => {
   const [servicesVisible, setServicesVisible] = useState(false)
   const colorBlind = useSelector(state => state.colorBlind)
@@ -171,24 +177,24 @@ const PlacesItem = ({ item, filters, index }) => {
     setServicesVisible(prevValue => !prevValue)
   }
 
-  const allServices = item.services.map((item, index) => {
+  const allServices = item.services.map(item => {
     return (
-      <PaddingRight key={index}>
-        <ButtonIcon title={item} fontSize="13" />
+      <PaddingRight key={item._id}>
+        <ButtonIcon title={item.serviceName} fontSize="13" />
       </PaddingRight>
     )
   })
 
   const isInServicesFilter = item.services.filter(item => {
     if (filters) {
-      return item.toLowerCase() === filters.value.toLowerCase()
+      return item.serviceName.toLowerCase() === filters.value.toLowerCase()
     }
     return false
   })
 
   const isInServicesFilterSome = item.services.some(item => {
     if (filters) {
-      return item.toLowerCase() === filters.value.toLowerCase()
+      return item.serviceName.toLowerCase() === filters.value.toLowerCase()
     }
     return false
   })
@@ -212,7 +218,6 @@ const PlacesItem = ({ item, filters, index }) => {
       </UnderMenuServices>
     </CSSTransition>
   )
-  console.log(item)
   return (
     <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
@@ -273,7 +278,15 @@ const PlacesItem = ({ item, filters, index }) => {
           classNames="popup"
           unmountOnExit
         >
-          <SerivesDiv onClick={handleServicesVisible}>{allServices}</SerivesDiv>
+          <SerivesDiv onClick={handleServicesVisible}>
+            {allServices.length > 0 ? (
+              allServices
+            ) : (
+              <NoServicesText colorBlind={colorBlind}>
+                Brak usług
+              </NoServicesText>
+            )}
+          </SerivesDiv>
         </CSSTransition>
       </PlaceItem>
     </div>

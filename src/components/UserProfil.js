@@ -20,7 +20,6 @@ const ProfilStyle = styled.div`
 `
 
 const TextToUser = styled.div`
-  margin-top: 50px;
   h1 {
     font-size: 1.4rem;
   }
@@ -107,7 +106,6 @@ const UserProfil = () => {
   return (
     <ProfilStyle colorBlind={colorBlind}>
       {tooltipButton}
-      <h1>Dane użytkownika:</h1>
       <TextToUser colorBlind={colorBlind}>
         <div>
           <h1>

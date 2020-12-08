@@ -995,7 +995,6 @@ export const fetchWorkerDisabledHours = (
 
 export const fetchPathCompany = (token, companyPath) => {
   return dispatch => {
-    dispatch(changeSpinner(true))
     return axios
       .post(
         `${Site.serverUrl}/company-path`,
@@ -1010,14 +1009,10 @@ export const fetchPathCompany = (token, companyPath) => {
       )
       .then(response => {
         dispatch(updatePatchCompanyData(response.data.companyDoc))
-        setTimeout(() => {
-          dispatch(changeSpinner(false))
-        }, 1000)
+    
       })
       .catch(error => {
-        setTimeout(() => {
-          dispatch(changeSpinner(false))
-        }, 1000)
+   
         dispatch(
           addAlertItem("Błąd podczas pobierania danych o firmie.", "red")
         )
@@ -1026,9 +1021,8 @@ export const fetchPathCompany = (token, companyPath) => {
 }
 
 
-export const fetchAllCompanys = (page) => {
+export const fetchAllCompanys = (page = 0) => {
   return dispatch => {
-    dispatch(changeSpinner(true))
     return axios
       .post(
         `${Site.serverUrl}/all-companys`,
@@ -1038,12 +1032,17 @@ export const fetchAllCompanys = (page) => {
       )
       .then(response => {
         dispatch(updatePlacesData(response.data.companysDoc))
+        if(page === 0){
+          dispatch(changeLoadingPlaces(true))
+        }
       })
       .catch(error => {
-       
         dispatch(
           addAlertItem("Błąd podczas pobierania firm.", "red")
         )
+        if (page === 0) {
+          dispatch(changeLoadingPlaces(false))
+        }
       })
   }
 }

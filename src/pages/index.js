@@ -62,7 +62,7 @@ const Home = () => {
   useEffect(() => {
     const heightContent = contentRef.current.clientHeight
     // window.scrollTo(heightContent)
-    console.log(heightContent)
+    // console.log(heightContent)
   }, [contentRef])
 
   const dispatch = useDispatch()

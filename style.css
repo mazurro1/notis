@@ -92,7 +92,7 @@ button:focus {
 
 .heightElement {
   /* min-height: calc(100vh); */
-  min-height: calc(100vh - 259px);
+  min-height: calc(100vh - 189px);
 }
 
 .example-enter {

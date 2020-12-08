@@ -17,7 +17,6 @@ const TakeCompanyData = ({ pathCompany = null }) => {
   let renderContent = null
 
   if (!!pathCompanyData) {
-    console.log(pathCompanyData)
     if (pathCompanyData.linkPath === pathCompany) {
       renderContent = (
         <ContentCompanyProfil
