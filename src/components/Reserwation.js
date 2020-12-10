@@ -387,7 +387,7 @@ const Reserwation = ({
     const workerIsSelected = !!selectedWorkerUserId
       ? selectedWorkerUserId === worker.user._id
       : false
-
+    console.log(worker)
     return (
       <WorkerItem
         key={index}

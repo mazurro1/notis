@@ -44,13 +44,15 @@ const PopupContent = styled.div`
   height: ${props => (props.fullScreen ? "100vh" : "auto")};
   margin: 0 auto;
   border-radius: 5px;
-  overflow-y: auto;
   max-height: 80vh;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
+  overflow: hidden;
 `
 
 const PaddingContnent = styled.div`
   padding: 10px 15px;
+  overflow-y: auto;
+  max-height: calc(100% - 41px);
 `
 
 const ClosePopup = styled.div`
@@ -88,7 +90,7 @@ const Popup = ({
   noContent = false,
   fullScreen = false,
   calendar = false,
-  title = ""
+  title = null,
 }) => {
   const colorBlind = useSelector(state => state.colorBlind)
   const handleOnClick = e => {
@@ -99,7 +101,7 @@ const Popup = ({
     e.stopPropagation()
   }
 
-  const isTitleOn = !!title;
+  const isTitleOn = !!title
 
   const contentComponent = noContent ? (
     <ContentNoBorder
@@ -120,7 +122,6 @@ const Popup = ({
       {isTitleOn && (
         <TitlePagePopup colorBlind={colorBlind}>
           {title}
-
           <ClosePopup
             onClick={handleOnClick}
             colorBlind={colorBlind}

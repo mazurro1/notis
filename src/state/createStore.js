@@ -39,6 +39,7 @@ import {
   AVAIBLE_DATE_TO_RESERWATION_UPDATE,
   UPDATE_PATCH_COMPANY_DATA,
   UPDATE_PLACES_DATA,
+  UPDATE_USER_RESERWATIONS,
 } from "./actions"
 
 const initialState = {
@@ -75,98 +76,7 @@ const initialState = {
   sortVisible: false,
   sorts: null,
   sortDataLoading: false,
-  placesData: [
-    // {
-    //   id: 1,
-    //   image:
-    //     "https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg",
-    //   name: "Salon Kosmetyczny Słowianka",
-    //   adress: "Warszawa, Wola, Mickiewicza 17",
-    //   title:
-    //     "Healthy Beauty to wyjątkowy salon kosmetyczny na mapie Warszawy. To tu wydobywamy zdrowe piękno i dbamy.",
-    //   countOpinions: 84,
-    //   avarageOpinions: "5,0",
-    //   services: [
-    //     "Strzyżenie dziecięce",
-    //     "Strzyżenie męskie",
-    //     "Strzyżenie damskie",
-    //     "Konsultacja fryzjerska",
-    //     "Oczyszczanie twarzy",
-    //   ],
-    // },
-    // {
-    //   id: 2,
-    //   image:
-    //     "https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg",
-    //   name: "Salon Kosmetyczny Słowianka",
-    //   adress: "Warszawa, Wola, Mickiewicza 17",
-    //   title:
-    //     "Healthy Beauty to wyjątkowy salon kosmetyczny na mapie Warszawy. To tu wydobywamy zdrowe piękno i dbamy.",
-    //   countOpinions: 84,
-    //   avarageOpinions: "5,0",
-    //   services: [
-    //     "Strzyżenie dziecięce",
-    //     "Strzyżenie męskie",
-    //     "Strzyżenie damskie",
-    //     "Konsultacja fryzjerska",
-    //     "Oczyszczanie twarzy",
-    //   ],
-    // },
-    // {
-    //   id: 3,
-    //   image:
-    //     "https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg",
-    //   name: "Salon Kosmetyczny Słowianka",
-    //   adress: "Warszawa, Wola, Mickiewicza 17",
-    //   title:
-    //     "Healthy Beauty to wyjątkowy salon kosmetyczny na mapie Warszawy. To tu wydobywamy zdrowe piękno i dbamy.",
-    //   countOpinions: 84,
-    //   avarageOpinions: "5,0",
-    //   services: [
-    //     "Strzyżenie dziecięce",
-    //     "Strzyżenie męskie",
-    //     "Strzyżenie damskie",
-    //     "Konsultacja fryzjerska",
-    //     "Oczyszczanie twarzy",
-    //   ],
-    // },
-    // {
-    //   id: 4,
-    //   image:
-    //     "https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg",
-    //   name: "Salon Kosmetyczny Słowianka",
-    //   adress: "Warszawa, Wola, Mickiewicza 17",
-    //   title:
-    //     "Healthy Beauty to wyjątkowy salon kosmetyczny na mapie Warszawy. To tu wydobywamy zdrowe piękno i dbamy.",
-    //   countOpinions: 84,
-    //   avarageOpinions: "5,0",
-    //   services: [
-    //     "Strzyżenie dziecięce",
-    //     "Strzyżenie męskie",
-    //     "Strzyżenie damskie",
-    //     "Konsultacja fryzjerska",
-    //     "Oczyszczanie twarzy",
-    //   ],
-    // },
-    // {
-    //   id: 5,
-    //   image:
-    //     "https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg",
-    //   name: "Salon Kosmetyczny Słowianka",
-    //   adress: "Warszawa, Wola, Mickiewicza 17",
-    //   title:
-    //     "Healthy Beauty to wyjątkowy salon kosmetyczny na mapie Warszawy. To tu wydobywamy zdrowe piękno i dbamy.",
-    //   countOpinions: 84,
-    //   avarageOpinions: "5,0",
-    //   services: [
-    //     "Strzyżenie dziecięce",
-    //     "Strzyżenie męskie",
-    //     "Strzyżenie damskie",
-    //     "Konsultacja fryzjerska",
-    //     "Oczyszczanie twarzy",
-    //   ],
-    // },
-  ],
+  placesData: [],
   loadingPlaces: false,
   alerts: [],
   //COMPANY
@@ -183,6 +93,7 @@ const initialState = {
   editWorkerHoursData: null,
   editedWorkersHours: [],
   pathCompanyData: null,
+  userHistoryReserwations: [],
 }
 
 const reducer = (state = initialState, action) => {
@@ -350,6 +261,12 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case UPDATE_USER_RESERWATIONS:
+      return {
+        ...state,
+        userHistoryReserwations: action.data,
+      }
+
     case UPDATE_PLACES_DATA:
       return {
         ...state,

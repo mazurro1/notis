@@ -201,7 +201,9 @@ const ServicesItem = ({
       timeService = `${numberOfHours}h`
     } else {
       const numberOfMinutes = numberTime - numberOfHours * 60
-      timeService = `${numberOfHours}h ${numberOfMinutes}min`
+      timeService = `${
+        numberOfHours > 0 ? `${numberOfHours}h` : ""
+      } ${numberOfMinutes}min`
     }
   }
 

@@ -52,6 +52,7 @@ import CreateCompany from "./CreateCompany"
 import Reserwation from "./Reserwation"
 import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
 import Switch from "react-switch"
+import UserHistory from "./UserHistory"
 
 const SpanSwitch = styled.span`
   font-size: 0.8rem;
@@ -455,10 +456,7 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const PopupCreateCompany = (
-    <Popup
-      popupEnable={createCompanyVisible}
-      handleClose={handleCreateCompany}
-    >
+    <Popup popupEnable={createCompanyVisible} handleClose={handleCreateCompany}>
       <CreateCompany />
     </Popup>
   )
@@ -472,10 +470,9 @@ const Navigation = ({ children, isMainPage }) => {
       fullScreen
       maxWidth="800"
     >
-      History
+      <UserHistory colorBlind={colorBlind} user={user} />
     </Popup>
   )
-
 
   const PopupReserwation = (
     <Popup
@@ -530,6 +527,7 @@ const Navigation = ({ children, isMainPage }) => {
       popupEnable={popupTakePlace}
       handleClose={handleClickTakePlace}
       maxWidth="500"
+      title="Znajdz ulubione miejsce"
     >
       <FindPlaceContent
         handleClose={handleClickTakePlace}

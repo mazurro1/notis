@@ -469,11 +469,19 @@ export const AVAIBLE_DATE_TO_RESERWATION = "AVAIBLE_DATE_TO_RESERWATION"
 export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
   "AVAIBLE_DATE_TO_RESERWATION_UPDATE"
 export const UPDATE_PATCH_COMPANY_DATA = "UPDATE_PATCH_COMPANY_DATA"
+export const UPDATE_USER_RESERWATIONS = "UPDATE_USER_RESERWATIONS"
 
-export const updatePlacesData = (data) => {
+export const updateUserReserwations = data => {
+  return {
+    type: UPDATE_USER_RESERWATIONS,
+    data: data,
+  }
+}
+
+export const updatePlacesData = data => {
   return {
     type: UPDATE_PLACES_DATA,
-    data: data
+    data: data,
   }
 }
 
@@ -1009,10 +1017,8 @@ export const fetchPathCompany = (token, companyPath) => {
       )
       .then(response => {
         dispatch(updatePatchCompanyData(response.data.companyDoc))
-    
       })
       .catch(error => {
-   
         dispatch(
           addAlertItem("Błąd podczas pobierania danych o firmie.", "red")
         )
@@ -1020,29 +1026,40 @@ export const fetchPathCompany = (token, companyPath) => {
   }
 }
 
-
 export const fetchAllCompanys = (page = 0) => {
   return dispatch => {
     return axios
-      .post(
-        `${Site.serverUrl}/all-companys`,
-        {
-          page: page,
-        },
-      )
+      .post(`${Site.serverUrl}/all-companys`, {
+        page: page,
+      })
       .then(response => {
         dispatch(updatePlacesData(response.data.companysDoc))
-        if(page === 0){
+        if (page === 0) {
           dispatch(changeLoadingPlaces(true))
         }
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas pobierania firm.", "red")
-        )
+        dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
         if (page === 0) {
           dispatch(changeLoadingPlaces(false))
         }
+      })
+  }
+}
+
+export const fetchUserReserwations = token => {
+  return dispatch => {
+    return axios
+      .get(`${Site.serverUrl}/user-reserwations`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then(response => {
+        dispatch(updateUserReserwations(response.data.reserwations))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }
 }

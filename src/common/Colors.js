@@ -20,6 +20,8 @@ export const Colors = (
     primaryColor: colorBlind.blind ? colorBlindDarkHex : "#5ec2d7",
     primaryColorDark: colorBlind.blind ? colorBlindHex : "#0597a7",
     secondColor: colorBlind.blind ? colorBlindDarkHex : "#f7a52c",
+    secondColorLight:
+      colorBlind.blind || colorBlind.dark ? "#212121" : "#fff3e0",
     secondDarkColor: colorBlind.blind ? colorBlindHex : "#ed6c0c",
     darkColor: colorBlind.blind
       ? colorBlindHex
@@ -32,7 +34,11 @@ export const Colors = (
       ? "#5ec2d7"
       : "#282828",
     dangerColor: colorBlind.blind ? colorBlindDarkHex : "#f44336",
+    dangerLightColor:
+      colorBlind.blind || colorBlind.dark ? "#212121" : "#ffebee",
     dangerColorDark: colorBlind.blind ? colorBlindHex : "#c62828",
+    successColorLight:
+      colorBlind.blind || colorBlind.dark ? "#212121" : "#e8f5e9",
     successColor: colorBlind.blind ? colorBlindDarkHex : "#43a047",
     successColorDark: colorBlind.blind ? colorBlindHex : "#2e7d32",
     textNormalBlack: colorBlind.blind
