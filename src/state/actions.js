@@ -470,6 +470,14 @@ export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
   "AVAIBLE_DATE_TO_RESERWATION_UPDATE"
 export const UPDATE_PATCH_COMPANY_DATA = "UPDATE_PATCH_COMPANY_DATA"
 export const UPDATE_USER_RESERWATIONS = "UPDATE_USER_RESERWATIONS"
+export const UPDATE_USER_ONE_RESERWATION = "UPDATE_USER_ONE_RESERWATION"
+
+export const updateUserOneReserwation = data => {
+  return {
+    type: UPDATE_USER_ONE_RESERWATION,
+    data: data,
+  }
+}
 
 export const updateUserReserwations = data => {
   return {
@@ -912,6 +920,7 @@ export const fetchDoReserwation = (
   token,
   companyId,
   workerUserId,
+  workerId,
   dateStart,
   dateFull,
   costReserwation,
@@ -927,6 +936,7 @@ export const fetchDoReserwation = (
         `${Site.serverUrl}/add-reserwation`,
         {
           workerUserId: workerUserId,
+          workerId: workerId,
           companyId: companyId,
           dateStart: dateStart,
           dateFull: dateFull,
@@ -962,6 +972,7 @@ export const fetchWorkerDisabledHours = (
   token,
   companyId,
   selectedWorkerUserId,
+  selectedWorkerId,
   selectedDay,
   selectedMonth,
   selectedYear,
@@ -974,6 +985,7 @@ export const fetchWorkerDisabledHours = (
         `${Site.serverUrl}/get-worker-disabled-hours`,
         {
           workerUserId: selectedWorkerUserId,
+          workerId: selectedWorkerId,
           companyId: companyId,
           selectedDay: selectedDay,
           selectedMonth: selectedMonth,
@@ -1060,6 +1072,42 @@ export const fetchUserReserwations = token => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
+      })
+  }
+}
+
+export const fetchDeleteReserwation = (
+  token,
+  reserwationId,
+  canceled = null,
+  changed = null,
+  finished = null,
+  changedName = ""
+) => {
+  return dispatch => {
+    return axios
+      .patch(
+        `${Site.serverUrl}/update-reserwation`,
+        {
+          reserwationId: reserwationId,
+          canceled: canceled,
+          changed: changed,
+          finished: finished,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        if ((changedName = "userReserwation")) {
+          dispatch(updateUserOneReserwation(response.data.reserwation))
+          dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
+        }
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas aktualizacji rezerwacji.", "red"))
       })
   }
 }

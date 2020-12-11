@@ -145,6 +145,10 @@ const AllCategoryOfServices = ({
     resetCompany,
   ])
 
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  })
+
   const handleClickContent = e => {
     e.stopPropagation()
   }
@@ -320,9 +324,9 @@ const AllCategoryOfServices = ({
       workerEdited.forEach(worker => {
         let findWorkerFromServer = {}
         ;[...workersFromServer].forEach(item => {
-          if (item.user._id === worker.indexWorker) {
+          if (item._id === worker.indexWorker) {
             const newWorkerFromServer = {
-              indexWorker: item.user._id,
+              indexWorker: item._id,
               specializationText: item.specialization,
               servicesCategory: item.servicesCategory,
             }
@@ -345,7 +349,7 @@ const AllCategoryOfServices = ({
     //search if user has category and remove this category in worker from server
     const mapWorkerFromServer = [...workersFromServer].map(item => {
       const worker = {
-        indexWorker: item.user._id,
+        indexWorker: item._id,
         specializationText: item.specialization,
         servicesCategory: item.servicesCategory,
       }
@@ -482,7 +486,7 @@ const AllCategoryOfServices = ({
 
     workersFromServer.forEach(workerX => {
       const newWorker = {
-        indexWorker: workerX.user._id,
+        indexWorker: workerX._id,
         specializationText: workerX.specialization,
         servicesCategory: [...workerX.servicesCategory],
       }
@@ -895,6 +899,15 @@ const AllCategoryOfServices = ({
               </ReactTooltip>
             )}
           </AddCategory>
+          <ReactTooltip id="addItem" effect="float" multiline={true}>
+            <span>Dodaj podkategorie</span>
+          </ReactTooltip>
+          <ReactTooltip id="deleteCategory" effect="float" multiline={true}>
+            <span>Usuń całą kategorię</span>
+          </ReactTooltip>
+          <ReactTooltip id="editCategory" effect="float" multiline={true}>
+            <span>Edytuj nazwe kategorii</span>
+          </ReactTooltip>
         </>
       )}
     </div>

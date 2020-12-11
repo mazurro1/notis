@@ -1,8 +1,13 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { MdExpandMore } from "react-icons/md"
 import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"
+import ReactTooltip from "react-tooltip"
+import UserHistoryCategoryItem from "./UserHistoryCategoryItem"
+import { useDispatch } from "react-redux"
+import { fetchDeleteReserwation } from "../state/actions"
+import Switch from "react-switch"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -16,6 +21,7 @@ const TitleCategory = styled.div`
   user-select: none;
   text-transform: uppercase;
   cursor: pointer;
+  padding-right: 110px;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -50,175 +56,81 @@ const CategoryItemStyle = styled.div`
   margin-top: 5px;
 `
 
-const ServiceItem = styled.div`
-  position: relative;
-  background-color: ${props =>
-    !props.isReserwationEnd
-      ? Colors(props.colorBlind).dangerLightColor
-      : props.visitCanceled
-      ? Colors(props.colorBlind).dangerLightColor
-      : props.visitFinished
-      ? Colors(props.colorBlind).successColorLight
-      : props.visitChanged
-      ? Colors(props.colorBlind).secondColorLight
-      : Colors(props.colorBlind).companyItemBackground};
-  padding: 10px;
-  border-radius: 5px;
-  border-top-left-radius: ${props => (props.index ? "0px" : "5px")};
-  border-top-right-radius: ${props => (props.index ? "0px" : "5px")};
-  margin: 5px 5px;
-  margin-top: ${props => (props.index ? "0px" : "5px")};
-  user-select: none;
-  overflow: hidden;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
-  transition-property: background-color, padding-bottom, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+const SwitchPosition = styled.div`
+  position: absolute;
+  top: 13px;
+  bottom: 0;
+  right: 50px;
 `
 
-const TitleService = styled.div`
-  font-size: 1.1rem;
-  font-weight: bold;
-`
-
-const PriceService = styled.span`
-  background-color: red;
-  font-size: 0.8rem;
-  padding: 2px 5px;
-  font-weight: 500;
-  color: white;
-  margin-left: 10px;
-  border-radius: 5px;
-  background-color: ${props =>
-    props.otherColor
-      ? Colors(props.colorBlind).darkColor
-      : Colors(props.colorBlind).primaryColorDark};
-
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: inline;
-`
-
-const StatusReserwation = styled.span`
-  border-radius: 5px;
-  padding: 0px 5px;
-  margin-top: 5px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
-  background-color: ${props =>
-    !!props.canceled
-      ? Colors(props.colorBlind).dangerColor
-      : !!props.changed
-      ? Colors(props.colorBlind).secondColor
-      : !!props.finished
-      ? Colors(props.colorBlind).successColor
-      : Colors(props.colorBlind).primaryColor};
-`
-
-const UserHistoryCategory = ({ colorBlind, title, reserwations }) => {
+const UserHistoryCategory = ({
+  colorBlind,
+  title,
+  reserwations,
+  userToken,
+}) => {
   const [collapseActive, setCollapseActive] = useState(false)
+  const [hiddenCanceledReserwation, setHiddenCanceledReserwation] = useState(
+    true
+  )
+
+  const dispatch = useDispatch()
+
   const handleClickArrow = () => {
     setCollapseActive(prevState => !prevState)
   }
 
-  const servicesMap = reserwations.map((item, index) => {
-    let timeService = ""
-    if (Number(item.time) <= 60) {
-      timeService = `${item.timeReserwation}min`
-    } else {
-      const numberTime = Number(item.timeReserwation)
-      const numberOfHours = Math.floor(numberTime / 60)
-      if (Number(item.timeReserwation) % 60 === 0) {
-        timeService = `${numberOfHours}h`
-      } else {
-        const numberOfMinutes = numberTime - numberOfHours * 60
-        timeService = `${
-          numberOfHours > 0 ? `${numberOfHours}h` : ""
-        } ${numberOfMinutes}min`
-      }
-    }
+  const handleHiddenCanceledReserwation = () => {
+    setHiddenCanceledReserwation(prevState => !prevState)
+  }
 
-    const splitDateReserwation = item.dateStart.split(":")
-    const dateReserwation = new Date(
-      item.dateYear,
-      item.dateMonth - 1,
-      item.dateDay,
-      Number(splitDateReserwation[0]),
-      Number(splitDateReserwation[1]),
-      0
-    )
-    const actualDate = new Date()
-    const isReserwationEnd = actualDate < dateReserwation
-
-    let workerName = "Konto nieaktywne"
-    if (!!item.toWorkerUserId) {
-      const userName = Buffer.from(item.toWorkerUserId.name, "base64").toString(
-        "ascii"
+  const handleDeleteReserwation = reserwationId => {
+    dispatch(
+      fetchDeleteReserwation(
+        userToken,
+        reserwationId,
+        true,
+        null,
+        null,
+        "userReserwation"
       )
-      const userSurname = Buffer.from(
-        item.toWorkerUserId.surname,
-        "base64"
-      ).toString("ascii")
-      workerName = ` ${userName} ${userSurname}`
-    }
+    )
+  }
 
+  const handleClickContent = e => {
+    e.stopPropagation()
+  }
+
+  let allReserwations = [...reserwations]
+  if (!!hiddenCanceledReserwation) {
+    allReserwations = allReserwations.filter(itemReserwation => {
+      const splitDateReserwation = itemReserwation.dateStart.split(":")
+      const dateReserwation = new Date(
+        itemReserwation.dateYear,
+        itemReserwation.dateMonth - 1,
+        itemReserwation.dateDay,
+        Number(splitDateReserwation[0]),
+        Number(splitDateReserwation[1]),
+        0
+      )
+      const actualDate = new Date()
+      const isReserwationEnd = actualDate < dateReserwation
+      return (
+        !!!itemReserwation.visitCanceled &&
+        !!!itemReserwation.visitFinished &&
+        isReserwationEnd
+      )
+    })
+  }
+
+  const servicesMap = allReserwations.map((item, index) => {
     return (
-      <ServiceItem
+      <UserHistoryCategoryItem
+        item={item}
+        index={index}
         key={index}
-        index={index === 0}
-        colorBlind={colorBlind}
-        isReserwationEnd={isReserwationEnd}
-        visitCanceled={item.visitCanceled}
-        visitFinished={item.visitFinished}
-        visitChanged={item.visitChanged}
-      >
-        <TitleService>
-          {item.serviceName}
-          <PriceService colorBlind={colorBlind}>
-            {`${item.costReserwation}zł ${item.extraCost ? "+" : ""}`}
-          </PriceService>
-          <PriceService otherColor colorBlind={colorBlind}>
-            {`${timeService} ${item.extraTime ? "+" : ""}`}
-          </PriceService>
-        </TitleService>
-        <div>
-          Wykonawca usługi:
-          <b>{workerName}</b>
-        </div>
-        <div>
-          Data usługi:
-          <b>{` ${item.dateDay < 10 ? `0${item.dateDay}` : item.dateDay}-${
-            item.dateMonth < 10 ? `0${item.dateMonth}` : item.dateMonth
-          }-${item.dateYear}`}</b>
-        </div>
-        <div>
-          Godzina usługi:<b>{` ${item.dateStart}-${item.dateEnd}`}</b>
-        </div>
-        <div>
-          Status:{" "}
-          {!isReserwationEnd ? (
-            <StatusReserwation canceled colorBlind={colorBlind}>
-              Wizyta nieodbyta
-            </StatusReserwation>
-          ) : item.visitCanceled ? (
-            <StatusReserwation canceled colorBlind={colorBlind}>
-              Wizyta odwołana
-            </StatusReserwation>
-          ) : item.visitFinished ? (
-            <StatusReserwation finished colorBlind={colorBlind}>
-              Wizyta odbyta
-            </StatusReserwation>
-          ) : item.visitChanged ? (
-            <StatusReserwation changed colorBlind={colorBlind}>
-              Wizyta zmieniona
-            </StatusReserwation>
-          ) : (
-            <StatusReserwation colorBlind={colorBlind}>
-              Wizyta oczekująca
-            </StatusReserwation>
-          )}
-        </div>
-      </ServiceItem>
+        handleDeleteReserwation={handleDeleteReserwation}
+      />
     )
   })
 
@@ -226,8 +138,25 @@ const UserHistoryCategory = ({ colorBlind, title, reserwations }) => {
     <CategoryItemStyle>
       <TitleCategory colorBlind={colorBlind} onClick={handleClickArrow}>
         {title}
+        <SwitchPosition
+          onClick={handleClickContent}
+          data-tip
+          data-for="switchCanceled"
+        >
+          <Switch
+            onChange={handleHiddenCanceledReserwation}
+            checked={hiddenCanceledReserwation}
+            activeBoxShadow={`0 0 2px 3px ${
+              Colors(colorBlind).primaryColorDark
+            }`}
+            onColor={Colors(colorBlind).primaryColorDark}
+            height={22}
+            uncheckedIcon
+            checkedIcon
+          />
+        </SwitchPosition>
         <IconArrowPosition
-          onClick={handleClickArrow}
+          // onClick={handleClickArrow}
           collapseActive={collapseActive}
         >
           <MdExpandMore />
@@ -236,6 +165,22 @@ const UserHistoryCategory = ({ colorBlind, title, reserwations }) => {
       <Collapse isOpened={collapseActive}>
         <div>{servicesMap}</div>
       </Collapse>
+
+      <ReactTooltip
+        id="deleteReserwationTooltip"
+        effect="float"
+        multiline={true}
+      >
+        <span>Odwołaj wizytę</span>
+      </ReactTooltip>
+
+      <ReactTooltip id="switchCanceled" effect="float" multiline={true}>
+        {!!!hiddenCanceledReserwation ? (
+          <span>Ukryj wizyty zakończone oraz odwołane</span>
+        ) : (
+          <span>Pokaż wizyty zakończone oraz odwołane</span>
+        )}
+      </ReactTooltip>
     </CategoryItemStyle>
   )
 }

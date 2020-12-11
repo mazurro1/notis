@@ -99,6 +99,7 @@ const SelectDataCalendar = ({
   setIsDataActive,
   setIsTimeActive = () => {},
   activeMonth = new Date(),
+  maxDate = null,
 }) => {
   const colorBlind = useSelector(state => state.colorBlind)
   const data = new Date()
@@ -126,6 +127,7 @@ const SelectDataCalendar = ({
         selected={activeData}
         disabledIntervals={disabledDatas}
         onSelect={date => handleSelectedDate(date)}
+        maxDate={maxDate}
       />
     </StyleSimpleReactCalendar>
   )

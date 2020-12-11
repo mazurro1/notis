@@ -10,6 +10,7 @@ import WorkerItem from "./WorkerItem"
 import { MdEmail, MdClose } from "react-icons/md"
 import { FaUserPlus } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
+import ReactTooltip from "react-tooltip"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "block")};
@@ -278,6 +279,10 @@ const OurWorkersContent = ({
     }
   }, [selectRef, ownerServicesCategory])
 
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  })
+
   const dispatch = useDispatch()
 
   const handleSentInvation = e => {
@@ -347,10 +352,10 @@ const OurWorkersContent = ({
 
   const mapWorkers = workers.map((item, index) => {
     const selectEditedWorker = [...editedWorkers].find(edited => {
-      return edited.indexWorker === item.user._id
+      return edited.indexWorker === item._id
     })
     const selectEditedWorkersHours = editedWorkersHours.find(
-      itemHours => itemHours.indexWorker === item.user._id
+      itemHours => itemHours.indexWorker === item._id
     )
 
     const finallEditedWorker = !!selectEditedWorker ? selectEditedWorker : null
@@ -499,6 +504,25 @@ const OurWorkersContent = ({
           </ContentAddWorkers>
         </PositionAddWorkers>
       </CSSTransition>
+      <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
+        <span>Ustaw czas pracy pracownika</span>
+      </ReactTooltip>
+      <ReactTooltip id="timeWork" effect="float" multiline={true}>
+        <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
+      </ReactTooltip>
+
+      <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
+        <span>Wyślij ponownie email weryfikacyjny</span>
+      </ReactTooltip>
+      <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
+        <span>Edytuj godziny pracy pracownika</span>
+      </ReactTooltip>
+      <ReactTooltip id="editUser" effect="float" multiline={true}>
+        <span>Edytuj stanowisko pracownika</span>
+      </ReactTooltip>
+      <ReactTooltip id="deleteUser" effect="float" multiline={true}>
+        <span>Usuń pracownika</span>
+      </ReactTooltip>
     </>
   )
 }

@@ -83,6 +83,9 @@ const WidthTimePicker = styled.div`
 
 const BackgroundColorPage = styled.div`
   background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const WrapperNavigation = styled.div`

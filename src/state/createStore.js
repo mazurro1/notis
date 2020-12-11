@@ -40,6 +40,7 @@ import {
   UPDATE_PATCH_COMPANY_DATA,
   UPDATE_PLACES_DATA,
   UPDATE_USER_RESERWATIONS,
+  UPDATE_USER_ONE_RESERWATION,
 } from "./actions"
 
 const initialState = {
@@ -261,6 +262,29 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case UPDATE_USER_ONE_RESERWATION: {
+      const newUserHistoryReserwations = [...state.userHistoryReserwations]
+      const changedReserwation = action.data
+      const indexCompany = newUserHistoryReserwations.findIndex(
+        item => item.category === changedReserwation.company.name
+      )
+      if (indexCompany >= 0) {
+        const indexReserwation = newUserHistoryReserwations[
+          indexCompany
+        ].items.findIndex(item => item._id === changedReserwation._id)
+
+        if (indexReserwation >= 0) {
+          newUserHistoryReserwations[indexCompany].items[
+            indexReserwation
+          ] = changedReserwation
+        }
+      }
+
+      return {
+        ...state,
+        userHistoryReserwations: newUserHistoryReserwations,
+      }
+    }
     case UPDATE_USER_RESERWATIONS:
       return {
         ...state,

@@ -28,9 +28,9 @@ import {
 import { useDispatch } from "react-redux"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import ReactTooltip from "react-tooltip"
 import InputIcon from "../InputIcon"
 import ButtonIcon from "../ButtonIcon"
+import ReactTooltip from "react-tooltip"
 
 const ActiveWorkerStyle = styled.div`
   position: absolute;
@@ -182,6 +182,10 @@ const WorkerItem = ({
   const selectRef = useRef(null)
 
   useEffect(() => {
+    ReactTooltip.rebuild()
+  })
+
+  useEffect(() => {
     setUserEditItem(false)
     setUserConfirmDelete(false)
     setChooseTimeWorker(false)
@@ -285,7 +289,7 @@ const WorkerItem = ({
 
   const handleDeleteUser = () => {
     dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, userToken))
-    handleAddEditWorker("delete", item.user._id, inputSpecialization)
+    handleAddEditWorker("delete", item._id, inputSpecialization)
   }
 
   const handleSentAgainEmailVeryfication = () => {
@@ -314,7 +318,7 @@ const WorkerItem = ({
 
     handleAddEditWorker(
       "save",
-      item.user._id,
+      item._id,
       inputSpecializationValue,
       workerServicesCategoryValue
     )
@@ -337,7 +341,7 @@ const WorkerItem = ({
     )
     handleAddEditWorker(
       "delete",
-      item.user._id,
+      item._id,
       inputSpecialization,
       mapLebelValueToCategory
     )
@@ -497,7 +501,7 @@ const WorkerItem = ({
   //   <HolidayDays
   //     colorBlind={colorBlind}
   //     data-tip
-  //     data-for={`holidays${index}`}
+  //     data-for="holidays"
   //     data-place="top"
   //   >
   //     <HolidayDaysIcon
@@ -534,7 +538,7 @@ const WorkerItem = ({
               onClick={handleChooseTimeWorker}
               // onClick={handleUserTimeWork}
               data-tip
-              data-for={`timeWorkUser${index}`}
+              data-for="timeWorkUser"
               data-place="left"
               colorBlind={colorBlind}
             >
@@ -543,7 +547,7 @@ const WorkerItem = ({
             <EditIconStyle
               onClick={handleUserItemEdit}
               data-tip
-              data-for={`editUser${index}`}
+              data-for="editUser"
               data-place="left"
               colorBlind={colorBlind}
             >
@@ -552,7 +556,7 @@ const WorkerItem = ({
             <DeleteUserIconStyle
               onClick={handleUserConfirmDelete}
               data-tip
-              data-for={`deleteUser${index}`}
+              data-for="deleteUser"
               data-place="left"
               colorBlind={colorBlind}
             >
@@ -563,7 +567,7 @@ const WorkerItem = ({
             <IconVeryfiedUser
               active={item.active}
               data-tip
-              data-for={`alertActive${index}`}
+              data-for="alertActive"
               colorBlind={colorBlind}
             >
               {item.active ? <MdVerifiedUser /> : <MdError />}
@@ -573,12 +577,19 @@ const WorkerItem = ({
                 email
                 onClick={handleSentAgainEmailVeryfication}
                 data-tip
-                data-for={`sentAgainEmail${index}`}
+                data-for="sentAgainEmail"
                 colorBlind={colorBlind}
               >
                 <MdEmail />
               </IconVeryfiedUser>
             )}
+            <ReactTooltip id="alertActive" effect="float" multiline={true}>
+              {item.active ? (
+                <span>Użytkownik potwierdzony</span>
+              ) : (
+                <span>Użytkownik nie potwierdzony</span>
+              )}
+            </ReactTooltip>
           </ActiveWorkerStyle>
           <CSSTransition
             in={userEditItem}
@@ -715,7 +726,7 @@ const WorkerItem = ({
                 <ButtonContent>
                   <ButtonDeleteStyle
                     data-tip
-                    data-for={`constTimeWork${index}`}
+                    data-for="constTimeWork"
                     data-place="top"
                   >
                     <ButtonIcon
@@ -730,7 +741,7 @@ const WorkerItem = ({
                   </ButtonDeleteStyle>
                   <ButtonDeleteStyle
                     data-tip
-                    data-for={`timeWork${index}`}
+                    data-for="timeWork"
                     data-place="top"
                   >
                     <ButtonIcon
@@ -755,22 +766,6 @@ const WorkerItem = ({
                       customColorIcon={Colors(colorBlind).dangerColor}
                     />
                   </ButtonDeleteStyle>
-                  <ReactTooltip
-                    id={`constTimeWork${index}`}
-                    effect="float"
-                    multiline={true}
-                  >
-                    <span>Ustaw czas pracy pracownika</span>
-                  </ReactTooltip>
-                  <ReactTooltip
-                    id={`timeWork${index}`}
-                    effect="float"
-                    multiline={true}
-                  >
-                    <span>
-                      Ustaw czas pracy pracownika w innych dniach itp itd
-                    </span>
-                  </ReactTooltip>
                 </ButtonContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
@@ -792,46 +787,8 @@ const WorkerItem = ({
             selectEditedWorkersHours={selectEditedWorkersHours}
             handleResetDay={handleResetDay}
           />
-          <ReactTooltip
-            id={`alertActive${index}`}
-            effect="float"
-            multiline={true}
-          >
-            {item.active ? (
-              <span>Użytkownik potwierdzony</span>
-            ) : (
-              <span>Użytkownik nie potwierdzony</span>
-            )}
-          </ReactTooltip>
-          <ReactTooltip
-            id={`sentAgainEmail${index}`}
-            effect="float"
-            multiline={true}
-          >
-            <span>Wyślij ponownie email weryfikacyjny</span>
-          </ReactTooltip>
-          <ReactTooltip
-            id={`timeWorkUser${index}`}
-            effect="float"
-            multiline={true}
-          >
-            <span>Edytuj godziny pracy pracownika</span>
-          </ReactTooltip>
-          <ReactTooltip id={`editUser${index}`} effect="float" multiline={true}>
-            <span>Edytuj stanowisko pracownika</span>
-          </ReactTooltip>
-          <ReactTooltip
-            id={`deleteUser${index}`}
-            effect="float"
-            multiline={true}
-          >
-            <span>Usuń pracownika</span>
-          </ReactTooltip>
         </>
       )}
-      {/* <ReactTooltip id={`holidays${index}`} effect="float" multiline={true}>
-        <span>Liczba wykorzystanych dni wolnych w roku {actualYear}</span>
-      </ReactTooltip> */}
     </WorkerItemStyle>
   )
 }

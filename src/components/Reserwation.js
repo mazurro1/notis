@@ -231,6 +231,7 @@ const Reserwation = ({
 }) => {
   const [selectedHour, setSelectedHour] = useState(null)
   const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
+  const [selectedWorkerId, setSelectedWorkerId] = useState(null)
   const [isDataActive, setIsDataActive] = useState(false)
   const [isOtherActive, setIsOtherActive] = useState(true)
   const [selectedDate, setSelectedDate] = useState(null)
@@ -254,6 +255,7 @@ const Reserwation = ({
           user.token,
           reserwationData.companyId,
           selectedWorkerUserId,
+          selectedWorkerId,
           selectedDay,
           selectedMonth,
           selectedYear,
@@ -268,6 +270,7 @@ const Reserwation = ({
       setTimeout(() => {
         setSelectedHour(null)
         setSelectedWorkerUserId(null)
+        setSelectedWorkerId(null)
         setIsDataActive(null)
         setIsOtherActive(null)
         setSelectedDate(null)
@@ -294,6 +297,7 @@ const Reserwation = ({
           user.token,
           reserwationData.companyId,
           selectedWorkerUserId, //workerUserId
+          selectedWorkerId, //workerUserId
           selectedHour, //dateStart
           dateFullToSent, //dateFull
           reserwationData.serviceCost,
@@ -306,17 +310,20 @@ const Reserwation = ({
     }
   }
 
-  const handleSelectWorker = workerUserId => {
+  const handleSelectWorker = (workerUserId, workerId) => {
     if (!!selectedWorkerUserId) {
       if (selectedWorkerUserId === workerUserId) {
         setSelectedWorkerUserId(null)
+        setSelectedWorkerId(null)
         setSelectedDate(null)
         dispatch(avaibleDateToReserwation([]))
       } else {
         setSelectedWorkerUserId(workerUserId)
+        setSelectedWorkerId(workerId)
       }
     } else {
       setSelectedWorkerUserId(workerUserId)
+      setSelectedWorkerId(workerId)
     }
   }
 
@@ -357,7 +364,12 @@ const Reserwation = ({
   const ownerWorkerToSelect = ownerHasServiceCategory &&
     !!reserwationData.ownerData && (
       <WorkerItem
-        onClick={() => handleSelectWorker(reserwationData.ownerData.ownerId)}
+        onClick={() =>
+          handleSelectWorker(
+            reserwationData.ownerData.ownerId,
+            reserwationData.ownerData.ownerId
+          )
+        }
         active={ownerIsSelected}
         colorBlind={colorBlind}
       >
@@ -385,13 +397,12 @@ const Reserwation = ({
 
   const mapWorkersToSelect = filterWorkers.map((worker, index) => {
     const workerIsSelected = !!selectedWorkerUserId
-      ? selectedWorkerUserId === worker.user._id
+      ? selectedWorkerId === worker._id
       : false
-    console.log(worker)
     return (
       <WorkerItem
         key={index}
-        onClick={() => handleSelectWorker(worker.user._id)}
+        onClick={() => handleSelectWorker(worker.user._id, worker._id)}
         active={workerIsSelected}
         colorBlind={colorBlind}
       >
@@ -574,6 +585,7 @@ const Reserwation = ({
             setActualCalendarDate={setSelectedDate}
             setIsDataActive={setIsDataActive}
             setIsTimeActive={setIsOtherActive}
+            maxDate={reserwationData.maxDate}
           />
         </div>
       </CSSTransition>

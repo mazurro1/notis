@@ -46,6 +46,7 @@ const CheckboxStyle = styled.div`
 const TitleCategory = styled.div`
   position: relative;
   font-size: 1.25rem;
+  cursor: pointer;
   color: ${props => Colors(props.colorBlind).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
@@ -338,12 +339,10 @@ const CategoryItem = ({
         clickAdd={clickAdd}
         clickEdit={clickEdit}
         colorBlind={colorBlind}
+        onClick={handleClickArrow}
       >
         {item.category}
-        <IconArrowPosition
-          onClick={handleClickArrow}
-          collapseActive={collapseActive}
-        >
+        <IconArrowPosition collapseActive={collapseActive}>
           <MdExpandMore />
         </IconArrowPosition>
         {isCompanyEditProfil && (
@@ -351,21 +350,21 @@ const CategoryItem = ({
             <IconDeletePosition
               onClick={handleClickDelete}
               data-tip
-              data-for={`deleteCategory${index}${item.serviceCategory}`}
+              data-for="deleteCategory"
             >
               <MdDeleteForever />
             </IconDeletePosition>
             <IconEditPosition
               onClick={handleEditCategory}
               data-tip
-              data-for={`editCategory${index}${item.serviceCategory}`}
+              data-for="editCategory"
             >
               <MdEdit />
             </IconEditPosition>
             <IconAddPosition
               onClick={handleClickAdd}
               data-tip
-              data-for={`addItem${index}${item.serviceCategory}`}
+              data-for="addItem"
             >
               <MdLibraryAdd />
             </IconAddPosition>
@@ -551,28 +550,6 @@ const CategoryItem = ({
                 </BackgroundEditContent>
               </BackgroundEdit>
             </CSSTransition>
-
-            <ReactTooltip
-              id={`addItem${index}${item.serviceCategory}`}
-              effect="float"
-              multiline={true}
-            >
-              <span>Dodaj podkategorie</span>
-            </ReactTooltip>
-            <ReactTooltip
-              id={`deleteCategory${index}${item.serviceCategory}`}
-              effect="float"
-              multiline={true}
-            >
-              <span>Usuń całą kategorię</span>
-            </ReactTooltip>
-            <ReactTooltip
-              id={`editCategory${index}${item.serviceCategory}`}
-              effect="float"
-              multiline={true}
-            >
-              <span>Edytuj nazwe kategorii</span>
-            </ReactTooltip>
           </>
         )}
       </TitleCategory>

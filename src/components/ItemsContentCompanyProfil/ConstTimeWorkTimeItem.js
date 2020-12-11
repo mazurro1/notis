@@ -127,7 +127,7 @@ const ConstTimeWorkTime = ({
   const handleSave = () => {
     setEditDay(prevState => !prevState)
     const itemToSave = {
-      indexWorker: itemWorker.user._id,
+      indexWorker: itemWorker._id,
       dayToSave: {
         dayOfTheWeek: item.dayOfTheWeek,
         startWorking: dayStart,
@@ -162,7 +162,7 @@ const ConstTimeWorkTime = ({
 
   const handleCloseDay = () => {
     setEditDay(false)
-    handleResetDay(itemWorker.user._id, item.dayOfTheWeek)
+    handleResetDay(itemWorker._id, item.dayOfTheWeek)
     if (!!finallSelectedDayOfTheMonth) {
       setDayStart(finallSelectedDayOfTheMonth.startWorking)
       setDayEnd(finallSelectedDayOfTheMonth.endWorking)
@@ -172,7 +172,7 @@ const ConstTimeWorkTime = ({
       setDayEnd("0:00")
       setDisabledDay(true)
     }
-    handleCloseConstTimeWorkItem(itemWorker.user._id, item.dayOfTheWeek)
+    handleCloseConstTimeWorkItem(itemWorker._id, item.dayOfTheWeek)
   }
 
   const disabledButtonSave = !!!dayStart || !!!dayEnd

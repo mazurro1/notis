@@ -234,7 +234,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
         }
       )
       const selectEditedWorker = editedWorkersHours.find(
-        workerEdited => workerEdited.indexWorker === item.user._id
+        workerEdited => workerEdited.indexWorker === item._id
       )
       if (!!selectEditedWorker) {
         const filterItemNoConstantWorkingHours = mapItemNoConstantWorkingHoursDate.filter(
@@ -546,8 +546,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
   const handleSaveNoConstTimework = () => {
     const newEditedWorkersHours = [...editedWorkersHours]
     const indexWorkerHours = editedWorkersHours.findIndex(
-      itemEditedWorkerHours =>
-        itemEditedWorkerHours.indexWorker === item.user._id
+      itemEditedWorkerHours => itemEditedWorkerHours.indexWorker === item._id
     )
     if (indexWorkerHours >= 0) {
       const allDeletedIds = [
@@ -570,7 +569,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
     } else {
       const newEditedWorker = {
         constantWorkingHours: [],
-        indexWorker: item.user._id,
+        indexWorker: item._id,
         noConstantWorkingHours: {
           deletedEventsIds: [...deletedEventsIds],
           newEvents: [...newEvents],

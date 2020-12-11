@@ -269,6 +269,7 @@ const ContentCompanyProfil = ({
       const isIndexWorker = oldWorkers.findIndex(
         item => item.indexWorker === indexWorker
       )
+      console.log(isIndexWorker, indexWorker)
       if (isIndexWorker >= 0) {
         oldWorkers[isIndexWorker].specializationText = specializationText
         oldWorkers[isIndexWorker].servicesCategory = workerServicesCategory
@@ -288,7 +289,7 @@ const ContentCompanyProfil = ({
       setEditedWorkers(newOldWorkers)
     } else if (action === "delete") {
       const itemFromServer = [...company.workers].find(
-        worker => worker.user._id === indexWorker
+        worker => worker._id === indexWorker
       )
       const workersIndex = [...editedWorkers].findIndex(
         item => item.indexWorker === indexWorker
@@ -394,7 +395,13 @@ const ContentCompanyProfil = ({
       companyId: companyId,
       workers: company.workers,
       ownerData: ownerData,
+      maxDate: new Date(
+        new Date().setMonth(
+          new Date().getMonth() + company.reservationMonthTime
+        )
+      ),
     }
+    // console.log(company)
     dispatch(changeReserwationValue(valueWithCompanyId))
   }
 

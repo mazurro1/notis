@@ -280,7 +280,7 @@ export const compareEditedArrayToServerArrayAndReturnNotCompareItems = (
   const prevWorkers = []
   workersFromServer.forEach(workerX => {
     const newWorker = {
-      indexWorker: workerX.user._id,
+      indexWorker: workerX._id,
       specializationText: workerX.specialization,
       servicesCategory: [...workerX.servicesCategory],
     }

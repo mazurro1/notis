@@ -86,7 +86,7 @@ const ConstTimeWorkTime = ({
                 fontIconSize="16"
                 fontSize="14"
                 icon={<FaArrowLeft />}
-                onClick={() => handleCancelConstTimeWork(itemWorker.user._id)}
+                onClick={() => handleCancelConstTimeWork(itemWorker._id)}
                 customColorButton={Colors(colorBlind).dangerColorDark}
                 customColorIcon={Colors(colorBlind).dangerColor}
               />
@@ -98,7 +98,7 @@ const ConstTimeWorkTime = ({
                 fontIconSize="18"
                 fontSize="14"
                 icon={<FaSave />}
-                onClick={() => handleSaveConstTimeWork(itemWorker.user._id)}
+                onClick={() => handleSaveConstTimeWork(itemWorker._id)}
                 customColorButton={Colors(colorBlind).successColorDark}
                 customColorIcon={Colors(colorBlind).successColor}
               />
