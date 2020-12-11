@@ -1,6 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchUserReserwations } from "../state/actions"
+import {
+  fetchUserReserwations,
+  fetchUserReserwationsAll,
+} from "../state/actions"
 import UserHistoryCategory from "./UserHistoryCategory"
 import styled from "styled-components"
 
@@ -15,10 +18,17 @@ const NoReserwationsStyle = styled.div`
 `
 
 const UserHistory = ({ colorBlind, user }) => {
+  const [hiddenCanceledReserwation, setHiddenCanceledReserwation] = useState(
+    true
+  )
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchUserReserwations(user.token))
-  }, [])
+    if (!!hiddenCanceledReserwation) {
+      dispatch(fetchUserReserwations(user.token))
+    } else {
+      dispatch(fetchUserReserwationsAll(user.token))
+    }
+  }, [hiddenCanceledReserwation])
 
   const userHistoryReserwations = useSelector(
     state => state.userHistoryReserwations
@@ -32,6 +42,8 @@ const UserHistory = ({ colorBlind, user }) => {
         reserwations={item.items}
         key={index}
         userToken={user.token}
+        setHiddenCanceledReserwation={setHiddenCanceledReserwation}
+        hiddenCanceledReserwation={hiddenCanceledReserwation}
       />
     )
   })

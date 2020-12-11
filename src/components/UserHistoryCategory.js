@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { MdExpandMore } from "react-icons/md"
 import { Collapse } from "react-collapse"
@@ -68,11 +68,11 @@ const UserHistoryCategory = ({
   title,
   reserwations,
   userToken,
+  hiddenCanceledReserwation,
+  setHiddenCanceledReserwation,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
-  const [hiddenCanceledReserwation, setHiddenCanceledReserwation] = useState(
-    true
-  )
+  const [disabledSwitch, setDisabledSwitch] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -81,7 +81,13 @@ const UserHistoryCategory = ({
   }
 
   const handleHiddenCanceledReserwation = () => {
-    setHiddenCanceledReserwation(prevState => !prevState)
+    if (!!!disabledSwitch) {
+      setHiddenCanceledReserwation(prevState => !prevState)
+      setDisabledSwitch(true)
+      setTimeout(() => {
+        setDisabledSwitch(false)
+      }, 5000)
+    }
   }
 
   const handleDeleteReserwation = reserwationId => {
@@ -101,28 +107,7 @@ const UserHistoryCategory = ({
     e.stopPropagation()
   }
 
-  let allReserwations = [...reserwations]
-  if (!!hiddenCanceledReserwation) {
-    allReserwations = allReserwations.filter(itemReserwation => {
-      const splitDateReserwation = itemReserwation.dateStart.split(":")
-      const dateReserwation = new Date(
-        itemReserwation.dateYear,
-        itemReserwation.dateMonth - 1,
-        itemReserwation.dateDay,
-        Number(splitDateReserwation[0]),
-        Number(splitDateReserwation[1]),
-        0
-      )
-      const actualDate = new Date()
-      const isReserwationEnd = actualDate < dateReserwation
-      return (
-        !!!itemReserwation.visitCanceled &&
-        !!!itemReserwation.visitFinished &&
-        isReserwationEnd
-      )
-    })
-  }
-
+  const allReserwations = [...reserwations]
   const servicesMap = allReserwations.map((item, index) => {
     return (
       <UserHistoryCategoryItem
@@ -153,6 +138,7 @@ const UserHistoryCategory = ({
             height={22}
             uncheckedIcon
             checkedIcon
+            disabled={disabledSwitch}
           />
         </SwitchPosition>
         <IconArrowPosition

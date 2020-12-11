@@ -1076,6 +1076,23 @@ export const fetchUserReserwations = token => {
   }
 }
 
+export const fetchUserReserwationsAll = token => {
+  return dispatch => {
+    return axios
+      .get(`${Site.serverUrl}/user-reserwations-all`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then(response => {
+        dispatch(updateUserReserwations(response.data.reserwations))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
+      })
+  }
+}
+
 export const fetchDeleteReserwation = (
   token,
   reserwationId,
