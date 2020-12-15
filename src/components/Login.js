@@ -42,7 +42,7 @@ const CheckboxStyle = styled.div`
   margin-top: 20px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).secondColor};
+    background-color: ${props => Colors(props.colorBlind).primaryColor};
   }
 
   span {

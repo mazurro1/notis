@@ -284,21 +284,28 @@ export const fetchAutoLogin = (
             }
           })
           .catch(error => {
-            if (!noAlert) {
-              dispatch(addAlertItem("Autologowanie się nie powiodło", "red"))
-            }
-            if (error.response.status === 401) {
+            if (!!error.response) {
+              if (!noAlert) {
+                dispatch(addAlertItem("Autologowanie się nie powiodło", "red"))
+              }
+              if (error.response.status === 401) {
+                dispatch(logout())
+              }
+              if (!noSpinner) {
+                setTimeout(() => {
+                  dispatch(changeSpinner(false))
+                }, 1000)
+              }
+              if (lastSpinnerCreateCompany) {
+                dispatch(
+                  addAlertItem("Błąd podczas tworzenia konta firmowego.", "red")
+                )
+                setTimeout(() => {
+                  dispatch(changeSpinner(false))
+                }, 1000)
+              }
+            } else {
               dispatch(logout())
-            }
-            if (!noSpinner) {
-              setTimeout(() => {
-                dispatch(changeSpinner(false))
-              }, 1000)
-            }
-            if (lastSpinnerCreateCompany) {
-              dispatch(
-                addAlertItem("Błąd podczas tworzenia konta firmowego.", "red")
-              )
               setTimeout(() => {
                 dispatch(changeSpinner(false))
               }, 1000)
@@ -1076,14 +1083,21 @@ export const fetchUserReserwations = token => {
   }
 }
 
-export const fetchUserReserwationsAll = token => {
+export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
   return dispatch => {
     return axios
-      .get(`${Site.serverUrl}/user-reserwations-all`, {
-        headers: {
-          Authorization: "Bearer " + token,
+      .post(
+        `${Site.serverUrl}/user-reserwations-all`,
+        {
+          yearPicker: yearPicker,
+          monthPicker: monthPicker,
         },
-      })
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then(response => {
         dispatch(updateUserReserwations(response.data.reserwations))
       })

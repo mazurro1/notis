@@ -9,14 +9,14 @@ const SelectDiv = styled.div`
   margin: 0 auto;
   width: ${props => (props.widthAuto ? "auto" : "500px")};
   max-width: 90vw;
+  /* box-shadow: 0 0 5px 10px rgba(0, 0, 0, 0.1); */
   div {
     div {
       border-color: ${props =>
         props.secondColor
           ? Colors(props.colorBlind).secondColor
           : Colors(props.colorBlind).primaryColor} !important;
-      box-shadow: none;
-      color: ${props => Colors(props.colorBlind).textBlack};
+      color: ${props => Colors(props.colorBlind).textNormalBlack};
     }
   }
 `
@@ -33,6 +33,8 @@ const SelectCustom = ({
   isMulti = false,
   closeMenuOnSelect = true,
   menuIsOpen = false,
+  isClearable = true,
+  isDisabled = false,
 }) => {
   const colorBlind = useSelector(state => state.colorBlind)
   const handleOnChange = value => {
@@ -114,7 +116,7 @@ const SelectCustom = ({
     >
       <Select
         isLoadin={isLoading}
-        isClearable
+        isClearable={isClearable}
         defaultMenuIsOpen={defaultMenuIsOpen}
         options={options}
         styles={secondColor ? "" : colourStyles}
@@ -124,7 +126,8 @@ const SelectCustom = ({
         maxMenuHeight={secondColor ? 100 : 300}
         isMulti={isMulti}
         closeMenuOnSelect={closeMenuOnSelect}
-        menuIsOpen={menuIsOpen}
+        isDisabled={isDisabled}
+        // menuIsOpen={menuIsOpen}
       />
     </SelectDiv>
   )

@@ -1,13 +1,14 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { MdExpandMore } from "react-icons/md"
+import { FaChrome } from "react-icons/fa"
 import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import UserHistoryCategoryItem from "./UserHistoryCategoryItem"
 import { useDispatch } from "react-redux"
 import { fetchDeleteReserwation } from "../state/actions"
-import Switch from "react-switch"
+import { LinkEffect } from "../common/LinkEffect"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -21,7 +22,7 @@ const TitleCategory = styled.div`
   user-select: none;
   text-transform: uppercase;
   cursor: pointer;
-  padding-right: 110px;
+  padding-right: 250px;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -56,11 +57,29 @@ const CategoryItemStyle = styled.div`
   margin-top: 5px;
 `
 
-const SwitchPosition = styled.div`
+const PositionCompanyLink = styled.div`
   position: absolute;
-  top: 13px;
-  bottom: 0;
   right: 50px;
+  top: 0px;
+  border-radius: 5px;
+  font-size: 1.8rem;
+  padding: 8px;
+  padding-bottom: 5px;
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  a {
+    color: ${props => Colors(props.colorBlind).textNormalWhite};
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+  &:hover {
+    transform: scale(1.1);
+    a {
+      color: ${props => Colors(props.colorBlind).primaryColorDark};
+    }
+  }
 `
 
 const UserHistoryCategory = ({
@@ -68,26 +87,13 @@ const UserHistoryCategory = ({
   title,
   reserwations,
   userToken,
-  hiddenCanceledReserwation,
-  setHiddenCanceledReserwation,
+  company,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
-  const [disabledSwitch, setDisabledSwitch] = useState(false)
-
   const dispatch = useDispatch()
 
   const handleClickArrow = () => {
     setCollapseActive(prevState => !prevState)
-  }
-
-  const handleHiddenCanceledReserwation = () => {
-    if (!!!disabledSwitch) {
-      setHiddenCanceledReserwation(prevState => !prevState)
-      setDisabledSwitch(true)
-      setTimeout(() => {
-        setDisabledSwitch(false)
-      }, 5000)
-    }
   }
 
   const handleDeleteReserwation = reserwationId => {
@@ -103,7 +109,7 @@ const UserHistoryCategory = ({
     )
   }
 
-  const handleClickContent = e => {
+  const handleClickContentNoClicked = e => {
     e.stopPropagation()
   }
 
@@ -118,33 +124,22 @@ const UserHistoryCategory = ({
       />
     )
   })
-
   return (
     <CategoryItemStyle>
       <TitleCategory colorBlind={colorBlind} onClick={handleClickArrow}>
         {title}
-        <SwitchPosition
-          onClick={handleClickContent}
+        <PositionCompanyLink
+          onClick={handleClickContentNoClicked}
+          colorBlind={colorBlind}
           data-tip
-          data-for="switchCanceled"
+          data-for="goToWebsite"
         >
-          <Switch
-            onChange={handleHiddenCanceledReserwation}
-            checked={hiddenCanceledReserwation}
-            activeBoxShadow={`0 0 2px 3px ${
-              Colors(colorBlind).primaryColorDark
-            }`}
-            onColor={Colors(colorBlind).primaryColorDark}
-            height={22}
-            uncheckedIcon
-            checkedIcon
-            disabled={disabledSwitch}
+          <LinkEffect
+            path={`/company/${company.company.linkPath}`}
+            text={<FaChrome />}
           />
-        </SwitchPosition>
-        <IconArrowPosition
-          // onClick={handleClickArrow}
-          collapseActive={collapseActive}
-        >
+        </PositionCompanyLink>
+        <IconArrowPosition collapseActive={collapseActive}>
           <MdExpandMore />
         </IconArrowPosition>
       </TitleCategory>
@@ -159,13 +154,8 @@ const UserHistoryCategory = ({
       >
         <span>Odwołaj wizytę</span>
       </ReactTooltip>
-
-      <ReactTooltip id="switchCanceled" effect="float" multiline={true}>
-        {!!!hiddenCanceledReserwation ? (
-          <span>Ukryj wizyty zakończone oraz odwołane</span>
-        ) : (
-          <span>Pokaż wizyty zakończone oraz odwołane</span>
-        )}
+      <ReactTooltip id="goToWebsite" effect="float" multiline={true}>
+        <span>Przejdz do strony internetowej firmy</span>
       </ReactTooltip>
     </CategoryItemStyle>
   )

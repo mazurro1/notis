@@ -433,6 +433,7 @@ const Navigation = ({ children, isMainPage }) => {
       popupEnable={loginVisible}
       handleClose={handleClickLogin}
       maxWidth="400"
+      title="Logowanie"
     >
       <LoginContent />
     </Popup>
@@ -443,6 +444,7 @@ const Navigation = ({ children, isMainPage }) => {
       popupEnable={remindPasswordVisible}
       handleClose={handleCloseRemindPassword}
       maxWidth="400"
+      title="Przypomnij hasło"
     >
       <RemindPassword />
     </Popup>
@@ -453,6 +455,7 @@ const Navigation = ({ children, isMainPage }) => {
       popupEnable={registrationVisible}
       handleClose={handleClickRegister}
       maxWidth="400"
+      title="Rejestracja"
     >
       <RegisterContent />
     </Popup>

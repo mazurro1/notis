@@ -153,7 +153,7 @@ const WorkerItem = ({
   ButtonDeleteStyle,
   ButtonContent,
   companyId,
-  userToken,
+  user,
   index,
   handleAddEditWorker,
   allCategoriesWithItems,
@@ -288,13 +288,13 @@ const WorkerItem = ({
   }
 
   const handleDeleteUser = () => {
-    dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, userToken))
+    dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, user.token))
     handleAddEditWorker("delete", item._id, inputSpecialization)
   }
 
   const handleSentAgainEmailVeryfication = () => {
     dispatch(
-      fetchAddAgainWorkerToCompany(companyId, item.user.email, userToken)
+      fetchAddAgainWorkerToCompany(companyId, item.user.email, user.token)
     )
   }
 

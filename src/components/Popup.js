@@ -52,7 +52,7 @@ const PopupContent = styled.div`
 const PaddingContnent = styled.div`
   padding: 10px 15px;
   overflow-y: auto;
-  max-height: calc(100% - 41px);
+  height: calc(100% - 41px);
 `
 
 const ClosePopup = styled.div`
