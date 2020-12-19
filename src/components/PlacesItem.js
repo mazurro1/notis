@@ -210,7 +210,7 @@ const PlacesItem = ({ item, filters, index }) => {
         <ButtonIcon
           title={
             isInServicesFilterSome
-              ? `W usługach znajduje się: ${isInServicesFilter[0]}`
+              ? `W usługach znajduje się: ${isInServicesFilter[0].serviceName}`
               : "Brak w usługach"
           }
           fontSize="13"

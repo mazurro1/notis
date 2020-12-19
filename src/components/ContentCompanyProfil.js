@@ -199,14 +199,19 @@ const ContentCompanyProfil = ({
   const [editedItemsServices, setEditedItemsServices] = useState([])
   const editedWorkersHours = useSelector(state => state.editedWorkersHours)
 
+  const [newIndustries, setNewIndustries] = useState([])
+  const [deletedIndustries, setDeletedIndustries] = useState([])
+
+  console.log("newIndustries", newIndustries)
+  console.log("deletedIndustries", deletedIndustries)
   // console.log("deleted from server", deletedItemsServices)
   // console.log("new services", newItemsServices)
   // console.log("edited services from server", editedItemsServices)
-  console.log("edited workers", editedWorkers)
-  console.log("edited workers hours", editedWorkersHours)
+  // console.log("edited workers", editedWorkers)
+  // console.log("edited workers hours", editedWorkersHours)
   // console.log("newOwnerSpecialization", newOwnerSpecialization)
-  console.log("deletedDayOffToSave", deletedDayOffToSave)
-  console.log("createdDayOffToSave", createdDayOffToSave)
+  // console.log("deletedDayOffToSave", deletedDayOffToSave)
+  // console.log("createdDayOffToSave", createdDayOffToSave)
   const user = useSelector(state => state.user)
   const colorBlind = useSelector(state => state.colorBlind)
   const resetCompany = useSelector(state => state.resetCompany)
@@ -215,6 +220,8 @@ const ContentCompanyProfil = ({
 
   useEffect(() => {
     if (!!resetCompany) {
+      setNewIndustries([])
+      setDeletedIndustries([])
       setCreatedDayOffToSave([])
       setDeletedDayOffToSave([])
       setReservationEveryTime(null)
@@ -434,6 +441,8 @@ const ContentCompanyProfil = ({
     deletedItemsServices.length > 0 ||
     deletedDayOffToSave.length > 0 ||
     createdDayOffToSave.length > 0 ||
+    deletedIndustries.length > 0 || 
+    newIndustries.length > 0 ||
     (companyPaused !== company.pauseCompany && companyPaused !== null)
 
   const handleSaveChanges = () => {
@@ -472,27 +481,34 @@ const ContentCompanyProfil = ({
         deletedDayOffToSave.length > 0 ? deletedDayOffToSave : null
       const createdDayOffToSaveIsChanges =
         createdDayOffToSave.length > 0 ? createdDayOffToSave : null
-      dispatch(
-        fetchUpdateCompanyProfil(
-          user.token,
-          company._id,
-          textAboutUsToSent,
-          textRezerwationTextToSent,
-          editedWorkersToSent,
-          editedAdressToSent,
-          editedLinksToSent,
-          ownerSpecializationToSent,
-          openingHoursToSentFinall,
-          companyPausedToSent,
-          services,
-          reservationEveryTime,
-          reservationMonthTime,
-          newOwnerServicesCategory,
-          editedWorkersHours,
-          createdDayOffToSaveIsChanges,
-          deletedDayOffToSaveIsChanges
-        )
+
+        const newIndustriesToSent = newIndustries.length > 0 ? newIndustries : null; 
+        const deletedIndustriesToSent =
+          deletedIndustries.length > 0 ? deletedIndustries : null 
+
+    dispatch(
+      fetchUpdateCompanyProfil(
+        user.token,
+        company._id,
+        textAboutUsToSent,
+        textRezerwationTextToSent,
+        editedWorkersToSent,
+        editedAdressToSent,
+        editedLinksToSent,
+        ownerSpecializationToSent,
+        openingHoursToSentFinall,
+        companyPausedToSent,
+        services,
+        reservationEveryTime,
+        reservationMonthTime,
+        newOwnerServicesCategory,
+        editedWorkersHours,
+        createdDayOffToSaveIsChanges,
+        deletedDayOffToSaveIsChanges,
+        newIndustriesToSent,
+        deletedIndustriesToSent
       )
+    )
       setCompanyPaused(null)
     }
   }
@@ -504,6 +520,8 @@ const ContentCompanyProfil = ({
       return false
     }
   })
+
+  console.log(company)
 
   return (
     <div>
@@ -572,6 +590,11 @@ const ContentCompanyProfil = ({
               reservationEveryTimeServer={company.reservationEveryTime}
               reservationMonthServer={company.reservationMonthTime}
               colorBlind={colorBlind}
+              newIndustries={newIndustries}
+              setNewIndustries={setNewIndustries}
+              deletedIndustries={deletedIndustries}
+              setDeletedIndustries={setDeletedIndustries}
+              companyIndustries={company.companyType}
             />
           </RightColumnItem>
           <InputCustom />

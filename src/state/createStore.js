@@ -69,7 +69,7 @@ const initialState = {
   filterVisible: false,
   filters: null,
   filtersData: [
-    { value: "oczyszczanie twarzy", label: "oczyszczanie twarzy" },
+    { value: "Hybryda", label: "Hybryda" },
     { value: "strawberry1", label: "Strawberry1" },
     { value: "vanilla1", label: "Vanilla1" },
   ],
@@ -346,7 +346,7 @@ const reducer = (state = initialState, action) => {
             ...state,
             reserwationData: itemReserwation,
           }
-        }, 400)
+        }, 1)
         return {
           ...state,
           reserwationEnable: reserwationEnable,

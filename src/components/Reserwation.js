@@ -214,6 +214,12 @@ const AllAvaibleHours = styled.div`
   flex-wrap: wrap;
 `
 
+const NoWorkersText = styled.div`
+  font-size: 1.1rem;
+  margin-left: 10px;
+  margin-top: 10px;
+`
+
 const Reserwation = ({
   handleCloseReserwation,
   reserwationEnable,
@@ -394,7 +400,6 @@ const Reserwation = ({
     )
     return workerHasServiceCategory
   })
-
   const mapWorkersToSelect = filterWorkers.map((worker, index) => {
     const workerIsSelected = !!selectedWorkerUserId
       ? selectedWorkerId === worker._id
@@ -491,7 +496,6 @@ const Reserwation = ({
   }
 
   const disabledReserwButton = !!selectedHour & !!selectedWorkerUserId
-
   return (
     <>
       <CSSTransition
@@ -523,48 +527,53 @@ const Reserwation = ({
                 </ServiceParagraph>
               </LeftContent>
             </ServiceItem>
-            <TextReserwation colorBlind={colorBlind}>
-              Wybierz pracownika:
-            </TextReserwation>
-            <ContentWorkers>
-              {ownerWorkerToSelect}
-              {mapWorkersToSelect}
-            </ContentWorkers>
-            <TextReserwation colorBlind={colorBlind}>
-              Wybierz dzień:
-            </TextReserwation>
 
-            <ButtonIconStyle>
-              <ButtonIcon
-                title={
-                  selectedDate
-                    ? `${selectedDateMonth} ${selectedDateDay}-${selectedDateFullMonth}-${selectedDateYear}`
-                    : "Wybierz dzień"
-                }
-                fontIconSize="20"
-                fontSize="16"
-                icon={<FaCalendarDay />}
-                onClick={handleSelectDay}
-                uppercase
-                disabled={!!!selectedWorkerUserId}
-              />
-            </ButtonIconStyle>
-
-            <TextReserwation colorBlind={colorBlind}>
-              Wybierz godzinę:
-            </TextReserwation>
-            {renderAvaibleHours}
-            <ButtonIcon
-              title="Rezerwuj"
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarCheck />}
-              onClick={handleDoReserwation}
-              uppercase
-              customColorButton={Colors(colorBlind).successColorDark}
-              customColorIcon={Colors(colorBlind).successColor}
-              disabled={!disabledReserwButton}
-            />
+            {!!!ownerHasServiceCategory && filterWorkers.length === 0 ? (
+              <NoWorkersText>Brak dostępnych pracowników</NoWorkersText>
+            ) : (
+              <>
+                <TextReserwation colorBlind={colorBlind}>
+                  Wybierz pracownika:
+                </TextReserwation>
+                <ContentWorkers>
+                  {ownerWorkerToSelect}
+                  {mapWorkersToSelect}
+                </ContentWorkers>
+                <TextReserwation colorBlind={colorBlind}>
+                  Wybierz dzień:
+                </TextReserwation>
+                <ButtonIconStyle>
+                  <ButtonIcon
+                    title={
+                      selectedDate
+                        ? `${selectedDateMonth} ${selectedDateDay}-${selectedDateFullMonth}-${selectedDateYear}`
+                        : "Wybierz dzień"
+                    }
+                    fontIconSize="20"
+                    fontSize="16"
+                    icon={<FaCalendarDay />}
+                    onClick={handleSelectDay}
+                    uppercase
+                    disabled={!!!selectedWorkerUserId}
+                  />
+                </ButtonIconStyle>
+                <TextReserwation colorBlind={colorBlind}>
+                  Wybierz godzinę:
+                </TextReserwation>
+                {renderAvaibleHours}
+                <ButtonIcon
+                  title="Rezerwuj"
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaCalendarCheck />}
+                  onClick={handleDoReserwation}
+                  uppercase
+                  customColorButton={Colors(colorBlind).successColorDark}
+                  customColorIcon={Colors(colorBlind).successColor}
+                  disabled={!disabledReserwButton}
+                />
+              </>
+            )}
             <ClosePopup
               onClick={handleCloseReserwation}
               colorBlind={colorBlind}

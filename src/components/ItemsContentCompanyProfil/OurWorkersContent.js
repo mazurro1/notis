@@ -272,6 +272,7 @@ const OurWorkersContent = ({
       }
     }
   }, [ownerServicesCategory, setSelectHeight])
+  
 
   useEffect(() => {
     if (!!selectRef.current) {
@@ -434,6 +435,8 @@ const OurWorkersContent = ({
           selectEditedWorkersHours={selectEditedOwnerHours}
           editedWorkersHours={editedWorkersHours}
           isAdmin={isAdmin}
+          setAllCategories={setAllCategories}
+          allCategoriesWithItems={allCategoriesWithItems}
         />
         {mapWorkers}
       </WorkerContent>

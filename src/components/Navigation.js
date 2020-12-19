@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Colors } from "../common/Colors"
-import { Industries } from "../common/Industries"
+import { AllIndustries } from "../common/AllIndustries"
 import ButtonIcon from "../components/ButtonIcon"
 import ButtonTakeData from "../components/ButtonTakeData"
 import styled from "styled-components"
@@ -40,6 +40,7 @@ import {
   changeBlindStyle,
   changeDarkStyle,
   fetchAllCompanys,
+  fetchAllCompanysOfType,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -178,6 +179,26 @@ const PaddingContent = styled.div`
   transition-delay: ${props => (props.topNavVisibleMenu ? "0" : "0.195s")};
 `
 
+const ButtonIconStyles = styled.div`
+  padding: 4px 10px;
+  padding-left: 10px;
+  border-radius: 5px;
+  background-color: ${props =>
+    props.active
+      ? Colors(props.colorBlind).primaryColor
+      : Colors(props.colorBlind).darkColor};
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  font-size: 15px;
+  user-select: none;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    background-color: ${props => Colors(props.colorBlind).primaryColorDark};
+  }
+`
+
 const Navigation = ({ children, isMainPage }) => {
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
@@ -242,7 +263,11 @@ const Navigation = ({ children, isMainPage }) => {
 
   useEffect(() => {
     console.log("update")
-    dispatch(fetchAllCompanys(1))
+    if (!!industries || industries === 0) {
+      dispatch(fetchAllCompanysOfType(1, industries))
+    } else {
+      dispatch(fetchAllCompanys(1))
+    }
   }, [
     selectedDateAndTime,
     selectedName,
@@ -324,15 +349,17 @@ const Navigation = ({ children, isMainPage }) => {
     setHistoryReserwations(prevState => !prevState)
   }
 
-  const mapIndustries = Industries.map((item, index) => {
+  const mapIndustries = AllIndustries.map((item, index) => {
+    const isIndustriesActive = industries === item.value
     return (
       <PaddingRight key={index}>
-        <ButtonIcon
-          title={item}
-          fontSize="15"
-          buttonBgDark
-          onClick={() => handleChangeIndustries(item)}
-        />
+        <ButtonIconStyles
+          active={isIndustriesActive}
+          colorBlind={colorBlind}
+          onClick={() => handleChangeIndustries(item.value)}
+        >
+          {item.label}
+        </ButtonIconStyles>
       </PaddingRight>
     )
   })
@@ -374,10 +401,16 @@ const Navigation = ({ children, isMainPage }) => {
             />
           </AllInputs>
           <UnderMenuIndustries>
-            {mapIndustries}
             <PaddingRight>
-              <ButtonIcon title="Więcej..." fontSize="15" buttonBgDark />
+              <ButtonIconStyles
+                active={industries === null}
+                colorBlind={colorBlind}
+                onClick={() => handleChangeIndustries(null)}
+              >
+                Wszystko
+              </ButtonIconStyles>
             </PaddingRight>
+            {mapIndustries}
           </UnderMenuIndustries>
         </NavigationDiv>
       </WrapperNavigationUnder>
@@ -462,7 +495,7 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const PopupCreateCompany = (
-    <Popup popupEnable={createCompanyVisible} handleClose={handleCreateCompany}>
+    <Popup popupEnable={createCompanyVisible} handleClose={handleCreateCompany} title="Stwórz konto firmowe">
       <CreateCompany />
     </Popup>
   )

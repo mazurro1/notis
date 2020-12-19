@@ -191,7 +191,7 @@ const WorkerItem = ({
     setChooseTimeWorker(false)
   }, [editMode])
 
-  useEffect(() => {
+ useEffect(() => {
     if (!!item.servicesCategory) {
       if (item.servicesCategory.length > 0) {
         const valuePadding = allCategoriesWithItems.length * 23 + 15
@@ -208,19 +208,19 @@ const WorkerItem = ({
 
   useEffect(() => {
     if (allCategoriesWithItems.length > 0 || !!resetServicesCategory) {
-      const newCategories = allCategoriesWithItems.map(item => {
+      const newCategories = allCategoriesWithItems.map(itemValue => {
         const newItem = {
-          value: item.oldCategory,
-          label: item.category,
+          value: itemValue.oldCategory,
+          label: itemValue.category,
         }
         return newItem
       })
 
       //take all categories
       const allCategories = []
-      allCategoriesWithItems.forEach(item => {
-        if (item.items.length > 0) {
-          allCategories.push(item.category)
+      allCategoriesWithItems.forEach(itemValue => {
+        if (itemValue.items.length > 0) {
+          allCategories.push(itemValue.category)
         }
       })
 
@@ -233,21 +233,23 @@ const WorkerItem = ({
         : []
 
       if (allWorkerServicesCategory.length === 0) {
-        const workerServicesCategoryMaped = actualServicesCategory.map(item => {
-          return {
-            label: item,
-            value: item,
+        const workerServicesCategoryMaped = actualServicesCategory.map(
+          itemValue => {
+            return {
+              label: itemValue,
+              value: itemValue,
+            }
           }
-        })
+        )
         allWorkerServicesCategory = [...workerServicesCategoryMaped]
       }
 
       //change label when category was actualizated
       const newWorkerServicesCategory = [...allWorkerServicesCategory]
       if (newWorkerServicesCategory.length > 0 || !!actualServicesCategory) {
-        newWorkerServicesCategory.forEach((item, index) => {
+        newWorkerServicesCategory.forEach((itemValue, index) => {
           newCategories.forEach(itemCategory => {
-            if (itemCategory.value === item.value) {
+            if (itemCategory.value === itemValue.value) {
               newWorkerServicesCategory[index].label = itemCategory.label
             }
           })
@@ -255,9 +257,9 @@ const WorkerItem = ({
 
         //filter categories worker
         const filteredArrayAllCategories = newWorkerServicesCategory.filter(
-          item => {
+          itemValue => {
             const isCategoryInWorkerArr = allCategories.some(
-              category => category === item.label
+              category => category === itemValue.label
             )
             return isCategoryInWorkerArr
           }
@@ -267,7 +269,8 @@ const WorkerItem = ({
       }
       setAllCategories(newCategories)
     }
-  }, [allCategoriesWithItems, item, setAllCategories])
+  }, [allCategoriesWithItems, item])
+  // }, [allCategoriesWithItems, item, setAllCategories])
 
   const dispatch = useDispatch()
 
@@ -311,7 +314,7 @@ const WorkerItem = ({
         : item.specialization
 
     const workerServicesCategoryToSent = workerServicesCategory.map(
-      item => item.label
+      itemValue => itemValue.label
     )
 
     const workerServicesCategoryValue = workerServicesCategoryToSent
@@ -327,17 +330,17 @@ const WorkerItem = ({
   const handleEditSpecializationReset = () => {
     let actualServicesCategory = workerServicesCategory
     if (!!editedWorkers) {
-      actualServicesCategory = editedWorkers.servicesCategory.map(item => {
+      actualServicesCategory = editedWorkers.servicesCategory.map(itemValue => {
         return {
-          label: item,
-          value: item,
+          label: itemValue,
+          value: itemValue,
         }
       })
     }
     setInputSpeciailization(item.specialization)
     setUserEditItem(false)
     const mapLebelValueToCategory = actualServicesCategory.map(
-      item => item.label
+      itemValue => itemValue.label
     )
     handleAddEditWorker(
       "delete",
@@ -365,12 +368,14 @@ const WorkerItem = ({
   const handleResetDay = (itemWorkerId, dayOfTheWeek) => {
     const newEditedWorkersHours = [...editedWorkersHours]
     const indexEditedWorker = editedWorkersHours.findIndex(
-      item => item.indexWorker === itemWorkerId
+      itemValue => itemValue.indexWorker === itemWorkerId
     )
     if (indexEditedWorker >= 0) {
       const filterEditedDays = newEditedWorkersHours[
         indexEditedWorker
-      ].constantWorkingHours.filter(item => item.dayOfTheWeek !== dayOfTheWeek)
+      ].constantWorkingHours.filter(
+        itemValue => itemValue.dayOfTheWeek !== dayOfTheWeek
+      )
       if (
         filterEditedDays.length > 0 ||
         newEditedWorkersHours[indexEditedWorker].noConstantWorkingHours.length >
@@ -382,7 +387,7 @@ const WorkerItem = ({
         dispatch(changeEditedWorkerHours(newEditedWorkersHours))
       } else {
         const deleteWorkerInEditedWorkerHours = editedWorkersHours.filter(
-          item => item.indexWorker !== itemWorkerId
+          itemValue => itemValue.indexWorker !== itemWorkerId
         )
         dispatch(changeEditedWorkerHours(deleteWorkerInEditedWorkerHours))
       }
@@ -391,10 +396,10 @@ const WorkerItem = ({
 
   const handleCancelConstTimeWork = itemWorkerId => {
     const filterToSaveWorkers = toSaveWorkerHours.filter(
-      item => item.indexWorker !== itemWorkerId
+      itemValue => itemValue.indexWorker !== itemWorkerId
     )
     const filterEditedWorkers = editedWorkersHours.filter(
-      item => item.indexWorker !== itemWorkerId
+      itemValue => itemValue.indexWorker !== itemWorkerId
     )
     dispatch(changeEditedWorkerHours(filterEditedWorkers))
     setToSaveWorkerHours(filterToSaveWorkers)
@@ -406,11 +411,11 @@ const WorkerItem = ({
   const handleSaveConstTimeWork = itemWorkerId => {
     const newEditedWorkersHoursSave = [...editedWorkersHours]
     const filterNewEditedWorkers = toSaveWorkerHours.find(
-      item => item.indexWorker === itemWorkerId
+      itemValue => itemValue.indexWorker === itemWorkerId
     )
 
     const indexEditedWorkers = editedWorkersHours.findIndex(
-      item => item.indexWorker === itemWorkerId
+      itemValue => itemValue.indexWorker === itemWorkerId
     )
     if (!!filterNewEditedWorkers) {
       if (indexEditedWorkers >= 0) {
@@ -465,12 +470,14 @@ const WorkerItem = ({
   const handleCloseConstTimeWorkItem = (indexWorker, dayOfTheWeek) => {
     const newToSaveWorkerHours = [...toSaveWorkerHours]
     const indexWorkerInArray = toSaveWorkerHours.findIndex(
-      item => item.indexWorker === indexWorker
+      itemValue => itemValue.indexWorker === indexWorker
     )
     if (indexWorkerInArray >= 0) {
       const filterArray = newToSaveWorkerHours[
         indexWorkerInArray
-      ].constantWorkingHours.filter(item => item.dayOfTheWeek !== dayOfTheWeek)
+      ].constantWorkingHours.filter(
+        itemValue => itemValue.dayOfTheWeek !== dayOfTheWeek
+      )
       newToSaveWorkerHours[
         indexWorkerInArray
       ].constantWorkingHours = filterArray

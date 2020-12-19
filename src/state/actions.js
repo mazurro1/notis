@@ -590,7 +590,8 @@ export const FetchCompanyRegistration = (
   companyDiscrict,
   companyAdress,
   userToken,
-  userId
+  userId,
+  industries
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -604,6 +605,7 @@ export const FetchCompanyRegistration = (
           companyCity: companyCity,
           companyDiscrict: companyDiscrict,
           companyAdress: companyAdress,
+          companyIndustries: industries,
         },
         {
           headers: {
@@ -876,7 +878,9 @@ export const fetchUpdateCompanyProfil = (
   newOwnerServicesCategory,
   editedWorkersHours,
   createdDayOffToSaveIsChanges,
-  deletedDayOffToSaveIsChanges
+  deletedDayOffToSaveIsChanges,
+  newIndustriesToSent,
+  deletedIndustriesToSent
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -900,6 +904,8 @@ export const fetchUpdateCompanyProfil = (
           editedWorkersHours: editedWorkersHours,
           createdDayOff: createdDayOffToSaveIsChanges,
           deletedDayOff: deletedDayOffToSaveIsChanges,
+          newIndustries: newIndustriesToSent,
+          deletedIndustries: deletedIndustriesToSent,
         },
         {
           headers: {
@@ -1045,16 +1051,45 @@ export const fetchPathCompany = (token, companyPath) => {
   }
 }
 
-export const fetchAllCompanys = (page = 0) => {
+export const fetchAllCompanys = (page = 1) => {
   return dispatch => {
+    if (page === 1) {
+      dispatch(changeLoadingPlaces(true))
+    }
     return axios
       .post(`${Site.serverUrl}/all-companys`, {
         page: page,
       })
       .then(response => {
         dispatch(updatePlacesData(response.data.companysDoc))
+        if (page === 1) {
+          dispatch(changeLoadingPlaces(false))
+        }
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
+        dispatch(changeLoadingPlaces(false))
         if (page === 0) {
-          dispatch(changeLoadingPlaces(true))
+          dispatch(changeLoadingPlaces(false))
+        }
+      })
+  }
+}
+
+export const fetchAllCompanysOfType = (page = 1, type = 1) => {
+  return dispatch => {
+    if (page === 1) {
+      dispatch(changeLoadingPlaces(true))
+    }
+    return axios
+      .post(`${Site.serverUrl}/all-companys-type`, {
+        page: page,
+        type: type,
+      })
+      .then(response => {
+        dispatch(updatePlacesData(response.data.companysDoc))
+        if (page === 1) {
+          dispatch(changeLoadingPlaces(false))
         }
       })
       .catch(error => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
@@ -17,6 +17,8 @@ import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
 import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
 import { useSelector } from "react-redux"
+import SelectCustom from '../SelectCustom'
+import {AllIndustries} from '../../common/AllIndustries'
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -38,7 +40,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "500px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "700px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -245,7 +247,19 @@ const OpinionAndAdressContent = ({
   setReservationMonthTime,
   reservationEveryTimeServer,
   reservationMonthServer,
+  newIndustries = [],
+  deletedIndustries = [],
+  setNewIndustries,
+  setDeletedIndustries,
+  companyIndustries = []
 }) => {
+  const [industriesComponent, setIndustriesComponent] = useState(null)
+  const [newIndustriesComponent, setNewIndustriesComponent] = useState(
+    newIndustries
+  )
+  const [deletedIndustriesComponent, setDeletedIndustriesComponent] = useState(
+    deletedIndustries
+  )
   const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
   const [discrictInput, setDiscrictInput] = useState(district)
@@ -258,9 +272,21 @@ const OpinionAndAdressContent = ({
   const [reserwationMonth, setReserwationMonth] = useState(
     reservationMonthServer
   )
-
   const colorBlind = useSelector(state => state.colorBlind)
+
+    useEffect(()=>{
+      const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
+        const selectedIndustriesComponent = AllIndustries.find(
+          itemIndustries => itemIndustries.value === itemId
+        )
+        return selectedIndustriesComponent
+      })
+      setIndustriesComponent(convertedCompanyIndustriesFromId)
+    }, [companyIndustries])
+
   const disabledButtonSubmit =
+    deletedIndustriesComponent.length > 0 ||
+    newIndustriesComponent.length > 0 ||
     reserwationMonth !== reservationMonthServer ||
     reserwationEver !== reservationEveryTimeServer ||
     companyNameInput !== companyName ||
@@ -287,6 +313,12 @@ const OpinionAndAdressContent = ({
         updateAdressInput,
         updatePhoneInput
       )
+      if (newIndustriesComponent.length > 0 || newIndustries.length > 0) {
+        setNewIndustries(newIndustriesComponent)
+      }
+      if (deletedIndustriesComponent.length > 0 || deletedIndustries.length > 0) {
+        setDeletedIndustries(deletedIndustriesComponent)
+      }
       if (pauseCompany === companyPausedItem) {
         setCompanyPaused(null)
       } else {
@@ -311,6 +343,8 @@ const OpinionAndAdressContent = ({
   }
 
   const handleResetInputs = () => {
+    setNewIndustriesComponent([])
+    setDeletedIndustriesComponent([])
     onClickEdit()
     setCompanyNameInput(companyName)
     setCityInput(city)
@@ -344,6 +378,59 @@ const OpinionAndAdressContent = ({
 
   const handleClickReserwationMonth = item => {
     setReserwationMonth(item)
+  }
+
+  const handleChangeIndystries = value => {
+    const allValues = value ? value : []
+    let allNewIndustries = [...newIndustriesComponent]
+    let allDeletedIndustries = [...deletedIndustriesComponent]
+
+    //filter addded industries component when delete
+    allNewIndustries = allNewIndustries.filter(itemNew => {
+      const isInNewValue = allValues.some(item => item.value === itemNew)
+      return isInNewValue
+    })
+
+    allValues.forEach(itemValue => {
+      const isValueInNewCompanyIndustries = newIndustriesComponent.some(
+        item => item === itemValue.value
+      )
+
+      const isValueInDeletedCompanyIndustries = allDeletedIndustries.some(
+        item => item === itemValue.value
+      )
+
+      if (isValueInDeletedCompanyIndustries) {
+        const filterDeletedItems = allDeletedIndustries.filter(
+          itemDeleted => itemDeleted !== itemValue.value
+        )
+        allDeletedIndustries = filterDeletedItems
+      }
+      //added industries
+      const isValueInCompanyIndustries = companyIndustries.some(
+        item => item === itemValue.value
+      )
+      if (!isValueInCompanyIndustries && !isValueInNewCompanyIndustries) {
+        allNewIndustries.push(itemValue.value)
+      }
+    })
+    // industriesComponent
+    //deleted industries
+    companyIndustries.forEach(companyItem => {
+      const isValueInNewValues = allValues.some(
+        item => item.value === companyItem
+      )
+      const isValueInDeleted = allDeletedIndustries.some(
+        item => item === companyItem
+      )
+      if (!isValueInNewValues && !isValueInDeleted) {
+        allDeletedIndustries.push(companyItem)
+      }
+    })
+
+    setNewIndustriesComponent(allNewIndustries)
+    setDeletedIndustriesComponent(allDeletedIndustries)
+    setIndustriesComponent(value)
   }
 
   const mapReserwationDelay = ReserwationDelay.map((item, index) => {
@@ -513,6 +600,18 @@ const OpinionAndAdressContent = ({
                   <AllReserwationTime>
                     {mapReserwationDelayMonth}
                   </AllReserwationTime>
+                  Typ działalności:
+                  <SelectCustom
+                    options={AllIndustries}
+                    value={industriesComponent}
+                    handleChange={handleChangeIndystries}
+                    placeholder="Działalność..."
+                    defaultMenuIsOpen={false}
+                    widthAuto
+                    secondColor
+                    isMulti
+                    isClearable={false}
+                  />
                   <CheckboxStyle colorBlind={colorBlind}>
                     <Checkbox
                       theme="material-checkbox"

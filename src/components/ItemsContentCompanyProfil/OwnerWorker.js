@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   FaUser,
   FaCalendarAlt,
@@ -125,6 +125,8 @@ const OwnerWorker = ({
   selectEditedWorkersHours,
   editedWorkersHours,
   isAdmin,
+  setAllCategories,
+  allCategoriesWithItems,
 }) => {
   const [editConstTimeWorker, setEditConstTimeWorker] = useState(false)
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
@@ -134,6 +136,19 @@ const OwnerWorker = ({
   const handleChooseTimeOwner = () => {
     setChooseTimeOwner(prevState => !prevState)
   }
+  useEffect(() => {
+    if (allCategoriesWithItems.length > 0){
+      const newCategories = allCategoriesWithItems.map(itemValue => {
+        const newItem = {
+          value: itemValue.oldCategory,
+          label: itemValue.category,
+        }
+        return newItem
+      })
+      setAllCategories(newCategories)
+    }
+  }, [allCategoriesWithItems])
+
   const handleUserTimeWork = () => {
     const itemsToSent = {
       ...ownerData,
@@ -298,7 +313,13 @@ const OwnerWorker = ({
   //     <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
   //   </HolidayDays>
   // )
-
+  const filterOptions = allCategories.filter(optionItem =>{
+    const isInOwnerThisSpecialization = ownerServicesCategory.some(
+      ownerItem => ownerItem.label === optionItem.label
+    )
+    return !isInOwnerThisSpecialization
+  })
+  console.log(allCategories)
   return (
     <WorkerItemStyle
       userEditItem={ownerEdit}
@@ -366,7 +387,7 @@ const OwnerWorker = ({
                         widthAuto
                         defaultMenuIsOpen={false}
                         secondColor
-                        options={allCategories}
+                        options={filterOptions}
                         handleChange={handleChangeSelectOwner}
                         value={ownerServicesCategory}
                         placeholder="Usługi..."
