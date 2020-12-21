@@ -16,6 +16,7 @@ import sal from "sal.js"
 import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { LinkEffect } from "../common/LinkEffect"
+import { AllIndustries } from "../common/AllIndustries"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -83,9 +84,11 @@ const Home = () => {
       <PlacesItem key={item._id} item={item} filters={filters} index={index} />
     )
   })
-
-  const industriesText = !!industries ? (
-    <TextH1 colorBlind={colorBlind}>{industries}</TextH1>
+  
+  const findIndustrie = AllIndustries.find(item => item.value === industries);
+  console.log(findIndustrie)
+  const industriesText = !!findIndustrie ? (
+    <TextH1 colorBlind={colorBlind}>{findIndustrie.label}</TextH1>
   ) : (
     <TextH1 colorBlind={colorBlind}>Wszystko</TextH1>
   )
@@ -147,7 +150,6 @@ const Home = () => {
           load places false
         </button>
       </div>
-
       <CSSTransition
         in={!loadingPlaces}
         timeout={400}

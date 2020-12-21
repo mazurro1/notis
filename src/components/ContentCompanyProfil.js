@@ -202,12 +202,12 @@ const ContentCompanyProfil = ({
   const [newIndustries, setNewIndustries] = useState([])
   const [deletedIndustries, setDeletedIndustries] = useState([])
 
-  console.log("newIndustries", newIndustries)
-  console.log("deletedIndustries", deletedIndustries)
+  // console.log("newIndustries", newIndustries)
+  // console.log("deletedIndustries", deletedIndustries)
   // console.log("deleted from server", deletedItemsServices)
   // console.log("new services", newItemsServices)
   // console.log("edited services from server", editedItemsServices)
-  // console.log("edited workers", editedWorkers)
+  console.log("edited workers", editedWorkers)
   // console.log("edited workers hours", editedWorkersHours)
   // console.log("newOwnerSpecialization", newOwnerSpecialization)
   // console.log("deletedDayOffToSave", deletedDayOffToSave)
@@ -269,9 +269,11 @@ const ContentCompanyProfil = ({
     action,
     indexWorker,
     specializationText,
-    workerServicesCategory = []
+    workerServicesCategory = [],
+    workerPermissions
   ) => {
     if (action === "save") {
+      console.log(workerPermissions)
       const oldWorkers = [...editedWorkers]
       const isIndexWorker = oldWorkers.findIndex(
         item => item.indexWorker === indexWorker
@@ -280,11 +282,13 @@ const ContentCompanyProfil = ({
       if (isIndexWorker >= 0) {
         oldWorkers[isIndexWorker].specializationText = specializationText
         oldWorkers[isIndexWorker].servicesCategory = workerServicesCategory
+        oldWorkers[isIndexWorker].permissions = workerPermissions
       } else {
         const newWorker = {
           indexWorker: indexWorker,
           specializationText: specializationText,
           servicesCategory: workerServicesCategory,
+          permissions: workerPermissions,
         }
         oldWorkers.push(newWorker)
       }
@@ -305,8 +309,12 @@ const ContentCompanyProfil = ({
       let newEditWorkers = [...editedWorkers]
 
       if (workersIndex >= 0 && !!itemFromServer) {
+        console.log(itemFromServer)
         newEditWorkers[workersIndex].specializationText =
           itemFromServer.specialization
+
+        newEditWorkers[workersIndex].permissions = itemFromServer.permissions
+          
         if (workerServicesCategory.length > 0) {
           newEditWorkers[workersIndex].servicesCategory = workerServicesCategory
         }

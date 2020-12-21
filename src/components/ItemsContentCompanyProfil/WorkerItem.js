@@ -8,7 +8,6 @@ import {
   MdClose,
   MdDone,
   MdTimelapse,
-  MdToday,
 } from "react-icons/md"
 import SelectCustom from "../SelectCustom"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
@@ -31,6 +30,7 @@ import { Colors } from "../../common/Colors"
 import InputIcon from "../InputIcon"
 import ButtonIcon from "../ButtonIcon"
 import ReactTooltip from "react-tooltip"
+import {Permissions} from '../../common/Permissions'
 
 const ActiveWorkerStyle = styled.div`
   position: absolute;
@@ -97,7 +97,7 @@ const DeleteIconStyle = styled.div`
 `
 
 const SelectStyle = styled.div`
-  margin-bottom: 120px;
+  margin-bottom: 20px;
   margin-top: 20px;
 `
 
@@ -176,6 +176,7 @@ const WorkerItem = ({
   )
   const [editConstTimeWorker, setEditConstTimeWorker] = useState(false)
   const [workerServicesCategory, setWorkerServicesCategory] = useState([])
+  const [workerPermissionsCategory, setWorkerPermissionsCategory] = useState([])
   const [selectHeight, setSelectHeight] = useState(0)
   const [resetServicesCategory, setResetServicesCategory] = useState(false)
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
@@ -192,19 +193,28 @@ const WorkerItem = ({
   }, [editMode])
 
  useEffect(() => {
-    if (!!item.servicesCategory) {
-      if (item.servicesCategory.length > 0) {
-        const valuePadding = allCategoriesWithItems.length * 23 + 15
-        setSelectHeight(valuePadding)
-      }
-    }
-  }, [item, setSelectHeight, allCategoriesWithItems.length])
+   if (!!item.servicesCategory) {
+     if (item.servicesCategory.length > 0) {
+       const valuePadding =
+         [...Permissions, ...allCategoriesWithItems].length * 23 + 15
+       setSelectHeight(valuePadding)
+     }
+   }
+ }, [item, setSelectHeight, allCategoriesWithItems.length, Permissions])
 
   useEffect(() => {
     if (!!selectRef.current) {
       setSelectHeight(selectRef.current.clientHeight)
     }
   }, [selectRef, workerServicesCategory, item])
+
+  useEffect(() => {
+    const mapWorkerPermissions = item.permissions.map(itemPerm => {
+      const findPermission = Permissions.find(itemVal => itemVal.value === itemPerm)
+      return findPermission
+    })
+    setWorkerPermissionsCategory(mapWorkerPermissions)
+  }, [item.permissions])
 
   useEffect(() => {
     if (allCategoriesWithItems.length > 0 || !!resetServicesCategory) {
@@ -292,7 +302,13 @@ const WorkerItem = ({
 
   const handleDeleteUser = () => {
     dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, user.token))
-    handleAddEditWorker("delete", item._id, inputSpecialization)
+    handleAddEditWorker(
+      "delete",
+      item._id,
+      inputSpecialization,
+      null,
+      null,
+    )
   }
 
   const handleSentAgainEmailVeryfication = () => {
@@ -318,12 +334,16 @@ const WorkerItem = ({
     )
 
     const workerServicesCategoryValue = workerServicesCategoryToSent
+    const mapWorkerPermissionsIds = workerPermissionsCategory.map(
+      item => item.value
+    )
 
     handleAddEditWorker(
       "save",
       item._id,
       inputSpecializationValue,
-      workerServicesCategoryValue
+      workerServicesCategoryValue,
+      mapWorkerPermissionsIds
     )
   }
 
@@ -346,8 +366,16 @@ const WorkerItem = ({
       "delete",
       item._id,
       inputSpecialization,
-      mapLebelValueToCategory
+      mapLebelValueToCategory,
+      null
     )
+     const mapWorkerPermissions = item.permissions.map(itemPerm => {
+       const findPermission = Permissions.find(
+         itemVal => itemVal.value === itemPerm
+       )
+       return findPermission
+     })
+     setWorkerPermissionsCategory(mapWorkerPermissions)
     setWorkerServicesCategory(actualServicesCategory)
     setResetServicesCategory(true)
   }
@@ -355,6 +383,11 @@ const WorkerItem = ({
   const handleChangeSelect = value => {
     const valueToSave = !!value ? value : []
     setWorkerServicesCategory(valueToSave)
+  }
+
+  const handleChangeSelectPermissions = value => {
+    const valueToSave = !!value ? value : []
+    setWorkerPermissionsCategory(valueToSave)
   }
 
   const handleUserTimeWork = () => {
@@ -635,10 +668,27 @@ const WorkerItem = ({
                         isMulti
                         closeMenuOnSelect={false}
                         menuIsOpen
+                        isClearable={false}
                       />
                     </SelectStyle>
                   </>
                 )}
+                <SelectStyle>
+                  Uprawnienia do
+                  <SelectCustom
+                    widthAuto
+                    defaultMenuIsOpen={false}
+                    secondColor
+                    options={Permissions}
+                    handleChange={handleChangeSelectPermissions}
+                    value={workerPermissionsCategory}
+                    placeholder="Uprawnienia..."
+                    isMulti
+                    closeMenuOnSelect={false}
+                    menuIsOpen
+                    isClearable={false}
+                  />
+                </SelectStyle>
                 <ButtonContentEdit>
                   <ButtonStyles>
                     <ButtonIcon

@@ -283,6 +283,7 @@ export const compareEditedArrayToServerArrayAndReturnNotCompareItems = (
       indexWorker: workerX._id,
       specializationText: workerX.specialization,
       servicesCategory: [...workerX.servicesCategory],
+      permissions: [...workerX.permissions],
     }
     prevWorkers.push(newWorker)
   })

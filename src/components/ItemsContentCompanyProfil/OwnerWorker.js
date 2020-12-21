@@ -19,6 +19,8 @@ import {
   changeEditedWorkerHours,
 } from "../../state/actions"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
+
+
 const HolidayDays = styled.div`
   position: absolute;
   bottom: 5px;
@@ -73,7 +75,7 @@ const DeleteIconPosition = styled.div`
 `
 
 const SelectStyle = styled.div`
-  margin-bottom: 120px;
+  margin-bottom: 20px;
   margin-top: 20px;
 `
 
@@ -319,7 +321,7 @@ const OwnerWorker = ({
     )
     return !isInOwnerThisSpecialization
   })
-  console.log(allCategories)
+  
   return (
     <WorkerItemStyle
       userEditItem={ownerEdit}
@@ -394,6 +396,7 @@ const OwnerWorker = ({
                         isMulti
                         closeMenuOnSelect={false}
                         menuIsOpen
+                        isClearable={false}
                       />
                     </SelectStyle>
                   </>

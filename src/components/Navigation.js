@@ -108,6 +108,9 @@ const WrapperNavigationUnder = styled.div`
   background-color: ${props => Colors(props.colorBlind).navDownBackground};
   padding-top: 20px;
   padding-bottom: 10px;
+  height: 152px;
+  overflow: hidden;
+  overflow-y: auto;
 `
 
 const NavigationDiv = styled.div`

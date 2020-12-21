@@ -267,11 +267,12 @@ const OurWorkersContent = ({
   useEffect(() => {
     if (!!ownerServicesCategory) {
       if (ownerServicesCategory.length > 0) {
-        const valuePadding = allCategoriesWithItems.length * 23 + 15
+        const valuePadding =
+         allCategoriesWithItems.length * 23 + 15
         setSelectHeight(valuePadding)
       }
     }
-  }, [ownerServicesCategory, setSelectHeight])
+  }, [ownerServicesCategory, setSelectHeight, Permissions])
   
 
   useEffect(() => {
@@ -319,13 +320,13 @@ const OurWorkersContent = ({
 
   const handleResetOwnerSpecialization = () => {
     setOwnerEdit(false)
-    const mapServiceCategoryOwner = ownerSerwiceCategory.map(item => {
-      return {
-        label: item,
-        value: item,
-      }
-    })
-    setOwnerServicesCategory(mapServiceCategoryOwner)
+    // const mapServiceCategoryOwner = ownerSerwiceCategory.map(item => {
+    //   return {
+    //     label: item,
+    //     value: item,
+    //   }
+    // })
+    // setOwnerServicesCategory(mapServiceCategoryOwner)
     handleSaveOwnerSpecialization(null, null)
     setInputSpecializationOwner(ownerSpecialization)
   }
@@ -360,7 +361,7 @@ const OurWorkersContent = ({
     )
 
     const finallEditedWorker = !!selectEditedWorker ? selectEditedWorker : null
-
+    
     return (
       <WorkerItem
         index={index}
