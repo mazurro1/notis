@@ -267,13 +267,11 @@ const OurWorkersContent = ({
   useEffect(() => {
     if (!!ownerServicesCategory) {
       if (ownerServicesCategory.length > 0) {
-        const valuePadding =
-         allCategoriesWithItems.length * 23 + 15
+        const valuePadding = allCategoriesWithItems.length * 23 + 15
         setSelectHeight(valuePadding)
       }
     }
   }, [ownerServicesCategory, setSelectHeight, Permissions])
-  
 
   useEffect(() => {
     if (!!selectRef.current) {
@@ -361,7 +359,7 @@ const OurWorkersContent = ({
     )
 
     const finallEditedWorker = !!selectEditedWorker ? selectEditedWorker : null
-    
+
     return (
       <WorkerItem
         index={index}
@@ -441,7 +439,7 @@ const OurWorkersContent = ({
         />
         {mapWorkers}
       </WorkerContent>
-      {isCompanyEditProfil ? (
+      {isCompanyEditProfil && isAdmin ? (
         <ButtonEditPosition>
           <ButtonIcon
             title="Dodaj użytkownika"
@@ -454,79 +452,85 @@ const OurWorkersContent = ({
           />
         </ButtonEditPosition>
       ) : null}
-      <CSSTransition
-        in={isaddUser}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <PositionAddWorkers
-        // onClick={handleOnClickBg}
+      {isAdmin && (
+        <CSSTransition
+          in={isaddUser}
+          timeout={400}
+          classNames="popup"
+          unmountOnExit
         >
-          <ContentAddWorkers
-            onClick={handleClickContentAddWorkers}
-            colorBlind={colorBlind}
+          <PositionAddWorkers
+          // onClick={handleOnClickBg}
           >
-            <form onSubmit={handleSentInvation}>
-              <InputIcon
-                icon={<FaUserPlus />}
-                placeholder="Wpisz adres email"
-                value={emailInput}
-                type="email"
-                secondColor
-                onChange={e => handleChange(e, setEmailInput)}
-                required
-              />
-              <ButtonSentPosition>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="14"
-                  icon={<MdEmail />}
-                  onClick={handleOnClickBg}
+            <ContentAddWorkers
+              onClick={handleClickContentAddWorkers}
+              colorBlind={colorBlind}
+            >
+              <form onSubmit={handleSentInvation}>
+                <InputIcon
+                  icon={<FaUserPlus />}
+                  placeholder="Wpisz adres email"
+                  value={emailInput}
+                  type="email"
+                  secondColor
+                  onChange={e => handleChange(e, setEmailInput)}
+                  required
                 />
-              </ButtonSentPosition>
-              <ButtonSentPosition>
-                <ButtonAddWorker type="submit">
+                <ButtonSentPosition>
                   <ButtonIcon
-                    title="Wyślij zaproszenie"
+                    title="Anuluj"
                     uppercase
                     fontIconSize="20"
                     fontSize="14"
                     icon={<MdEmail />}
-                    customColorButton={Colors(colorBlind).successColorDark}
-                    customColorIcon={Colors(colorBlind).successColor}
-                    disabled={!!!emailInput}
+                    onClick={handleOnClickBg}
                   />
-                </ButtonAddWorker>
-              </ButtonSentPosition>
-            </form>
-            <CloseAddWorkers onClick={handleOnClickBg}>
-              <MdClose />
-            </CloseAddWorkers>
-          </ContentAddWorkers>
-        </PositionAddWorkers>
-      </CSSTransition>
-      <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
-        <span>Ustaw czas pracy pracownika</span>
-      </ReactTooltip>
-      <ReactTooltip id="timeWork" effect="float" multiline={true}>
-        <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
-      </ReactTooltip>
+                </ButtonSentPosition>
+                <ButtonSentPosition>
+                  <ButtonAddWorker type="submit">
+                    <ButtonIcon
+                      title="Wyślij zaproszenie"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="14"
+                      icon={<MdEmail />}
+                      customColorButton={Colors(colorBlind).successColorDark}
+                      customColorIcon={Colors(colorBlind).successColor}
+                      disabled={!!!emailInput}
+                    />
+                  </ButtonAddWorker>
+                </ButtonSentPosition>
+              </form>
+              <CloseAddWorkers onClick={handleOnClickBg}>
+                <MdClose />
+              </CloseAddWorkers>
+            </ContentAddWorkers>
+          </PositionAddWorkers>
+        </CSSTransition>
+      )}
+      {isCompanyEditProfil && (
+        <>
+          <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
+            <span>Ustaw czas pracy pracownika</span>
+          </ReactTooltip>
+          <ReactTooltip id="timeWork" effect="float" multiline={true}>
+            <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
+          </ReactTooltip>
 
-      <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
-        <span>Wyślij ponownie email weryfikacyjny</span>
-      </ReactTooltip>
-      <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
-        <span>Edytuj godziny pracy pracownika</span>
-      </ReactTooltip>
-      <ReactTooltip id="editUser" effect="float" multiline={true}>
-        <span>Edytuj stanowisko pracownika</span>
-      </ReactTooltip>
-      <ReactTooltip id="deleteUser" effect="float" multiline={true}>
-        <span>Usuń pracownika</span>
-      </ReactTooltip>
+          <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
+            <span>Wyślij ponownie email weryfikacyjny</span>
+          </ReactTooltip>
+          <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
+            <span>Edytuj godziny pracy pracownika</span>
+          </ReactTooltip>
+          <ReactTooltip id="editUser" effect="float" multiline={true}>
+            <span>Edytuj stanowisko pracownika</span>
+          </ReactTooltip>
+          <ReactTooltip id="deleteUser" effect="float" multiline={true}>
+            <span>Usuń pracownika</span>
+          </ReactTooltip>
+        </>
+      )}
     </>
   )
 }

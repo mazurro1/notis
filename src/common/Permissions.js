@@ -15,4 +15,8 @@ export const Permissions = [
     value: 4,
     label: "Grafik wszystkich pracowników",
   },
+  {
+    value: 5,
+    label: "Historia rezerwacji wszystkich pracowników",
+  },
 ]

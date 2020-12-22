@@ -208,12 +208,16 @@ const WorkerItem = ({
     }
   }, [selectRef, workerServicesCategory, item])
 
-  useEffect(() => {
-    const mapWorkerPermissions = item.permissions.map(itemPerm => {
-      const findPermission = Permissions.find(itemVal => itemVal.value === itemPerm)
-      return findPermission
-    })
-    setWorkerPermissionsCategory(mapWorkerPermissions)
+  useEffect(() => {    
+    if (!!item.permissions){
+      const mapWorkerPermissions = item.permissions.map(itemPerm => {
+        const findPermission = Permissions.find(
+          itemVal => itemVal.value === itemPerm
+        )
+        return findPermission
+      })
+      setWorkerPermissionsCategory(mapWorkerPermissions)
+    }
   }, [item.permissions])
 
   useEffect(() => {
@@ -593,7 +597,7 @@ const WorkerItem = ({
             >
               <MdEdit />
             </EditIconStyle>
-            <DeleteUserIconStyle
+            {isAdmin && <DeleteUserIconStyle
               onClick={handleUserConfirmDelete}
               data-tip
               data-for="deleteUser"
@@ -601,7 +605,7 @@ const WorkerItem = ({
               colorBlind={colorBlind}
             >
               <MdDelete />
-            </DeleteUserIconStyle>
+            </DeleteUserIconStyle>}
           </EditUserStyle>
           <ActiveWorkerStyle>
             <IconVeryfiedUser
@@ -673,7 +677,7 @@ const WorkerItem = ({
                     </SelectStyle>
                   </>
                 )}
-                <SelectStyle>
+                {isAdmin && <SelectStyle>
                   Uprawnienia do
                   <SelectCustom
                     widthAuto
@@ -688,7 +692,7 @@ const WorkerItem = ({
                     menuIsOpen
                     isClearable={false}
                   />
-                </SelectStyle>
+                </SelectStyle>}
                 <ButtonContentEdit>
                   <ButtonStyles>
                     <ButtonIcon
@@ -727,7 +731,7 @@ const WorkerItem = ({
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
-          <CSSTransition
+          {isAdmin && <CSSTransition
             in={userConfirmDelete}
             timeout={400}
             classNames="popup"
@@ -767,7 +771,7 @@ const WorkerItem = ({
                 </ButtonContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
-          </CSSTransition>
+          </CSSTransition>}
           <CSSTransition
             in={chooseTimeWorker}
             timeout={400}

@@ -8,6 +8,7 @@ import ContentCompanyProfil from "./ContentCompanyProfil"
 
 const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
+  const pathCompanyData = useSelector(state => state.pathCompanyData)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -31,16 +32,37 @@ const CompanyEditProfil = () => {
       <ActiveCompany />
     </Popup>
   )
+  
+  let isAdminCompany = false;
+  let userHasAccess = false;
+  let selectedWorker = null;
+  if (!!pathCompanyData) {
+    isAdminCompany = user.userId === pathCompanyData.owner._id
+    const findWorker = pathCompanyData.workers.find(worker => worker.user._id === user.userId);
+    if(!!findWorker){
+      selectedWorker = findWorker;
+      const workerHasPermission = findWorker.permissions.some(perm => perm === 2 || perm === 3 || perm === 4)
+      if (workerHasPermission){
+        userHasAccess = true
+      }
+    }else{
+      userHasAccess = pathCompanyData.owner._id === user.userId;
+    }
+  }
 
-  const isAdminCompany = user.userId === user.company.owner._id
+
   return (
     <>
-      {user.company.adress && (
+      {userHasAccess ? (
         <ContentCompanyProfil
-          company={user.company}
+          company={pathCompanyData}
           isAdmin={isAdminCompany}
           isCompanyEditProfil
+          userHasAccess={userHasAccess}
+          selectedWorker={selectedWorker}
         />
+      ) : (
+        "Brak uprawnień"
       )}
       {PopupActiveCompany}
     </>

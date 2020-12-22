@@ -714,7 +714,8 @@ export const fetchCompanyData = (companyId, token) => {
         }
       )
       .then(response => {
-        dispatch(replaceCompanyData(response.data.companyProfil))
+        dispatch(updatePatchCompanyData(response.data.companyProfil))
+        // dispatch(replaceCompanyData(response.data.companyProfil))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)

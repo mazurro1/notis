@@ -275,14 +275,18 @@ const OpinionAndAdressContent = ({
   const colorBlind = useSelector(state => state.colorBlind)
 
     useEffect(()=>{
-      const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
-        const selectedIndustriesComponent = AllIndustries.find(
-          itemIndustries => itemIndustries.value === itemId
+      if (!!companyIndustries){
+        const convertedCompanyIndustriesFromId = companyIndustries.map(
+          itemId => {
+            const selectedIndustriesComponent = AllIndustries.find(
+              itemIndustries => itemIndustries.value === itemId
+            )
+            return selectedIndustriesComponent
+          }
         )
-        return selectedIndustriesComponent
-      })
-      setIndustriesComponent(convertedCompanyIndustriesFromId)
-    }, [companyIndustries])
+        setIndustriesComponent(convertedCompanyIndustriesFromId)
+      }
+    }, [])
 
   const disabledButtonSubmit =
     deletedIndustriesComponent.length > 0 ||

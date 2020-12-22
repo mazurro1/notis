@@ -162,6 +162,8 @@ const ContentCompanyProfil = ({
   company = null,
   isAdmin = false,
   isCompanyEditProfil = false,
+  userHasAccess = false,
+  selectedWorker = null,
 }) => {
   const [editMode, setEditMode] = useState(false)
   const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
@@ -262,7 +264,8 @@ const ContentCompanyProfil = ({
   }
 
   const companyEditProfilProps = {
-    isCompanyEditProfil: isCompanyEditProfil && isAdmin && editMode,
+    isCompanyEditProfil:
+      isCompanyEditProfil && (isAdmin || userHasAccess) && editMode,
   }
 
   const handleAddEditWorker = (
@@ -314,7 +317,7 @@ const ContentCompanyProfil = ({
           itemFromServer.specialization
 
         newEditWorkers[workersIndex].permissions = itemFromServer.permissions
-          
+
         if (workerServicesCategory.length > 0) {
           newEditWorkers[workersIndex].servicesCategory = workerServicesCategory
         }
@@ -449,7 +452,7 @@ const ContentCompanyProfil = ({
     deletedItemsServices.length > 0 ||
     deletedDayOffToSave.length > 0 ||
     createdDayOffToSave.length > 0 ||
-    deletedIndustries.length > 0 || 
+    deletedIndustries.length > 0 ||
     newIndustries.length > 0 ||
     (companyPaused !== company.pauseCompany && companyPaused !== null)
 
@@ -490,33 +493,34 @@ const ContentCompanyProfil = ({
       const createdDayOffToSaveIsChanges =
         createdDayOffToSave.length > 0 ? createdDayOffToSave : null
 
-        const newIndustriesToSent = newIndustries.length > 0 ? newIndustries : null; 
-        const deletedIndustriesToSent =
-          deletedIndustries.length > 0 ? deletedIndustries : null 
+      const newIndustriesToSent =
+        newIndustries.length > 0 ? newIndustries : null
+      const deletedIndustriesToSent =
+        deletedIndustries.length > 0 ? deletedIndustries : null
 
-    dispatch(
-      fetchUpdateCompanyProfil(
-        user.token,
-        company._id,
-        textAboutUsToSent,
-        textRezerwationTextToSent,
-        editedWorkersToSent,
-        editedAdressToSent,
-        editedLinksToSent,
-        ownerSpecializationToSent,
-        openingHoursToSentFinall,
-        companyPausedToSent,
-        services,
-        reservationEveryTime,
-        reservationMonthTime,
-        newOwnerServicesCategory,
-        editedWorkersHours,
-        createdDayOffToSaveIsChanges,
-        deletedDayOffToSaveIsChanges,
-        newIndustriesToSent,
-        deletedIndustriesToSent
+      dispatch(
+        fetchUpdateCompanyProfil(
+          user.token,
+          company._id,
+          textAboutUsToSent,
+          textRezerwationTextToSent,
+          editedWorkersToSent,
+          editedAdressToSent,
+          editedLinksToSent,
+          ownerSpecializationToSent,
+          openingHoursToSentFinall,
+          companyPausedToSent,
+          services,
+          reservationEveryTime,
+          reservationMonthTime,
+          newOwnerServicesCategory,
+          editedWorkersHours,
+          createdDayOffToSaveIsChanges,
+          deletedDayOffToSaveIsChanges,
+          newIndustriesToSent,
+          deletedIndustriesToSent
+        )
       )
-    )
       setCompanyPaused(null)
     }
   }
@@ -529,242 +533,282 @@ const ContentCompanyProfil = ({
     }
   })
 
-  console.log(company)
-
-  return (
-    <div>
-      <TextH1 {...companyEditProfilProps} colorBlind={colorBlind}>
-        {company.name}
-        {isAdmin && isCompanyEditProfil && (
-          <EditModeToChange
-            data-tip
-            data-for="editMode"
-            data-place="bottom"
-            onClick={handleClickEditMode}
-            colorBlind={colorBlind}
-          >
-            <MdEdit />
-          </EditModeToChange>
-        )}
-      </TextH1>
-      <ContentDiv>
-        <LeftColumn>
-          <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
-          <AllCategoryOfServices
-            newItemsServices={newItemsServices}
-            setNewItemsServices={setNewItemsServices}
-            editedItemsServices={editedItemsServices}
-            setEditedItemsServices={setEditedItemsServices}
-            deletedItemsServices={deletedItemsServices}
-            setDeletedItemsServices={setDeletedItemsServices}
-            services={company.services}
-            allCategoriesWithItems={allCategoriesWithItems}
-            setAllCategoriesWithItems={setAllCategoriesWithItems}
-            {...companyEditProfilProps}
-            editedWorkers={editedWorkers}
-            setEditedWorkers={setEditedWorkers}
-            workersFromServer={[...company.workers]}
-            handleClickReserwation={handleClickReserwation}
-            companyId={company._id}
-            newOwnerServicesCategory={newOwnerServicesCategory}
-            setNewOwnerServicesCategory={setNewOwnerServicesCategory}
-            ownerSerwiceCategory={company.ownerData.servicesCategory}
-          />
-        </LeftColumn>
-        <RightColumn>
-          <RightColumnItem
-            noBg
-            {...companyEditProfilProps}
-            colorBlind={colorBlind}
-          >
-            <OpinionAndAdressContent
-              {...companyEditProfilProps}
-              city={company.city}
-              companyName={company.name}
-              district={company.district}
-              adress={company.adress}
-              TitleRightColumn={TitleRightColumn}
-              opinionsCount={company.opinionsCount}
-              opinionsValue={company.opinionsValue}
-              phone={company.phone}
-              pauseCompany={company.pauseCompany}
-              ButtonEditPosition={ButtonEditPosition}
-              editable={editOpinionAndAdress}
-              onClickEdit={() => handleEdit(setEditOpinionAndAdress)}
-              handleChangeUpodateAdress={handleChangeUpodateAdress}
-              setCompanyPaused={setCompanyPaused}
-              setReservationEveryTime={setReservationEveryTime}
-              setReservationMonthTime={setReservationMonthTime}
-              reservationEveryTimeServer={company.reservationEveryTime}
-              reservationMonthServer={company.reservationMonthTime}
+  let userHasPermToServices = !isCompanyEditProfil || isAdmin;
+  if (!userHasPermToServices && selectedWorker) {
+    userHasPermToServices = selectedWorker.permissions.some(perm => perm === 2)
+  }
+  let userHasPermToHappyHours = !isCompanyEditProfil || isAdmin
+  if (!userHasPermToHappyHours && selectedWorker) {
+    userHasPermToHappyHours = selectedWorker.permissions.some(
+      perm => perm === 3
+    )
+  }
+  let userHasPermToWorkers = !isCompanyEditProfil || isAdmin
+  if (!userHasPermToWorkers && selectedWorker) {
+    userHasPermToWorkers = selectedWorker.permissions.some(perm => perm === 4)
+  }
+  
+  let userHasPermisionToOther = !isCompanyEditProfil || isAdmin
+  
+    return (
+      <div>
+        <TextH1 {...companyEditProfilProps} colorBlind={colorBlind}>
+          {company.name}
+          {(isAdmin || userHasAccess) && isCompanyEditProfil && (
+            <EditModeToChange
+              data-tip
+              data-for="editMode"
+              data-place="bottom"
+              onClick={handleClickEditMode}
               colorBlind={colorBlind}
-              newIndustries={newIndustries}
-              setNewIndustries={setNewIndustries}
-              deletedIndustries={deletedIndustries}
-              setDeletedIndustries={setDeletedIndustries}
-              companyIndustries={company.companyType}
-            />
-          </RightColumnItem>
-          <InputCustom />
-          <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
-            <ColumnItemTextarea
-              titleColumnItem="O NAS"
-              TitleRightColumn={TitleRightColumn}
-              ParagraphRightColumn={ParagraphRightColumn}
-              {...companyEditProfilProps}
-              ButtonEditPosition={ButtonEditPosition}
-              title={company.title}
-              editable={editAboutUs}
-              onClickEdit={() => handleEdit(setEditAboutUs)}
-              setTextEditedChange={setTextAboutUs}
-              textEdited={textAboutUs}
-              colorBlind={colorBlind}
-            />
-          </RightColumnItem>
-          <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
-            <OpeningHoursContent
-              TitleRightColumn={TitleRightColumn}
-              ButtonEditPosition={ButtonEditPosition}
-              {...companyEditProfilProps}
-              companyEditProfilProps={companyEditProfilProps}
-              company={company}
-              setChangesTimeOpen={setChangesTimeOpen}
-              setOpeningHoursToSent={setOpeningHoursToSent}
-              editMode={editMode}
-              colorBlind={colorBlind}
-            />
-          </RightColumnItem>
-          {(isAdmin || isCompanyEditProfil) && (
-            <>
+            >
+              <MdEdit />
+            </EditModeToChange>
+          )}
+        </TextH1>
+        <ContentDiv>
+          <LeftColumn>
+            <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
+            {userHasPermToServices && (
+              <AllCategoryOfServices
+                newItemsServices={newItemsServices}
+                setNewItemsServices={setNewItemsServices}
+                editedItemsServices={editedItemsServices}
+                setEditedItemsServices={setEditedItemsServices}
+                deletedItemsServices={deletedItemsServices}
+                setDeletedItemsServices={setDeletedItemsServices}
+                services={company.services}
+                allCategoriesWithItems={allCategoriesWithItems}
+                setAllCategoriesWithItems={setAllCategoriesWithItems}
+                {...companyEditProfilProps}
+                editedWorkers={editedWorkers}
+                setEditedWorkers={setEditedWorkers}
+                workersFromServer={[...company.workers]}
+                handleClickReserwation={handleClickReserwation}
+                companyId={company._id}
+                newOwnerServicesCategory={newOwnerServicesCategory}
+                setNewOwnerServicesCategory={setNewOwnerServicesCategory}
+                ownerSerwiceCategory={company.ownerData.servicesCategory}
+              />
+            )}
+          </LeftColumn>
+          <RightColumn>
+            {userHasPermisionToOther && (
               <RightColumnItem
+                noBg
                 {...companyEditProfilProps}
                 colorBlind={colorBlind}
               >
-                <DaysOffContent
+                <OpinionAndAdressContent
                   {...companyEditProfilProps}
-                  companyEditProfilProps={companyEditProfilProps}
+                  city={company.city}
+                  companyName={company.name}
+                  district={company.district}
+                  adress={company.adress}
                   TitleRightColumn={TitleRightColumn}
-                  colorBlind={colorBlind}
+                  opinionsCount={company.opinionsCount}
+                  opinionsValue={company.opinionsValue}
+                  phone={company.phone}
+                  pauseCompany={company.pauseCompany}
                   ButtonEditPosition={ButtonEditPosition}
-                  setDeletedDayOffToSave={setDeletedDayOffToSave}
-                  companyDaysOff={company.daysOff}
-                  setCreatedDayOffToSave={setCreatedDayOffToSave}
-                  deletedDayOffToSave={deletedDayOffToSave}
-                  createdDayOffToSave={createdDayOffToSave}
+                  editable={editOpinionAndAdress}
+                  onClickEdit={() => handleEdit(setEditOpinionAndAdress)}
+                  handleChangeUpodateAdress={handleChangeUpodateAdress}
+                  setCompanyPaused={setCompanyPaused}
+                  setReservationEveryTime={setReservationEveryTime}
+                  setReservationMonthTime={setReservationMonthTime}
+                  reservationEveryTimeServer={company.reservationEveryTime}
+                  reservationMonthServer={company.reservationMonthTime}
+                  colorBlind={colorBlind}
+                  newIndustries={newIndustries}
+                  setNewIndustries={setNewIndustries}
+                  deletedIndustries={deletedIndustries}
+                  setDeletedIndustries={setDeletedIndustries}
+                  companyIndustries={company.companyType}
                 />
               </RightColumnItem>
+            )}
+            <InputCustom />
+            {userHasPermisionToOther && (
               <RightColumnItem
                 {...companyEditProfilProps}
                 colorBlind={colorBlind}
               >
-                <HappyHoursContent
-                  {...companyEditProfilProps}
-                  companyEditProfilProps={companyEditProfilProps}
+                <ColumnItemTextarea
+                  titleColumnItem="O NAS"
                   TitleRightColumn={TitleRightColumn}
+                  ParagraphRightColumn={ParagraphRightColumn}
+                  {...companyEditProfilProps}
+                  ButtonEditPosition={ButtonEditPosition}
+                  title={company.title}
+                  editable={editAboutUs}
+                  onClickEdit={() => handleEdit(setEditAboutUs)}
+                  setTextEditedChange={setTextAboutUs}
+                  textEdited={textAboutUs}
                   colorBlind={colorBlind}
                 />
               </RightColumnItem>
-            </>
-          )}
-          <RightColumnItem {...companyEditProfilProps} colorBlind={colorBlind}>
-            <OurWorkersContent
-              TitleRightColumn={TitleRightColumn}
-              companyEditProfilProps={companyEditProfilProps}
-              {...companyEditProfilProps}
-              ButtonEditPosition={ButtonEditPosition}
-              workers={[...company.workers]}
-              owner={company.owner}
-              companyId={company._id}
-              ownerSpecialization={company.ownerData.specialization}
-              handleAddEditWorker={handleAddEditWorker}
-              handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
-              allCategoriesWithItems={filteredAllCategoriesWithItems}
-              editedWorkers={editedWorkers}
-              ownerSerwiceCategory={company.ownerData.servicesCategory}
-              newOwnerServicesCategory={newOwnerServicesCategory}
-              company={company}
-              editMode={editMode}
-              colorBlind={colorBlind}
-              editedWorkersHours={editedWorkersHours}
-              isAdmin={isAdmin}
-              ownerData={company.ownerData}
-            />
-          </RightColumnItem>
+            )}
+            {userHasPermisionToOther && (
+              <RightColumnItem
+                {...companyEditProfilProps}
+                colorBlind={colorBlind}
+              >
+                <OpeningHoursContent
+                  TitleRightColumn={TitleRightColumn}
+                  ButtonEditPosition={ButtonEditPosition}
+                  {...companyEditProfilProps}
+                  companyEditProfilProps={companyEditProfilProps}
+                  company={company}
+                  setChangesTimeOpen={setChangesTimeOpen}
+                  setOpeningHoursToSent={setOpeningHoursToSent}
+                  editMode={editMode}
+                  colorBlind={colorBlind}
+                />
+              </RightColumnItem>
+            )}
+            {isCompanyEditProfil && (
+              <>
+                {isAdmin && (
+                  <RightColumnItem
+                    {...companyEditProfilProps}
+                    colorBlind={colorBlind}
+                  >
+                    <DaysOffContent
+                      {...companyEditProfilProps}
+                      companyEditProfilProps={companyEditProfilProps}
+                      TitleRightColumn={TitleRightColumn}
+                      colorBlind={colorBlind}
+                      ButtonEditPosition={ButtonEditPosition}
+                      setDeletedDayOffToSave={setDeletedDayOffToSave}
+                      companyDaysOff={company.daysOff}
+                      setCreatedDayOffToSave={setCreatedDayOffToSave}
+                      deletedDayOffToSave={deletedDayOffToSave}
+                      createdDayOffToSave={createdDayOffToSave}
+                    />
+                  </RightColumnItem>
+                )}
+                {userHasPermToHappyHours && (
+                  <RightColumnItem
+                    {...companyEditProfilProps}
+                    colorBlind={colorBlind}
+                  >
+                    <HappyHoursContent
+                      {...companyEditProfilProps}
+                      companyEditProfilProps={companyEditProfilProps}
+                      TitleRightColumn={TitleRightColumn}
+                      colorBlind={colorBlind}
+                    />
+                  </RightColumnItem>
+                )}
+              </>
+            )}
+            {userHasPermToWorkers && (
+              <RightColumnItem
+                {...companyEditProfilProps}
+                colorBlind={colorBlind}
+              >
+                <OurWorkersContent
+                  TitleRightColumn={TitleRightColumn}
+                  companyEditProfilProps={companyEditProfilProps}
+                  {...companyEditProfilProps}
+                  ButtonEditPosition={ButtonEditPosition}
+                  workers={[...company.workers]}
+                  owner={company.owner}
+                  companyId={company._id}
+                  ownerSpecialization={company.ownerData.specialization}
+                  handleAddEditWorker={handleAddEditWorker}
+                  handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
+                  allCategoriesWithItems={filteredAllCategoriesWithItems}
+                  editedWorkers={editedWorkers}
+                  ownerSerwiceCategory={company.ownerData.servicesCategory}
+                  newOwnerServicesCategory={newOwnerServicesCategory}
+                  company={company}
+                  editMode={editMode}
+                  colorBlind={colorBlind}
+                  editedWorkersHours={editedWorkersHours}
+                  isAdmin={isAdmin}
+                  ownerData={company.ownerData}
+                />
+              </RightColumnItem>
+            )}
 
-          {(company.reserationText || isCompanyEditProfil) && (
-            <RightColumnItem
-              {...companyEditProfilProps}
-              colorBlind={colorBlind}
-            >
-              <ColumnItemTextarea
-                titleColumnItem="ZASADY REZERWACJI"
-                TitleRightColumn={TitleRightColumn}
-                ParagraphRightColumn={ParagraphRightColumn}
-                {...companyEditProfilProps}
-                ButtonEditPosition={ButtonEditPosition}
-                title={company.reserationText}
-                editable={editRezerwationText}
-                onClickEdit={() => handleEdit(setEditRezerwationText)}
-                setTextEditedChange={setTextRezerwation}
-                textEdited={textRezerwationText}
-                colorBlind={colorBlind}
-              />
-            </RightColumnItem>
-          )}
-          {(!!company.linkFacebook ||
-            !!company.linkiWebsite ||
-            !!company.linkInstagram ||
-            isCompanyEditProfil) && (
-            <RightColumnItem
-              {...companyEditProfilProps}
-              colorBlind={colorBlind}
-            >
-              <OurLinksContent
-                TitleRightColumn={TitleRightColumn}
-                companyEditProfilProps={companyEditProfilProps}
-                {...companyEditProfilProps}
-                ButtonEditPosition={ButtonEditPosition}
-                editable={editLinks}
-                colorBlind={colorBlind}
-                onClickEdit={() => handleEdit(setEditLinks)}
-                handleSaveLinks={handleSaveLinks}
-                linkFacebook={
-                  !!company.linkFacebook ? company.linkFacebook : ""
-                }
-                linkiWebsite={
-                  !!company.linkiWebsite ? company.linkiWebsite : ""
-                }
-                linkInstagram={
-                  !!company.linkInstagram ? company.linkInstagram : ""
-                }
-              />
-            </RightColumnItem>
-          )}
-        </RightColumn>
-      </ContentDiv>
-      <CSSTransition
-        in={isCompanyEditProfil && isAnyChanges}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <SaveChangesPosition>
-          <ButtonIcon
-            title="Zapisz zmiany"
-            uppercase
-            fontIconSize="40"
-            fontSize="28"
-            icon={<FaSave />}
-            customColorButton={Colors(colorBlind).successColorDark}
-            customColorIcon={Colors(colorBlind).successColor}
-            onClick={handleSaveChanges}
-          />
-        </SaveChangesPosition>
-      </CSSTransition>
-      <ReactTooltip id="editMode" effect="float" multiline={true}>
-        <span>Tryb edycji.</span>
-      </ReactTooltip>
-    </div>
-  )
+            {(company.reserationText || isCompanyEditProfil) &&
+              userHasPermisionToOther && (
+                <RightColumnItem
+                  {...companyEditProfilProps}
+                  colorBlind={colorBlind}
+                >
+                  <ColumnItemTextarea
+                    titleColumnItem="ZASADY REZERWACJI"
+                    TitleRightColumn={TitleRightColumn}
+                    ParagraphRightColumn={ParagraphRightColumn}
+                    {...companyEditProfilProps}
+                    ButtonEditPosition={ButtonEditPosition}
+                    title={company.reserationText}
+                    editable={editRezerwationText}
+                    onClickEdit={() => handleEdit(setEditRezerwationText)}
+                    setTextEditedChange={setTextRezerwation}
+                    textEdited={textRezerwationText}
+                    colorBlind={colorBlind}
+                  />
+                </RightColumnItem>
+              )}
+            {(!!company.linkFacebook ||
+              !!company.linkiWebsite ||
+              !!company.linkInstagram ||
+              isCompanyEditProfil) &&
+              userHasPermisionToOther && (
+                <RightColumnItem
+                  {...companyEditProfilProps}
+                  colorBlind={colorBlind}
+                >
+                  <OurLinksContent
+                    TitleRightColumn={TitleRightColumn}
+                    companyEditProfilProps={companyEditProfilProps}
+                    {...companyEditProfilProps}
+                    ButtonEditPosition={ButtonEditPosition}
+                    editable={editLinks}
+                    colorBlind={colorBlind}
+                    onClickEdit={() => handleEdit(setEditLinks)}
+                    handleSaveLinks={handleSaveLinks}
+                    linkFacebook={
+                      !!company.linkFacebook ? company.linkFacebook : ""
+                    }
+                    linkiWebsite={
+                      !!company.linkiWebsite ? company.linkiWebsite : ""
+                    }
+                    linkInstagram={
+                      !!company.linkInstagram ? company.linkInstagram : ""
+                    }
+                  />
+                </RightColumnItem>
+              )}
+          </RightColumn>
+        </ContentDiv>
+        <CSSTransition
+          in={isCompanyEditProfil && isAnyChanges}
+          timeout={400}
+          classNames="popup"
+          unmountOnExit
+        >
+          <SaveChangesPosition>
+            <ButtonIcon
+              title="Zapisz zmiany"
+              uppercase
+              fontIconSize="40"
+              fontSize="28"
+              icon={<FaSave />}
+              customColorButton={Colors(colorBlind).successColorDark}
+              customColorIcon={Colors(colorBlind).successColor}
+              onClick={handleSaveChanges}
+            />
+          </SaveChangesPosition>
+        </CSSTransition>
+        {isCompanyEditProfil && <ReactTooltip id="editMode" effect="float" multiline={true}>
+          <span>Tryb edycji.</span>
+        </ReactTooltip>}
+      </div>
+    )
 }
 export default ContentCompanyProfil

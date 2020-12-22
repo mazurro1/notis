@@ -115,7 +115,6 @@ const WrapperNavigationUnder = styled.div`
 
 const NavigationDiv = styled.div`
   color: ${props => Colors(props.colorBlind).navText};
-  /* max-width: 900px; */
   max-width: 1200px;
   margin: 0 auto;
 `
@@ -170,7 +169,6 @@ const PaddingRight = styled.div`
 `
 
 const PaddingContent = styled.div`
-  /* max-width: 900px; */
   max-width: 1200px;
   margin: 0 auto;
   padding-left: 1%;
@@ -600,41 +598,79 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   console.log(user)
-
-  const renderCompanyOrCreateCompany =
-    !!user && user.hasCompany ? (
-      <ButtonNavStyle>
-        <LinkEffect
-          path="/company-profil"
-          text={
+  let workerHasAccessButton = false;
+  if(!!user){
+    if(user.hasCompany){
+      const selectWorker = user.company.workers.find(
+        worker => worker.user === user.userId
+      )
+      if (!!selectWorker) {
+        const hasPermission = selectWorker.permissions.some(
+          perm => perm === 2 || perm === 3 || perm === 4
+        )
+        if (hasPermission) {
+          workerHasAccessButton = true
+        }
+      }
+    }
+  }
+    const renderCompanyOrCreateCompany =
+      !!user && user.hasCompany ? (
+        user.company.owner === user.userId || workerHasAccessButton ? (
+          <>
+            <ButtonNavStyle>
+              <LinkEffect
+                path="/company-profil"
+                text={
+                  <ButtonIcon
+                    title={user.company.name}
+                    uppercase
+                    fontIconSize="25"
+                    fontSize="16"
+                    icon={<MdWork />}
+                    secondColors
+                  />
+                }
+              />
+            </ButtonNavStyle>
+            <ButtonNavStyle>
+              <ButtonIcon
+                title="Praca"
+                uppercase
+                fontIconSize="25"
+                fontSize="16"
+                icon={<MdWork />}
+              />
+            </ButtonNavStyle>
+          </>
+        ) : (
+          <ButtonNavStyle>
             <ButtonIcon
-              title={user.company.name}
+              title="Praca"
               uppercase
               fontIconSize="25"
               fontSize="16"
               icon={<MdWork />}
-              secondColors
             />
-          }
-        />
-      </ButtonNavStyle>
-    ) : (
-      <ButtonNavStyle>
-        <LinkEffect
-          path="/your-company"
-          text={
-            <ButtonIcon
-              title="dla firm"
-              uppercase
-              fontIconSize="25"
-              fontSize="16"
-              icon={<MdWork />}
-              secondColors
-            />
-          }
-        />
-      </ButtonNavStyle>
-    )
+          </ButtonNavStyle>
+        )
+      ) : (
+        <ButtonNavStyle>
+          <LinkEffect
+            path="/your-company"
+            text={
+              <ButtonIcon
+                title="dla firm"
+                uppercase
+                fontIconSize="25"
+                fontSize="16"
+                icon={<MdWork />}
+                secondColors
+              />
+            }
+          />
+        </ButtonNavStyle>
+      )
 
   const renderButtonsUp = !!user ? (
     <>
