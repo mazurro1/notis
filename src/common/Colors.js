@@ -14,6 +14,11 @@ export const Colors = (
       : colorBlind.dark
       ? backgroundColorBlind
       : "white",
+    menuColor: colorBlind.blind
+      ? "#212121"
+      : colorBlind.dark
+      ? "#212121"
+      : "white",
     navBackground: "#212121",
     navDownBackground: "#282828",
     navText: "white",

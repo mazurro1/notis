@@ -86,7 +86,7 @@ const Home = () => {
   })
   
   const findIndustrie = AllIndustries.find(item => item.value === industries);
-  console.log(findIndustrie)
+  
   const industriesText = !!findIndustrie ? (
     <TextH1 colorBlind={colorBlind}>{findIndustrie.label}</TextH1>
   ) : (

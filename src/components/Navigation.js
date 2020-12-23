@@ -10,6 +10,7 @@ import {
   FaSearch,
   FaCalendarDay,
   FaShoppingBag,
+  FaBars,
 } from "react-icons/fa"
 import { MdWork, MdPowerSettingsNew } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
@@ -54,6 +55,7 @@ import Reserwation from "./Reserwation"
 import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
+import Footer from './Footer'
 
 const SpanSwitch = styled.span`
   font-size: 0.8rem;
@@ -70,8 +72,7 @@ const LabelStyle = styled.div`
 
 const ButtonNavStyle = styled.div`
   position: relative;
-  padding: 10px 0;
-  padding-left: 10px;
+  padding: 10px 5px;
   min-width: 140px;
   user-select: none;
 `
@@ -90,7 +91,7 @@ const BackgroundColorPage = styled.div`
 `
 
 const WrapperNavigation = styled.div`
-  position: sticky;
+  position: fixed;
   z-index: 100;
   top: 0;
   left: 0;
@@ -98,11 +99,13 @@ const WrapperNavigation = styled.div`
   background-color: ${props => Colors(props.colorBlind).navBackground};
   padding-top: 10px;
   padding-bottom: 10px;
+  height: 70px;
 `
 
 const WrapperNavigationUnder = styled.div`
   position: absolute;
   z-index: 90;
+  top: 70px;
   left: 0;
   right: 0;
   background-color: ${props => Colors(props.colorBlind).navDownBackground};
@@ -110,7 +113,6 @@ const WrapperNavigationUnder = styled.div`
   padding-bottom: 10px;
   height: 152px;
   overflow: hidden;
-  overflow-y: auto;
 `
 
 const NavigationDiv = styled.div`
@@ -125,6 +127,9 @@ const ButtonsNav = styled.div`
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
+  @media all and (max-width: ${props => props.isUser ? "1200px" : "800px"}) {
+    display: none;
+  }
 `
 
 const NavigationItems = styled.div`
@@ -144,6 +149,8 @@ const UnderMenuIndustries = styled.div`
   flex-wrap: wrap;
   padding-top: 10px;
   padding-bottom: 5px;
+  overflow-y: auto;
+  height: 58px;
 `
 
 const LogoStyle = styled.div`
@@ -173,7 +180,7 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  padding-top: ${props => (props.topNavVisibleMenu ? "152px" : "0px")};
+  padding-top: ${props => (props.topNavVisibleMenu ? "222px" : "70px")};
   transition-property: padding-top, margin-bottom;
   transition-duration: 0.3s;
   transition-timing-function: inline;
@@ -200,8 +207,71 @@ const ButtonIconStyles = styled.div`
   }
 `
 
+const MenuPosition = styled.div`
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  bottom: 0;
+  left: 0px;
+  width: 300px;
+  max-width: 100vw;
+  background-color: ${props => Colors(props.colorBlind).menuColor};
+  transform: ${props =>
+    props.active ? "translateX(0px)" : "translateX(-100%)"};
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+`
+
+const ContentMenu = styled.div`
+  position: relative;
+  transition-property: transform;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transform: ${props =>
+    props.active
+      ? "translate(20%, -15%) scale(0.6) rotateY(-50deg) rotateX(-15deg) rotateZ(17deg);"
+      : ""};
+  box-shadow: 0 0 40px 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`
+
+const BurgerButton = styled.div`
+  height: 50px;
+  width: 50px;
+  background-color: transparent;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+`
+
+const LeftMenuStyle = styled.div`
+  padding: 10px;
+`
+
+const MinHeightContent = styled.div`
+  min-height: ${props =>
+    props.isMainPage
+      ? "calc(100vh - 70px - 152px)"
+      : "calc(100vh - 70px)"};
+`
+
 const Navigation = ({ children, isMainPage }) => {
+  const [menuOpen, setMenuOpen] = useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
+  const [workPropsVisible, setWorkPropsVisible] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
   const [isDataActive, setIsDataActive] = useState(true)
@@ -350,6 +420,10 @@ const Navigation = ({ children, isMainPage }) => {
     setHistoryReserwations(prevState => !prevState)
   }
 
+  const handleClickWork = () => {
+    setWorkPropsVisible(prevState => !prevState)
+  }
+
   const mapIndustries = AllIndustries.map((item, index) => {
     const isIndustriesActive = industries === item.value
     return (
@@ -417,6 +491,16 @@ const Navigation = ({ children, isMainPage }) => {
       </WrapperNavigationUnder>
     </CSSTransition>
   )
+
+    const PopupWorkerPropsVisible = (
+      <Popup
+        popupEnable={workPropsVisible}
+        handleClose={handleClickWork}
+        title="Praca"
+      >
+        work props visible
+      </Popup>
+    )
 
   const PopupWorkerEditHours = (
     <Popup
@@ -640,6 +724,7 @@ const Navigation = ({ children, isMainPage }) => {
                 fontIconSize="25"
                 fontSize="16"
                 icon={<MdWork />}
+                onClick={handleClickWork}
               />
             </ButtonNavStyle>
           </>
@@ -651,6 +736,7 @@ const Navigation = ({ children, isMainPage }) => {
               fontIconSize="25"
               fontSize="16"
               icon={<MdWork />}
+              onClick={handleClickWork}
             />
           </ButtonNavStyle>
         )
@@ -732,10 +818,12 @@ const Navigation = ({ children, isMainPage }) => {
     </>
   )
 
+    const handleMenuOpen = () => {
+      setMenuOpen(prevState => !prevState)
+    }
   return (
-    <BackgroundColorPage className="heightElement" colorBlind={colorBlind}>
-      <Spinner spinnerEnable={spinnerEnable} />
-      <Alerts />
+    <>
+      {PopupWorkerPropsVisible}
       {PopupWorkerEditHours}
       {PopupReserwation}
       {PopupActiveAccount}
@@ -750,58 +838,80 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupLocalization}
       {PopupUserProfil}
       {PopupHistoryReserwations}
-      <WrapperNavigation colorBlind={colorBlind}>
-        <NavigationDiv colorBlind={colorBlind}>
-          <NavigationItems>
-            <LogoStyle>
-              <LinkEffect text="NOOTIS" path="/" />
-            </LogoStyle>
-            <ButtonsNav>
-              <ButtonNavStyle>
-                <LabelStyle>
-                  <SpanSwitch>Tryb ciemny</SpanSwitch>
-                  <Switch
-                    onChange={handleDarkStyleClick}
-                    checked={colorBlind.dark}
-                    activeBoxShadow={`0 0 2px 3px ${
-                      Colors(colorBlind).primaryColor
-                    }`}
-                    onColor={Colors(colorBlind).primaryColor}
-                    height={22}
-                    uncheckedIcon
-                    checkedIcon
-                  />
-                </LabelStyle>
-              </ButtonNavStyle>
-              <ButtonNavStyle>
-                <LabelStyle>
-                  <SpanSwitch>Tryb dla daltonistów</SpanSwitch>
-                  <Switch
-                    onChange={handleBlindStyleClick}
-                    checked={colorBlind.blind}
-                    activeBoxShadow={`0 0 2px 3px ${
-                      Colors(colorBlind).primaryColor
-                    }`}
-                    onColor={Colors(colorBlind).primaryColor}
-                    height={22}
-                    uncheckedIcon
-                    checkedIcon
-                  />
-                </LabelStyle>
-              </ButtonNavStyle>
-              {renderCompanyOrCreateCompany}
-              {renderButtonsUp}
-            </ButtonsNav>
-          </NavigationItems>
-        </NavigationDiv>
-      </WrapperNavigation>
-      {renderExtraPropsInMainMenu}
-      <PaddingContent
-        topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
-      >
-        {children}
-      </PaddingContent>
-    </BackgroundColorPage>
+      <MenuPosition active={menuOpen} colorBlind={colorBlind}>
+        <LeftMenuStyle>
+          <div onClick={handleMenuOpen}>
+            {renderCompanyOrCreateCompany}
+            {renderButtonsUp}
+          </div>
+          <ButtonNavStyle>
+            <LabelStyle>
+              <SpanSwitch>Tryb ciemny</SpanSwitch>
+              <Switch
+                onChange={handleDarkStyleClick}
+                checked={colorBlind.dark}
+                activeBoxShadow={`0 0 2px 3px ${
+                  Colors(colorBlind).primaryColor
+                }`}
+                onColor={Colors(colorBlind).primaryColor}
+                height={22}
+                uncheckedIcon
+                checkedIcon
+              />
+            </LabelStyle>
+          </ButtonNavStyle>
+          <ButtonNavStyle>
+            <LabelStyle>
+              <SpanSwitch>Tryb dla daltonistów</SpanSwitch>
+              <Switch
+                onChange={handleBlindStyleClick}
+                checked={colorBlind.blind}
+                activeBoxShadow={`0 0 2px 3px ${
+                  Colors(colorBlind).primaryColor
+                }`}
+                onColor={Colors(colorBlind).primaryColor}
+                height={22}
+                uncheckedIcon
+                checkedIcon
+              />
+            </LabelStyle>
+          </ButtonNavStyle>
+        </LeftMenuStyle>
+      </MenuPosition>
+      <Popup popupEnable={menuOpen} handleClose={handleMenuOpen} noContent />
+      <ContentMenu active={menuOpen}>
+        <BackgroundColorPage className="heightElement" colorBlind={colorBlind}>
+          <Spinner spinnerEnable={spinnerEnable} />
+          <Alerts />
+
+          <WrapperNavigation colorBlind={colorBlind} menuOpen={menuOpen}>
+            <NavigationDiv colorBlind={colorBlind}>
+              <NavigationItems>
+                <LogoStyle>
+                  <LinkEffect text="NOOTIS" path="/" />
+                </LogoStyle>
+                <ButtonsNav isUser={!!user}>
+                  {renderCompanyOrCreateCompany}
+                  {renderButtonsUp}
+                </ButtonsNav>
+                <BurgerButton onClick={handleMenuOpen}>
+                  <FaBars />
+                </BurgerButton>
+              </NavigationItems>
+            </NavigationDiv>
+          </WrapperNavigation>
+          {renderExtraPropsInMainMenu}
+          <PaddingContent
+            topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
+          >
+            <MinHeightContent isMainPage={isMainPage}>
+              {children}
+            </MinHeightContent>
+          </PaddingContent>
+          <Footer />
+        </BackgroundColorPage>
+      </ContentMenu>
+    </>
   )
 }
 

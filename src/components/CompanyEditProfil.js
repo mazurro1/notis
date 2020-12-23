@@ -41,10 +41,15 @@ const CompanyEditProfil = () => {
     const findWorker = pathCompanyData.workers.find(worker => worker.user._id === user.userId);
     if(!!findWorker){
       selectedWorker = findWorker;
-      const workerHasPermission = findWorker.permissions.some(perm => perm === 2 || perm === 3 || perm === 4)
-      if (workerHasPermission){
-        userHasAccess = true
+      if (!!findWorker.permissions){
+        const workerHasPermission = findWorker.permissions.some(
+          perm => perm === 2 || perm === 3 || perm === 4
+        )
+        if (workerHasPermission) {
+          userHasAccess = true
+        }
       }
+      
     }else{
       userHasAccess = pathCompanyData.owner._id === user.userId;
     }
