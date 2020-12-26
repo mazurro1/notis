@@ -30,6 +30,8 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  AVAIBLE_UPDATE_PAGE,
+  UPDATE_PAGE,
   REPLACE_COMPANY_DATA,
   RESET_EDIT_COMPANY,
   CHANGE_RESERWATION_VALUE,
@@ -39,6 +41,7 @@ import {
   AVAIBLE_DATE_TO_RESERWATION_UPDATE,
   UPDATE_PATCH_COMPANY_DATA,
   UPDATE_PLACES_DATA,
+  UPDATE_NEW_PLACES_DATA,
   UPDATE_USER_RESERWATIONS,
   UPDATE_USER_ONE_RESERWATION,
 } from "./actions"
@@ -51,6 +54,7 @@ const initialState = {
   user: null,
   userPhone: null,
   page: 1,
+  avaibleUpdatePage: false,
   spinnerEnable: false,
   industries: null,
   createCompanyVisible: false,
@@ -94,16 +98,12 @@ const initialState = {
   editWorkerHoursData: null,
   editedWorkersHours: [],
   pathCompanyData: null,
+  workCompanyData: null,
   userHistoryReserwations: [],
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_PATCH_COMPANY_DATA:
-      return {
-        ...state,
-        pathCompanyData: action.data,
-      }
     case CHANGE_DARK_STYLE:
       const newDarkStyle = {
         blind: false,
@@ -216,6 +216,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         industries: action.value,
+        page: 1,
       }
 
     case CHANGE_SORT_VISIBLE:
@@ -262,6 +263,22 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case AVAIBLE_UPDATE_PAGE:
+      return {
+        ...state,
+        avaibleUpdatePage: action.value,
+      }
+    case UPDATE_PAGE:
+      return {
+        ...state,
+        page: state.page + 1,
+        avaibleUpdatePage: false,
+      }
+    case UPDATE_PATCH_COMPANY_DATA:
+      return {
+        ...state,
+        pathCompanyData: action.data,
+      }
     case UPDATE_USER_ONE_RESERWATION: {
       const newUserHistoryReserwations = [...state.userHistoryReserwations]
       const changedReserwation = action.data
@@ -295,6 +312,15 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         placesData: action.data,
+        avaibleUpdatePage: true,
+      }
+
+    case UPDATE_NEW_PLACES_DATA:
+      const allPlacesData = [...state.placesData, ...action.data]
+      return {
+        ...state,
+        placesData: allPlacesData,
+        avaibleUpdatePage: true,
       }
     case AVAIBLE_DATE_TO_RESERWATION_UPDATE:
       return {
@@ -354,13 +380,9 @@ const reducer = (state = initialState, action) => {
       }
 
     case REPLACE_COMPANY_DATA:
-      const newUserCompany = { ...state.user }
-      if (!!newUserCompany.company) {
-        newUserCompany.company = action.data
-      }
       return {
         ...state,
-        user: newUserCompany,
+        workCompanyData: action.data,
       }
     case RESET_EDIT_COMPANY:
       return {

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import "../../style.css"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch,useSelector } from "react-redux"
 import PlacesItem from "../components/PlacesItem"
 import ButtonIcon from "../components/ButtonIcon"
 import styled from "styled-components"
@@ -10,12 +10,12 @@ import {
   changeFilterVisible,
   changeLocaliaztionVisible,
   changeLoadingPlaces,
+  updatePage,
 } from "../state/actions"
 import { Colors } from "../common/Colors"
 import sal from "sal.js"
 import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
-import { LinkEffect } from "../common/LinkEffect"
 import { AllIndustries } from "../common/AllIndustries"
 
 const ButtonsFilters = styled.div`
@@ -49,7 +49,12 @@ const TextH1 = styled.div`
   background-color: ${props => Colors(props.colorBlind).primaryColor};
 `
 
+const MarginBottomPlaces = styled.div`
+  margin-bottom: 150px;
+`
+
 const Home = () => {
+  const [scrollPosition, setScrollPosition] = useState(0)
   const placesData = useSelector(state => state.placesData)
   const filters = useSelector(state => state.filters)
   const sorts = useSelector(state => state.sorts)
@@ -57,19 +62,34 @@ const Home = () => {
   const industries = useSelector(state => state.industries)
   const loadingPlaces = useSelector(state => state.loadingPlaces)
   const colorBlind = useSelector(state => state.colorBlind)
-
-  const contentRef = useRef(null)
-
-  useEffect(() => {
-    const heightContent = contentRef.current.clientHeight
-    // window.scrollTo(heightContent)
-    // console.log(heightContent)
-  }, [contentRef])
-
+  const avaibleUpdatePage = useSelector(state => state.avaibleUpdatePage)
+  const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
 
-  useScrollPosition(({ prevPos, currPos }) => {
-    // console.log(currPos.y)
+  useEffect(() => {
+    if (!!refAllPlaces) {
+      if(!!refAllPlaces.current){
+        const indexLastChildren = refAllPlaces.current.childNodes.length
+        if (indexLastChildren % 10 === 0 && indexLastChildren > 0) {
+          const isLastPlaceVisible = refAllPlaces.current.childNodes[indexLastChildren - 1].className === "sal-animate";
+          if(isLastPlaceVisible){
+            refAllPlaces.current.childNodes[indexLastChildren - 1].className =
+              "sal-animate active-update"
+            dispatch(updatePage())
+          }
+        }
+      }
+    }
+  }, [refAllPlaces, placesData, scrollPosition])
+  
+  useScrollPosition(({ _, currPos }) => {
+    if (
+      currPos.y !== 0 &&
+      Math.abs(currPos.y) % 10 === 0 &&
+      avaibleUpdatePage
+    ) {
+      setScrollPosition(Math.abs(currPos.y))
+    }
   })
 
   useEffect(() => {
@@ -94,7 +114,7 @@ const Home = () => {
   )
 
   return (
-    <div ref={contentRef}>
+    <div>
       {industriesText}
       <ButtonsFilters>
         <ButtonMargin>
@@ -156,7 +176,7 @@ const Home = () => {
         classNames="popup"
         unmountOnExit
       >
-        <div>{mapPlacesData}</div>
+        <MarginBottomPlaces ref={refAllPlaces}>{mapPlacesData}</MarginBottomPlaces>
       </CSSTransition>
     </div>
   )

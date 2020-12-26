@@ -465,7 +465,7 @@ export const fetchResetPassword = (email, password, codeReset) => {
 // COMPANY ACTIONS
 // COMPANY ACTIONS
 // COMPANY ACTIONS
-
+export const UPDATE_PAGE = "UPDATE_PAGE"
 export const UPDATE_PLACES_DATA = "UPDATE_PLACES_DATA"
 export const CHANGE_EDIT_WORKER_HOURS = "EDIT_WORKER_HOURS"
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
@@ -478,6 +478,21 @@ export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
 export const UPDATE_PATCH_COMPANY_DATA = "UPDATE_PATCH_COMPANY_DATA"
 export const UPDATE_USER_RESERWATIONS = "UPDATE_USER_RESERWATIONS"
 export const UPDATE_USER_ONE_RESERWATION = "UPDATE_USER_ONE_RESERWATION"
+export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
+export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
+
+export const avaibleUpdatePage = (value) => {
+  return {
+    type: AVAIBLE_UPDATE_PAGE,
+    value: value
+  }
+}
+
+export const updatePage = () => {
+  return {
+    type: UPDATE_PAGE,
+  }
+}
 
 export const updateUserOneReserwation = data => {
   return {
@@ -496,6 +511,14 @@ export const updateUserReserwations = data => {
 export const updatePlacesData = data => {
   return {
     type: UPDATE_PLACES_DATA,
+    data: data,
+  }
+}
+
+
+export const updateNewPlacesData = data => {
+  return {
+    type: UPDATE_NEW_PLACES_DATA,
     data: data,
   }
 }
@@ -714,8 +737,7 @@ export const fetchCompanyData = (companyId, token) => {
         }
       )
       .then(response => {
-        dispatch(updatePatchCompanyData(response.data.companyProfil))
-        // dispatch(replaceCompanyData(response.data.companyProfil))
+        dispatch(replaceCompanyData(response.data.companyProfil))
         setTimeout(() => {
           dispatch(changeSpinner(false))
         }, 1000)
@@ -1062,17 +1084,26 @@ export const fetchAllCompanys = (page = 1) => {
         page: page,
       })
       .then(response => {
-        dispatch(updatePlacesData(response.data.companysDoc))
         if (page === 1) {
+          dispatch(updatePlacesData(response.data.companysDoc))
           dispatch(changeLoadingPlaces(false))
+        }else if (page > 1 && response.data.companysDoc.length > 0) {
+          dispatch(updateNewPlacesData(response.data.companysDoc))
         }
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
-        dispatch(changeLoadingPlaces(false))
-        if (page === 0) {
-          dispatch(changeLoadingPlaces(false))
-        }
+       if (error.response) {
+         if (error.response.status === 403) {
+           dispatch(
+             addAlertItem("Brak więcej firm w danej kategorii.", "blue")
+           )
+         }
+       } else {
+         dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
+       }
+       if (page === 1) {
+         dispatch(changeLoadingPlaces(false))
+       }
       })
   }
 }
@@ -1088,14 +1119,23 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
         type: type,
       })
       .then(response => {
-        dispatch(updatePlacesData(response.data.companysDoc))
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
+          dispatch(updatePlacesData(response.data.companysDoc))
+        } else if (page > 1 && response.data.companysDoc.length > 0) {
+          dispatch(updateNewPlacesData(response.data.companysDoc))
         }
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
-        if (page === 0) {
+        if(error.response){
+          if (error.response.status === 403) {
+            dispatch(addAlertItem("Brak więcej firm w danej kategorii.", "blue")) 
+          }
+          
+        }else{
+          dispatch(addAlertItem("Błąd podczas pobierania firm.", "red")) 
+        }
+        if (page === 1) {
           dispatch(changeLoadingPlaces(false))
         }
       })

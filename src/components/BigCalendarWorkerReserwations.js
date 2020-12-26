@@ -218,53 +218,52 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
   const timerToClearEdited = useRef(null)
 
   const dispatch = useDispatch()
-  console.log(item)
 
-  useEffect(() => {
-    if (!!item && allEvents.length === 0) {
-      const mapItemNoConstantWorkingHoursDate = item.noConstantWorkingHours.map(
-        itemMaped => {
-          const itemMapedResult = {
-            end: new Date(itemMaped.end),
-            start: new Date(itemMaped.start),
-            fullDate: itemMaped.fullDate,
-            _id: itemMaped._id,
-            holidays: itemMaped.holidays,
-          }
-          return itemMapedResult
-        }
-      )
-      const selectEditedWorker = editedWorkersHours.find(
-        workerEdited => workerEdited.indexWorker === item._id
-      )
-      if (!!selectEditedWorker) {
-        const filterItemNoConstantWorkingHours = mapItemNoConstantWorkingHoursDate.filter(
-          itemHour => {
-            const isIdInDeleted = selectEditedWorker.noConstantWorkingHours.deletedEventsIds.some(
-              deletedEventsIds => {
-                return deletedEventsIds === itemHour._id
-              }
-            )
-            return !isIdInDeleted
-          }
-        )
+  // useEffect(() => {
+  //   if (!!item && allEvents.length === 0) {
+  //     const mapItemNoConstantWorkingHoursDate = item.noConstantWorkingHours.map(
+  //       itemMaped => {
+  //         const itemMapedResult = {
+  //           end: new Date(itemMaped.end),
+  //           start: new Date(itemMaped.start),
+  //           fullDate: itemMaped.fullDate,
+  //           _id: itemMaped._id,
+  //           holidays: itemMaped.holidays,
+  //         }
+  //         return itemMapedResult
+  //       }
+  //     )
+  //     const selectEditedWorker = editedWorkersHours.find(
+  //       workerEdited => workerEdited.indexWorker === item._id
+  //     )
+  //     if (!!selectEditedWorker) {
+  //       const filterItemNoConstantWorkingHours = mapItemNoConstantWorkingHoursDate.filter(
+  //         itemHour => {
+  //           const isIdInDeleted = selectEditedWorker.noConstantWorkingHours.deletedEventsIds.some(
+  //             deletedEventsIds => {
+  //               return deletedEventsIds === itemHour._id
+  //             }
+  //           )
+  //           return !isIdInDeleted
+  //         }
+  //       )
 
-        let userEditedNewEvents = []
-        if (!!selectEditedWorker) {
-          userEditedNewEvents =
-            selectEditedWorker.noConstantWorkingHours.newEvents
-        }
+  //       let userEditedNewEvents = []
+  //       if (!!selectEditedWorker) {
+  //         userEditedNewEvents =
+  //           selectEditedWorker.noConstantWorkingHours.newEvents
+  //       }
 
-        const allItemsAndFilter = [
-          ...filterItemNoConstantWorkingHours,
-          ...userEditedNewEvents,
-        ]
-        setAllEvents(allItemsAndFilter)
-      } else {
-        setAllEvents(mapItemNoConstantWorkingHoursDate)
-      }
-    }
-  }, [editedWorkersHours, item])
+  //       const allItemsAndFilter = [
+  //         ...filterItemNoConstantWorkingHours,
+  //         ...userEditedNewEvents,
+  //       ]
+  //       setAllEvents(allItemsAndFilter)
+  //     } else {
+  //       setAllEvents(mapItemNoConstantWorkingHoursDate)
+  //     }
+  //   }
+  // }, [editedWorkersHours, item])
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
     item.company.openingDays

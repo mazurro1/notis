@@ -11,8 +11,11 @@ import {
   FaCalendarDay,
   FaShoppingBag,
   FaBars,
+  FaChrome,
+  FaCalendarAlt,
+  FaBox,
 } from "react-icons/fa"
-import { MdWork, MdPowerSettingsNew } from "react-icons/md"
+import { MdWork, MdPowerSettingsNew, MdTimelapse } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
@@ -56,6 +59,11 @@ import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
 import Footer from './Footer'
+import BigCalendarWorkerReserwations from "./BigCalendarWorkerReserwations"
+
+const MarginButtonsWork = styled.div`
+  margin-top: 10px;
+`
 
 const SpanSwitch = styled.span`
   font-size: 0.8rem;
@@ -270,6 +278,7 @@ const MinHeightContent = styled.div`
 
 const Navigation = ({ children, isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [workPropsVisible, setWorkPropsVisible] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
@@ -333,11 +342,11 @@ const Navigation = ({ children, isMainPage }) => {
   }, [isMainPage])
 
   useEffect(() => {
-    console.log("update")
+    console.log("update", page)
     if (!!industries || industries === 0) {
-      dispatch(fetchAllCompanysOfType(1, industries))
+      dispatch(fetchAllCompanysOfType(page, industries))
     } else {
-      dispatch(fetchAllCompanys(1))
+      dispatch(fetchAllCompanys(page))
     }
   }, [
     selectedDateAndTime,
@@ -424,6 +433,20 @@ const Navigation = ({ children, isMainPage }) => {
     setWorkPropsVisible(prevState => !prevState)
   }
 
+   const handleMenuOpen = () => {
+     setMenuOpen(prevState => !prevState)
+   }
+
+   const handleWorkerReserwations = () => {
+    setWorkPropsVisible(false)
+    setWorkerReserwationsVisible(true)
+   }
+
+   const handleCloseWorkerReserwations = () => {
+    setWorkerReserwationsVisible(false)
+    setWorkPropsVisible(true)
+   }
+
   const mapIndustries = AllIndustries.map((item, index) => {
     const isIndustriesActive = industries === item.value
     return (
@@ -497,10 +520,54 @@ const Navigation = ({ children, isMainPage }) => {
         popupEnable={workPropsVisible}
         handleClose={handleClickWork}
         title="Praca"
+        maxWidth="300"
       >
-        work props visible
+        <div>
+          <ButtonIcon
+            title="Grafik pracy"
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<MdTimelapse />}
+            // onClick={handleWorkerReserwations}
+          />
+          <MarginButtonsWork>
+            <ButtonIcon
+              title="Rezerwacje"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarAlt />}
+              onClick={handleWorkerReserwations}
+            />
+          </MarginButtonsWork>
+          <MarginButtonsWork>
+            <ButtonIcon
+              title="Stan magazynowy"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaBox />}
+              // onClick={handleClickWork}
+            />
+          </MarginButtonsWork>
+        </div>
       </Popup>
     )
+
+      const PopupWorkersReserwations = (
+        <Popup
+          popupEnable={workerReserwationsVisible}
+          handleClose={handleCloseWorkerReserwations}
+          noContent
+          calendar
+        >
+          <BigCalendarWorkerReserwations
+            handleClose={handleCloseWorkerReserwations}
+          />
+        </Popup>
+      )
+
 
   const PopupWorkerEditHours = (
     <Popup
@@ -709,9 +776,9 @@ const Navigation = ({ children, isMainPage }) => {
                   <ButtonIcon
                     title={user.company.name}
                     uppercase
-                    fontIconSize="25"
+                    fontIconSize="20"
                     fontSize="16"
-                    icon={<MdWork />}
+                    icon={<FaChrome />}
                     secondColors
                   />
                 }
@@ -818,11 +885,10 @@ const Navigation = ({ children, isMainPage }) => {
     </>
   )
 
-    const handleMenuOpen = () => {
-      setMenuOpen(prevState => !prevState)
-    }
+   
   return (
     <>
+      {PopupWorkersReserwations}
       {PopupWorkerPropsVisible}
       {PopupWorkerEditHours}
       {PopupReserwation}

@@ -8,7 +8,7 @@ import ContentCompanyProfil from "./ContentCompanyProfil"
 
 const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
-  const pathCompanyData = useSelector(state => state.pathCompanyData)
+  const workCompanyData = useSelector(state => state.workCompanyData)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -36,12 +36,14 @@ const CompanyEditProfil = () => {
   let isAdminCompany = false;
   let userHasAccess = false;
   let selectedWorker = null;
-  if (!!pathCompanyData) {
-    isAdminCompany = user.userId === pathCompanyData.owner._id
-    const findWorker = pathCompanyData.workers.find(worker => worker.user._id === user.userId);
-    if(!!findWorker){
-      selectedWorker = findWorker;
-      if (!!findWorker.permissions){
+  if (!!workCompanyData) {
+    isAdminCompany = user.userId === workCompanyData.owner._id
+    const findWorker = workCompanyData.workers.find(
+      worker => worker.user._id === user.userId
+    )
+    if (!!findWorker) {
+      selectedWorker = findWorker
+      if (!!findWorker.permissions) {
         const workerHasPermission = findWorker.permissions.some(
           perm => perm === 2 || perm === 3 || perm === 4
         )
@@ -49,9 +51,8 @@ const CompanyEditProfil = () => {
           userHasAccess = true
         }
       }
-      
-    }else{
-      userHasAccess = pathCompanyData.owner._id === user.userId;
+    } else {
+      userHasAccess = workCompanyData.owner._id === user.userId
     }
   }
 
@@ -60,7 +61,7 @@ const CompanyEditProfil = () => {
     <>
       {userHasAccess ? (
         <ContentCompanyProfil
-          company={pathCompanyData}
+          company={workCompanyData}
           isAdmin={isAdminCompany}
           isCompanyEditProfil
           userHasAccess={userHasAccess}
