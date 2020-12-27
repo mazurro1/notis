@@ -16,6 +16,7 @@ import { FaCalendarDay, FaCalendarCheck } from "react-icons/fa"
 import { getMonthAndReturn } from "../common/Functions"
 import { CgSpinner } from "react-icons/cg"
 import HoursItemReserwation from "./HoursItemReserwation"
+import InputIcon from "./InputIcon"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -235,6 +236,7 @@ const Reserwation = ({
     workers: [],
   },
 }) => {
+  const [reserwationMessage, setReserwationMessage] = useState("")
   const [selectedHour, setSelectedHour] = useState(null)
   const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
   const [selectedWorkerId, setSelectedWorkerId] = useState(null)
@@ -310,7 +312,8 @@ const Reserwation = ({
           reserwationData.time,
           reserwationData.serviceName,
           reserwationData.extraCost,
-          reserwationData.extraTime
+          reserwationData.extraTime,
+          reserwationMessage
         )
       )
     }
@@ -343,6 +346,10 @@ const Reserwation = ({
     } else {
       setSelectedHour(clickedHour)
     }
+  }
+
+  const handleReserwationMessage = (e) => {
+    setReserwationMessage(e.target.value)
   }
 
   let timeService = ""
@@ -429,20 +436,6 @@ const Reserwation = ({
       </WorkerItem>
     )
   })
-
-  // const mapAvaibleHours = avaibleHoursReserwation.map((item, index) => {
-  //   const isHourActive = selectedHour === item
-  //   return (
-  //     <DateReserwStyle
-  //       colorBlind={colorBlind}
-  //       onClick={() => handleClickDateToReserw(item)}
-  //       active={isHourActive}
-  //       key={index}
-  //     >
-  //       {item}
-  //     </DateReserwStyle>
-  //   )
-  // })
 
   const renderAvaibleHours = avaibleHoursReserwationUpdate ? (
     <SpinnerToLoadAvaibleHours colorBlind={colorBlind}>
@@ -564,17 +557,27 @@ const Reserwation = ({
                   Wybierz godzinę:
                 </TextReserwation>
                 {renderAvaibleHours}
-                <ButtonIcon
-                  title="Rezerwuj"
-                  fontIconSize="20"
-                  fontSize="16"
-                  icon={<FaCalendarCheck />}
-                  onClick={handleDoReserwation}
-                  uppercase
-                  customColorButton={Colors(colorBlind).successColorDark}
-                  customColorIcon={Colors(colorBlind).successColor}
-                  disabled={!disabledReserwButton}
-                />
+                {!!selectedDate && avaibleHoursReserwation.length > 0 && (
+                  <>
+                    <InputIcon
+                      placeholder="Wiadomość do rezerwacji (domyślnie)"
+                      inputActive={true}
+                      value={reserwationMessage}
+                      onChange={handleReserwationMessage}
+                    />
+                  </>
+                )}
+                  <ButtonIcon
+                    title="Rezerwuj"
+                    fontIconSize="20"
+                    fontSize="25"
+                    icon={<FaCalendarCheck />}
+                    onClick={handleDoReserwation}
+                    uppercase
+                    customColorButton={Colors(colorBlind).successColorDark}
+                    customColorIcon={Colors(colorBlind).successColor}
+                    disabled={!disabledReserwButton}
+                  />
               </>
             )}
             <ClosePopup

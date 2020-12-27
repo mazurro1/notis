@@ -15,7 +15,7 @@ import {
   FaCalendarAlt,
   FaBox,
 } from "react-icons/fa"
-import { MdWork, MdPowerSettingsNew, MdTimelapse } from "react-icons/md"
+import { MdWork, MdPowerSettingsNew, MdTimelapse, MdClose } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
@@ -45,6 +45,7 @@ import {
   changeDarkStyle,
   fetchAllCompanys,
   fetchAllCompanysOfType,
+  changeLanguageStyle,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -71,6 +72,7 @@ const SpanSwitch = styled.span`
   top: 10px;
   left: 10px;
   right: 0;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
 `
 
 const LabelStyle = styled.div`
@@ -267,6 +269,21 @@ const BurgerButton = styled.div`
 
 const LeftMenuStyle = styled.div`
   padding: 10px;
+  padding-top: 60px;
+`
+
+const IconCloseStyle = styled.div`
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 10px;
+  padding-bottom: 0px;
+  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    transform: scale(1.4);
+  }
 `
 
 const MinHeightContent = styled.div`
@@ -274,6 +291,24 @@ const MinHeightContent = styled.div`
     props.isMainPage
       ? "calc(100vh - 70px - 152px)"
       : "calc(100vh - 70px)"};
+`
+
+const CloseMenuLeft = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 15px;
+`
+
+const PositionPl = styled.div`
+  text-align: right;
+  padding-right: 7px;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
+`
+
+const PositionEn = styled.div`
+  text-align: left;
+  padding-left: 7px;
+  color: ${props => Colors(props.colorBlind).textNormalWhite};
 `
 
 const Navigation = ({ children, isMainPage }) => {
@@ -445,6 +480,11 @@ const Navigation = ({ children, isMainPage }) => {
    const handleCloseWorkerReserwations = () => {
     setWorkerReserwationsVisible(false)
     setWorkPropsVisible(true)
+   }
+
+   const handleChangeLanguage = () => {
+     const languageSelected = colorBlind.language === "PL" ? "EN" : "PL"
+     dispatch(changeLanguageStyle(languageSelected))
    }
 
   const mapIndustries = AllIndustries.map((item, index) => {
@@ -912,7 +952,29 @@ const Navigation = ({ children, isMainPage }) => {
           </div>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch>Tryb ciemny</SpanSwitch>
+              <SpanSwitch colorBlind={colorBlind}>Język</SpanSwitch>
+              <Switch
+                onChange={handleChangeLanguage}
+                checked={colorBlind.language === "PL"}
+                activeBoxShadow={`0 0 2px 3px ${
+                  Colors(colorBlind).primaryColor
+                }`}
+                onColor={Colors(colorBlind).primaryColor}
+                offColor={Colors(colorBlind).primaryColor}
+                onColor={Colors(colorBlind).primaryColor}
+                height={22}
+                uncheckedIcon={
+                  <PositionPl colorBlind={colorBlind}>PL</PositionPl>
+                }
+                checkedIcon={
+                  <PositionEn colorBlind={colorBlind}>EN</PositionEn>
+                }
+              />
+            </LabelStyle>
+          </ButtonNavStyle>
+          <ButtonNavStyle>
+            <LabelStyle>
+              <SpanSwitch colorBlind={colorBlind}>Tryb ciemny</SpanSwitch>
               <Switch
                 onChange={handleDarkStyleClick}
                 checked={colorBlind.dark}
@@ -928,7 +990,9 @@ const Navigation = ({ children, isMainPage }) => {
           </ButtonNavStyle>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch>Tryb dla daltonistów</SpanSwitch>
+              <SpanSwitch colorBlind={colorBlind}>
+                Tryb dla daltonistów
+              </SpanSwitch>
               <Switch
                 onChange={handleBlindStyleClick}
                 checked={colorBlind.blind}
@@ -943,6 +1007,11 @@ const Navigation = ({ children, isMainPage }) => {
             </LabelStyle>
           </ButtonNavStyle>
         </LeftMenuStyle>
+        <CloseMenuLeft>
+          <IconCloseStyle onClick={handleMenuOpen} colorBlind={colorBlind}>
+            <MdClose />
+          </IconCloseStyle>
+        </CloseMenuLeft>
       </MenuPosition>
       <Popup popupEnable={menuOpen} handleClose={handleMenuOpen} noContent />
       <ContentMenu active={menuOpen}>

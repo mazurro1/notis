@@ -29,6 +29,14 @@ export const CHANGE_REMIND_PASSWORD_VISIBLE = "CHANGE_REMIND_PASSWORD_VISIBLE"
 export const CHANGE_REMIND_PASSWORD_EMAIL_SENT =
   "CHANGE_REMIND_PASSWORD_EMAIL_SENT"
 export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
+export const CHANGE_LANGUAGE_STYLE = "CHANGE_LANGUAGE_STYLE"
+
+export const changeLanguageStyle = (value) => {
+  return {
+    type: CHANGE_LANGUAGE_STYLE,
+    value: value
+  }
+}
 
 export const changeBlindStyle = () => {
   return {
@@ -465,6 +473,7 @@ export const fetchResetPassword = (email, password, codeReset) => {
 // COMPANY ACTIONS
 // COMPANY ACTIONS
 // COMPANY ACTIONS
+export const RESET_PLACES = "RESET_PLACES"
 export const UPDATE_PAGE = "UPDATE_PAGE"
 export const UPDATE_PLACES_DATA = "UPDATE_PLACES_DATA"
 export const CHANGE_EDIT_WORKER_HOURS = "EDIT_WORKER_HOURS"
@@ -480,6 +489,12 @@ export const UPDATE_USER_RESERWATIONS = "UPDATE_USER_RESERWATIONS"
 export const UPDATE_USER_ONE_RESERWATION = "UPDATE_USER_ONE_RESERWATION"
 export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
 export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
+
+export const resetPlaces = () => {
+  return {
+    type: RESET_PLACES
+  }
+}
 
 export const avaibleUpdatePage = (value) => {
   return {
@@ -963,7 +978,8 @@ export const fetchDoReserwation = (
   timeReserwation,
   serviceName,
   extraCost,
-  extraTime
+  extraTime,
+  reserwationMessage
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -981,6 +997,7 @@ export const fetchDoReserwation = (
           serviceName: serviceName,
           extraCost: extraCost,
           extraTime: extraTime,
+          reserwationMessage: reserwationMessage,
         },
         {
           headers: {
@@ -1103,6 +1120,7 @@ export const fetchAllCompanys = (page = 1) => {
        }
        if (page === 1) {
          dispatch(changeLoadingPlaces(false))
+         dispatch(resetPlaces())
        }
       })
   }
@@ -1137,6 +1155,7 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
         }
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
+          dispatch(resetPlaces())
         }
       })
   }

@@ -216,6 +216,11 @@ const UserHistoryCategoryItem = ({
       <div>
         Godzina usługi:<b>{` ${item.dateStart}-${item.dateEnd}`}</b>
       </div>
+      {!!item.reserwationMessage && (
+        <div>
+          Wiadomość: <b>{item.reserwationMessage}</b>
+        </div>
+      )}
       <div>
         Status:{" "}
         {item.visitFinished ? (

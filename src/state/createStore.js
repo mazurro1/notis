@@ -25,6 +25,7 @@ import {
   CHANGE_CREATE_COMPANY_VISIBLE,
   CHANGE_BLIND_STYLE,
   CHANGE_DARK_STYLE,
+  CHANGE_LANGUAGE_STYLE,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -44,12 +45,14 @@ import {
   UPDATE_NEW_PLACES_DATA,
   UPDATE_USER_RESERWATIONS,
   UPDATE_USER_ONE_RESERWATION,
+  RESET_PLACES,
 } from "./actions"
 
 const initialState = {
   colorBlind: {
     blind: false,
     dark: false,
+    language: "PL"
   },
   user: null,
   userPhone: null,
@@ -108,6 +111,7 @@ const reducer = (state = initialState, action) => {
       const newDarkStyle = {
         blind: false,
         dark: !state.colorBlind.dark,
+        language: state.colorBlind.language,
       }
       return {
         ...state,
@@ -117,10 +121,21 @@ const reducer = (state = initialState, action) => {
       const newBlindStyle = {
         blind: !state.colorBlind.blind,
         dark: false,
+        language: state.colorBlind.language,
       }
       return {
         ...state,
         colorBlind: newBlindStyle,
+      }
+    case CHANGE_LANGUAGE_STYLE:
+      const newLanguageStyle = {
+        blind: state.colorBlind.blind,
+        dark: state.colorBlind.dark,
+        language: action.value,
+      }
+      return {
+        ...state,
+        colorBlind: newLanguageStyle,
       }
     case CHANGE_CREATE_COMPANY_VISIBLE:
       return {
@@ -263,6 +278,14 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case RESET_PLACES: {
+      if (state.page === 1) {
+        return {
+          ...state,
+          placesData: [],
+        }
+      }
+    }
     case AVAIBLE_UPDATE_PAGE:
       return {
         ...state,
