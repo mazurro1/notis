@@ -12,6 +12,7 @@ import ReactTooltip from "react-tooltip"
 import SelectCustom from './SelectCustom'
 import { AllMonths } from "../common/AllMonths"
 import { CSSTransition } from "react-transition-group"
+import {Translates} from '../common/Translates'
 
 const NoReserwationsStyle = styled.div`
   position: absolute;
@@ -183,7 +184,9 @@ const UserHistory = ({ siteProps, user }) => {
             </WidthSelect>
           </PositionSelectAll>
         </CSSTransition>
-        <PositionSwitchFlex>Histora rezerwacji</PositionSwitchFlex>
+        <PositionSwitchFlex>
+          {Translates[siteProps.language].buttons.bookingHistory}
+        </PositionSwitchFlex>
         <SwitchPosition data-tip data-for="switchCanceled">
           <Switch
             onChange={handleHiddenCanceledReserwation}

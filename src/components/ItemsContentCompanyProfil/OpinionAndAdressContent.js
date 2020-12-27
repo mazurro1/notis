@@ -278,9 +278,9 @@ const OpinionAndAdressContent = ({
       if (!!companyIndustries){
         const convertedCompanyIndustriesFromId = companyIndustries.map(
           itemId => {
-            const selectedIndustriesComponent = AllIndustries.find(
-              itemIndustries => itemIndustries.value === itemId
-            )
+            const selectedIndustriesComponent = AllIndustries[
+              siteProps.language
+            ].find(itemIndustries => itemIndustries.value === itemId)
             return selectedIndustriesComponent
           }
         )
@@ -606,7 +606,7 @@ const OpinionAndAdressContent = ({
                   </AllReserwationTime>
                   Typ działalności:
                   <SelectCustom
-                    options={AllIndustries}
+                    options={AllIndustries[siteProps.language]}
                     value={industriesComponent}
                     handleChange={handleChangeIndystries}
                     placeholder="Działalność..."
@@ -648,9 +648,7 @@ const OpinionAndAdressContent = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaSave />}
-                          customColorButton={
-                            Colors(siteProps).successColorDark
-                          }
+                          customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                           disabled={!disabledButtonSubmit}
                         />

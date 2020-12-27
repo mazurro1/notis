@@ -108,7 +108,7 @@ const CreateCompany = () => {
     <form onSubmit={handleSubmit}>
       <SelectStyles>
         <SelectCustom
-          options={AllIndustries}
+          options={AllIndustries[siteProps.language]}
           value={industries}
           handleChange={handleChangeIndustries}
           placeholder="Zaznacz typ działalności..."

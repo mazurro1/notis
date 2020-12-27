@@ -17,6 +17,7 @@ import sal from "sal.js"
 import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { AllIndustries } from "../common/AllIndustries"
+import {Translates} from '../common/Translates'
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -105,12 +106,16 @@ const Home = () => {
     )
   })
   
-  const findIndustrie = AllIndustries.find(item => item.value === industries);
+  const findIndustrie = AllIndustries[siteProps.language].find(
+    item => item.value === industries
+  )
   
   const industriesText = !!findIndustrie ? (
     <TextH1 siteProps={siteProps}>{findIndustrie.label}</TextH1>
   ) : (
-    <TextH1 siteProps={siteProps}>Wszystko</TextH1>
+    <TextH1 siteProps={siteProps}>
+      {Translates[siteProps.language].buttons.all}
+    </TextH1>
   )
 
   return (

@@ -61,6 +61,7 @@ import Switch from "react-switch"
 import UserHistory from "./UserHistory"
 import Footer from './Footer'
 import BigCalendarWorkerReserwations from "./BigCalendarWorkerReserwations"
+import {Translates} from '../common/Translates'
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -487,7 +488,7 @@ const Navigation = ({ children, isMainPage }) => {
      dispatch(changeLanguageStyle(languageSelected))
    }
 
-  const mapIndustries = AllIndustries.map((item, index) => {
+  const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
     const isIndustriesActive = industries === item.value
     return (
       <PaddingRight key={index}>
@@ -545,7 +546,7 @@ const Navigation = ({ children, isMainPage }) => {
                 siteProps={siteProps}
                 onClick={() => handleChangeIndustries(null)}
               >
-                Wszystko
+                {Translates[siteProps.language].buttons.all}
               </ButtonIconStyles>
             </PaddingRight>
             {mapIndustries}
@@ -559,7 +560,7 @@ const Navigation = ({ children, isMainPage }) => {
       <Popup
         popupEnable={workPropsVisible}
         handleClose={handleClickWork}
-        title="Praca"
+        title={Translates[siteProps.language].buttons.work}
         maxWidth="300"
       >
         <div>
@@ -697,7 +698,7 @@ const Navigation = ({ children, isMainPage }) => {
       popupEnable={historyReserwations}
       handleClose={handleHistoryReserwations}
       maxWidth="400"
-      title="Historia rezerwacji"
+      title={Translates[siteProps.language].buttons.bookingHistory}
       fullScreen
       maxWidth="800"
     >
@@ -826,7 +827,7 @@ const Navigation = ({ children, isMainPage }) => {
             </ButtonNavStyle>
             <ButtonNavStyle>
               <ButtonIcon
-                title="Praca"
+                title={Translates[siteProps.language].buttons.work}
                 uppercase
                 fontIconSize="25"
                 fontSize="16"
@@ -838,7 +839,7 @@ const Navigation = ({ children, isMainPage }) => {
         ) : (
           <ButtonNavStyle>
             <ButtonIcon
-              title="Praca"
+              title={Translates[siteProps.language].buttons.work}
               uppercase
               fontIconSize="25"
               fontSize="16"
@@ -869,7 +870,7 @@ const Navigation = ({ children, isMainPage }) => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
-          title="Historia rezerwacji"
+          title={Translates[siteProps.language].buttons.bookingHistory}
           uppercase
           fontIconSize="20"
           fontSize="16"
@@ -889,7 +890,7 @@ const Navigation = ({ children, isMainPage }) => {
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
-          title="Wyloguj"
+          title={Translates[siteProps.language].buttons.logOut}
           uppercase
           fontIconSize="26"
           fontSize="16"
@@ -904,7 +905,7 @@ const Navigation = ({ children, isMainPage }) => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
-          title="zarejestruj się"
+          title={Translates[siteProps.language].buttons.register}
           uppercase
           fontIconSize="35"
           fontSize="16"
@@ -914,7 +915,7 @@ const Navigation = ({ children, isMainPage }) => {
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
-          title="zaloguj się"
+          title={Translates[siteProps.language].buttons.logIn}
           uppercase
           fontIconSize="20"
           fontSize="16"
@@ -925,7 +926,6 @@ const Navigation = ({ children, isMainPage }) => {
     </>
   )
 
-   
   return (
     <>
       {PopupWorkersReserwations}
@@ -952,10 +952,12 @@ const Navigation = ({ children, isMainPage }) => {
           </div>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch siteProps={siteProps}>Język</SpanSwitch>
+              <SpanSwitch siteProps={siteProps}>
+                {Translates[siteProps.language].buttons.language}
+              </SpanSwitch>
               <Switch
                 onChange={handleChangeLanguage}
-                checked={siteProps.language === "PL"}
+                checked={siteProps.language === "EN"}
                 activeBoxShadow={`0 0 2px 3px ${
                   Colors(siteProps).primaryColor
                 }`}
@@ -966,15 +968,15 @@ const Navigation = ({ children, isMainPage }) => {
                 uncheckedIcon={
                   <PositionPl siteProps={siteProps}>PL</PositionPl>
                 }
-                checkedIcon={
-                  <PositionEn siteProps={siteProps}>EN</PositionEn>
-                }
+                checkedIcon={<PositionEn siteProps={siteProps}>EN</PositionEn>}
               />
             </LabelStyle>
           </ButtonNavStyle>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch siteProps={siteProps}>Tryb ciemny</SpanSwitch>
+              <SpanSwitch siteProps={siteProps}>
+                {Translates[siteProps.language].buttons.darkMode}
+              </SpanSwitch>
               <Switch
                 onChange={handleDarkStyleClick}
                 checked={siteProps.dark}
@@ -991,7 +993,7 @@ const Navigation = ({ children, isMainPage }) => {
           <ButtonNavStyle>
             <LabelStyle>
               <SpanSwitch siteProps={siteProps}>
-                Tryb dla daltonistów
+                {Translates[siteProps.language].buttons.colorBlindMode}
               </SpanSwitch>
               <Switch
                 onChange={handleBlindStyleClick}
