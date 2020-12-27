@@ -49,7 +49,7 @@ import {
 } from "./actions"
 
 const initialState = {
-  colorBlind: {
+  siteProps: {
     blind: false,
     dark: false,
     language: "PL"
@@ -110,32 +110,32 @@ const reducer = (state = initialState, action) => {
     case CHANGE_DARK_STYLE:
       const newDarkStyle = {
         blind: false,
-        dark: !state.colorBlind.dark,
-        language: state.colorBlind.language,
+        dark: !state.siteProps.dark,
+        language: state.siteProps.language,
       }
       return {
         ...state,
-        colorBlind: newDarkStyle,
+        siteProps: newDarkStyle,
       }
     case CHANGE_BLIND_STYLE:
       const newBlindStyle = {
-        blind: !state.colorBlind.blind,
+        blind: !state.siteProps.blind,
         dark: false,
-        language: state.colorBlind.language,
+        language: state.siteProps.language,
       }
       return {
         ...state,
-        colorBlind: newBlindStyle,
+        siteProps: newBlindStyle,
       }
     case CHANGE_LANGUAGE_STYLE:
       const newLanguageStyle = {
-        blind: state.colorBlind.blind,
-        dark: state.colorBlind.dark,
+        blind: state.siteProps.blind,
+        dark: state.siteProps.dark,
         language: action.value,
       }
       return {
         ...state,
-        colorBlind: newLanguageStyle,
+        siteProps: newLanguageStyle,
       }
     case CHANGE_CREATE_COMPANY_VISIBLE:
       return {

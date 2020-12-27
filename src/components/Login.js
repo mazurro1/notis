@@ -32,7 +32,7 @@ const ButtonFacebook = styled.div`
 `
 
 const TextCheckbox = styled.span`
-  color: ${props => Colors(props.colorBlind).primaryColor};
+  color: ${props => Colors(props.siteProps).primaryColor};
   padding-left: 10px;
   font-weight: 600;
   user-select: none;
@@ -42,12 +42,12 @@ const CheckboxStyle = styled.div`
   margin-top: 20px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).primaryColor};
+    background-color: ${props => Colors(props.siteProps).primaryColor};
   }
 
   span {
-    color: ${props => Colors(props.colorBlind).textNormalBlack};
-    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
 `
 
@@ -55,7 +55,7 @@ const LoginContent = () => {
   const [emailInput, setEmailInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
   const [checkboxAutoLogin, setCheckboxAutoLogin] = useState(false)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
@@ -105,13 +105,13 @@ const LoginContent = () => {
           type="password"
           onChange={e => handleChange(e, setPasswordInput)}
         />
-        <CheckboxStyle colorBlind={colorBlind}>
+        <CheckboxStyle siteProps={siteProps}>
           <Checkbox
             theme="material-checkbox"
             value={checkboxAutoLogin}
             onChange={handleChangeCheckbox}
           >
-            <TextCheckbox colorBlind={colorBlind}>
+            <TextCheckbox siteProps={siteProps}>
               Zapamiętaj użytkownika
             </TextCheckbox>
           </Checkbox>

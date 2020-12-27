@@ -47,8 +47,8 @@ const BackgroundEditContent = styled.div`
   background-color: ${props =>
     props.transparent
       ? "transparent"
-      : Colors(props.colorBlind).companyItemBackground};
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+      : Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   padding: 10px;
   padding-bottom: 5px;
   border-radius: 5px;
@@ -69,14 +69,14 @@ const ButtonMargin = styled.div`
 const TextAddDayOff = styled.div`
   font-size: 1.05rem;
   display: inline-block;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
-  border-bottom: 2px solid ${props => Colors(props.colorBlind).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  border-bottom: 2px solid ${props => Colors(props.siteProps).secondColor};
 `
 
 const DaysOffContentAdd = ({
   handleClickContent,
   handleAddClose,
-  colorBlind,
+  siteProps,
   createDayOff,
   setCreateDayOff,
   takeDateActive,
@@ -126,9 +126,9 @@ const DaysOffContentAdd = ({
         <BackgroundEdit>
           <BackgroundEditContent
             onClick={handleClickContent}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
-            <TextAddDayOff colorBlind={colorBlind}>
+            <TextAddDayOff siteProps={siteProps}>
               Dodawanie wolnego dnia
             </TextAddDayOff>
             <ButtonAddDayOff>
@@ -150,8 +150,8 @@ const DaysOffContentAdd = ({
                   fontIconSize="20"
                   fontSize="14"
                   icon={<MdArrowBack />}
-                  customColorButton={Colors(colorBlind).dangerColorDark}
-                  customColorIcon={Colors(colorBlind).dangerColor}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
                   onClick={handleClose}
                 />
               </ButtonMargin>
@@ -162,8 +162,8 @@ const DaysOffContentAdd = ({
                   fontIconSize="18"
                   fontSize="14"
                   icon={<FaSave />}
-                  customColorButton={Colors(colorBlind).successColorDark}
-                  customColorIcon={Colors(colorBlind).successColor}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
                   onClick={handleAddDayOff}
                 />
               </ButtonMargin>
@@ -180,7 +180,7 @@ const DaysOffContentAdd = ({
         <BackgroundEditCalendar>
           <BackgroundEditContent
             onClick={handleClickContent}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
             transparent
           >
             <SelectDataCalendar

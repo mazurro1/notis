@@ -39,7 +39,7 @@ const CheckboxStyle = styled.div`
   margin-bottom: 10px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).secondColor};
+    background-color: ${props => Colors(props.siteProps).secondColor};
   }
 `
 
@@ -47,11 +47,11 @@ const TitleCategory = styled.div`
   position: relative;
   font-size: 1.25rem;
   cursor: pointer;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
   padding: 10px;
   border-radius: 5px;
   padding-right: ${props => (props.isCompanyEditProfil ? "190px" : "50px")};
@@ -215,7 +215,7 @@ const CategoryItem = ({
   const [priceInput, setPriceInput] = useState("")
   const [categoryTitle, setCategoryTitle] = useState("")
   const resetCompany = useSelector(state => state.resetCompany)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const disabledCategorySave =
     categoryTitle.toLowerCase() === item.category.toLowerCase()
@@ -322,7 +322,7 @@ const CategoryItem = ({
         handleResetItemToFromServer={handleResetItemToFromServer}
         handleClickReserwation={handleClickReserwation}
         companyId={companyId}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       />
     )
   })
@@ -338,7 +338,7 @@ const CategoryItem = ({
         clickDelete={clickDelete}
         clickAdd={clickAdd}
         clickEdit={clickEdit}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         onClick={handleClickArrow}
       >
         {item.category}
@@ -385,8 +385,8 @@ const CategoryItem = ({
                         fontIconSize="40"
                         fontSize="14"
                         icon={<MdArrowBack />}
-                        customColorButton={Colors(colorBlind).successColorDark}
-                        customColorIcon={Colors(colorBlind).successColor}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
                         onClick={handleClickDelete}
                       />
                     </ButtonMargin>
@@ -397,8 +397,8 @@ const CategoryItem = ({
                         fontIconSize="40"
                         fontSize="14"
                         icon={<MdDeleteForever />}
-                        customColorButton={Colors(colorBlind).dangerColorDark}
-                        customColorIcon={Colors(colorBlind).dangerColor}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
                         onClick={handleDeleteCategory}
                       />
                     </ButtonMargin>
@@ -433,8 +433,8 @@ const CategoryItem = ({
                           fontSize="13"
                           icon={<MdArrowBack />}
                           onClick={handleResetCategory}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
                         />
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
@@ -445,9 +445,9 @@ const CategoryItem = ({
                           fontSize="15"
                           icon={<MdLibraryAdd />}
                           customColorButton={
-                            Colors(colorBlind).successColorDark
+                            Colors(siteProps).successColorDark
                           }
-                          customColorIcon={Colors(colorBlind).successColor}
+                          customColorIcon={Colors(siteProps).successColor}
                           disabled={disabledCategorySave}
                         />
                       </ButtonMarginSubmit>
@@ -492,7 +492,7 @@ const CategoryItem = ({
                       onChange={e => handleChangeInput(e, setTimeInput)}
                       required
                     />
-                    <CheckboxStyle colorBlind={colorBlind}>
+                    <CheckboxStyle siteProps={siteProps}>
                       <Checkbox
                         theme="material-checkbox"
                         value={extraTime}
@@ -510,7 +510,7 @@ const CategoryItem = ({
                       onChange={e => handleChangeInput(e, setPriceInput)}
                       required
                     />
-                    <CheckboxStyle colorBlind={colorBlind}>
+                    <CheckboxStyle siteProps={siteProps}>
                       <Checkbox
                         theme="material-checkbox"
                         value={extraPrice}
@@ -528,8 +528,8 @@ const CategoryItem = ({
                           fontSize="13"
                           icon={<MdArrowBack />}
                           onClick={handleClickAdd}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
                         />
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
@@ -540,9 +540,9 @@ const CategoryItem = ({
                           fontSize="15"
                           icon={<MdLibraryAdd />}
                           customColorButton={
-                            Colors(colorBlind).successColorDark
+                            Colors(siteProps).successColorDark
                           }
-                          customColorIcon={Colors(colorBlind).successColor}
+                          customColorIcon={Colors(siteProps).successColor}
                         />
                       </ButtonMarginSubmit>
                     </ButtonsAddPosition>

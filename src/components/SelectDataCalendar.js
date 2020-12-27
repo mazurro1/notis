@@ -11,7 +11,7 @@ const StyleSimpleReactCalendar = styled.div`
   transform: translate(0px, 0px) !important;
   opacity: 1;
   .date_picker {
-    background-color: ${props => Colors(props.colorBlind).calendarBackground};
+    background-color: ${props => Colors(props.siteProps).calendarBackground};
     max-width: 300px;
     min-height: 420px;
     box-shadow: 0 0 35px 10px rgba(0, 0, 0, 0.2);
@@ -20,22 +20,22 @@ const StyleSimpleReactCalendar = styled.div`
   }
 
   .date_picker-month_header_title {
-    color: ${props => Colors(props.colorBlind).calendarActiveDate};
+    color: ${props => Colors(props.siteProps).calendarActiveDate};
   }
 
   .date_picker-week-day {
     background-color: transparent;
   }
   .date_picker-week-day.is-selectable {
-    color: ${props => Colors(props.colorBlind).calendarActiveDate};
+    color: ${props => Colors(props.siteProps).calendarActiveDate};
     &:hover {
-      background-color: ${props => Colors(props.colorBlind).primaryColorDark};
-      color: ${props => Colors(props.colorBlind).textNormalWhite};
+      background-color: ${props => Colors(props.siteProps).primaryColorDark};
+      color: ${props => Colors(props.siteProps).textNormalWhite};
     }
   }
 
   .date_picker-week-day.is-not_selectable {
-    color: ${props => Colors(props.colorBlind).calendarDisabledDate} !important;
+    color: ${props => Colors(props.siteProps).calendarDisabledDate} !important;
   }
 
   .is-disabled {
@@ -66,12 +66,12 @@ const StyleSimpleReactCalendar = styled.div`
 
   .date_picker-week-day.is-selected::before {
     background-color: ${props =>
-      Colors(props.colorBlind).primaryColorDark} !important;
+      Colors(props.siteProps).primaryColorDark} !important;
     box-shadow: none;
   }
   .date_picker-week-day.is-selected:hover::before {
     background-color: ${props =>
-      Colors(props.colorBlind).primaryColor} !important;
+      Colors(props.siteProps).primaryColor} !important;
     box-shadow: none;
   }
 
@@ -79,16 +79,16 @@ const StyleSimpleReactCalendar = styled.div`
     transition-property: background-color, color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
-    background-color: ${props => Colors(props.colorBlind).primaryColorDark};
+    background-color: ${props => Colors(props.siteProps).primaryColorDark};
     border: none;
-    color: ${props => Colors(props.colorBlind).textNormalWhite} !important;
+    color: ${props => Colors(props.siteProps).textNormalWhite} !important;
     &:hover {
-      background-color: ${props => Colors(props.colorBlind).primaryColor};
+      background-color: ${props => Colors(props.siteProps).primaryColor};
     }
   }
   .date_picker-header_button.is-next:before,
   .date_picker-header_button.is-prev:before {
-    color: ${props => Colors(props.colorBlind).textNormalWhite} !important;
+    color: ${props => Colors(props.siteProps).textNormalWhite} !important;
   }
 `
 
@@ -101,7 +101,7 @@ const SelectDataCalendar = ({
   activeMonth = new Date(),
   maxDate = null,
 }) => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const data = new Date()
   const prevYeat = new Date(data.getFullYear(), data.getMonth(), data.getDate())
   const nextYear = new Date(
@@ -118,7 +118,7 @@ const SelectDataCalendar = ({
     }, 500)
   }
   return (
-    <StyleSimpleReactCalendar colorBlind={colorBlind}>
+    <StyleSimpleReactCalendar siteProps={siteProps}>
       <SimpleReactCalendar
         activeMonth={activeMonth}
         blockClassName="date_picker"

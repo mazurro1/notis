@@ -8,14 +8,14 @@ const DivTakeData = styled.div`
   position: relative;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 5px;
-  color: ${props => Colors(props.colorBlind).selectDateNavigationText};
+  color: ${props => Colors(props.siteProps).selectDateNavigationText};
   font-size: 16px;
   user-select: none;
   padding: 13px 0;
   padding-left: 50px;
   padding-right: ${props => (props.resetTextEnable ? "40px" : "20px")};
   background-color: ${props =>
-    Colors(props.colorBlind).selectDateNavigationBackground};
+    Colors(props.siteProps).selectDateNavigationBackground};
   cursor: pointer;
   margin-bottom: 5px;
   margin-right: 10px;
@@ -27,7 +27,7 @@ const DivTakeData = styled.div`
   transition-timing-function: ease;
   &:hover {
     background-color: ${props =>
-      Colors(props.colorBlind).selectDateNavigationBackgroundHover};
+      Colors(props.siteProps).selectDateNavigationBackgroundHover};
   }
 `
 
@@ -41,7 +41,7 @@ const IconStyle = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 25px;
-  color: ${props => Colors(props.colorBlind).selectDateNavigationText};
+  color: ${props => Colors(props.siteProps).selectDateNavigationText};
 `
 
 const IconResetDate = styled.div`
@@ -54,7 +54,7 @@ const IconResetDate = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    color: ${props => Colors(props.colorBlind).primaryColorDark};
+    color: ${props => Colors(props.siteProps).primaryColorDark};
   }
 `
 
@@ -67,7 +67,7 @@ const ButtonTakeData = ({
 }) => {
   const [mouseClick, setMouseClick] = useState(false)
   const [numberScale, setNumberScale] = useState(1)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const handleOnClick = () => {
     setMouseClick(true)
@@ -90,12 +90,12 @@ const ButtonTakeData = ({
       mouseClick={mouseClick}
       numberScale={numberScale}
       resetTextEnable={resetTextEnable}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
     >
-      <IconStyle colorBlind={colorBlind}>{icon}</IconStyle>
+      <IconStyle siteProps={siteProps}>{icon}</IconStyle>
       {text}
       {resetTextEnable && (
-        <IconResetDate onClick={handleResetText} colorBlind={colorBlind}>
+        <IconResetDate onClick={handleResetText} siteProps={siteProps}>
           <MdClose />
         </IconResetDate>
       )}

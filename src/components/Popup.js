@@ -10,8 +10,8 @@ const TitlePagePopup = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background-color: ${props => Colors(props.colorBlind).primaryColorDark};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   font-size: 1.4rem;
   padding: 5px 10px;
   padding-right: 35px;
@@ -45,7 +45,7 @@ const PopupContent = styled.div`
   margin: 0 auto;
   border-radius: 5px;
   max-height: 80vh;
-  background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
   overflow: hidden;
 `
 
@@ -63,12 +63,12 @@ const ClosePopup = styled.div`
   cursor: pointer;
   font-size: 1.5rem;
   color: ${props =>
-    props.titleOn ? Colors(props.colorBlind).textNormalWhite : "#757575"};
+    props.titleOn ? Colors(props.siteProps).textNormalWhite : "#757575"};
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    color: ${props => Colors(props.colorBlind).primaryColor};
+    color: ${props => Colors(props.siteProps).primaryColor};
   }
 `
 
@@ -92,7 +92,7 @@ const Popup = ({
   calendar = false,
   title = null,
 }) => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
     handleClose()
   }
@@ -117,14 +117,14 @@ const Popup = ({
       maxWidth={maxWidth}
       onClick={handleOnClickContent}
       fullScreen={fullScreen}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
     >
       {isTitleOn && (
-        <TitlePagePopup colorBlind={colorBlind}>
+        <TitlePagePopup siteProps={siteProps}>
           {title}
           <ClosePopup
             onClick={handleOnClick}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
             titleOn={isTitleOn}
           >
             <MdClose />
@@ -135,7 +135,7 @@ const Popup = ({
       {!isTitleOn && (
         <ClosePopup
           onClick={handleOnClick}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           title={isTitleOn}
         >
           <MdClose />

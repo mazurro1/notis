@@ -14,9 +14,9 @@ const SelectDiv = styled.div`
     div {
       border-color: ${props =>
         props.secondColor
-          ? Colors(props.colorBlind).secondColor
-          : Colors(props.colorBlind).primaryColor} !important;
-      color: ${props => Colors(props.colorBlind).textNormalBlack};
+          ? Colors(props.siteProps).secondColor
+          : Colors(props.siteProps).primaryColor} !important;
+      color: ${props => Colors(props.siteProps).textNormalBlack};
     }
   }
 `
@@ -36,12 +36,12 @@ const SelectCustom = ({
   isClearable = true,
   isDisabled = false,
 }) => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const handleOnChange = value => {
     handleChange(value)
   }
 
-  const dot = (color = Colors(colorBlind).primaryColor) => ({
+  const dot = (color = Colors(siteProps).primaryColor) => ({
     alignItems: "center",
     display: "flex",
 
@@ -59,16 +59,16 @@ const SelectCustom = ({
   const colourStyles = {
     control: styles => ({
       ...styles,
-      backgroundColor: Colors(colorBlind).companyItemBackground,
+      backgroundColor: Colors(siteProps).companyItemBackground,
     }),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-      const color = chroma(Colors(colorBlind).primaryColor)
+      const color = chroma(Colors(siteProps).primaryColor)
       return {
         ...styles,
         backgroundColor: isDisabled
           ? null
           : isSelected
-          ? Colors(colorBlind).primaryColor
+          ? Colors(siteProps).primaryColor
           : isFocused
           ? color.alpha(0.1).css()
           : null,
@@ -88,7 +88,7 @@ const SelectCustom = ({
           backgroundColor:
             !isDisabled &&
             (isSelected
-              ? Colors(colorBlind).primaryColor
+              ? Colors(siteProps).primaryColor
               : color.alpha(0.3).css()),
           boxShadow: "none",
           border: "none",
@@ -112,7 +112,7 @@ const SelectCustom = ({
     <SelectDiv
       widthAuto={widthAuto}
       secondColor={secondColor}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
     >
       <Select
         isLoadin={isLoading}

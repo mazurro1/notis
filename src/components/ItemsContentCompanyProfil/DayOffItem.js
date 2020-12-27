@@ -11,9 +11,9 @@ const DayOffStyle = styled.div`
   border-radius: 5px;
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).primaryColor
-      : Colors(props.colorBlind).secondColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+      ? Colors(props.siteProps).primaryColor
+      : Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   margin: 5px;
   font-size: 0.8rem;
   overflow: hidden;
@@ -34,8 +34,8 @@ const MonthNameStyle = styled.div`
   text-transform: uppercase;
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).primaryColorDark
-      : Colors(props.colorBlind).secondDarkColor};
+      ? Colors(props.siteProps).primaryColorDark
+      : Colors(props.siteProps).secondDarkColor};
   padding-right: 30px;
   transition-property: background-color;
   transition-duration: 0.3s;
@@ -56,7 +56,7 @@ const DayOffDelete = styled.div`
   transition-timing-function: ease;
 
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+    background-color: ${props => Colors(props.siteProps).dangerColorDark};
   }
 `
 
@@ -97,7 +97,7 @@ const DayOffItem = ({
   item,
   handleDeleteDay,
   monthName,
-  colorBlind,
+  siteProps,
   isCompanyEditProfil,
   editable,
 }) => {
@@ -124,12 +124,12 @@ const DayOffItem = ({
 
   return (
     <DayOffStyle
-      colorBlind={colorBlind}
+      siteProps={siteProps}
       onClick={handleCheckDelete}
       isCompanyEditProfil={!isCompanyEditProfil}
     >
       <MonthNameStyle
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         isCompanyEditProfil={!isCompanyEditProfil}
       >
         {`${monthName} ${item.year}`}
@@ -157,8 +157,8 @@ const DayOffItem = ({
                     fontIconSize="20"
                     fontSize="14"
                     icon={<MdArrowBack />}
-                    customColorButton={Colors(colorBlind).successColorDark}
-                    customColorIcon={Colors(colorBlind).successColor}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
                     onClick={handleCheckDelete}
                   />
                 </ButtonMargin>
@@ -169,8 +169,8 @@ const DayOffItem = ({
                     fontIconSize="20"
                     fontSize="14"
                     icon={<MdDeleteForever />}
-                    customColorButton={Colors(colorBlind).dangerColorDark}
-                    customColorIcon={Colors(colorBlind).dangerColor}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
                     onClick={handleConfirmDeleteDay}
                   />
                 </ButtonMargin>

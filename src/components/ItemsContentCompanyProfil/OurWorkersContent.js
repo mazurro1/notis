@@ -27,7 +27,7 @@ const WorkerItemStyle = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${props =>
-    props.colorBlind.blind || props.colorBlind.dark
+    props.siteProps.blind || props.siteProps.dark
       ? "rgba(255, 255, 255, 0.1)"
       : "rgba(255, 255, 255, 0.8)"};
   padding: 10px 10px 5px 10px;
@@ -69,7 +69,7 @@ const EditUserBackgroundContent = styled.div`
   background-color: ${props =>
     props.noBg
       ? "transparent"
-      : Colors(props.colorBlind).companyItemBackground};
+      : Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   padding: 5px;
   font-size: 0.9rem;
@@ -89,8 +89,8 @@ const EditIconStyle = styled.div`
   padding: 5px;
   padding-bottom: 0px;
   border-radius: 5px;
-  background-color: ${props => Colors(props.colorBlind).secondColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   margin: 5px;
   margin-left: 0;
   cursor: pointer;
@@ -100,7 +100,7 @@ const EditIconStyle = styled.div`
   transition-timing-function: ease;
 
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).secondDarkColor};
+    background-color: ${props => Colors(props.siteProps).secondDarkColor};
   }
 `
 
@@ -109,8 +109,8 @@ const DeleteUserIconStyle = styled.div`
   padding: 5px;
   padding-bottom: 0px;
   border-radius: 5px;
-  background-color: ${props => Colors(props.colorBlind).dangerColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).dangerColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   margin: 5px;
   cursor: pointer;
   margin-left: 0px;
@@ -120,16 +120,16 @@ const DeleteUserIconStyle = styled.div`
   transition-timing-function: ease;
 
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+    background-color: ${props => Colors(props.siteProps).dangerColorDark};
   }
 `
 
 const WorkerCircle = styled.div`
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).primaryColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   border-radius: 50%;
   height: 50px;
   width: 50px;
@@ -162,7 +162,7 @@ const PositionAddWorkers = styled.div`
 
 const ContentAddWorkers = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   width: 90%;
   padding: 10px;
   border-radius: 5px;
@@ -229,7 +229,7 @@ const OurWorkersContent = ({
   newOwnerServicesCategory,
   company,
   editMode,
-  colorBlind,
+  siteProps,
   editedWorkersHours,
   isAdmin,
   ownerData,
@@ -384,7 +384,7 @@ const OurWorkersContent = ({
         setAllCategories={setAllCategories}
         company={company}
         editMode={editMode}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         editedWorkersHours={editedWorkersHours}
         selectEditedWorkersHours={selectEditedWorkersHours}
         isAdmin={isAdmin}
@@ -400,7 +400,7 @@ const OurWorkersContent = ({
 
   return (
     <>
-      <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
+      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
         NASI PRACOWNICY
       </TitleRightColumn>
       <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
@@ -415,7 +415,7 @@ const OurWorkersContent = ({
           EditUserBackground={EditUserBackground}
           EditUserBackgroundContent={EditUserBackgroundContent}
           allCategories={allCategories}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           ButtonContent={ButtonContent}
           ButtonDeleteStyle={ButtonDeleteStyle}
           owner={owner}
@@ -464,7 +464,7 @@ const OurWorkersContent = ({
           >
             <ContentAddWorkers
               onClick={handleClickContentAddWorkers}
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <form onSubmit={handleSentInvation}>
                 <InputIcon
@@ -494,8 +494,8 @@ const OurWorkersContent = ({
                       fontIconSize="20"
                       fontSize="14"
                       icon={<MdEmail />}
-                      customColorButton={Colors(colorBlind).successColorDark}
-                      customColorIcon={Colors(colorBlind).successColor}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
                       disabled={!!!emailInput}
                     />
                   </ButtonAddWorker>

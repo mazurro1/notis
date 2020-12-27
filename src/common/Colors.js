@@ -1,87 +1,87 @@
 export const Colors = (
-  colorBlind = {
+  siteProps = {
     blind: false,
     dark: false,
   }
 ) => {
-  const colorBlindDarkHex = "#f9a825"
-  const colorBlindHex = "#ffff00"
-  const backgroundColorBlind = "#313131"
+  const sitePropsDarkHex = "#f9a825"
+  const sitePropsHex = "#ffff00"
+  const backgroundsiteProps = "#313131"
 
   return {
-    backgroundColorPage: colorBlind.blind
-      ? backgroundColorBlind
-      : colorBlind.dark
-      ? backgroundColorBlind
+    backgroundColorPage: siteProps.blind
+      ? backgroundsiteProps
+      : siteProps.dark
+      ? backgroundsiteProps
       : "white",
-    menuColor: colorBlind.blind
+    menuColor: siteProps.blind
       ? "#212121"
-      : colorBlind.dark
+      : siteProps.dark
       ? "#212121"
       : "white",
     navBackground: "#212121",
     navDownBackground: "#282828",
     navText: "white",
-    primaryColor: colorBlind.blind ? colorBlindDarkHex : "#5ec2d7",
-    primaryColorDark: colorBlind.blind ? colorBlindHex : "#0597a7",
-    secondColor: colorBlind.blind ? colorBlindDarkHex : "#f7a52c",
+    primaryColor: siteProps.blind ? sitePropsDarkHex : "#5ec2d7",
+    primaryColorDark: siteProps.blind ? sitePropsHex : "#0597a7",
+    secondColor: siteProps.blind ? sitePropsDarkHex : "#f7a52c",
     secondColorLight:
-      colorBlind.blind || colorBlind.dark ? "#212121" : "#fff3e0",
-    secondDarkColor: colorBlind.blind ? colorBlindHex : "#ed6c0c",
-    darkColor: colorBlind.blind
-      ? colorBlindHex
-      : colorBlind.dark
+      siteProps.blind || siteProps.dark ? "#212121" : "#fff3e0",
+    secondDarkColor: siteProps.blind ? sitePropsHex : "#ed6c0c",
+    darkColor: siteProps.blind
+      ? sitePropsHex
+      : siteProps.dark
       ? "#0597a7"
       : "#424242",
-    darkColorDark: colorBlind.blind
-      ? colorBlindDarkHex
-      : colorBlind.dark
+    darkColorDark: siteProps.blind
+      ? sitePropsDarkHex
+      : siteProps.dark
       ? "#5ec2d7"
       : "#282828",
-    dangerColor: colorBlind.blind ? colorBlindDarkHex : "#f44336",
+    dangerColor: siteProps.blind ? sitePropsDarkHex : "#f44336",
     dangerLightColor:
-      colorBlind.blind || colorBlind.dark ? "#212121" : "#ffebee",
-    dangerColorDark: colorBlind.blind ? colorBlindHex : "#c62828",
+      siteProps.blind || siteProps.dark ? "#212121" : "#ffebee",
+    dangerColorDark: siteProps.blind ? sitePropsHex : "#c62828",
     successColorLight:
-      colorBlind.blind || colorBlind.dark ? "#212121" : "#e8f5e9",
-    successColor: colorBlind.blind ? colorBlindDarkHex : "#43a047",
-    successColorDark: colorBlind.blind ? colorBlindHex : "#2e7d32",
-    textNormalBlack: colorBlind.blind
+      siteProps.blind || siteProps.dark ? "#212121" : "#e8f5e9",
+    successColor: siteProps.blind ? sitePropsDarkHex : "#43a047",
+    successColorDark: siteProps.blind ? sitePropsHex : "#2e7d32",
+    textNormalBlack: siteProps.blind
       ? "white"
-      : colorBlind.dark
+      : siteProps.dark
       ? "white"
       : "#222",
-    textNormalWhite: colorBlind.blind ? "#222" : "white",
+    textNormalWhite: siteProps.blind ? "#222" : "white",
     textBlack: "#222",
-    opinionColorUp: colorBlind.blind
-      ? colorBlindHex
-      : colorBlind.dark
+    opinionColorUp: siteProps.blind
+      ? sitePropsHex
+      : siteProps.dark
       ? "#5ec2d7"
       : "#212121",
-    opinionColorDown: colorBlind.blind
-      ? colorBlindDarkHex
-      : colorBlind.dark
+    opinionColorDown: siteProps.blind
+      ? sitePropsDarkHex
+      : siteProps.dark
       ? "#0597a7"
       : "#424242",
-    timePickerTopBackground: colorBlind.blind ? "#313131" : "#fff",
-    calendarBackground: colorBlind.blind ? "#212121" : "#fff",
-    calendarDisabledDate: colorBlind.blind ? "#313131" : "#e4e7ea",
-    calendarActiveDate: colorBlind.blind
+    timePickerTopBackground: siteProps.blind ? "#313131" : "#fff",
+    calendarBackground: siteProps.blind ? "#212121" : "#fff",
+    calendarDisabledDate: siteProps.blind ? "#313131" : "#e4e7ea",
+    calendarActiveDate: siteProps.blind
       ? "white"
-      : colorBlind.dark
+      : siteProps.dark
       ? "#222"
       : "#222",
-    timePickerBottomBackground: colorBlind.blind ? "#212121" : "#f4f4f4",
-    selectDateNavigationBackground: colorBlind.blind
-      ? colorBlindDarkHex
+    timePickerBottomBackground: siteProps.blind ? "#212121" : "#f4f4f4",
+    selectDateNavigationBackground: siteProps.blind
+      ? sitePropsDarkHex
       : "#f5f4f5",
-    selectDateNavigationBackgroundHover: colorBlind.blind
-      ? colorBlindHex
+    selectDateNavigationBackgroundHover: siteProps.blind
+      ? sitePropsHex
       : "#e0e0e0",
-    selectDateNavigationText: colorBlind.blind ? "#222" : "#757575",
-    companyItemBackground: colorBlind.blind
+    selectDateNavigationText: siteProps.blind ? "#222" : "#757575",
+    companyItemBackground: siteProps.blind
       ? "#212121"
-      : colorBlind.dark
+      : siteProps.dark
       ? "#212121"
       : "#f5f4f5",
   }

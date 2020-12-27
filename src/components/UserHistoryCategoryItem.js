@@ -31,14 +31,14 @@ const ServiceItem = styled.div`
   position: relative;
   background-color: ${props =>
     props.visitFinished
-      ? Colors(props.colorBlind).successColorLight
+      ? Colors(props.siteProps).successColorLight
       : !props.isReserwationEnd
-      ? Colors(props.colorBlind).dangerLightColor
+      ? Colors(props.siteProps).dangerLightColor
       : props.visitCanceled
-      ? Colors(props.colorBlind).dangerLightColor
+      ? Colors(props.siteProps).dangerLightColor
       : props.visitChanged
-      ? Colors(props.colorBlind).secondColorLight
-      : Colors(props.colorBlind).companyItemBackground};
+      ? Colors(props.siteProps).secondColorLight
+      : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   padding-right: 50px;
   border-radius: 5px;
@@ -48,7 +48,7 @@ const ServiceItem = styled.div`
   margin-top: ${props => (props.index ? "0px" : "5px")};
   user-select: none;
   overflow: hidden;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -61,8 +61,8 @@ const ArrowDeleteReserwation = styled.div`
   padding: 5px;
   font-size: 1.8rem;
   cursor: pointer;
-  background-color: ${props => Colors(props.colorBlind).dangerColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).dangerColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   border-top-right-radius: 5px;
   border-bottom-left-radius: 5px;
   overflow: hidden;
@@ -75,7 +75,7 @@ const ArrowDeleteReserwation = styled.div`
   transition-timing-function: ease;
 
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+    background-color: ${props => Colors(props.siteProps).dangerColorDark};
   }
 `
 
@@ -94,10 +94,10 @@ const PriceService = styled.span`
   border-radius: 5px;
   background-color: ${props =>
     props.otherColor
-      ? Colors(props.colorBlind).darkColor
-      : Colors(props.colorBlind).primaryColorDark};
+      ? Colors(props.siteProps).darkColor
+      : Colors(props.siteProps).primaryColorDark};
 
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: inline;
@@ -107,15 +107,15 @@ const StatusReserwation = styled.span`
   border-radius: 5px;
   padding: 0px 5px;
   margin-top: 5px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     !!props.canceled
-      ? Colors(props.colorBlind).dangerColor
+      ? Colors(props.siteProps).dangerColor
       : !!props.changed
-      ? Colors(props.colorBlind).secondColor
+      ? Colors(props.siteProps).secondColor
       : !!props.finished
-      ? Colors(props.colorBlind).successColor
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).successColor
+      : Colors(props.siteProps).primaryColor};
 `
 
 const ButtonsAddPosition = styled.div`
@@ -130,7 +130,7 @@ const ButtonMargin = styled.div`
 `
 
 const UserHistoryCategoryItem = ({
-  colorBlind,
+  siteProps,
   item,
   index,
   handleDeleteReserwation,
@@ -188,7 +188,7 @@ const UserHistoryCategoryItem = ({
     <ServiceItem
       key={index}
       index={index === 0}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
       isReserwationEnd={isReserwationEnd}
       visitCanceled={item.visitCanceled}
       visitFinished={item.visitFinished}
@@ -196,10 +196,10 @@ const UserHistoryCategoryItem = ({
     >
       <TitleService>
         {item.serviceName}
-        <PriceService colorBlind={colorBlind}>
+        <PriceService siteProps={siteProps}>
           {`${item.costReserwation}zł ${item.extraCost ? "+" : ""}`}
         </PriceService>
-        <PriceService otherColor colorBlind={colorBlind}>
+        <PriceService otherColor siteProps={siteProps}>
           {`${timeService} ${item.extraTime ? "+" : ""}`}
         </PriceService>
       </TitleService>
@@ -224,23 +224,23 @@ const UserHistoryCategoryItem = ({
       <div>
         Status:{" "}
         {item.visitFinished ? (
-          <StatusReserwation finished colorBlind={colorBlind}>
+          <StatusReserwation finished siteProps={siteProps}>
             Wizyta odbyta
           </StatusReserwation>
         ) : !isReserwationEnd ? (
-          <StatusReserwation canceled colorBlind={colorBlind}>
+          <StatusReserwation canceled siteProps={siteProps}>
             Wizyta nieodbyta
           </StatusReserwation>
         ) : item.visitCanceled ? (
-          <StatusReserwation canceled colorBlind={colorBlind}>
+          <StatusReserwation canceled siteProps={siteProps}>
             Wizyta odwołana
           </StatusReserwation>
         ) : item.visitChanged ? (
-          <StatusReserwation changed colorBlind={colorBlind}>
+          <StatusReserwation changed siteProps={siteProps}>
             Wizyta zmieniona
           </StatusReserwation>
         ) : (
-          <StatusReserwation colorBlind={colorBlind}>
+          <StatusReserwation siteProps={siteProps}>
             Wizyta oczekująca
           </StatusReserwation>
         )}
@@ -248,7 +248,7 @@ const UserHistoryCategoryItem = ({
       {!!isReserwationEnd && !!!item.visitFinished && !!!item.visitCanceled && (
         <>
           <ArrowDeleteReserwation
-            colorBlind={colorBlind}
+            siteProps={siteProps}
             data-tip
             data-for="deleteReserwationTooltip"
             onClick={handleConfirmDeleteReserwation}
@@ -272,8 +272,8 @@ const UserHistoryCategoryItem = ({
                       fontSize="15"
                       icon={<MdArrowBack />}
                       onClick={handleConfirmDeleteReserwation}
-                      customColorButton={Colors(colorBlind).successColorDark}
-                      customColorIcon={Colors(colorBlind).successColor}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
                     />
                   </ButtonMargin>
                   <ButtonMargin>
@@ -284,8 +284,8 @@ const UserHistoryCategoryItem = ({
                       fontSize="15"
                       icon={<MdDeleteForever />}
                       onClick={handleToDeleteReserwation}
-                      customColorButton={Colors(colorBlind).dangerColorDark}
-                      customColorIcon={Colors(colorBlind).dangerColor}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
                     />
                   </ButtonMargin>
                 </ButtonsAddPosition>

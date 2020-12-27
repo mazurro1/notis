@@ -30,7 +30,7 @@ const TextH1 = styled.div`
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   padding: 5px 10px;
   padding-left: 25px;
   text-transform: uppercase;
@@ -41,8 +41,8 @@ const TextH1 = styled.div`
   border-bottom-right-radius: 5px;
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
 `
 
 const ContentDiv = styled.div`
@@ -79,8 +79,8 @@ const RightColumnItem = styled.div`
   word-break: break-all;
   white-space: normal;
   background-color: ${props =>
-    props.noBg ? "" : Colors(props.colorBlind).companyItemBackground};
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+    props.noBg ? "" : Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   border-radius: 5px;
   padding: ${props => (props.noBg ? "10px 0px" : "10px 15px")};
   margin-bottom: 20px;
@@ -101,8 +101,8 @@ const TitleRightColumn = styled.h2`
   border-bottom: 2px solid
     ${props =>
       props.isCompanyEditProfil
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor};
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor};
 `
 
 const ParagraphRightColumn = styled.p`
@@ -144,7 +144,7 @@ const EditModeToChange = styled.div`
   position: absolute;
   right: -50px;
   top: 5px;
-  background-color: ${props => Colors(props.colorBlind).darkColor};
+  background-color: ${props => Colors(props.siteProps).darkColor};
   padding: 8px;
   padding-bottom: 0px;
   border-radius: 50%;
@@ -154,7 +154,7 @@ const EditModeToChange = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).darkColorDark};
+    background-color: ${props => Colors(props.siteProps).darkColorDark};
   }
 `
 
@@ -215,7 +215,7 @@ const ContentCompanyProfil = ({
   // console.log("deletedDayOffToSave", deletedDayOffToSave)
   // console.log("createdDayOffToSave", createdDayOffToSave)
   const user = useSelector(state => state.user)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const resetCompany = useSelector(state => state.resetCompany)
 
   const dispatch = useDispatch()
@@ -552,7 +552,7 @@ const ContentCompanyProfil = ({
   
     return (
       <div>
-        <TextH1 {...companyEditProfilProps} colorBlind={colorBlind}>
+        <TextH1 {...companyEditProfilProps} siteProps={siteProps}>
           {company.name}
           {(isAdmin || userHasAccess) && isCompanyEditProfil && (
             <EditModeToChange
@@ -560,7 +560,7 @@ const ContentCompanyProfil = ({
               data-for="editMode"
               data-place="bottom"
               onClick={handleClickEditMode}
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdEdit />
             </EditModeToChange>
@@ -597,7 +597,7 @@ const ContentCompanyProfil = ({
               <RightColumnItem
                 noBg
                 {...companyEditProfilProps}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <OpinionAndAdressContent
                   {...companyEditProfilProps}
@@ -619,7 +619,7 @@ const ContentCompanyProfil = ({
                   setReservationMonthTime={setReservationMonthTime}
                   reservationEveryTimeServer={company.reservationEveryTime}
                   reservationMonthServer={company.reservationMonthTime}
-                  colorBlind={colorBlind}
+                  siteProps={siteProps}
                   newIndustries={newIndustries}
                   setNewIndustries={setNewIndustries}
                   deletedIndustries={deletedIndustries}
@@ -632,7 +632,7 @@ const ContentCompanyProfil = ({
             {userHasPermisionToOther && (
               <RightColumnItem
                 {...companyEditProfilProps}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <ColumnItemTextarea
                   titleColumnItem="O NAS"
@@ -645,14 +645,14 @@ const ContentCompanyProfil = ({
                   onClickEdit={() => handleEdit(setEditAboutUs)}
                   setTextEditedChange={setTextAboutUs}
                   textEdited={textAboutUs}
-                  colorBlind={colorBlind}
+                  siteProps={siteProps}
                 />
               </RightColumnItem>
             )}
             {userHasPermisionToOther && (
               <RightColumnItem
                 {...companyEditProfilProps}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <OpeningHoursContent
                   TitleRightColumn={TitleRightColumn}
@@ -663,7 +663,7 @@ const ContentCompanyProfil = ({
                   setChangesTimeOpen={setChangesTimeOpen}
                   setOpeningHoursToSent={setOpeningHoursToSent}
                   editMode={editMode}
-                  colorBlind={colorBlind}
+                  siteProps={siteProps}
                 />
               </RightColumnItem>
             )}
@@ -672,13 +672,13 @@ const ContentCompanyProfil = ({
                 {isAdmin && (
                   <RightColumnItem
                     {...companyEditProfilProps}
-                    colorBlind={colorBlind}
+                    siteProps={siteProps}
                   >
                     <DaysOffContent
                       {...companyEditProfilProps}
                       companyEditProfilProps={companyEditProfilProps}
                       TitleRightColumn={TitleRightColumn}
-                      colorBlind={colorBlind}
+                      siteProps={siteProps}
                       ButtonEditPosition={ButtonEditPosition}
                       setDeletedDayOffToSave={setDeletedDayOffToSave}
                       companyDaysOff={company.daysOff}
@@ -691,13 +691,13 @@ const ContentCompanyProfil = ({
                 {userHasPermToHappyHours && (
                   <RightColumnItem
                     {...companyEditProfilProps}
-                    colorBlind={colorBlind}
+                    siteProps={siteProps}
                   >
                     <HappyHoursContent
                       {...companyEditProfilProps}
                       companyEditProfilProps={companyEditProfilProps}
                       TitleRightColumn={TitleRightColumn}
-                      colorBlind={colorBlind}
+                      siteProps={siteProps}
                     />
                   </RightColumnItem>
                 )}
@@ -706,7 +706,7 @@ const ContentCompanyProfil = ({
             {userHasPermToWorkers && (
               <RightColumnItem
                 {...companyEditProfilProps}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <OurWorkersContent
                   TitleRightColumn={TitleRightColumn}
@@ -725,7 +725,7 @@ const ContentCompanyProfil = ({
                   newOwnerServicesCategory={newOwnerServicesCategory}
                   company={company}
                   editMode={editMode}
-                  colorBlind={colorBlind}
+                  siteProps={siteProps}
                   editedWorkersHours={editedWorkersHours}
                   isAdmin={isAdmin}
                   ownerData={company.ownerData}
@@ -737,7 +737,7 @@ const ContentCompanyProfil = ({
               userHasPermisionToOther && (
                 <RightColumnItem
                   {...companyEditProfilProps}
-                  colorBlind={colorBlind}
+                  siteProps={siteProps}
                 >
                   <ColumnItemTextarea
                     titleColumnItem="ZASADY REZERWACJI"
@@ -750,7 +750,7 @@ const ContentCompanyProfil = ({
                     onClickEdit={() => handleEdit(setEditRezerwationText)}
                     setTextEditedChange={setTextRezerwation}
                     textEdited={textRezerwationText}
-                    colorBlind={colorBlind}
+                    siteProps={siteProps}
                   />
                 </RightColumnItem>
               )}
@@ -761,7 +761,7 @@ const ContentCompanyProfil = ({
               userHasPermisionToOther && (
                 <RightColumnItem
                   {...companyEditProfilProps}
-                  colorBlind={colorBlind}
+                  siteProps={siteProps}
                 >
                   <OurLinksContent
                     TitleRightColumn={TitleRightColumn}
@@ -769,7 +769,7 @@ const ContentCompanyProfil = ({
                     {...companyEditProfilProps}
                     ButtonEditPosition={ButtonEditPosition}
                     editable={editLinks}
-                    colorBlind={colorBlind}
+                    siteProps={siteProps}
                     onClickEdit={() => handleEdit(setEditLinks)}
                     handleSaveLinks={handleSaveLinks}
                     linkFacebook={
@@ -799,8 +799,8 @@ const ContentCompanyProfil = ({
               fontIconSize="40"
               fontSize="28"
               icon={<FaSave />}
-              customColorButton={Colors(colorBlind).successColorDark}
-              customColorIcon={Colors(colorBlind).successColor}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
               onClick={handleSaveChanges}
             />
           </SaveChangesPosition>

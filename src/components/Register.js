@@ -24,12 +24,12 @@ const RegulationsText = styled.div`
   text-align: center;
   margin-top: 20px;
   a {
-    color: ${props => Colors(props.colorBlind).primaryColor};
+    color: ${props => Colors(props.siteProps).primaryColor};
     transition-property: color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
     &:hover {
-      color: ${props => Colors(props.colorBlind).primaryColorDark};
+      color: ${props => Colors(props.siteProps).primaryColorDark};
     }
   }
 `
@@ -41,7 +41,7 @@ const RegisterContent = () => {
   const [phoneInput, setPhoneInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
   const [repeatPasswordInput, setRepeatPasswordInput] = useState("")
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
 
@@ -118,7 +118,7 @@ const RegisterContent = () => {
         type="password"
         onChange={e => handleChange(e, setRepeatPasswordInput)}
       />
-      <RegulationsText colorBlind={colorBlind}>
+      <RegulationsText siteProps={siteProps}>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>

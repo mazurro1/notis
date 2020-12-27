@@ -13,11 +13,11 @@ const InputStyled = styled.input`
   border-bottom: ${props =>
     props.inputActive
       ? props.secondColor
-        ? `2px solid ${Colors(props.colorBlind).secondColor}`
-        : `2px solid ${Colors(props.colorBlind).primaryColor}`
+        ? `2px solid ${Colors(props.siteProps).secondColor}`
+        : `2px solid ${Colors(props.siteProps).primaryColor}`
       : "2px solid #bdbdbd"};
   width: 100%;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   background-color: transparent;
   transition-property: border-bottom, color;
   transition-duration: 0.3s;
@@ -39,9 +39,9 @@ const InputStyled = styled.input`
   &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
     box-shadow: 0 0 0 30px
-      ${props => Colors(props.colorBlind).companyItemBackground} inset !important;
+      ${props => Colors(props.siteProps).companyItemBackground} inset !important;
     -webkit-text-fill-color: ${props =>
-      Colors(props.colorBlind).textNormalBlack} !important;
+      Colors(props.siteProps).textNormalBlack} !important;
   }
 `
 
@@ -67,8 +67,8 @@ const IconInput = styled.div`
   color: ${props =>
     props.inputActive
       ? props.secondColor
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor
       : "#bdbdbd"};
   transition-property: color;
   transition-duration: 0.3s;
@@ -87,7 +87,7 @@ const InputIcon = ({
   required = false,
 }) => {
   const [inputActive, setInputActive] = useState(false)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const handleOnFocus = () => {
     setInputActive(true)
@@ -110,13 +110,13 @@ const InputIcon = ({
         max={max}
         secondColor={secondColor}
         required={required}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       />
       {!!icon && (
         <IconInput
           inputActive={inputActive}
           secondColor={secondColor}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
         >
           {icon}
         </IconInput>

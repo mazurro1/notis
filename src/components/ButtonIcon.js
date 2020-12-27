@@ -12,19 +12,19 @@ const ButtonStyle = styled.div`
   background-color: ${props =>
     props.mouseOn && !props.icon
       ? props.secondColors
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor
       : props.disabled
       ? "#e0e0e0"
       : props.buttonBgDark && props.icon
-      ? Colors(props.colorBlind).darkColorDark
+      ? Colors(props.siteProps).darkColorDark
       : props.secondColors
-      ? Colors(props.colorBlind).secondDarkColor
+      ? Colors(props.siteProps).secondDarkColor
       : props.buttonBgDark
-      ? Colors(props.colorBlind).darkColor
+      ? Colors(props.siteProps).darkColor
       : props.customColorButton
       ? props.customColorButton
-      : Colors(props.colorBlind).primaryColorDark};
+      : Colors(props.siteProps).primaryColorDark};
   color: black;
   overflow: hidden;
   color: white;
@@ -51,21 +51,21 @@ const IconStyle = styled.div`
   background-color: ${props =>
     props.mouseClick
       ? props.secondColors
-        ? Colors(props.colorBlind).secondDarkColor
+        ? Colors(props.siteProps).secondDarkColor
         : props.customColorIcon
         ? props.customColorIcon
         : props.buttonBgDark
-        ? Colors(props.colorBlind).darkColor
-        : Colors(props.colorBlind).primaryColorDark
+        ? Colors(props.siteProps).darkColor
+        : Colors(props.siteProps).primaryColorDark
       : props.disabled
       ? "#bdbdbd"
       : props.secondColors
-      ? Colors(props.colorBlind).secondColor
+      ? Colors(props.siteProps).secondColor
       : props.buttonBgDark
-      ? Colors(props.colorBlind).darkColor
+      ? Colors(props.siteProps).darkColor
       : props.customColorIcon
       ? props.customColorIcon
-      : Colors(props.colorBlind).primaryColor};
+      : Colors(props.siteProps).primaryColor};
   transform: ${props =>
     props.mouseOn ? `scale(${props.numberScale})` : "scale(1)"};
   transition-property: transform, background-color;
@@ -82,7 +82,7 @@ const OnlyIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   font-size: ${props => props.fontIconSize + "px"};
   padding: 5px;
 `
@@ -91,7 +91,7 @@ const TextStyle = styled.div`
   position: relative;
   z-index: 10;
   text-align: center;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
 const ButtonIcon = ({
@@ -112,7 +112,7 @@ const ButtonIcon = ({
   const [numberScale, setNumberScale] = useState(1)
   const refButton = useRef(null)
   const timerToClearSomewhere = useRef(null)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   useEffect(() => {
     if (mouseClick) {
@@ -158,9 +158,9 @@ const ButtonIcon = ({
         buttonBgDark={buttonBgDark}
         disabled={disabled}
         customColorIcon={customColorIcon}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       />
-      <OnlyIcon fontIconSize={fontIconSize} colorBlind={colorBlind}>
+      <OnlyIcon fontIconSize={fontIconSize} siteProps={siteProps}>
         {iconRender}
       </OnlyIcon>
     </>
@@ -181,10 +181,10 @@ const ButtonIcon = ({
       buttonBgDark={buttonBgDark}
       disabled={disabled}
       customColorButton={customColorButton}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
     >
       {allIcon}
-      <TextStyle colorBlind={colorBlind}>{title}</TextStyle>
+      <TextStyle siteProps={siteProps}>{title}</TextStyle>
     </ButtonStyle>
   )
 }

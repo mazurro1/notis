@@ -19,9 +19,9 @@ import { Checkbox } from "react-input-checkbox"
 const ServiceItem = styled.div`
   position: relative;
   background-color: ${props =>
-    props.clickDelete && !props.colorBlind
+    props.clickDelete && !props.siteProps
       ? "#ffebee"
-      : Colors(props.colorBlind).companyItemBackground};
+      : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   border-top-left-radius: ${props => (props.index ? "0px" : "5px")};
@@ -35,7 +35,7 @@ const ServiceItem = styled.div`
   user-select: none;
   overflow: hidden;
   padding-bottom: ${props => (props.clickEdit ? "450px" : "auto")};
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -75,13 +75,13 @@ const PriceService = styled.span`
   background-color: ${props =>
     props.isCompanyEditProfil
       ? props.otherColor
-        ? Colors(props.colorBlind).darkColor
-        : Colors(props.colorBlind).secondDarkColor
+        ? Colors(props.siteProps).darkColor
+        : Colors(props.siteProps).secondDarkColor
       : props.otherColor
-      ? Colors(props.colorBlind).darkColor
-      : Colors(props.colorBlind).primaryColorDark};
+      ? Colors(props.siteProps).darkColor
+      : Colors(props.siteProps).primaryColorDark};
 
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: inline;
@@ -114,7 +114,7 @@ const ServicesItem = ({
   handleResetItemToFromServer,
   handleClickReserwation,
   companyId,
-  colorBlind,
+  siteProps,
 }) => {
   const [clickEdit, setClickEdit] = useState(false)
   const [clickButtonDelete, setClickButtonDelete] = useState(false)
@@ -212,14 +212,14 @@ const ServicesItem = ({
       index={index === 0}
       clickDelete={clickDelete}
       clickEdit={clickEdit}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
     >
       <LeftContent>
         <TitleService>
           {itemServices.serviceName}
           <PriceService
             isCompanyEditProfil={isCompanyEditProfil}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             {`${itemServices.serviceCost}zł ${
               itemServices.extraCost ? "+" : ""
@@ -228,7 +228,7 @@ const ServicesItem = ({
           <PriceService
             isCompanyEditProfil={isCompanyEditProfil}
             otherColor
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             {`${timeService} ${itemServices.extraTime ? "+" : ""}`}
           </PriceService>
@@ -256,8 +256,8 @@ const ServicesItem = ({
                 fontIconSize="40"
                 fontSize="14"
                 icon={<MdEdit />}
-                customColorButton={Colors(colorBlind).dangerColorDark}
-                customColorIcon={Colors(colorBlind).dangerColor}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleClickDelete}
               />
             </ButtonMargin>
@@ -311,7 +311,7 @@ const ServicesItem = ({
                 onChange={e => handleChangeInput(e, setTimeInput)}
                 required
               />
-              <CheckboxStyle colorBlind={colorBlind}>
+              <CheckboxStyle siteProps={siteProps}>
                 <Checkbox
                   theme="material-checkbox"
                   value={extraTime}
@@ -329,7 +329,7 @@ const ServicesItem = ({
                 onChange={e => handleChangeInput(e, setPriceInput)}
                 required
               />
-              <CheckboxStyle colorBlind={colorBlind}>
+              <CheckboxStyle siteProps={siteProps}>
                 <Checkbox
                   theme="material-checkbox"
                   value={extraPrice}
@@ -347,8 +347,8 @@ const ServicesItem = ({
                     fontSize="13"
                     icon={<MdArrowBack />}
                     onClick={handleResetEdit}
-                    customColorButton={Colors(colorBlind).dangerColorDark}
-                    customColorIcon={Colors(colorBlind).dangerColor}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
                   />
                 </ButtonMargin>
                 <ButtonMarginSubmit type="submit">
@@ -358,8 +358,8 @@ const ServicesItem = ({
                     fontIconSize="20"
                     fontSize="15"
                     icon={<MdLibraryAdd />}
-                    customColorButton={Colors(colorBlind).successColorDark}
-                    customColorIcon={Colors(colorBlind).successColor}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
                     disabled={disabledSaveButton}
                   />
                 </ButtonMarginSubmit>
@@ -385,8 +385,8 @@ const ServicesItem = ({
                   fontIconSize="40"
                   fontSize="14"
                   icon={<MdArrowBack />}
-                  customColorButton={Colors(colorBlind).successColorDark}
-                  customColorIcon={Colors(colorBlind).successColor}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
                   onClick={handleClickDelete}
                 />
               </ButtonMargin>
@@ -397,8 +397,8 @@ const ServicesItem = ({
                   fontIconSize="40"
                   fontSize="14"
                   icon={<MdDeleteForever />}
-                  customColorButton={Colors(colorBlind).dangerColorDark}
-                  customColorIcon={Colors(colorBlind).dangerColor}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
                   onClick={handleConfirmDeleteItem}
                 />
               </ButtonMargin>

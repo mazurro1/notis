@@ -20,12 +20,12 @@ const CheckboxStyle = styled.div`
   margin-bottom: 30px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).secondColor};
+    background-color: ${props => Colors(props.siteProps).secondColor};
   }
 
   span {
-    color: ${props => Colors(props.colorBlind).textNormalBlack};
-    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
 `
 
@@ -56,7 +56,7 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   position: relative;
   width: 90%;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   padding: ${props => (props.active ? "0px" : "10px")};
   border-radius: 5px;
   max-height: 90%;
@@ -80,8 +80,8 @@ const DayMonth = styled.div`
   color: ${props =>
     props.isActualDate
       ? props.isCompanyEditProfil
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor
       : ""};
 `
 
@@ -90,8 +90,8 @@ const DayDate = styled.div`
   color: ${props =>
     props.isActualDate
       ? props.isCompanyEditProfil
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor
       : ""};
 `
 
@@ -126,7 +126,7 @@ const OpeningHoursItem = ({
   const [activeTimePickerOpen, setActiveTimePickerOpen] = useState(false)
   const [activeTimePickerClose, setActiveTimePickerClose] = useState(false)
   const [checkboxDisabledDay, setCheckboxDisabledDay] = useState(item.disabled)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const handleClickItemEditable = () => {
     setItemEditable(prevState => !prevState)
@@ -208,14 +208,14 @@ const OpeningHoursItem = ({
         <DayMonth
           isActualDate={actualDay == item.dayValue}
           {...companyEditProfilProps}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
         >
           {item.dayName}:
         </DayMonth>
         <DayDate
           isActualDate={actualDay == item.dayValue}
           {...companyEditProfilProps}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
         >
           {editable ? (
             <ButtonIcon
@@ -245,7 +245,7 @@ const OpeningHoursItem = ({
         <BackgroundEdit>
           <BackgroundEditContent
             onClick={handleClickContent}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <h3>{item.dayName}</h3>
             <ButtonsTimePicker>
@@ -274,7 +274,7 @@ const OpeningHoursItem = ({
                 />
               </ButtonTimePickerStyle>
             </ButtonsTimePicker>
-            <CheckboxStyle colorBlind={colorBlind}>
+            <CheckboxStyle siteProps={siteProps}>
               <Checkbox
                 theme="material-checkbox"
                 value={checkboxDisabledDay}
@@ -291,8 +291,8 @@ const OpeningHoursItem = ({
                   fontIconSize="16"
                   fontSize="14"
                   icon={<FaArrowLeft />}
-                  customColorButton={Colors(colorBlind).dangerColorDark}
-                  customColorIcon={Colors(colorBlind).dangerColor}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
                   onClick={handleResetButton}
                 />
               </MarginButton>
@@ -303,8 +303,8 @@ const OpeningHoursItem = ({
                   fontIconSize="25"
                   fontSize="14"
                   icon={<MdEdit />}
-                  customColorButton={Colors(colorBlind).successColorDark}
-                  customColorIcon={Colors(colorBlind).successColor}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
                   disabled={!disabledButtonSave}
                   onClick={handleSaveChangesTimeDay}
                 />
@@ -323,7 +323,7 @@ const OpeningHoursItem = ({
           <BackgroundEditContent
             onClick={handleClickContent}
             active={activeTimePickerOpen}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <TimePickerContent
               handleResetTakeData={handleResetOpenTimePicker}
@@ -344,7 +344,7 @@ const OpeningHoursItem = ({
           <BackgroundEditContent
             onClick={handleClickContent}
             active={activeTimePickerClose}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <TimePickerContent
               handleResetTakeData={handleResetCloseTimePicker}

@@ -49,7 +49,7 @@ const BackgroundEdit = styled.div`
 
 const BackgroundEditContent = styled.div`
   width: 90%;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   max-height: 90%;
@@ -67,7 +67,7 @@ const ColumnItemTextarea = ({
   onClickEdit = () => {},
   setTextEditedChange,
   textEdited,
-  colorBlind,
+  siteProps,
 }) => {
   const [textTitle, handleTextAbout] = useState(textEdited ? textEdited : title)
   const [isErrorText, setIsErrorText] = useState(false)
@@ -116,7 +116,7 @@ const ColumnItemTextarea = ({
     >
       <TitleRightColumn
         isCompanyEditProfil={isCompanyEditProfil}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       >
         {titleColumnItem}
       </TitleRightColumn>
@@ -146,7 +146,7 @@ const ColumnItemTextarea = ({
             >
               <BackgroundEditContent
                 onClick={handleClickContent}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <form onSubmit={handleSaveButton}>
                   <TextareaCustom
@@ -165,8 +165,8 @@ const ColumnItemTextarea = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaArrowLeft />}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
                           onClick={handleResetButton}
                         />
                       </ButtonSubmit>
@@ -180,9 +180,9 @@ const ColumnItemTextarea = ({
                           fontSize="14"
                           icon={<FaSave />}
                           customColorButton={
-                            Colors(colorBlind).successColorDark
+                            Colors(siteProps).successColorDark
                           }
-                          customColorIcon={Colors(colorBlind).successColor}
+                          customColorIcon={Colors(siteProps).successColor}
                           disabled={disabledSave}
                         />
                       </ButtonMargin>

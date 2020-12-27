@@ -20,7 +20,7 @@ const OpeningHoursContent = ({
   setChangesTimeOpen,
   setOpeningHoursToSent,
   editMode,
-  colorBlind,
+  siteProps,
 }) => {
   const [openingHoursComponent, setOpeningHoursComponent] = useState(false)
   const [changesComponent, setChangesComponent] = useState(false)
@@ -263,7 +263,7 @@ const OpeningHoursContent = ({
   return (
     <>
       <>
-        <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
+        <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
           GODZINY OTWARCIA
         </TitleRightColumn>
         {arrayHoursData.length > 0 && mapDayHours}
@@ -278,8 +278,8 @@ const OpeningHoursContent = ({
                     fontIconSize="16"
                     fontSize="14"
                     icon={<FaArrowLeft />}
-                    customColorButton={Colors(colorBlind).dangerColorDark}
-                    customColorIcon={Colors(colorBlind).dangerColor}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
                     onClick={handleResetValues}
                   />
                 </MarginButton>
@@ -290,8 +290,8 @@ const OpeningHoursContent = ({
                     fontIconSize="16"
                     fontSize="14"
                     icon={<FaSave />}
-                    customColorButton={Colors(colorBlind).successColorDark}
-                    customColorIcon={Colors(colorBlind).successColor}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
                     onClick={handleSaveAllComponent}
                   />
                 </MarginButton>

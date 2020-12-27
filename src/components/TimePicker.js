@@ -10,7 +10,7 @@ import moment from "moment"
 const ButtonConfirmDate = styled.div`
   padding: 5px;
   background-color: ${props =>
-    Colors(props.colorBlind).timePickerTopBackground};
+    Colors(props.siteProps).timePickerTopBackground};
 `
 
 const MaxWidth = styled.div`
@@ -20,17 +20,17 @@ const MaxWidth = styled.div`
 
   .react-timekeeper__top-bar {
     background-color: ${props =>
-      Colors(props.colorBlind).timePickerTopBackground};
+      Colors(props.siteProps).timePickerTopBackground};
   }
 
   .react-timekeeper__clock-wrapper {
     background-color: ${props =>
-      Colors(props.colorBlind).timePickerBottomBackground};
+      Colors(props.siteProps).timePickerBottomBackground};
   }
 
   .react-timekeeper__clock {
     background-color: ${props =>
-      Colors(props.colorBlind).timePickerTopBackground};
+      Colors(props.siteProps).timePickerTopBackground};
   }
 
   .react-timekeeper__tb-hour {
@@ -48,15 +48,15 @@ const MaxWidth = styled.div`
   .react-timekeeper__tb-hour--active {
     color: ${props =>
       props.secondColor
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor};
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor};
   }
 
   .react-timekeeper__tb-minute--active {
     color: ${props =>
       props.secondColor
-        ? Colors(props.colorBlind).secondColor
-        : Colors(props.colorBlind).primaryColor};
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor};
   }
 `
 
@@ -67,7 +67,7 @@ const TimePickerContent = ({
   secondColor = false,
 }) => {
   const [time, setTime] = useState(timeTimePicker)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   moment().format(moment.HTML5_FMT.TIME)
   useEffect(() => {
     if (!!!time) {
@@ -87,7 +87,7 @@ const TimePickerContent = ({
   }
 
   return (
-    <MaxWidth secondColor={secondColor} colorBlind={colorBlind}>
+    <MaxWidth secondColor={secondColor} siteProps={siteProps}>
       {!!time && (
         <TimeKeeper
           hour24Mode
@@ -96,7 +96,7 @@ const TimePickerContent = ({
           closeOnMinuteSelect
           onChange={handleTimeOnChange}
           doneButton={newTime => (
-            <ButtonConfirmDate colorBlind={colorBlind}>
+            <ButtonConfirmDate siteProps={siteProps}>
               <ButtonIcon
                 title="ZATWIERDŹ"
                 uppercase

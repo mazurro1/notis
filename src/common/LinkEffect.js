@@ -4,13 +4,13 @@ import { Colors } from "./Colors"
 import { useSelector } from "react-redux"
 
 export const LinkEffect = ({ path = "/", text = "" }) => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   return (
     <AniLink
       cover
       direction="bottom"
       to={path}
-      bg={Colors(colorBlind).primaryColor}
+      bg={Colors(siteProps).primaryColor}
       duration={0.7}
     >
       {text}

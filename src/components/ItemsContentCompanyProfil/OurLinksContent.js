@@ -42,7 +42,7 @@ const BackgroundEdit = styled.div`
 
 const BackgroundEditContent = styled.div`
   width: 90%;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   max-height: 90%;
@@ -79,8 +79,8 @@ const IconLinkToSite = styled.button`
   &:hover {
     color: ${props =>
       props.isCompanyEditProfil
-        ? Colors(props.colorBlind).secondDarkColor
-        : Colors(props.colorBlind).primaryColorDark};
+        ? Colors(props.siteProps).secondDarkColor
+        : Colors(props.siteProps).primaryColorDark};
   }
 `
 
@@ -95,7 +95,7 @@ const OurLinksContent = ({
   linkiWebsite,
   linkInstagram,
   handleSaveLinks,
-  colorBlind,
+  siteProps,
 }) => {
   const [facebookInput, setFacebookInput] = useState(linkFacebook)
   const [instagramInput, setInstagramInput] = useState(linkInstagram)
@@ -182,7 +182,7 @@ const OurLinksContent = ({
       isCompanyEditProfil={isCompanyEditProfil}
       editable={editable}
     >
-      <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
+      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
         LINKI
       </TitleRightColumn>
       <PositionLinksSites>
@@ -192,7 +192,7 @@ const OurLinksContent = ({
               isCompanyEditProfil={isCompanyEditProfil}
               color="#3b5998"
               onClick={() => handleOpenInNewWindow(facebookInput)}
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <FaFacebook />
             </IconLinkToSite>
@@ -204,7 +204,7 @@ const OurLinksContent = ({
               isCompanyEditProfil={isCompanyEditProfil}
               color="#dd2a7b"
               onClick={() => handleOpenInNewWindow(instagramInput)}
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <FaInstagram />
             </IconLinkToSite>
@@ -213,12 +213,12 @@ const OurLinksContent = ({
         {!!websiteInput && websiteInput && (
           <div>
             <IconLinkToSite
-              colorBlind={colorBlind}
+              siteProps={siteProps}
               isCompanyEditProfil={isCompanyEditProfil}
               color={
                 isCompanyEditProfil
-                  ? Colors(colorBlind).secondColor
-                  : Colors(colorBlind).primaryColor
+                  ? Colors(siteProps).secondColor
+                  : Colors(siteProps).primaryColor
               }
               onClick={() => handleOpenInNewWindow(websiteInput)}
             >
@@ -253,7 +253,7 @@ const OurLinksContent = ({
             >
               <BackgroundEditContent
                 onClick={handleClickContent}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <form onSubmit={handleSaveButton}>
                   <InputIcon
@@ -289,8 +289,8 @@ const OurLinksContent = ({
                           fontIconSize="16"
                           fontSize="12"
                           icon={<FaArrowLeft />}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
                           onClick={handleResetButton}
                         />
                       </ButtonMargin>
@@ -304,9 +304,9 @@ const OurLinksContent = ({
                           fontSize="14"
                           icon={<FaSave />}
                           customColorButton={
-                            Colors(colorBlind).successColorDark
+                            Colors(siteProps).successColorDark
                           }
-                          customColorIcon={Colors(colorBlind).successColor}
+                          customColorIcon={Colors(siteProps).successColor}
                           disabled={!disabledButtonSave}
                         />
                       </ButtonMargin>

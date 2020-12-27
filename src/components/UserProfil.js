@@ -15,8 +15,8 @@ import { fetchEditUser } from "../state/actions"
 
 const ProfilStyle = styled.div`
   padding: 20px;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
 `
 
 const TextToUser = styled.div`
@@ -24,7 +24,7 @@ const TextToUser = styled.div`
     font-size: 1.4rem;
   }
   span {
-    color: ${props => Colors(props.colorBlind).primaryColor};
+    color: ${props => Colors(props.siteProps).primaryColor};
     padding-left: 10px;
     font-weight: 600;
     user-select: none;
@@ -52,7 +52,7 @@ const UserProfil = () => {
   const [checkboxPassword, setCheckboxPassword] = useState(false)
   const user = useSelector(state => state.user)
   const userPhone = useSelector(state => state.userPhone)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
 
@@ -104,9 +104,9 @@ const UserProfil = () => {
     ))
 
   return (
-    <ProfilStyle colorBlind={colorBlind}>
+    <ProfilStyle siteProps={siteProps}>
       {tooltipButton}
-      <TextToUser colorBlind={colorBlind}>
+      <TextToUser siteProps={siteProps}>
         <div>
           <h1>
             Twoje imię: <span>{!!user ? user.userName : ""}</span>

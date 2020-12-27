@@ -3,12 +3,12 @@ import React from "react"
 const HappyHoursContent = ({
   companyEditProfilProps = {},
   isCompanyEditProfil = false,
-  colorBlind,
+  siteProps,
   TitleRightColumn,
 }) => {
   return (
     <>
-      <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
+      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
         Happy hours
       </TitleRightColumn>
     </>

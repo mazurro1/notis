@@ -11,12 +11,12 @@ const WrapperFooter = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background-color: ${props => Colors(props.colorBlind).navBackground};
+  background-color: ${props => Colors(props.siteProps).navBackground};
 `
 
 const FooterDiv = styled.div`
-  color: ${props => Colors(props.colorBlind).navText};
-  background-color: ${props => Colors(props.colorBlind).navBackground};
+  color: ${props => Colors(props.siteProps).navText};
+  background-color: ${props => Colors(props.siteProps).navBackground};
   max-width: 900px;
   margin: 0 auto;
   padding-bottom: 30px;
@@ -51,7 +51,7 @@ const LinkRoutes = styled.div`
     transition-timing-function: ease-in-out;
 
     &:hover {
-      color: ${props => Colors(props.colorBlind).primaryColor};
+      color: ${props => Colors(props.siteProps).primaryColor};
     }
   }
 `
@@ -67,22 +67,22 @@ const FacebookIcon = styled.div`
     color: white;
 
     &:hover {
-      color: ${props => Colors(props.colorBlind).primaryColor};
+      color: ${props => Colors(props.siteProps).primaryColor};
     }
   }
 `
 
 const Footer = () => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const mapRoutes = Routes.map((item, index) => {
     return <LinkEffect path={item.path} key={index} text={item.name} />
   })
 
   return (
-    <WrapperFooter colorBlind={colorBlind}>
-      <FooterDiv colorBlind={colorBlind}>
-        <LinkRoutes colorBlind={colorBlind}>{mapRoutes}</LinkRoutes>
-        <FacebookIcon colorBlind={colorBlind}>
+    <WrapperFooter siteProps={siteProps}>
+      <FooterDiv siteProps={siteProps}>
+        <LinkRoutes siteProps={siteProps}>{mapRoutes}</LinkRoutes>
+        <FacebookIcon siteProps={siteProps}>
           <a href="https://www.facebook.com/" target="__blank">
             <FaFacebookSquare />
           </a>

@@ -28,7 +28,7 @@ const EventItemPosition = styled.div`
 
 const EventItemPositionContent = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   width: 600px;
   max-width: 90%;
   max-height: 90%;
@@ -52,10 +52,10 @@ const ButtonItemStyle = styled.div`
 
 const TitleItemName = styled.div`
   width: 100%;
-  background-color: ${props => Colors(props.colorBlind).secondColor};
+  background-color: ${props => Colors(props.siteProps).secondColor};
   padding: 2px 8px;
   font-size: 1.2rem;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   padding-right: 30px;
@@ -69,7 +69,7 @@ const CloseEditCreateMode = styled.div`
   padding: 5px;
   font-size: 1.2rem;
   overflow: hidden;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   cursor: pointer;
   border-top-right-radius: 5px;
   background-color: rgba(0, 0, 0, 0.1);
@@ -85,7 +85,7 @@ const WarningStyle = styled.div`
   position: relative;
   background-color: #757575;
   padding: 5px 10px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   padding-left: 50px;
   font-size: 0.8rem;
   margin: 1px;
@@ -97,7 +97,7 @@ const IconWarning = styled.div`
   bottom: 0;
   left: 0;
   width: 50px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -107,7 +107,7 @@ const IconWarning = styled.div`
 
 const ItemTitle = styled.div`
   font-size: 1.1rem;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   margin-bottom: 5px;
   display: flex;
   flex-direction: row;
@@ -116,7 +116,7 @@ const ItemTitle = styled.div`
 
   span {
     padding-left: 5px;
-    color: ${props => Colors(props.colorBlind).secondColor};
+    color: ${props => Colors(props.siteProps).secondColor};
   }
 `
 
@@ -130,17 +130,17 @@ const CheckboxStyle = styled.div`
   margin-bottom: 30px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).secondColor};
+    background-color: ${props => Colors(props.siteProps).secondColor};
   }
 
   span {
-    color: ${props => Colors(props.colorBlind).textNormalBlack};
-    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
 `
 
 const CalendarEventItemClicked = ({
-  colorBlind,
+  siteProps,
   handleClosePopupEventItem,
   selectedEvent,
   allEvents,
@@ -214,7 +214,7 @@ const CalendarEventItemClicked = ({
     companyOpenHours = itemCompanyHours[selectedDayOpenCompany]
 
     isDayHoliday = !!isHolidays && (
-      <ItemTitle colorBlind={colorBlind}>
+      <ItemTitle siteProps={siteProps}>
         Dzień wolny:
         <span>{!!isHolidays ? "Tak" : "Nie"}</span>
       </ItemTitle>
@@ -246,7 +246,7 @@ const CalendarEventItemClicked = ({
       : null
 
     switchButtonHolidays = !!selectedEvent.action && !companyOpenHours.disabled && (
-      <CheckboxStyle colorBlind={colorBlind}>
+      <CheckboxStyle siteProps={siteProps}>
         <Checkbox
           theme="material-checkbox"
           value={isHolidays}
@@ -265,8 +265,8 @@ const CalendarEventItemClicked = ({
           fontIconSize="20"
           fontSize="16"
           icon={<FaSave />}
-          customColorButton={Colors(colorBlind).successColorDark}
-          customColorIcon={Colors(colorBlind).successColor}
+          customColorButton={Colors(siteProps).successColorDark}
+          customColorIcon={Colors(siteProps).successColor}
           onClick={handleClickSaveItem}
         />
       </ButtonItemStyle>
@@ -279,8 +279,8 @@ const CalendarEventItemClicked = ({
             fontIconSize="20"
             fontSize="16"
             icon={<MdDeleteForever />}
-            customColorButton={Colors(colorBlind).dangerColorDark}
-            customColorIcon={Colors(colorBlind).dangerColor}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
             onClick={() => {
               handleClosePopupEventItem()
               handleDeleteNoConstTimeworkToSave(selectedEvent)
@@ -292,18 +292,18 @@ const CalendarEventItemClicked = ({
   }
 
   const warningItem = !!selectedEventInAllEventWarning && (
-    <WarningStyle colorBlind={colorBlind}>
+    <WarningStyle siteProps={siteProps}>
       {selectedEventInAllEventWarning}
-      <IconWarning colorBlind={colorBlind}>
+      <IconWarning siteProps={siteProps}>
         <MdInfo />
       </IconWarning>
     </WarningStyle>
   )
 
   const warningItemExtraTime = !!selectedEventInAllEventWarningExtraTime && (
-    <WarningStyle colorBlind={colorBlind}>
+    <WarningStyle siteProps={siteProps}>
       {selectedEventInAllEventWarningExtraTime}
-      <IconWarning colorBlind={colorBlind}>
+      <IconWarning siteProps={siteProps}>
         <MdInfo />
       </IconWarning>
     </WarningStyle>
@@ -317,36 +317,36 @@ const CalendarEventItemClicked = ({
       unmountOnExit
     >
       <EventItemPosition>
-        <EventItemPositionContent colorBlind={colorBlind}>
-          <TitleItemName colorBlind={colorBlind}>{titleEvent}</TitleItemName>
+        <EventItemPositionContent siteProps={siteProps}>
+          <TitleItemName siteProps={siteProps}>{titleEvent}</TitleItemName>
           {warningItem}
           {warningItemExtraTime}
           <CloseEditCreateMode
-            colorBlind={colorBlind}
+            siteProps={siteProps}
             onClick={handleClosePopupEventItem}
           >
             <MdClose />
           </CloseEditCreateMode>
           <EventItemPositionContentPadding>
-            <ItemTitle colorBlind={colorBlind}>
+            <ItemTitle siteProps={siteProps}>
               Miesiąc:
               <span>{selectMonthName}</span>
             </ItemTitle>
-            <ItemTitle colorBlind={colorBlind}>
+            <ItemTitle siteProps={siteProps}>
               Dzień tygodnia:
               <span>{selectedDayWeekName}</span>
             </ItemTitle>
-            <ItemTitle colorBlind={colorBlind}>
+            <ItemTitle siteProps={siteProps}>
               Data:
               <span>{selectedDate}</span>
             </ItemTitle>
             {!!!isHolidays ? (
               <>
-                <ItemTitle colorBlind={colorBlind}>
+                <ItemTitle siteProps={siteProps}>
                   Początek pracy:
                   <span>{dateStart}</span>
                 </ItemTitle>
-                <ItemTitle colorBlind={colorBlind}>
+                <ItemTitle siteProps={siteProps}>
                   Koniec pracy:
                   <span>{dateEnd}</span>
                 </ItemTitle>

@@ -9,7 +9,7 @@ import { LinkEffect } from "../common/LinkEffect"
 
 const PlaceItem = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   margin: 7px;
   margin-top: 50px;
@@ -20,7 +20,7 @@ const PlaceItem = styled.div`
   flex-wrap: wrap;
   margin-bottom: 50px;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   /* border: 1px solid #b2ebf2; */
   overflow: hidden;
   @media all and (max-width: 920px) {
@@ -61,7 +61,7 @@ const PlaceContent = styled.div`
 
   h6 {
     display: inline;
-    border-bottom: 2px solid ${props => Colors(props.colorBlind).primaryColor};
+    border-bottom: 2px solid ${props => Colors(props.siteProps).primaryColor};
     padding-bottom: 5px;
     font-size: 0.8rem;
   }
@@ -110,8 +110,8 @@ const OpinionMainDiv = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  background-color: ${props => Colors(props.colorBlind).opinionColorUp};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).opinionColorUp};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   border-bottom-left-radius: 5px;
   border-top-right-radius: 5px;
   font-size: 1.6rem;
@@ -128,7 +128,7 @@ const OpinionBottom = styled.div`
   left: 0;
   right: 0;
   font-size: 0.8rem;
-  background-color: ${props => Colors(props.colorBlind).opinionColorDown};
+  background-color: ${props => Colors(props.siteProps).opinionColorDown};
   padding: 2px 5px;
   border-bottom-left-radius: 5px;
   text-align: center;
@@ -166,12 +166,12 @@ const SerivesDiv = styled.div`
 `
 
 const NoServicesText = styled.div`
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
 const PlacesItem = ({ item, filters, index }) => {
   const [servicesVisible, setServicesVisible] = useState(false)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const handleServicesVisible = () => {
     setServicesVisible(prevValue => !prevValue)
@@ -224,12 +224,12 @@ const PlacesItem = ({ item, filters, index }) => {
       data-sal-duration="1000"
       data-sal-easing="ease-out-bounce"
     >
-      <PlaceItem colorBlind={colorBlind}>
+      <PlaceItem siteProps={siteProps}>
         <PlaceImage>
           {/* <BackGroundImageCustomUrl url={item.image} /> */}
           <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
         </PlaceImage>
-        <PlaceContent colorBlind={colorBlind}>
+        <PlaceContent siteProps={siteProps}>
           <h1>{item.name}</h1>
           <MarginBottomTitle>
             <h6>{`${item.city}, ${item.district}, ${item.adress}`}</h6>
@@ -238,11 +238,11 @@ const PlacesItem = ({ item, filters, index }) => {
 
           {renderSelectedFilter}
 
-          <OpinionMainDiv colorBlind={colorBlind}>
+          <OpinionMainDiv siteProps={siteProps}>
             <PaddingOpinion>
               {item.avarageOpinions ? item.avarageOpinions : 0}
             </PaddingOpinion>
-            <OpinionBottom colorBlind={colorBlind}>
+            <OpinionBottom siteProps={siteProps}>
               Opinie: {item.countOpinions ? item.countOpinions : 0}
             </OpinionBottom>
           </OpinionMainDiv>
@@ -282,7 +282,7 @@ const PlacesItem = ({ item, filters, index }) => {
             {allServices.length > 0 ? (
               allServices
             ) : (
-              <NoServicesText colorBlind={colorBlind}>
+              <NoServicesText siteProps={siteProps}>
                 Brak usług
               </NoServicesText>
             )}

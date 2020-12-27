@@ -46,17 +46,17 @@ const IconVeryfiedUser = styled.div`
   cursor: ${props => (props.email ? "pointer" : "")};
   color: ${props =>
     props.active
-      ? Colors(props.colorBlind).successColor
+      ? Colors(props.siteProps).successColor
       : props.email
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).dangerColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).dangerColor};
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
   &:hover {
     color: ${props =>
-      props.email ? Colors(props.colorBlind).secondDarkColor : ""};
+      props.email ? Colors(props.siteProps).secondDarkColor : ""};
   }
 `
 
@@ -84,7 +84,7 @@ const DeleteIconPosition = styled.div`
 `
 
 const DeleteIconStyle = styled.div`
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   padding: 5px;
   padding-bottom: 0;
   cursor: pointer;
@@ -110,7 +110,7 @@ const HolidayDays = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 5px;
@@ -122,13 +122,13 @@ const HolidayDaysIcon = styled.div`
   position: relative;
   left: -2px;
   font-size: 1.25rem;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   border-radius: 50%;
   padding: 5px;
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
   height: 30px;
   transform: scale(1.2);
 `
@@ -162,7 +162,7 @@ const WorkerItem = ({
   setAllCategories,
   company,
   editMode,
-  colorBlind,
+  siteProps,
   editedWorkersHours,
   selectEditedWorkersHours,
   isAdmin,
@@ -543,13 +543,13 @@ const WorkerItem = ({
 
   // const holidayDaysInYear = isAdmin && (
   //   <HolidayDays
-  //     colorBlind={colorBlind}
+  //     siteProps={siteProps}
   //     data-tip
   //     data-for="holidays"
   //     data-place="top"
   //   >
   //     <HolidayDaysIcon
-  //       colorBlind={colorBlind}
+  //       siteProps={siteProps}
   //       isCompanyEditProfil={isCompanyEditProfil}
   //     >
   //       <MdToday />
@@ -562,13 +562,13 @@ const WorkerItem = ({
     <WorkerItemStyle
       userEditItem={userEditItem}
       selectHeight={selectHeight}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
       // isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       >
         <FaUser />
       </WorkerCircle>
@@ -584,7 +584,7 @@ const WorkerItem = ({
               data-tip
               data-for="timeWorkUser"
               data-place="left"
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdTimelapse />
             </EditIconStyle>
@@ -593,7 +593,7 @@ const WorkerItem = ({
               data-tip
               data-for="editUser"
               data-place="left"
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdEdit />
             </EditIconStyle>
@@ -602,7 +602,7 @@ const WorkerItem = ({
               data-tip
               data-for="deleteUser"
               data-place="left"
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdDelete />
             </DeleteUserIconStyle>}
@@ -612,7 +612,7 @@ const WorkerItem = ({
               active={item.active}
               data-tip
               data-for="alertActive"
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               {item.active ? <MdVerifiedUser /> : <MdError />}
             </IconVeryfiedUser>
@@ -622,7 +622,7 @@ const WorkerItem = ({
                 onClick={handleSentAgainEmailVeryfication}
                 data-tip
                 data-for="sentAgainEmail"
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <MdEmail />
               </IconVeryfiedUser>
@@ -646,7 +646,7 @@ const WorkerItem = ({
             >
               <EditUserBackgroundContent
                 onClick={handleClickContent}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 Stanowisko
                 <InputStyles>
@@ -702,8 +702,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleEditSpecializationReset}
-                      customColorButton={Colors(colorBlind).dangerColorDark}
-                      customColorIcon={Colors(colorBlind).dangerColor}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
                     />
                   </ButtonStyles>
                   <ButtonStyles>
@@ -714,8 +714,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<MdDone />}
                       onClick={handleSaveSpecialization}
-                      customColorButton={Colors(colorBlind).successColorDark}
-                      customColorIcon={Colors(colorBlind).successColor}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
                       // disabled={!disabledButtonAccept}
                     />
                   </ButtonStyles>
@@ -723,7 +723,7 @@ const WorkerItem = ({
                 <DeleteIconPosition>
                   <DeleteIconStyle
                     onClick={handleEditSpecializationReset}
-                    colorBlind={colorBlind}
+                    siteProps={siteProps}
                   >
                     <MdClose />
                   </DeleteIconStyle>
@@ -741,7 +741,7 @@ const WorkerItem = ({
               <EditUserBackgroundContent
                 onClick={handleClickContent}
                 noBg
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <ButtonContent>
                   <ButtonDeleteStyle>
@@ -752,8 +752,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleUserConfirmDelete}
-                      customColorButton={Colors(colorBlind).successColorDark}
-                      customColorIcon={Colors(colorBlind).successColor}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
                     />
                   </ButtonDeleteStyle>
                   <ButtonDeleteStyle>
@@ -764,8 +764,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<MdDelete />}
                       onClick={handleDeleteUser}
-                      customColorButton={Colors(colorBlind).dangerColorDark}
-                      customColorIcon={Colors(colorBlind).dangerColor}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
                     />
                   </ButtonDeleteStyle>
                 </ButtonContent>
@@ -782,7 +782,7 @@ const WorkerItem = ({
               <EditUserBackgroundContent
                 onClick={handleClickContent}
                 noBg
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <ButtonContent>
                   <ButtonDeleteStyle
@@ -823,8 +823,8 @@ const WorkerItem = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleChooseTimeWorker}
-                      customColorButton={Colors(colorBlind).dangerColorDark}
-                      customColorIcon={Colors(colorBlind).dangerColor}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
                     />
                   </ButtonDeleteStyle>
                 </ButtonContent>
@@ -834,7 +834,7 @@ const WorkerItem = ({
           <ConstTimeWorkTime
             constTimeWorker={constTimeWorker}
             handleClickContent={handleClickContent}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
             EditUserBackground={EditUserBackground}
             EditUserBackgroundContent={EditUserBackgroundContent}
             ButtonContent={ButtonContent}

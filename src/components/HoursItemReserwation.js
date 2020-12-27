@@ -6,7 +6,7 @@ const ColumnAvaibleHours = styled.div`
   width: 30%;
   min-width: 150px;
   padding: 10px;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   margin-bottom: 10px;
 `
@@ -15,11 +15,11 @@ const TextColumnAvaibleHours = styled.div`
   font-size: 1.2rem;
   width: 100%;
   margin-bottom: 10px;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
 const TextNoDate = styled.div`
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
 const DateReserwStyle = styled.div`
@@ -31,11 +31,11 @@ const DateReserwStyle = styled.div`
   border-radius: 5px;
   padding: 5px 10px;
   cursor: pointer;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     props.active
-      ? Colors(props.colorBlind).primaryColorDark
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).primaryColorDark
+      : Colors(props.siteProps).primaryColor};
   transition-property: background-color, color, transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -43,12 +43,12 @@ const DateReserwStyle = styled.div`
 
   &:hover {
     transform: scale(0.95);
-    background-color: ${props => Colors(props.colorBlind).primaryColorDark};
+    background-color: ${props => Colors(props.siteProps).primaryColorDark};
   }
 `
 
 const HoursItemReserwation = ({
-  colorBlind,
+  siteProps,
   maxHourToFilter = 10,
   minHourToFilter = 0,
   itemsHours = [],
@@ -72,7 +72,7 @@ const HoursItemReserwation = ({
     const isHourActive = selectedHour === item
     return (
       <DateReserwStyle
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         onClick={() => handleClickDateToReserw(item)}
         active={isHourActive}
         key={index}
@@ -82,14 +82,14 @@ const HoursItemReserwation = ({
     )
   })
   return (
-    <ColumnAvaibleHours colorBlind={colorBlind}>
-      <TextColumnAvaibleHours colorBlind={colorBlind}>
+    <ColumnAvaibleHours siteProps={siteProps}>
+      <TextColumnAvaibleHours siteProps={siteProps}>
         {title}
       </TextColumnAvaibleHours>
       {mapDate.length > 0 ? (
         mapDate
       ) : (
-        <TextNoDate colorBlind={colorBlind}>Brak dostępnych godzin</TextNoDate>
+        <TextNoDate siteProps={siteProps}>Brak dostępnych godzin</TextNoDate>
       )}
     </ColumnAvaibleHours>
   )

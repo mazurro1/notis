@@ -10,10 +10,10 @@ const CustomStyleTextarea = styled.textarea`
   max-height: 300px;
   border: ${props =>
     props.isErrorText
-      ? `1px solid ${Colors(props.colorBlind).dangerColor}`
-      : `1px solid ${Colors(props.colorBlind).textNormalBlack}`};
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+      ? `1px solid ${Colors(props.siteProps).dangerColor}`
+      : `1px solid ${Colors(props.siteProps).textNormalBlack}`};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   border-radius: 5px;
   padding: 10px;
   word-wrap: break-word;
@@ -31,7 +31,7 @@ const CustomStyleTextarea = styled.textarea`
 const ErrorText = styled.div`
   font-size: 0.75rem;
   font-weight: bold;
-  color: ${props => Colors(props.colorBlind).dangerColor};
+  color: ${props => Colors(props.siteProps).dangerColor};
   padding-left: 10px;
 `
 
@@ -42,7 +42,7 @@ const TextareaCustom = ({
   value = "",
   isErrorText = false,
 }) => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const handleOnChange = e => {
     onChange(e)
   }
@@ -58,10 +58,10 @@ const TextareaCustom = ({
         autocapitalize="sentences"
         onChange={e => handleOnChange(e)}
         value={value}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       />
       {isErrorText && (
-        <ErrorText colorBlind={colorBlind}>
+        <ErrorText siteProps={siteProps}>
           {
             "W tekście nie może być następujących znaków: $, #, %, &, *, (, ), /, [, ], +, -, |"
           }

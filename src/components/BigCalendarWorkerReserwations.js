@@ -51,8 +51,8 @@ const BackgroundCalendarStyle = styled.div`
     border: none;
   }
   .rbc-event {
-    background-color: ${props => Colors(props.colorBlind).secondColor};
-    color: ${props => Colors(props.colorBlind).textNormalWhite};
+    background-color: ${props => Colors(props.siteProps).secondColor};
+    color: ${props => Colors(props.siteProps).textNormalWhite};
     border: none;
     border-radius: 5px;
     transition-property: background-color;
@@ -60,7 +60,7 @@ const BackgroundCalendarStyle = styled.div`
     transition-timing-function: ease;
 
     &:hover {
-      background-color: ${props => Colors(props.colorBlind).secondDarkColor};
+      background-color: ${props => Colors(props.siteProps).secondDarkColor};
     }
   }
 
@@ -89,7 +89,7 @@ const BackgroundCalendarStyle = styled.div`
   }
 
   .rbc-day-slot .rbc-no-disabled-active-holiday {
-    background-color: ${props => Colors(props.colorBlind).dangerColor};
+    background-color: ${props => Colors(props.siteProps).dangerColor};
     border-left: 1px solid #e0e0e0 !important;
   }
   .rbc-day-slot .rbc-no-disabled-active {
@@ -107,7 +107,7 @@ const BackgroundCalendarStyle = styled.div`
   }
 
   .rbc-time-gutter .rbc-time-slot {
-    background-color: ${props => Colors(props.colorBlind).navDownBackground};
+    background-color: ${props => Colors(props.siteProps).navDownBackground};
     color: white;
   }
   .rbc-time-gutter .rbc-timeslot-group {
@@ -115,7 +115,7 @@ const BackgroundCalendarStyle = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: ${props => Colors(props.colorBlind).navDownBackground};
+    background-color: ${props => Colors(props.siteProps).navDownBackground};
     text-align: center;
     border-bottom: 1px solid white;
   }
@@ -137,7 +137,7 @@ const BackgroundCalendarStyle = styled.div`
   }
   .rbc-time-header {
     color: white;
-    background-color: ${props => Colors(props.colorBlind).navDownBackground};
+    background-color: ${props => Colors(props.siteProps).navDownBackground};
     .rbc-header + .rbc-header {
       border-left: 1px solid #e0e0e0 !important;
     }
@@ -160,7 +160,7 @@ const TitleMonthYear = styled.div`
 `
 
 const TitleMonthYearContent = styled.div`
-  background-color: ${props => Colors(props.colorBlind).secondColor};
+  background-color: ${props => Colors(props.siteProps).secondColor};
   color: white;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -180,9 +180,9 @@ const ButtonItemStyle = styled.div`
 `
 const WarningStyle = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+  background-color: ${props => Colors(props.siteProps).dangerColorDark};
   padding: 5px 10px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   padding-left: 50px;
   font-size: 0.8rem;
   margin-bottom: 10px;
@@ -195,7 +195,7 @@ const IconWarning = styled.div`
   bottom: 0;
   left: 0;
   width: 50px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -213,7 +213,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
   const [deletedEventsIds, setDeletedEventsIds] = useState([])
   const [allEvents, setAllEvents] = useState([])
   const editedWorkersHours = useSelector(state => state.editedWorkersHours)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const timerToClearNew = useRef(null)
   const timerToClearEdited = useRef(null)
 
@@ -617,7 +617,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
             onClick={() => handleChangeDate("minus")}
           />
         </div>
-        <TitleMonthYearContent colorBlind={colorBlind}>
+        <TitleMonthYearContent siteProps={siteProps}>
           {finnalDate}
         </TitleMonthYearContent>
         <div>
@@ -643,7 +643,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
           />
         </div>
       </TitleMonthYear>
-      <BackgroundCalendarStyle colorBlind={colorBlind}>
+      <BackgroundCalendarStyle siteProps={siteProps}>
         <Calendar
           culture="pl"
           views={["week"]}
@@ -670,10 +670,10 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
           eventPropGetter={handleEventPropGetter}
         />
       </BackgroundCalendarStyle>
-      <WarningStyle colorBlind={colorBlind}>
+      <WarningStyle siteProps={siteProps}>
         Uwaga tworząc tutaj dzień pracy, jest on automatycznie zastępywany
         względem stałych godzin pracy.
-        <IconWarning colorBlind={colorBlind}>
+        <IconWarning siteProps={siteProps}>
           <MdInfo />
         </IconWarning>
       </WarningStyle>
@@ -686,8 +686,8 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
             fontIconSize="25"
             fontSize="16"
             icon={<FaArrowLeft />}
-            customColorButton={Colors(colorBlind).dangerColorDark}
-            customColorIcon={Colors(colorBlind).dangerColor}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleCloseCalendar}
           />
         </ButtonItemStyle>
@@ -705,7 +705,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
         </ButtonItemStyle>
       </ButtonsPosition>
       <CalendarEventItemClicked
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         handleClosePopupEventItem={handleClosePopupEventItem}
         selectedEvent={selectedEvent}
         screenOpen={selectedEventOpen}
@@ -715,7 +715,7 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
         itemCompanyHours={item.company.openingDays}
       />
       <CalendarEventItemClicked
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         handleClosePopupEventItem={handleCloseNewEventItem}
         selectedEvent={newEvent}
         screenOpen={newEventOpen}

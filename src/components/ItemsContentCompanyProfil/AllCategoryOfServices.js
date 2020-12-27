@@ -24,7 +24,7 @@ import { Colors } from "../../common/Colors"
 
 const AddCategory = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).successColor};
+  background-color: ${props => Colors(props.siteProps).successColor};
   border-radius: 5px;
   display: flex;
   flex-direction: row;
@@ -38,7 +38,7 @@ const AddCategory = styled.div`
   overflow: hidden;
   cursor: ${props => (props.clickAddCategory ? "default" : "pointer")};
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).successColorDark};
+    background-color: ${props => Colors(props.siteProps).successColorDark};
   }
 `
 
@@ -69,7 +69,7 @@ const IconAddCategory = styled.div`
   padding-bottom: 0px;
   color: white;
   font-size: 2rem;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
 const ButtonsAddPosition = styled.div`
@@ -115,7 +115,7 @@ const AllCategoryOfServices = ({
   const [clickAddCategory, setClickAddCategory] = useState(false)
   const [newCategoryTitle, setNewCategoryTitle] = useState("")
   const resetCompany = useSelector(state => state.resetCompany)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   useEffect(() => {
     sal({
@@ -837,9 +837,9 @@ const AllCategoryOfServices = ({
             data-for="addNewCategory"
             onClick={handleClickAddCategory}
             clickAddCategory={clickAddCategory}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
-            <IconAddCategory colorBlind={colorBlind}>
+            <IconAddCategory siteProps={siteProps}>
               <MdAddBox />
             </IconAddCategory>
 
@@ -870,8 +870,8 @@ const AllCategoryOfServices = ({
                           fontSize="13"
                           icon={<MdArrowBack />}
                           onClick={handleClickAddCategory}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
                         />
                       </ButtonMargin>
                       <ButtonMarginSubmit type="submit">
@@ -882,9 +882,9 @@ const AllCategoryOfServices = ({
                           fontSize="15"
                           icon={<MdAddBox />}
                           customColorButton={
-                            Colors(colorBlind).successColorDark
+                            Colors(siteProps).successColorDark
                           }
-                          customColorIcon={Colors(colorBlind).successColor}
+                          customColorIcon={Colors(siteProps).successColor}
                           disabled={disabledAddCategoryButton}
                         />
                       </ButtonMarginSubmit>

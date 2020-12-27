@@ -34,7 +34,7 @@ const EditUserBackgroundContentCosntHour = styled.div`
   background-color: ${props =>
     props.noBg
       ? "transparent"
-      : Colors(props.colorBlind).companyItemBackground};
+      : Colors(props.siteProps).companyItemBackground};
   z-index: 10;
   border-radius: 5px;
   padding: 5px;
@@ -69,18 +69,18 @@ const CheckboxStyle = styled.div`
   margin-bottom: 30px;
 
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).secondColor};
+    background-color: ${props => Colors(props.siteProps).secondColor};
   }
 
   span {
-    color: ${props => Colors(props.colorBlind).textNormalBlack};
-    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
 `
 
 const ConstTimeWorkTime = ({
   item,
-  colorBlind,
+  siteProps,
   itemWorker,
   finallSelectedDayOfTheMonth,
   handleClickContent,
@@ -208,7 +208,7 @@ const ConstTimeWorkTime = ({
         <EditUserBackgroundConstHour>
           <EditUserBackgroundContentCosntHour
             onClick={handleClickContent}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <div>
               <DayHoursStyle>{item.title}:</DayHoursStyle>
@@ -238,7 +238,7 @@ const ConstTimeWorkTime = ({
                   />
                 </div>
               </ContentDateButtons>
-              <CheckboxStyle colorBlind={colorBlind}>
+              <CheckboxStyle siteProps={siteProps}>
                 <Checkbox
                   theme="material-checkbox"
                   value={disabledDay}
@@ -256,8 +256,8 @@ const ConstTimeWorkTime = ({
                     fontSize="14"
                     icon={<FaArrowLeft />}
                     onClick={handleCloseDay}
-                    customColorButton={Colors(colorBlind).dangerColorDark}
-                    customColorIcon={Colors(colorBlind).dangerColor}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
                   />
                 </ButtonDeleteStyle>
                 <ButtonDeleteStyle>
@@ -268,8 +268,8 @@ const ConstTimeWorkTime = ({
                     fontSize="14"
                     icon={<FaSave />}
                     onClick={handleSave}
-                    customColorButton={Colors(colorBlind).successColorDark}
-                    customColorIcon={Colors(colorBlind).successColor}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
                     disabled={disabledButtonSave}
                   />
                 </ButtonDeleteStyle>
@@ -288,7 +288,7 @@ const ConstTimeWorkTime = ({
           <EditUserBackgroundContentCosntHour
             onClick={handleClickContent}
             active={dayTimeStart}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <TimePickerContent
               setSelectedTime={handleSetTimeStart}
@@ -308,7 +308,7 @@ const ConstTimeWorkTime = ({
           <EditUserBackgroundContentCosntHour
             onClick={handleClickContent}
             active={dayTimeEnd}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <TimePickerContent
               setSelectedTime={handleSetTimeEnd}

@@ -30,7 +30,7 @@ const HolidayDays = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 5px;
@@ -42,13 +42,13 @@ const HolidayDaysIcon = styled.div`
   position: relative;
   left: -2px;
   font-size: 1.25rem;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   border-radius: 50%;
   padding: 5px;
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
   height: 30px;
   transform: scale(1.2);
 `
@@ -100,7 +100,7 @@ const InputStyles = styled.div`
 const OwnerWorker = ({
   ButtonDeleteStyle,
   ButtonContent,
-  colorBlind,
+  siteProps,
   allCategories,
   EditUserBackgroundContent,
   EditUserBackground,
@@ -301,13 +301,13 @@ const OwnerWorker = ({
 
   // const holidayDaysInYear = isAdmin && (
   //   <HolidayDays
-  //     colorBlind={colorBlind}
+  //     siteProps={siteProps}
   //     data-tip
   //     data-for={`holidaysOwner`}
   //     data-place="top"
   //   >
   //     <HolidayDaysIcon
-  //       colorBlind={colorBlind}
+  //       siteProps={siteProps}
   //       isCompanyEditProfil={isCompanyEditProfil}
   //     >
   //       <MdToday />
@@ -326,13 +326,13 @@ const OwnerWorker = ({
     <WorkerItemStyle
       userEditItem={ownerEdit}
       selectHeight={selectHeight}
-      colorBlind={colorBlind}
+      siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
       // isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       >
         <FaUser />
       </WorkerCircle>
@@ -347,7 +347,7 @@ const OwnerWorker = ({
               data-tip
               data-for={`timeWorkUserOwner`}
               data-place="left"
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdTimelapse />
             </EditIconStyle>
@@ -356,7 +356,7 @@ const OwnerWorker = ({
               data-for={`editOwner`}
               data-place="left"
               onClick={handleClickOwnerEdit}
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdEdit />
             </EditIconStyle>
@@ -370,7 +370,7 @@ const OwnerWorker = ({
             <EditUserBackground onClick={handleResetOwnerSpecialization}>
               <EditUserBackgroundContent
                 onClick={handleClickContent}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 Stanowisko
                 <InputStyles>
@@ -410,8 +410,8 @@ const OwnerWorker = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleResetOwnerSpecialization}
-                      customColorButton={Colors(colorBlind).dangerColorDark}
-                      customColorIcon={Colors(colorBlind).dangerColor}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
                     />
                   </ButtonStyles>
                   <ButtonStyles>
@@ -422,8 +422,8 @@ const OwnerWorker = ({
                       fontSize="14"
                       icon={<MdDone />}
                       onClick={handleSaveSpecialization}
-                      customColorButton={Colors(colorBlind).successColorDark}
-                      customColorIcon={Colors(colorBlind).successColor}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
                       // disabled={
                       //   inputSpecializationOwner === ownerSpecialization
                       // }
@@ -448,7 +448,7 @@ const OwnerWorker = ({
               <EditUserBackgroundContent
                 onClick={handleClickContent}
                 noBg
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <ButtonContent>
                   <ButtonDeleteStyle
@@ -489,8 +489,8 @@ const OwnerWorker = ({
                       fontSize="14"
                       icon={<FaArrowLeft />}
                       onClick={handleChooseTimeOwner}
-                      customColorButton={Colors(colorBlind).dangerColorDark}
-                      customColorIcon={Colors(colorBlind).dangerColor}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
                     />
                   </ButtonDeleteStyle>
                   <ReactTooltip
@@ -514,7 +514,7 @@ const OwnerWorker = ({
           <ConstTimeWorkTime
             constTimeWorker={constTimeOwner}
             handleClickContent={handleClickContent}
-            colorBlind={colorBlind}
+            siteProps={siteProps}
             EditUserBackground={EditUserBackground}
             EditUserBackgroundContent={EditUserBackgroundContent}
             ButtonContent={ButtonContent}

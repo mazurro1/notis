@@ -30,10 +30,10 @@ const ContentAlert = styled.div`
   padding: 10px;
   background-color: ${props =>
     props.color === "green"
-      ? Colors(props.colorBlind).successColor
+      ? Colors(props.siteProps).successColor
       : props.color === "blue"
-      ? Colors(props.colorBlind).primaryColorDark
-      : Colors(props.colorBlind).dangerColor};
+      ? Colors(props.siteProps).primaryColorDark
+      : Colors(props.siteProps).dangerColor};
   border-radius: 5px;
   opacity: 0.99;
   color: white;
@@ -85,7 +85,7 @@ const Alert = ({ item, index }) => {
   const [alertVisible, setAlertVisible] = useState(false)
   const [isNew, setIsNew] = useState(true)
   const timerToClearSomewhere = useRef(null)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
 
@@ -123,7 +123,7 @@ const Alert = ({ item, index }) => {
       unmountOnExit
     >
       <OneAlert index={index}>
-        <ContentAlert color={item.color} colorBlind={colorBlind}>
+        <ContentAlert color={item.color} siteProps={siteProps}>
           {item.text}
           <IconClose color={item.color} onClick={handleClose}>
             <MdClose />

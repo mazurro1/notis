@@ -50,7 +50,7 @@ const WidthSelect = styled.div`
   margin-right: 20px;
 `
 
-const UserHistory = ({ colorBlind, user }) => {
+const UserHistory = ({ siteProps, user }) => {
   const allYears = [
     {
       value: new Date().getFullYear() - 2,
@@ -134,7 +134,7 @@ const UserHistory = ({ colorBlind, user }) => {
   const mapCategory = userHistoryReserwations.map((item, index) => {
     return (
       <UserHistoryCategory
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         title={item.category}
         reserwations={item.items}
         key={index}
@@ -189,9 +189,9 @@ const UserHistory = ({ colorBlind, user }) => {
             onChange={handleHiddenCanceledReserwation}
             checked={!hiddenCanceledReserwation}
             activeBoxShadow={`0 0 2px 3px ${
-              Colors(colorBlind).primaryColorDark
+              Colors(siteProps).primaryColorDark
             }`}
-            onColor={Colors(colorBlind).primaryColorDark}
+            onColor={Colors(siteProps).primaryColorDark}
             height={22}
             uncheckedIcon
             checkedIcon

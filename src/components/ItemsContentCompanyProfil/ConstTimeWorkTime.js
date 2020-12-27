@@ -11,13 +11,13 @@ const DayHoursStyle = styled.h2`
   font-size: 1.25rem;
   display: inline-block;
   font-weight: 500;
-  border-bottom: 2px solid ${props => Colors(props.colorBlind).secondColor};
+  border-bottom: 2px solid ${props => Colors(props.siteProps).secondColor};
 `
 
 const ConstTimeWorkTime = ({
   constTimeWorker,
   handleClickContent,
-  colorBlind,
+  siteProps,
   EditUserBackground,
   EditUserBackgroundContent,
   ButtonContent,
@@ -47,7 +47,7 @@ const ConstTimeWorkTime = ({
       <ConstTimeWorkTimeItem
         item={item}
         key={item.dayOfTheWeek}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         itemWorker={itemWorker}
         finallSelectedDayOfTheMonth={finallSelectedDayOfTheMonth}
         handleClickContent={handleClickContent}
@@ -73,10 +73,10 @@ const ConstTimeWorkTime = ({
       <EditUserBackground>
         <EditUserBackgroundContent
           onClick={handleClickContent}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           noRelative
         >
-          <DayHoursStyle colorBlind={colorBlind}>GODZINY PRACY</DayHoursStyle>
+          <DayHoursStyle siteProps={siteProps}>GODZINY PRACY</DayHoursStyle>
           {mapDaysOfTheWeek}
           <ButtonContent>
             <ButtonDeleteStyle>
@@ -87,8 +87,8 @@ const ConstTimeWorkTime = ({
                 fontSize="14"
                 icon={<FaArrowLeft />}
                 onClick={() => handleCancelConstTimeWork(itemWorker._id)}
-                customColorButton={Colors(colorBlind).dangerColorDark}
-                customColorIcon={Colors(colorBlind).dangerColor}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
               />
             </ButtonDeleteStyle>
             <ButtonDeleteStyle>
@@ -99,8 +99,8 @@ const ConstTimeWorkTime = ({
                 fontSize="14"
                 icon={<FaSave />}
                 onClick={() => handleSaveConstTimeWork(itemWorker._id)}
-                customColorButton={Colors(colorBlind).successColorDark}
-                customColorIcon={Colors(colorBlind).successColor}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
               />
             </ButtonDeleteStyle>
           </ButtonContent>

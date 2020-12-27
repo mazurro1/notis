@@ -14,7 +14,7 @@ const CustomStyleInput = styled(InputIcon)`
   transition-timing-function: ease; */
 
   &:focus {
-    border: 2px solid ${props => Colors(props.colorBlind).secondColor};
+    border: 2px solid ${props => Colors(props.siteProps).secondColor};
   }
 `
 
@@ -25,7 +25,7 @@ const InputCustom = ({
   value = "",
 }) => {
   const [areaActive, setAreaActive] = useState(false)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
   useEffect(() => {
     if (inputActive) {
@@ -49,7 +49,7 @@ const InputCustom = ({
         value={value}
         secondColor
         onChange={onChange}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       />
     </CSSTransition>
   )

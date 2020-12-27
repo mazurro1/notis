@@ -13,8 +13,8 @@ import { LinkEffect } from "../common/LinkEffect"
 const TitleCategory = styled.div`
   position: relative;
   font-size: 1.25rem;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
-  background-color: ${props => Colors(props.colorBlind).primaryColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).primaryColor};
   padding: 10px;
   border-radius: 5px;
   padding-right: 50px;
@@ -69,7 +69,7 @@ const PositionCompanyLink = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   a {
-    color: ${props => Colors(props.colorBlind).textNormalWhite};
+    color: ${props => Colors(props.siteProps).textNormalWhite};
     transition-property: color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
@@ -77,13 +77,13 @@ const PositionCompanyLink = styled.div`
   &:hover {
     transform: scale(1.1);
     a {
-      color: ${props => Colors(props.colorBlind).primaryColorDark};
+      color: ${props => Colors(props.siteProps).primaryColorDark};
     }
   }
 `
 
 const UserHistoryCategory = ({
-  colorBlind,
+  siteProps,
   title,
   reserwations,
   userToken,
@@ -126,11 +126,11 @@ const UserHistoryCategory = ({
   })
   return (
     <CategoryItemStyle>
-      <TitleCategory colorBlind={colorBlind} onClick={handleClickArrow}>
+      <TitleCategory siteProps={siteProps} onClick={handleClickArrow}>
         {title}
         <PositionCompanyLink
           onClick={handleClickContentNoClicked}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           data-tip
           data-for="goToWebsite"
         >

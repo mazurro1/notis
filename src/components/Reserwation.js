@@ -20,8 +20,8 @@ import InputIcon from "./InputIcon"
 
 const ServiceItem = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   padding: 10px;
   border-radius: 5px;
   border-top-left-radius: 5px;
@@ -61,19 +61,19 @@ const PriceService = styled.span`
   font-weight: 500;
   margin-left: 10px;
   border-radius: 5px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
       ? props.otherColor
-        ? Colors(props.colorBlind).darkColor
-        : Colors(props.colorBlind).secondDarkColor
+        ? Colors(props.siteProps).darkColor
+        : Colors(props.siteProps).secondDarkColor
       : props.otherColor
-      ? Colors(props.colorBlind).darkColor
-      : Colors(props.colorBlind).primaryColorDark};
+      ? Colors(props.siteProps).darkColor
+      : Colors(props.siteProps).primaryColorDark};
 `
 
 const ItemSummary = styled.div`
-  background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
   position: relative;
   border-radius: 5px;
   max-width: 90vw;
@@ -89,9 +89,9 @@ const PaddingContent = styled.div`
 const TextReserwation = styled.div`
   font-size: 1.2rem;
   margin-bottom: 5px;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   span {
-    color: ${props => Colors(props.colorBlind).primaryColor};
+    color: ${props => Colors(props.siteProps).primaryColor};
   }
 `
 
@@ -102,9 +102,9 @@ const SummaryReserwationText = styled.div`
   right: 0;
   font-size: 1.4rem;
   margin-bottom: 10px;
-  background-color: ${props => Colors(props.colorBlind).primaryColorDark};
+  background-color: ${props => Colors(props.siteProps).primaryColorDark};
   padding: 5px 10px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   padding-right: 30px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2) inset;
 `
@@ -118,9 +118,9 @@ const ClosePopup = styled.div`
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   &:hover {
-    color: ${props => Colors(props.colorBlind).primaryColor};
+    color: ${props => Colors(props.siteProps).primaryColor};
   }
 `
 
@@ -139,15 +139,15 @@ const WorkerItem = styled.div`
   align-items: center;
   background-color: ${props =>
     props.active
-      ? Colors(props.colorBlind).primaryColor
-      : Colors(props.colorBlind).companyItemBackground};
+      ? Colors(props.siteProps).primaryColor
+      : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   margin: 5px;
   margin-top: 0;
   cursor: pointer;
   color: ${props =>
-    props.active ? "white" : Colors(props.colorBlind).textNormalBlack};
+    props.active ? "white" : Colors(props.siteProps).textNormalBlack};
 
   transition-property: transform, background-color, color;
   transition-duration: 0.3s;
@@ -157,7 +157,7 @@ const WorkerItem = styled.div`
   svg {
     font-size: 2rem;
     color: ${props =>
-      props.active ? "white" : Colors(props.colorBlind).primaryColor};
+      props.active ? "white" : Colors(props.siteProps).primaryColor};
     transition-property: color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
@@ -172,15 +172,15 @@ const WorkerSpecializationStyle = styled.div`
   font-size: 0.8rem;
   color: ${props =>
     props.active
-      ? Colors(props.colorBlind).textNormalWhite
-      : Colors(props.colorBlind).textNormalBlack};
+      ? Colors(props.siteProps).textNormalWhite
+      : Colors(props.siteProps).textNormalBlack};
 `
 
 const WorkerNameStyle = styled.div`
   color: ${props =>
     props.active
-      ? Colors(props.colorBlind).textNormalWhite
-      : Colors(props.colorBlind).textNormalBlack};
+      ? Colors(props.siteProps).textNormalWhite
+      : Colors(props.siteProps).textNormalBlack};
 `
 
 const ButtonIconStyle = styled.div`
@@ -191,7 +191,7 @@ const SpinnerToLoadAvaibleHours = styled.div`
   height: 34px;
   width: 32px;
   font-size: 2rem;
-  color: ${props => Colors(props.colorBlind).primaryColor};
+  color: ${props => Colors(props.siteProps).primaryColor};
   animation-name: spinner;
   animation-duration: 0.9s;
   animation-timing-function: linear;
@@ -201,7 +201,7 @@ const SpinnerToLoadAvaibleHours = styled.div`
 
 const NoAvaibleHourStyle = styled.div`
   margin-bottom: 10px;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
 const AllAvaibleHours = styled.div`
@@ -250,7 +250,7 @@ const Reserwation = ({
   const avaibleHoursReserwationUpdate = useSelector(
     state => state.avaibleHoursReserwationUpdate
   )
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -384,16 +384,16 @@ const Reserwation = ({
           )
         }
         active={ownerIsSelected}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       >
         <div>
           <FaUser />
         </div>
-        <WorkerNameStyle active={ownerIsSelected} colorBlind={colorBlind}>
+        <WorkerNameStyle active={ownerIsSelected} siteProps={siteProps}>
           {reserwationData.ownerData.name} {reserwationData.ownerData.surname}
         </WorkerNameStyle>
         <WorkerSpecializationStyle
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           active={ownerIsSelected}
         >
           {reserwationData.ownerData.specialization}
@@ -419,16 +419,16 @@ const Reserwation = ({
         key={index}
         onClick={() => handleSelectWorker(worker.user._id, worker._id)}
         active={workerIsSelected}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
       >
         <div>
           <FaUser />
         </div>
-        <WorkerNameStyle colorBlind={colorBlind} active={workerIsSelected}>
+        <WorkerNameStyle siteProps={siteProps} active={workerIsSelected}>
           {worker.user.name} {worker.user.surname}
         </WorkerNameStyle>
         <WorkerSpecializationStyle
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           active={workerIsSelected}
         >
           {worker.specialization}
@@ -438,13 +438,13 @@ const Reserwation = ({
   })
 
   const renderAvaibleHours = avaibleHoursReserwationUpdate ? (
-    <SpinnerToLoadAvaibleHours colorBlind={colorBlind}>
+    <SpinnerToLoadAvaibleHours siteProps={siteProps}>
       <CgSpinner />
     </SpinnerToLoadAvaibleHours>
   ) : avaibleHoursReserwation.length > 0 ? (
     <AllAvaibleHours>
       <HoursItemReserwation
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         maxHourToFilter={12}
         minHourToFilter={0}
         itemsHours={avaibleHoursReserwation}
@@ -453,7 +453,7 @@ const Reserwation = ({
         selectedHour={selectedHour}
       />
       <HoursItemReserwation
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         maxHourToFilter={18}
         minHourToFilter={12}
         itemsHours={avaibleHoursReserwation}
@@ -462,7 +462,7 @@ const Reserwation = ({
         selectedHour={selectedHour}
       />
       <HoursItemReserwation
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         maxHourToFilter={24}
         minHourToFilter={18}
         itemsHours={avaibleHoursReserwation}
@@ -472,7 +472,7 @@ const Reserwation = ({
       />
     </AllAvaibleHours>
   ) : (
-    <NoAvaibleHourStyle colorBlind={colorBlind}>
+    <NoAvaibleHourStyle siteProps={siteProps}>
       {!!selectedWorkerUserId && !!selectedDate
         ? "Brak dostępnych godzin"
         : "Aby zobaczyć dostępne godziny, musisz wybrać pracownika oraz odpowiadający Tobie termin."}
@@ -500,21 +500,21 @@ const Reserwation = ({
         classNames="popup"
         unmountOnExit
       >
-        <ItemSummary colorBlind={colorBlind}>
+        <ItemSummary siteProps={siteProps}>
           <PaddingContent>
-            <SummaryReserwationText colorBlind={colorBlind}>
+            <SummaryReserwationText siteProps={siteProps}>
               Rezerwacja
             </SummaryReserwationText>
-            <ServiceItem colorBlind={colorBlind}>
+            <ServiceItem siteProps={siteProps}>
               <LeftContent>
                 <TitleService>
                   {reserwationData.serviceName}
-                  <PriceService colorBlind={colorBlind}>
+                  <PriceService siteProps={siteProps}>
                     {`${reserwationData.serviceCost}zł ${
                       reserwationData.extraCost ? "+" : ""
                     }`}
                   </PriceService>
-                  <PriceService otherColor colorBlind={colorBlind}>
+                  <PriceService otherColor siteProps={siteProps}>
                     {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
                   </PriceService>
                 </TitleService>
@@ -528,14 +528,14 @@ const Reserwation = ({
               <NoWorkersText>Brak dostępnych pracowników</NoWorkersText>
             ) : (
               <>
-                <TextReserwation colorBlind={colorBlind}>
+                <TextReserwation siteProps={siteProps}>
                   Wybierz pracownika:
                 </TextReserwation>
                 <ContentWorkers>
                   {ownerWorkerToSelect}
                   {mapWorkersToSelect}
                 </ContentWorkers>
-                <TextReserwation colorBlind={colorBlind}>
+                <TextReserwation siteProps={siteProps}>
                   Wybierz dzień:
                 </TextReserwation>
                 <ButtonIconStyle>
@@ -553,7 +553,7 @@ const Reserwation = ({
                     disabled={!!!selectedWorkerUserId}
                   />
                 </ButtonIconStyle>
-                <TextReserwation colorBlind={colorBlind}>
+                <TextReserwation siteProps={siteProps}>
                   Wybierz godzinę:
                 </TextReserwation>
                 {renderAvaibleHours}
@@ -574,15 +574,15 @@ const Reserwation = ({
                     icon={<FaCalendarCheck />}
                     onClick={handleDoReserwation}
                     uppercase
-                    customColorButton={Colors(colorBlind).successColorDark}
-                    customColorIcon={Colors(colorBlind).successColor}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
                     disabled={!disabledReserwButton}
                   />
               </>
             )}
             <ClosePopup
               onClick={handleCloseReserwation}
-              colorBlind={colorBlind}
+              siteProps={siteProps}
             >
               <MdClose />
             </ClosePopup>

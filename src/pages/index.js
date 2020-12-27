@@ -36,7 +36,7 @@ const TextH1 = styled.div`
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   padding: 5px 10px;
   padding-left: 25px;
   margin-bottom: 10px;
@@ -46,7 +46,7 @@ const TextH1 = styled.div`
   text-align: center;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  background-color: ${props => Colors(props.colorBlind).primaryColor};
+  background-color: ${props => Colors(props.siteProps).primaryColor};
 `
 
 const MarginBottomPlaces = styled.div`
@@ -61,7 +61,7 @@ const Home = () => {
   const localization = useSelector(state => state.localization)
   const industries = useSelector(state => state.industries)
   const loadingPlaces = useSelector(state => state.loadingPlaces)
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const avaibleUpdatePage = useSelector(state => state.avaibleUpdatePage)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
@@ -108,9 +108,9 @@ const Home = () => {
   const findIndustrie = AllIndustries.find(item => item.value === industries);
   
   const industriesText = !!findIndustrie ? (
-    <TextH1 colorBlind={colorBlind}>{findIndustrie.label}</TextH1>
+    <TextH1 siteProps={siteProps}>{findIndustrie.label}</TextH1>
   ) : (
-    <TextH1 colorBlind={colorBlind}>Wszystko</TextH1>
+    <TextH1 siteProps={siteProps}>Wszystko</TextH1>
   )
 
   return (

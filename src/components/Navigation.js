@@ -72,7 +72,7 @@ const SpanSwitch = styled.span`
   top: 10px;
   left: 10px;
   right: 0;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
 const LabelStyle = styled.div`
@@ -94,7 +94,7 @@ const WidthTimePicker = styled.div`
 `
 
 const BackgroundColorPage = styled.div`
-  background-color: ${props => Colors(props.colorBlind).backgroundColorPage};
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
   transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -106,7 +106,7 @@ const WrapperNavigation = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background-color: ${props => Colors(props.colorBlind).navBackground};
+  background-color: ${props => Colors(props.siteProps).navBackground};
   padding-top: 10px;
   padding-bottom: 10px;
   height: 70px;
@@ -118,7 +118,7 @@ const WrapperNavigationUnder = styled.div`
   top: 70px;
   left: 0;
   right: 0;
-  background-color: ${props => Colors(props.colorBlind).navDownBackground};
+  background-color: ${props => Colors(props.siteProps).navDownBackground};
   padding-top: 20px;
   padding-bottom: 10px;
   height: 152px;
@@ -126,7 +126,7 @@ const WrapperNavigationUnder = styled.div`
 `
 
 const NavigationDiv = styled.div`
-  color: ${props => Colors(props.colorBlind).navText};
+  color: ${props => Colors(props.siteProps).navText};
   max-width: 1200px;
   margin: 0 auto;
 `
@@ -203,9 +203,9 @@ const ButtonIconStyles = styled.div`
   border-radius: 5px;
   background-color: ${props =>
     props.active
-      ? Colors(props.colorBlind).primaryColor
-      : Colors(props.colorBlind).darkColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+      ? Colors(props.siteProps).primaryColor
+      : Colors(props.siteProps).darkColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   font-size: 15px;
   user-select: none;
   cursor: pointer;
@@ -213,7 +213,7 @@ const ButtonIconStyles = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).primaryColorDark};
+    background-color: ${props => Colors(props.siteProps).primaryColorDark};
   }
 `
 
@@ -225,7 +225,7 @@ const MenuPosition = styled.div`
   left: 0px;
   width: 300px;
   max-width: 100vw;
-  background-color: ${props => Colors(props.colorBlind).menuColor};
+  background-color: ${props => Colors(props.siteProps).menuColor};
   transform: ${props =>
     props.active ? "translateX(0px)" : "translateX(-100%)"};
   transition-property: transform;
@@ -277,7 +277,7 @@ const IconCloseStyle = styled.div`
   font-size: 1.5rem;
   padding: 10px;
   padding-bottom: 0px;
-  color: ${props => Colors(props.colorBlind).textNormalBlack};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   transition-property: transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -302,13 +302,13 @@ const CloseMenuLeft = styled.div`
 const PositionPl = styled.div`
   text-align: right;
   padding-right: 7px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
 const PositionEn = styled.div`
   text-align: left;
   padding-left: 7px;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
 const Navigation = ({ children, isMainPage }) => {
@@ -327,7 +327,7 @@ const Navigation = ({ children, isMainPage }) => {
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
 
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
   const editWorkerHoursData = useSelector(state => state.editWorkerHoursData)
   const createCompanyVisible = useSelector(state => state.createCompanyVisible)
@@ -483,7 +483,7 @@ const Navigation = ({ children, isMainPage }) => {
    }
 
    const handleChangeLanguage = () => {
-     const languageSelected = colorBlind.language === "PL" ? "EN" : "PL"
+     const languageSelected = siteProps.language === "PL" ? "EN" : "PL"
      dispatch(changeLanguageStyle(languageSelected))
    }
 
@@ -493,7 +493,7 @@ const Navigation = ({ children, isMainPage }) => {
       <PaddingRight key={index}>
         <ButtonIconStyles
           active={isIndustriesActive}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
           onClick={() => handleChangeIndustries(item.value)}
         >
           {item.label}
@@ -509,7 +509,7 @@ const Navigation = ({ children, isMainPage }) => {
       classNames="popup3"
       unmountOnExit
     >
-      <WrapperNavigationUnder colorBlind={colorBlind}>
+      <WrapperNavigationUnder siteProps={siteProps}>
         <NavigationDiv>
           <AllInputs>
             <ButtonTakeData
@@ -542,7 +542,7 @@ const Navigation = ({ children, isMainPage }) => {
             <PaddingRight>
               <ButtonIconStyles
                 active={industries === null}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
                 onClick={() => handleChangeIndustries(null)}
               >
                 Wszystko
@@ -701,7 +701,7 @@ const Navigation = ({ children, isMainPage }) => {
       fullScreen
       maxWidth="800"
     >
-      <UserHistory colorBlind={colorBlind} user={user} />
+      <UserHistory siteProps={siteProps} user={user} />
     </Popup>
   )
 
@@ -893,8 +893,8 @@ const Navigation = ({ children, isMainPage }) => {
           uppercase
           fontIconSize="26"
           fontSize="16"
-          customColorButton={Colors(colorBlind).dangerColorDark}
-          customColorIcon={Colors(colorBlind).dangerColor}
+          customColorButton={Colors(siteProps).dangerColorDark}
+          customColorIcon={Colors(siteProps).dangerColor}
           icon={<MdPowerSettingsNew />}
           onClick={handleLogout}
         />
@@ -944,7 +944,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupLocalization}
       {PopupUserProfil}
       {PopupHistoryReserwations}
-      <MenuPosition active={menuOpen} colorBlind={colorBlind}>
+      <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen}>
             {renderCompanyOrCreateCompany}
@@ -952,36 +952,36 @@ const Navigation = ({ children, isMainPage }) => {
           </div>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch colorBlind={colorBlind}>Język</SpanSwitch>
+              <SpanSwitch siteProps={siteProps}>Język</SpanSwitch>
               <Switch
                 onChange={handleChangeLanguage}
-                checked={colorBlind.language === "PL"}
+                checked={siteProps.language === "PL"}
                 activeBoxShadow={`0 0 2px 3px ${
-                  Colors(colorBlind).primaryColor
+                  Colors(siteProps).primaryColor
                 }`}
-                onColor={Colors(colorBlind).primaryColor}
-                offColor={Colors(colorBlind).primaryColor}
-                onColor={Colors(colorBlind).primaryColor}
+                onColor={Colors(siteProps).primaryColor}
+                offColor={Colors(siteProps).primaryColor}
+                onColor={Colors(siteProps).primaryColor}
                 height={22}
                 uncheckedIcon={
-                  <PositionPl colorBlind={colorBlind}>PL</PositionPl>
+                  <PositionPl siteProps={siteProps}>PL</PositionPl>
                 }
                 checkedIcon={
-                  <PositionEn colorBlind={colorBlind}>EN</PositionEn>
+                  <PositionEn siteProps={siteProps}>EN</PositionEn>
                 }
               />
             </LabelStyle>
           </ButtonNavStyle>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch colorBlind={colorBlind}>Tryb ciemny</SpanSwitch>
+              <SpanSwitch siteProps={siteProps}>Tryb ciemny</SpanSwitch>
               <Switch
                 onChange={handleDarkStyleClick}
-                checked={colorBlind.dark}
+                checked={siteProps.dark}
                 activeBoxShadow={`0 0 2px 3px ${
-                  Colors(colorBlind).primaryColor
+                  Colors(siteProps).primaryColor
                 }`}
-                onColor={Colors(colorBlind).primaryColor}
+                onColor={Colors(siteProps).primaryColor}
                 height={22}
                 uncheckedIcon
                 checkedIcon
@@ -990,16 +990,16 @@ const Navigation = ({ children, isMainPage }) => {
           </ButtonNavStyle>
           <ButtonNavStyle>
             <LabelStyle>
-              <SpanSwitch colorBlind={colorBlind}>
+              <SpanSwitch siteProps={siteProps}>
                 Tryb dla daltonistów
               </SpanSwitch>
               <Switch
                 onChange={handleBlindStyleClick}
-                checked={colorBlind.blind}
+                checked={siteProps.blind}
                 activeBoxShadow={`0 0 2px 3px ${
-                  Colors(colorBlind).primaryColor
+                  Colors(siteProps).primaryColor
                 }`}
-                onColor={Colors(colorBlind).primaryColor}
+                onColor={Colors(siteProps).primaryColor}
                 height={22}
                 uncheckedIcon
                 checkedIcon
@@ -1008,19 +1008,19 @@ const Navigation = ({ children, isMainPage }) => {
           </ButtonNavStyle>
         </LeftMenuStyle>
         <CloseMenuLeft>
-          <IconCloseStyle onClick={handleMenuOpen} colorBlind={colorBlind}>
+          <IconCloseStyle onClick={handleMenuOpen} siteProps={siteProps}>
             <MdClose />
           </IconCloseStyle>
         </CloseMenuLeft>
       </MenuPosition>
       <Popup popupEnable={menuOpen} handleClose={handleMenuOpen} noContent />
       <ContentMenu active={menuOpen}>
-        <BackgroundColorPage className="heightElement" colorBlind={colorBlind}>
+        <BackgroundColorPage className="heightElement" siteProps={siteProps}>
           <Spinner spinnerEnable={spinnerEnable} />
           <Alerts />
 
-          <WrapperNavigation colorBlind={colorBlind} menuOpen={menuOpen}>
-            <NavigationDiv colorBlind={colorBlind}>
+          <WrapperNavigation siteProps={siteProps} menuOpen={menuOpen}>
+            <NavigationDiv siteProps={siteProps}>
               <NavigationItems>
                 <LogoStyle>
                   <LinkEffect text="NOOTIS" path="/" />

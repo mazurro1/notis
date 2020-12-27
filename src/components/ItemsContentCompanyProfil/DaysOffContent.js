@@ -30,8 +30,8 @@ const CreateDayOff = styled.div`
   padding: 5px 10px;
   border-radius: 5px;
   margin: 5px;
-  background-color: ${props => Colors(props.colorBlind).secondColor};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   font-size: 2rem;
   display: flex;
   flex-direction: row;
@@ -44,7 +44,7 @@ const CreateDayOff = styled.div`
   transition-timing-function: ease;
 
   &:hover {
-    background-color: ${props => Colors(props.colorBlind).secondDarkColor};
+    background-color: ${props => Colors(props.siteProps).secondDarkColor};
   }
 `
 
@@ -58,7 +58,7 @@ const PaddingBottomStyle = styled.div`
 const DaysOffContent = ({
   companyEditProfilProps = {},
   isCompanyEditProfil = false,
-  colorBlind,
+  siteProps,
   TitleRightColumn,
   ButtonEditPosition,
   setDeletedDayOffToSave,
@@ -182,7 +182,7 @@ const DaysOffContent = ({
         item={item}
         key={index}
         handleDeleteDay={handleDeleteDay}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         isCompanyEditProfil={isCompanyEditProfil}
         editable={editable}
       />
@@ -190,13 +190,13 @@ const DaysOffContent = ({
   })
   return (
     <PaddingBottomStyle takeDateActive={takeDateActive}>
-      <TitleRightColumn {...companyEditProfilProps} colorBlind={colorBlind}>
+      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
         Dni wolne od pracy
       </TitleRightColumn>
       <DayOffContent>
         {mapDayOff}
         {!!isCompanyEditProfil && editable && (
-          <CreateDayOff colorBlind={colorBlind} onClick={handleClickCreate}>
+          <CreateDayOff siteProps={siteProps} onClick={handleClickCreate}>
             <MdAddBox />
           </CreateDayOff>
         )}
@@ -213,8 +213,8 @@ const DaysOffContent = ({
                   fontIconSize="16"
                   fontSize="14"
                   icon={<FaArrowLeft />}
-                  customColorButton={Colors(colorBlind).dangerColorDark}
-                  customColorIcon={Colors(colorBlind).dangerColor}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
                   onClick={handleResetEdit}
                 />
               </MarginButton>
@@ -225,8 +225,8 @@ const DaysOffContent = ({
                   fontIconSize="16"
                   fontSize="14"
                   icon={<FaSave />}
-                  customColorButton={Colors(colorBlind).successColorDark}
-                  customColorIcon={Colors(colorBlind).successColor}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
                   onClick={handleSaveDayOff}
                 />
               </MarginButton>
@@ -249,7 +249,7 @@ const DaysOffContent = ({
       <DaysOffContentAdd
         handleClickContent={handleClickContent}
         handleAddClose={handleAddClose}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         createDayOff={createDayOff}
         setCreateDayOff={setCreateDayOff}
         takeDateActive={takeDateActive}

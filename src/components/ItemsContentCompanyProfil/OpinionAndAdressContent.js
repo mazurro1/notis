@@ -30,11 +30,11 @@ const CheckboxStyle = styled.div`
   margin-bottom: 30px;
   margin-top: 10px;
   .material-checkbox__input:checked + .material-checkbox__image {
-    background-color: ${props => Colors(props.colorBlind).dangerColorDark};
+    background-color: ${props => Colors(props.siteProps).dangerColorDark};
   }
   span {
-    color: ${props => Colors(props.colorBlind).textNormalBlack};
-    border-color: ${props => Colors(props.colorBlind).textNormalBlack};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
 `
 
@@ -80,8 +80,8 @@ const OpinionsContent = styled.div`
 `
 
 const OpinionUp = styled.div`
-  background-color: ${props => Colors(props.colorBlind).opinionColorUp};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).opinionColorUp};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   text-align: center;
   font-size: 1.5rem;
   border-top-right-radius: 5px;
@@ -93,8 +93,8 @@ const OpininPadding = styled.div`
 `
 
 const OpinionDown = styled.div`
-  background-color: ${props => Colors(props.colorBlind).opinionColorDown};
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).opinionColorDown};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   font-size: 0.9rem;
   padding: 2px 15px;
   border-bottom-left-radius: 5px;
@@ -119,8 +119,8 @@ const CirclePhone = styled.div`
   border-radius: 50%;
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).primaryColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
   height: 40px;
   width: 40px;
   display: inline-flex;
@@ -146,7 +146,7 @@ const BackgroundEdit = styled.div`
 
 const BackgroundEditContent = styled.div`
   width: 90%;
-  background-color: ${props => Colors(props.colorBlind).companyItemBackground};
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   max-height: 90%;
@@ -177,12 +177,12 @@ const ReserwationItem = styled.div`
   align-items: center;
   background-color: ${props =>
     props.active
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).secondDarkColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).secondDarkColor};
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: transform, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -203,12 +203,12 @@ const ReserwationMonth = styled.div`
   align-items: center;
   background-color: ${props =>
     props.active
-      ? Colors(props.colorBlind).secondColor
-      : Colors(props.colorBlind).secondDarkColor};
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).secondDarkColor};
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  color: ${props => Colors(props.colorBlind).textNormalWhite};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: transform, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -272,7 +272,7 @@ const OpinionAndAdressContent = ({
   const [reserwationMonth, setReserwationMonth] = useState(
     reservationMonthServer
   )
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
 
     useEffect(()=>{
       if (!!companyIndustries){
@@ -444,7 +444,7 @@ const OpinionAndAdressContent = ({
         key={index}
         active={isActive}
         onClick={() => handleClickReserwationEver(item)}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         index={index === 3}
       >
         <div>{item} min</div>
@@ -459,7 +459,7 @@ const OpinionAndAdressContent = ({
         key={index}
         active={isActive}
         onClick={() => handleClickReserwationMonth(item.id)}
-        colorBlind={colorBlind}
+        siteProps={siteProps}
         index={index === 11}
       >
         <div>{`${item.id} ${item.month}`}</div>
@@ -482,16 +482,16 @@ const OpinionAndAdressContent = ({
     >
       {isCompanyEditProfil ? (
         companyPausedItem ? (
-          <IsCompanyPaused color={Colors(colorBlind).dangerColor}>
+          <IsCompanyPaused color={Colors(siteProps).dangerColor}>
             Działalność wstrzymana
           </IsCompanyPaused>
         ) : (
-          <IsCompanyPaused color={Colors(colorBlind).successColor}>
+          <IsCompanyPaused color={Colors(siteProps).successColor}>
             Działalność aktywna
           </IsCompanyPaused>
         )
       ) : companyPausedItem ? (
-        <IsCompanyPaused color={Colors(colorBlind).dangerColor}>
+        <IsCompanyPaused color={Colors(siteProps).dangerColor}>
           Działalność wstrzymana
         </IsCompanyPaused>
       ) : null}
@@ -500,7 +500,7 @@ const OpinionAndAdressContent = ({
           <TitleRightColumn
             isCompanyEditProfil={isCompanyEditProfil}
             adress
-            colorBlind={colorBlind}
+            siteProps={siteProps}
           >
             <DivInlineBlock> {`${cityInput},`}</DivInlineBlock>
             <DivInlineBlock>{`${discrictInput},`}</DivInlineBlock>
@@ -509,9 +509,9 @@ const OpinionAndAdressContent = ({
         </AdressContent>
         <OpinionsContent>
           <OpinionRight>
-            <OpinionUp colorBlind={colorBlind}>
+            <OpinionUp siteProps={siteProps}>
               <OpininPadding>{opinionsValue}</OpininPadding>
-              <OpinionDown colorBlind={colorBlind}>
+              <OpinionDown siteProps={siteProps}>
                 Opinie: {opinionsCount}
               </OpinionDown>
             </OpinionUp>
@@ -521,7 +521,7 @@ const OpinionAndAdressContent = ({
       <TelephoneDiv>
         <CirclePhone
           isCompanyEditProfil={isCompanyEditProfil}
-          colorBlind={colorBlind}
+          siteProps={siteProps}
         >
           <MdPhone />
         </CirclePhone>
@@ -550,7 +550,7 @@ const OpinionAndAdressContent = ({
             <BackgroundEdit>
               <BackgroundEditContent
                 onClick={handleClickContentAddWorkers}
-                colorBlind={colorBlind}
+                siteProps={siteProps}
               >
                 <form onSubmit={handleOnSubmit}>
                   <InputIcon
@@ -616,7 +616,7 @@ const OpinionAndAdressContent = ({
                     isMulti
                     isClearable={false}
                   />
-                  <CheckboxStyle colorBlind={colorBlind}>
+                  <CheckboxStyle siteProps={siteProps}>
                     <Checkbox
                       theme="material-checkbox"
                       value={companyPausedItem}
@@ -634,8 +634,8 @@ const OpinionAndAdressContent = ({
                           fontIconSize="16"
                           fontSize="12"
                           icon={<FaArrowLeft />}
-                          customColorButton={Colors(colorBlind).dangerColorDark}
-                          customColorIcon={Colors(colorBlind).dangerColor}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
                           onClick={handleResetInputs}
                         />
                       </>
@@ -649,9 +649,9 @@ const OpinionAndAdressContent = ({
                           fontSize="14"
                           icon={<FaSave />}
                           customColorButton={
-                            Colors(colorBlind).successColorDark
+                            Colors(siteProps).successColorDark
                           }
-                          customColorIcon={Colors(colorBlind).successColor}
+                          customColorIcon={Colors(siteProps).successColor}
                           disabled={!disabledButtonSubmit}
                         />
                       </ButtonMargin>

@@ -25,14 +25,14 @@ const SpinnerDiv = styled.div`
   animation-duration: 0.9s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  color: ${props => Colors(props.colorBlind).primaryColor};
+  color: ${props => Colors(props.siteProps).primaryColor};
   font-size: 3rem;
   height: 52px;
   width: 48px;
 `
 
 const Spinner = ({ spinnerEnable = false }) => {
-  const colorBlind = useSelector(state => state.colorBlind)
+  const siteProps = useSelector(state => state.siteProps)
   return (
     <CSSTransition
       in={spinnerEnable}
@@ -41,7 +41,7 @@ const Spinner = ({ spinnerEnable = false }) => {
       unmountOnExit
     >
       <PopupWindow>
-        <SpinnerDiv colorBlind={colorBlind}>
+        <SpinnerDiv siteProps={siteProps}>
           <CgSpinner />
         </SpinnerDiv>
       </PopupWindow>
