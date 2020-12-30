@@ -57,9 +57,10 @@ const SelectCustom = ({
   })
 
   const colourStyles = {
-    control: styles => ({
+    control: (styles, { isDisabled }) => ({
       ...styles,
       backgroundColor: Colors(siteProps).companyItemBackground,
+      opacity: isDisabled ? 0.9 : 1,
     }),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
       const color = chroma(Colors(siteProps).primaryColor)
@@ -85,11 +86,11 @@ const SelectCustom = ({
 
         ":active": {
           ...styles[":active"],
-          backgroundColor:
-            !isDisabled &&
-            (isSelected
-              ? Colors(siteProps).primaryColor
-              : color.alpha(0.3).css()),
+          backgroundColor: isDisabled
+            ? "#000"
+            : isSelected
+            ? Colors(siteProps).primaryColor
+            : color.alpha(0.3).css(),
           boxShadow: "none",
           border: "none",
         },

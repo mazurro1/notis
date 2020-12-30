@@ -486,6 +486,7 @@ export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
   "AVAIBLE_DATE_TO_RESERWATION_UPDATE"
 export const UPDATE_PATCH_COMPANY_DATA = "UPDATE_PATCH_COMPANY_DATA"
 export const UPDATE_USER_RESERWATIONS = "UPDATE_USER_RESERWATIONS"
+export const UPDATE_WORKER_RESERWATIONS = "UPDATE_WORKER_RESERWATIONS"
 export const UPDATE_USER_ONE_RESERWATION = "UPDATE_USER_ONE_RESERWATION"
 export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
 export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
@@ -519,6 +520,13 @@ export const updateUserOneReserwation = data => {
 export const updateUserReserwations = data => {
   return {
     type: UPDATE_USER_RESERWATIONS,
+    data: data,
+  }
+}
+
+export const updateWorkerReserwations = data => {
+  return {
+    type: UPDATE_WORKER_RESERWATIONS,
     data: data,
   }
 }
@@ -1197,6 +1205,34 @@ export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
         dispatch(updateUserReserwations(response.data.reserwations))
       })
       .catch(error => {
+        dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
+      })
+  }
+}
+
+export const fetchWorkerReserwationsAll = (token, yearPicker, monthPicker, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/worker-reserwations-all`,
+        {
+          yearPicker: yearPicker,
+          monthPicker: monthPicker,
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(updateWorkerReserwations(response.data.reserwations))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }

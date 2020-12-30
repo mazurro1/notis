@@ -56,11 +56,11 @@ import UserProfil from "./UserProfil"
 import RemindPassword from "./RemindPassword"
 import CreateCompany from "./CreateCompany"
 import Reserwation from "./Reserwation"
-import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
+import WorkerReserwations from "./WorkerReserwations"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
 import Footer from './Footer'
-import BigCalendarWorkerReserwations from "./BigCalendarWorkerReserwations"
+import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
 import {Translates} from '../common/Translates'
 
 const MarginButtonsWork = styled.div`
@@ -603,9 +603,7 @@ const Navigation = ({ children, isMainPage }) => {
           noContent
           calendar
         >
-          <BigCalendarWorkerReserwations
-            handleClose={handleCloseWorkerReserwations}
-          />
+          <WorkerReserwations handleClose={handleCloseWorkerReserwations} />
         </Popup>
       )
 

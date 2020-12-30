@@ -100,6 +100,7 @@ const SelectDataCalendar = ({
   setIsTimeActive = () => {},
   activeMonth = new Date(),
   maxDate = null,
+  minDateActive = true
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const data = new Date()
@@ -123,7 +124,7 @@ const SelectDataCalendar = ({
         activeMonth={activeMonth}
         blockClassName="date_picker"
         maxDate={nextYear}
-        minDate={prevYeat}
+        minDate={minDateActive ? prevYeat : null}
         selected={activeData}
         disabledIntervals={disabledDatas}
         onSelect={date => handleSelectedDate(date)}

@@ -15,13 +15,13 @@ import {
   FaCalendarPlus,
   FaCalendarMinus,
   FaArrowLeft,
-  FaSave,
 } from "react-icons/fa"
-import { MdInfo } from "react-icons/md"
-
+import SelectCustom from "./SelectCustom"
 import CalendarEventItemClicked from "./CalendarEventItemClicked"
 import { useSelector, useDispatch } from "react-redux"
-import { changeEditedWorkerHours } from "../state/actions"
+import { AllMonths } from "../common/AllMonths"
+import Popup from "./Popup"
+import SelectDataCalendar from "./SelectDataCalendar"
 
 const BackgroundContentCalendar = styled.div`
   position: relative;
@@ -41,7 +41,7 @@ const BackgroundCalendarStyle = styled.div`
   margin-bottom: 10px;
 
   .rbc-day-slot .rbc-time-work-company-active {
-    background-color: #fff3e0 !important;
+    background-color: #e0f7fa !important;
     border-left: 1px solid #e0e0e0 !important;
   }
   .disabled-holiday-event {
@@ -51,7 +51,7 @@ const BackgroundCalendarStyle = styled.div`
     border: none;
   }
   .rbc-event {
-    background-color: ${props => Colors(props.siteProps).secondColor};
+    background-color: ${props => Colors(props.siteProps).primaryColor};
     color: ${props => Colors(props.siteProps).textNormalWhite};
     border: none;
     border-radius: 5px;
@@ -60,7 +60,7 @@ const BackgroundCalendarStyle = styled.div`
     transition-timing-function: ease;
 
     &:hover {
-      background-color: ${props => Colors(props.siteProps).secondDarkColor};
+      background-color: ${props => Colors(props.siteProps).primaryColorDark};
     }
   }
 
@@ -145,7 +145,7 @@ const BackgroundCalendarStyle = styled.div`
       font-weight: 500;
     }
     .rbc-today {
-      background-color: #f7a52c;
+      background-color: #5ec2d7;
       /* border: none; */
     }
   }
@@ -160,7 +160,7 @@ const TitleMonthYear = styled.div`
 `
 
 const TitleMonthYearContent = styled.div`
-  background-color: ${props => Colors(props.siteProps).secondColor};
+  background-color: ${props => Colors(props.siteProps).primaryColor};
   color: white;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -202,68 +202,122 @@ const IconWarning = styled.div`
   align-items: center;
   font-size: 1.3rem;
 `
+const WidthSelect = styled.div`
+  width: 160px;
+  margin-right: 20px;
+`
 
-const BigCalendarWorkerHours = ({ item, handleClose }) => {
-  const [date, setDate] = useState(new Date())
+const ContentSelect = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
+`
+
+const BigCalendarWorkerReserwations = ({
+  item,
+  handleClose,
+  dateCalendar,
+  setDateCalendar,
+  disabledSwitch,
+  setDisabledSwitch,
+}) => {
+  const [datePicker, setDatePicker] = useState(new Date())
+  const [datePickerActive, setDatePickerActive] = useState(false)
   const [selectedEventOpen, setSelectedEventOpen] = useState(null)
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [newEvent, setNewEvent] = useState(null)
   const [newEventOpen, setNewEventOpen] = useState(null)
-  const [newEvents, setNewEvents] = useState([])
-  const [deletedEventsIds, setDeletedEventsIds] = useState([])
+  // const [newEvents, setNewEvents] = useState([])
+  // const [deletedEventsIds, setDeletedEventsIds] = useState([])
   const [allEvents, setAllEvents] = useState([])
-  const editedWorkersHours = useSelector(state => state.editedWorkersHours)
   const siteProps = useSelector(state => state.siteProps)
   const timerToClearNew = useRef(null)
   const timerToClearEdited = useRef(null)
 
+  const allYears = [
+    {
+      value: new Date().getFullYear() - 2,
+      label: new Date().getFullYear() - 2,
+    },
+    {
+      value: new Date().getFullYear() - 1,
+      label: new Date().getFullYear() - 1,
+    },
+    {
+      value: new Date().getFullYear(),
+      label: new Date().getFullYear(),
+    },
+    {
+      value: new Date().getFullYear() + 1,
+      label: new Date().getFullYear() + 1,
+    },
+  ]
+
+  const [yearPicker, setYearPicker] = useState({
+    value: new Date().getFullYear(),
+    label: new Date().getFullYear(),
+  })
+
+  const [monthPicker, setMonthPicker] = useState({
+    value: 1,
+    label: "Styczeń",
+  })
+
   const dispatch = useDispatch()
 
-  // useEffect(() => {
-  //   if (!!item && allEvents.length === 0) {
-  //     const mapItemNoConstantWorkingHoursDate = item.noConstantWorkingHours.map(
-  //       itemMaped => {
-  //         const itemMapedResult = {
-  //           end: new Date(itemMaped.end),
-  //           start: new Date(itemMaped.start),
-  //           fullDate: itemMaped.fullDate,
-  //           _id: itemMaped._id,
-  //           holidays: itemMaped.holidays,
-  //         }
-  //         return itemMapedResult
-  //       }
-  //     )
-  //     const selectEditedWorker = editedWorkersHours.find(
-  //       workerEdited => workerEdited.indexWorker === item._id
-  //     )
-  //     if (!!selectEditedWorker) {
-  //       const filterItemNoConstantWorkingHours = mapItemNoConstantWorkingHoursDate.filter(
-  //         itemHour => {
-  //           const isIdInDeleted = selectEditedWorker.noConstantWorkingHours.deletedEventsIds.some(
-  //             deletedEventsIds => {
-  //               return deletedEventsIds === itemHour._id
-  //             }
-  //           )
-  //           return !isIdInDeleted
-  //         }
-  //       )
+  useEffect(() => {
+      const newDate = new Date(datePicker.getFullYear(), datePicker.getMonth(), datePicker.getDate())
+    setDateCalendar(newDate)
+  }, [datePicker])
 
-  //       let userEditedNewEvents = []
-  //       if (!!selectEditedWorker) {
-  //         userEditedNewEvents =
-  //           selectEditedWorker.noConstantWorkingHours.newEvents
-  //       }
+  useEffect(() => {
+    const actualMonth = dateCalendar.getMonth() + 1
+    const findMonth = AllMonths.find(item => item.value === actualMonth)
+    setMonthPicker(findMonth)
+  }, [AllMonths, dateCalendar])
 
-  //       const allItemsAndFilter = [
-  //         ...filterItemNoConstantWorkingHours,
-  //         ...userEditedNewEvents,
-  //       ]
-  //       setAllEvents(allItemsAndFilter)
-  //     } else {
-  //       setAllEvents(mapItemNoConstantWorkingHoursDate)
-  //     }
-  //   }
-  // }, [editedWorkersHours, item])
+  useEffect(() => {
+    if (dateCalendar.getFullYear() !== yearPicker.value) {
+      const newYear = {
+        value: yearPicker.value,
+        label: yearPicker.value,
+      }
+      setYearPicker(newYear)
+    }
+  }, [dateCalendar])
+
+  useEffect(() => {
+    if (!!item) {
+      const mapItemReserwations = item.reserwations.map(itemMaped => {
+        // new Date(year, month, day, hours, minutes)
+        const timeEndSplit = itemMaped.dateEnd.split(":")
+        const timeStartSplit = itemMaped.dateStart.split(":")
+        const itemMapedResult = {
+          end: new Date(
+            itemMaped.dateYear,
+            itemMaped.dateMonth - 1,
+            itemMaped.dateDay,
+            timeEndSplit[0],
+            timeEndSplit[1]
+          ),
+          start: new Date(
+            itemMaped.dateYear,
+            itemMaped.dateMonth - 1,
+            itemMaped.dateDay,
+            timeStartSplit[0],
+            timeStartSplit[1]
+          ),
+          fullDate: `${itemMaped.dateDay}-${itemMaped.dateMonth}-${itemMaped.dateYear}`,
+          _id: itemMaped._id,
+          holidays: null,
+        }
+        return itemMapedResult
+      })
+      setAllEvents(mapItemReserwations)
+    }
+  }, [item])
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
     item.company.openingDays
@@ -275,88 +329,59 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
     2020,
     0,
     1,
-    Number(arrMinHours[0]),
+    Number(arrMinHours[0]) - 1,
     Number(arrMinHours[1])
   )
   const maxHoursInCalendar = new Date(
     2020,
     0,
     1,
-    Number(arrMaxHours[0]),
+    Number(arrMaxHours[0]) + 1,
     Number(arrMaxHours[1])
   )
 
+  const handleChangeYear = value => {
+    if (dateCalendar.getFullYear() !== value.value) {
+      const newDateCalendar = new Date(
+        value.value,
+        dateCalendar.getMonth(),
+        dateCalendar.getDate()
+      )
+      setDateCalendar(newDateCalendar)
+    }
+
+    setYearPicker(value)
+    setDisabledSwitch(true)
+    setTimeout(() => {
+      setDisabledSwitch(false)
+    }, 2000)
+  }
+
+  const handleChangeMonth = value => {
+    if (dateCalendar.getMonth() !== value.value - 1) {
+      const newDateCalendar = new Date(
+        dateCalendar.getFullYear(),
+        value.value - 1,
+        1
+      )
+      setDateCalendar(newDateCalendar)
+    }
+    setMonthPicker(value)
+    setDisabledSwitch(true)
+    setTimeout(() => {
+      setDisabledSwitch(false)
+    }, 2000)
+  }
+
   const handleOnSelecting = slots => {
     const takeDateStart = new Date(slots.start)
-    const takeDateEnd = new Date(slots.end)
-    const selectedDayToCompany = getMonthAndReturnEng(takeDateStart.getDay())
-    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
-    const arrSerwerMaxHours = selectedHoursCompany.end.split(":")
-    const arrSerwerMinHours = selectedHoursCompany.start.split(":")
-    const calendarDateStart =
-      takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
-    const calendarDateEnd =
-      takeDateEnd.getHours() * 60 + takeDateEnd.getMinutes()
-    const numberMax =
-      Number(arrSerwerMaxHours[0]) * 60 + Number(arrSerwerMaxHours[1])
-    const numberMin =
-      Number(arrSerwerMinHours[0]) * 60 + Number(arrSerwerMinHours[1])
     if (
-      calendarDateStart >= numberMin &&
-      calendarDateEnd <= numberMax &&
-      !selectedHoursCompany.disabled
+      dateCalendar.getFullYear() === takeDateStart.getFullYear() &&
+      dateCalendar.getMonth() === takeDateStart.getMonth()
     ) {
       return true
     } else {
       return false
-    }
-  }
-
-  const handleSlotPropGetter = date => {
-    const takeDateStart = new Date(date)
-    const getterDay = takeDateStart.getDate()
-    const getterMonth = takeDateStart.getMonth() + 1
-    const getterYear = takeDateStart.getFullYear()
-    const getterFullDate = `${getterDay}-${getterMonth}-${getterYear}`
-    const findInAllEvents = allEvents.find(
-      item => item.fullDate === getterFullDate
-    )
-
-    const selectedDayToCompany = getMonthAndReturnEng(takeDateStart.getDay())
-    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
-    const arrSerwerMaxHours = selectedHoursCompany.end.split(":")
-    const arrSerwerMinHours = selectedHoursCompany.start.split(":")
-    const calendarDate =
-      takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
-    const numberMax =
-      Number(arrSerwerMaxHours[0]) * 60 + Number(arrSerwerMaxHours[1])
-    const numberMin =
-      Number(arrSerwerMinHours[0]) * 60 + Number(arrSerwerMinHours[1])
-    if (
-      calendarDate >= numberMin &&
-      calendarDate < numberMax &&
-      !selectedHoursCompany.disabled
-    ) {
-      if (!!findInAllEvents) {
-        // if (!!findInAllEvents.holidays) {
-        // return {
-        //   className:
-        //     "rbc-day-slot rbc-time-slot rbc-no-disabled-active-holiday",
-        // }
-        // } else {
-        return {
-          className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active",
-        }
-        // }
-      } else {
-        return {
-          className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active",
-        }
-      }
-    } else {
-      return {
-        className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
-      }
     }
   }
 
@@ -380,23 +405,46 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
       Number(arrSerwerMaxHours[0]) * 60 + Number(arrSerwerMaxHours[1])
     const numberMin =
       Number(arrSerwerMinHours[0]) * 60 + Number(arrSerwerMinHours[1])
+    const isActualMonth =
+      dateCalendar.getFullYear() === takeDateStart.getFullYear() &&
+      dateCalendar.getMonth() === takeDateStart.getMonth()
     if (
       calendarDate >= numberMin &&
       calendarDate < numberMax &&
       !selectedHoursCompany.disabled
     ) {
       if (!!findInAllEvents) {
-        return {
-          className: "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+        if (isActualMonth) {
+          return {
+            className:
+              "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+          }
+        } else {
+          return {
+            className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
+          }
         }
       } else {
-        return {
-          className: "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+        if (isActualMonth) {
+          return {
+            className:
+              "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+          }
+        } else {
+          return {
+            className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
+          }
         }
       }
     } else {
-      return {
-        className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active ",
+      if (isActualMonth) {
+        return {
+          className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active ",
+        }
+      } else {
+        return {
+          className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
+        }
       }
     }
   }
@@ -418,24 +466,49 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
   }
 
   const handleChangeDate = value => {
+    let newDate = new Date()
     if (value === "plus") {
-      const prevDate = date
-      const newDate = new Date(
-        date.getFullYear(),
-        prevDate.getMonth(),
-        prevDate.getDate() + 7
+      const afterAddedDays = new Date(
+        takeDateYear,
+        takeDateDayToday,
+        dateCalendar.getDate() + 7
       )
-      setDate(newDate)
+
+      const disabledNextWeek =
+        afterAddedDays.getMonth() === takeDateDayToday &&
+        afterAddedDays.getFullYear() === takeDateYear
+      if (disabledNextWeek) {
+        newDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth(),
+          dateCalendar.getDate() + 7
+        )
+      } else {
+        newDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth() + 1,
+          1
+        )
+      }
+      setDateCalendar(newDate)
     } else if (value === "today") {
-      setDate(new Date())
+      setDateCalendar(new Date())
     } else if (value === "minus") {
-      const prevDate = date
-      const newDate = new Date(
-        date.getFullYear(),
-        prevDate.getMonth(),
-        prevDate.getDate() - 7
-      )
-      setDate(newDate)
+      const disabledPrevWeek = Math.ceil(dateCalendar.getDate() / 7) === 1
+      if (!disabledPrevWeek) {
+        newDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth(),
+          dateCalendar.getDate() - 7
+        )
+      } else {
+        newDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth(),
+          0
+        )
+      }
+      setDateCalendar(newDate)
     }
   }
 
@@ -461,23 +534,23 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
 
   const handleCloseCalendar = () => {
     handleClose()
-    setDeletedEventsIds([])
-    setAllEvents([])
+    // setDeletedEventsIds([])
+    // setAllEvents([])
   }
 
   const handleDeleteNoConstTimeworkToSave = selectedEvent => {
-    const filterNewEvents = newEvents.filter(
-      item => item._id !== selectedEvent._id
-    )
-    setNewEvents(filterNewEvents)
-    const filterNewEventsFromServer = allEvents.filter(
-      item => item._id !== selectedEvent._id
-    )
-    setAllEvents(filterNewEventsFromServer)
-    if (!!!selectedEvent.isNew) {
-      const deletedIds = [...deletedEventsIds, selectedEvent._id]
-      setDeletedEventsIds(deletedIds)
-    }
+    // const filterNewEvents = newEvents.filter(
+    //   item => item._id !== selectedEvent._id
+    // )
+    // setNewEvents(filterNewEvents)
+    // const filterNewEventsFromServer = allEvents.filter(
+    //   item => item._id !== selectedEvent._id
+    // )
+    // setAllEvents(filterNewEventsFromServer)
+    // if (!!!selectedEvent.isNew) {
+    //   const deletedIds = [...deletedEventsIds, selectedEvent._id]
+    //   setDeletedEventsIds(deletedIds)
+    // }
   }
 
   const handleCreateNoConstTimeworkToSave = (
@@ -522,68 +595,29 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
     }
 
     if (!!newCreatedItem.start && !!newCreatedItem.end) {
-      const filterNewEvents = !!eventToDelete
-        ? newEvents.filter(item => item._id !== eventToDelete._id)
-        : newEvents
-      const filterAllEvents = !!eventToDelete
-        ? allEvents.filter(item => item._id !== eventToDelete._id)
-        : allEvents
+      // const filterNewEvents = !!eventToDelete
+      //   ? newEvents.filter(item => item._id !== eventToDelete._id)
+      //   : newEvents
+      // const filterAllEvents = !!eventToDelete
+      //   ? allEvents.filter(item => item._id !== eventToDelete._id)
+      //   : allEvents
 
-      const allNewEvents = [...filterNewEvents, newCreatedItem]
-      setNewEvents(allNewEvents)
-      const allNewEventsAndFromServer = [...filterAllEvents, newCreatedItem]
-      setAllEvents(allNewEventsAndFromServer)
+      // const allNewEvents = [...filterNewEvents, newCreatedItem]
+      // setNewEvents(allNewEvents)
+      // const allNewEventsAndFromServer = [...filterAllEvents, newCreatedItem]
+      // setAllEvents(allNewEventsAndFromServer)
 
       if (!!eventToDelete) {
         if (!!!eventToDelete.isNew) {
-          const deletedIds = [...deletedEventsIds, eventToDelete._id]
-          setDeletedEventsIds(deletedIds)
+          // const deletedIds = [...deletedEventsIds, eventToDelete._id]
+          // setDeletedEventsIds(deletedIds)
         }
       }
     }
   }
 
-  const handleSaveNoConstTimework = () => {
-    const newEditedWorkersHours = [...editedWorkersHours]
-    const indexWorkerHours = editedWorkersHours.findIndex(
-      itemEditedWorkerHours => itemEditedWorkerHours.indexWorker === item._id
-    )
-    if (indexWorkerHours >= 0) {
-      const allDeletedIds = [
-        ...newEditedWorkersHours[indexWorkerHours].noConstantWorkingHours
-          .deletedEventsIds,
-        ...deletedEventsIds,
-      ]
-      const allNewEvents = [
-        ...newEditedWorkersHours[indexWorkerHours].noConstantWorkingHours
-          .newEvents,
-        ...newEvents,
-      ]
-      newEditedWorkersHours[
-        indexWorkerHours
-      ].noConstantWorkingHours.deletedEventsIds = allDeletedIds
-      newEditedWorkersHours[
-        indexWorkerHours
-      ].noConstantWorkingHours.newEvents = allNewEvents
-      dispatch(changeEditedWorkerHours(newEditedWorkersHours))
-    } else {
-      const newEditedWorker = {
-        constantWorkingHours: [],
-        indexWorker: item._id,
-        noConstantWorkingHours: {
-          deletedEventsIds: [...deletedEventsIds],
-          newEvents: [...newEvents],
-        },
-      }
-      const allNewEditedWorkerHours = [
-        ...newEditedWorkersHours,
-        newEditedWorker,
-      ]
-      dispatch(changeEditedWorkerHours(allNewEditedWorkerHours))
-    }
-    setNewEvents([])
-    setDeletedEventsIds([])
-    handleClose()
+  const handleCloseDatePicker = () => {
+    setDatePickerActive(prevState => !prevState)
   }
 
   const slotsValue =
@@ -595,136 +629,171 @@ const BigCalendarWorkerHours = ({ item, handleClose }) => {
       ? 4
       : 2
 
-  const takeDateDayToday = date.getMonth()
-  const takeDateYear = date.getFullYear()
+  const takeDateDayToday = dateCalendar.getMonth()
+  const takeDateYear = dateCalendar.getFullYear()
   const selectMonthName = getMonthNamePl(takeDateDayToday)
   const finnalDate = `${selectMonthName} ${takeDateYear}`
 
-  const disabledSaveCalendar =
-    newEvents.length > 0 || deletedEventsIds.length > 0
-
+  const selectedDayCalendar = `${
+    dateCalendar.getDate() < 10
+      ? `0${dateCalendar.getDate()}`
+      : dateCalendar.getDate()
+  }-${
+    dateCalendar.getMonth() + 1 < 10
+      ? `0${dateCalendar.getMonth() + 1}`
+      : dateCalendar.getMonth() + 1
+  }-${dateCalendar.getFullYear()}`
+  
   return (
-    <BackgroundContentCalendar>
-      <TitleMonthYear>
-        <div>
+    <>
+      <BackgroundContentCalendar>
+        <ContentSelect>
+          <WidthSelect>
+            <SelectCustom
+              options={allYears}
+              value={yearPicker}
+              handleChange={handleChangeYear}
+              placeholder="Rok..."
+              defaultMenuIsOpen={false}
+              isClearable={false}
+              widthAuto
+              isDisabled={disabledSwitch}
+            />
+          </WidthSelect>
+          <WidthSelect>
+            <SelectCustom
+              options={AllMonths}
+              value={monthPicker}
+              handleChange={handleChangeMonth}
+              placeholder="Miesiąc..."
+              defaultMenuIsOpen={false}
+              isClearable={false}
+              widthAuto
+              isDisabled={disabledSwitch}
+            />
+          </WidthSelect>
           <ButtonIcon
-            title="Poprzedni tydzień"
-            uppercase
-            fontIconSize="20"
-            fontSize="16"
-            icon={<FaCalendarMinus />}
-            secondColors
-            onClick={() => handleChangeDate("minus")}
-          />
-        </div>
-        <TitleMonthYearContent siteProps={siteProps}>
-          {finnalDate}
-        </TitleMonthYearContent>
-        <div>
-          <ButtonIcon
-            title="Dzisiaj"
+            title={selectedDayCalendar}
             uppercase
             fontIconSize="20"
             fontSize="16"
             icon={<FaCalendarDay />}
-            secondColors
-            onClick={() => handleChangeDate("today")}
+            onClick={handleCloseDatePicker}
           />
-        </div>
-        <div>
-          <ButtonIcon
-            title="Kolejny tydzień"
-            uppercase
-            fontIconSize="20"
-            fontSize="16"
-            icon={<FaCalendarPlus />}
-            secondColors
-            onClick={() => handleChangeDate("plus")}
+        </ContentSelect>
+        <TitleMonthYear>
+          <div>
+            <ButtonIcon
+              title="Poprzedni tydzień"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarMinus />}
+              onClick={() => handleChangeDate("minus")}
+              // disabled={disabledPrevWeek}
+            />
+          </div>
+          <TitleMonthYearContent siteProps={siteProps}>
+            {finnalDate}
+          </TitleMonthYearContent>
+          <div>
+            <ButtonIcon
+              title="Dzisiaj"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarDay />}
+              onClick={() => handleChangeDate("today")}
+            />
+          </div>
+          <div>
+            <ButtonIcon
+              title="Kolejny tydzień"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarPlus />}
+              onClick={() => handleChangeDate("plus")}
+            />
+          </div>
+        </TitleMonthYear>
+        <BackgroundCalendarStyle siteProps={siteProps}>
+          <Calendar
+            culture="pl"
+            views={["week"]}
+            selectable
+            localizer={localizer}
+            events={allEvents}
+            defaultView="week"
+            date={dateCalendar}
+            onNavigate={date => {
+              setDateCalendar(date)
+            }}
+            startAccessor="start"
+            endAccessor="end"
+            timeslots={slotsValue}
+            step={item.company.reservationEveryTime}
+            toolbar={false}
+            min={minHoursInCalendar} // 8.00 AM
+            max={maxHoursInCalendar} // Max will be 6.00 PM!
+            onSelectSlot={handleOnSelectSlot} // zdarzenie po zaznaczeniu okresu
+            onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
+            // slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
+            slotPropGetter={handleSlotPropGetterOpenHoursCompany} // nadanie koloru godzin otwartych firmy
+            onSelectEvent={handleClickEvent}
+            eventPropGetter={handleEventPropGetter}
+            // onNavigate={handleOnNavigate}
           />
-        </div>
-      </TitleMonthYear>
-      <BackgroundCalendarStyle siteProps={siteProps}>
-        <Calendar
-          culture="pl"
-          views={["week"]}
-          selectable
-          localizer={localizer}
-          events={allEvents}
-          defaultView="week"
-          date={date}
-          onNavigate={date => {
-            setDate(date)
-          }}
-          startAccessor="start"
-          endAccessor="end"
-          timeslots={slotsValue}
-          step={item.company.reservationEveryTime}
-          toolbar={false}
-          min={minHoursInCalendar} // 8.00 AM
-          max={maxHoursInCalendar} // Max will be 6.00 PM!
-          onSelectSlot={handleOnSelectSlot} // zdarzenie po zaznaczeniu okresu
-          // onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
-          // slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
-          slotPropGetter={handleSlotPropGetterOpenHoursCompany} // nadanie koloru godzin otwartych firmy
-          onSelectEvent={handleClickEvent}
-          eventPropGetter={handleEventPropGetter}
-        />
-      </BackgroundCalendarStyle>
-      <WarningStyle siteProps={siteProps}>
-        Uwaga tworząc tutaj dzień pracy, jest on automatycznie zastępywany
-        względem stałych godzin pracy.
-        <IconWarning siteProps={siteProps}>
-          <MdInfo />
-        </IconWarning>
-      </WarningStyle>
+        </BackgroundCalendarStyle>
 
-      <ButtonsPosition>
-        <ButtonItemStyle>
-          <ButtonIcon
-            title="Anuluj"
-            uppercase
-            fontIconSize="25"
-            fontSize="16"
-            icon={<FaArrowLeft />}
-            customColorButton={Colors(siteProps).dangerColorDark}
-            customColorIcon={Colors(siteProps).dangerColor}
-            onClick={handleCloseCalendar}
-          />
-        </ButtonItemStyle>
-        <ButtonItemStyle>
-          <ButtonIcon
-            title="Zapisz"
-            uppercase
-            fontIconSize="25"
-            fontSize="16"
-            icon={<FaSave />}
-            secondColors
-            onClick={handleSaveNoConstTimework}
-            disabled={!disabledSaveCalendar}
-          />
-        </ButtonItemStyle>
-      </ButtonsPosition>
-      <CalendarEventItemClicked
-        siteProps={siteProps}
-        handleClosePopupEventItem={handleClosePopupEventItem}
-        selectedEvent={selectedEvent}
-        screenOpen={selectedEventOpen}
-        allEvents={allEvents}
-        handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
-        handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
-        itemCompanyHours={item.company.openingDays}
-      />
-      <CalendarEventItemClicked
-        siteProps={siteProps}
-        handleClosePopupEventItem={handleCloseNewEventItem}
-        selectedEvent={newEvent}
-        screenOpen={newEventOpen}
-        allEvents={allEvents}
-        handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
-        handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
-        itemCompanyHours={item.company.openingDays}
-      />
-    </BackgroundContentCalendar>
+        <ButtonsPosition>
+          <ButtonItemStyle>
+            <ButtonIcon
+              title="Zamknij"
+              uppercase
+              fontIconSize="25"
+              fontSize="16"
+              icon={<FaArrowLeft />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleCloseCalendar}
+            />
+          </ButtonItemStyle>
+        </ButtonsPosition>
+        <CalendarEventItemClicked
+          siteProps={siteProps}
+          handleClosePopupEventItem={handleClosePopupEventItem}
+          selectedEvent={selectedEvent}
+          screenOpen={selectedEventOpen}
+          allEvents={allEvents}
+          handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
+          handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
+          itemCompanyHours={item.company.openingDays}
+        />
+        <CalendarEventItemClicked
+          siteProps={siteProps}
+          handleClosePopupEventItem={handleCloseNewEventItem}
+          selectedEvent={newEvent}
+          screenOpen={newEventOpen}
+          allEvents={allEvents}
+          handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
+          handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
+          itemCompanyHours={item.company.openingDays}
+        />
+      </BackgroundContentCalendar>
+      <Popup
+        popupEnable={datePickerActive}
+        handleClose={handleCloseDatePicker}
+        noContent
+      >
+        <SelectDataCalendar
+          setActualCalendarDate={setDatePicker}
+          setIsDataActive={setDatePickerActive}
+          activeMonth={dateCalendar}
+          minDateActive={false}
+        />
+      </Popup>
+    </>
   )
 }
-export default BigCalendarWorkerHours
+export default BigCalendarWorkerReserwations

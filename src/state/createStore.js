@@ -44,6 +44,7 @@ import {
   UPDATE_PLACES_DATA,
   UPDATE_NEW_PLACES_DATA,
   UPDATE_USER_RESERWATIONS,
+  UPDATE_WORKER_RESERWATIONS,
   UPDATE_USER_ONE_RESERWATION,
   RESET_PLACES,
 } from "./actions"
@@ -52,7 +53,7 @@ const initialState = {
   siteProps: {
     blind: false,
     dark: false,
-    language: "PL"
+    language: "PL",
   },
   user: null,
   userPhone: null,
@@ -103,6 +104,7 @@ const initialState = {
   pathCompanyData: null,
   workCompanyData: null,
   userHistoryReserwations: [],
+  workerHistoryReserwations: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -329,6 +331,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         userHistoryReserwations: action.data,
+      }
+
+    case UPDATE_WORKER_RESERWATIONS:
+      return {
+        ...state,
+        workerHistoryReserwations: action.data,
       }
 
     case UPDATE_PLACES_DATA:
