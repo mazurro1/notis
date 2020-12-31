@@ -30,10 +30,10 @@ const BackgroundEditContent = styled.div`
 const ServiceItem = styled.div`
   position: relative;
   background-color: ${props =>
-    props.visitFinished
-      ? Colors(props.siteProps).successColorLight
-      : !props.isReserwationEnd
+    props.visitNotFinished
       ? Colors(props.siteProps).dangerLightColor
+      : !props.isReserwationEnd
+      ? Colors(props.siteProps).successColorLight
       : props.visitCanceled
       ? Colors(props.siteProps).dangerLightColor
       : props.visitChanged
@@ -191,7 +191,7 @@ const UserHistoryCategoryItem = ({
       siteProps={siteProps}
       isReserwationEnd={isReserwationEnd}
       visitCanceled={item.visitCanceled}
-      visitFinished={item.visitFinished}
+      visitNotFinished={item.visitNotFinished}
       visitChanged={item.visitChanged}
     >
       <TitleService>
@@ -223,13 +223,13 @@ const UserHistoryCategoryItem = ({
       )}
       <div>
         Status:{" "}
-        {item.visitFinished ? (
-          <StatusReserwation finished siteProps={siteProps}>
-            Wizyta odbyta
-          </StatusReserwation>
-        ) : !isReserwationEnd ? (
+        {item.visitNotFinished ? (
           <StatusReserwation canceled siteProps={siteProps}>
             Wizyta nieodbyta
+          </StatusReserwation>
+        ) : !isReserwationEnd ? (
+          <StatusReserwation finished siteProps={siteProps}>
+            Wizyta odbyta
           </StatusReserwation>
         ) : item.visitCanceled ? (
           <StatusReserwation canceled siteProps={siteProps}>
@@ -245,7 +245,7 @@ const UserHistoryCategoryItem = ({
           </StatusReserwation>
         )}
       </div>
-      {!!isReserwationEnd && !!!item.visitFinished && !!!item.visitCanceled && (
+      {!!isReserwationEnd && !!!item.visitNotFinished && !!!item.visitCanceled && (
         <>
           <ArrowDeleteReserwation
             siteProps={siteProps}

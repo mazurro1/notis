@@ -17,11 +17,16 @@ import {
   FaArrowLeft,
 } from "react-icons/fa"
 import SelectCustom from "./SelectCustom"
-import CalendarEventItemClicked from "./CalendarEventItemClicked"
+import CalendarWorkerReserwatinEvent from "./CalendarWorkerReserwatinEvent"
 import { useSelector, useDispatch } from "react-redux"
 import { AllMonths } from "../common/AllMonths"
 import Popup from "./Popup"
 import SelectDataCalendar from "./SelectDataCalendar"
+import {
+  fetchUpdateWorkerReserwation,
+  fetchDoReserwationWorker,
+} from "../state/actions"
+import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
 
 const BackgroundContentCalendar = styled.div`
   position: relative;
@@ -40,12 +45,19 @@ const BackgroundCalendarStyle = styled.div`
   opacity: 0.95;
   margin-bottom: 10px;
 
+  .rbc-event-content {
+    font-size: 0.7rem;
+    padding-top: 3px;
+  }
   .rbc-day-slot .rbc-time-work-company-active {
     background-color: #e0f7fa !important;
     border-left: 1px solid #e0e0e0 !important;
   }
   .disabled-holiday-event {
     background-color: #757575 !important;
+    &:hover {
+      background-color: #424242 !important;
+    }
   }
   .rbc-time-view {
     border: none;
@@ -54,6 +66,7 @@ const BackgroundCalendarStyle = styled.div`
     background-color: ${props => Colors(props.siteProps).primaryColor};
     color: ${props => Colors(props.siteProps).textNormalWhite};
     border: none;
+    border: 1px solid white;
     border-radius: 5px;
     transition-property: background-color;
     transition-duration: 0.3s;
@@ -222,6 +235,7 @@ const BigCalendarWorkerReserwations = ({
   setDateCalendar,
   disabledSwitch,
   setDisabledSwitch,
+  user
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -229,8 +243,6 @@ const BigCalendarWorkerReserwations = ({
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [newEvent, setNewEvent] = useState(null)
   const [newEventOpen, setNewEventOpen] = useState(null)
-  // const [newEvents, setNewEvents] = useState([])
-  // const [deletedEventsIds, setDeletedEventsIds] = useState([])
   const [allEvents, setAllEvents] = useState([])
   const siteProps = useSelector(state => state.siteProps)
   const timerToClearNew = useRef(null)
@@ -291,7 +303,14 @@ const BigCalendarWorkerReserwations = ({
   useEffect(() => {
     if (!!item) {
       const mapItemReserwations = item.reserwations.map(itemMaped => {
-        // new Date(year, month, day, hours, minutes)
+        const userName = Buffer.from(
+          itemMaped.fromUser.name,
+          "base64"
+        ).toString("ascii")
+        const userSurname = Buffer.from(
+          itemMaped.fromUser.surname,
+          "base64"
+        ).toString("ascii")
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
         const itemMapedResult = {
@@ -309,9 +328,14 @@ const BigCalendarWorkerReserwations = ({
             timeStartSplit[0],
             timeStartSplit[1]
           ),
+          title: `${userName} ${userSurname} - ${
+            !!itemMaped.workerReserwation
+              ? "Rezerwacja czasu"
+              : itemMaped.serviceName
+          }`,
           fullDate: `${itemMaped.dateDay}-${itemMaped.dateMonth}-${itemMaped.dateYear}`,
           _id: itemMaped._id,
-          holidays: null,
+          colorItem: !!itemMaped.workerReserwation ? "gray" : "normal",
         }
         return itemMapedResult
       })
@@ -450,7 +474,7 @@ const BigCalendarWorkerReserwations = ({
   }
 
   const handleEventPropGetter = event => {
-    if (!!event.holidays) {
+    if (event.colorItem === "gray") {
       return {
         className: "disabled-holiday-event",
       }
@@ -514,7 +538,14 @@ const BigCalendarWorkerReserwations = ({
 
   const handleClickEvent = eventItem => {
     clearInterval(timerToClearEdited.current)
-    setSelectedEvent(eventItem)
+    const selectItemReserwation = item.reserwations.find(
+      itemRes => itemRes._id === eventItem._id
+    )
+    if (!!selectItemReserwation){
+      setSelectedEvent({...selectItemReserwation, ...eventItem})
+    }else{
+      setSelectedEvent(eventItem)
+    }
     setSelectedEventOpen(true)
   }
 
@@ -534,86 +565,91 @@ const BigCalendarWorkerReserwations = ({
 
   const handleCloseCalendar = () => {
     handleClose()
-    // setDeletedEventsIds([])
-    // setAllEvents([])
   }
 
-  const handleDeleteNoConstTimeworkToSave = selectedEvent => {
-    // const filterNewEvents = newEvents.filter(
-    //   item => item._id !== selectedEvent._id
-    // )
-    // setNewEvents(filterNewEvents)
-    // const filterNewEventsFromServer = allEvents.filter(
-    //   item => item._id !== selectedEvent._id
-    // )
-    // setAllEvents(filterNewEventsFromServer)
-    // if (!!!selectedEvent.isNew) {
-    //   const deletedIds = [...deletedEventsIds, selectedEvent._id]
-    //   setDeletedEventsIds(deletedIds)
-    // }
+  const handleChangeReserwationStatus = (selectedEventId, status, newDateStart = null, newDateEnd = null) => {
+    if (status === "canceled"){
+      dispatch(
+        fetchUpdateWorkerReserwation(
+          user.token,
+          selectedEventId,
+          true,
+          null,
+          null,
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth() + 1,
+          user.company._id,
+          null,
+          null
+        )
+      )
+    }else if (status === "finished") {
+      dispatch(
+        fetchUpdateWorkerReserwation(
+          user.token,
+          selectedEventId,
+          null,
+          null,
+          false,
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth() + 1,
+          user.company._id,
+          null,
+          null
+        )
+      )
+    }else if(status === "noFinished"){
+      dispatch(
+        fetchUpdateWorkerReserwation(
+          user.token,
+          selectedEventId,
+          null,
+          null,
+          true,
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth() + 1,
+          user.company._id,
+          null,
+          null
+        )
+      )
+    }else if(status === "update"){
+      dispatch(
+        fetchUpdateWorkerReserwation(
+          user.token,
+          selectedEventId,
+          null,
+          true,
+          null,
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth() + 1,
+          user.company._id,
+          newDateStart,
+          newDateEnd
+        )
+      )
+    } 
   }
 
-  const handleCreateNoConstTimeworkToSave = (
-    selectedEvent,
-    eventToDelete,
-    isHolidays = false
+  const handleAddWorkerReserwation = (
+    dateStart,
+    dateEnd,
+    dateFull,
+    reserwationMessage
   ) => {
-    const itemDay = selectedEvent.start.getDate()
-    const itemMonth = selectedEvent.start.getMonth() + 1
-    const itemYear = selectedEvent.start.getFullYear()
-    const itemFullDate = `${itemDay}-${itemMonth}-${itemYear}`
-
-    const selectedDayToCompany = getMonthAndReturnEng(
-      selectedEvent.start.getDay()
+    dispatch(
+      fetchDoReserwationWorker(
+        user.token,
+        user.userId,
+        user.company._id,
+        dateStart,
+        dateEnd,
+        dateFull,
+        reserwationMessage,
+        dateCalendar.getFullYear(),
+        dateCalendar.getMonth() + 1
+      )
     )
-    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
-    const companyDateStart = selectedHoursCompany.start.split(":")
-    const companyDateEnd = selectedHoursCompany.end.split(":")
-    let newCreatedItem = {
-      _id: Math.floor(100000 + Math.random() * 900000),
-      fullDate: itemFullDate,
-      isNew: true,
-      start: selectedEvent.start,
-      end: selectedEvent.end,
-      holidays: isHolidays,
-    }
-    if (!!isHolidays) {
-      newCreatedItem.start = selectedHoursCompany.disabled
-        ? null
-        : new Date(
-            new Date(
-              new Date(selectedEvent.start).setHours(companyDateStart[0])
-            ).setMinutes(companyDateStart[1])
-          )
-      newCreatedItem.end = selectedHoursCompany.disabled
-        ? null
-        : new Date(
-            new Date(
-              new Date(selectedEvent.start).setHours(companyDateEnd[0])
-            ).setMinutes(companyDateEnd[1])
-          )
-    }
-
-    if (!!newCreatedItem.start && !!newCreatedItem.end) {
-      // const filterNewEvents = !!eventToDelete
-      //   ? newEvents.filter(item => item._id !== eventToDelete._id)
-      //   : newEvents
-      // const filterAllEvents = !!eventToDelete
-      //   ? allEvents.filter(item => item._id !== eventToDelete._id)
-      //   : allEvents
-
-      // const allNewEvents = [...filterNewEvents, newCreatedItem]
-      // setNewEvents(allNewEvents)
-      // const allNewEventsAndFromServer = [...filterAllEvents, newCreatedItem]
-      // setAllEvents(allNewEventsAndFromServer)
-
-      if (!!eventToDelete) {
-        if (!!!eventToDelete.isNew) {
-          // const deletedIds = [...deletedEventsIds, eventToDelete._id]
-          // setDeletedEventsIds(deletedIds)
-        }
-      }
-    }
   }
 
   const handleCloseDatePicker = () => {
@@ -690,7 +726,6 @@ const BigCalendarWorkerReserwations = ({
               fontSize="16"
               icon={<FaCalendarMinus />}
               onClick={() => handleChangeDate("minus")}
-              // disabled={disabledPrevWeek}
             />
           </div>
           <TitleMonthYearContent siteProps={siteProps}>
@@ -740,8 +775,8 @@ const BigCalendarWorkerReserwations = ({
             onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
             // slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
             slotPropGetter={handleSlotPropGetterOpenHoursCompany} // nadanie koloru godzin otwartych firmy
-            onSelectEvent={handleClickEvent}
             eventPropGetter={handleEventPropGetter}
+            onSelectEvent={handleClickEvent}
             // onNavigate={handleOnNavigate}
           />
         </BackgroundCalendarStyle>
@@ -760,25 +795,23 @@ const BigCalendarWorkerReserwations = ({
             />
           </ButtonItemStyle>
         </ButtonsPosition>
-        <CalendarEventItemClicked
+        <CalendarWorkerReserwatinEvent
           siteProps={siteProps}
           handleClosePopupEventItem={handleClosePopupEventItem}
           selectedEvent={selectedEvent}
           screenOpen={selectedEventOpen}
           allEvents={allEvents}
-          handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
-          handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
+          handleChangeReserwationStatus={handleChangeReserwationStatus}
           itemCompanyHours={item.company.openingDays}
         />
-        <CalendarEventItemClicked
+        <CalendarWorkerReserwatinNewEvent
           siteProps={siteProps}
           handleClosePopupEventItem={handleCloseNewEventItem}
           selectedEvent={newEvent}
           screenOpen={newEventOpen}
           allEvents={allEvents}
-          handleDeleteNoConstTimeworkToSave={handleDeleteNoConstTimeworkToSave}
-          handleCreateNoConstTimeworkToSave={handleCreateNoConstTimeworkToSave}
           itemCompanyHours={item.company.openingDays}
+          handleAddWorkerReserwation={handleAddWorkerReserwation}
         />
       </BackgroundContentCalendar>
       <Popup

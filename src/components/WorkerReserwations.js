@@ -33,6 +33,7 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
            setDateCalendar={setDateCalendar}
            disabledSwitch={disabledSwitch}
            setDisabledSwitch={setDisabledSwitch}
+           user={user}
          />
        ) : (
          "Brak uprawnien"

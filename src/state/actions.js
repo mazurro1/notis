@@ -1029,6 +1029,49 @@ export const fetchDoReserwation = (
   }
 }
 
+export const fetchDoReserwationWorker = (
+  token,
+  workerUserId,
+  companyId,
+  dateStart,
+  dateEnd,
+  dateFull,
+  reserwationMessage,
+  yearPicker,
+  monthPicker,
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-reserwation-worker`,
+        {
+          workerUserId: workerUserId,
+          companyId: companyId,
+          dateStart: dateStart,
+          dateEnd: dateEnd,
+          dateFull: dateFull,
+          reserwationMessage: reserwationMessage,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Dokonano rezerwacje czasu.", "green"))
+        dispatch(
+          fetchWorkerReserwationsAll(token, yearPicker, monthPicker, companyId)
+        )
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas robienia rezerwacji czasu.", "red"))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
 export const fetchWorkerDisabledHours = (
   token,
   companyId,
@@ -1243,7 +1286,7 @@ export const fetchDeleteReserwation = (
   reserwationId,
   canceled = null,
   changed = null,
-  finished = null,
+  noFinished = null,
   changedName = ""
 ) => {
   return dispatch => {
@@ -1254,7 +1297,7 @@ export const fetchDeleteReserwation = (
           reserwationId: reserwationId,
           canceled: canceled,
           changed: changed,
-          finished: finished,
+          noFinished: noFinished,
         },
         {
           headers: {
@@ -1270,6 +1313,50 @@ export const fetchDeleteReserwation = (
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas aktualizacji rezerwacji.", "red"))
+      })
+  }
+}
+
+export const fetchUpdateWorkerReserwation = (
+  token,
+  reserwationId,
+  canceled = null,
+  changed = null,
+  noFinished = null,
+  yearPicker,
+  monthPicker,
+  companyId,
+  newTimeStart,
+  newTimeEnd,
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/update-reserwation-worker`,
+        {
+          reserwationId: reserwationId,
+          canceled: canceled,
+          changed: changed,
+          noFinished: noFinished,
+          newTimeStart: newTimeStart,
+          newTimeEnd: newTimeEnd,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          fetchWorkerReserwationsAll(token, yearPicker, monthPicker, companyId)
+        )
+        dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas aktualizacji rezerwacji.", "red"))
+        dispatch(changeSpinner(false))
       })
   }
 }

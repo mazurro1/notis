@@ -408,8 +408,6 @@ const Reserwation = ({
     return workerHasServiceCategory
   })
 
-  console.log(selectedWorkerUserId)
-
   const mapWorkersToSelect = filterWorkers.map((worker, index) => {
     const workerIsSelected = !!selectedWorkerUserId
       ? selectedWorkerId === worker._id
