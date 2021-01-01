@@ -182,7 +182,8 @@ const AllCategoryOfServices = ({
     time,
     extraTime,
     price,
-    extraPrice
+    extraPrice,
+    colorService
   ) => {
     const randomNumber =
       Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111
@@ -195,6 +196,7 @@ const AllCategoryOfServices = ({
       time: time,
       extraCost: extraPrice,
       extraTime: extraTime,
+      colorService: colorService,
     }
     const prevAllCategoriesWithItems = [...allCategoriesWithItems]
 
@@ -615,7 +617,8 @@ const AllCategoryOfServices = ({
     extraTime,
     price,
     extraPrice,
-    serviceCategory
+    serviceCategory,
+    serviceColor
   ) => {
     const prevEditedItems = [...editedItemsServices]
     const prevNewItems = [...newItemsServices]
@@ -635,6 +638,7 @@ const AllCategoryOfServices = ({
       prevNewItems[findIndexInNewItems].time = time
       prevNewItems[findIndexInNewItems].extraCost = extraPrice
       prevNewItems[findIndexInNewItems].extraTime = extraTime
+      prevNewItems[findIndexInNewItems].serviceColor = serviceColor
       setNewItemsServices(prevNewItems)
     } else {
       if (findIndexInEdited >= 0) {
@@ -645,6 +649,7 @@ const AllCategoryOfServices = ({
         prevEditedItems[findIndexInEdited].time = time
         prevEditedItems[findIndexInEdited].extraCost = extraPrice
         prevEditedItems[findIndexInEdited].extraTime = extraTime
+        prevEditedItems[findIndexInEdited].serviceColor = serviceColor
         setEditedItemsServices(prevEditedItems)
       } else {
         const newItem = {
@@ -656,6 +661,7 @@ const AllCategoryOfServices = ({
           time: time,
           extraCost: extraPrice,
           extraTime: extraTime,
+          serviceColor: serviceColor,
         }
         prevEditedItems.push(newItem)
         setEditedItemsServices(prevEditedItems)
@@ -694,6 +700,9 @@ const AllCategoryOfServices = ({
         prevAllItems[itemCategoryIndex].items[
           findIndexItemInCategory
         ].time = time
+        prevAllItems[itemCategoryIndex].items[
+          findIndexItemInCategory
+        ].serviceColor = serviceColor
 
         setAllCategoriesWithItems(prevAllItems)
       }

@@ -15,6 +15,8 @@ import { FaDollarSign, FaCalendarAlt } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
+import SelectCustom from "../SelectCustom"
+import {ServiceColors} from '../../common/ServiceColors'
 
 const ServiceItem = styled.div`
   position: relative;
@@ -34,7 +36,7 @@ const ServiceItem = styled.div`
   align-items: center;
   user-select: none;
   overflow: hidden;
-  padding-bottom: ${props => (props.clickEdit ? "450px" : "auto")};
+  padding-bottom: ${props => (props.clickEdit ? "500px" : "auto")};
   color: ${props => Colors(props.siteProps).textNormalBlack};
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
@@ -62,6 +64,10 @@ const RightContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+const SelectStyle = styled.div`
+  margin-top: 10px;
+  margin-bottom: 20px;
 `
 
 const PriceService = styled.span`
@@ -116,6 +122,10 @@ const ServicesItem = ({
   companyId,
   siteProps,
 }) => {
+  const [colorServiceComponent, setColorServiceComponent] = useState({
+    value: 1,
+    label: ""
+  })
   const [clickEdit, setClickEdit] = useState(false)
   const [clickButtonDelete, setClickButtonDelete] = useState(false)
   const [extraPrice, setExtraPrice] = useState(false)
@@ -125,7 +135,10 @@ const ServicesItem = ({
   const [timeInput, setTimeInput] = useState("")
   const [priceInput, setPriceInput] = useState("")
 
+  const indexValueColorService = !!itemServices.serviceColor ? itemServices.serviceColor : 1
+
   const disabledSaveButton =
+    colorServiceComponent.value === indexValueColorService &&
     extraPrice === itemServices.extraCost &&
     extraTime === itemServices.extraTime &&
     titleInput === itemServices.serviceName &&
@@ -140,6 +153,13 @@ const ServicesItem = ({
     setContentInput(itemServices.serviceText)
     setTimeInput(itemServices.time)
     setPriceInput(itemServices.serviceCost)
+    const indexValueColorService = !!itemServices.serviceColor ? itemServices.serviceColor : 1
+    const selectedItemColor = ServiceColors.find(
+      col => col.value === indexValueColorService
+    )
+    if (!!selectedItemColor) {
+      setColorServiceComponent(selectedItemColor)
+    }
   }, [itemServices])
 
   const handleResetEdit = () => {
@@ -174,6 +194,10 @@ const ServicesItem = ({
     setClickEdit(prevState => !prevState)
   }
 
+  const handleChangeColorService = (value) => {
+    setColorServiceComponent(value)
+  }
+
   const handleSaveEdit = e => {
     e.preventDefault()
     if (!disabledSaveButton) {
@@ -185,7 +209,8 @@ const ServicesItem = ({
         extraTime,
         priceInput,
         extraPrice,
-        itemServices.serviceCategory
+        itemServices.serviceCategory,
+        colorServiceComponent.value,
       )
       setClickEdit(false)
     }
@@ -338,6 +363,18 @@ const ServicesItem = ({
                   <TextCheckbox>Niestała cena</TextCheckbox>
                 </Checkbox>
               </CheckboxStyle>
+              <SelectStyle>
+                <SelectCustom
+                  options={ServiceColors}
+                  value={colorServiceComponent}
+                  handleChange={handleChangeColorService}
+                  isLoading={false}
+                  secondColor
+                  defaultMenuIsOpen={false}
+                  placeholder="Wybierz kolor usługi..."
+                  marginAuto={false}
+                />
+              </SelectStyle>
               <ButtonsAddPosition>
                 <ButtonMargin>
                   <ButtonIcon

@@ -38,10 +38,20 @@ const EventItemPosition = styled.div`
 const EventItemPositionContent = styled.div`
   position: relative;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  width: 800px;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 5px;
+`
+
+const EventItemPositionContentDelete = styled.div`
+  position: relative;
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
   width: 600px;
   max-width: 90%;
   max-height: 90%;
   border-radius: 5px;
+  overflow: hidden;
 `
 
 const EventItemPositionContentPadding = styled.div`
@@ -158,6 +168,21 @@ const CheckboxStyle = styled.div`
 
 const ButtonItemStyleTime = styled.div`
   margin-left: 10px;
+`
+
+const ButtonItemStyleCancelReserwation = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+`
+
+const TitleDelete = styled.div`
+  background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1.2rem;
+  padding: 5px 10px;
 `
 
 const CalendarWorkerReserwatinEvent = ({
@@ -413,21 +438,43 @@ const CalendarWorkerReserwatinEvent = ({
         {isOldDate ? (
           !!!selectedEvent.visitCanceled &&
           !!!selectedEvent.visitNotFinished ? (
-            <ButtonItemStyle>
-              <ButtonIcon
-                title="Wizyta nieodbyta"
-                uppercase
-                fontIconSize="20"
-                fontSize="16"
-                icon={<MdAssignmentLate />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={() => {
-                  handleClosePopupEventItem()
-                  handleChangeReserwationStatus(selectedEvent._id, "noFinished")
-                }}
-              />
-            </ButtonItemStyle>
+            !isWorkerReserwation ? (
+              <ButtonItemStyle>
+                <ButtonIcon
+                  title="Wizyta nieodbyta"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<MdAssignmentLate />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={() => {
+                    handleClosePopupEventItem()
+                    handleChangeReserwationStatus(
+                      selectedEvent._id,
+                      "noFinished"
+                    )
+                  }}
+                />
+              </ButtonItemStyle>
+            ) : (
+              <ButtonItemStyle>
+                <ButtonIcon
+                  title={
+                    isWorkerReserwation
+                      ? "Odwołaj rezerwacje"
+                      : "Odwołaj wizyte"
+                  }
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<MdCancel />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleConfirmCancelReserwation}
+                />
+              </ButtonItemStyle>
+            )
           ) : (
             <ButtonItemStyle>
               <ButtonIcon
@@ -448,7 +495,9 @@ const CalendarWorkerReserwatinEvent = ({
         ) : (
           <ButtonItemStyle>
             <ButtonIcon
-              title="Odwołaj wizyte"
+              title={
+                isWorkerReserwation ? "Odwołaj rezerwacje" : "Odwołaj wizyte"
+              }
               uppercase
               fontIconSize="20"
               fontSize="16"
@@ -515,105 +564,121 @@ const CalendarWorkerReserwatinEvent = ({
         classNames="popup"
         unmountOnExit
       >
-        <>
-          <EventItemPosition>
-            <EventItemPositionContent siteProps={siteProps}>
-              <TitleItemName siteProps={siteProps}>{titleEvent}</TitleItemName>
-              {warningItemExtraTime}
-              <CloseEditCreateMode
-                siteProps={siteProps}
-                onClick={handleClosePopupEventItem}
-              >
-                <MdClose />
-              </CloseEditCreateMode>
-              <EventItemPositionContentPadding>
+        <EventItemPosition>
+          <EventItemPositionContent siteProps={siteProps}>
+            <TitleItemName siteProps={siteProps}>{titleEvent}</TitleItemName>
+            {warningItemExtraTime}
+            <CloseEditCreateMode
+              siteProps={siteProps}
+              onClick={handleClosePopupEventItem}
+            >
+              <MdClose />
+            </CloseEditCreateMode>
+            <EventItemPositionContentPadding>
+              <ItemTitle siteProps={siteProps}>
+                Miesiąc:
+                <span>{selectMonthName}</span>
+              </ItemTitle>
+              <ItemTitle siteProps={siteProps}>
+                Dzień tygodnia:
+                <span>{selectedDayWeekName}</span>
+              </ItemTitle>
+              <ItemTitle siteProps={siteProps}>
+                Data:
+                <span>{selectedDate}</span>
+              </ItemTitle>
+              <ItemTitle siteProps={siteProps}>
+                {isWorkerReserwation ? "Pracownik:" : "Klient:"}
+                <span>{client}</span>
+              </ItemTitle>
+              <ItemTitle siteProps={siteProps}>
+                Nazwa usługi:
+                <span>
+                  {isWorkerReserwation ? "Rezerwacja czasu" : serviceName}
+                </span>
+              </ItemTitle>
+              {!isWorkerReserwation && (
                 <ItemTitle siteProps={siteProps}>
-                  Miesiąc:
-                  <span>{selectMonthName}</span>
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
-                  Dzień tygodnia:
-                  <span>{selectedDayWeekName}</span>
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
-                  Data:
-                  <span>{selectedDate}</span>
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
-                  {isWorkerReserwation ? "Pracownik:" : "Klient:"}
-                  <span>{client}</span>
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
-                  Nazwa usługi:
-                  <span>{isWorkerReserwation ? "Rezerwacja czasu" : serviceName}</span>
-                </ItemTitle>
-                {!isWorkerReserwation && <ItemTitle siteProps={siteProps}>
                   Koszt usługi:
                   <span>{costReserwation}</span>
-                </ItemTitle>}
-                {!isWorkerReserwation && <ItemTitle siteProps={siteProps}>
+                </ItemTitle>
+              )}
+              {!isWorkerReserwation && (
+                <ItemTitle siteProps={siteProps}>
                   Czas trwania usługi:
                   <span>{timeReserwation}</span>
-                </ItemTitle>}
-                <ItemTitle siteProps={siteProps}>
-                  Początek rezerwacji:
-                  {renderDateStart}
                 </ItemTitle>
+              )}
+              <ItemTitle siteProps={siteProps}>
+                Początek rezerwacji:
+                {renderDateStart}
+              </ItemTitle>
+              <ItemTitle siteProps={siteProps}>
+                Koniec rezerwacji:
+                {renderDateEnd}
+              </ItemTitle>
+              <ItemTitle siteProps={siteProps}>
+                Wiadomość:
+                {reserwationMessage}
+              </ItemTitle>
+              {!isWorkerReserwation && (
                 <ItemTitle siteProps={siteProps}>
-                  Koniec rezerwacji:
-                  {renderDateEnd}
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
-                  Wiadomość:
-                  {reserwationMessage}
-                </ItemTitle>
-                {!isWorkerReserwation && <ItemTitle siteProps={siteProps}>
                   Status:
                   {statusReserwation}
-                </ItemTitle>}
-                {switchButtonHolidays}
-                <ButtonsItemEvent>{selectButtonsToEvents}</ButtonsItemEvent>
-              </EventItemPositionContentPadding>
-            </EventItemPositionContent>
-          </EventItemPosition>
-          <CSSTransition
-            in={confirmCancelReserwation}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
-          >
-            <EventItemPosition>
-              <ButtonItemStyle>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="16"
-                  icon={<MdCancel />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleConfirmCancelReserwation}
-                />
-              </ButtonItemStyle>
-              <ButtonItemStyle>
-                <ButtonIcon
-                  title="Potwierdz"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="16"
-                  icon={<MdCancel />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={() => {
-                    handleClosePopupEventItem()
-                    handleChangeReserwationStatus(selectedEvent._id, "canceled")
-                    setConfirmCancelReserwation(false)
-                  }}
-                />
-              </ButtonItemStyle>
-            </EventItemPosition>
-          </CSSTransition>
-        </>
+                </ItemTitle>
+              )}
+              {switchButtonHolidays}
+              <ButtonsItemEvent>{selectButtonsToEvents}</ButtonsItemEvent>
+            </EventItemPositionContentPadding>
+            <CSSTransition
+              in={confirmCancelReserwation}
+              timeout={400}
+              classNames="popup"
+              unmountOnExit
+            >
+              <EventItemPosition>
+                <EventItemPositionContentDelete siteProps={siteProps}>
+                  <TitleDelete>
+                    Potwierdz usuwanie rezerwacji
+                  </TitleDelete>
+                  <ButtonItemStyleCancelReserwation>
+                    <ButtonItemStyle>
+                      <ButtonIcon
+                        title="Anuluj"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="16"
+                        icon={<MdCancel />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        onClick={handleConfirmCancelReserwation}
+                      />
+                    </ButtonItemStyle>
+                    <ButtonItemStyle>
+                      <ButtonIcon
+                        title="Potwierdz"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="16"
+                        icon={<MdCancel />}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
+                        onClick={() => {
+                          handleClosePopupEventItem()
+                          handleChangeReserwationStatus(
+                            selectedEvent._id,
+                            "canceled"
+                          )
+                          setConfirmCancelReserwation(false)
+                        }}
+                      />
+                    </ButtonItemStyle>
+                  </ButtonItemStyleCancelReserwation>
+                </EventItemPositionContentDelete>
+              </EventItemPosition>
+            </CSSTransition>
+          </EventItemPositionContent>
+        </EventItemPosition>
       </CSSTransition>
 
       {!!selectedEvent && (

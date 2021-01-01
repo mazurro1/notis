@@ -27,6 +27,7 @@ import {
   fetchDoReserwationWorker,
 } from "../state/actions"
 import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
+import { ServiceColorsReserwationsConvert } from "../common/ServiceColorsReserwationsConvert"
 
 const BackgroundContentCalendar = styled.div`
   position: relative;
@@ -37,11 +38,13 @@ const BackgroundContentCalendar = styled.div`
 
 const BackgroundCalendarStyle = styled.div`
   background-color: white;
-  max-height: 90vh;
+  max-height: 70vh;
   max-width: 90vw;
   width: 900px;
   min-width: 800px;
   /* border-radius: 5px; */
+  overflow: hidden;
+  overflow-y: auto;
   opacity: 0.95;
   margin-bottom: 10px;
 
@@ -53,10 +56,53 @@ const BackgroundCalendarStyle = styled.div`
     background-color: #e0f7fa !important;
     border-left: 1px solid #e0e0e0 !important;
   }
-  .disabled-holiday-event {
+
+  .gray-event {
     background-color: #757575 !important;
     &:hover {
       background-color: #424242 !important;
+    }
+  }
+  .red-event {
+    background-color: #e53935 !important;
+    &:hover {
+      background-color: #c62828 !important;
+    }
+  }
+  .blue-event {
+    background-color: #039be5 !important;
+    &:hover {
+      background-color: #0277bd !important;
+    }
+  }
+  .yellow-event {
+    background-color: #fdd835 !important;
+    &:hover {
+      background-color: #f9a825 !important;
+    }
+  }
+  .orange-event {
+    background-color: #fb8c00 !important;
+    &:hover {
+      background-color: #ef6c00 !important;
+    }
+  }
+  .pink-event {
+    background-color: #e040fb !important;
+    &:hover {
+      background-color: #d500f9 !important;
+    }
+  }
+  .green-event {
+    background-color: #43a047 !important;
+    &:hover {
+      background-color: #2e7d32 !important;
+    }
+  }
+  .purple-event {
+    background-color: #8e24aa !important;
+    &:hover {
+      background-color: #6a1b9a !important;
     }
   }
   .rbc-time-view {
@@ -202,19 +248,6 @@ const WarningStyle = styled.div`
   border-radius: 5px;
 `
 
-const IconWarning = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 50px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.3rem;
-`
 const WidthSelect = styled.div`
   width: 160px;
   margin-right: 20px;
@@ -228,6 +261,34 @@ const ContentSelect = styled.div`
   margin-bottom: 10px;
 `
 
+const ContentWorkersAdmin = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+`
+const WorkerItemStyle = styled.div`
+  background-color: ${props =>
+    props.active
+      ? Colors(props.siteProps).primaryColor
+      : Colors(props.siteProps).primaryColorDark};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition-property: transform, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`
+
 const BigCalendarWorkerReserwations = ({
   item,
   handleClose,
@@ -235,7 +296,10 @@ const BigCalendarWorkerReserwations = ({
   setDateCalendar,
   disabledSwitch,
   setDisabledSwitch,
-  user
+  user,
+  isAdmin = false,
+  userWorkerActive,
+  setUserWorkerActive,
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -280,7 +344,11 @@ const BigCalendarWorkerReserwations = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-      const newDate = new Date(datePicker.getFullYear(), datePicker.getMonth(), datePicker.getDate())
+    const newDate = new Date(
+      datePicker.getFullYear(),
+      datePicker.getMonth(),
+      datePicker.getDate()
+    )
     setDateCalendar(newDate)
   }, [datePicker])
 
@@ -303,6 +371,21 @@ const BigCalendarWorkerReserwations = ({
   useEffect(() => {
     if (!!item) {
       const mapItemReserwations = item.reserwations.map(itemMaped => {
+        const selectedServices = !!itemMaped.company.services
+          ? itemMaped.company.services
+          : []
+        const filterServiceFromCompany = selectedServices.find(
+          service => service._id === itemMaped.serviceId
+        )
+        let selectedColorEvent = 1
+        if (!!filterServiceFromCompany) {
+          if (!!filterServiceFromCompany.serviceColor) {
+            selectedColorEvent = filterServiceFromCompany.serviceColor
+          }
+        }
+        const selectServiceColor = ServiceColorsReserwationsConvert.find(
+          conv => conv.value === selectedColorEvent
+        )
         const userName = Buffer.from(
           itemMaped.fromUser.name,
           "base64"
@@ -335,7 +418,9 @@ const BigCalendarWorkerReserwations = ({
           }`,
           fullDate: `${itemMaped.dateDay}-${itemMaped.dateMonth}-${itemMaped.dateYear}`,
           _id: itemMaped._id,
-          colorItem: !!itemMaped.workerReserwation ? "gray" : "normal",
+          colorItem: !!itemMaped.workerReserwation
+            ? "gray"
+            : selectServiceColor.label,
         }
         return itemMapedResult
       })
@@ -472,11 +557,38 @@ const BigCalendarWorkerReserwations = ({
       }
     }
   }
-
   const handleEventPropGetter = event => {
     if (event.colorItem === "gray") {
       return {
-        className: "disabled-holiday-event",
+        className: "gray-event",
+      }
+    } else if (event.colorItem === "red") {
+      return {
+        className: "red-event",
+      }
+    } else if (event.colorItem === "blue") {
+      return {
+        className: "blue-event",
+      }
+    } else if (event.colorItem === "yellow") {
+      return {
+        className: "yellow-event",
+      }
+    } else if (event.colorItem === "orange") {
+      return {
+        className: "orange-event",
+      }
+    } else if (event.colorItem === "pink") {
+      return {
+        className: "pink-event",
+      }
+    } else if (event.colorItem === "green") {
+      return {
+        className: "green-event",
+      }
+    } else if (event.colorItem === "purple") {
+      return {
+        className: "purple-event",
       }
     }
   }
@@ -541,9 +653,9 @@ const BigCalendarWorkerReserwations = ({
     const selectItemReserwation = item.reserwations.find(
       itemRes => itemRes._id === eventItem._id
     )
-    if (!!selectItemReserwation){
-      setSelectedEvent({...selectItemReserwation, ...eventItem})
-    }else{
+    if (!!selectItemReserwation) {
+      setSelectedEvent({ ...selectItemReserwation, ...eventItem })
+    } else {
       setSelectedEvent(eventItem)
     }
     setSelectedEventOpen(true)
@@ -567,11 +679,17 @@ const BigCalendarWorkerReserwations = ({
     handleClose()
   }
 
-  const handleChangeReserwationStatus = (selectedEventId, status, newDateStart = null, newDateEnd = null) => {
-    if (status === "canceled"){
+  const handleChangeReserwationStatus = (
+    selectedEventId,
+    status,
+    newDateStart = null,
+    newDateEnd = null
+  ) => {
+    if (status === "canceled") {
       dispatch(
         fetchUpdateWorkerReserwation(
           user.token,
+          isAdmin ? userWorkerActive : user.userId,
           selectedEventId,
           true,
           null,
@@ -583,10 +701,11 @@ const BigCalendarWorkerReserwations = ({
           null
         )
       )
-    }else if (status === "finished") {
+    } else if (status === "finished") {
       dispatch(
         fetchUpdateWorkerReserwation(
           user.token,
+          isAdmin ? userWorkerActive : user.userId,
           selectedEventId,
           null,
           null,
@@ -598,10 +717,11 @@ const BigCalendarWorkerReserwations = ({
           null
         )
       )
-    }else if(status === "noFinished"){
+    } else if (status === "noFinished") {
       dispatch(
         fetchUpdateWorkerReserwation(
           user.token,
+          isAdmin ? userWorkerActive : user.userId,
           selectedEventId,
           null,
           null,
@@ -613,10 +733,11 @@ const BigCalendarWorkerReserwations = ({
           null
         )
       )
-    }else if(status === "update"){
+    } else if (status === "update") {
       dispatch(
         fetchUpdateWorkerReserwation(
           user.token,
+          isAdmin ? userWorkerActive : user.userId,
           selectedEventId,
           null,
           true,
@@ -628,7 +749,7 @@ const BigCalendarWorkerReserwations = ({
           newDateEnd
         )
       )
-    } 
+    }
   }
 
   const handleAddWorkerReserwation = (
@@ -640,7 +761,7 @@ const BigCalendarWorkerReserwations = ({
     dispatch(
       fetchDoReserwationWorker(
         user.token,
-        user.userId,
+        isAdmin ? userWorkerActive : user.userId,
         user.company._id,
         dateStart,
         dateEnd,
@@ -654,6 +775,10 @@ const BigCalendarWorkerReserwations = ({
 
   const handleCloseDatePicker = () => {
     setDatePickerActive(prevState => !prevState)
+  }
+
+  const handleChangeUserWorkerActive = userId => {
+    setUserWorkerActive(userId)
   }
 
   const slotsValue =
@@ -679,7 +804,26 @@ const BigCalendarWorkerReserwations = ({
       ? `0${dateCalendar.getMonth() + 1}`
       : dateCalendar.getMonth() + 1
   }-${dateCalendar.getFullYear()}`
-  
+
+  const mapWorkers =
+    isAdmin &&
+    item.company.workers.map((worker, indexWorker) => {
+      const userName = Buffer.from(worker.user.name, "base64").toString("ascii")
+      const userSurname = Buffer.from(worker.user.surname, "base64").toString(
+        "ascii"
+      )
+      return (
+        <WorkerItemStyle
+          key={indexWorker}
+          siteProps={siteProps}
+          active={userWorkerActive === worker.user._id}
+          onClick={() => handleChangeUserWorkerActive(worker.user._id)}
+        >
+          {`${userName} ${userSurname}`}
+        </WorkerItemStyle>
+      )
+    })
+
   return (
     <>
       <BackgroundContentCalendar>
@@ -717,6 +861,16 @@ const BigCalendarWorkerReserwations = ({
             onClick={handleCloseDatePicker}
           />
         </ContentSelect>
+        {isAdmin && (
+          <ContentWorkersAdmin>
+            <WorkerItemStyle
+              siteProps={siteProps}
+              active={userWorkerActive === user.userId}
+              onClick={() => handleChangeUserWorkerActive(user.userId)}
+            >{`${user.userName} ${user.userSurname}`}</WorkerItemStyle>
+            {mapWorkers}
+          </ContentWorkersAdmin>
+        )}
         <TitleMonthYear>
           <div>
             <ButtonIcon

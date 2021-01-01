@@ -300,6 +300,7 @@ const Reserwation = ({
       const selectedMonth = selectedDate.getMonth() + 1
       const selectedYear = selectedDate.getFullYear()
       const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
+      console.log(reserwationData)
       dispatch(
         fetchDoReserwation(
           user.token,
@@ -308,12 +309,8 @@ const Reserwation = ({
           selectedWorkerId, //workerUserId
           selectedHour, //dateStart
           dateFullToSent, //dateFull
-          reserwationData.serviceCost,
-          reserwationData.time,
-          reserwationData.serviceName,
-          reserwationData.extraCost,
-          reserwationData.extraTime,
-          reserwationMessage
+          reserwationMessage,
+          reserwationData._id,
         )
       )
     }

@@ -20,6 +20,8 @@ import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import { useSelector } from "react-redux"
+import SelectCustom from "../SelectCustom"
+import { ServiceColors } from "../../common/ServiceColors"
 
 const TextCheckbox = styled.span`
   position: relative;
@@ -59,7 +61,7 @@ const TitleCategory = styled.div`
     props.clickDelete
       ? "50px"
       : props.clickAdd
-      ? "500px"
+      ? "550px"
       : props.clickEdit
       ? "150px"
       : "10px"};
@@ -189,6 +191,11 @@ const ButtonMarginSubmit = styled.button`
   background-color: transparent;
 `
 
+const SelectStyle = styled.div`
+  margin-top: 10px;
+  margin-bottom: 20px;
+`
+
 const CategoryItem = ({
   item,
   isCompanyEditProfil,
@@ -203,6 +210,10 @@ const CategoryItem = ({
   handleClickReserwation,
   companyId,
 }) => {
+  const [colorServiceComponent, setColorServiceComponent] = useState({
+    value: 1,
+    label: "",
+  })
   const [collapseActive, setCollapseActive] = useState(true)
   const [clickDelete, setClickDelete] = useState(false)
   const [clickAdd, setClickAdd] = useState(false)
@@ -216,6 +227,11 @@ const CategoryItem = ({
   const [categoryTitle, setCategoryTitle] = useState("")
   const resetCompany = useSelector(state => state.resetCompany)
   const siteProps = useSelector(state => state.siteProps)
+
+  useEffect(() => {
+    const selectedDefaultColor = ServiceColors.find(col => col.value === 1)
+    setColorServiceComponent(selectedDefaultColor)
+  }, [ServiceColors])
 
   const disabledCategorySave =
     categoryTitle.toLowerCase() === item.category.toLowerCase()
@@ -257,6 +273,10 @@ const CategoryItem = ({
     setChange(prevState => !prevState)
   }
 
+   const handleChangeColorService = value => {
+     setColorServiceComponent(value)
+   }
+
   const handleAddItem = e => {
     e.preventDefault()
     if (
@@ -266,13 +286,17 @@ const CategoryItem = ({
       !!priceInput
     ) {
       setClickAdd(false)
-
+      setCollapseActive(true)
       setExtraPrice(false)
       setExtraTime(false)
       setInputTitle("")
       setContentInput("")
       setTimeInput("")
       setPriceInput("")
+      setColorServiceComponent({
+        value: 1,
+        label: "",
+      })
 
       handleAddItemInCategory(
         item.category,
@@ -281,7 +305,8 @@ const CategoryItem = ({
         timeInput,
         extraTime,
         priceInput,
-        extraPrice
+        extraPrice,
+        colorServiceComponent.value,
       )
     }
   }
@@ -444,9 +469,7 @@ const CategoryItem = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdLibraryAdd />}
-                          customColorButton={
-                            Colors(siteProps).successColorDark
-                          }
+                          customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                           disabled={disabledCategorySave}
                         />
@@ -519,6 +542,18 @@ const CategoryItem = ({
                         <TextCheckbox>Niestała cena</TextCheckbox>
                       </Checkbox>
                     </CheckboxStyle>
+                    <SelectStyle>
+                      <SelectCustom
+                        options={ServiceColors}
+                        value={colorServiceComponent}
+                        handleChange={handleChangeColorService}
+                        isLoading={false}
+                        secondColor
+                        defaultMenuIsOpen={false}
+                        placeholder="Wybierz kolor usługi..."
+                        marginAuto={false}
+                      />
+                    </SelectStyle>
                     <ButtonsAddPosition>
                       <ButtonMargin>
                         <ButtonIcon
@@ -539,9 +574,7 @@ const CategoryItem = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdLibraryAdd />}
-                          customColorButton={
-                            Colors(siteProps).successColorDark
-                          }
+                          customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                         />
                       </ButtonMarginSubmit>

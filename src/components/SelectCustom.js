@@ -6,7 +6,8 @@ import { Colors } from "../common/Colors"
 import { useSelector } from "react-redux"
 
 const SelectDiv = styled.div`
-  margin: 0 auto;
+  font-size: 1rem;
+  margin: ${props => props.marginAuto ? "0 auto" : "0"};
   width: ${props => (props.widthAuto ? "auto" : "500px")};
   max-width: 90vw;
   /* box-shadow: 0 0 5px 10px rgba(0, 0, 0, 0.1); */
@@ -35,6 +36,7 @@ const SelectCustom = ({
   menuIsOpen = false,
   isClearable = true,
   isDisabled = false,
+  marginAuto = true
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnChange = value => {
@@ -114,6 +116,7 @@ const SelectCustom = ({
       widthAuto={widthAuto}
       secondColor={secondColor}
       siteProps={siteProps}
+      marginAuto={marginAuto}
     >
       <Select
         isLoadin={isLoading}

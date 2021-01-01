@@ -14,6 +14,7 @@ import {
   FaChrome,
   FaCalendarAlt,
   FaBox,
+  FaUsers,
 } from "react-icons/fa"
 import { MdWork, MdPowerSettingsNew, MdTimelapse, MdClose } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
@@ -378,7 +379,6 @@ const Navigation = ({ children, isMainPage }) => {
   }, [isMainPage])
 
   useEffect(() => {
-    console.log("update", page)
     if (!!industries || industries === 0) {
       dispatch(fetchAllCompanysOfType(page, industries))
     } else {
@@ -556,45 +556,7 @@ const Navigation = ({ children, isMainPage }) => {
     </CSSTransition>
   )
 
-    const PopupWorkerPropsVisible = (
-      <Popup
-        popupEnable={workPropsVisible}
-        handleClose={handleClickWork}
-        title={Translates[siteProps.language].buttons.work}
-        maxWidth="300"
-      >
-        <div>
-          <ButtonIcon
-            title="Grafik pracy"
-            uppercase
-            fontIconSize="25"
-            fontSize="16"
-            icon={<MdTimelapse />}
-            // onClick={handleWorkerReserwations}
-          />
-          <MarginButtonsWork>
-            <ButtonIcon
-              title="Rezerwacje"
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarAlt />}
-              onClick={handleWorkerReserwations}
-            />
-          </MarginButtonsWork>
-          <MarginButtonsWork>
-            <ButtonIcon
-              title="Stan magazynowy"
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaBox />}
-              // onClick={handleClickWork}
-            />
-          </MarginButtonsWork>
-        </div>
-      </Popup>
-    )
+    
 
       const PopupWorkersReserwations = (
         <Popup
@@ -789,11 +751,16 @@ const Navigation = ({ children, isMainPage }) => {
 
   console.log(user)
   let workerHasAccessButton = false;
+  let workerHasAccessClientsOpinions = false
+  let workerHasAccessAvailability = false
   if(!!user){
     if(user.hasCompany){
       const selectWorker = user.company.workers.find(
         worker => worker.user === user.userId
       )
+      workerHasAccessClientsOpinions = user.company.owner === user.userId;
+      workerHasAccessAvailability = user.company.owner === user.userId
+
       if (!!selectWorker) {
         const hasPermission = selectWorker.permissions.some(
           perm => perm === 2 || perm === 3 || perm === 4
@@ -801,9 +768,78 @@ const Navigation = ({ children, isMainPage }) => {
         if (hasPermission) {
           workerHasAccessButton = true
         }
+
+        if(!workerHasAccessClientsOpinions){
+          const hasPermissionClientsOpinion = selectWorker.permissions.some(
+            perm => perm === 6
+          )
+          if (hasPermissionClientsOpinion) {
+            workerHasAccessClientsOpinions = true
+          }
+        }
+
+        if (!workerHasAccessAvailability) {
+          const hasPermissionClientsOpinion = selectWorker.permissions.some(
+            perm => perm === 1
+          )
+          if (hasPermissionClientsOpinion) {
+            workerHasAccessAvailability = true
+          }
+        }
       }
     }
   }
+
+  const PopupWorkerPropsVisible = (
+    <Popup
+      popupEnable={workPropsVisible}
+      handleClose={handleClickWork}
+      title={Translates[siteProps.language].buttons.work}
+      maxWidth="300"
+    >
+      <div>
+        <ButtonIcon
+          title="Grafik pracy"
+          uppercase
+          fontIconSize="25"
+          fontSize="16"
+          icon={<MdTimelapse />}
+          // onClick={handleWorkerReserwations}
+        />
+        {workerHasAccessClientsOpinions && <MarginButtonsWork>
+          <ButtonIcon
+            title="Twoi klienci"
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<FaUsers />}
+            // onClick={handleWorkerReserwations}
+          />
+        </MarginButtonsWork>}
+        <MarginButtonsWork>
+          <ButtonIcon
+            title="Rezerwacje"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaCalendarAlt />}
+            onClick={handleWorkerReserwations}
+          />
+        </MarginButtonsWork>
+        {workerHasAccessAvailability && <MarginButtonsWork>
+          <ButtonIcon
+            title="Stan magazynowy"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaBox />}
+            // onClick={handleClickWork}
+          />
+        </MarginButtonsWork>}
+      </div>
+    </Popup>
+  )
+
     const renderCompanyOrCreateCompany =
       !!user && user.hasCompany ? (
         user.company.owner === user.userId || workerHasAccessButton ? (

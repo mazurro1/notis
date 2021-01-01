@@ -35,7 +35,7 @@ const EventItemPosition = styled.div`
 const EventItemPositionContent = styled.div`
   position: relative;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  width: 600px;
+  width: 800px;
   max-width: 90%;
   max-height: 90%;
   border-radius: 5px;

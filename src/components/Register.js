@@ -5,7 +5,7 @@ import { MdAccountBox, MdEmail, MdPhoneAndroid, MdLock } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-import { FaUserPlus } from "react-icons/fa"
+import { FaUserPlus, FaCalendarDay, FaCalendar } from "react-icons/fa"
 import ButtonIcon from "./ButtonIcon"
 import { fetchRegisterUser } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
@@ -35,6 +35,8 @@ const RegulationsText = styled.div`
 `
 
 const RegisterContent = () => {
+  const [dateBirth, setDateBirth] = useState("")
+  const [monthBirth, setMonthBirth] = useState("")
   const [emailInput, setEmailInput] = useState("")
   const [nameInput, setNameInput] = useState("")
   const [surnameInput, setSurnameInput] = useState("")
@@ -57,7 +59,9 @@ const RegisterContent = () => {
         nameInput,
         surnameInput,
         phoneInput,
-        repeatPasswordInput
+        repeatPasswordInput,
+        dateBirth,
+        monthBirth
       )
     )
   }
@@ -84,18 +88,21 @@ const RegisterContent = () => {
         value={emailInput}
         type="email"
         onChange={e => handleChange(e, setEmailInput)}
+        required
       />
       <InputIcon
         icon={<MdAccountBox />}
         placeholder="Imię"
         value={nameInput}
         onChange={e => handleChange(e, setNameInput)}
+        required
       />
       <InputIcon
         icon={<MdAccountBox />}
         placeholder="Nazwisko"
         value={surnameInput}
         onChange={e => handleChange(e, setSurnameInput)}
+        required
       />
       <InputIcon
         icon={<MdPhoneAndroid />}
@@ -103,6 +110,23 @@ const RegisterContent = () => {
         value={phoneInput}
         type="number"
         onChange={e => handleChange(e, setPhoneInput)}
+        required
+      />
+      <InputIcon
+        icon={<FaCalendarDay />}
+        placeholder="Dzień urodzenia"
+        value={dateBirth}
+        type="number"
+        onChange={e => handleChange(e, setDateBirth)}
+        required
+      />
+      <InputIcon
+        icon={<FaCalendar />}
+        placeholder="Miesiąc urodzenia"
+        value={monthBirth}
+        type="number"
+        onChange={e => handleChange(e, setMonthBirth)}
+        required
       />
       <InputIcon
         icon={<MdLock />}
@@ -110,6 +134,7 @@ const RegisterContent = () => {
         value={passwordInput}
         type="password"
         onChange={e => handleChange(e, setPasswordInput)}
+        required
       />
       <InputIcon
         icon={<MdLock />}
@@ -117,6 +142,7 @@ const RegisterContent = () => {
         value={repeatPasswordInput}
         type="password"
         onChange={e => handleChange(e, setRepeatPasswordInput)}
+        required
       />
       <RegulationsText siteProps={siteProps}>
         Klikając w przycisk poniżej akceptujesz{" "}

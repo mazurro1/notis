@@ -32,11 +32,13 @@ const BackgroundContentCalendar = styled.div`
 
 const BackgroundCalendarStyle = styled.div`
   background-color: white;
-  max-height: 90vh;
+  max-height: 70vh;
   max-width: 90vw;
   width: 900px;
   min-width: 800px;
   /* border-radius: 5px; */
+  overflow: hidden;
+  overflow-y: auto;
   opacity: 0.95;
   margin-bottom: 10px;
 

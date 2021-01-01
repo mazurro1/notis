@@ -225,7 +225,15 @@ export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
   }
 }
 
-export const fetchRegisterUser = (email, name, surname, phone, password) => {
+export const fetchRegisterUser = (
+  email,
+  name,
+  surname,
+  phone,
+  password,
+  dateBirth = 1,
+  monthBirth = 0,
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -235,6 +243,8 @@ export const fetchRegisterUser = (email, name, surname, phone, password) => {
         userSurname: surname,
         phoneNumber: phone,
         password: password,
+        dateBirth: dateBirth,
+        monthBirth: monthBirth,
       })
       .then(response => {
         dispatch(loginUser(response.data))
@@ -982,12 +992,8 @@ export const fetchDoReserwation = (
   workerId,
   dateStart,
   dateFull,
-  costReserwation,
-  timeReserwation,
-  serviceName,
-  extraCost,
-  extraTime,
-  reserwationMessage
+  reserwationMessage,
+  serviceId,
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1000,12 +1006,8 @@ export const fetchDoReserwation = (
           companyId: companyId,
           dateStart: dateStart,
           dateFull: dateFull,
-          costReserwation: costReserwation,
-          timeReserwation: timeReserwation,
-          serviceName: serviceName,
-          extraCost: extraCost,
-          extraTime: extraTime,
           reserwationMessage: reserwationMessage,
+          serviceId: serviceId,
         },
         {
           headers: {
@@ -1062,7 +1064,7 @@ export const fetchDoReserwationWorker = (
       .then(response => {
         dispatch(addAlertItem("Dokonano rezerwacje czasu.", "green"))
         dispatch(
-          fetchWorkerReserwationsAll(token, yearPicker, monthPicker, companyId)
+          fetchWorkerReserwationsAll(token, workerUserId, yearPicker, monthPicker, companyId)
         )
       })
       .catch(error => {
@@ -1253,13 +1255,14 @@ export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
   }
 }
 
-export const fetchWorkerReserwationsAll = (token, yearPicker, monthPicker, companyId) => {
+export const fetchWorkerReserwationsAll = (token, workerUserId, yearPicker, monthPicker, companyId) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
       .post(
         `${Site.serverUrl}/worker-reserwations-all`,
         {
+          workerUserId: workerUserId,
           yearPicker: yearPicker,
           monthPicker: monthPicker,
           companyId: companyId,
@@ -1319,6 +1322,7 @@ export const fetchDeleteReserwation = (
 
 export const fetchUpdateWorkerReserwation = (
   token,
+  workerUserId,
   reserwationId,
   canceled = null,
   changed = null,
@@ -1335,6 +1339,7 @@ export const fetchUpdateWorkerReserwation = (
       .patch(
         `${Site.serverUrl}/update-reserwation-worker`,
         {
+          workerUserId: workerUserId,
           reserwationId: reserwationId,
           canceled: canceled,
           changed: changed,
@@ -1350,7 +1355,7 @@ export const fetchUpdateWorkerReserwation = (
       )
       .then(response => {
         dispatch(
-          fetchWorkerReserwationsAll(token, yearPicker, monthPicker, companyId)
+          fetchWorkerReserwationsAll(token, workerUserId, yearPicker, monthPicker, companyId)
         )
         dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
       })
