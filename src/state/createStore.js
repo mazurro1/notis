@@ -31,6 +31,9 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  ADD_NEW_ALERTS,
+  RESET_USER_ALERTS,
+  ADD_NEW_USER_ALERT,
   AVAIBLE_UPDATE_PAGE,
   UPDATE_PAGE,
   REPLACE_COMPANY_DATA,
@@ -56,6 +59,7 @@ const initialState = {
     language: "PL",
   },
   user: null,
+  userId: null,
   userPhone: null,
   page: 1,
   avaibleUpdatePage: false,
@@ -211,11 +215,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.user,
+        userId: action.user.userId
       }
     case LOGOUT:
       return {
         ...state,
         user: null,
+        userId: null,
       }
     case CHANGE_SPINNER:
       return {
@@ -280,6 +286,44 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case ADD_NEW_ALERTS: {
+      const newAllertsUser = {...state.user}
+      if (!!newAllertsUser){
+        newAllertsUser.alerts.push(...action.data)
+      }
+      console.log(newAllertsUser)
+        return {
+          ...state,
+          user: newAllertsUser,
+        }
+    }
+    case ADD_NEW_USER_ALERT: {
+      const newUserWithAlerts = {...state.user}
+      const isIdResInArr = newUserWithAlerts.alerts.some(
+        item => item.reserwationId._id === action.data.reserwationId._id
+      )
+      
+      if (!!newUserWithAlerts && !isIdResInArr) {
+        newUserWithAlerts.alerts = [action.data, ...state.user.alerts]
+        newUserWithAlerts.alertActiveCount = state.user.alertActiveCount + 1
+      }
+      return{
+        ...state,
+        user: newUserWithAlerts
+      }
+    }
+
+    case RESET_USER_ALERTS: {
+      const newResetUserWithAlerts = { ...state.user }
+      if (!!newResetUserWithAlerts) {
+        newResetUserWithAlerts.alertActiveCount = 0;
+      }
+      return {
+        ...state,
+        user: newResetUserWithAlerts,
+      }
+    }
+
     case RESET_PLACES: {
       if (state.page === 1) {
         return {

@@ -47,6 +47,7 @@ import {
   fetchAllCompanys,
   fetchAllCompanysOfType,
   changeLanguageStyle,
+  addNewUserAlert,
 } from "../state/actions"
 import Sort from "./Sort"
 import Filter from "./Filter"
@@ -63,6 +64,9 @@ import UserHistory from "./UserHistory"
 import Footer from './Footer'
 import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
 import {Translates} from '../common/Translates'
+import BellAlerts from "./BellAlerts"
+import openSocket from "socket.io-client"
+import {Site} from '../common/Site'
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -345,6 +349,7 @@ const Navigation = ({ children, isMainPage }) => {
   const industries = useSelector(state => state.industries)
   const page = useSelector(state => state.page)
   const user = useSelector(state => state.user)
+  const userId = useSelector(state => state.userId)
   const reserwationEnable = useSelector(state => state.reserwationEnable)
   const reserwationData = useSelector(state => state.reserwationData)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
@@ -353,6 +358,17 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const dispatch = useDispatch()
+  
+  useEffect(() => {
+    if (!!userId) {
+      const socket = openSocket(Site.serverUrl)
+      socket.on(`user${userId}`, data => {
+        if (data.action === "update-alerts") {
+          dispatch(addNewUserAlert(data.alertData))
+        }
+      })
+    }
+  }, [userId])
 
   useEffect(() => {
     if (!!!user) {
@@ -1065,6 +1081,7 @@ const Navigation = ({ children, isMainPage }) => {
                   {renderCompanyOrCreateCompany}
                   {renderButtonsUp}
                 </ButtonsNav>
+                {!!user && <BellAlerts siteProps={siteProps} user={user} />}
                 <BurgerButton onClick={handleMenuOpen}>
                   <FaBars />
                 </BurgerButton>

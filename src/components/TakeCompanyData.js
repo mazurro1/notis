@@ -8,11 +8,10 @@ const TakeCompanyData = ({ pathCompany = null }) => {
   const user = useSelector(state => state.user)
   const pathCompanyData = useSelector(state => state.pathCompanyData)
   const dispatch = useDispatch()
+
   useEffect(() => {
-    if (!!user) {
-      dispatch(fetchPathCompany(user.token, pathCompany))
-    }
-  }, [pathCompany, user])
+      dispatch(fetchPathCompany(pathCompany))
+  }, [pathCompany])
 
   let renderContent = null
 

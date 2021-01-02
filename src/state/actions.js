@@ -30,6 +30,14 @@ export const CHANGE_REMIND_PASSWORD_EMAIL_SENT =
   "CHANGE_REMIND_PASSWORD_EMAIL_SENT"
 export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
 export const CHANGE_LANGUAGE_STYLE = "CHANGE_LANGUAGE_STYLE"
+export const ADD_NEW_USER_ALERT = "ADD_NEW_USER_ALERT"
+
+export const addNewUserAlert = data => {
+  return {
+    type: ADD_NEW_USER_ALERT,
+    data: data,
+  }
+}
 
 export const changeLanguageStyle = (value) => {
   return {
@@ -307,7 +315,7 @@ export const fetchAutoLogin = (
                 dispatch(addAlertItem("Autologowanie się nie powiodło", "red"))
               }
               if (error.response.status === 401) {
-                dispatch(logout())
+                // dispatch(logout())
               }
               if (!noSpinner) {
                 setTimeout(() => {
@@ -323,7 +331,7 @@ export const fetchAutoLogin = (
                 }, 1000)
               }
             } else {
-              dispatch(logout())
+              // dispatch(logout())
               setTimeout(() => {
                 dispatch(changeSpinner(false))
               }, 1000)
@@ -500,6 +508,21 @@ export const UPDATE_WORKER_RESERWATIONS = "UPDATE_WORKER_RESERWATIONS"
 export const UPDATE_USER_ONE_RESERWATION = "UPDATE_USER_ONE_RESERWATION"
 export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
 export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
+export const RESET_USER_ALERTS = "RESET_USER_ALERTS"
+export const ADD_NEW_ALERTS = "ADD_NEW_ALERTS"
+
+export const addNewAlerts = (data) => {
+  return {
+    type: ADD_NEW_ALERTS,
+    data: data
+  }
+}
+
+export const resetUserAlerts = () => {
+  return{
+    type: RESET_USER_ALERTS
+  }
+}
 
 export const resetPlaces = () => {
   return {
@@ -1119,7 +1142,7 @@ export const fetchWorkerDisabledHours = (
   }
 }
 
-export const fetchPathCompany = (token, companyPath) => {
+export const fetchPathCompany = (companyPath) => {
   return dispatch => {
     return axios
       .post(
@@ -1127,11 +1150,11 @@ export const fetchPathCompany = (token, companyPath) => {
         {
           companyPath: companyPath,
         },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
+        // {
+        //   headers: {
+        //     Authorization: "Bearer " + token,
+        //   },
+        // }
       )
       .then(response => {
         dispatch(updatePatchCompanyData(response.data.companyDoc))
@@ -1365,3 +1388,50 @@ export const fetchUpdateWorkerReserwation = (
       })
   }
 }
+
+export const fetchUpdateUserAlert = (
+  token,
+) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/update-user-alert`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(resetUserAlerts())
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas aktualizacji powiadomień.", "red"))
+      })
+  }
+}
+
+export const fetchGetMoreAlerts = (token, page) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/get-more-alerts`,
+        {
+          page: page
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addNewAlerts(response.data.newAllerts))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas aktualizacji powiadomień.", "red"))
+      })
+  }
+}
+

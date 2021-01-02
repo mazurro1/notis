@@ -55,6 +55,7 @@
     "sal.js": "^0.8.1",
     "simple-react-calendar": "^2.2.8",
     "socket.io": "^3.0.3",
+    "socket.io-client": "^3.0.4",
     "styled-components": "^5.2.0"
   },
   "devDependencies": {
