@@ -1,4 +1,86 @@
 import React from 'react'
+import styled from 'styled-components'
+import {LinkEffect} from '../common/LinkEffect'
+import { Colors } from "../common/Colors"
+
+const TimeStyle = styled.div`
+  position: absolute;
+  top: 2px;
+  left: 10px;
+  right: 10px;
+  font-size: 0.7rem;
+  user-select: none;
+  opacity: 0.5;
+
+  span {
+    color: ${props =>
+      props.active
+        ? `${Colors(props.siteProps).textNormalBlack} !important`
+        : `${Colors(props.siteProps).textNormalBlack} !important`};
+    margin-right: 5px;
+    font-weight: 500 !important;
+  }
+`
+
+const ButtonAlertCompany = styled.button`
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 5px 10px;
+  background-color: ${props =>
+    // props.active
+    //   ? props.alertColor === "blue"
+    //     ? Colors(props.siteProps).darkColorDark
+    //     : props.alertColor === "red"
+    //     ? Colors(props.siteProps).darkColorDark
+    //     : props.alertColor === "green"
+    //     ? Colors(props.siteProps).darkColorDark
+    //     : props.alertColor === "orange"
+    //     ? Colors(props.siteProps).darkColorDark
+    //     : Colors(props.siteProps).primaryColorDark
+      // :
+       props.alertColor === "blue"
+      ? Colors(props.siteProps).primaryColorDark
+      : props.alertColor === "red"
+      ? Colors(props.siteProps).dangerColorDark
+      : props.alertColor === "green"
+      ? Colors(props.siteProps).successColorDark
+      : props.alertColor === "orange"
+      ? Colors(props.siteProps).secondDarkColor
+      : Colors(props.siteProps).darkColorDark
+      };
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${props =>
+      // !props.active
+      //   ? 
+        props.alertColor === "blue"
+          ? Colors(props.siteProps).primaryColor
+          : props.alertColor === "red"
+          ? Colors(props.siteProps).dangerColor
+          : props.alertColor === "green"
+          ? Colors(props.siteProps).successColor
+          : props.alertColor === "orange"
+          ? Colors(props.siteProps).secondColor
+          : Colors(props.siteProps).primaryColor
+        // : props.alertColor === "blue"
+        // ? Colors(props.siteProps).darkColor
+        // : props.alertColor === "red"
+        // ? Colors(props.siteProps).darkColor
+        // : props.alertColor === "green"
+        // ? Colors(props.siteProps).darkColor
+        // : props.alertColor === "orange"
+        // ? Colors(props.siteProps).darkColor
+        // : Colors(props.siteProps).primaryColor
+        };
+  }
+`
 
  const BellAlertsItem = ({
    siteProps,
@@ -7,6 +89,7 @@ import React from 'react'
    user
  }) => {
    let isUserReserwation = false;
+   let isCompanyChangedReserwation = !!alert.companyChanged ? alert.companyChanged : false
    if(!!alert.reserwationId){
      if(!!alert.reserwationId.fromUser){
        if(!!alert.reserwationId.fromUser._id){
@@ -16,6 +99,9 @@ import React from 'react'
    }
 
    let alertMessage = ""
+   let textBeginningAlert = ""
+   let alertColor = 'default'
+
    const reserwationDate = `${
      alert.reserwationId.dateDay < 10
        ? `0${alert.reserwationId.dateDay}`
@@ -45,14 +131,101 @@ import React from 'react'
    }
 
 
-   if (isUserReserwation){
-    alertMessage = `Dokonałeś rezerwacji w firmie: ${alert.reserwationId.company.name.toUpperCase()} dnia: ${reserwationDate}, o godzinie: ${alert.reserwationId.dateStart}`
-   }else{
-    alertMessage = `Użytkownik ${
-      !!userName && !!userSurname ? `${userName} ${userSurname}` : "Brak użytkownika"
-    } dokonał rezerwacji dnia: ${reserwationDate}, o godzinie: ${
-      alert.reserwationId.dateStart
-    }, usługa: ${alert.reserwationId.serviceName}`
+   if (alert.type === "rezerwation_created") {
+     alertColor = "blue"
+     if(!isCompanyChangedReserwation){
+       textBeginningAlert = isUserReserwation
+         ? "Rezerwacja została utworzona w firmie"
+         : "dokonał rezerwacji"
+     }else{
+        textBeginningAlert = isUserReserwation
+          ? ""
+          : ""
+     }
+   } else if (alert.type === "rezerwation_changed") {
+     alertColor = "orange"
+     if(!isCompanyChangedReserwation){
+      textBeginningAlert = isUserReserwation ? "Rezerwacja została zmieniona w firmie" : "zmienił rezerwację"
+     }else{
+      textBeginningAlert = isUserReserwation
+        ? "Twoja rezerwacja została zmieniona przez firmę"
+        : "Dokonano zmianę w rezerwacji"
+     }
+   } else if (alert.type === "rezerwation_canceled") {
+     alertColor = "red"
+     if(!isCompanyChangedReserwation){
+     textBeginningAlert = isUserReserwation ? "Rezerwacja została odwołana w firmie" : "odowłał rezerwację"
+     }else{
+     textBeginningAlert = isUserReserwation
+       ? "Rezerwacja została odwołana przez firmę"
+       : "Odwołano rezerwację"
+     }
+   } else if (alert.type === "reserwation_not_finished") {
+     alertColor = "red"
+     if(!isCompanyChangedReserwation){
+     textBeginningAlert = isUserReserwation ? "Rezerwacja nie została odbyta w firmie" : "nie odbył wizyty"
+     }else{
+     textBeginningAlert = isUserReserwation
+       ? "Zmieniono status twojej rezerwacji na nie odbytą w firmie"
+       : "Zmieniono status rezerwacji na nie odbytą"
+     }
+   } else if (alert.type === "reserwation_finished") {
+     alertColor = "green"
+     if(!isCompanyChangedReserwation){
+      textBeginningAlert = isUserReserwation
+        ? "Rezerwacja została odbyta w firmie"
+        : "odbył wizytę"
+     }else{
+      textBeginningAlert = isUserReserwation
+        ? "Zmieniono status twojej rezerwacji na odbytą"
+        : "Zmieniono status rezerwacji na odbytą"
+     }
+   } else{
+     alertColor = "default"
+   }
+
+   if (isUserReserwation) {
+     alertMessage = (
+       <>
+         {textBeginningAlert}:
+         <LinkEffect
+           path={`company/${alert.reserwationId.company.linkPath}`}
+           text={
+             <ButtonAlertCompany
+               siteProps={siteProps}
+               active={alert.active}
+               alertColor={alertColor}
+             >
+               {alert.reserwationId.company.name.toUpperCase()}
+             </ButtonAlertCompany>
+           }
+         />
+         dnia: <span>{reserwationDate}</span>, na godzine:{" "}
+         <span>{alert.reserwationId.dateStart}</span>, usługa:{" "}
+         <span>{alert.reserwationId.serviceName}</span>
+       </>
+     )
+   } else {
+     alertMessage = isCompanyChangedReserwation ? (
+       <>
+         {textBeginningAlert} użytkowniowi{" "}
+         {!!userName && !!userSurname
+           ? `${userName} ${userSurname}`
+           : "Brak użytkownika"}{" "} dnia: <span>{reserwationDate}</span>, na godzine:{" "}
+         <span>{alert.reserwationId.dateStart}</span>, usługa:{" "}
+         <span>{alert.reserwationId.serviceName}</span>
+       </>
+     ) : (
+       <>
+         Użytkownik{" "}
+         {!!userName && !!userSurname
+           ? `${userName} ${userSurname}`
+           : "Brak użytkownika"}{" "}
+         {textBeginningAlert} dnia: <span>{reserwationDate}</span>, na godzine:{" "}
+         <span>{alert.reserwationId.dateStart}</span>, usługa:{" "}
+         <span>{alert.reserwationId.serviceName}</span>
+       </>
+     )
    }
 
      return (
@@ -61,7 +234,35 @@ import React from 'react'
          data-sal-duration="300"
          data-sal-easing="ease-out-bounce"
        >
-         <AlertItemStyle active={alert.active}>{alertMessage}</AlertItemStyle>
+         <AlertItemStyle
+           active={alert.active}
+           alertColor={alertColor}
+           siteProps={siteProps}
+           noTime={!!!alert.creationTime}
+         >
+           {!!alert.creationTime && (
+             <TimeStyle
+               active={alert.active}
+               alertColor={alertColor}
+               siteProps={siteProps}
+             >
+               <span>{`${new Date(alert.creationTime).getHours()}:${new Date(
+                 alert.creationTime
+               ).getMinutes()}`}</span>
+               {`
+              ${
+                new Date(alert.creationTime).getDate() < 10
+                  ? `0${new Date(alert.creationTime).getDate()}`
+                  : new Date(alert.creationTime).getDate()
+              }-${
+                 new Date(alert.creationTime).getMonth() + 1 < 10
+                   ? `0${new Date(alert.creationTime).getMonth() + 1}`
+                   : new Date(alert.creationTime).getMonth() + 1
+               }-${new Date(alert.creationTime).getFullYear()}`}
+             </TimeStyle>
+           )}
+           {alertMessage}
+         </AlertItemStyle>
        </div>
      )
  }

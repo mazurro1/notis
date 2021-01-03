@@ -291,7 +291,6 @@ const reducer = (state = initialState, action) => {
       if (!!newAllertsUser){
         newAllertsUser.alerts.push(...action.data)
       }
-      console.log(newAllertsUser)
         return {
           ...state,
           user: newAllertsUser,
@@ -299,12 +298,9 @@ const reducer = (state = initialState, action) => {
     }
     case ADD_NEW_USER_ALERT: {
       const newUserWithAlerts = {...state.user}
-      const isIdResInArr = newUserWithAlerts.alerts.some(
-        item => item.reserwationId._id === action.data.reserwationId._id
-      )
-      
-      if (!!newUserWithAlerts && !isIdResInArr) {
-        newUserWithAlerts.alerts = [action.data, ...state.user.alerts]
+      const alertsUserValid = !!state.user.alerts ? state.user.alerts : []
+      if (!!newUserWithAlerts) {
+        newUserWithAlerts.alerts = [action.data, ...alertsUserValid]
         newUserWithAlerts.alertActiveCount = state.user.alertActiveCount + 1
       }
       return{

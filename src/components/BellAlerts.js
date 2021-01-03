@@ -94,62 +94,45 @@ const ContentAllAlerts = styled.div`
 const AlertItemStyle = styled.div`
   position: relative;
   padding: 5px 10px;
+  padding-top: ${props => (props.noTime ? "5px" : "15px")};
   margin: 5px;
-  /* transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease; */
 
   background-color: ${props =>
     props.active
-      ? Colors(props.siteProps).primaryColorDark
-      : Colors(props.siteProps).darkColor};
+      ? props.alertColor === "blue"
+        ? Colors(props.siteProps).primaryColorLight
+        : props.alertColor === "red"
+        ? Colors(props.siteProps).dangerLightColor
+        : props.alertColor === "green"
+        ? Colors(props.siteProps).successColorLight
+        : props.alertColor === "orange"
+        ? Colors(props.siteProps).secondColorLight
+        : Colors(props.siteProps).darkColorDark
+      : Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   overflow: hidden;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 
-// const AllAlertsContent = [
-//   {
-//     _id: 1,
-//     message: "cos tam xd 1",
-//     active: true,
-//   },
-//   {
-//     _id: 2,
-//     message: "cos tam xd 2",
-//     active: true,
-//   },
-//   {
-//     _id: 3,
-//     message: "cos tam xd 3",
-//     active: true,
-//   },
-//   {
-//     _id: 4,
-//     message: "cos tam xd 4",
-//     active: false,
-//   },
-//   {
-//     _id: 5,
-//     message: "cos tam xd 5",
-//     active: false,
-//   },
-//   {
-//     _id: 6,
-//     message: "cos tam xd 6",
-//     active: false,
-//   },
-//   {
-//     _id: 7,
-//     message: "cos tam xd 7",
-//     active: false,
-//   },
-//   {
-//     _id: 8,
-//     message: "cos tam xd 8",
-//     active: false,
-//   },
-// ]
+  span {
+    color: ${props =>
+      // !props.active
+      //   ? 
+        props.alertColor === "blue"
+          ? Colors(props.siteProps).primaryColorDark
+          : props.alertColor === "red"
+          ? Colors(props.siteProps).dangerColorDark
+          : props.alertColor === "green"
+          ? Colors(props.siteProps).successColorDark
+          : props.alertColor === "orange"
+          ? Colors(props.siteProps).secondDarkColor
+          : Colors(props.siteProps).darkColorDark
+        // : props.alertColor === "default"
+        // ? Colors(props.siteProps).primaryColor
+        // : Colors(props.siteProps).textNormalBlack
+        };
+    font-weight: 700;
+  }
+`
 
  const BellAlerts = ({ siteProps, user }) => {
    const [allAlerts, setAllAlerts] = useState([])
@@ -259,7 +242,7 @@ const AlertItemStyle = styled.div`
              {mapAlerts.length > 0 ? (
                <div ref={refAllAllerts}>{mapAlerts}</div>
              ) : (
-               <AlertItemStyle>Brak alertów</AlertItemStyle>
+               <AlertItemStyle noTime>Brak alertów</AlertItemStyle>
              )}
            </ContentAllAlerts>
          </AllAlerts>

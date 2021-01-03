@@ -24,9 +24,10 @@ export const Colors = (
     navText: "white",
     primaryColor: siteProps.blind ? sitePropsDarkHex : "#5ec2d7",
     primaryColorDark: siteProps.blind ? sitePropsHex : "#0597a7",
+    primaryColorLight:
+      siteProps.blind || siteProps.dark ? "#212121" : "#cce3e8",
     secondColor: siteProps.blind ? sitePropsDarkHex : "#f7a52c",
-    secondColorLight:
-      siteProps.blind || siteProps.dark ? "#212121" : "#fff3e0",
+    secondColorLight: siteProps.blind || siteProps.dark ? "#212121" : "#fff3e0",
     secondDarkColor: siteProps.blind ? sitePropsHex : "#ed6c0c",
     darkColor: siteProps.blind
       ? sitePropsHex
@@ -39,8 +40,7 @@ export const Colors = (
       ? "#5ec2d7"
       : "#282828",
     dangerColor: siteProps.blind ? sitePropsDarkHex : "#f44336",
-    dangerLightColor:
-      siteProps.blind || siteProps.dark ? "#212121" : "#ffebee",
+    dangerLightColor: siteProps.blind || siteProps.dark ? "#212121" : "#ffebee",
     dangerColorDark: siteProps.blind ? sitePropsHex : "#c62828",
     successColorLight:
       siteProps.blind || siteProps.dark ? "#212121" : "#e8f5e9",
