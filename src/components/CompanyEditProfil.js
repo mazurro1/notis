@@ -8,14 +8,17 @@ import ContentCompanyProfil from "./ContentCompanyProfil"
 
 const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
+  const userId = useSelector(state => state.userId)
   const workCompanyData = useSelector(state => state.workCompanyData)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (user.company.accountVerified && !!!user.company.adress) {
-      dispatch(fetchCompanyData(user.company._id, user.token))
+    if (!!userId) {
+      if (user.company.accountVerified && !!!user.company.adress) {
+        dispatch(fetchCompanyData(user.company._id, user.token))
+      }
     }
-  }, [user, dispatch])
+  }, [userId, dispatch])
 
   const PopupActiveCompany = (
     <Popup

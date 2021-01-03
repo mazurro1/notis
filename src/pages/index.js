@@ -9,7 +9,6 @@ import {
   changeSortVisible,
   changeFilterVisible,
   changeLocaliaztionVisible,
-  changeLoadingPlaces,
   updatePage,
 } from "../state/actions"
 import { Colors } from "../common/Colors"
@@ -157,24 +156,6 @@ const Home = () => {
           />
         </ButtonMargin>
       </ButtonsFilters>
-      <div>
-        <button
-          onClick={() => {
-            dispatch(changeLoadingPlaces(true))
-          }}
-        >
-          load places true
-        </button>
-      </div>
-      <div>
-        <button
-          onClick={() => {
-            dispatch(changeLoadingPlaces(false))
-          }}
-        >
-          load places false
-        </button>
-      </div>
       <CSSTransition
         in={!loadingPlaces}
         timeout={400}
