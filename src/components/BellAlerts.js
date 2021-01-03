@@ -115,8 +115,6 @@ const AlertItemStyle = styled.div`
 
   span {
     color: ${props =>
-      // !props.active
-      //   ? 
         props.alertColor === "blue"
           ? Colors(props.siteProps).primaryColorDark
           : props.alertColor === "red"
@@ -126,9 +124,6 @@ const AlertItemStyle = styled.div`
           : props.alertColor === "orange"
           ? Colors(props.siteProps).secondDarkColor
           : Colors(props.siteProps).darkColorDark
-        // : props.alertColor === "default"
-        // ? Colors(props.siteProps).primaryColor
-        // : Colors(props.siteProps).textNormalBlack
         };
     font-weight: 700;
   }
@@ -208,8 +203,6 @@ const AlertItemStyle = styled.div`
        />
      )
    })
-
-   const filterActiveAlerts = allAlerts.filter(item => item.active === true).length
    
    return (
      <PositionRelative>

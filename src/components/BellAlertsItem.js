@@ -27,17 +27,6 @@ const ButtonAlertCompany = styled.button`
   margin-right: 5px;
   padding: 5px 10px;
   background-color: ${props =>
-    // props.active
-    //   ? props.alertColor === "blue"
-    //     ? Colors(props.siteProps).darkColorDark
-    //     : props.alertColor === "red"
-    //     ? Colors(props.siteProps).darkColorDark
-    //     : props.alertColor === "green"
-    //     ? Colors(props.siteProps).darkColorDark
-    //     : props.alertColor === "orange"
-    //     ? Colors(props.siteProps).darkColorDark
-    //     : Colors(props.siteProps).primaryColorDark
-      // :
        props.alertColor === "blue"
       ? Colors(props.siteProps).primaryColorDark
       : props.alertColor === "red"
@@ -58,8 +47,6 @@ const ButtonAlertCompany = styled.button`
 
   &:hover {
     background-color: ${props =>
-      // !props.active
-      //   ? 
         props.alertColor === "blue"
           ? Colors(props.siteProps).primaryColor
           : props.alertColor === "red"
@@ -69,15 +56,6 @@ const ButtonAlertCompany = styled.button`
           : props.alertColor === "orange"
           ? Colors(props.siteProps).secondColor
           : Colors(props.siteProps).primaryColor
-        // : props.alertColor === "blue"
-        // ? Colors(props.siteProps).darkColor
-        // : props.alertColor === "red"
-        // ? Colors(props.siteProps).darkColor
-        // : props.alertColor === "green"
-        // ? Colors(props.siteProps).darkColor
-        // : props.alertColor === "orange"
-        // ? Colors(props.siteProps).darkColor
-        // : Colors(props.siteProps).primaryColor
         };
   }
 `
