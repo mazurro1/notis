@@ -160,7 +160,7 @@ const AlertItemStyle = styled.div`
 
      useEffect(() => {
        sal({
-         threshold: 0.1,
+         threshold: 0.01,
          once: true,
        })
      }, [user, alertVisible])

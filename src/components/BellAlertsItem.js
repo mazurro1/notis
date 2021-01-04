@@ -21,9 +21,12 @@ const TimeStyle = styled.div`
     font-weight: 500 !important;
   }
 `
+const TextBeforeCompany = styled.div`
+  display: inline-block;
+  margin-right: 5px;
+`
 
 const ButtonAlertCompany = styled.button`
-  margin-left: 5px;
   margin-right: 5px;
   padding: 5px 10px;
   background-color: ${props =>
@@ -165,7 +168,7 @@ const ButtonAlertCompany = styled.button`
    if (isUserReserwation) {
      alertMessage = (
        <>
-         {textBeginningAlert}:
+         <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
          <LinkEffect
            path={`company/${alert.reserwationId.company.linkPath}`}
            text={

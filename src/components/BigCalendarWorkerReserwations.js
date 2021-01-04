@@ -28,6 +28,7 @@ import {
 } from "../state/actions"
 import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
 import { ServiceColorsReserwationsConvert } from "../common/ServiceColorsReserwationsConvert"
+import NewEventView from "./BigCalendarWorkerReserwationsTooltip"
 
 const BackgroundContentCalendar = styled.div`
   position: relative;
@@ -47,6 +48,10 @@ const BackgroundCalendarStyle = styled.div`
   overflow-y: auto;
   opacity: 0.95;
   margin-bottom: 10px;
+
+  .rbc-event-label {
+    display: none;
+  }
 
   .rbc-event-content {
     font-size: 0.7rem;
@@ -114,6 +119,7 @@ const BackgroundCalendarStyle = styled.div`
     border: none;
     border: 1px solid white;
     border-radius: 5px;
+    padding: 0px;
     transition-property: background-color;
     transition-duration: 0.3s;
     transition-timing-function: ease;
@@ -908,6 +914,7 @@ const BigCalendarWorkerReserwations = ({
         </TitleMonthYear>
         <BackgroundCalendarStyle siteProps={siteProps}>
           <Calendar
+            tooltipAccessor={null}
             culture="pl"
             views={["week"]}
             selectable
@@ -931,7 +938,7 @@ const BigCalendarWorkerReserwations = ({
             slotPropGetter={handleSlotPropGetterOpenHoursCompany} // nadanie koloru godzin otwartych firmy
             eventPropGetter={handleEventPropGetter}
             onSelectEvent={handleClickEvent}
-            // onNavigate={handleOnNavigate}
+            components={{ event: NewEventView }}
           />
         </BackgroundCalendarStyle>
 
