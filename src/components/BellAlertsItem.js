@@ -26,6 +26,10 @@ const TextBeforeCompany = styled.div`
   margin-right: 5px;
 `
 
+const DivInlineBlock = styled.div`
+  display: inline-block;
+`
+
 const ButtonAlertCompany = styled.button`
   margin-right: 5px;
   padding: 5px 10px;
@@ -181,9 +185,16 @@ const ButtonAlertCompany = styled.button`
              </ButtonAlertCompany>
            }
          />
-         dnia: <span>{reserwationDate}</span>, na godzine:{" "}
-         <span>{alert.reserwationId.dateStart}</span>, usługa:{" "}
-         <span>{alert.reserwationId.serviceName}</span>
+         <DivInlineBlock>
+           dnia: <span>{reserwationDate}</span>,
+         </DivInlineBlock>{" "}
+         na godzine:{" "}
+         <DivInlineBlock>
+           <span>
+             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+           </span>
+         </DivInlineBlock>
+         , usługa: <span>{alert.reserwationId.serviceName}</span>
        </>
      )
    } else {
@@ -192,9 +203,18 @@ const ButtonAlertCompany = styled.button`
          {textBeginningAlert} użytkowniowi{" "}
          {!!userName && !!userSurname
            ? `${userName} ${userSurname}`
-           : "Brak użytkownika"}{" "} dnia: <span>{reserwationDate}</span>, na godzine:{" "}
-         <span>{alert.reserwationId.dateStart}</span>, usługa:{" "}
-         <span>{alert.reserwationId.serviceName}</span>
+           : "Brak użytkownika"}{" "}
+         <DivInlineBlock>
+           dnia: <span>{reserwationDate}</span>,
+         </DivInlineBlock>{" "}
+         na godzine:{" "}
+         <DivInlineBlock>
+           <span>
+             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+           </span>
+           ,
+         </DivInlineBlock>{" "}
+         usługa: <span>{alert.reserwationId.serviceName}</span>
        </>
      ) : (
        <>
@@ -202,9 +222,18 @@ const ButtonAlertCompany = styled.button`
          {!!userName && !!userSurname
            ? `${userName} ${userSurname}`
            : "Brak użytkownika"}{" "}
-         {textBeginningAlert} dnia: <span>{reserwationDate}</span>, na godzine:{" "}
-         <span>{alert.reserwationId.dateStart}</span>, usługa:{" "}
-         <span>{alert.reserwationId.serviceName}</span>
+         {textBeginningAlert}
+         <DivInlineBlock>
+           dnia: <span>{reserwationDate}</span>,
+         </DivInlineBlock>{" "}
+         na godzine:{" "}
+         <DivInlineBlock>
+           <span>
+             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+           </span>
+           ,{" "}
+         </DivInlineBlock>{" "}
+         usługa: <span>{alert.reserwationId.serviceName}</span>
        </>
      )
    }
@@ -227,9 +256,15 @@ const ButtonAlertCompany = styled.button`
                alertColor={alertColor}
                siteProps={siteProps}
              >
-               <span>{`${new Date(alert.creationTime).getHours()}:${new Date(
-                 alert.creationTime
-               ).getMinutes()}`}</span>
+               <span>{`${
+                 new Date(alert.creationTime).getHours() < 10
+                   ? `0${new Date(alert.creationTime).getHours()}`
+                   : new Date(alert.creationTime).getHours()
+               }:${
+                 new Date(alert.creationTime).getMinutes() < 10
+                   ? `0${new Date(alert.creationTime).getMinutes()}`
+                   : new Date(alert.creationTime).getMinutes()
+               }`}</span>
                {`
               ${
                 new Date(alert.creationTime).getDate() < 10

@@ -12,6 +12,7 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
    const workerHistoryReserwations = useSelector(
      state => state.workerHistoryReserwations
    )
+
    const dispatch = useDispatch()
    
    const isAdmin = user.userId === user.company.owner
@@ -31,6 +32,7 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
      dateCalendar.getFullYear(),
      isAdmin,
      userWorkerActive,
+     user,
    ])
    return (
      <>
