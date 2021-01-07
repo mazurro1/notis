@@ -89,6 +89,15 @@ const ButtonMarginSubmit = styled.button`
   background-color: transparent;
 `
 
+const BlockUserInfo = styled.div`
+  text-align: center;
+  margin-top: 20px;
+  padding: 5px 10px;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).dangerColor};
+  border-radius: 5px;
+`
+
 const AllCategoryOfServices = ({
   isCompanyEditProfil,
   services = [],
@@ -108,6 +117,7 @@ const AllCategoryOfServices = ({
   newOwnerServicesCategory,
   setNewOwnerServicesCategory,
   ownerSerwiceCategory = [],
+  userIsBlocked,
 }) => {
   const [allCategories, setAllCategories] = useState([])
   const [isFirstRender, setIsFirstRender] = useState(true)
@@ -145,9 +155,9 @@ const AllCategoryOfServices = ({
     resetCompany,
   ])
 
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  })
+    useEffect(() => {
+      ReactTooltip.rebuild()
+    }, [userIsBlocked])
 
   const handleClickContent = e => {
     e.stopPropagation()
@@ -826,6 +836,7 @@ const AllCategoryOfServices = ({
         handleResetItemToFromServer={handleResetItemToFromServer}
         handleClickReserwation={handleClickReserwation}
         companyId={companyId}
+        userIsBlocked={userIsBlocked}
       />
     )
   })
@@ -838,7 +849,17 @@ const AllCategoryOfServices = ({
 
   return (
     <div>
+      {!!userIsBlocked && (
+        <BlockUserInfo>
+          Twoje konto zostało zablokowane na tej stronie
+        </BlockUserInfo>
+      )}
       {mapCategories}
+      {userIsBlocked && (
+        <ReactTooltip id="userIsBlocked" effect="float" multiline={true}>
+          <span>Twoje konto zostało zablokowane na tej stronie</span>
+        </ReactTooltip>
+      )}
       {isCompanyEditProfil && (
         <>
           <AddCategory
@@ -890,9 +911,7 @@ const AllCategoryOfServices = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdAddBox />}
-                          customColorButton={
-                            Colors(siteProps).successColorDark
-                          }
+                          customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                           disabled={disabledAddCategoryButton}
                         />

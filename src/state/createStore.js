@@ -31,6 +31,9 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  WORKER_USERS_INFORMATIONS_BLOCK,
+  WORKER_MORE_USERS_HISTORY_INFORMATIONS,
+  WORKER_USERS_INFORMATIONS,
   ADD_NEW_ALERTS,
   RESET_USER_ALERTS,
   ADD_NEW_USER_ALERT,
@@ -97,6 +100,7 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  companyUsersInformations: [],
   avaibleHoursReserwation: [],
   avaibleHoursReserwationUpdate: false,
   resetCompany: false,
@@ -286,6 +290,43 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case WORKER_USERS_INFORMATIONS_BLOCK: {
+      const newCompanyUsersInformationsBlocked = [...state.companyUsersInformations]
+      const findIndexUserHistory = newCompanyUsersInformationsBlocked.findIndex(
+        hist => hist._id === action.userHistoryId
+      )
+      newCompanyUsersInformationsBlocked[findIndexUserHistory].isBlocked =
+        action.isBlocked
+      return {
+        ...state,
+        companyUsersInformations: newCompanyUsersInformationsBlocked,
+      }
+    }
+
+    
+    case WORKER_MORE_USERS_HISTORY_INFORMATIONS: {
+      const newCompanyUsersInformations = [...state.companyUsersInformations]
+      const findIndexUserHistory = newCompanyUsersInformations.findIndex(
+        hist => hist._id === action.userHistoryId
+      )
+      newCompanyUsersInformations[findIndexUserHistory].allUserReserwations.push(
+        ...action.data
+      )
+      console.log(findIndexUserHistory)
+      return {
+        ...state,
+        companyUsersInformations: newCompanyUsersInformations,
+      }
+    }
+
+
+    case WORKER_USERS_INFORMATIONS: {
+      return {
+        ...state,
+        companyUsersInformations: action.data,
+      }
+    }
+
     case ADD_NEW_ALERTS: {
       const newAllertsUser = {...state.user}
       if (!!newAllertsUser){

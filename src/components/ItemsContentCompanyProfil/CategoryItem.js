@@ -209,6 +209,7 @@ const CategoryItem = ({
   handleResetItemToFromServer,
   handleClickReserwation,
   companyId,
+  userIsBlocked,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
@@ -273,9 +274,9 @@ const CategoryItem = ({
     setChange(prevState => !prevState)
   }
 
-   const handleChangeColorService = value => {
-     setColorServiceComponent(value)
-   }
+  const handleChangeColorService = value => {
+    setColorServiceComponent(value)
+  }
 
   const handleAddItem = e => {
     e.preventDefault()
@@ -306,7 +307,7 @@ const CategoryItem = ({
         extraTime,
         priceInput,
         extraPrice,
-        colorServiceComponent.value,
+        colorServiceComponent.value
       )
     }
   }
@@ -348,6 +349,7 @@ const CategoryItem = ({
         handleClickReserwation={handleClickReserwation}
         companyId={companyId}
         siteProps={siteProps}
+        userIsBlocked={userIsBlocked}
       />
     )
   })

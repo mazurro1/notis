@@ -491,6 +491,10 @@ export const fetchResetPassword = (email, password, codeReset) => {
 // COMPANY ACTIONS
 // COMPANY ACTIONS
 // COMPANY ACTIONS
+export const WORKER_USERS_INFORMATIONS_BLOCK = "WORKER_USERS_INFORMATIONS_BLOCK"
+export const WORKER_MORE_USERS_HISTORY_INFORMATIONS =
+  "WORKER_MORE_USERS_HISTORY_INFORMATIONS"
+export const WORKER_USERS_INFORMATIONS = "WORKER_USERS_INFORMATIONS"
 export const RESET_PLACES = "RESET_PLACES"
 export const UPDATE_PAGE = "UPDATE_PAGE"
 export const UPDATE_PLACES_DATA = "UPDATE_PLACES_DATA"
@@ -510,6 +514,29 @@ export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
 export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
 export const RESET_USER_ALERTS = "RESET_USER_ALERTS"
 export const ADD_NEW_ALERTS = "ADD_NEW_ALERTS"
+
+export const newWorkerUsersInformationsBlock = (userHistoryId, isBlocked) => {
+  return {
+    type: WORKER_USERS_INFORMATIONS_BLOCK,
+    userHistoryId: userHistoryId,
+    isBlocked: isBlocked,
+  }
+}
+
+export const newWorkerUsersHistoryInformations = (data, userHistoryId) => {
+  return {
+    type: WORKER_MORE_USERS_HISTORY_INFORMATIONS,
+    data: data,
+    userHistoryId: userHistoryId,
+  }
+}
+
+export const newWorkerUsersInformations = (data) => {
+  return {
+    type: WORKER_USERS_INFORMATIONS,
+    data: data,
+  }
+}
 
 export const addNewAlerts = (data) => {
   return {
@@ -1435,3 +1462,104 @@ export const fetchGetMoreAlerts = (token, page) => {
   }
 }
 
+export const fetchworkerUsersInformations = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/get-company-users-informations`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          newWorkerUsersInformations(response.data.companysClientInformations)
+        )
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd podczas ładowania informacji o klientach.", "red"))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+
+export const fetchworkerUsersMoreInformationsHistory = (token, companyId, userHistoryId, page) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/get-more-users-informations-history`,
+        {
+          companyId: companyId,
+          userHistoryId: userHistoryId,
+          page: page
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          newWorkerUsersHistoryInformations(
+            response.data.newUserReserwations,
+            userHistoryId
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
+        )
+      })
+  }
+}
+
+export const fetchCompanyUsersInformationsBlock = (
+  token,
+  companyId,
+  userHistoryId,
+  isBlocked
+) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/company-users-informations-block`,
+        {
+          companyId: companyId,
+          userHistoryId: userHistoryId,
+          isBlocked: isBlocked,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(newWorkerUsersInformationsBlock(userHistoryId, isBlocked))
+        if (!!isBlocked){
+          dispatch(
+            addAlertItem("Konto zostało zablokowane na stronie.", "green")
+          )
+        }else{
+          dispatch(
+            addAlertItem("Konto zostało odblokowane na stronie.", "green")
+          )
+        }
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
+        )
+      })
+  }
+}

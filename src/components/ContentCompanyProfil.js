@@ -549,6 +549,17 @@ const ContentCompanyProfil = ({
   }
   
   let userHasPermisionToOther = !isCompanyEditProfil || isAdmin
+  let userIsBlocked = false;
+  if (!!company.usersInformation && !!user) {
+    const isUserInAllUsers = company.usersInformation.find(
+      itemInfo => itemInfo.userId === user.userId
+    )
+    if(!!isUserInAllUsers){
+      if(!!isUserInAllUsers.isBlocked){
+        userIsBlocked = true
+      }
+    }
+  }
   
     return (
       <div>
@@ -589,6 +600,7 @@ const ContentCompanyProfil = ({
                 newOwnerServicesCategory={newOwnerServicesCategory}
                 setNewOwnerServicesCategory={setNewOwnerServicesCategory}
                 ownerSerwiceCategory={company.ownerData.servicesCategory}
+                userIsBlocked={userIsBlocked}
               />
             )}
           </LeftColumn>
@@ -805,9 +817,11 @@ const ContentCompanyProfil = ({
             />
           </SaveChangesPosition>
         </CSSTransition>
-        {isCompanyEditProfil && <ReactTooltip id="editMode" effect="float" multiline={true}>
-          <span>Tryb edycji.</span>
-        </ReactTooltip>}
+        {isCompanyEditProfil && (
+          <ReactTooltip id="editMode" effect="float" multiline={true}>
+            <span>Tryb edycji.</span>
+          </ReactTooltip>
+        )}
       </div>
     )
 }

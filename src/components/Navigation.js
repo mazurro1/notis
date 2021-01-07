@@ -67,6 +67,7 @@ import {Translates} from '../common/Translates'
 import BellAlerts from "./BellAlerts"
 import openSocket from "socket.io-client"
 import {Site} from '../common/Site'
+import WorkerUsersInformation from "./WorkerUsersInformation"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -320,6 +321,7 @@ const PositionEn = styled.div`
 const Navigation = ({ children, isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(false)
+  const [workerUsersInformationVisible, setWorkerUsersInformationVisible] = useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [workPropsVisible, setWorkPropsVisible] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
@@ -494,6 +496,16 @@ const Navigation = ({ children, isMainPage }) => {
     setWorkerReserwationsVisible(true)
    }
 
+   const handleWorkerUsersInformation = () => {
+    setWorkPropsVisible(false)
+    setWorkerUsersInformationVisible(true)
+   }
+
+   const handleCloseWorkerUsersInformation = () => {
+     setWorkerUsersInformationVisible(false)
+     setWorkPropsVisible(true)
+   }
+
    const handleCloseWorkerReserwations = () => {
     setWorkerReserwationsVisible(false)
     setWorkPropsVisible(true)
@@ -582,6 +594,21 @@ const Navigation = ({ children, isMainPage }) => {
           calendar
         >
           <WorkerReserwations handleClose={handleCloseWorkerReserwations} />
+        </Popup>
+      )
+
+      const PopupWorkersUsersInformations = (
+        <Popup
+          popupEnable={workerUsersInformationVisible}
+          handleClose={handleCloseWorkerUsersInformation}
+          title="Klienci"
+          fullScreen
+        >
+          <WorkerUsersInformation
+            handleClose={handleCloseWorkerUsersInformation}
+            user={user}
+            siteProps={siteProps}
+          />
         </Popup>
       )
 
@@ -822,16 +849,18 @@ const Navigation = ({ children, isMainPage }) => {
           icon={<MdTimelapse />}
           // onClick={handleWorkerReserwations}
         />
-        {workerHasAccessClientsOpinions && <MarginButtonsWork>
-          <ButtonIcon
-            title="Twoi klienci"
-            uppercase
-            fontIconSize="25"
-            fontSize="16"
-            icon={<FaUsers />}
-            // onClick={handleWorkerReserwations}
-          />
-        </MarginButtonsWork>}
+        {workerHasAccessClientsOpinions && (
+          <MarginButtonsWork>
+            <ButtonIcon
+              title="Klienci"
+              uppercase
+              fontIconSize="25"
+              fontSize="16"
+              icon={<FaUsers />}
+              onClick={handleWorkerUsersInformation}
+            />
+          </MarginButtonsWork>
+        )}
         <MarginButtonsWork>
           <ButtonIcon
             title="Rezerwacje"
@@ -842,16 +871,18 @@ const Navigation = ({ children, isMainPage }) => {
             onClick={handleWorkerReserwations}
           />
         </MarginButtonsWork>
-        {workerHasAccessAvailability && <MarginButtonsWork>
-          <ButtonIcon
-            title="Stan magazynowy"
-            uppercase
-            fontIconSize="20"
-            fontSize="16"
-            icon={<FaBox />}
-            // onClick={handleClickWork}
-          />
-        </MarginButtonsWork>}
+        {workerHasAccessAvailability && (
+          <MarginButtonsWork>
+            <ButtonIcon
+              title="Stan magazynowy"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaBox />}
+              // onClick={handleClickWork}
+            />
+          </MarginButtonsWork>
+        )}
       </div>
     </Popup>
   )
@@ -979,6 +1010,7 @@ const Navigation = ({ children, isMainPage }) => {
   return (
     <>
       {PopupWorkersReserwations}
+      {PopupWorkersUsersInformations}
       {PopupWorkerPropsVisible}
       {PopupWorkerEditHours}
       {PopupReserwation}

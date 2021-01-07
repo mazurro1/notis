@@ -32,7 +32,8 @@ const ServiceItem = styled.div`
   margin-top: ${props => (props.index ? "0px" : "5px")};
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   user-select: none;
   overflow: hidden;
@@ -55,11 +56,10 @@ const ServiceParagraph = styled.p`
 `
 
 const LeftContent = styled.div`
-  width: 80%;
+  min-width: 300px;
 `
 
 const RightContent = styled.div`
-  width: 20%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -121,10 +121,11 @@ const ServicesItem = ({
   handleClickReserwation,
   companyId,
   siteProps,
+  userIsBlocked,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
-    label: ""
+    label: "",
   })
   const [clickEdit, setClickEdit] = useState(false)
   const [clickButtonDelete, setClickButtonDelete] = useState(false)
@@ -135,7 +136,9 @@ const ServicesItem = ({
   const [timeInput, setTimeInput] = useState("")
   const [priceInput, setPriceInput] = useState("")
 
-  const indexValueColorService = !!itemServices.serviceColor ? itemServices.serviceColor : 1
+  const indexValueColorService = !!itemServices.serviceColor
+    ? itemServices.serviceColor
+    : 1
 
   const disabledSaveButton =
     colorServiceComponent.value === indexValueColorService &&
@@ -153,7 +156,9 @@ const ServicesItem = ({
     setContentInput(itemServices.serviceText)
     setTimeInput(itemServices.time)
     setPriceInput(itemServices.serviceCost)
-    const indexValueColorService = !!itemServices.serviceColor ? itemServices.serviceColor : 1
+    const indexValueColorService = !!itemServices.serviceColor
+      ? itemServices.serviceColor
+      : 1
     const selectedItemColor = ServiceColors.find(
       col => col.value === indexValueColorService
     )
@@ -194,7 +199,7 @@ const ServicesItem = ({
     setClickEdit(prevState => !prevState)
   }
 
-  const handleChangeColorService = (value) => {
+  const handleChangeColorService = value => {
     setColorServiceComponent(value)
   }
 
@@ -210,7 +215,7 @@ const ServicesItem = ({
         priceInput,
         extraPrice,
         itemServices.serviceCategory,
-        colorServiceComponent.value,
+        colorServiceComponent.value
       )
       setClickEdit(false)
     }
@@ -288,15 +293,20 @@ const ServicesItem = ({
             </ButtonMargin>
           </>
         ) : (
-          <ButtonIcon
-            title="Rezerwuj"
-            uppercase
-            fontIconSize="18"
-            fontSize="14"
-            icon={<FaCalendarAlt />}
-            secondColors={isCompanyEditProfil}
-            onClick={() => handleClickReserwation(itemServices, companyId)}
-          />
+          <>
+            <div data-tip data-for="userIsBlocked">
+              <ButtonIcon
+                title="Rezerwuj"
+                uppercase
+                fontIconSize="18"
+                fontSize="14"
+                icon={<FaCalendarAlt />}
+                secondColors={isCompanyEditProfil}
+                onClick={() => handleClickReserwation(itemServices, companyId)}
+                disabled={userIsBlocked}
+              />
+            </div>
+          </>
         )}
       </RightContent>
       <CSSTransition

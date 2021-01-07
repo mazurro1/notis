@@ -193,15 +193,17 @@ const AlertItemStyle = styled.div`
    }
 
    const mapAlerts = allAlerts.map((alert, index) => {
-     return (
-       <BellAlertsItem
-         key={index}
-         alert={alert}
-         siteProps={siteProps}
-         AlertItemStyle={AlertItemStyle}
-         user={user}
-       />
-     )
+     if(!!alert.reserwationId){
+       return (
+         <BellAlertsItem
+           key={index}
+           alert={alert}
+           siteProps={siteProps}
+           AlertItemStyle={AlertItemStyle}
+           user={user}
+         />
+       )
+     }
    })
    
    return (

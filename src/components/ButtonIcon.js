@@ -139,11 +139,11 @@ const ButtonIcon = ({
     }
   }
 
-  const handleOnClick = () => {
+  const handleOnClick = (e) => {
     if (!disabled) {
       setNumberScale(1)
       setMouseClick(true)
-      onClick()
+      onClick(e)
     }
   }
 
