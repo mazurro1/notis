@@ -91,6 +91,7 @@ const Popup = ({
   fullScreen = false,
   calendar = false,
   title = null,
+  opacity = false,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -148,7 +149,7 @@ const Popup = ({
     <CSSTransition
       in={popupEnable}
       timeout={400}
-      classNames="popup"
+      classNames={opacity ? "opacitySpinner" : "popup"}
       unmountOnExit
     >
       <PopupWindow onClick={handleOnClick} calendar={calendar}>

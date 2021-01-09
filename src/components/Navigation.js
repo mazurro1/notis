@@ -242,15 +242,15 @@ const MenuPosition = styled.div`
 
 const ContentMenu = styled.div`
   position: relative;
-  transition-property: transform;
-  transition-duration: 0.5s;
-  transition-timing-function: ease;
-  transform: ${props =>
+  /* transform: ${props =>
     props.active
       ? "translate(20%, -15%) scale(0.6) rotateY(-50deg) rotateX(-15deg) rotateZ(17deg);"
-      : ""};
+      : ""}; */
   box-shadow: 0 0 40px 1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  transition-property: transform, padding-left;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
 `
 
 const BurgerButton = styled.div`
@@ -1097,7 +1097,7 @@ const Navigation = ({ children, isMainPage }) => {
           </IconCloseStyle>
         </CloseMenuLeft>
       </MenuPosition>
-      <Popup popupEnable={menuOpen} handleClose={handleMenuOpen} noContent />
+      <Popup opacity popupEnable={menuOpen} handleClose={handleMenuOpen} noContent />
       <ContentMenu active={menuOpen}>
         <BackgroundColorPage className="heightElement" siteProps={siteProps}>
           <Spinner spinnerEnable={spinnerEnable} />

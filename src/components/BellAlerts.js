@@ -6,13 +6,15 @@ import styled from 'styled-components'
 import {Colors} from '../common/Colors'
 import { CSSTransition } from "react-transition-group"
 import BellAlertsItem from "./BellAlertsItem"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import {
   fetchUpdateUserAlert,
   fetchGetMoreAlerts,
   resetUserAlerts,
+  resetBellAlerts,
 } from "../state/actions"
 import sal from "sal.js"
+import {useOutsideAlerter} from '../common/Functions'
 
 const BellAlertsStyle = styled.div`
   position: relative;
@@ -134,7 +136,10 @@ const AlertItemStyle = styled.div`
    const [alertVisible, setAlertVisible] = useState(false)
    const [scrollPosition, setScrollPosition] = useState(0)
    const [pageUpdate, setPageUpdate] = useState(1)
-
+   const refBell = useRef(null)
+   const bellAlertsActive = useSelector(state => state.bellAlertsActive)
+   
+  useOutsideAlerter(refBell)
    const dispatch = useDispatch()
 
      const refAllAllerts= useRef(null)
@@ -163,7 +168,7 @@ const AlertItemStyle = styled.div`
          threshold: 0.01,
          once: true,
        })
-     }, [user, alertVisible])
+     }, [user, bellAlertsActive])
 
   useEffect(() => {
     if (!!user.alerts) {
@@ -176,14 +181,16 @@ const AlertItemStyle = styled.div`
   }
 
    const handleClickAlertVisible = () => {
-    setAlertVisible(prevState => !prevState)
+    // setAlertVisible(prevState => !prevState)
+    
+    dispatch(resetBellAlerts(!bellAlertsActive))
     const isSomeActive = allAlerts.some(item => item.active)
-    if (alertVisible === false && isSomeActive) {
+    if (bellAlertsActive === false && isSomeActive) {
       dispatch(fetchUpdateUserAlert(user.token))
-    }else if (alertVisible === false){
+    } else if (bellAlertsActive === false) {
       dispatch(resetUserAlerts())
     }
-      if (alertVisible === true) {
+      if (bellAlertsActive === true) {
         const mapAllerts = allAlerts.map(item => {
           item.active = false
           return item
@@ -208,7 +215,11 @@ const AlertItemStyle = styled.div`
    
    return (
      <PositionRelative>
-       <BellAlertsStyle siteProps={siteProps} onClick={handleClickAlertVisible}>
+       <BellAlertsStyle
+         siteProps={siteProps}
+         onClick={handleClickAlertVisible}
+         ref={refBell}
+       >
          <IconStyle className="bell-action">
            <FaBell />
          </IconStyle>
@@ -224,7 +235,7 @@ const AlertItemStyle = styled.div`
          </CountAlerts>
        </CSSTransition>
        <CSSTransition
-         in={alertVisible}
+         in={bellAlertsActive}
          timeout={400}
          classNames="popup"
          unmountOnExit

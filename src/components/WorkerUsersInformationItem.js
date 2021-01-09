@@ -19,9 +19,16 @@ import sal from "sal.js"
 import {
   fetchworkerUsersMoreInformationsHistory,
   fetchCompanyUsersInformationsBlock,
+  fetchCustomUserPhone,
+  fetchCompanyUsersInformationsMessage,
+  fetchCompanyUsersInformationsDeleteMessage,
+  fetchworkerUsersMoreInformationsMessage,
 } from "../state/actions"
 import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
+import WorkerUsersInformationItemMessage from "./WorkerUsersInformationItemMessage"
+
+
 
 const ServiceItem = styled.div`
   position: relative;
@@ -47,11 +54,40 @@ const ServiceItem = styled.div`
   transition-timing-function: ease;
 `
 
-const ServiceItemHistory = styled.div`
+const ServiceItemMessages = styled.div`
   position: relative;
   background-color: ${props =>
     props.clickDelete && !props.siteProps
       ? "#ffebee"
+      : Colors(props.siteProps).companyItemBackground};
+  padding: 10px;
+  padding-top: 22px;
+  padding-right: 50px;
+  border-radius: 5px;
+  border-top-left-radius: ${props => (props.index ? "0px" : "5px")};
+  border-top-right-radius: ${props => (props.index ? "0px" : "5px")};
+  margin: 5px 5px;
+  margin-top: ${props => (props.index ? "0px" : "5px")};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  user-select: none;
+  overflow: hidden;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  transition-property: all;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+`
+
+const ServiceItemHistory = styled.div`
+  position: relative;
+  font-size: 1rem;
+  background-color: ${props =>
+    props.color === "green"
+      ? Colors(props.siteProps).successColorLight
+      : props.color === "red"
+      ? Colors(props.siteProps).dangerLightColor
       : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   padding-top: 20px;
@@ -74,7 +110,6 @@ const ServiceItemHistory = styled.div`
 
 const CategoryItemStyle = styled.div`
   margin-top: 20px;
-  /* margin-bottom: ${props => `-${props.paddingCategory}px`}; */
 `
 
 
@@ -154,7 +189,7 @@ const BackgroundEdit = styled.div`
 
 const BackgroundEditContent = styled.div`
   width: 90%;
-  background-color: ${props => (props.transparent ? "transparent" : "white")};
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
   border-radius: 5px;
   max-height: 90%;
   color: black;
@@ -194,6 +229,16 @@ const HeightContentHistory = styled.div`
   overflow-y: auto;
 `
 
+const HeightContentMessages = styled.div`
+  max-height: 350px;
+  overflow-y: auto;
+`
+
+const HeightContentMessagesOther = styled.div`
+  max-height: 350px;
+  overflow-y: auto;
+`
+
 const ReserwationsCountStyle = styled.div`
   position: absolute;
   bottom: 5px;
@@ -211,18 +256,89 @@ const TimeReserwation = styled.div`
     padding-right: 5px;
     color: ${props => Colors(props.siteProps).primaryColorDark};
   }
+
+  .statusReserwation {
+    display: inline-block;
+    font-weight: 700;
+    color: ${props =>
+      props.color === "green"
+        ? Colors(props.siteProps).successColorDark
+        : props.color === "red"
+        ? Colors(props.siteProps).dangerColorDark
+        : Colors(props.siteProps).primaryColorDark};
+    margin-left: 10px;
+  }
 `
 
+const PhoneNumberContent = styled.div`
+  position: relative;
+  padding: 10px;
+`
+
+const ButtonStylePhone = styled.div`
+  position: relative;
+  top: 7px;
+  display: inline-block;
+  margin-left: 5px;
+`
+
+const PaddingTopPhone = styled.div`
+  padding-top: 7px;
+  display: inline-block;
+  margin-right: 5px;
+`
+
+const DateMessageWorkerInformations = styled.div`
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  font-size: 0.8rem;
+  color: ${props => Colors(props.siteProps).primaryColorDark};
+  opacity: 0.5;
+
+  span {
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    padding-right: 5px;
+  }
+`
+
+const IconDeleteMessage = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 5px;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).dangerColor};
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${props => Colors(props.siteProps).dangerColorDark};
+  }
+`
 
  const WorkerUsersInformationItem = ({ userInfo, siteProps, user }) => {
    const [userCollapseActive, setUserCollapseActive] = useState(false)
    const [clickAdd, setClickAdd] = useState(false)
    const [clickBlock, setClickBlock] = useState(false)
    const [clickHistory, setClickHistory] = useState(false)
+   const [clickPhone, setClickPhone] = useState(false)
    const [newMessage, setNewMessage] = useState("")
    const [scrollPosition, setScrollPosition] = useState(0)
+   const [scrollPositionMessages, setScrollPositionMessages] = useState(0)
    const [pageHistory, setPageHistory] = useState(1)
+   const [pageMessages, setPageMessages] = useState(1)
    const refAllHistory = useRef(null)
+   const refAllMessages = useRef(null)
 
    const dispatch = useDispatch()
 
@@ -245,8 +361,6 @@ const TimeReserwation = styled.div`
              refAllHistory.current.childNodes[indexLastChildren - 1].className =
                "sal-animate active-update"
              setPageHistory(prevState => prevState + 1)
-             console.log("update history")
-             console.log(userInfo)
              dispatch(
                fetchworkerUsersMoreInformationsHistory(
                  user.token,
@@ -261,6 +375,35 @@ const TimeReserwation = styled.div`
      }
    }, [refAllHistory, userInfo, scrollPosition])
 
+      useEffect(() => {
+        if (!!refAllMessages) {
+          if (!!refAllMessages.current) {
+            const indexLastChildren = refAllMessages.current.childNodes.length
+            if (
+              indexLastChildren > 0
+            ) {
+              const isLastPlaceVisible =
+                refAllMessages.current.childNodes[indexLastChildren - 1]
+                  .className === "sal-animate"
+              if (isLastPlaceVisible) {
+                refAllMessages.current.childNodes[
+                  indexLastChildren - 1
+                ].className = "sal-animate active-update"
+                setPageMessages(prevState => prevState + 1)
+                dispatch(
+                  fetchworkerUsersMoreInformationsMessage(
+                    user.token,
+                    user.company._id,
+                    userInfo._id,
+                    pageMessages
+                  )
+                )
+              }
+            }
+          }
+        }
+      }, [refAllMessages, userInfo, scrollPositionMessages])
+
    useEffect(() => {
      sal({
        threshold: 0.01,
@@ -271,6 +414,10 @@ const TimeReserwation = styled.div`
    const handleScrollContainer = () => {
      setScrollPosition(prevState => prevState + 1)
    }
+
+  const handleScrollContainerMessages = () => {
+    setScrollPositionMessages(prevState => prevState + 1)
+  }
 
    const handleClickCollapse = e => {
      e.stopPropagation()
@@ -297,12 +444,38 @@ const TimeReserwation = styled.div`
    }
 
    const handleAddMessage = e => {
-     console.log(newMessage)
+     e.preventDefault()
+      dispatch(
+        fetchCompanyUsersInformationsMessage(
+          user.token,
+          user.company._id,
+          userInfo._id,
+          newMessage
+        )
+      )
+      setClickAdd(false)
+      setNewMessage("")
+   }
+
+   const handleDeleteMessageFetch = (messageId) => {
+     dispatch(
+       fetchCompanyUsersInformationsDeleteMessage(
+         user.token,
+         user.company._id,
+         userInfo._id,
+         messageId
+       )
+     )
    }
 
    const handleClickBlock = e => {
      e.stopPropagation()
      setClickBlock(prevState => !prevState)
+   }
+
+   const handleClickPhone = e => {
+     e.stopPropagation()
+    setClickPhone(prevState => !prevState)
    }
 
    const handleConfirmBlockUser = () => {
@@ -323,11 +496,58 @@ const TimeReserwation = styled.div`
      setPageHistory(1)
    }
 
+   const handleFetchPhoneNumber = () => {
+     dispatch(
+       fetchCustomUserPhone(
+         user.token,
+         userInfo.userId._id,
+         userInfo._id,
+         user.company._id
+       )
+     )
+   }
+
    const mapInformations = userInfo.informations.map((item, index) => {
+      let workerName = "Użytkownik skasował konto"
+      let workerSurname = ""
+      if (!!item.workerWhoWritedUserId) {
+        workerName = Buffer.from(
+          item.workerWhoWritedUserId.name,
+          "base64"
+        ).toString("ascii")
+        workerSurname = Buffer.from(
+          item.workerWhoWritedUserId.surname,
+          "base64"
+        ).toString("ascii")
+      }
+      const dateMessage = new Date(item.dateMessage)
+      const renderDate = `${
+        dateMessage.getDate() < 10
+          ? `0${dateMessage.getDate()}`
+          : dateMessage.getDate()
+      }-${
+        dateMessage.getMonth() + 1 < 10
+          ? `0${dateMessage.getMonth() + 1}`
+          : dateMessage.getMonth()
+      }-${dateMessage.getFullYear()} -`
+
      return (
-       <ServiceItem siteProps={siteProps} index={index === 0}>
-         {item.message}
-       </ServiceItem>
+       <WorkerUsersInformationItemMessage
+         ServiceItemMessages={ServiceItemMessages}
+         siteProps={siteProps}
+         index={index}
+         item={item}
+         DateMessageWorkerInformations={DateMessageWorkerInformations}
+         renderDate={renderDate}
+         workerName={workerName}
+         workerSurname={workerSurname}
+         IconDeleteMessage={IconDeleteMessage}
+         userInfo={userInfo}
+         handleClickContent={handleClickContent}
+         ButtonMargin={ButtonMargin}
+         key={index}
+         handleDeleteMessageFetch={handleDeleteMessageFetch}
+       />
      )
    })
 
@@ -358,6 +578,22 @@ const TimeReserwation = styled.div`
          reserwation.reserwationId.toWorkerUserId.surname,
          "base64"
        ).toString("ascii")
+       const splitReserwationDate = reserwation.reserwationId.dateStart.split(":")
+       const isActualReserwation = new Date(
+         reserwation.reserwationId.dateYear,
+         reserwation.reserwationId.dateMonth - 1,
+         reserwation.reserwationId.dateDay,
+         Number(splitReserwationDate[0]),
+         Number(splitReserwationDate[1])
+       )
+       const isFinishedDate = isActualReserwation <= new Date()
+       const reserwationColor = reserwation.reserwationId.visitCanceled
+         ? "red"
+         : reserwation.reserwationId.visitNotFinished
+         ? "red"
+         : isFinishedDate
+         ? "green"
+         : "blue"
        return (
          <div
            data-sal="zoom-in"
@@ -365,9 +601,22 @@ const TimeReserwation = styled.div`
            data-sal-easing="ease-out-bounce"
            key={index}
          >
-           <ServiceItemHistory index={index === 0}>
-             <TimeReserwation siteProps={siteProps}>
+           <ServiceItemHistory
+             index={index === 0}
+             siteProps={siteProps}
+             color={reserwationColor}
+           >
+             <TimeReserwation siteProps={siteProps} color={reserwationColor}>
                {dateReserwation}
+               <div className="statusReserwation">
+                 {reserwation.reserwationId.visitCanceled
+                   ? "Wizyta odwołana"
+                   : reserwation.reserwationId.visitNotFinished
+                   ? "Wizyta nie odbyta"
+                   : isFinishedDate
+                   ? "Wizyta odbyta"
+                   : "Wizyta oczekująca"}
+               </div>
              </TimeReserwation>
              {reserwation.reserwationId.serviceName} -{" "}
              {`${workerName} ${workerSurname}`}
@@ -389,7 +638,7 @@ const TimeReserwation = styled.div`
    return (
      <CategoryItemStyle>
        <TitleCategory
-         clickAdd={clickAdd || clickBlock || clickHistory}
+         clickAdd={clickAdd || clickBlock || clickHistory || clickPhone}
          siteProps={siteProps}
          onClick={handleClickCollapse}
          isBlocked={!!userInfo.isBlocked}
@@ -429,7 +678,12 @@ const TimeReserwation = styled.div`
          >
            <MdHistory />
          </IconPosition>
-         <IconPosition data-tip data-for="phoneItemUserInfo" right="232px">
+         <IconPosition
+           data-tip
+           data-for="phoneItemUserInfo"
+           right="232px"
+           onClick={handleClickPhone}
+         >
            <MdPhone />
          </IconPosition>
          <CSSTransition
@@ -439,8 +693,13 @@ const TimeReserwation = styled.div`
            unmountOnExit
          >
            <BackgroundEdit onClick={handleCancelAdd}>
-             <BackgroundEditContent onClick={handleClickContent}>
-               <TitleEditContent>Nowa wiadomość o kliencie</TitleEditContent>
+             <BackgroundEditContent
+               onClick={handleClickContent}
+               siteProps={siteProps}
+             >
+               <TitleEditContent siteProps={siteProps}>
+                 Nowa wiadomość o kliencie
+               </TitleEditContent>
                <BackgroundEditContentPadding>
                  <form onSubmit={handleAddMessage}>
                    <InputIcon
@@ -488,8 +747,13 @@ const TimeReserwation = styled.div`
            unmountOnExit
          >
            <BackgroundEdit onClick={handleClickBlock}>
-             <BackgroundEditContent onClick={handleClickContent}>
-               <TitleEditContent>Blokuj użytkownika</TitleEditContent>
+             <BackgroundEditContent
+               onClick={handleClickContent}
+               siteProps={siteProps}
+             >
+               <TitleEditContent siteProps={siteProps}>
+                 Blokuj użytkownika
+               </TitleEditContent>
                <BackgroundEditContentPadding>
                  <ButtonsAddPosition>
                    <ButtonMargin>
@@ -522,14 +786,71 @@ const TimeReserwation = styled.div`
            </BackgroundEdit>
          </CSSTransition>
          <CSSTransition
+           in={clickPhone}
+           timeout={400}
+           classNames="popup"
+           unmountOnExit
+         >
+           <BackgroundEdit onClick={handleClickPhone}>
+             <BackgroundEditContent
+               onClick={handleClickContent}
+               siteProps={siteProps}
+             >
+               <TitleEditContent siteProps={siteProps}>
+                 Numer klienta
+               </TitleEditContent>
+               <PhoneNumberContent>
+                 <PaddingTopPhone>Numer telefonu: </PaddingTopPhone>
+                 {userInfo.numberPhone ? (
+                   userInfo.numberPhone
+                 ) : (
+                   <ButtonStylePhone>
+                     <ButtonIcon
+                       title="Zobacz numer"
+                       uppercase
+                       fontIconSize="40"
+                       fontSize="15"
+                       icon={<MdPhone />}
+                       onClick={handleFetchPhoneNumber}
+                       customColorButton={Colors(siteProps).successColorDark}
+                       customColorIcon={Colors(siteProps).successColor}
+                     />
+                   </ButtonStylePhone>
+                 )}
+               </PhoneNumberContent>
+               <BackgroundEditContentPadding>
+                 <ButtonsAddPosition>
+                   <ButtonMargin>
+                     <ButtonIcon
+                       title="Wróc"
+                       uppercase
+                       fontIconSize="40"
+                       fontSize="15"
+                       icon={<MdArrowBack />}
+                       onClick={handleClickPhone}
+                       customColorButton={Colors(siteProps).dangerColorDark}
+                       customColorIcon={Colors(siteProps).dangerColor}
+                     />
+                   </ButtonMargin>
+                 </ButtonsAddPosition>
+               </BackgroundEditContentPadding>
+             </BackgroundEditContent>
+           </BackgroundEdit>
+         </CSSTransition>
+         <CSSTransition
            in={clickHistory}
            timeout={400}
            classNames="popup"
            unmountOnExit
          >
            <BackgroundEdit onClick={handleClickHistory}>
-             <BackgroundEditContent onClick={handleClickContent}>
-               <TitleEditContent>Historia rezerwacji</TitleEditContent>
+             <BackgroundEditContent
+               onClick={handleClickContent}
+               siteProps={siteProps}
+             >
+               <TitleEditContent siteProps={siteProps}>
+                 Historia rezerwacji
+               </TitleEditContent>
                <BackgroundEditContentPadding>
                  <HeightContentHistory
                    ref={refAllHistory}
@@ -558,9 +879,27 @@ const TimeReserwation = styled.div`
        </TitleCategory>
        <Collapse isOpened={userCollapseActive}>
          {mapInformations.length > 0 ? (
-           mapInformations
+           <>
+             <HeightContentMessages
+               onScroll={handleScrollContainerMessages}
+               ref={refAllMessages}
+             >
+               {mapInformations}
+             </HeightContentMessages>
+             <ReactTooltip
+               id={`deleteMessage${userInfo._id}`}
+               effect="float"
+               multiline={true}
+             >
+               <span>Usuń wiadomość</span>
+             </ReactTooltip>
+           </>
          ) : (
-           <ServiceItem index={true}>Brak informacji</ServiceItem>
+           <HeightContentMessagesOther>
+             <ServiceItem siteProps={siteProps} index={true}>
+               Brak informacji
+             </ServiceItem>
+           </HeightContentMessagesOther>
          )}
        </Collapse>
        {!!userInfo.isBlocked ? (

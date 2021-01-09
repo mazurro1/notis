@@ -37,7 +37,7 @@ const Spinner = ({ spinnerEnable = false }) => {
     <CSSTransition
       in={spinnerEnable}
       timeout={400}
-      classNames="popup"
+      classNames="opacitySpinner"
       unmountOnExit
     >
       <PopupWindow>

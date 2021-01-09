@@ -235,6 +235,28 @@ button:focus {
   transition-timing-function: ease;
 }
 
+.opacitySpinner-enter {
+  opacity: 0.01;
+}
+
+.opacitySpinner-enter.opacitySpinner-enter-active {
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.opacitySpinner-exit {
+  opacity: 1;
+}
+
+.opacitySpinner-exit.opacitySpinner-exit-active {
+  opacity: 0.01;
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
 .popup-enter {
   opacity: 0.01;
   transform: scale(0.1);

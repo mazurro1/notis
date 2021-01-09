@@ -1,4 +1,8 @@
 /*eslint-disable eqeqeq*/
+import React, {useEffect} from 'react'
+import { useDispatch } from "react-redux"
+import {resetBellAlerts} from '../state/actions'
+
 export const checkIfBadValue = value => {
   const textHaveVal1 = value.includes("$")
   const textHaveVal2 = value.includes("#")
@@ -485,4 +489,20 @@ export const checkAndReturnMinAndMaxValueFromDaysHours = openingDays => {
     maxHours: maxHours,
     minHours: minHours,
   }
+}
+
+export function useOutsideAlerter(ref) {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        dispatch(resetBellAlerts(false))
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [ref])
 }

@@ -31,8 +31,11 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  RESET_BELL_ALERT,
+  ADD_NEW_MESSAGE_WORKER_USER_INFORMATION,
   WORKER_USERS_INFORMATIONS_BLOCK,
   WORKER_MORE_USERS_HISTORY_INFORMATIONS,
+  WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
   WORKER_USERS_INFORMATIONS,
   ADD_NEW_ALERTS,
   RESET_USER_ALERTS,
@@ -53,6 +56,8 @@ import {
   UPDATE_WORKER_RESERWATIONS,
   UPDATE_USER_ONE_RESERWATION,
   RESET_PLACES,
+  ADD_NEW_PHONE_WORKER_USER_INFORMATION,
+  DELETE_MESSAGE_WORKER_USER_INFORMATION,
 } from "./actions"
 
 const initialState = {
@@ -100,6 +105,7 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  bellAlertsActive: false,
   companyUsersInformations: [],
   avaibleHoursReserwation: [],
   avaibleHoursReserwationUpdate: false,
@@ -219,7 +225,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.user,
-        userId: action.user.userId
+        userId: action.user.userId,
       }
     case LOGOUT:
       return {
@@ -290,35 +296,142 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
-    case WORKER_USERS_INFORMATIONS_BLOCK: {
-      const newCompanyUsersInformationsBlocked = [...state.companyUsersInformations]
-      const findIndexUserHistory = newCompanyUsersInformationsBlocked.findIndex(
-        hist => hist._id === action.userHistoryId
-      )
-      newCompanyUsersInformationsBlocked[findIndexUserHistory].isBlocked =
-        action.isBlocked
+
+    case RESET_BELL_ALERT: {
       return {
         ...state,
-        companyUsersInformations: newCompanyUsersInformationsBlocked,
+        bellAlertsActive: action.value,
       }
     }
 
-    
+    case ADD_NEW_MESSAGE_WORKER_USER_INFORMATION: {
+      const newCompanyUsersInformationsMessage = [
+        ...state.companyUsersInformations,
+      ]
+      const findIndexUserPhone = newCompanyUsersInformationsMessage.findIndex(
+        hist => hist._id === action.userHistoryId
+      )
+      if (findIndexUserPhone >= 0) {
+        newCompanyUsersInformationsMessage[
+          findIndexUserPhone
+        ].informations.unshift(action.newMessage)
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformationsMessage,
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
+    }
+
+    case ADD_NEW_PHONE_WORKER_USER_INFORMATION: {
+      const newCompanyUsersInformationsPhone = [
+        ...state.companyUsersInformations,
+      ]
+      const findIndexUserPhone = newCompanyUsersInformationsPhone.findIndex(
+        hist => hist._id === action.workerUserInformationId
+      )
+      if (findIndexUserPhone >= 0) {
+        newCompanyUsersInformationsPhone[findIndexUserPhone].numberPhone =
+          action.userPhone
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformationsPhone,
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
+    }
+
+    case DELETE_MESSAGE_WORKER_USER_INFORMATION: {
+      const newCompanyUsersInformationsDelete = [
+        ...state.companyUsersInformations,
+      ]
+      const findIndexUserMessageDelete = newCompanyUsersInformationsDelete.findIndex(
+        hist => hist._id === action.userHistoryId
+      )
+      if (findIndexUserMessageDelete >= 0) {
+        const filterArray = newCompanyUsersInformationsDelete[
+          findIndexUserMessageDelete
+        ].informations.filter(message => message._id !== action.messageId)
+        newCompanyUsersInformationsDelete[
+          findIndexUserMessageDelete
+        ].informations = filterArray
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformationsDelete,
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
+    }
+
+    case WORKER_USERS_INFORMATIONS_BLOCK: {
+      const newCompanyUsersInformationsBlocked = [
+        ...state.companyUsersInformations,
+      ]
+      const findIndexUserHistory = newCompanyUsersInformationsBlocked.findIndex(
+        hist => hist._id === action.userHistoryId
+      )
+      if (findIndexUserHistory >= 0) {
+        newCompanyUsersInformationsBlocked[findIndexUserHistory].isBlocked =
+          action.isBlocked
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformationsBlocked,
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
+    }
+
     case WORKER_MORE_USERS_HISTORY_INFORMATIONS: {
       const newCompanyUsersInformations = [...state.companyUsersInformations]
       const findIndexUserHistory = newCompanyUsersInformations.findIndex(
         hist => hist._id === action.userHistoryId
       )
-      newCompanyUsersInformations[findIndexUserHistory].allUserReserwations.push(
-        ...action.data
-      )
-      console.log(findIndexUserHistory)
-      return {
-        ...state,
-        companyUsersInformations: newCompanyUsersInformations,
+      if (findIndexUserHistory >= 0) {
+        newCompanyUsersInformations[
+          findIndexUserHistory
+        ].allUserReserwations.push(...action.data)
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformations,
+        }
+      } else {
+        return {
+          ...state,
+        }
       }
     }
 
+    case WORKER_MORE_USERS_MESSAGES_INFORMATIONS: {
+      const newCompanyUsersInformations = [...state.companyUsersInformations]
+      const findIndexUserHistory = newCompanyUsersInformations.findIndex(
+        hist => hist._id === action.userHistoryId
+      )
+      if (findIndexUserHistory >= 0) {
+        newCompanyUsersInformations[
+          findIndexUserHistory
+        ].informations.push(...action.data)
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformations,
+        }
+      } else {
+        return {
+          ...state,
+        }
+      }
+    }
 
     case WORKER_USERS_INFORMATIONS: {
       return {
@@ -328,32 +441,32 @@ const reducer = (state = initialState, action) => {
     }
 
     case ADD_NEW_ALERTS: {
-      const newAllertsUser = {...state.user}
-      if (!!newAllertsUser){
+      const newAllertsUser = { ...state.user }
+      if (!!newAllertsUser) {
         newAllertsUser.alerts.push(...action.data)
       }
-        return {
-          ...state,
-          user: newAllertsUser,
-        }
+      return {
+        ...state,
+        user: newAllertsUser,
+      }
     }
     case ADD_NEW_USER_ALERT: {
-      const newUserWithAlerts = {...state.user}
+      const newUserWithAlerts = { ...state.user }
       const alertsUserValid = !!state.user.alerts ? state.user.alerts : []
       if (!!newUserWithAlerts) {
         newUserWithAlerts.alerts = [action.data, ...alertsUserValid]
         newUserWithAlerts.alertActiveCount = state.user.alertActiveCount + 1
       }
-      return{
+      return {
         ...state,
-        user: newUserWithAlerts
+        user: newUserWithAlerts,
       }
     }
 
     case RESET_USER_ALERTS: {
       const newResetUserWithAlerts = { ...state.user }
       if (!!newResetUserWithAlerts) {
-        newResetUserWithAlerts.alertActiveCount = 0;
+        newResetUserWithAlerts.alertActiveCount = 0
       }
       return {
         ...state,
@@ -366,6 +479,10 @@ const reducer = (state = initialState, action) => {
         return {
           ...state,
           placesData: [],
+        }
+      } else {
+        return {
+          ...state,
         }
       }
     }

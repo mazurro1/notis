@@ -201,9 +201,7 @@ export const logout = () => {
     localStorage.removeItem("USERID")
     localStorage.removeItem("TOKEN")
     dispatch(addAlertItem("Zostałeś wylogowany", "red"))
-    setTimeout(() => {
-      dispatch(changeSpinner(false))
-    }, 1000)
+    dispatch(changeSpinner(false))
     dispatch(changeLogout())
   }
 }
@@ -295,18 +293,14 @@ export const fetchAutoLogin = (
             }
             dispatch(loginUser(response.data))
             if (!noSpinner) {
-              setTimeout(() => {
-                dispatch(changeSpinner(false))
-              }, 1000)
+              dispatch(changeSpinner(false))
             }
             if (lastSpinnerCreateCompany) {
               dispatch(
                 addAlertItem("Pomyślnie utworzono konto firmowe.", "green")
               )
               dispatch(changeCreateCompanyVisible(false))
-              setTimeout(() => {
                 dispatch(changeSpinner(false))
-              }, 1000)
             }
           })
           .catch(error => {
@@ -318,23 +312,17 @@ export const fetchAutoLogin = (
                 // dispatch(logout())
               }
               if (!noSpinner) {
-                setTimeout(() => {
                   dispatch(changeSpinner(false))
-                }, 1000)
               }
               if (lastSpinnerCreateCompany) {
                 dispatch(
                   addAlertItem("Błąd podczas tworzenia konta firmowego.", "red")
                 )
-                setTimeout(() => {
                   dispatch(changeSpinner(false))
-                }, 1000)
               }
             } else {
               // dispatch(logout())
-              setTimeout(() => {
                 dispatch(changeSpinner(false))
-              }, 1000)
             }
           })
       }
@@ -428,15 +416,11 @@ export const fetchActiveAccount = (codeToVerified, token, userId) => {
       .then(response => {
         dispatch(addAlertItem("Pomyślnie aktywowano konto", "green"))
         dispatch(fetchAutoLogin(true, true, token, userId))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas aktywowania konta.", "red"))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -514,6 +498,55 @@ export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
 export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
 export const RESET_USER_ALERTS = "RESET_USER_ALERTS"
 export const ADD_NEW_ALERTS = "ADD_NEW_ALERTS"
+export const ADD_NEW_PHONE_WORKER_USER_INFORMATION = "ADD_NEW_PHONE_WORKER_USER_INFORMATION"
+export const ADD_NEW_MESSAGE_WORKER_USER_INFORMATION =
+  "ADD_NEW_MESSAGE_WORKER_USER_INFORMATION"
+export const RESET_BELL_ALERT = "RESET_BELL_ALERT"
+export const DELETE_MESSAGE_WORKER_USER_INFORMATION =
+  "DELETE_MESSAGE_WORKER_USER_INFORMATION"
+export const WORKER_MORE_USERS_MESSAGES_INFORMATIONS =
+  "WORKER_MORE_USERS_MESSAGES_INFORMATIONS"
+
+
+  export const newWorkerUsersMessageInformations = (data, userHistoryId) => {
+  return {
+    type: WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
+    data: data,
+    userHistoryId: userHistoryId,
+  }
+}
+
+const deleteMessageToUserInformation = (userHistoryId, messageId) => {
+  return {
+    type: DELETE_MESSAGE_WORKER_USER_INFORMATION,
+    userHistoryId: userHistoryId,
+    messageId: messageId,
+  }
+}
+
+  export const resetBellAlerts = (value) => {
+    return {
+      type: RESET_BELL_ALERT,
+      value: value
+    }
+  }
+
+export const addNewMessageToUserInformation = (userHistoryId, newMessage) => {
+  return {
+    type: ADD_NEW_MESSAGE_WORKER_USER_INFORMATION,
+    userHistoryId: userHistoryId,
+    newMessage: newMessage,
+  }
+}
+
+export const addPhoneToWorkerUserInformation = (workerUserInformationId, userPhone) => {
+  return {
+    type: ADD_NEW_PHONE_WORKER_USER_INFORMATION,
+    workerUserInformationId: workerUserInformationId,
+    userPhone: userPhone,
+  }
+}
+
 
 export const newWorkerUsersInformationsBlock = (userHistoryId, isBlocked) => {
   return {
@@ -789,17 +822,13 @@ export const fetchActiveCompanyAccount = (
       .then(response => {
         dispatch(addAlertItem("Pomyślnie aktywowano konto firmowe", "green"))
         dispatch(fetchAutoLogin(true, true, token, userId))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
       .catch(error => {
         dispatch(
           addAlertItem("Błąd podczas aktywowania konta firmowego.", "red")
         )
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -821,16 +850,12 @@ export const fetchCompanyData = (companyId, token) => {
       )
       .then(response => {
         dispatch(replaceCompanyData(response.data.companyProfil))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
         dispatch(resetEditCompany(true))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas ładowania konta firmowego.", "red"))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
         dispatch(resetEditCompany(false))
       })
   }
@@ -860,9 +885,7 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas dodawania pracownika.", "red"))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -890,9 +913,7 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
             "green"
           )
         )
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
       .catch(error => {
         dispatch(
@@ -901,9 +922,7 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
             "red"
           )
         )
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -923,17 +942,13 @@ export const fetchConfirmAddWorkerToCompany = (
       })
       .then(response => {
         dispatch(addAlertItem("Dodano użytkownika do firmy.", "green"))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
       .catch(error => {
         dispatch(
           addAlertItem("Błąd podczas dodawania pracownika do firmy.", "red")
         )
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -960,9 +975,7 @@ export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas usuwania pracownika.", "red"))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -1028,9 +1041,7 @@ export const fetchUpdateCompanyProfil = (
           addAlertItem("Błąd podczas aktualizowania profilu firmowego.", "red")
         )
         dispatch(resetEditCompany(false))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -1068,15 +1079,11 @@ export const fetchDoReserwation = (
       .then(response => {
         dispatch(addAlertItem("Dokonano rezerwacji.", "green"))
         dispatch(changeReserwationValue(null))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas robienia rezerwacji.", "red"))
-        setTimeout(() => {
           dispatch(changeSpinner(false))
-        }, 1000)
       })
   }
 }
@@ -1155,16 +1162,12 @@ export const fetchWorkerDisabledHours = (
         }
       )
       .then(response => {
-        setTimeout(() => {
           dispatch(avaibleDateToReserwationUpdate(false))
           dispatch(avaibleDateToReserwation(response.data.avaibleHours))
-        }, 1000)
       })
       .catch(error => {
-        setTimeout(() => {
           dispatch(avaibleDateToReserwationUpdate(false))
           dispatch(avaibleDateToReserwation([]))
-        }, 1000)
       })
   }
 }
@@ -1523,6 +1526,44 @@ export const fetchworkerUsersMoreInformationsHistory = (token, companyId, userHi
   }
 }
 
+export const fetchworkerUsersMoreInformationsMessage = (
+  token,
+  companyId,
+  userHistoryId,
+  page
+) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/get-more-users-informations-message`,
+        {
+          companyId: companyId,
+          userHistoryId: userHistoryId,
+          page: page,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        console.log(response.data)
+        dispatch(
+          newWorkerUsersMessageInformations(
+            response.data.newUserMessages,
+            userHistoryId
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(
+          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
+        )
+      })
+  }
+}
+
 export const fetchCompanyUsersInformationsBlock = (
   token,
   companyId,
@@ -1560,6 +1601,116 @@ export const fetchCompanyUsersInformationsBlock = (
         dispatch(
           addAlertItem("Błąd podczas ładowania historii klienta.", "red")
         )
+      })
+  }
+}
+
+export const fetchCompanyUsersInformationsMessage = (
+  token,
+  companyId,
+  userHistoryId,
+  workerMessage
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-users-informations-message`,
+        {
+          companyId: companyId,
+          userHistoryId: userHistoryId,
+          workerMessage: workerMessage,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addNewMessageToUserInformation(userHistoryId, response.data.message)
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano wiadomość o kliencie.", "green"))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd dodawania wiadomości o kliencie.", "red"))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCompanyUsersInformationsDeleteMessage = (
+  token,
+  companyId,
+  userHistoryId,
+  messageId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-users-informations-delete-message`,
+        {
+          companyId: companyId,
+          userHistoryId: userHistoryId,
+          messageId: messageId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(deleteMessageToUserInformation(userHistoryId, messageId))
+        // dispatch(
+        //   addNewMessageToUserInformation(userHistoryId, response.data.message)
+        // )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano wiadomość o kliencie.", "green"))
+      })
+      .catch(error => {
+        dispatch(addAlertItem("Błąd dodawania wiadomości o kliencie.", "red"))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+
+export const fetchCustomUserPhone = (
+  token,
+  selectedUserId,
+  workerUserInformationId,
+  companyId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/get-custom-user-phone`,
+        {
+          selectedUserId: selectedUserId,
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addPhoneToWorkerUserInformation(
+            workerUserInformationId,
+            response.data.userPhone
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
       })
   }
 }
