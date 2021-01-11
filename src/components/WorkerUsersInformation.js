@@ -32,7 +32,6 @@ import { FaUserFriends } from "react-icons/fa"
   useEffect(() => {
     const newFilterUsers = companyUsersInformations.filter(userCompany => {
       if (!!userCompany.userId) {
-        console.log(user)
         const userName = Buffer.from(
           userCompany.userId.name,
           "base64"

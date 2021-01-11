@@ -1639,6 +1639,7 @@ export const fetchCompanyUsersInformationsMessage = (
         {
           companyId: companyId,
           workerMessage: workerMessage,
+          selectedUserId: selectedUserId,
         },
         {
           headers: {
