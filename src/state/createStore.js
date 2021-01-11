@@ -31,6 +31,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  ADD_SELECTED_USER_RESERWATIONS,
   RESET_BELL_ALERT,
   ADD_NEW_MESSAGE_WORKER_USER_INFORMATION,
   WORKER_USERS_INFORMATIONS_BLOCK,
@@ -58,6 +59,7 @@ import {
   RESET_PLACES,
   ADD_NEW_PHONE_WORKER_USER_INFORMATION,
   DELETE_MESSAGE_WORKER_USER_INFORMATION,
+  ADD_TO_USER_INFORMATIONS,
 } from "./actions"
 
 const initialState = {
@@ -297,27 +299,20 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
-    case RESET_BELL_ALERT: {
-      return {
-        ...state,
-        bellAlertsActive: action.value,
-      }
-    }
-
-    case ADD_NEW_MESSAGE_WORKER_USER_INFORMATION: {
-      const newCompanyUsersInformationsMessage = [
+    case ADD_SELECTED_USER_RESERWATIONS: {
+      const newCompanyUsersInformationsReserwations = [
         ...state.companyUsersInformations,
       ]
-      const findIndexUserPhone = newCompanyUsersInformationsMessage.findIndex(
-        hist => hist._id === action.userHistoryId
+      const userSelectedIndex = state.companyUsersInformations.findIndex(
+        item => item.userId._id === action.userSelectedId
       )
-      if (findIndexUserPhone >= 0) {
-        newCompanyUsersInformationsMessage[
-          findIndexUserPhone
-        ].informations.unshift(action.newMessage)
+      if (userSelectedIndex >= 0) {
+        newCompanyUsersInformationsReserwations[
+          userSelectedIndex
+        ].reserwations = action.reserwations
         return {
           ...state,
-          companyUsersInformations: newCompanyUsersInformationsMessage,
+          companyUsersInformations: newCompanyUsersInformationsReserwations,
         }
       } else {
         return {
@@ -326,12 +321,47 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case RESET_BELL_ALERT: {
+      return {
+        ...state,
+        bellAlertsActive: action.value,
+      }
+    }
+
+    case ADD_NEW_MESSAGE_WORKER_USER_INFORMATION: {
+       const newCompanyUsersInformationsInformations = [
+         ...state.companyUsersInformations,
+       ]
+       const userSelectedIndex = state.companyUsersInformations.findIndex(
+         item => item.userId._id === action.selectedUserId
+       )
+       if (userSelectedIndex >= 0) {
+         const validUserInformations =
+           newCompanyUsersInformationsInformations[userSelectedIndex]
+             .informations ? newCompanyUsersInformationsInformations[userSelectedIndex]
+             .informations : []
+
+         validUserInformations.unshift(action.newMessage)
+         newCompanyUsersInformationsInformations[
+           userSelectedIndex
+         ].informations = validUserInformations
+         return {
+           ...state,
+           companyUsersInformations: newCompanyUsersInformationsInformations,
+         }
+       } else {
+         return {
+           ...state,
+         }
+       }
+    }
+
     case ADD_NEW_PHONE_WORKER_USER_INFORMATION: {
       const newCompanyUsersInformationsPhone = [
         ...state.companyUsersInformations,
       ]
       const findIndexUserPhone = newCompanyUsersInformationsPhone.findIndex(
-        hist => hist._id === action.workerUserInformationId
+        hist => hist.userId._id === action.selectedUserId
       )
       if (findIndexUserPhone >= 0) {
         newCompanyUsersInformationsPhone[findIndexUserPhone].numberPhone =
@@ -352,7 +382,7 @@ const reducer = (state = initialState, action) => {
         ...state.companyUsersInformations,
       ]
       const findIndexUserMessageDelete = newCompanyUsersInformationsDelete.findIndex(
-        hist => hist._id === action.userHistoryId
+        hist => hist.userId._id === action.selectedUserId
       )
       if (findIndexUserMessageDelete >= 0) {
         const filterArray = newCompanyUsersInformationsDelete[
@@ -372,12 +402,34 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case ADD_TO_USER_INFORMATIONS: {
+      const newCompanyUsersInformationsInformations = [
+        ...state.companyUsersInformations,
+      ]
+      const userSelectedIndex = state.companyUsersInformations.findIndex(
+        item => item.userId._id === action.userSelectedId
+      )
+      if (userSelectedIndex >= 0){
+        newCompanyUsersInformationsInformations[userSelectedIndex].informations = action.messages
+        newCompanyUsersInformationsInformations[userSelectedIndex].firstUserInformationsFetch = true
+        return {
+          ...state,
+          companyUsersInformations: newCompanyUsersInformationsInformations,
+        }
+      }else{
+        return {
+          ...state,
+        }
+      }
+        
+    }
+
     case WORKER_USERS_INFORMATIONS_BLOCK: {
       const newCompanyUsersInformationsBlocked = [
         ...state.companyUsersInformations,
       ]
       const findIndexUserHistory = newCompanyUsersInformationsBlocked.findIndex(
-        hist => hist._id === action.userHistoryId
+        hist => hist.userId._id === action.selectedUserId
       )
       if (findIndexUserHistory >= 0) {
         newCompanyUsersInformationsBlocked[findIndexUserHistory].isBlocked =
@@ -396,12 +448,12 @@ const reducer = (state = initialState, action) => {
     case WORKER_MORE_USERS_HISTORY_INFORMATIONS: {
       const newCompanyUsersInformations = [...state.companyUsersInformations]
       const findIndexUserHistory = newCompanyUsersInformations.findIndex(
-        hist => hist._id === action.userHistoryId
+        hist => hist.userId._id === action.userSelectedId
       )
       if (findIndexUserHistory >= 0) {
         newCompanyUsersInformations[
           findIndexUserHistory
-        ].allUserReserwations.push(...action.data)
+        ].reserwations.push(...action.data)
         return {
           ...state,
           companyUsersInformations: newCompanyUsersInformations,
@@ -416,7 +468,7 @@ const reducer = (state = initialState, action) => {
     case WORKER_MORE_USERS_MESSAGES_INFORMATIONS: {
       const newCompanyUsersInformations = [...state.companyUsersInformations]
       const findIndexUserHistory = newCompanyUsersInformations.findIndex(
-        hist => hist._id === action.userHistoryId
+        hist => hist.userId._id === action.selectedUserId
       )
       if (findIndexUserHistory >= 0) {
         newCompanyUsersInformations[

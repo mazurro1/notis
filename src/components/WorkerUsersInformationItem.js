@@ -23,6 +23,8 @@ import {
   fetchCompanyUsersInformationsMessage,
   fetchCompanyUsersInformationsDeleteMessage,
   fetchworkerUsersMoreInformationsMessage,
+  fetchUserInformations,
+  fetchSelectedUserReserwations,
 } from "../state/actions"
 import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
@@ -346,13 +348,14 @@ const IconDeleteMessage = styled.div`
     ReactTooltip.rebuild()
   }, [userInfo, clickBlock])
 
+
    useEffect(() => {
      if (!!refAllHistory) {
        if (!!refAllHistory.current) {
          const indexLastChildren = refAllHistory.current.childNodes.length
          if (
-           indexLastChildren > 0 &&
-           indexLastChildren < userInfo.reserwationsCount
+           indexLastChildren > 0 
+          //  && indexLastChildren < userInfo.reserwationsCount
          ) {
            const isLastPlaceVisible =
              refAllHistory.current.childNodes[indexLastChildren - 1]
@@ -365,7 +368,7 @@ const IconDeleteMessage = styled.div`
                fetchworkerUsersMoreInformationsHistory(
                  user.token,
                  user.company._id,
-                 userInfo._id,
+                 userInfo.userId._id,
                  pageHistory
                )
              )
@@ -394,7 +397,7 @@ const IconDeleteMessage = styled.div`
                   fetchworkerUsersMoreInformationsMessage(
                     user.token,
                     user.company._id,
-                    userInfo._id,
+                    userInfo.userId._id,
                     pageMessages
                   )
                 )
@@ -422,6 +425,16 @@ const IconDeleteMessage = styled.div`
    const handleClickCollapse = e => {
      e.stopPropagation()
      setUserCollapseActive(prevState => !prevState)
+
+     if (!userCollapseActive && !!!userInfo.firstUserInformationsFetch) {
+         dispatch(
+           fetchUserInformations(
+             user.token,
+             user.company._id,
+             userInfo.userId._id
+           )
+         )
+     }
    }
 
    const handleClickAdd = e => {
@@ -449,7 +462,7 @@ const IconDeleteMessage = styled.div`
         fetchCompanyUsersInformationsMessage(
           user.token,
           user.company._id,
-          userInfo._id,
+          userInfo.userId._id,
           newMessage
         )
       )
@@ -462,7 +475,7 @@ const IconDeleteMessage = styled.div`
        fetchCompanyUsersInformationsDeleteMessage(
          user.token,
          user.company._id,
-         userInfo._id,
+         userInfo.userId._id,
          messageId
        )
      )
@@ -484,7 +497,7 @@ const IconDeleteMessage = styled.div`
        fetchCompanyUsersInformationsBlock(
          user.token,
          user.company._id,
-         userInfo._id,
+         userInfo.userId._id,
          !!!userInfo.isBlocked
        )
      )
@@ -493,7 +506,13 @@ const IconDeleteMessage = styled.div`
    const handleClickHistory = e => {
      e.stopPropagation()
      setClickHistory(prevState => !prevState)
-     setPageHistory(1)
+     if(!clickHistory && !!!userInfo.reserwations){
+      dispatch(fetchSelectedUserReserwations(
+        user.token,
+        userInfo.userId._id,
+        user.company._id
+      ))
+     }
    }
 
    const handleFetchPhoneNumber = () => {
@@ -501,130 +520,135 @@ const IconDeleteMessage = styled.div`
        fetchCustomUserPhone(
          user.token,
          userInfo.userId._id,
-         userInfo._id,
          user.company._id
        )
      )
    }
+   let mapInformations = "Trwa ładowanie danych"
+   if (!!userInfo.informations){
+     mapInformations = userInfo.informations.map((item, index) => {
+       let workerName = "Użytkownik skasował konto"
+       let workerSurname = ""
+       if (!!item.workerWhoWritedUserId) {
+         workerName = Buffer.from(
+           item.workerWhoWritedUserId.name,
+           "base64"
+         ).toString("ascii")
+         workerSurname = Buffer.from(
+           item.workerWhoWritedUserId.surname,
+           "base64"
+         ).toString("ascii")
+       }
+       const dateMessage = new Date(item.dateMessage)
+       const renderDate = `${
+         dateMessage.getDate() < 10
+           ? `0${dateMessage.getDate()}`
+           : dateMessage.getDate()
+       }-${
+         dateMessage.getMonth() + 1 < 10
+           ? `0${dateMessage.getMonth() + 1}`
+           : dateMessage.getMonth()
+       }-${dateMessage.getFullYear()} -`
 
-   const mapInformations = userInfo.informations.map((item, index) => {
-      let workerName = "Użytkownik skasował konto"
-      let workerSurname = ""
-      if (!!item.workerWhoWritedUserId) {
-        workerName = Buffer.from(
-          item.workerWhoWritedUserId.name,
-          "base64"
-        ).toString("ascii")
-        workerSurname = Buffer.from(
-          item.workerWhoWritedUserId.surname,
-          "base64"
-        ).toString("ascii")
-      }
-      const dateMessage = new Date(item.dateMessage)
-      const renderDate = `${
-        dateMessage.getDate() < 10
-          ? `0${dateMessage.getDate()}`
-          : dateMessage.getDate()
-      }-${
-        dateMessage.getMonth() + 1 < 10
-          ? `0${dateMessage.getMonth() + 1}`
-          : dateMessage.getMonth()
-      }-${dateMessage.getFullYear()} -`
-
-     return (
-       <WorkerUsersInformationItemMessage
-         ServiceItemMessages={ServiceItemMessages}
-         siteProps={siteProps}
-         index={index}
-         item={item}
-         DateMessageWorkerInformations={DateMessageWorkerInformations}
-         renderDate={renderDate}
-         workerName={workerName}
-         workerSurname={workerSurname}
-         IconDeleteMessage={IconDeleteMessage}
-         userInfo={userInfo}
-         handleClickContent={handleClickContent}
-         ButtonMargin={ButtonMargin}
-         key={index}
-         handleDeleteMessageFetch={handleDeleteMessageFetch}
-       />
-     )
-   })
-
-   const mapedUserReserwations = userInfo.allUserReserwations.map(
-     (reserwation, index) => {
-       const dateReserwation = (
-         <>
-           <span>
-             {`${reserwation.reserwationId.dateStart}-${reserwation.reserwationId.dateEnd}`}{" "}
-           </span>
-           {`${
-             reserwation.reserwationId.dateDay < 10
-               ? `0${reserwation.reserwationId.dateDay}`
-               : reserwation.reserwationId.dateDay
-           }-${
-             reserwation.reserwationId.dateMonth < 10
-               ? `0${reserwation.reserwationId.dateMonth}`
-               : reserwation.reserwationId.dateMonth
-           }-${reserwation.reserwationId.dateYear}`}
-         </>
-       )
-
-       const workerName = Buffer.from(
-         reserwation.reserwationId.toWorkerUserId.name,
-         "base64"
-       ).toString("ascii")
-       const workerSurname = Buffer.from(
-         reserwation.reserwationId.toWorkerUserId.surname,
-         "base64"
-       ).toString("ascii")
-       const splitReserwationDate = reserwation.reserwationId.dateStart.split(":")
-       const isActualReserwation = new Date(
-         reserwation.reserwationId.dateYear,
-         reserwation.reserwationId.dateMonth - 1,
-         reserwation.reserwationId.dateDay,
-         Number(splitReserwationDate[0]),
-         Number(splitReserwationDate[1])
-       )
-       const isFinishedDate = isActualReserwation <= new Date()
-       const reserwationColor = reserwation.reserwationId.visitCanceled
-         ? "red"
-         : reserwation.reserwationId.visitNotFinished
-         ? "red"
-         : isFinishedDate
-         ? "green"
-         : "blue"
        return (
-         <div
-           data-sal="zoom-in"
-           data-sal-duration="300"
-           data-sal-easing="ease-out-bounce"
+         <WorkerUsersInformationItemMessage
+           ServiceItemMessages={ServiceItemMessages}
+           siteProps={siteProps}
+           index={index}
+           item={item}
+           DateMessageWorkerInformations={DateMessageWorkerInformations}
+           renderDate={renderDate}
+           workerName={workerName}
+           workerSurname={workerSurname}
+           IconDeleteMessage={IconDeleteMessage}
+           userInfo={userInfo}
+           handleClickContent={handleClickContent}
+           ButtonMargin={ButtonMargin}
            key={index}
-         >
-           <ServiceItemHistory
-             index={index === 0}
-             siteProps={siteProps}
-             color={reserwationColor}
-           >
-             <TimeReserwation siteProps={siteProps} color={reserwationColor}>
-               {dateReserwation}
-               <div className="statusReserwation">
-                 {reserwation.reserwationId.visitCanceled
-                   ? "Wizyta odwołana"
-                   : reserwation.reserwationId.visitNotFinished
-                   ? "Wizyta nie odbyta"
-                   : isFinishedDate
-                   ? "Wizyta odbyta"
-                   : "Wizyta oczekująca"}
-               </div>
-             </TimeReserwation>
-             {reserwation.reserwationId.serviceName} -{" "}
-             {`${workerName} ${workerSurname}`}
-           </ServiceItemHistory>
-         </div>
+           handleDeleteMessageFetch={handleDeleteMessageFetch}
+         />
        )
-     }
-   )
+     })
+   }
+   let mapedUserReserwations = "Trwa ładowanie rezerwacji"
+   if(!!userInfo.reserwations){
+      mapedUserReserwations = userInfo.reserwations.map(
+        (reserwation, index) => {
+          const dateReserwation = (
+            <>
+              <span>
+                {`${reserwation.dateStart}-${reserwation.dateEnd}`}{" "}
+              </span>
+              {`${
+                reserwation.dateDay < 10
+                  ? `0${reserwation.dateDay}`
+                  : reserwation.dateDay
+              }-${
+                reserwation.dateMonth < 10
+                  ? `0${reserwation.dateMonth}`
+                  : reserwation.dateMonth
+              }-${reserwation.dateYear}`}
+            </>
+          )
+
+          const workerName = Buffer.from(
+            reserwation.toWorkerUserId.name,
+            "base64"
+          ).toString("ascii")
+          const workerSurname = Buffer.from(
+            reserwation.toWorkerUserId.surname,
+            "base64"
+          ).toString("ascii")
+          const splitReserwationDate = reserwation.dateStart.split(
+            ":"
+          )
+          const isActualReserwation = new Date(
+            reserwation.dateYear,
+            reserwation.dateMonth - 1,
+            reserwation.dateDay,
+            Number(splitReserwationDate[0]),
+            Number(splitReserwationDate[1])
+          )
+          const isFinishedDate = isActualReserwation <= new Date()
+          const reserwationColor = reserwation.visitCanceled
+            ? "red"
+            : reserwation.visitNotFinished
+            ? "red"
+            : isFinishedDate
+            ? "green"
+            : "blue"
+          return (
+            <div
+              data-sal="zoom-in"
+              data-sal-duration="300"
+              data-sal-easing="ease-out-bounce"
+              key={index}
+            >
+              <ServiceItemHistory
+                index={index === 0}
+                siteProps={siteProps}
+                color={reserwationColor}
+              >
+                <TimeReserwation siteProps={siteProps} color={reserwationColor}>
+                  {dateReserwation}
+                  <div className="statusReserwation">
+                    {reserwation.visitCanceled
+                      ? "Wizyta odwołana"
+                      : reserwation.visitNotFinished
+                      ? "Wizyta nie odbyta"
+                      : isFinishedDate
+                      ? "Wizyta odbyta"
+                      : "Wizyta oczekująca"}
+                  </div>
+                </TimeReserwation>
+                {reserwation.serviceName} -{" "}
+                {`${workerName} ${workerSurname}`}
+              </ServiceItemHistory>
+            </div>
+          )
+        }
+      )
+   }
 
    let userName = "Brak użytkownika"
    let userSurname = ""
@@ -655,8 +679,8 @@ const IconDeleteMessage = styled.div`
            data-tip
            data-for={
              !!userInfo.isBlocked
-               ? `blocked${userInfo._id}`
-               : `noBlocked${userInfo._id}`
+               ? `blocked${userInfo.userId._id}`
+               : `noBlocked${userInfo.userId._id}`
            }
            onClick={handleClickBlock}
          >
@@ -887,7 +911,7 @@ const IconDeleteMessage = styled.div`
                {mapInformations}
              </HeightContentMessages>
              <ReactTooltip
-               id={`deleteMessage${userInfo._id}`}
+               id={`deleteMessage${userInfo.userId._id}`}
                effect="float"
                multiline={true}
              >
@@ -904,7 +928,7 @@ const IconDeleteMessage = styled.div`
        </Collapse>
        {!!userInfo.isBlocked ? (
          <ReactTooltip
-           id={`blocked${userInfo._id}`}
+           id={`blocked${userInfo.userId._id}`}
            effect="float"
            multiline={true}
          >
@@ -912,7 +936,7 @@ const IconDeleteMessage = styled.div`
          </ReactTooltip>
        ) : (
          <ReactTooltip
-           id={`noBlocked${userInfo._id}`}
+           id={`noBlocked${userInfo.userId._id}`}
            effect="float"
            multiline={true}
          >

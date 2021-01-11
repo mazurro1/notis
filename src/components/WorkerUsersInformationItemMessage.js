@@ -79,7 +79,7 @@ const ButtonsDeletePosition = styled.div`
          <IconDeleteMessage
            siteProps={siteProps}
            data-tip
-           data-for={`deleteMessage${userInfo._id}`}
+           data-for={`deleteMessage${userInfo.userId._id}`}
            onClick={handleClickDeleteConfirm}
          >
            <MdDelete />

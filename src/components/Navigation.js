@@ -491,6 +491,10 @@ const Navigation = ({ children, isMainPage }) => {
      setMenuOpen(prevState => !prevState)
    }
 
+   const handleCloseMenu = () => {
+     setMenuOpen(false)
+   }
+
    const handleWorkerReserwations = () => {
     setWorkPropsVisible(false)
     setWorkerReserwationsVisible(true)
@@ -1097,7 +1101,12 @@ const Navigation = ({ children, isMainPage }) => {
           </IconCloseStyle>
         </CloseMenuLeft>
       </MenuPosition>
-      <Popup opacity popupEnable={menuOpen} handleClose={handleMenuOpen} noContent />
+      <Popup
+        opacity
+        popupEnable={menuOpen}
+        handleClose={handleCloseMenu}
+        noContent
+      />
       <ContentMenu active={menuOpen}>
         <BackgroundColorPage className="heightElement" siteProps={siteProps}>
           <Spinner spinnerEnable={spinnerEnable} />

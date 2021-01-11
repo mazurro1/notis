@@ -506,20 +506,37 @@ export const DELETE_MESSAGE_WORKER_USER_INFORMATION =
   "DELETE_MESSAGE_WORKER_USER_INFORMATION"
 export const WORKER_MORE_USERS_MESSAGES_INFORMATIONS =
   "WORKER_MORE_USERS_MESSAGES_INFORMATIONS"
+export const ADD_TO_USER_INFORMATIONS = "ADD_TO_USER_INFORMATIONS"
+export const ADD_SELECTED_USER_RESERWATIONS = "ADD_SELECTED_USER_RESERWATIONS"
 
-
-  export const newWorkerUsersMessageInformations = (data, userHistoryId) => {
+export const addSelectedUserReserwations = (userSelectedId, reserwations) => {
   return {
-    type: WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
-    data: data,
-    userHistoryId: userHistoryId,
+    type: ADD_SELECTED_USER_RESERWATIONS,
+    userSelectedId: userSelectedId,
+    reserwations: reserwations,
   }
 }
 
-const deleteMessageToUserInformation = (userHistoryId, messageId) => {
+  export const addToUserInformations = (userSelectedId, messages) => {
+    return {
+      type: ADD_TO_USER_INFORMATIONS,
+      userSelectedId: userSelectedId,
+      messages: messages,
+    }
+  }
+
+  export const newWorkerUsersMessageInformations = (data, selectedUserId) => {
+    return {
+      type: WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
+      data: data,
+      selectedUserId: selectedUserId,
+    }
+  }
+
+const deleteMessageToUserInformation = (selectedUserId, messageId) => {
   return {
     type: DELETE_MESSAGE_WORKER_USER_INFORMATION,
-    userHistoryId: userHistoryId,
+    selectedUserId: selectedUserId,
     messageId: messageId,
   }
 }
@@ -531,36 +548,36 @@ const deleteMessageToUserInformation = (userHistoryId, messageId) => {
     }
   }
 
-export const addNewMessageToUserInformation = (userHistoryId, newMessage) => {
+export const addNewMessageToUserInformation = (selectedUserId, newMessage) => {
   return {
     type: ADD_NEW_MESSAGE_WORKER_USER_INFORMATION,
-    userHistoryId: userHistoryId,
+    selectedUserId: selectedUserId,
     newMessage: newMessage,
   }
 }
 
-export const addPhoneToWorkerUserInformation = (workerUserInformationId, userPhone) => {
+export const addPhoneToWorkerUserInformation = (selectedUserId, userPhone) => {
   return {
     type: ADD_NEW_PHONE_WORKER_USER_INFORMATION,
-    workerUserInformationId: workerUserInformationId,
+    selectedUserId: selectedUserId,
     userPhone: userPhone,
   }
 }
 
 
-export const newWorkerUsersInformationsBlock = (userHistoryId, isBlocked) => {
+export const newWorkerUsersInformationsBlock = (selectedUserId, isBlocked) => {
   return {
     type: WORKER_USERS_INFORMATIONS_BLOCK,
-    userHistoryId: userHistoryId,
+    selectedUserId: selectedUserId,
     isBlocked: isBlocked,
   }
 }
 
-export const newWorkerUsersHistoryInformations = (data, userHistoryId) => {
+export const newWorkerUsersHistoryInformations = (data, userSelectedId) => {
   return {
     type: WORKER_MORE_USERS_HISTORY_INFORMATIONS,
     data: data,
-    userHistoryId: userHistoryId,
+    userSelectedId: userSelectedId,
   }
 }
 
@@ -1470,7 +1487,7 @@ export const fetchworkerUsersInformations = (token, companyId) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
-        `${Site.serverUrl}/get-company-users-informations`,
+        `${Site.serverUrl}/company-reserwations`,
         {
           companyId: companyId,
         },
@@ -1482,9 +1499,7 @@ export const fetchworkerUsersInformations = (token, companyId) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(
-          newWorkerUsersInformations(response.data.companysClientInformations)
-        )
+        dispatch(newWorkerUsersInformations(response.data.reserwations))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas ładowania informacji o klientach.", "red"))
@@ -1494,15 +1509,20 @@ export const fetchworkerUsersInformations = (token, companyId) => {
 }
 
 
-export const fetchworkerUsersMoreInformationsHistory = (token, companyId, userHistoryId, page) => {
+export const fetchworkerUsersMoreInformationsHistory = (
+  token,
+  companyId,
+  userSelectedId,
+  page
+) => {
   return dispatch => {
     return axios
       .post(
-        `${Site.serverUrl}/get-more-users-informations-history`,
+        `${Site.serverUrl}/get-selected-users-reserwations`,
         {
           companyId: companyId,
-          userHistoryId: userHistoryId,
-          page: page
+          userSelectedId: userSelectedId,
+          page: page + 1,
         },
         {
           headers: {
@@ -1513,8 +1533,8 @@ export const fetchworkerUsersMoreInformationsHistory = (token, companyId, userHi
       .then(response => {
         dispatch(
           newWorkerUsersHistoryInformations(
-            response.data.newUserReserwations,
-            userHistoryId
+            response.data.reserwations,
+            userSelectedId
           )
         )
       })
@@ -1529,16 +1549,16 @@ export const fetchworkerUsersMoreInformationsHistory = (token, companyId, userHi
 export const fetchworkerUsersMoreInformationsMessage = (
   token,
   companyId,
-  userHistoryId,
+  selectedUserId,
   page
 ) => {
   return dispatch => {
     return axios
       .post(
-        `${Site.serverUrl}/get-more-users-informations-message`,
+        `${Site.serverUrl}/get-more-company-user-informations-messages`,
         {
           companyId: companyId,
-          userHistoryId: userHistoryId,
+          selectedUserId: selectedUserId,
           page: page,
         },
         {
@@ -1551,8 +1571,8 @@ export const fetchworkerUsersMoreInformationsMessage = (
         console.log(response.data)
         dispatch(
           newWorkerUsersMessageInformations(
-            response.data.newUserMessages,
-            userHistoryId
+            response.data.newMessages,
+            selectedUserId
           )
         )
       })
@@ -1567,7 +1587,7 @@ export const fetchworkerUsersMoreInformationsMessage = (
 export const fetchCompanyUsersInformationsBlock = (
   token,
   companyId,
-  userHistoryId,
+  selectedUserId,
   isBlocked
 ) => {
   return dispatch => {
@@ -1576,7 +1596,7 @@ export const fetchCompanyUsersInformationsBlock = (
         `${Site.serverUrl}/company-users-informations-block`,
         {
           companyId: companyId,
-          userHistoryId: userHistoryId,
+          selectedUserId: selectedUserId,
           isBlocked: isBlocked,
         },
         {
@@ -1586,12 +1606,12 @@ export const fetchCompanyUsersInformationsBlock = (
         }
       )
       .then(response => {
-        dispatch(newWorkerUsersInformationsBlock(userHistoryId, isBlocked))
-        if (!!isBlocked){
+        dispatch(newWorkerUsersInformationsBlock(selectedUserId, isBlocked))
+        if (!!isBlocked) {
           dispatch(
             addAlertItem("Konto zostało zablokowane na stronie.", "green")
           )
-        }else{
+        } else {
           dispatch(
             addAlertItem("Konto zostało odblokowane na stronie.", "green")
           )
@@ -1608,17 +1628,16 @@ export const fetchCompanyUsersInformationsBlock = (
 export const fetchCompanyUsersInformationsMessage = (
   token,
   companyId,
-  userHistoryId,
+  selectedUserId,
   workerMessage
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
       .post(
-        `${Site.serverUrl}/company-users-informations-message`,
+        `${Site.serverUrl}/add-company-users-informations-message`,
         {
           companyId: companyId,
-          userHistoryId: userHistoryId,
           workerMessage: workerMessage,
         },
         {
@@ -1629,8 +1648,9 @@ export const fetchCompanyUsersInformationsMessage = (
       )
       .then(response => {
         dispatch(
-          addNewMessageToUserInformation(userHistoryId, response.data.message)
+          addNewMessageToUserInformation(selectedUserId, response.data.message)
         )
+        console.log(response.data.message)
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano wiadomość o kliencie.", "green"))
       })
@@ -1644,17 +1664,17 @@ export const fetchCompanyUsersInformationsMessage = (
 export const fetchCompanyUsersInformationsDeleteMessage = (
   token,
   companyId,
-  userHistoryId,
+  selectedUserId,
   messageId
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
       .post(
-        `${Site.serverUrl}/company-users-informations-delete-message`,
+        `${Site.serverUrl}/delete-selected-users-informations-message`,
         {
           companyId: companyId,
-          userHistoryId: userHistoryId,
+          selectedUserId: selectedUserId,
           messageId: messageId,
         },
         {
@@ -1664,12 +1684,9 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
         }
       )
       .then(response => {
-        dispatch(deleteMessageToUserInformation(userHistoryId, messageId))
-        // dispatch(
-        //   addNewMessageToUserInformation(userHistoryId, response.data.message)
-        // )
+        dispatch(deleteMessageToUserInformation(selectedUserId, messageId))
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Dodano wiadomość o kliencie.", "green"))
+        dispatch(addAlertItem("Usunięto wiadomość o kliencie.", "green"))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd dodawania wiadomości o kliencie.", "red"))
@@ -1682,7 +1699,6 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
 export const fetchCustomUserPhone = (
   token,
   selectedUserId,
-  workerUserInformationId,
   companyId
 ) => {
   return dispatch => {
@@ -1704,13 +1720,74 @@ export const fetchCustomUserPhone = (
         dispatch(changeSpinner(false))
         dispatch(
           addPhoneToWorkerUserInformation(
-            workerUserInformationId,
+            selectedUserId,
             response.data.userPhone
           )
         )
       })
       .catch(error => {
         dispatch(changeSpinner(false))
+      })
+  }
+}
+
+
+export const fetchUserInformations = (token, companyId, userSelectedId) => {
+  return dispatch => {
+  dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/get-selected-users-informations-message`,
+        {
+          companyId: companyId,
+          userSelectedId: userSelectedId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addToUserInformations(userSelectedId, response.data.message))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
+        )
+      })
+  }
+}
+
+
+export const fetchSelectedUserReserwations = (token, userSelectedId, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/get-selected-users-reserwations`,
+        {
+          companyId: companyId,
+          userSelectedId: userSelectedId,
+          page: 1
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addSelectedUserReserwations(userSelectedId, response.data.reserwations))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Błąd podczas ładowania rezerwacji klienta.", "red")
+        )
       })
   }
 }
