@@ -5,12 +5,12 @@ import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import { FaSave } from "react-icons/fa"
 import InputCustom from "./InputCustom"
-import OpinionAndAdressContent from "./ItemsContentCompanyProfil/OpinionAndAdressContent"
-import OurWorkersContent from "./ItemsContentCompanyProfil/OurWorkersContent"
-import OurLinksContent from "./ItemsContentCompanyProfil/OurLinksContent"
-import ColumnItemTextarea from "./ItemsContentCompanyProfil/ColumnItemTextarea"
+import OpinionAndAdressContent from "./ItemsContentCompanyProfilAutoSave/OpinionAndAdressContent"
+import OurWorkersContent from "./ItemsContentCompanyProfilAutoSave/OurWorkersContent"
+import OurLinksContent from "./ItemsContentCompanyProfilAutoSave/OurLinksContent"
+import ColumnItemTextarea from "./ItemsContentCompanyProfilAutoSave/ColumnItemTextarea"
 import { CSSTransition } from "react-transition-group"
-import OpeningHoursContent from "./ItemsContentCompanyProfil/OpeningHoursContent"
+import OpeningHoursContent from "./ItemsContentCompanyProfilAutoSave/OpeningHoursContent"
 import { useDispatch, useSelector } from "react-redux"
 import {
   fetchUpdateCompanyProfil,
@@ -18,13 +18,13 @@ import {
   changeReserwationValue,
   changeEditedWorkerHours,
 } from "../state/actions"
-import AllCategoryOfServices from "./ItemsContentCompanyProfil/AllCategoryOfServices"
+import AllCategoryOfServices from "./ItemsContentCompanyProfilAutoSave/AllCategoryOfServices"
 import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
 import { MdEdit } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
-import DaysOffContent from "./ItemsContentCompanyProfil/DaysOffContent"
-import HappyHoursConstContent from "./ItemsContentCompanyProfil/HappyHoursConstContent"
-import HappyHoursNoConstContent from "./ItemsContentCompanyProfil/HappyHoursNoConstContent"
+import DaysOffContent from "./ItemsContentCompanyProfilAutoSave/DaysOffContent"
+import HappyHoursConstContent from "./ItemsContentCompanyProfilAutoSave/HappyHoursConstContent"
+import HappyHoursNoConstContent from "./ItemsContentCompanyProfilAutoSave/HappyHoursNoConstContent"
 
 const TextH1 = styled.div`
   position: relative;
@@ -166,99 +166,19 @@ const ContentCompanyProfil = ({
   userHasAccess = false,
   selectedWorker = null,
 }) => {
-  const [editMode, setEditMode] = useState(false)
-  const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
+  const [editMode, setEditMode] = useState(true)
+  const [allCategoryEdit, setAllCategoryEdit] = useState(false)
   const [editOpinionAndAdress, setEditOpinionAndAdress] = useState(false)
   const [editAboutUs, setEditAboutUs] = useState(false)
-  const [textAboutUs, setTextAboutUs] = useState("")
   const [editRezerwationText, setEditRezerwationText] = useState(false)
-  const [textRezerwationText, setTextRezerwation] = useState("")
   const [editLinks, setEditLinks] = useState(false)
-  const [companyPaused, setCompanyPaused] = useState(null)
-  const [editedWorkers, setEditedWorkers] = useState([])
-  const [editedAdress, setEditedAdress] = useState({
-    companyName: null,
-    city: null,
-    discrict: null,
-    adress: null,
-    phone: null,
-  })
-  const [editedLinks, setEditedLinks] = useState({
-    facebook: null,
-    instagram: null,
-    website: null,
-  })
-  const [reservationEveryTime, setReservationEveryTime] = useState(null)
-  const [reservationMonthTime, setReservationMonthTime] = useState(null)
-  const [newOwnerSpecialization, setNewOwnerSpecialization] = useState(null)
-  const [newOwnerServicesCategory, setNewOwnerServicesCategory] = useState(null)
   const [changesTimeOpen, setChangesTimeOpen] = useState(false)
-  const [openingHoursToSent, setOpeningHoursToSent] = useState(false)
 
-  const [deletedDayOffToSave, setDeletedDayOffToSave] = useState([])
-  const [createdDayOffToSave, setCreatedDayOffToSave] = useState([])
-  const [deletedItemsServices, setDeletedItemsServices] = useState([])
-  const [newItemsServices, setNewItemsServices] = useState([])
-  const [editedItemsServices, setEditedItemsServices] = useState([])
-  const editedWorkersHours = useSelector(state => state.editedWorkersHours)
-
-  const [newIndustries, setNewIndustries] = useState([])
-  const [deletedIndustries, setDeletedIndustries] = useState([])
-
-  // console.log("newIndustries", newIndustries)
-  // console.log("deletedIndustries", deletedIndustries)
-  // console.log("deleted from server", deletedItemsServices)
-  console.log("new services", newItemsServices)
-  console.log("edited services from server", editedItemsServices)
-  console.log("edited workers", editedWorkers)
-  // console.log("edited workers hours", editedWorkersHours)
-  // console.log("newOwnerSpecialization", newOwnerSpecialization)
-  // console.log("deletedDayOffToSave", deletedDayOffToSave)
-  // console.log("createdDayOffToSave", createdDayOffToSave)
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
-  const resetCompany = useSelector(state => state.resetCompany)
   console.log(company)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (!!resetCompany) {
-      setNewIndustries([])
-      setDeletedIndustries([])
-      setCreatedDayOffToSave([])
-      setDeletedDayOffToSave([])
-      setReservationEveryTime(null)
-      setReservationMonthTime(null)
-      setDeletedItemsServices([])
-      setNewItemsServices([])
-      setEditedItemsServices([])
-      setTextAboutUs("")
-      setTextRezerwation("")
-      setEditedWorkers([])
-      dispatch(changeEditedWorkerHours([]))
-      setEditedAdress({
-        companyName: null,
-        city: null,
-        discrict: null,
-        adress: null,
-        phone: null,
-      })
-      setEditedLinks({
-        facebook: null,
-        instagram: null,
-        website: null,
-      })
-      setNewOwnerSpecialization(null)
-      setNewOwnerServicesCategory(null)
-      setOpeningHoursToSent(false)
-      setChangesTimeOpen(false)
-      dispatch(resetEditCompany(false))
-    }
-  }, [resetCompany])
-
-  useEffect(() => {
-    setCompanyPaused(company.pauseCompany)
-  }, [company.pauseCompany])
 
   const handleEdit = setChange => {
     setChange(prevState => !prevState)
@@ -269,76 +189,8 @@ const ContentCompanyProfil = ({
       isCompanyEditProfil && (isAdmin || userHasAccess) && editMode,
   }
 
-  const handleAddEditWorker = (
-    action,
-    indexWorker,
-    specializationText,
-    workerServicesCategory = [],
-    workerPermissions
-  ) => {
-    if (action === "save") {
-      console.log(workerPermissions)
-      const oldWorkers = [...editedWorkers]
-      const isIndexWorker = oldWorkers.findIndex(
-        item => item.indexWorker === indexWorker
-      )
-      console.log(isIndexWorker, indexWorker)
-      if (isIndexWorker >= 0) {
-        oldWorkers[isIndexWorker].specializationText = specializationText
-        oldWorkers[isIndexWorker].servicesCategory = workerServicesCategory
-        oldWorkers[isIndexWorker].permissions = workerPermissions
-      } else {
-        const newWorker = {
-          indexWorker: indexWorker,
-          specializationText: specializationText,
-          servicesCategory: workerServicesCategory,
-          permissions: workerPermissions,
-        }
-        oldWorkers.push(newWorker)
-      }
-      const newOldWorkers = compareEditedArrayToServerArrayAndReturnNotCompareItems(
-        oldWorkers,
-        "indexWorker",
-        [...company.workers]
-      )
-      setEditedWorkers(newOldWorkers)
-    } else if (action === "delete") {
-      const itemFromServer = [...company.workers].find(
-        worker => worker._id === indexWorker
-      )
-      const workersIndex = [...editedWorkers].findIndex(
-        item => item.indexWorker === indexWorker
-      )
-
-      let newEditWorkers = [...editedWorkers]
-
-      if (workersIndex >= 0 && !!itemFromServer) {
-        console.log(itemFromServer)
-        newEditWorkers[workersIndex].specializationText =
-          itemFromServer.specialization
-
-        newEditWorkers[workersIndex].permissions = itemFromServer.permissions
-
-        if (workerServicesCategory.length > 0) {
-          newEditWorkers[workersIndex].servicesCategory = workerServicesCategory
-        }
-      } else {
-        newEditWorkers = newEditWorkers.filter(
-          item => item.indexWorker !== indexWorker
-        )
-      }
-      const newEditedItems = compareEditedArrayToServerArrayAndReturnNotCompareItems(
-        newEditWorkers,
-        "indexWorker",
-        [...company.workers]
-      )
-      setEditedWorkers(newEditedItems)
-    }
-  }
-
   const handleClickEditMode = () => {
     setEditMode(prevState => !prevState)
-
     setEditOpinionAndAdress(false)
     setEditAboutUs(false)
     setEditRezerwationText(false)
@@ -346,193 +198,44 @@ const ContentCompanyProfil = ({
     setChangesTimeOpen(false)
   }
 
-  const handleChangeUpodateAdress = (
-    updateNompanyNameInput,
-    updateCityInput,
-    updateDiscrictInput,
-    updateAdressInput,
-    updatePhoneInput
-  ) => {
-    setEditedAdress({
-      companyName: updateNompanyNameInput,
-      city: updateCityInput,
-      discrict: updateDiscrictInput,
-      adress: updateAdressInput,
-      phone: updatePhoneInput,
-    })
-  }
+    const handleClickReserwation = (itemServices, companyId) => {
+      const ownerCategoryToSent = !!company.ownerData.servicesCategory
+        ? company.ownerData.servicesCategory
+        : []
 
-  const handleSaveLinks = (
-    newFacebookLink,
-    newInstagramLink,
-    newWebsiteLink
-  ) => {
-    setEditedLinks({
-      facebook: newFacebookLink,
-      instagram: newInstagramLink,
-      website: newWebsiteLink,
-    })
-  }
+      const ownerSpecializationToSent = !!company.ownerData.specialization
+        ? company.ownerData.specialization
+        : ""
 
-  const handleSaveOwnerSpecialization = (specialization, servicesCategory) => {
-    const checkOwnerSpecialization =
-      company.ownerData.specialization === specialization
-        ? null
-        : specialization
-
-    const ownerCategoryCheck = !!company.ownerData.servicesCategory
-      ? company.ownerData.servicesCategory
-      : []
-
-    const isTheSameOwnerCategory =
-      JSON.stringify(servicesCategory) == JSON.stringify(ownerCategoryCheck)
-
-    const resultOwnerCategory = isTheSameOwnerCategory ? null : servicesCategory
-
-    setNewOwnerSpecialization(checkOwnerSpecialization)
-    setNewOwnerServicesCategory(resultOwnerCategory)
-  }
-
-  const handleClickReserwation = (itemServices, companyId) => {
-    const ownerCategoryToSent = !!company.ownerData.servicesCategory
-      ? company.ownerData.servicesCategory
-      : []
-
-    const ownerSpecializationToSent = !!company.ownerData.specialization
-      ? company.ownerData.specialization
-      : ""
-
-    const ownerData = {
-      ownerCategory: ownerCategoryToSent,
-      specialization: ownerSpecializationToSent,
-      name: company.owner.name,
-      surname: company.owner.surname,
-      ownerId: company.owner._id,
-    }
-    const valueWithCompanyId = {
-      ...itemServices,
-      companyId: companyId,
-      workers: company.workers,
-      ownerData: ownerData,
-      maxDate: new Date(
-        new Date().setMonth(
-          new Date().getMonth() + company.reservationMonthTime
-        )
-      ),
-    }
-    // console.log(company)
-    dispatch(changeReserwationValue(valueWithCompanyId))
-  }
-
-  const isChangesInAdress =
-    editedAdress.companyName !== null ||
-    editedAdress.city !== null ||
-    editedAdress.discrict !== null ||
-    editedAdress.adress !== null ||
-    editedAdress.phone !== null
-
-  const isChangesInLinks =
-    editedLinks.facebook !== null ||
-    editedLinks.instagram !== null ||
-    editedLinks.website !== null
-
-  const isAnyChanges =
-    newOwnerServicesCategory !== null ||
-    editedWorkers.length > 0 ||
-    !!reservationEveryTime ||
-    !!reservationMonthTime ||
-    !!textAboutUs ||
-    !!textRezerwationText ||
-    isChangesInAdress ||
-    isChangesInLinks ||
-    !!newOwnerSpecialization ||
-    changesTimeOpen ||
-    newItemsServices.length > 0 ||
-    editedItemsServices.length > 0 ||
-    editedWorkersHours.length > 0 ||
-    deletedItemsServices.length > 0 ||
-    deletedDayOffToSave.length > 0 ||
-    createdDayOffToSave.length > 0 ||
-    deletedIndustries.length > 0 ||
-    newIndustries.length > 0 ||
-    (companyPaused !== company.pauseCompany && companyPaused !== null)
-
-  const handleSaveChanges = () => {
-    if (isAnyChanges) {
-      const textAboutUsToSent = !!textAboutUs ? textAboutUs : null
-      const textRezerwationTextToSent = !!textRezerwationText
-        ? textRezerwationText
-        : null
-      const editedWorkersToSent =
-        editedWorkers.length > 0 ? editedWorkers : null
-      const editedAdressIsEmpty = !Object.values(editedAdress).some(
-        x => x !== null && x !== ""
-      )
-      const editedAdressToSent = !editedAdressIsEmpty ? editedAdress : null
-      const editedLinksIsEmpty = !Object.values(editedLinks).some(
-        x => x !== null
-      )
-      const editedLinksToSent = !editedLinksIsEmpty ? editedLinks : null
-      const ownerSpecializationToSent = !!newOwnerSpecialization
-        ? newOwnerSpecialization
-        : null
-      const openingHoursToSentFinall = !!openingHoursToSent
-        ? openingHoursToSent
-        : null
-
-      const companyPausedToSent =
-        companyPaused !== company.pauseCompany ? companyPaused : null
-
-      const services = {
-        deleted: deletedItemsServices,
-        edited: editedItemsServices,
-        new: newItemsServices,
+      const ownerData = {
+        ownerCategory: ownerCategoryToSent,
+        specialization: ownerSpecializationToSent,
+        name: company.owner.name,
+        surname: company.owner.surname,
+        ownerId: company.owner._id,
       }
-
-      const deletedDayOffToSaveIsChanges =
-        deletedDayOffToSave.length > 0 ? deletedDayOffToSave : null
-      const createdDayOffToSaveIsChanges =
-        createdDayOffToSave.length > 0 ? createdDayOffToSave : null
-
-      const newIndustriesToSent =
-        newIndustries.length > 0 ? newIndustries : null
-      const deletedIndustriesToSent =
-        deletedIndustries.length > 0 ? deletedIndustries : null
-
-      dispatch(
-        fetchUpdateCompanyProfil(
-          user.token,
-          company._id,
-          textAboutUsToSent,
-          textRezerwationTextToSent,
-          editedWorkersToSent,
-          editedAdressToSent,
-          editedLinksToSent,
-          ownerSpecializationToSent,
-          openingHoursToSentFinall,
-          companyPausedToSent,
-          services,
-          reservationEveryTime,
-          reservationMonthTime,
-          newOwnerServicesCategory,
-          editedWorkersHours,
-          createdDayOffToSaveIsChanges,
-          deletedDayOffToSaveIsChanges,
-          newIndustriesToSent,
-          deletedIndustriesToSent
-        )
-      )
-      setCompanyPaused(null)
+      const valueWithCompanyId = {
+        ...itemServices,
+        companyId: companyId,
+        workers: company.workers,
+        ownerData: ownerData,
+        maxDate: new Date(
+          new Date().setMonth(
+            new Date().getMonth() + company.reservationMonthTime
+          )
+        ),
+      }
+      // console.log(company)
+      dispatch(changeReserwationValue(valueWithCompanyId))
     }
-  }
 
-  const filteredAllCategoriesWithItems = allCategoriesWithItems.filter(item => {
-    if (item.items.length > 0) {
-      return true
-    } else {
-      return false
-    }
-  })
+  // const filteredAllCategoriesWithItems = allCategoriesWithItems.filter(item => {
+  //   if (item.items.length > 0) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // })
 
   let userHasPermToServices = !isCompanyEditProfil || isAdmin;
   if (!userHasPermToServices && selectedWorker) {
@@ -583,28 +286,18 @@ const ContentCompanyProfil = ({
             <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
             {userHasPermToServices && (
               <AllCategoryOfServices
-                newItemsServices={newItemsServices}
-                setNewItemsServices={setNewItemsServices}
-                editedItemsServices={editedItemsServices}
-                setEditedItemsServices={setEditedItemsServices}
-                deletedItemsServices={deletedItemsServices}
-                setDeletedItemsServices={setDeletedItemsServices}
                 services={company.services}
-                allCategoriesWithItems={allCategoriesWithItems}
-                setAllCategoriesWithItems={setAllCategoriesWithItems}
                 {...companyEditProfilProps}
-                editedWorkers={editedWorkers}
-                setEditedWorkers={setEditedWorkers}
-                workersFromServer={[...company.workers]}
                 handleClickReserwation={handleClickReserwation}
                 companyId={company._id}
-                newOwnerServicesCategory={newOwnerServicesCategory}
-                setNewOwnerServicesCategory={setNewOwnerServicesCategory}
-                ownerSerwiceCategory={company.ownerData.servicesCategory}
                 userIsBlocked={userIsBlocked}
+                user={user}
+                allCategoryEdit={allCategoryEdit}
+                setAllCategoryEdit={setAllCategoryEdit}
               />
             )}
           </LeftColumn>
+          {/*
           <RightColumn>
             {userHasPermisionToOther && (
               <RightColumnItem
@@ -626,17 +319,17 @@ const ContentCompanyProfil = ({
                   ButtonEditPosition={ButtonEditPosition}
                   editable={editOpinionAndAdress}
                   onClickEdit={() => handleEdit(setEditOpinionAndAdress)}
-                  handleChangeUpodateAdress={handleChangeUpodateAdress}
-                  setCompanyPaused={setCompanyPaused}
-                  setReservationEveryTime={setReservationEveryTime}
-                  setReservationMonthTime={setReservationMonthTime}
+                  // handleChangeUpodateAdress={handleChangeUpodateAdress}
+                  // setCompanyPaused={setCompanyPaused}
+                  // setReservationEveryTime={setReservationEveryTime}
+                  // setReservationMonthTime={setReservationMonthTime}
                   reservationEveryTimeServer={company.reservationEveryTime}
                   reservationMonthServer={company.reservationMonthTime}
                   siteProps={siteProps}
-                  newIndustries={newIndustries}
-                  setNewIndustries={setNewIndustries}
-                  deletedIndustries={deletedIndustries}
-                  setDeletedIndustries={setDeletedIndustries}
+                  // newIndustries={newIndustries}
+                  // setNewIndustries={setNewIndustries}
+                  // deletedIndustries={deletedIndustries}
+                  // setDeletedIndustries={setDeletedIndustries}
                   companyIndustries={company.companyType}
                 />
               </RightColumnItem>
@@ -656,8 +349,8 @@ const ContentCompanyProfil = ({
                   title={company.title}
                   editable={editAboutUs}
                   onClickEdit={() => handleEdit(setEditAboutUs)}
-                  setTextEditedChange={setTextAboutUs}
-                  textEdited={textAboutUs}
+                  // setTextEditedChange={setTextAboutUs}
+                  // textEdited={textAboutUs}
                   siteProps={siteProps}
                 />
               </RightColumnItem>
@@ -674,7 +367,7 @@ const ContentCompanyProfil = ({
                   companyEditProfilProps={companyEditProfilProps}
                   company={company}
                   setChangesTimeOpen={setChangesTimeOpen}
-                  setOpeningHoursToSent={setOpeningHoursToSent}
+                  // setOpeningHoursToSent={setOpeningHoursToSent}
                   editMode={editMode}
                   siteProps={siteProps}
                 />
@@ -693,11 +386,11 @@ const ContentCompanyProfil = ({
                       TitleRightColumn={TitleRightColumn}
                       siteProps={siteProps}
                       ButtonEditPosition={ButtonEditPosition}
-                      setDeletedDayOffToSave={setDeletedDayOffToSave}
+                      // setDeletedDayOffToSave={setDeletedDayOffToSave}
                       companyDaysOff={company.daysOff}
-                      setCreatedDayOffToSave={setCreatedDayOffToSave}
-                      deletedDayOffToSave={deletedDayOffToSave}
-                      createdDayOffToSave={createdDayOffToSave}
+                      // setCreatedDayOffToSave={setCreatedDayOffToSave}
+                      // deletedDayOffToSave={deletedDayOffToSave}
+                      // createdDayOffToSave={createdDayOffToSave}
                     />
                   </RightColumnItem>
                 )}
@@ -745,16 +438,16 @@ const ContentCompanyProfil = ({
                   owner={company.owner}
                   companyId={company._id}
                   ownerSpecialization={company.ownerData.specialization}
-                  handleAddEditWorker={handleAddEditWorker}
-                  handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
+                  // handleAddEditWorker={handleAddEditWorker}
+                  // handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
                   allCategoriesWithItems={filteredAllCategoriesWithItems}
-                  editedWorkers={editedWorkers}
+                  // editedWorkers={editedWorkers}
                   ownerSerwiceCategory={company.ownerData.servicesCategory}
-                  newOwnerServicesCategory={newOwnerServicesCategory}
+                  // newOwnerServicesCategory={newOwnerServicesCategory}
                   company={company}
                   editMode={editMode}
                   siteProps={siteProps}
-                  editedWorkersHours={editedWorkersHours}
+                  // editedWorkersHours={editedWorkersHours}
                   isAdmin={isAdmin}
                   ownerData={company.ownerData}
                 />
@@ -776,8 +469,8 @@ const ContentCompanyProfil = ({
                     title={company.reserationText}
                     editable={editRezerwationText}
                     onClickEdit={() => handleEdit(setEditRezerwationText)}
-                    setTextEditedChange={setTextRezerwation}
-                    textEdited={textRezerwationText}
+                    // setTextEditedChange={setTextRezerwation}
+                    // textEdited={textRezerwationText}
                     siteProps={siteProps}
                   />
                 </RightColumnItem>
@@ -799,7 +492,7 @@ const ContentCompanyProfil = ({
                     editable={editLinks}
                     siteProps={siteProps}
                     onClickEdit={() => handleEdit(setEditLinks)}
-                    handleSaveLinks={handleSaveLinks}
+                    // handleSaveLinks={handleSaveLinks}
                     linkFacebook={
                       !!company.linkFacebook ? company.linkFacebook : ""
                     }
@@ -813,26 +506,8 @@ const ContentCompanyProfil = ({
                 </RightColumnItem>
               )}
           </RightColumn>
+           */}
         </ContentDiv>
-        <CSSTransition
-          in={isCompanyEditProfil && isAnyChanges}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
-        >
-          <SaveChangesPosition>
-            <ButtonIcon
-              title="Zapisz zmiany"
-              uppercase
-              fontIconSize="40"
-              fontSize="28"
-              icon={<FaSave />}
-              customColorButton={Colors(siteProps).successColorDark}
-              customColorIcon={Colors(siteProps).successColor}
-              onClick={handleSaveChanges}
-            />
-          </SaveChangesPosition>
-        </CSSTransition>
         {isCompanyEditProfil && (
           <ReactTooltip id="editMode" effect="float" multiline={true}>
             <span>Tryb edycji.</span>

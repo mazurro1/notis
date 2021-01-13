@@ -1,17 +1,18 @@
 import React from "react"
 
-const HappyHoursContent = ({
+const HappyHoursConstContent = ({
   companyEditProfilProps = {},
   isCompanyEditProfil = false,
   siteProps,
   TitleRightColumn,
+  happyHoursConst = [],
 }) => {
   return (
     <>
       <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
-        Happy hours
+        Stałe Happy Hours
       </TitleRightColumn>
     </>
   )
 }
-export default HappyHoursContent
+export default HappyHoursConstContent

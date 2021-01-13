@@ -5,6 +5,7 @@ import Popup from "./Popup"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCompanyData } from "../state/actions"
 import ContentCompanyProfil from "./ContentCompanyProfil"
+import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
 
 const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
@@ -63,7 +64,7 @@ const CompanyEditProfil = () => {
   return (
     <>
       {userHasAccess ? (
-        <ContentCompanyProfil
+        <ContentCompanyProfilAutoSave
           company={workCompanyData}
           isAdmin={isAdminCompany}
           isCompanyEditProfil

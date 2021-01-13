@@ -31,6 +31,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  COMPANY_PATCH_NEW_SERVICES,
   ADD_SELECTED_USER_RESERWATIONS,
   RESET_BELL_ALERT,
   ADD_NEW_MESSAGE_WORKER_USER_INFORMATION,
@@ -298,6 +299,21 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case COMPANY_PATCH_NEW_SERVICES: {
+      if (!!state.workCompanyData){
+        const newWorkCompanyDataServices = { ...state.workCompanyData }
+        newWorkCompanyDataServices.services = action.data
+        return {
+          ...state,
+          workCompanyData: newWorkCompanyDataServices,
+        }
+      }else{
+        return {
+          ...state
+        }
+      }
+    }
 
     case ADD_SELECTED_USER_RESERWATIONS: {
       const newCompanyUsersInformationsReserwations = [

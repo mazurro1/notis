@@ -508,6 +508,14 @@ export const WORKER_MORE_USERS_MESSAGES_INFORMATIONS =
   "WORKER_MORE_USERS_MESSAGES_INFORMATIONS"
 export const ADD_TO_USER_INFORMATIONS = "ADD_TO_USER_INFORMATIONS"
 export const ADD_SELECTED_USER_RESERWATIONS = "ADD_SELECTED_USER_RESERWATIONS"
+export const COMPANY_PATCH_NEW_SERVICES = "COMPANY_PATCH_NEW_SERVICES"
+
+export const patchNewCompanyServices = (data) => {
+  return {
+    type: COMPANY_PATCH_NEW_SERVICES,
+    data: data,
+  }
+}
 
 export const addSelectedUserReserwations = (userSelectedId, reserwations) => {
   return {
@@ -1792,3 +1800,33 @@ export const fetchSelectedUserReserwations = (token, userSelectedId, companyId) 
       })
   }
 }
+
+
+export const fetchSaveCompanyServices = (token, companyId, services) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-services-patch`,
+        {
+          companyId: companyId,
+          services: services,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(patchNewCompanyServices(response.data.services))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas aktualizacji usług.", "red"))
+      })
+  }
+}
+
+

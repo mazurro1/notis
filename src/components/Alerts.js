@@ -26,6 +26,7 @@ const OneAlert = styled.div`
   padding: 2.5px 5px;
 `
 const ContentAlert = styled.div`
+  user-select: none;
   position: relative;
   padding: 10px;
   background-color: ${props =>

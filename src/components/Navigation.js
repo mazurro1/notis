@@ -520,6 +520,10 @@ const Navigation = ({ children, isMainPage }) => {
      dispatch(changeLanguageStyle(languageSelected))
    }
 
+   const handleClickAdminPanel = () => {
+     setWorkPropsVisible(false)
+   }
+
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
     const isIndustriesActive = industries === item.value
     return (
@@ -800,6 +804,7 @@ const Navigation = ({ children, isMainPage }) => {
   let workerHasAccessButton = false;
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
+  let hasCompany = false
   if(!!user){
     if(user.hasCompany){
       const selectWorker = user.company.workers.find(
@@ -807,7 +812,7 @@ const Navigation = ({ children, isMainPage }) => {
       )
       workerHasAccessClientsOpinions = user.company.owner === user.userId;
       workerHasAccessAvailability = user.company.owner === user.userId
-
+      hasCompany = true
       if (!!selectWorker) {
         const hasPermission = selectWorker.permissions.some(
           perm => perm === 2 || perm === 3 || perm === 4
@@ -833,10 +838,10 @@ const Navigation = ({ children, isMainPage }) => {
             workerHasAccessAvailability = true
           }
         }
+        }
       }
     }
-  }
-
+  
   const PopupWorkerPropsVisible = (
     <Popup
       popupEnable={workPropsVisible}
@@ -845,14 +850,34 @@ const Navigation = ({ children, isMainPage }) => {
       maxWidth="300"
     >
       <div>
-        <ButtonIcon
-          title="Grafik pracy"
-          uppercase
-          fontIconSize="25"
-          fontSize="16"
-          icon={<MdTimelapse />}
-          // onClick={handleWorkerReserwations}
-        />
+        {hasCompany && (
+          <div onClick={handleClickAdminPanel}>
+            <LinkEffect
+              path="/company-profil"
+              text={
+                <ButtonIcon
+                  title="Panel administracyjny"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaChrome />}
+                  secondColors
+                />
+              }
+            />
+          </div>
+          // </ButtonNavStyle>
+        )}
+        <MarginButtonsWork>
+          <ButtonIcon
+            title="Grafik pracy"
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<MdTimelapse />}
+            // onClick={handleWorkerReserwations}
+          />
+        </MarginButtonsWork>
         {workerHasAccessClientsOpinions && (
           <MarginButtonsWork>
             <ButtonIcon
@@ -895,21 +920,6 @@ const Navigation = ({ children, isMainPage }) => {
       !!user && user.hasCompany ? (
         user.company.owner === user.userId || workerHasAccessButton ? (
           <>
-            <ButtonNavStyle>
-              <LinkEffect
-                path="/company-profil"
-                text={
-                  <ButtonIcon
-                    title={user.company.name}
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="16"
-                    icon={<FaChrome />}
-                    secondColors
-                  />
-                }
-              />
-            </ButtonNavStyle>
             <ButtonNavStyle>
               <ButtonIcon
                 title={Translates[siteProps.language].buttons.work}

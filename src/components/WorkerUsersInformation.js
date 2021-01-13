@@ -64,6 +64,7 @@ import { FaUserFriends } from "react-icons/fa"
          key={index}
          siteProps={siteProps}
          user={user}
+         filterUsers={filterUsers}
        />
      )
    })

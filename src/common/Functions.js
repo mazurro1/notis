@@ -67,14 +67,18 @@ export const getCategories = (items, propName) => {
 
 export const categoryItemsMenu = (categories, items) => {
   let allItems = []
-  categories.forEach(itemCategory => {
+  categories.forEach((itemCategory, index) => {
     const filterItemsToCategory = items.filter(
       item => item.serviceCategory === itemCategory
     )
+    const mapItemsCategoryToAddCategoryId = filterItemsToCategory.map(item => {
+      item.categoryId = index;
+      return item;
+    })
     const newAllItem = {
       category: itemCategory,
-      oldCategory: itemCategory,
-      items: filterItemsToCategory,
+      categoryId: index,
+      items: mapItemsCategoryToAddCategoryId,
     }
     allItems.push(newAllItem)
   })
