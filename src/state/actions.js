@@ -509,6 +509,14 @@ export const WORKER_MORE_USERS_MESSAGES_INFORMATIONS =
 export const ADD_TO_USER_INFORMATIONS = "ADD_TO_USER_INFORMATIONS"
 export const ADD_SELECTED_USER_RESERWATIONS = "ADD_SELECTED_USER_RESERWATIONS"
 export const COMPANY_PATCH_NEW_SERVICES = "COMPANY_PATCH_NEW_SERVICES"
+export const COMPANY_PATCH_SETTINGS = "COMPANY_PATCH_SETTINGS"
+
+export const companyPatchSettings = (data) => {
+  return {
+    type: COMPANY_PATCH_SETTINGS,
+    data: data,
+  }
+}
 
 export const patchNewCompanyServices = (data) => {
   return {
@@ -1825,6 +1833,33 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas aktualizacji usług.", "red"))
+      })
+  }
+}
+
+export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-settings-patch`,
+        {
+          companyId: companyId,
+          dataSettings: dataSettings,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(companyPatchSettings(dataSettings))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas aktualizacji ustawień firmy.", "red"))
       })
   }
 }

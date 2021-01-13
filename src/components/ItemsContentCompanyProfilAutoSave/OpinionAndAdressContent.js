@@ -16,9 +16,10 @@ import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
 import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
-import { useSelector } from "react-redux"
 import SelectCustom from '../SelectCustom'
 import {AllIndustries} from '../../common/AllIndustries'
+import {fetchSaveCompanySettings} from '../../state/actions'
+import { useDispatch, useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -239,26 +240,19 @@ const OpinionAndAdressContent = ({
   isCompanyEditProfil = false,
   editable = false,
   onClickEdit = () => {},
-  handleChangeUpodateAdress,
-  setCompanyPaused,
   pauseCompany = true,
   companyName = "",
-  setReservationEveryTime,
-  setReservationMonthTime,
   reservationEveryTimeServer,
   reservationMonthServer,
-  newIndustries = [],
-  deletedIndustries = [],
-  setNewIndustries,
-  setDeletedIndustries,
-  companyIndustries = []
+  companyIndustries = [],
+  user,
+  company,
+  setEditOpinionAndAdress,
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
-  const [newIndustriesComponent, setNewIndustriesComponent] = useState(
-    newIndustries
-  )
+  const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
   const [deletedIndustriesComponent, setDeletedIndustriesComponent] = useState(
-    deletedIndustries
+    []
   )
   const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
@@ -274,19 +268,44 @@ const OpinionAndAdressContent = ({
   )
   const siteProps = useSelector(state => state.siteProps)
 
-    useEffect(()=>{
-      if (!!companyIndustries){
-        const convertedCompanyIndustriesFromId = companyIndustries.map(
-          itemId => {
-            const selectedIndustriesComponent = AllIndustries[
-              siteProps.language
-            ].find(itemIndustries => itemIndustries.value === itemId)
-            return selectedIndustriesComponent
-          }
-        )
-        setIndustriesComponent(convertedCompanyIndustriesFromId)
-      }
-    }, [])
+  const dispatch = useDispatch()
+  // useEffect(()=>{
+  //   if (!!companyIndustries){
+  //     const convertedCompanyIndustriesFromId = companyIndustries.map(
+  //       itemId => {
+  //         const selectedIndustriesComponent = AllIndustries[
+  //           siteProps.language
+  //         ].find(itemIndustries => itemIndustries.value === itemId)
+  //         return selectedIndustriesComponent
+  //       }
+  //     )
+  //     setIndustriesComponent(convertedCompanyIndustriesFromId)
+  //   }
+  // }, [company])
+
+  useEffect(() => {
+    setNewIndustriesComponent([])
+    setDeletedIndustriesComponent([])
+    setEditOpinionAndAdress(false)
+    setCompanyNameInput(companyName)
+    setCityInput(city)
+    setDiscrictInput(district)
+    setAdressInput(adress)
+    setPhoneInput(phone)
+    setCompanyPausedItem(pauseCompany)
+    setReserwationEver(reservationEveryTimeServer)
+    setReserwationMonth(reservationMonthServer)
+
+    if (!!companyIndustries) {
+      const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
+        const selectedIndustriesComponent = AllIndustries[
+          siteProps.language
+        ].find(itemIndustries => itemIndustries.value === itemId)
+        return selectedIndustriesComponent
+      })
+      setIndustriesComponent(convertedCompanyIndustriesFromId)
+    }
+  }, [company])
 
   const disabledButtonSubmit =
     deletedIndustriesComponent.length > 0 ||
@@ -310,35 +329,50 @@ const OpinionAndAdressContent = ({
       const updatePhoneInput = phoneInput !== phone ? phoneInput : null
       const updateNompanyNameInput =
         companyNameInput !== companyName ? companyNameInput : null
-      handleChangeUpodateAdress(
-        updateNompanyNameInput,
-        updateCityInput,
-        updateDiscrictInput,
-        updateAdressInput,
-        updatePhoneInput
-      )
-      if (newIndustriesComponent.length > 0 || newIndustries.length > 0) {
-        setNewIndustries(newIndustriesComponent)
+
+      let newIndustriesComponentToServer = null
+      if (newIndustriesComponent.length > 0) {
+        newIndustriesComponentToServer = newIndustriesComponent
       }
-      if (deletedIndustriesComponent.length > 0 || deletedIndustries.length > 0) {
-        setDeletedIndustries(deletedIndustriesComponent)
+
+      let deletedIndustriesToServer = null
+      if (deletedIndustriesComponent.length > 0) {
+        deletedIndustriesToServer = deletedIndustriesComponent
       }
-      if (pauseCompany === companyPausedItem) {
-        setCompanyPaused(null)
-      } else {
-        setCompanyPaused(!pauseCompany)
+
+      let pauseCompanyToServer = null
+      if (pauseCompany !== companyPausedItem) {
+        pauseCompanyToServer = !pauseCompany
       }
+
+      let reserwationMonthToServer = null
       if (reserwationMonth !== reservationMonthServer) {
-        setReservationMonthTime(reserwationMonth)
-      } else {
-        setReservationMonthTime(null)
+        reserwationMonthToServer = reserwationMonth
       }
+
+      let reserwationEverToServer = null
       if (reserwationEver !== reservationEveryTimeServer) {
-        setReservationEveryTime(reserwationEver)
-      } else {
-        setReservationEveryTime(null)
+        reserwationEverToServer = reserwationEver
       }
-      onClickEdit()
+
+      const mapCompanyIndustries = industriesComponent.map(item => item.value)
+
+      const dataSettings = {
+        updateCityInput: updateCityInput,
+        updateDiscrictInput: updateDiscrictInput,
+        updateAdressInput: updateAdressInput,
+        updatePhoneInput: updatePhoneInput,
+        updateNompanyNameInput: updateNompanyNameInput,
+        industriesComponent: mapCompanyIndustries,
+        pauseCompanyToServer: pauseCompanyToServer,
+        reserwationMonthToServer: reserwationMonthToServer,
+        reserwationEverToServer: reserwationEverToServer,
+      }
+      dispatch(
+        fetchSaveCompanySettings(user.token, user.company._id, dataSettings)
+      )
+
+      // onClickEdit()
     }
   }
 
@@ -355,13 +389,19 @@ const OpinionAndAdressContent = ({
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
-    handleChangeUpodateAdress(null, null, null, null, null)
     setCompanyPausedItem(pauseCompany)
-    setCompanyPaused(null)
-    setReservationEveryTime(null)
-    setReservationMonthTime(null)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
+
+    if (!!companyIndustries) {
+      const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
+        const selectedIndustriesComponent = AllIndustries[
+          siteProps.language
+        ].find(itemIndustries => itemIndustries.value === itemId)
+        return selectedIndustriesComponent
+      })
+      setIndustriesComponent(convertedCompanyIndustriesFromId)
+    }
   }
 
   const handleEdit = () => {
@@ -497,11 +537,7 @@ const OpinionAndAdressContent = ({
       ) : null}
       <OpinionsAndAdress>
         <AdressContent>
-          <TitleRightColumn
-            isCompanyEditProfil={isCompanyEditProfil}
-            adress
-            siteProps={siteProps}
-          >
+          <TitleRightColumn adress siteProps={siteProps}>
             <DivInlineBlock> {`${cityInput},`}</DivInlineBlock>
             <DivInlineBlock>{`${discrictInput},`}</DivInlineBlock>
             <DivInlineBlock> {`${adressInput}`}</DivInlineBlock>
@@ -519,10 +555,7 @@ const OpinionAndAdressContent = ({
         </OpinionsContent>
       </OpinionsAndAdress>
       <TelephoneDiv>
-        <CirclePhone
-          isCompanyEditProfil={isCompanyEditProfil}
-          siteProps={siteProps}
-        >
+        <CirclePhone siteProps={siteProps}>
           <MdPhone />
         </CirclePhone>
         {phoneNumberRender}

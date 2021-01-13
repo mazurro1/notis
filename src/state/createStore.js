@@ -61,6 +61,7 @@ import {
   ADD_NEW_PHONE_WORKER_USER_INFORMATION,
   DELETE_MESSAGE_WORKER_USER_INFORMATION,
   ADD_TO_USER_INFORMATIONS,
+  COMPANY_PATCH_SETTINGS,
 } from "./actions"
 
 const initialState = {
@@ -299,6 +300,51 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case COMPANY_PATCH_SETTINGS: {
+      if (!!state.workCompanyData){
+        const newWorkCompanyDataSettings = { ...state.workCompanyData }
+        if(!!action.data.industriesComponent){
+          newWorkCompanyDataSettings.companyType =
+            action.data.industriesComponent
+        }
+        if (action.data.pauseCompanyToServer !== null) {
+          newWorkCompanyDataSettings.pauseCompany =
+            action.data.pauseCompanyToServer
+        }
+        if (!!action.data.reserwationEverToServer) {
+          newWorkCompanyDataSettings.reservationEveryTime =
+            action.data.reserwationEverToServer
+        }
+        if (!!action.data.reserwationMonthToServer) {
+          newWorkCompanyDataSettings.reservationMonthTime =
+            action.data.reserwationMonthToServer
+        }
+        if (!!action.data.updateAdressInput) {
+          newWorkCompanyDataSettings.adress = action.data.updateAdressInput
+        }
+        if (!!action.data.updateDiscrictInput) {
+          newWorkCompanyDataSettings.district = action.data.updateDiscrictInput
+        }
+        if (!!action.data.updateNompanyNameInput) {
+          newWorkCompanyDataSettings.name = action.data.updateNompanyNameInput
+        }
+        if (!!action.data.updatePhoneInput) {
+          newWorkCompanyDataSettings.phone = action.data.updatePhoneInput
+        }
+        if (!!action.data.updateCityInput) {
+          newWorkCompanyDataSettings.city = action.data.updateCityInput
+        }
+        return {
+          ...state,
+          workCompanyData: newWorkCompanyDataSettings,
+        }
+      }else{
+        return {
+          ...state
+        }
+      }
+    }
 
     case COMPANY_PATCH_NEW_SERVICES: {
       if (!!state.workCompanyData){

@@ -10,7 +10,7 @@ const SelectDiv = styled.div`
   margin: ${props => props.marginAuto ? "0 auto" : "0"};
   width: ${props => (props.widthAuto ? "auto" : "500px")};
   max-width: 90vw;
-  /* box-shadow: 0 0 5px 10px rgba(0, 0, 0, 0.1); */
+  font-size: 0.9rem;
   div {
     div {
       border-color: ${props =>

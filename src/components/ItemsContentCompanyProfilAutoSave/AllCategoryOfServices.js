@@ -432,6 +432,11 @@ const AllCategoryOfServices = ({
     item => item.category.toLowerCase() === newCategoryTitle.toLowerCase()
   )
 
+  const isAnyChanges =
+    newCategoryItems.length > 0 ||
+    deletedCategoryItems.length > 0 ||
+    editedCategoryItems.length > 0
+
   return (
     <BackgroundEditedComponent active={allCategoryEdit} siteProps={siteProps}>
       {!!userIsBlocked && (
@@ -524,15 +529,17 @@ const AllCategoryOfServices = ({
       )}
       <ButtonsEditPosition>
         {!allCategoryEdit ? (
-          <ButtonIcon
-            title="Edytuj usługi"
-            uppercase
-            fontIconSize="40"
-            fontSize="14"
-            icon={<MdArrowBack />}
-            onClick={handleClickEditComponent}
-            secondColors
-          />
+          isCompanyEditProfil && (
+            <ButtonIcon
+              title="Edytuj usługi"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              onClick={handleClickEditComponent}
+              secondColors
+            />
+          )
         ) : (
           <>
             <ButtonIcon
@@ -555,6 +562,7 @@ const AllCategoryOfServices = ({
                 onClick={handleSaveAllServices}
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
+                disabled={!isAnyChanges}
               />
             </MarginButtonLeft>
           </>

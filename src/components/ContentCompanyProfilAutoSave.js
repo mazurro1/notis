@@ -297,7 +297,7 @@ const ContentCompanyProfil = ({
               />
             )}
           </LeftColumn>
-          {/*
+
           <RightColumn>
             {userHasPermisionToOther && (
               <RightColumnItem
@@ -319,21 +319,18 @@ const ContentCompanyProfil = ({
                   ButtonEditPosition={ButtonEditPosition}
                   editable={editOpinionAndAdress}
                   onClickEdit={() => handleEdit(setEditOpinionAndAdress)}
-                  // handleChangeUpodateAdress={handleChangeUpodateAdress}
-                  // setCompanyPaused={setCompanyPaused}
-                  // setReservationEveryTime={setReservationEveryTime}
-                  // setReservationMonthTime={setReservationMonthTime}
+                  setEditOpinionAndAdress={setEditOpinionAndAdress}
                   reservationEveryTimeServer={company.reservationEveryTime}
                   reservationMonthServer={company.reservationMonthTime}
                   siteProps={siteProps}
-                  // newIndustries={newIndustries}
-                  // setNewIndustries={setNewIndustries}
-                  // deletedIndustries={deletedIndustries}
-                  // setDeletedIndustries={setDeletedIndustries}
                   companyIndustries={company.companyType}
+                  user={user}
+                  company={company}
                 />
               </RightColumnItem>
             )}
+
+            {/*
             <InputCustom />
             {userHasPermisionToOther && (
               <RightColumnItem
@@ -505,8 +502,8 @@ const ContentCompanyProfil = ({
                   />
                 </RightColumnItem>
               )}
-          </RightColumn>
            */}
+          </RightColumn>
         </ContentDiv>
         {isCompanyEditProfil && (
           <ReactTooltip id="editMode" effect="float" multiline={true}>
