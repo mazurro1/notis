@@ -174,6 +174,7 @@ const ContentCompanyProfil = ({
   const [editLinks, setEditLinks] = useState(false)
   const [changesTimeOpen, setChangesTimeOpen] = useState(false)
 
+
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
   console.log(company)
@@ -326,6 +327,7 @@ const ContentCompanyProfil = ({
                   companyIndustries={company.companyType}
                   user={user}
                   company={company}
+                  
                 />
               </RightColumnItem>
             )}
@@ -421,6 +423,8 @@ const ContentCompanyProfil = ({
                 )}
               </>
             )}
+                */}
+
             {userHasPermToWorkers && (
               <RightColumnItem
                 {...companyEditProfilProps}
@@ -437,7 +441,7 @@ const ContentCompanyProfil = ({
                   ownerSpecialization={company.ownerData.specialization}
                   // handleAddEditWorker={handleAddEditWorker}
                   // handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
-                  allCategoriesWithItems={filteredAllCategoriesWithItems}
+                  companyServices={company.services}
                   // editedWorkers={editedWorkers}
                   ownerSerwiceCategory={company.ownerData.servicesCategory}
                   // newOwnerServicesCategory={newOwnerServicesCategory}
@@ -447,10 +451,11 @@ const ContentCompanyProfil = ({
                   // editedWorkersHours={editedWorkersHours}
                   isAdmin={isAdmin}
                   ownerData={company.ownerData}
+                  company={company}
                 />
               </RightColumnItem>
             )}
-
+            {/*
             {(company.reserationText || isCompanyEditProfil) &&
               userHasPermisionToOther && (
                 <RightColumnItem

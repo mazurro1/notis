@@ -510,6 +510,56 @@ export const ADD_TO_USER_INFORMATIONS = "ADD_TO_USER_INFORMATIONS"
 export const ADD_SELECTED_USER_RESERWATIONS = "ADD_SELECTED_USER_RESERWATIONS"
 export const COMPANY_PATCH_NEW_SERVICES = "COMPANY_PATCH_NEW_SERVICES"
 export const COMPANY_PATCH_SETTINGS = "COMPANY_PATCH_SETTINGS"
+export const COMPANY_PATCH_WORKER_SETTINGS = "COMPANY_PATCH_WORKER_SETTINGS"
+export const RESET_WORKER_PROPS_VISIBLE = "RESET_WORKER_PROPS_VISIBLE"
+export const COMPANY_PATCH_WORKER_CONST_TIME = "COMPANY_PATCH_WORKER_CONST_TIME"
+export const COMPANY_PATCH_WORKER_NO_CONST_HOURS = "COMPANY_PATCH_WORKER_NO_CONST_HOURS"
+export const COMPANY_ADD_WORKER_NO_CONST_HOURS = "COMPANY_ADD_WORKER_NO_CONST_HOURS"
+export const COMPANY_DELETE_WORKER_NO_CONST_HOURS = "COMPANY_DELETE_WORKER_NO_CONST_HOURS"
+
+export const companyDeleteWorkerNoConstHours = (workerId, noConstHourId) => {
+  return {
+    type: COMPANY_DELETE_WORKER_NO_CONST_HOURS,
+    workerId: workerId,
+    noConstHourId: noConstHourId,
+  }
+}
+
+export const companyAddWorkerNoConstHours = (workerId, data) => {
+  return {
+    type: COMPANY_ADD_WORKER_NO_CONST_HOURS,
+    workerId: workerId,
+    data: data,
+  }
+}
+
+export const companyPatchWorkerNoConstHours = (workerId, data) => {
+  return {
+    type: COMPANY_PATCH_WORKER_NO_CONST_HOURS,
+    workerId: workerId,
+    data: data,
+  }
+}
+
+export const resetWorkersPropsVisible = () => {
+  return {
+    type: RESET_WORKER_PROPS_VISIBLE
+  }
+}
+
+export const companyPatchWorkerContTime = (dataTime) => {
+  return {
+    type: COMPANY_PATCH_WORKER_CONST_TIME,
+    dataTime: dataTime,
+  }
+}
+
+export const companyPatchWorkerSettings = (dataWorker) => {
+  return {
+    type: COMPANY_PATCH_WORKER_SETTINGS,
+    dataWorker: dataWorker,
+  }
+}
 
 export const companyPatchSettings = (data) => {
   return {
@@ -1864,4 +1914,197 @@ export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
   }
 }
 
+export const fetchSaveWorkerProps = (
+  token,
+  companyId,
+  dateProps = null,
+  constTime = null
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-workers-save-props`,
+        {
+          companyId: companyId,
+          dateProps: dateProps,
+          constTime: constTime,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        if (!!dateProps) {
+          dispatch(companyPatchWorkerSettings(dateProps))
+        }
+        if (!!constTime){
+          dispatch(companyPatchWorkerContTime(constTime))
+        }
+          dispatch(addAlertItem("Zaktualizowano pracownika.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas aktualizacji pracownika.", "red"))
+      })
+  }
+}
 
+export const fetchGetWorkerNoConstData = (
+  token,
+  companyId,
+  workerId,
+  year,
+  month
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-workers-no-const-data`,
+        {
+          companyId: companyId,
+          workerId: workerId,
+          year: year,
+          month: month,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          companyPatchWorkerNoConstHours(
+            workerId, response.data.noConstWorkingHours
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(changeEditWorkerHours(false, null))
+        dispatch(addAlertItem("Błąd podczas pobierania godzin pracy pracownika.", "red"))
+      })
+  }
+}
+
+export const fetchGetOwnerNoConstData = (
+  token,
+  companyId,
+  year,
+  month
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-owner-no-const-data`,
+        {
+          companyId: companyId,
+          year: year,
+          month: month,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          companyPatchWorkerNoConstHours(
+            "owner",
+            response.data.noConstWorkingHours
+          )
+        )
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(changeEditWorkerHours(false, null))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas pobierania godzin pracy pracownika.",
+            "red"
+          )
+        )
+      })
+  }
+}
+
+export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-workers-add-no-const-data`,
+        {
+          companyId: companyId,
+          workerId: workerId,
+          newDate: newDate
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          companyAddWorkerNoConstHours(workerId, response.data.noConstantDay)
+        )
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        // dispatch(changeEditWorkerHours(false, null))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas pobierania godzin pracy pracownika.",
+            "red"
+          )
+        )
+      })
+  }
+}
+
+export const deleteNoConstHour = (token, companyId, workerId, noConstDateId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-workers-delete-no-const-data`,
+        {
+          companyId: companyId,
+          workerId: workerId,
+          noConstDateId: noConstDateId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          companyDeleteWorkerNoConstHours(workerId, noConstDateId)
+        )
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        // dispatch(changeEditWorkerHours(false, null))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas pobierania godzin pracy pracownika.",
+            "red"
+          )
+        )
+      })
+  }
+}

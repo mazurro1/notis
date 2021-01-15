@@ -364,7 +364,7 @@ const Reserwation = ({
   }
 
   const ownerHasServiceCategory = reserwationData.ownerData.ownerCategory.some(
-    item => item === reserwationData.serviceCategory
+    item => item === reserwationData._id
   )
 
   const ownerIsSelected = !!selectedWorkerUserId
@@ -400,7 +400,7 @@ const Reserwation = ({
 
   const filterWorkers = reserwationData.workers.filter(item => {
     const workerHasServiceCategory = item.servicesCategory.some(
-      item => item === reserwationData.serviceCategory
+      item => item === reserwationData._id
     )
     return workerHasServiceCategory
   })

@@ -14,7 +14,7 @@ const DayHoursStyle = styled.h2`
   border-bottom: 2px solid ${props => Colors(props.siteProps).secondColor};
 `
 
-const ConstTimeWorkTime = ({
+const ConstTimeWorkTimeAutoSave = ({
   constTimeWorker,
   handleClickContent,
   siteProps,
@@ -27,7 +27,8 @@ const ConstTimeWorkTime = ({
   itemWorker,
   handleSaveConstTimeWorkItem,
   handleCloseConstTimeWorkItem,
-  resetConstDays,
+  selectEditedWorkersHours,
+  handleResetDay,
 }) => {
   const mapDaysOfTheWeek = DaySOfTheWeek.map(item => {
     const selectedDayOfTheMonth = itemWorker.constantWorkingHours.find(
@@ -36,7 +37,12 @@ const ConstTimeWorkTime = ({
     const finallSelectedDayOfTheMonth = !!selectedDayOfTheMonth
       ? selectedDayOfTheMonth
       : null
-
+    let selectedDaySelectEditedWorkersHours = null
+    if (!!selectEditedWorkersHours) {
+      selectedDaySelectEditedWorkersHours = selectEditedWorkersHours.constantWorkingHours.find(
+        day => day.dayOfTheWeek === item.dayOfTheWeek
+      )
+    }
     return (
       <ConstTimeWorkTimeItem
         item={item}
@@ -50,7 +56,10 @@ const ConstTimeWorkTime = ({
         DayHoursStyle={DayHoursStyle}
         handleSaveConstTimeWorkItem={handleSaveConstTimeWorkItem}
         handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
-        resetConstDays={resetConstDays}
+        selectedDaySelectEditedWorkersHours={
+          selectedDaySelectEditedWorkersHours
+        }
+        handleResetDay={handleResetDay}
       />
     )
   })
@@ -100,4 +109,4 @@ const ConstTimeWorkTime = ({
     </CSSTransition>
   )
 }
-export default ConstTimeWorkTime
+export default ConstTimeWorkTimeAutoSave

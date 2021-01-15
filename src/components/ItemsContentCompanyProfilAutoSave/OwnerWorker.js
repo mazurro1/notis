@@ -126,9 +126,6 @@ const OwnerWorker = ({
   ownerData,
   selectEditedWorkersHours,
   editedWorkersHours,
-  isAdmin,
-  setAllCategories,
-  allCategoriesWithItems,
 }) => {
   const [editConstTimeWorker, setEditConstTimeWorker] = useState(false)
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
@@ -138,18 +135,6 @@ const OwnerWorker = ({
   const handleChooseTimeOwner = () => {
     setChooseTimeOwner(prevState => !prevState)
   }
-  useEffect(() => {
-    if (allCategoriesWithItems.length > 0){
-      const newCategories = allCategoriesWithItems.map(itemValue => {
-        const newItem = {
-          value: itemValue.oldCategory,
-          label: itemValue.category,
-        }
-        return newItem
-      })
-      setAllCategories(newCategories)
-    }
-  }, [allCategoriesWithItems])
 
   const handleUserTimeWork = () => {
     const itemsToSent = {
@@ -207,6 +192,8 @@ const OwnerWorker = ({
     setConstTimeOwner(false)
     setChooseTimeOwner(true)
     setEditConstTimeWorker(false)
+    console.log("handleSaveConstTimeWork")
+    console.log(filterNewEditedWorkers)
   }
 
   const handleCloseConstTimeWorkItem = (indexWorker, dayOfTheWeek) => {
@@ -251,10 +238,6 @@ const OwnerWorker = ({
       const newWorker = {
         indexWorker: item.indexWorker,
         constantWorkingHours: [item.dayToSave],
-        noConstantWorkingHours: {
-          deletedEventsIds: [],
-          newEvents: [],
-        },
       }
       const allWorkers = [...newToSaveWorkerHours, newWorker]
       setToSaveWorkerHours(allWorkers)
@@ -284,37 +267,9 @@ const OwnerWorker = ({
   const itemOwner = {
     ...ownerData,
     user: owner,
+    _id: 'owner'
   }
 
-  // const actualYear = new Date().getFullYear()
-
-  // const filterNoConstDateToCountHolidays = ownerData.noConstantWorkingHours.filter(
-  //   itemHour => {
-  //     const yearInDate = new Date(itemHour.start).getFullYear()
-  //     if (actualYear === yearInDate && itemHour.holidays) {
-  //       return true
-  //     } else {
-  //       return false
-  //     }
-  //   }
-  // ).length
-
-  // const holidayDaysInYear = isAdmin && (
-  //   <HolidayDays
-  //     siteProps={siteProps}
-  //     data-tip
-  //     data-for={`holidaysOwner`}
-  //     data-place="top"
-  //   >
-  //     <HolidayDaysIcon
-  //       siteProps={siteProps}
-  //       isCompanyEditProfil={isCompanyEditProfil}
-  //     >
-  //       <MdToday />
-  //     </HolidayDaysIcon>
-  //     <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
-  //   </HolidayDays>
-  // )
   const filterOptions = allCategories.filter(optionItem =>{
     const isInOwnerThisSpecialization = ownerServicesCategory.some(
       ownerItem => ownerItem.label === optionItem.label
@@ -328,7 +283,6 @@ const OwnerWorker = ({
       selectHeight={selectHeight}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
-      // isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
@@ -338,7 +292,6 @@ const OwnerWorker = ({
       </WorkerCircle>
       <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecializationOwner}</WorkerSpecjalization>
-      {/* {holidayDaysInYear} */}
       {isCompanyEditProfil && (
         <>
           <EditUserStyle>

@@ -62,11 +62,11 @@ import WorkerReserwations from "./WorkerReserwations"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
 import Footer from './Footer'
-import BigCalendarWorkerHours from "./BigCalendarWorkerHours"
 import {Translates} from '../common/Translates'
 import BellAlerts from "./BellAlerts"
 import openSocket from "socket.io-client"
 import {Site} from '../common/Site'
+import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
 import WorkerUsersInformation from "./WorkerUsersInformation"
 
 const MarginButtonsWork = styled.div`
@@ -358,7 +358,6 @@ const Navigation = ({ children, isMainPage }) => {
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
   )
-
   const dispatch = useDispatch()
   
   useEffect(() => {
@@ -628,8 +627,9 @@ const Navigation = ({ children, isMainPage }) => {
       noContent
       calendar
     >
-      <BigCalendarWorkerHours
+      <WorkerHoursAutoSave
         item={editWorkerHoursData}
+        editWorkerHours={editWorkerHours}
         handleClose={() => dispatch(changeEditWorkerHours(false, null))}
       />
     </Popup>

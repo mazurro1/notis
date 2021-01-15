@@ -11,6 +11,11 @@ import { MdEmail, MdClose } from "react-icons/md"
 import { FaUserPlus } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
 import ReactTooltip from "react-tooltip"
+import {
+  getCategories,
+  categoryItemsMenu,
+  sortItemsInArray,
+} from "../../common/Functions"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "block")};
@@ -223,16 +228,16 @@ const OurWorkersContent = ({
   companyId = "",
   handleAddEditWorker,
   handleSaveOwnerSpecialization,
-  allCategoriesWithItems,
-  editedWorkers,
+  editedWorkers = [],
   ownerSerwiceCategory = [],
   newOwnerServicesCategory,
   company,
   editMode,
   siteProps,
-  editedWorkersHours,
+  editedWorkersHours = [],
   isAdmin,
   ownerData,
+  companyServices,
 }) => {
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
@@ -241,28 +246,16 @@ const OurWorkersContent = ({
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
     ownerSpecialization
   )
+  const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
   const [selectHeight, setSelectHeight] = useState(0)
   const [ownerEdit, setOwnerEdit] = useState(false)
   const user = useSelector(state => state.user)
+  
   const selectRef = useRef(null)
+
   useEffect(() => {
     setOwnerEdit(false)
   }, [editMode])
-
-  useEffect(() => {
-    const selectActualRenderOwnerCategory = !!newOwnerServicesCategory
-      ? newOwnerServicesCategory
-      : ownerSerwiceCategory
-    const mapServiceCategoryOwner = selectActualRenderOwnerCategory.map(
-      item => {
-        return {
-          label: item,
-          value: item,
-        }
-      }
-    )
-    setOwnerServicesCategory(mapServiceCategoryOwner)
-  }, [ownerSerwiceCategory, newOwnerServicesCategory])
 
   useEffect(() => {
     if (!!ownerServicesCategory) {
@@ -271,7 +264,7 @@ const OurWorkersContent = ({
         setSelectHeight(valuePadding)
       }
     }
-  }, [ownerServicesCategory, setSelectHeight, Permissions])
+  }, [ownerServicesCategory, setSelectHeight])
 
   useEffect(() => {
     if (!!selectRef.current) {
@@ -281,7 +274,22 @@ const OurWorkersContent = ({
 
   useEffect(() => {
     ReactTooltip.rebuild()
-  })
+  }, [])
+
+  useEffect(() => {
+    const categories = getCategories([...companyServices], "serviceCategory")
+    const items = categoryItemsMenu(categories, [...companyServices])
+    const sortedItems = sortItemsInArray([...items], "category")
+     const newCategories = companyServices.map(itemValue => {
+       const newItem = {
+         value: itemValue._id,
+         label: itemValue.serviceName,
+       }
+       return newItem
+     })
+     setAllCategories(newCategories)
+    setAllCategoriesWithItems(sortedItems)
+  }, [company])
 
   const dispatch = useDispatch()
 
@@ -317,16 +325,7 @@ const OurWorkersContent = ({
   }
 
   const handleResetOwnerSpecialization = () => {
-    setOwnerEdit(false)
-    // const mapServiceCategoryOwner = ownerSerwiceCategory.map(item => {
-    //   return {
-    //     label: item,
-    //     value: item,
-    //   }
-    // })
-    // setOwnerServicesCategory(mapServiceCategoryOwner)
-    handleSaveOwnerSpecialization(null, null)
-    setInputSpecializationOwner(ownerSpecialization)
+    console.log("handleResetOwnerSpecialization")
   }
 
   const handleInputOnChange = e => {
@@ -334,15 +333,7 @@ const OurWorkersContent = ({
   }
 
   const handleSaveSpecialization = () => {
-    let toSaveOwnerServiceCategory = ownerServicesCategory
-    if (!!ownerServicesCategory) {
-      toSaveOwnerServiceCategory = ownerServicesCategory.map(item => item.label)
-    }
-    handleSaveOwnerSpecialization(
-      inputSpecializationOwner,
-      toSaveOwnerServiceCategory
-    )
-    setOwnerEdit(false)
+    console.log("handleSaveSpecialization")
   }
 
   const handleChangeSelectOwner = value => {
@@ -351,21 +342,20 @@ const OurWorkersContent = ({
   }
 
   const mapWorkers = workers.map((item, index) => {
-    const selectEditedWorker = [...editedWorkers].find(edited => {
-      return edited.indexWorker === item._id
-    })
-    const selectEditedWorkersHours = editedWorkersHours.find(
-      itemHours => itemHours.indexWorker === item._id
-    )
-
-    const finallEditedWorker = !!selectEditedWorker ? selectEditedWorker : null
-
     return (
       <WorkerItem
         index={index}
         key={index}
         item={item}
         {...companyEditProfilProps}
+        companyId={companyId}
+        user={user}
+        allCategories={allCategories}
+        company={company}
+        editMode={editMode}
+        siteProps={siteProps}
+        isAdmin={isAdmin}
+        allCategoriesWithItems={allCategoriesWithItems}
         WorkerItemStyle={WorkerItemStyle}
         WorkerCircle={WorkerCircle}
         WorkerName={WorkerName}
@@ -375,28 +365,11 @@ const OurWorkersContent = ({
         EditUserBackground={EditUserBackground}
         DeleteUserIconStyle={DeleteUserIconStyle}
         EditUserBackgroundContent={EditUserBackgroundContent}
-        companyId={companyId}
-        user={user}
-        handleAddEditWorker={handleAddEditWorker}
-        allCategoriesWithItems={allCategoriesWithItems}
-        editedWorkers={finallEditedWorker}
-        allCategories={allCategories}
-        setAllCategories={setAllCategories}
-        company={company}
-        editMode={editMode}
-        siteProps={siteProps}
-        editedWorkersHours={editedWorkersHours}
-        selectEditedWorkersHours={selectEditedWorkersHours}
-        isAdmin={isAdmin}
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
       />
     )
   })
-
-  const selectEditedOwnerHours = editedWorkersHours.find(
-    itemHours => itemHours.indexWorker === owner._id
-  )
 
   return (
     <>
@@ -431,7 +404,6 @@ const OurWorkersContent = ({
           handleSaveSpecialization={handleSaveSpecialization}
           company={company}
           ownerData={ownerData}
-          selectEditedWorkersHours={selectEditedOwnerHours}
           editedWorkersHours={editedWorkersHours}
           isAdmin={isAdmin}
           setAllCategories={setAllCategories}

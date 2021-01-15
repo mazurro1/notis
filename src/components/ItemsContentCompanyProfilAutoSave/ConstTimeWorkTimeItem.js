@@ -90,34 +90,28 @@ const ConstTimeWorkTime = ({
   handleSaveConstTimeWorkItem,
   handleCloseConstTimeWorkItem,
   selectedDaySelectEditedWorkersHours,
-  handleResetDay,
+  resetConstDays,
 }) => {
   const [resetDay, setResetDay] = useState(true)
   const [editDay, setEditDay] = useState(false)
-  const [dayStart, setDayStart] = useState("0:00")
+  const [dayStart, setDayStart] = useState("9:00")
   const [dayEnd, setDayEnd] = useState("18:00")
   const [dayTimeStart, setDayTimeStart] = useState(false)
   const [dayTimeEnd, setDayTimeEnd] = useState(false)
   const [disabledDay, setDisabledDay] = useState(true)
-  // console.log(selectedDaySelectEditedWorkersHours)
   useEffect(() => {
-    if (!!selectedDaySelectEditedWorkersHours) {
-      setDayStart(selectedDaySelectEditedWorkersHours.startWorking)
-      setDayEnd(selectedDaySelectEditedWorkersHours.endWorking)
-      setDisabledDay(selectedDaySelectEditedWorkersHours.disabled)
+    if ((!!finallSelectedDayOfTheMonth && resetDay) || !!resetConstDays) {
+      setDayStart(finallSelectedDayOfTheMonth.startWorking)
+      setDayEnd(finallSelectedDayOfTheMonth.endWorking)
+      setDisabledDay(finallSelectedDayOfTheMonth.disabled)
       setResetDay(false)
-    } else {
-      if (!!finallSelectedDayOfTheMonth && resetDay) {
-        setDayStart(finallSelectedDayOfTheMonth.startWorking)
-        setDayEnd(finallSelectedDayOfTheMonth.endWorking)
-        setDisabledDay(finallSelectedDayOfTheMonth.disabled)
-        setResetDay(false)
-      }
     }
+    // }
   }, [
     finallSelectedDayOfTheMonth,
     resetDay,
     selectedDaySelectEditedWorkersHours,
+    resetConstDays,
   ])
 
   const handleEditDay = () => {
@@ -162,7 +156,6 @@ const ConstTimeWorkTime = ({
 
   const handleCloseDay = () => {
     setEditDay(false)
-    handleResetDay(itemWorker._id, item.dayOfTheWeek)
     if (!!finallSelectedDayOfTheMonth) {
       setDayStart(finallSelectedDayOfTheMonth.startWorking)
       setDayEnd(finallSelectedDayOfTheMonth.endWorking)

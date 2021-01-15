@@ -269,19 +269,6 @@ const OpinionAndAdressContent = ({
   const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
-  // useEffect(()=>{
-  //   if (!!companyIndustries){
-  //     const convertedCompanyIndustriesFromId = companyIndustries.map(
-  //       itemId => {
-  //         const selectedIndustriesComponent = AllIndustries[
-  //           siteProps.language
-  //         ].find(itemIndustries => itemIndustries.value === itemId)
-  //         return selectedIndustriesComponent
-  //       }
-  //     )
-  //     setIndustriesComponent(convertedCompanyIndustriesFromId)
-  //   }
-  // }, [company])
 
   useEffect(() => {
     setNewIndustriesComponent([])
@@ -564,7 +551,7 @@ const OpinionAndAdressContent = ({
         <>
           <ButtonEditPosition>
             <ButtonIcon
-              title="Edytuj"
+              title="Edytuj ustawienia"
               uppercase
               fontIconSize="25"
               fontSize="14"

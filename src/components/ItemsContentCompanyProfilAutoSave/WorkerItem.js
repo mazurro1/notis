@@ -23,8 +23,10 @@ import {
   fetchAddAgainWorkerToCompany,
   changeEditWorkerHours,
   changeEditedWorkerHours,
+  fetchSaveWorkerProps,
+  resetWorkersPropsVisible,
 } from "../../state/actions"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import InputIcon from "../InputIcon"
@@ -101,46 +103,20 @@ const SelectStyle = styled.div`
   margin-top: 20px;
 `
 
-const HolidayDays = styled.div`
-  position: absolute;
-  bottom: 5px;
-  left: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: nowrap;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 5px;
-  border-top-right-radius: 5px;
-  user-select: none;
-`
-
-const HolidayDaysIcon = styled.div`
-  position: relative;
-  left: -2px;
-  font-size: 1.25rem;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  border-radius: 50%;
-  padding: 5px;
-  background-color: ${props =>
-    props.isCompanyEditProfil
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).primaryColor};
-  height: 30px;
-  transform: scale(1.2);
-`
-
-const HolidayDaysDay = styled.div`
-  padding: 5px 10px;
-  font-size: 1rem;
-`
-
 const WorkerItem = ({
   item,
   isCompanyEditProfil,
+  companyId,
+  user,
+  allCategoriesWithItems,
+  allCategories,
+  company,
+  editMode,
+  siteProps,
+  editedWorkersHours,
+  selectEditedWorkersHours,
+  isAdmin,
+
   WorkerItemStyle,
   WorkerCircle,
   WorkerName,
@@ -152,21 +128,8 @@ const WorkerItem = ({
   EditUserBackgroundContent,
   ButtonDeleteStyle,
   ButtonContent,
-  companyId,
-  user,
-  index,
-  handleAddEditWorker,
-  allCategoriesWithItems,
-  editedWorkers,
-  allCategories,
-  setAllCategories,
-  company,
-  editMode,
-  siteProps,
-  editedWorkersHours,
-  selectEditedWorkersHours,
-  isAdmin,
 }) => {
+  const [resetConstDays, setResetConstDays] = useState(false)
   const [constTimeWorker, setConstTimeWorker] = useState(false)
   const [chooseTimeWorker, setChooseTimeWorker] = useState(false)
   const [userEditItem, setUserEditItem] = useState(false)
@@ -178,9 +141,71 @@ const WorkerItem = ({
   const [workerServicesCategory, setWorkerServicesCategory] = useState([])
   const [workerPermissionsCategory, setWorkerPermissionsCategory] = useState([])
   const [selectHeight, setSelectHeight] = useState(0)
-  const [resetServicesCategory, setResetServicesCategory] = useState(false)
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
+
+  const resetWorkerProps = useSelector(state => state.resetWorkerProps)
+
   const selectRef = useRef(null)
+
+  useEffect(() => {
+    const servicesWorker = item.servicesCategory.map(serv => {
+      const findService = company.services.find(
+        companyServ => companyServ._id === serv
+      )
+      if (!!findService) {
+        return {
+          value: findService._id,
+          label: findService.serviceName,
+        }
+      } else {
+        return {
+          value: serv,
+          label: serv,
+        }
+      }
+    })
+    setWorkerServicesCategory(servicesWorker)
+    setToSaveWorkerHours([])
+    setInputSpeciailization(item.specialization)
+    setUserEditItem(false)
+  }, [item])
+
+  useEffect(() => {
+    if (!!resetWorkerProps) {
+      const servicesWorker = item.servicesCategory.map(serv => {
+        const findService = company.services.find(
+          companyServ => companyServ._id === serv
+        )
+        if (!!findService) {
+          return {
+            value: findService._id,
+            label: findService.serviceName,
+          }
+        } else {
+          return {
+            value: serv,
+            label: serv,
+          }
+        }
+      })
+      if (!!item.permissions) {
+        const mapWorkerPermissions = item.permissions.map(itemPerm => {
+          const findPermission = Permissions.find(
+            itemVal => itemVal.value === itemPerm
+          )
+          return findPermission
+        })
+        setWorkerPermissionsCategory(mapWorkerPermissions)
+      }
+      setWorkerServicesCategory(servicesWorker)
+      setToSaveWorkerHours([])
+      setInputSpeciailization(item.specialization)
+      setUserEditItem(false)
+      setConstTimeWorker(false)
+      setEditConstTimeWorker(false)
+      dispatch(resetWorkersPropsVisible())
+    }
+  }, [resetWorkerProps])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -192,15 +217,15 @@ const WorkerItem = ({
     setChooseTimeWorker(false)
   }, [editMode])
 
- useEffect(() => {
-   if (!!item.servicesCategory) {
-     if (item.servicesCategory.length > 0) {
-       const valuePadding =
-         [...Permissions, ...allCategoriesWithItems].length * 23 + 15
-       setSelectHeight(valuePadding)
-     }
-   }
- }, [item, setSelectHeight, allCategoriesWithItems.length, Permissions])
+  useEffect(() => {
+    if (!!item.servicesCategory) {
+      if (item.servicesCategory.length > 0) {
+        const valuePadding =
+          [...Permissions, ...allCategoriesWithItems].length * 23 + 15
+        setSelectHeight(valuePadding)
+      }
+    }
+  }, [item, setSelectHeight, allCategoriesWithItems.length, Permissions])
 
   useEffect(() => {
     if (!!selectRef.current) {
@@ -208,8 +233,8 @@ const WorkerItem = ({
     }
   }, [selectRef, workerServicesCategory, item])
 
-  useEffect(() => {    
-    if (!!item.permissions){
+  useEffect(() => {
+    if (!!item.permissions) {
       const mapWorkerPermissions = item.permissions.map(itemPerm => {
         const findPermission = Permissions.find(
           itemVal => itemVal.value === itemPerm
@@ -220,72 +245,6 @@ const WorkerItem = ({
     }
   }, [item.permissions])
 
-  useEffect(() => {
-    if (allCategoriesWithItems.length > 0 || !!resetServicesCategory) {
-      const newCategories = allCategoriesWithItems.map(itemValue => {
-        const newItem = {
-          value: itemValue.oldCategory,
-          label: itemValue.category,
-        }
-        return newItem
-      })
-
-      //take all categories
-      const allCategories = []
-      allCategoriesWithItems.forEach(itemValue => {
-        if (itemValue.items.length > 0) {
-          allCategories.push(itemValue.category)
-        }
-      })
-
-      //actualizate when category was deleted
-      let allWorkerServicesCategory = [...workerServicesCategory]
-      const actualServicesCategory = !!editedWorkers
-        ? editedWorkers.servicesCategory
-        : !!item.servicesCategory
-        ? item.servicesCategory
-        : []
-
-      if (allWorkerServicesCategory.length === 0) {
-        const workerServicesCategoryMaped = actualServicesCategory.map(
-          itemValue => {
-            return {
-              label: itemValue,
-              value: itemValue,
-            }
-          }
-        )
-        allWorkerServicesCategory = [...workerServicesCategoryMaped]
-      }
-
-      //change label when category was actualizated
-      const newWorkerServicesCategory = [...allWorkerServicesCategory]
-      if (newWorkerServicesCategory.length > 0 || !!actualServicesCategory) {
-        newWorkerServicesCategory.forEach((itemValue, index) => {
-          newCategories.forEach(itemCategory => {
-            if (itemCategory.value === itemValue.value) {
-              newWorkerServicesCategory[index].label = itemCategory.label
-            }
-          })
-        })
-
-        //filter categories worker
-        const filteredArrayAllCategories = newWorkerServicesCategory.filter(
-          itemValue => {
-            const isCategoryInWorkerArr = allCategories.some(
-              category => category === itemValue.label
-            )
-            return isCategoryInWorkerArr
-          }
-        )
-        //actualizate selected category user
-        setWorkerServicesCategory(filteredArrayAllCategories)
-      }
-      setAllCategories(newCategories)
-    }
-  }, [allCategoriesWithItems, item])
-  // }, [allCategoriesWithItems, item, setAllCategories])
-
   const dispatch = useDispatch()
 
   const handleUserConfirmDelete = () => {
@@ -295,9 +254,8 @@ const WorkerItem = ({
   const handleChooseTimeWorker = () => {
     setChooseTimeWorker(prevState => !prevState)
   }
-
   const handleUserItemEdit = () => {
-    setUserEditItem(prevState => !prevState)
+      setUserEditItem(prevState => !prevState)
   }
 
   const handleClickContent = e => {
@@ -306,13 +264,13 @@ const WorkerItem = ({
 
   const handleDeleteUser = () => {
     dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, user.token))
-    handleAddEditWorker(
-      "delete",
-      item._id,
-      inputSpecialization,
-      null,
-      null,
-    )
+    // handleAddEditWorker(
+    //   "delete",
+    //   item._id,
+    //   inputSpecialization,
+    //   null,
+    //   null,
+    // )
   }
 
   const handleSentAgainEmailVeryfication = () => {
@@ -326,7 +284,7 @@ const WorkerItem = ({
   }
 
   const handleSaveSpecialization = () => {
-    setUserEditItem(false)
+    // setUserEditItem(false)
 
     const inputSpecializationValue =
       inputSpecialization !== item.specialization
@@ -334,7 +292,7 @@ const WorkerItem = ({
         : item.specialization
 
     const workerServicesCategoryToSent = workerServicesCategory.map(
-      itemValue => itemValue.label
+      itemValue => itemValue.value
     )
 
     const workerServicesCategoryValue = workerServicesCategoryToSent
@@ -342,46 +300,46 @@ const WorkerItem = ({
       item => item.value
     )
 
-    handleAddEditWorker(
-      "save",
-      item._id,
-      inputSpecializationValue,
-      workerServicesCategoryValue,
-      mapWorkerPermissionsIds
-    )
+    const dataToSave = {
+      workerId: item._id,
+      inputSpecializationValue: inputSpecializationValue,
+      workerServicesCategoryValue: workerServicesCategoryValue,
+      mapWorkerPermissionsIds: mapWorkerPermissionsIds,
+    }
+
+    dispatch(fetchSaveWorkerProps(user.token, companyId, dataToSave))
   }
 
   const handleEditSpecializationReset = () => {
-    let actualServicesCategory = workerServicesCategory
-    if (!!editedWorkers) {
-      actualServicesCategory = editedWorkers.servicesCategory.map(itemValue => {
+    const servicesWorker = item.servicesCategory.map(serv => {
+      const findService = company.services.find(
+        companyServ => companyServ._id === serv
+      )
+      if (!!findService) {
         return {
-          label: itemValue,
-          value: itemValue,
+          value: findService._id,
+          label: findService.serviceName,
         }
+      } else {
+        return {
+          value: serv,
+          label: serv,
+        }
+      }
+    })
+    if (!!item.permissions) {
+      const mapWorkerPermissions = item.permissions.map(itemPerm => {
+        const findPermission = Permissions.find(
+          itemVal => itemVal.value === itemPerm
+        )
+        return findPermission
       })
+      setWorkerPermissionsCategory(mapWorkerPermissions)
     }
+    setWorkerServicesCategory(servicesWorker)
+    setToSaveWorkerHours([])
     setInputSpeciailization(item.specialization)
     setUserEditItem(false)
-    const mapLebelValueToCategory = actualServicesCategory.map(
-      itemValue => itemValue.label
-    )
-    handleAddEditWorker(
-      "delete",
-      item._id,
-      inputSpecialization,
-      mapLebelValueToCategory,
-      null
-    )
-     const mapWorkerPermissions = item.permissions.map(itemPerm => {
-       const findPermission = Permissions.find(
-         itemVal => itemVal.value === itemPerm
-       )
-       return findPermission
-     })
-     setWorkerPermissionsCategory(mapWorkerPermissions)
-    setWorkerServicesCategory(actualServicesCategory)
-    setResetServicesCategory(true)
   }
 
   const handleChangeSelect = value => {
@@ -393,79 +351,29 @@ const WorkerItem = ({
     const valueToSave = !!value ? value : []
     setWorkerPermissionsCategory(valueToSave)
   }
-
   const handleUserTimeWork = () => {
-    const itemsToSent = {
-      ...item,
-      company: company,
-    }
-    dispatch(changeEditWorkerHours(true, itemsToSent))
-  }
-
-  const handleResetDay = (itemWorkerId, dayOfTheWeek) => {
-    const newEditedWorkersHours = [...editedWorkersHours]
-    const indexEditedWorker = editedWorkersHours.findIndex(
-      itemValue => itemValue.indexWorker === itemWorkerId
-    )
-    if (indexEditedWorker >= 0) {
-      const filterEditedDays = newEditedWorkersHours[
-        indexEditedWorker
-      ].constantWorkingHours.filter(
-        itemValue => itemValue.dayOfTheWeek !== dayOfTheWeek
-      )
-      if (
-        filterEditedDays.length > 0 ||
-        newEditedWorkersHours[indexEditedWorker].noConstantWorkingHours.length >
-          0
-      ) {
-        newEditedWorkersHours[
-          indexEditedWorker
-        ].constantWorkingHours = filterEditedDays
-        dispatch(changeEditedWorkerHours(newEditedWorkersHours))
-      } else {
-        const deleteWorkerInEditedWorkerHours = editedWorkersHours.filter(
-          itemValue => itemValue.indexWorker !== itemWorkerId
-        )
-        dispatch(changeEditedWorkerHours(deleteWorkerInEditedWorkerHours))
+    
+      const itemsToSent = {
+        ...item,
+        company: company,
       }
-    }
+      dispatch(changeEditWorkerHours(true, itemsToSent))
+    
   }
 
-  const handleCancelConstTimeWork = itemWorkerId => {
-    const filterToSaveWorkers = toSaveWorkerHours.filter(
-      itemValue => itemValue.indexWorker !== itemWorkerId
-    )
-    const filterEditedWorkers = editedWorkersHours.filter(
-      itemValue => itemValue.indexWorker !== itemWorkerId
-    )
-    dispatch(changeEditedWorkerHours(filterEditedWorkers))
-    setToSaveWorkerHours(filterToSaveWorkers)
+  const handleCancelConstTimeWork = () => {
+    setResetConstDays(true)
     setConstTimeWorker(false)
-    setChooseTimeWorker(true)
     setEditConstTimeWorker(false)
+    setChooseTimeWorker(true)
+    setToSaveWorkerHours([])
   }
 
   const handleSaveConstTimeWork = itemWorkerId => {
-    const newEditedWorkersHoursSave = [...editedWorkersHours]
-    const filterNewEditedWorkers = toSaveWorkerHours.find(
-      itemValue => itemValue.indexWorker === itemWorkerId
+    const selectWorker = toSaveWorkerHours.find(
+      hour => hour.indexWorker === itemWorkerId
     )
-
-    const indexEditedWorkers = editedWorkersHours.findIndex(
-      itemValue => itemValue.indexWorker === itemWorkerId
-    )
-    if (!!filterNewEditedWorkers) {
-      if (indexEditedWorkers >= 0) {
-        newEditedWorkersHoursSave[indexEditedWorkers] = filterNewEditedWorkers
-        dispatch(changeEditedWorkerHours(newEditedWorkersHoursSave))
-      } else {
-        const allEditedWorkers = [...editedWorkersHours, filterNewEditedWorkers]
-        dispatch(changeEditedWorkerHours(allEditedWorkers))
-      }
-    }
-    setConstTimeWorker(false)
-    setChooseTimeWorker(true)
-    setEditConstTimeWorker(false)
+    dispatch(fetchSaveWorkerProps(user.token, companyId, null, selectWorker))
   }
 
   const handleSaveConstTimeWorkItem = item => {
@@ -494,10 +402,6 @@ const WorkerItem = ({
       const newWorker = {
         indexWorker: item.indexWorker,
         constantWorkingHours: [item.dayToSave],
-        noConstantWorkingHours: {
-          deletedEventsIds: [],
-          newEvents: [],
-        },
       }
       const allWorkers = [...newToSaveWorkerHours, newWorker]
       setToSaveWorkerHours(allWorkers)
@@ -528,43 +432,12 @@ const WorkerItem = ({
     setEditConstTimeWorker(true)
   }
 
-  const actualYear = new Date().getFullYear()
-
-  // const filterNoConstDateToCountHolidays = item.noConstantWorkingHours.filter(
-  //   itemHour => {
-  //     const yearInDate = new Date(itemHour.start).getFullYear()
-  //     if (actualYear === yearInDate && itemHour.holidays) {
-  //       return true
-  //     } else {
-  //       return false
-  //     }
-  //   }
-  // ).length
-
-  // const holidayDaysInYear = isAdmin && (
-  //   <HolidayDays
-  //     siteProps={siteProps}
-  //     data-tip
-  //     data-for="holidays"
-  //     data-place="top"
-  //   >
-  //     <HolidayDaysIcon
-  //       siteProps={siteProps}
-  //       isCompanyEditProfil={isCompanyEditProfil}
-  //     >
-  //       <MdToday />
-  //     </HolidayDaysIcon>
-  //     <HolidayDaysDay>{filterNoConstDateToCountHolidays} dni</HolidayDaysDay>
-  //   </HolidayDays>
-  // )
-
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
       selectHeight={selectHeight}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
-      // isAdmin={isAdmin}
     >
       <WorkerCircle
         isCompanyEditProfil={isCompanyEditProfil}
@@ -574,7 +447,6 @@ const WorkerItem = ({
       </WorkerCircle>
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecialization}</WorkerSpecjalization>
-      {/* {holidayDaysInYear} */}
       {isCompanyEditProfil && (
         <>
           <EditUserStyle>
@@ -597,15 +469,17 @@ const WorkerItem = ({
             >
               <MdEdit />
             </EditIconStyle>
-            {isAdmin && <DeleteUserIconStyle
-              onClick={handleUserConfirmDelete}
-              data-tip
-              data-for="deleteUser"
-              data-place="left"
-              siteProps={siteProps}
-            >
-              <MdDelete />
-            </DeleteUserIconStyle>}
+            {isAdmin && (
+              <DeleteUserIconStyle
+                onClick={handleUserConfirmDelete}
+                data-tip
+                data-for="deleteUser"
+                data-place="left"
+                siteProps={siteProps}
+              >
+                <MdDelete />
+              </DeleteUserIconStyle>
+            )}
           </EditUserStyle>
           <ActiveWorkerStyle>
             <IconVeryfiedUser
@@ -677,26 +551,28 @@ const WorkerItem = ({
                     </SelectStyle>
                   </>
                 )}
-                {isAdmin && <SelectStyle>
-                  Uprawnienia do
-                  <SelectCustom
-                    widthAuto
-                    defaultMenuIsOpen={false}
-                    secondColor
-                    options={Permissions}
-                    handleChange={handleChangeSelectPermissions}
-                    value={workerPermissionsCategory}
-                    placeholder="Uprawnienia..."
-                    isMulti
-                    closeMenuOnSelect={false}
-                    menuIsOpen
-                    isClearable={false}
-                  />
-                </SelectStyle>}
+                {isAdmin && (
+                  <SelectStyle>
+                    Uprawnienia do
+                    <SelectCustom
+                      widthAuto
+                      defaultMenuIsOpen={false}
+                      secondColor
+                      options={Permissions}
+                      handleChange={handleChangeSelectPermissions}
+                      value={workerPermissionsCategory}
+                      placeholder="Uprawnienia..."
+                      isMulti
+                      closeMenuOnSelect={false}
+                      menuIsOpen
+                      isClearable={false}
+                    />
+                  </SelectStyle>
+                )}
                 <ButtonContentEdit>
                   <ButtonStyles>
                     <ButtonIcon
-                      title="Cofnij"
+                      title="Anuluj"
                       uppercase
                       fontIconSize="16"
                       fontSize="14"
@@ -708,7 +584,7 @@ const WorkerItem = ({
                   </ButtonStyles>
                   <ButtonStyles>
                     <ButtonIcon
-                      title="Akceptuj"
+                      title="Zapisz"
                       uppercase
                       fontIconSize="20"
                       fontSize="14"
@@ -731,47 +607,49 @@ const WorkerItem = ({
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
-          {isAdmin && <CSSTransition
-            in={userConfirmDelete}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
-          >
-            <EditUserBackground>
-              <EditUserBackgroundContent
-                onClick={handleClickContent}
-                noBg
-                siteProps={siteProps}
-              >
-                <ButtonContent>
-                  <ButtonDeleteStyle>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaArrowLeft />}
-                      onClick={handleUserConfirmDelete}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                    />
-                  </ButtonDeleteStyle>
-                  <ButtonDeleteStyle>
-                    <ButtonIcon
-                      title="Usuń"
-                      uppercase
-                      fontIconSize="18"
-                      fontSize="14"
-                      icon={<MdDelete />}
-                      onClick={handleDeleteUser}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonDeleteStyle>
-                </ButtonContent>
-              </EditUserBackgroundContent>
-            </EditUserBackground>
-          </CSSTransition>}
+          {isAdmin && (
+            <CSSTransition
+              in={userConfirmDelete}
+              timeout={400}
+              classNames="popup"
+              unmountOnExit
+            >
+              <EditUserBackground>
+                <EditUserBackgroundContent
+                  onClick={handleClickContent}
+                  noBg
+                  siteProps={siteProps}
+                >
+                  <ButtonContent>
+                    <ButtonDeleteStyle>
+                      <ButtonIcon
+                        title="Anuluj"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaArrowLeft />}
+                        onClick={handleUserConfirmDelete}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                      />
+                    </ButtonDeleteStyle>
+                    <ButtonDeleteStyle>
+                      <ButtonIcon
+                        title="Usuń"
+                        uppercase
+                        fontIconSize="18"
+                        fontSize="14"
+                        icon={<MdDelete />}
+                        onClick={handleDeleteUser}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
+                      />
+                    </ButtonDeleteStyle>
+                  </ButtonContent>
+                </EditUserBackgroundContent>
+              </EditUserBackground>
+            </CSSTransition>
+          )}
           <CSSTransition
             in={chooseTimeWorker}
             timeout={400}
@@ -846,7 +724,7 @@ const WorkerItem = ({
             handleSaveConstTimeWork={handleSaveConstTimeWork}
             editedWorkersHours={editedWorkersHours}
             selectEditedWorkersHours={selectEditedWorkersHours}
-            handleResetDay={handleResetDay}
+            resetConstDays={resetConstDays}
           />
         </>
       )}
