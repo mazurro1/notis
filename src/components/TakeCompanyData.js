@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import "../../style.css"
 import { fetchPathCompany } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import ContentCompanyProfil from "./ContentCompanyProfil"
+import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
 
 const TakeCompanyData = ({ pathCompany = null }) => {
   const user = useSelector(state => state.user)
@@ -18,7 +18,7 @@ const TakeCompanyData = ({ pathCompany = null }) => {
   if (!!pathCompanyData) {
     if (pathCompanyData.linkPath === pathCompany) {
       renderContent = (
-        <ContentCompanyProfil
+        <ContentCompanyProfilAutoSave
           company={pathCompanyData}
           isAdmin={false}
           isCompanyEditProfil={false}

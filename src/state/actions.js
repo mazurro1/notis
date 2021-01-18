@@ -486,7 +486,7 @@ export const CHANGE_EDIT_WORKER_HOURS = "EDIT_WORKER_HOURS"
 export const REPLACE_COMPANY_DATA = "REPLACE_COMPANY_DATA"
 export const RESET_EDIT_COMPANY = "RESET_EDIT_COMPANY"
 export const CHANGE_RESERWATION_VALUE = "CHANGE_RESERWATION_VALUE"
-export const CHANGE_EDITED_WORKER_HOURS = "CHANGE_EDITED_WORKER_HOURS"
+// export const CHANGE_EDITED_WORKER_HOURS = "CHANGE_EDITED_WORKER_HOURS"
 export const AVAIBLE_DATE_TO_RESERWATION = "AVAIBLE_DATE_TO_RESERWATION"
 export const AVAIBLE_DATE_TO_RESERWATION_UPDATE =
   "AVAIBLE_DATE_TO_RESERWATION_UPDATE"
@@ -743,12 +743,12 @@ export const avaibleDateToReserwation = date => {
   }
 }
 
-export const changeEditedWorkerHours = item => {
-  return {
-    type: CHANGE_EDITED_WORKER_HOURS,
-    item: item,
-  }
-}
+// export const changeEditedWorkerHours = item => {
+//   return {
+//     type: CHANGE_EDITED_WORKER_HOURS,
+//     item: item,
+//   }
+// }
 
 export const changeEditWorkerHours = (value, item) => {
   return {
@@ -1063,71 +1063,71 @@ export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
   }
 }
 
-export const fetchUpdateCompanyProfil = (
-  token,
-  companyId,
-  textAboutUsToSent,
-  textRezerwationTextToSent,
-  editedWorkersToSent,
-  editedAdressToSent,
-  editedLinksToSent,
-  ownerSpecializationToSent,
-  openingHoursToSentFinall,
-  companyPaused,
-  services,
-  reservationEveryTime,
-  reservationMonthTime,
-  newOwnerServicesCategory,
-  editedWorkersHours,
-  createdDayOffToSaveIsChanges,
-  deletedDayOffToSaveIsChanges,
-  newIndustriesToSent,
-  deletedIndustriesToSent
-) => {
-  return dispatch => {
-    dispatch(changeSpinner(true))
-    return axios
-      .patch(
-        `${Site.serverUrl}/update-company-profil`,
-        {
-          companyId: companyId,
-          textAboutUs: textAboutUsToSent,
-          textRezerwation: textRezerwationTextToSent,
-          ownerSpecialization: ownerSpecializationToSent,
-          editedWorkers: editedWorkersToSent,
-          editedAdress: editedAdressToSent,
-          editedLinks: editedLinksToSent,
-          openingHours: openingHoursToSentFinall,
-          companyPaused: companyPaused,
-          services: services,
-          reservationEveryTime: reservationEveryTime,
-          reservationMonthTime: reservationMonthTime,
-          ownerSerwiceCategory: newOwnerServicesCategory,
-          editedWorkersHours: editedWorkersHours,
-          createdDayOff: createdDayOffToSaveIsChanges,
-          deletedDayOff: deletedDayOffToSaveIsChanges,
-          newIndustries: newIndustriesToSent,
-          deletedIndustries: deletedIndustriesToSent,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then(response => {
-        dispatch(addAlertItem("Zaktualizowano profil firmowy.", "green"))
-        dispatch(fetchCompanyData(companyId, token))
-      })
-      .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas aktualizowania profilu firmowego.", "red")
-        )
-        dispatch(resetEditCompany(false))
-          dispatch(changeSpinner(false))
-      })
-  }
-}
+// export const fetchUpdateCompanyProfil = (
+//   token,
+//   companyId,
+//   textAboutUsToSent,
+//   textRezerwationTextToSent,
+//   editedWorkersToSent,
+//   editedAdressToSent,
+//   editedLinksToSent,
+//   ownerSpecializationToSent,
+//   openingHoursToSentFinall,
+//   companyPaused,
+//   services,
+//   reservationEveryTime,
+//   reservationMonthTime,
+//   newOwnerServicesCategory,
+//   editedWorkersHours,
+//   createdDayOffToSaveIsChanges,
+//   deletedDayOffToSaveIsChanges,
+//   newIndustriesToSent,
+//   deletedIndustriesToSent
+// ) => {
+//   return dispatch => {
+//     dispatch(changeSpinner(true))
+//     return axios
+//       .patch(
+//         `${Site.serverUrl}/update-company-profil`,
+//         {
+//           companyId: companyId,
+//           textAboutUs: textAboutUsToSent,
+//           textRezerwation: textRezerwationTextToSent,
+//           ownerSpecialization: ownerSpecializationToSent,
+//           editedWorkers: editedWorkersToSent,
+//           editedAdress: editedAdressToSent,
+//           editedLinks: editedLinksToSent,
+//           openingHours: openingHoursToSentFinall,
+//           companyPaused: companyPaused,
+//           services: services,
+//           reservationEveryTime: reservationEveryTime,
+//           reservationMonthTime: reservationMonthTime,
+//           ownerSerwiceCategory: newOwnerServicesCategory,
+//           editedWorkersHours: editedWorkersHours,
+//           createdDayOff: createdDayOffToSaveIsChanges,
+//           deletedDayOff: deletedDayOffToSaveIsChanges,
+//           newIndustries: newIndustriesToSent,
+//           deletedIndustries: deletedIndustriesToSent,
+//         },
+//         {
+//           headers: {
+//             Authorization: "Bearer " + token,
+//           },
+//         }
+//       )
+//       .then(response => {
+//         dispatch(addAlertItem("Zaktualizowano profil firmowy.", "green"))
+//         dispatch(fetchCompanyData(companyId, token))
+//       })
+//       .catch(error => {
+//         dispatch(
+//           addAlertItem("Błąd podczas aktualizowania profilu firmowego.", "red")
+//         )
+//         dispatch(resetEditCompany(false))
+//           dispatch(changeSpinner(false))
+//       })
+//   }
+// }
 
 export const fetchDoReserwation = (
   token,

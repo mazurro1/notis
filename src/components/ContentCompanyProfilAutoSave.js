@@ -13,7 +13,6 @@ import { CSSTransition } from "react-transition-group"
 import OpeningHoursContent from "./ItemsContentCompanyProfilAutoSave/OpeningHoursContent"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  fetchUpdateCompanyProfil,
   resetEditCompany,
   changeReserwationValue,
   changeEditedWorkerHours,
@@ -327,7 +326,6 @@ const ContentCompanyProfil = ({
                   companyIndustries={company.companyType}
                   user={user}
                   company={company}
-                  
                 />
               </RightColumnItem>
             )}
@@ -426,10 +424,6 @@ const ContentCompanyProfil = ({
                 */}
 
             {userHasPermToWorkers && (
-              <RightColumnItem
-                {...companyEditProfilProps}
-                siteProps={siteProps}
-              >
                 <OurWorkersContent
                   TitleRightColumn={TitleRightColumn}
                   companyEditProfilProps={companyEditProfilProps}
@@ -443,17 +437,16 @@ const ContentCompanyProfil = ({
                   // handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
                   companyServices={company.services}
                   // editedWorkers={editedWorkers}
-                  ownerSerwiceCategory={company.ownerData.servicesCategory}
+                  // ownerSerwiceCategory={company.ownerData.servicesCategory}
                   // newOwnerServicesCategory={newOwnerServicesCategory}
                   company={company}
                   editMode={editMode}
                   siteProps={siteProps}
-                  // editedWorkersHours={editedWorkersHours}
                   isAdmin={isAdmin}
                   ownerData={company.ownerData}
                   company={company}
+                  RightColumnItem={RightColumnItem}
                 />
-              </RightColumnItem>
             )}
             {/*
             {(company.reserationText || isCompanyEditProfil) &&

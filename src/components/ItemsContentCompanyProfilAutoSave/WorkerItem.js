@@ -22,7 +22,6 @@ import {
   fetchDeleteUserFromCompany,
   fetchAddAgainWorkerToCompany,
   changeEditWorkerHours,
-  changeEditedWorkerHours,
   fetchSaveWorkerProps,
   resetWorkersPropsVisible,
 } from "../../state/actions"
@@ -113,9 +112,8 @@ const WorkerItem = ({
   company,
   editMode,
   siteProps,
-  editedWorkersHours,
-  selectEditedWorkersHours,
   isAdmin,
+  editedWorkers = false,
 
   WorkerItemStyle,
   WorkerCircle,
@@ -439,15 +437,12 @@ const WorkerItem = ({
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
     >
-      <WorkerCircle
-        isCompanyEditProfil={isCompanyEditProfil}
-        siteProps={siteProps}
-      >
+      <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
         <FaUser />
       </WorkerCircle>
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecialization}</WorkerSpecjalization>
-      {isCompanyEditProfil && (
+      {editedWorkers && (
         <>
           <EditUserStyle>
             <EditIconStyle
@@ -722,8 +717,6 @@ const WorkerItem = ({
             handleSaveConstTimeWorkItem={handleSaveConstTimeWorkItem}
             handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
             handleSaveConstTimeWork={handleSaveConstTimeWork}
-            editedWorkersHours={editedWorkersHours}
-            selectEditedWorkersHours={selectEditedWorkersHours}
             resetConstDays={resetConstDays}
           />
         </>

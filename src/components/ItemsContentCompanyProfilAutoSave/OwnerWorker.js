@@ -8,7 +8,7 @@ import {
 import SelectCustom from "../SelectCustom"
 import ReactTooltip from "react-tooltip"
 import { MdEdit, MdClose, MdDone, MdTimelapse, MdToday } from "react-icons/md"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { CSSTransition } from "react-transition-group"
@@ -16,7 +16,8 @@ import InputIcon from "../InputIcon"
 import styled from "styled-components"
 import {
   changeEditWorkerHours,
-  changeEditedWorkerHours,
+  fetchSaveWorkerProps,
+  resetWorkersPropsVisible,
 } from "../../state/actions"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
 
@@ -112,26 +113,54 @@ const OwnerWorker = ({
   WorkerItemStyle,
   isCompanyEditProfil,
   owner,
-  ownerEdit,
-  selectHeight,
-  inputSpecializationOwner,
-  handleClickOwnerEdit,
-  handleResetOwnerSpecialization,
   handleClickContent,
-  handleInputOnChange,
-  handleChangeSelectOwner,
-  ownerServicesCategory,
-  handleSaveSpecialization,
   company,
   ownerData,
-  selectEditedWorkersHours,
-  editedWorkersHours,
+  editedWorkers = false,
+  item,
+  ownerSpecialization,
+  companyId,
+  user,
 }) => {
+  const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
+  const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
+    ownerSpecialization
+  )
   const [editConstTimeWorker, setEditConstTimeWorker] = useState(false)
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
   const [chooseTimeOwner, setChooseTimeOwner] = useState(false)
   const [constTimeOwner, setConstTimeOwner] = useState(false)
+  const [ownerEdit, setOwnerEdit] = useState(false)
+  const resetWorkerProps = useSelector(state => state.resetWorkerProps)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    const servicesWorker = ownerData.servicesCategory.map(serv => {
+      const findService = company.services.find(
+        companyServ => companyServ._id === serv
+      )
+      if (!!findService) {
+        return {
+          value: findService._id,
+          label: findService.serviceName,
+        }
+      } else {
+        return {
+          value: serv,
+          label: serv,
+        }
+      }
+    })
+    setOwnerServicesCategory(servicesWorker)
+    setToSaveWorkerHours([])
+    setInputSpecializationOwner(ownerData.specialization)
+    setOwnerEdit(false)
+    dispatch(resetWorkersPropsVisible())
+    setConstTimeOwner(false)
+    setChooseTimeOwner(false)
+    setEditConstTimeWorker(false)
+  }, [item, resetWorkerProps])
+
   const handleChooseTimeOwner = () => {
     setChooseTimeOwner(prevState => !prevState)
   }
@@ -145,55 +174,18 @@ const OwnerWorker = ({
     dispatch(changeEditWorkerHours(true, itemsToSent))
   }
 
+  const handleClickOwnerEdit = () => {
+    setOwnerEdit(prevState => !prevState)
+  }
+
   const handleResetDay = (itemWorkerId, dayOfTheWeek) => {
-    const newEditedWorkersHours = [...editedWorkersHours]
-    const indexEditedWorker = editedWorkersHours.findIndex(
-      item => item.indexWorker === itemWorkerId
-    )
-    if (indexEditedWorker >= 0) {
-      const filterEditedDays = newEditedWorkersHours[
-        indexEditedWorker
-      ].constantWorkingHours.filter(item => item.dayOfTheWeek !== dayOfTheWeek)
-      if (
-        filterEditedDays.length > 0 ||
-        newEditedWorkersHours[indexEditedWorker].noConstantWorkingHours.length >
-          0
-      ) {
-        newEditedWorkersHours[
-          indexEditedWorker
-        ].constantWorkingHours = filterEditedDays
-        dispatch(changeEditedWorkerHours(newEditedWorkersHours))
-      } else {
-        const deleteWorkerInEditedWorkerHours = editedWorkersHours.filter(
-          item => item.indexWorker !== itemWorkerId
-        )
-        dispatch(changeEditedWorkerHours(deleteWorkerInEditedWorkerHours))
-      }
-    }
   }
 
   const handleSaveConstTimeWork = itemWorkerId => {
-    const newEditedWorkersHoursSave = [...editedWorkersHours]
-    const filterNewEditedWorkers = toSaveWorkerHours.find(
-      item => item.indexWorker === itemWorkerId
+     const selectWorker = toSaveWorkerHours.find(
+      hour => hour.indexWorker === itemWorkerId
     )
-    const indexEditedWorkers = editedWorkersHours.findIndex(
-      item => item.indexWorker === itemWorkerId
-    )
-    if (!!filterNewEditedWorkers) {
-      if (indexEditedWorkers >= 0) {
-        newEditedWorkersHoursSave[indexEditedWorkers] = filterNewEditedWorkers
-        dispatch(changeEditedWorkerHours(newEditedWorkersHoursSave))
-      } else {
-        const allEditedWorkers = [...editedWorkersHours, filterNewEditedWorkers]
-        dispatch(changeEditedWorkerHours(allEditedWorkers))
-      }
-    }
-    setConstTimeOwner(false)
-    setChooseTimeOwner(true)
-    setEditConstTimeWorker(false)
-    console.log("handleSaveConstTimeWork")
-    console.log(filterNewEditedWorkers)
+    dispatch(fetchSaveWorkerProps(user.token, companyId, null, selectWorker))
   }
 
   const handleCloseConstTimeWorkItem = (indexWorker, dayOfTheWeek) => {
@@ -248,10 +240,6 @@ const OwnerWorker = ({
     const filterToSaveWorkers = toSaveWorkerHours.filter(
       item => item.indexWorker !== itemWorkerId
     )
-    const filterEditedWorkers = editedWorkersHours.filter(
-      item => item.indexWorker !== itemWorkerId
-    )
-    dispatch(changeEditedWorkerHours(filterEditedWorkers))
     setToSaveWorkerHours(filterToSaveWorkers)
     setConstTimeOwner(false)
     setChooseTimeOwner(true)
@@ -264,35 +252,73 @@ const OwnerWorker = ({
     setEditConstTimeWorker(true)
   }
 
+  const handleChangeSelectOwner = value => {
+    const valueToSave = !!value ? value : []
+    setOwnerServicesCategory(valueToSave)
+  }
+
+  const handleSaveSpecialization = () => {
+    const workerServicesCategoryToSent = ownerServicesCategory.map(
+      itemValue => itemValue.value
+    )
+
+    const dataToSave = {
+      workerId: "owner",
+      inputSpecializationValue: inputSpecializationOwner,
+      workerServicesCategoryValue: workerServicesCategoryToSent,
+      mapWorkerPermissionsIds: [],
+    }
+
+    dispatch(fetchSaveWorkerProps(user.token, companyId, dataToSave))
+  }
+
+  const handleResetOwnerSpecialization = () => {
+    console.log("handleResetOwnerSpecialization")
+    const servicesWorker = ownerData.servicesCategory.map(serv => {
+      const findService = company.services.find(
+        companyServ => companyServ._id === serv
+      )
+      if (!!findService) {
+        return {
+          value: findService._id,
+          label: findService.serviceName,
+        }
+      } else {
+        return {
+          value: serv,
+          label: serv,
+        }
+      }
+    })
+    setOwnerServicesCategory(servicesWorker)
+    setToSaveWorkerHours([])
+    setInputSpecializationOwner(ownerData.specialization)
+    setOwnerEdit(false)
+  }
+
+  const handleInputOnChange = e => {
+    setInputSpecializationOwner(e.target.value)
+  }
+
   const itemOwner = {
     ...ownerData,
     user: owner,
-    _id: 'owner'
+    _id: "owner",
   }
 
-  const filterOptions = allCategories.filter(optionItem =>{
-    const isInOwnerThisSpecialization = ownerServicesCategory.some(
-      ownerItem => ownerItem.label === optionItem.label
-    )
-    return !isInOwnerThisSpecialization
-  })
-  
   return (
     <WorkerItemStyle
       userEditItem={ownerEdit}
-      selectHeight={selectHeight}
+      selectHeight={200}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
     >
-      <WorkerCircle
-        isCompanyEditProfil={isCompanyEditProfil}
-        siteProps={siteProps}
-      >
+      <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
         <FaUser />
       </WorkerCircle>
       <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecializationOwner}</WorkerSpecjalization>
-      {isCompanyEditProfil && (
+      {editedWorkers && (
         <>
           <EditUserStyle>
             <EditIconStyle
@@ -342,7 +368,7 @@ const OwnerWorker = ({
                         widthAuto
                         defaultMenuIsOpen={false}
                         secondColor
-                        options={filterOptions}
+                        options={allCategories}
                         handleChange={handleChangeSelectOwner}
                         value={ownerServicesCategory}
                         placeholder="Usługi..."
@@ -477,8 +503,6 @@ const OwnerWorker = ({
             handleSaveConstTimeWorkItem={handleSaveConstTimeWorkItem}
             handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
             handleSaveConstTimeWork={handleSaveConstTimeWork}
-            editedWorkersHours={editedWorkersHours}
-            selectEditedWorkersHours={selectEditedWorkersHours}
             handleResetDay={handleResetDay}
           />
 
@@ -494,9 +518,6 @@ const OwnerWorker = ({
           </ReactTooltip>
         </>
       )}
-      {/* <ReactTooltip id={`holidaysOwner`} effect="float" multiline={true}>
-        <span>Liczba wykorzystanych dni wolnych w roku {actualYear}</span>
-      </ReactTooltip> */}
     </WorkerItemStyle>
   )
 }

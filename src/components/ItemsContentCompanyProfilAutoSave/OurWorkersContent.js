@@ -7,7 +7,7 @@ import InputIcon from "../InputIcon"
 import { fetchAddWorkerToCompany } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
-import { MdEmail, MdClose } from "react-icons/md"
+import { MdEmail, MdClose, MdEdit } from "react-icons/md"
 import { FaUserPlus } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
 import ReactTooltip from "react-tooltip"
@@ -217,6 +217,18 @@ const ButtonDeleteStyle = styled.div`
   padding: 2.5px;
 `
 
+const PositionRelative = styled.div`
+  position: relative;
+`
+
+const ButtonEditPositionEdit = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+`
+
 const OurWorkersContent = ({
   TitleRightColumn,
   ButtonEditPosition,
@@ -226,51 +238,22 @@ const OurWorkersContent = ({
   owner = { name: "", surname: "" },
   ownerSpecialization = "",
   companyId = "",
-  handleAddEditWorker,
-  handleSaveOwnerSpecialization,
-  editedWorkers = [],
-  ownerSerwiceCategory = [],
-  newOwnerServicesCategory,
   company,
   editMode,
   siteProps,
-  editedWorkersHours = [],
   isAdmin,
   ownerData,
   companyServices,
+  RightColumnItem,
 }) => {
+  const [editedWorkers, setEditedWorkers] = useState(false)
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
-  const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
+
   const [allCategories, setAllCategories] = useState([])
-  const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
-    ownerSpecialization
-  )
   const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
   const [selectHeight, setSelectHeight] = useState(0)
-  const [ownerEdit, setOwnerEdit] = useState(false)
   const user = useSelector(state => state.user)
-  
-  const selectRef = useRef(null)
-
-  useEffect(() => {
-    setOwnerEdit(false)
-  }, [editMode])
-
-  useEffect(() => {
-    if (!!ownerServicesCategory) {
-      if (ownerServicesCategory.length > 0) {
-        const valuePadding = allCategoriesWithItems.length * 23 + 15
-        setSelectHeight(valuePadding)
-      }
-    }
-  }, [ownerServicesCategory, setSelectHeight])
-
-  useEffect(() => {
-    if (!!selectRef.current) {
-      setSelectHeight(selectRef.current.clientHeight)
-    }
-  }, [selectRef, ownerServicesCategory])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -280,14 +263,14 @@ const OurWorkersContent = ({
     const categories = getCategories([...companyServices], "serviceCategory")
     const items = categoryItemsMenu(categories, [...companyServices])
     const sortedItems = sortItemsInArray([...items], "category")
-     const newCategories = companyServices.map(itemValue => {
-       const newItem = {
-         value: itemValue._id,
-         label: itemValue.serviceName,
-       }
-       return newItem
-     })
-     setAllCategories(newCategories)
+    const newCategories = companyServices.map(itemValue => {
+      const newItem = {
+        value: itemValue._id,
+        label: itemValue.serviceName,
+      }
+      return newItem
+    })
+    setAllCategories(newCategories)
     setAllCategoriesWithItems(sortedItems)
   }, [company])
 
@@ -297,6 +280,10 @@ const OurWorkersContent = ({
     e.preventDefault()
     setIsAdduser(prevState => !prevState)
     dispatch(fetchAddWorkerToCompany(companyId, emailInput, user.token))
+  }
+
+  const handleEditWorkers = () => {
+    setEditedWorkers(prevState => !prevState)
   }
 
   const handleEdit = () => {
@@ -320,26 +307,7 @@ const OurWorkersContent = ({
     e.stopPropagation()
   }
 
-  const handleClickOwnerEdit = () => {
-    setOwnerEdit(prevState => !prevState)
-  }
-
-  const handleResetOwnerSpecialization = () => {
-    console.log("handleResetOwnerSpecialization")
-  }
-
-  const handleInputOnChange = e => {
-    setInputSpecializationOwner(e.target.value)
-  }
-
-  const handleSaveSpecialization = () => {
-    console.log("handleSaveSpecialization")
-  }
-
-  const handleChangeSelectOwner = value => {
-    const valueToSave = !!value ? value : []
-    setOwnerServicesCategory(valueToSave)
-  }
+ 
 
   const mapWorkers = workers.map((item, index) => {
     return (
@@ -367,143 +335,160 @@ const OurWorkersContent = ({
         EditUserBackgroundContent={EditUserBackgroundContent}
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
+        editedWorkers={editedWorkers}
       />
     )
   })
 
   return (
-    <>
-      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
-        NASI PRACOWNICY
-      </TitleRightColumn>
-      <WorkerContent isCompanyEditProfil={isCompanyEditProfil}>
-        <OwnerWorker
-          {...companyEditProfilProps}
-          WorkerItemStyle={WorkerItemStyle}
-          WorkerCircle={WorkerCircle}
-          WorkerName={WorkerName}
-          WorkerSpecjalization={WorkerSpecjalization}
-          EditUserStyle={EditUserStyle}
-          EditIconStyle={EditIconStyle}
-          EditUserBackground={EditUserBackground}
-          EditUserBackgroundContent={EditUserBackgroundContent}
-          allCategories={allCategories}
+    <PositionRelative>
+      <RightColumnItem
+        isCompanyEditProfil={editedWorkers}
+        siteProps={siteProps}
+      >
+        <TitleRightColumn
+          isCompanyEditProfil={editedWorkers}
           siteProps={siteProps}
-          ButtonContent={ButtonContent}
-          ButtonDeleteStyle={ButtonDeleteStyle}
-          owner={owner}
-          ownerEdit={ownerEdit}
-          selectHeight={selectHeight}
-          inputSpecializationOwner={inputSpecializationOwner}
-          handleClickOwnerEdit={handleClickOwnerEdit}
-          handleResetOwnerSpecialization={handleResetOwnerSpecialization}
-          handleClickContent={handleClickContent}
-          handleInputOnChange={handleInputOnChange}
-          handleChangeSelectOwner={handleChangeSelectOwner}
-          ownerServicesCategory={ownerServicesCategory}
-          handleSaveSpecialization={handleSaveSpecialization}
-          company={company}
-          ownerData={ownerData}
-          editedWorkersHours={editedWorkersHours}
-          isAdmin={isAdmin}
-          setAllCategories={setAllCategories}
-          allCategoriesWithItems={allCategoriesWithItems}
-        />
-        {mapWorkers}
-      </WorkerContent>
-      {isCompanyEditProfil && isAdmin ? (
-        <ButtonEditPosition>
-          <ButtonIcon
-            title="Dodaj użytkownika"
-            uppercase
-            fontIconSize="25"
-            fontSize="14"
-            icon={<FaUserPlus />}
-            secondColors
-            onClick={handleEdit}
-          />
-        </ButtonEditPosition>
-      ) : null}
-      {isAdmin && (
-        <CSSTransition
-          in={isaddUser}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
         >
-          <PositionAddWorkers
-          // onClick={handleOnClickBg}
+          NASI PRACOWNICY
+        </TitleRightColumn>
+        <WorkerContent isCompanyEditProfil={editedWorkers}>
+          <OwnerWorker
+            companyId={companyId}
+            {...companyEditProfilProps}
+            WorkerItemStyle={WorkerItemStyle}
+            WorkerCircle={WorkerCircle}
+            WorkerName={WorkerName}
+            WorkerSpecjalization={WorkerSpecjalization}
+            EditUserStyle={EditUserStyle}
+            EditIconStyle={EditIconStyle}
+            EditUserBackground={EditUserBackground}
+            EditUserBackgroundContent={EditUserBackgroundContent}
+            allCategories={allCategories}
+            siteProps={siteProps}
+            ButtonContent={ButtonContent}
+            ButtonDeleteStyle={ButtonDeleteStyle}
+            owner={owner}
+            handleClickContent={handleClickContent}
+            company={company}
+            ownerData={ownerData}
+            isAdmin={isAdmin}
+            setAllCategories={setAllCategories}
+            allCategoriesWithItems={allCategoriesWithItems}
+            editedWorkers={editedWorkers}
+            ownerSpecialization={ownerSpecialization}
+            user={user}
+          />
+          {mapWorkers}
+        </WorkerContent>
+        {editedWorkers && isAdmin ? (
+          <ButtonEditPosition>
+            <ButtonIcon
+              title="Dodaj użytkownika"
+              uppercase
+              fontIconSize="25"
+              fontSize="14"
+              icon={<FaUserPlus />}
+              secondColors
+              onClick={handleEdit}
+            />
+          </ButtonEditPosition>
+        ) : null}
+        {isAdmin && (
+          <CSSTransition
+            in={isaddUser}
+            timeout={400}
+            classNames="popup"
+            unmountOnExit
           >
-            <ContentAddWorkers
-              onClick={handleClickContentAddWorkers}
-              siteProps={siteProps}
+            <PositionAddWorkers
+            // onClick={handleOnClickBg}
             >
-              <form onSubmit={handleSentInvation}>
-                <InputIcon
-                  icon={<FaUserPlus />}
-                  placeholder="Wpisz adres email"
-                  value={emailInput}
-                  type="email"
-                  secondColor
-                  onChange={e => handleChange(e, setEmailInput)}
-                  required
-                />
-                <ButtonSentPosition>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="14"
-                    icon={<MdEmail />}
-                    onClick={handleOnClickBg}
+              <ContentAddWorkers
+                onClick={handleClickContentAddWorkers}
+                siteProps={siteProps}
+              >
+                <form onSubmit={handleSentInvation}>
+                  <InputIcon
+                    icon={<FaUserPlus />}
+                    placeholder="Wpisz adres email"
+                    value={emailInput}
+                    type="email"
+                    secondColor
+                    onChange={e => handleChange(e, setEmailInput)}
+                    required
                   />
-                </ButtonSentPosition>
-                <ButtonSentPosition>
-                  <ButtonAddWorker type="submit">
+                  <ButtonSentPosition>
                     <ButtonIcon
-                      title="Wyślij zaproszenie"
+                      title="Anuluj"
                       uppercase
                       fontIconSize="20"
                       fontSize="14"
                       icon={<MdEmail />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={!!!emailInput}
+                      secondColors
+                      onClick={handleOnClickBg}
                     />
-                  </ButtonAddWorker>
-                </ButtonSentPosition>
-              </form>
-              <CloseAddWorkers onClick={handleOnClickBg}>
-                <MdClose />
-              </CloseAddWorkers>
-            </ContentAddWorkers>
-          </PositionAddWorkers>
-        </CSSTransition>
-      )}
-      {isCompanyEditProfil && (
-        <>
-          <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
-            <span>Ustaw czas pracy pracownika</span>
-          </ReactTooltip>
-          <ReactTooltip id="timeWork" effect="float" multiline={true}>
-            <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
-          </ReactTooltip>
+                  </ButtonSentPosition>
+                  <ButtonSentPosition>
+                    <ButtonAddWorker type="submit">
+                      <ButtonIcon
+                        title="Wyślij zaproszenie"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="14"
+                        icon={<MdEmail />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={!!!emailInput}
+                      />
+                    </ButtonAddWorker>
+                  </ButtonSentPosition>
+                </form>
+                <CloseAddWorkers onClick={handleOnClickBg}>
+                  <MdClose />
+                </CloseAddWorkers>
+              </ContentAddWorkers>
+            </PositionAddWorkers>
+          </CSSTransition>
+        )}
+        {editedWorkers && (
+          <>
+            <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
+              <span>Ustaw czas pracy pracownika</span>
+            </ReactTooltip>
+            <ReactTooltip id="timeWork" effect="float" multiline={true}>
+              <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
+            </ReactTooltip>
 
-          <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
-            <span>Wyślij ponownie email weryfikacyjny</span>
-          </ReactTooltip>
-          <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
-            <span>Edytuj godziny pracy pracownika</span>
-          </ReactTooltip>
-          <ReactTooltip id="editUser" effect="float" multiline={true}>
-            <span>Edytuj stanowisko pracownika</span>
-          </ReactTooltip>
-          <ReactTooltip id="deleteUser" effect="float" multiline={true}>
-            <span>Usuń pracownika</span>
-          </ReactTooltip>
-        </>
+            <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
+              <span>Wyślij ponownie email weryfikacyjny</span>
+            </ReactTooltip>
+            <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
+              <span>Edytuj godziny pracy pracownika</span>
+            </ReactTooltip>
+            <ReactTooltip id="editUser" effect="float" multiline={true}>
+              <span>Edytuj stanowisko pracownika</span>
+            </ReactTooltip>
+            <ReactTooltip id="deleteUser" effect="float" multiline={true}>
+              <span>Usuń pracownika</span>
+            </ReactTooltip>
+          </>
+        )}
+      </RightColumnItem>
+      {isCompanyEditProfil && (
+        <ButtonEditPositionEdit>
+          <ButtonIcon
+            title="Edytuj pracowników"
+            uppercase
+            fontIconSize="25"
+            fontSize="14"
+            icon={<MdEdit />}
+            secondColors
+            onClick={handleEditWorkers}
+          />
+        </ButtonEditPositionEdit>
       )}
-    </>
+    </PositionRelative>
   )
 }
 export default OurWorkersContent

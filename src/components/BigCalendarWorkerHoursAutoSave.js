@@ -305,10 +305,6 @@ const BigCalendarWorkerHoursAutoSave = ({
   disabledSwitch,
   setDisabledSwitch,
   user,
-  isAdmin = false,
-  userWorkerActive,
-  setUserWorkerActive,
-  editedWorkersHours,
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -393,7 +389,7 @@ const BigCalendarWorkerHoursAutoSave = ({
       )
         setAllEvents(mapItemNoConstantWorkingHoursDate)
     }
-  }, [editedWorkersHours, item])
+  }, [item])
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
     item.company.openingDays

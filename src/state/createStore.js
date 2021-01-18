@@ -124,7 +124,7 @@ const initialState = {
   reserwationEnable: false,
   editWorkerHours: false,
   editWorkerHoursData: null,
-  editedWorkersHours: [],
+  // editedWorkersHours: [],
   pathCompanyData: null,
   workCompanyData: null,
   userHistoryReserwations: [],
@@ -318,24 +318,42 @@ const reducer = (state = initialState, action) => {
     case COMPANY_PATCH_WORKER_CONST_TIME: {
       if(!!state.workCompanyData){
         const newWorkCompanyDataWorkersTime = { ...state.workCompanyData }
-        const selectedWorkerIndex = newWorkCompanyDataWorkersTime.workers.findIndex(item => item._id === action.dataTime.indexWorker);
-        if(selectedWorkerIndex >= 0){
+        if(action.dataTime.indexWorker === "owner"){
           if (action.dataTime.constantWorkingHours.length > 0) {
             action.dataTime.constantWorkingHours.forEach((constDate) => {
-              const dateIsInBackend = newWorkCompanyDataWorkersTime.workers[
-                selectedWorkerIndex
-              ].constantWorkingHours.findIndex(
+              const dateIsInBackend = newWorkCompanyDataWorkersTime.ownerData.constantWorkingHours.findIndex(
                 item => item.dayOfTheWeek === constDate.dayOfTheWeek
               )
               if (dateIsInBackend >= 0) {
-                newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].dayOfTheWeek = constDate.dayOfTheWeek;
-                newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].startWorking = constDate.startWorking;
-                newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].endWorking = constDate.endWorking;
-                newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].disabled = constDate.disabled;
+                newWorkCompanyDataWorkersTime.ownerData.constantWorkingHours[dateIsInBackend].dayOfTheWeek = constDate.dayOfTheWeek;
+                newWorkCompanyDataWorkersTime.ownerData.constantWorkingHours[dateIsInBackend].startWorking = constDate.startWorking;
+                newWorkCompanyDataWorkersTime.ownerData.constantWorkingHours[dateIsInBackend].endWorking = constDate.endWorking;
+                newWorkCompanyDataWorkersTime.ownerData.constantWorkingHours[dateIsInBackend].disabled = constDate.disabled;
               } else {
-                newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours.push(constDate);
+                newWorkCompanyDataWorkersTime.ownerData.constantWorkingHours.push(constDate);
               }
             });
+          }
+        }else{
+          const selectedWorkerIndex = newWorkCompanyDataWorkersTime.workers.findIndex(item => item._id === action.dataTime.indexWorker);
+          if(selectedWorkerIndex >= 0){
+            if (action.dataTime.constantWorkingHours.length > 0) {
+              action.dataTime.constantWorkingHours.forEach((constDate) => {
+                const dateIsInBackend = newWorkCompanyDataWorkersTime.workers[
+                  selectedWorkerIndex
+                ].constantWorkingHours.findIndex(
+                  item => item.dayOfTheWeek === constDate.dayOfTheWeek
+                )
+                if (dateIsInBackend >= 0) {
+                  newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].dayOfTheWeek = constDate.dayOfTheWeek;
+                  newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].startWorking = constDate.startWorking;
+                  newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].endWorking = constDate.endWorking;
+                  newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours[dateIsInBackend].disabled = constDate.disabled;
+                } else {
+                  newWorkCompanyDataWorkersTime.workers[selectedWorkerIndex].constantWorkingHours.push(constDate);
+                }
+              });
+            }
           }
         }
         return {
@@ -353,12 +371,26 @@ const reducer = (state = initialState, action) => {
     case COMPANY_PATCH_WORKER_SETTINGS: {
       if(!!state.workCompanyData){
         const newWorkCompanyDataWorkersProps = { ...state.workCompanyData }
-        const selectedWorkerIndex = newWorkCompanyDataWorkersProps.workers.findIndex(item => item._id === action.dataWorker.workerId);
-      if(selectedWorkerIndex >= 0){
-        newWorkCompanyDataWorkersProps.workers[selectedWorkerIndex].specialization = action.dataWorker.inputSpecializationValue;
-        newWorkCompanyDataWorkersProps.workers[selectedWorkerIndex].permissions = action.dataWorker.mapWorkerPermissionsIds;
-        newWorkCompanyDataWorkersProps.workers[selectedWorkerIndex].servicesCategory = action.dataWorker.workerServicesCategoryValue;
-      }
+        if (action.dataWorker.workerId === "owner") {
+          newWorkCompanyDataWorkersProps.ownerData.specialization = action.dataWorker.inputSpecializationValue
+          newWorkCompanyDataWorkersProps.ownerData.permissions = action.dataWorker.mapWorkerPermissionsIds
+          newWorkCompanyDataWorkersProps.ownerData.servicesCategory = action.dataWorker.workerServicesCategoryValue
+        } else {
+          const selectedWorkerIndex = newWorkCompanyDataWorkersProps.workers.findIndex(
+            item => item._id === action.dataWorker.workerId
+          )
+          if (selectedWorkerIndex >= 0) {
+            newWorkCompanyDataWorkersProps.workers[
+              selectedWorkerIndex
+            ].specialization = action.dataWorker.inputSpecializationValue
+            newWorkCompanyDataWorkersProps.workers[
+              selectedWorkerIndex
+            ].permissions = action.dataWorker.mapWorkerPermissionsIds
+            newWorkCompanyDataWorkersProps.workers[
+              selectedWorkerIndex
+            ].servicesCategory = action.dataWorker.workerServicesCategoryValue
+          }
+        }
       return {
         ...state,
         workCompanyData: newWorkCompanyDataWorkersProps,
@@ -825,11 +857,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         avaibleHoursReserwation: action.date,
       }
-    case CHANGE_EDITED_WORKER_HOURS:
-      return {
-        ...state,
-        editedWorkersHours: action.item,
-      }
+    // case CHANGE_EDITED_WORKER_HOURS:
+    //   return {
+    //     ...state,
+    //     editedWorkersHours: action.item,
+    //   }
     case CHANGE_EDIT_WORKER_HOURS:{
       if (!!action.item) {
         return {
