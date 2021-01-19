@@ -568,10 +568,12 @@ export const companyPatchSettings = (data) => {
   }
 }
 
-export const patchNewCompanyServices = (data) => {
+export const patchNewCompanyServices = (data, ownerDataServices, workers) => {
   return {
     type: COMPANY_PATCH_NEW_SERVICES,
     data: data,
+    ownerDataServices: ownerDataServices,
+    workers: workers
   }
 }
 
@@ -1878,7 +1880,13 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(patchNewCompanyServices(response.data.services))
+        dispatch(
+          patchNewCompanyServices(
+            response.data.services,
+            response.data.ownerDataServices,
+            response.data.workers
+          )
+        )
       })
       .catch(error => {
         dispatch(changeSpinner(false))

@@ -532,9 +532,18 @@ const reducer = (state = initialState, action) => {
       if (!!state.workCompanyData){
         const newWorkCompanyDataServices = { ...state.workCompanyData }
         newWorkCompanyDataServices.services = action.data
+        newWorkCompanyDataServices.ownerData.servicesCategory =
+          action.ownerDataServices
+        newWorkCompanyDataServices.workers.forEach((worker, index)=> {
+          const findSentWorker = action.workers.find(sentWorker => sentWorker.user === worker.user._id)
+          if(!!findSentWorker){
+            newWorkCompanyDataServices.workers[index].servicesCategory = findSentWorker.servicesCategory
+          }
+        })
         return {
           ...state,
           workCompanyData: newWorkCompanyDataServices,
+          resetWorkerProps: true,
         }
       }else{
         return {

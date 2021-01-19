@@ -273,7 +273,6 @@ const OwnerWorker = ({
   }
 
   const handleResetOwnerSpecialization = () => {
-    console.log("handleResetOwnerSpecialization")
     const servicesWorker = ownerData.servicesCategory.map(serv => {
       const findService = company.services.find(
         companyServ => companyServ._id === serv

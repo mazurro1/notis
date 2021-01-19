@@ -262,13 +262,6 @@ const WorkerItem = ({
 
   const handleDeleteUser = () => {
     dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, user.token))
-    // handleAddEditWorker(
-    //   "delete",
-    //   item._id,
-    //   inputSpecialization,
-    //   null,
-    //   null,
-    // )
   }
 
   const handleSentAgainEmailVeryfication = () => {
