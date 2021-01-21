@@ -68,6 +68,7 @@ import openSocket from "socket.io-client"
 import {Site} from '../common/Site'
 import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
 import WorkerUsersInformation from "./WorkerUsersInformation"
+import AlertExtra from "./AlertExtra"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -1121,7 +1122,7 @@ const Navigation = ({ children, isMainPage }) => {
         <BackgroundColorPage className="heightElement" siteProps={siteProps}>
           <Spinner spinnerEnable={spinnerEnable} />
           <Alerts />
-
+          <AlertExtra siteProps={siteProps} />
           <WrapperNavigation siteProps={siteProps} menuOpen={menuOpen}>
             <NavigationDiv siteProps={siteProps}>
               <NavigationItems>

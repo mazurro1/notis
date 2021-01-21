@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import { FaFacebook, FaInstagram, FaChrome } from "react-icons/fa"
@@ -86,7 +86,6 @@ const IconLinkToSite = styled.button`
 
 const OurLinksContent = ({
   TitleRightColumn,
-  ButtonEditPosition,
   companyEditProfilProps = {},
   isCompanyEditProfil = false,
   editable = false,
@@ -96,14 +95,17 @@ const OurLinksContent = ({
   linkInstagram,
   handleSaveLinks,
   siteProps,
+  company,
 }) => {
   const [facebookInput, setFacebookInput] = useState(linkFacebook)
   const [instagramInput, setInstagramInput] = useState(linkInstagram)
   const [websiteInput, setWebsiteInput] = useState(linkiWebsite)
 
-  const handleEdit = () => {
-    onClickEdit()
-  }
+  useEffect(() => {
+    setFacebookInput(linkFacebook)
+    setInstagramInput(linkInstagram)
+    setWebsiteInput(linkiWebsite)
+  }, [company.linkFacebook, company.linkInstagram, company.linkiWebsite])
 
   const isUrlFacebook = validURL(facebookInput)
   const isUrlInstagram = validURL(instagramInput)
@@ -125,7 +127,6 @@ const OurLinksContent = ({
       const instagramInputWithHttps = convertLinkToHttps(instagramInput)
       const websiteInputWithHttps = convertLinkToHttps(websiteInput)
 
-      onClickEdit()
       const newFacebookLink =
         facebookInput.length === 0
           ? ""
@@ -159,7 +160,6 @@ const OurLinksContent = ({
     setFacebookInput(linkFacebook)
     setInstagramInput(linkInstagram)
     setWebsiteInput(linkiWebsite)
-    handleSaveLinks(null, null, null)
   }
 
   const handleClickContent = e => {
@@ -230,18 +230,6 @@ const OurLinksContent = ({
 
       {isCompanyEditProfil && (
         <>
-          <ButtonEditPosition>
-            <ButtonIcon
-              title="Edytuj"
-              uppercase
-              fontIconSize="25"
-              fontSize="14"
-              icon={<MdEdit />}
-              secondColors
-              onClick={handleEdit}
-            />
-          </ButtonEditPosition>
-
           <CSSTransition
             in={editable}
             timeout={400}
@@ -303,9 +291,7 @@ const OurLinksContent = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaSave />}
-                          customColorButton={
-                            Colors(siteProps).successColorDark
-                          }
+                          customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                           disabled={!disabledButtonSave}
                         />

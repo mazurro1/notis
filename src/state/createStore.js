@@ -26,11 +26,13 @@ import {
   CHANGE_BLIND_STYLE,
   CHANGE_DARK_STYLE,
   CHANGE_LANGUAGE_STYLE,
+  CHANGE_ALERT_EXTRA,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_TEKSTS,
   COMPANY_DELETE_WORKER_NO_CONST_HOURS,
   COMPANY_ADD_WORKER_NO_CONST_HOURS,
   COMPANY_PATCH_WORKER_NO_CONST_HOURS,
@@ -110,6 +112,10 @@ const initialState = {
   placesData: [],
   loadingPlaces: false,
   alerts: [],
+  alertExtra: {
+    name: null,
+    active: false,
+  },
   //COMPANY
   //COMPANY
   //COMPANY
@@ -134,6 +140,16 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_ALERT_EXTRA:{
+      return {
+        ...state,
+        alertExtra: {
+          name: !!action.name ? action.name : state.alertExtra.name,
+          active: action.value,
+        },
+      }
+    }
+
     case CHANGE_DARK_STYLE:
       const newDarkStyle = {
         blind: false,
@@ -307,6 +323,35 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case UPDATE_COMPANY_TEKSTS: {
+      const newWorkCompanyData = !!state.workCompanyData ? { ...state.workCompanyData } : {}
+      if (!!action.texts.textAboutUs) {
+        newWorkCompanyData.title = action.texts.textAboutUs
+      }
+      if (!!action.texts.textReserwation) {
+        newWorkCompanyData.reserationText = action.texts.textReserwation
+      }
+
+      if (!!action.texts.links) {
+        if (!!action.texts.links.facebook) {
+          newWorkCompanyData.linkFacebook = action.texts.links.facebook
+        }
+
+        if (!!action.texts.links.instagram) {
+          newWorkCompanyData.linkInstagram = action.texts.links.instagram
+        }
+
+        if (!!action.texts.links.website) {
+          newWorkCompanyData.linkiWebsite = action.texts.links.website
+        }
+      }
+
+      return {
+        ...state,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
 
     case RESET_WORKER_PROPS_VISIBLE: {
       return {
@@ -894,25 +939,27 @@ const reducer = (state = initialState, action) => {
 
     case CHANGE_RESERWATION_VALUE:
       const reserwationEnable = !!action.value ? true : false
-      const itemReserwation = !!action.value ? action.value : {}
-      if (!!action.value) {
+      const itemReserwation = !!action.value
+        ? action.value
+        : state.reserwationData
+      // if (!!action.value) {
         return {
           ...state,
           reserwationData: itemReserwation,
           reserwationEnable: reserwationEnable,
         }
-      } else {
-        setTimeout(() => {
-          return {
-            ...state,
-            reserwationData: itemReserwation,
-          }
-        }, 1)
-        return {
-          ...state,
-          reserwationEnable: reserwationEnable,
-        }
-      }
+      // } else {
+      //   setTimeout(() => {
+      //     return {
+      //       ...state,
+      //       reserwationData: itemReserwation,
+      //     }
+      //   }, 1)
+      //   return {
+      //     ...state,
+      //     reserwationEnable: reserwationEnable,
+      //   }
+      // }
 
     case REPLACE_COMPANY_DATA:
       return {

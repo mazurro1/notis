@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit } from "react-icons/md"
 import TextareaCustom from "../TextareaCustom"
 import styled from "styled-components"
 import { checkIfBadValue } from "../../common/Functions"
@@ -68,13 +67,10 @@ const ColumnItemTextarea = ({
   setTextEditedChange,
   textEdited,
   siteProps,
+  handleSaveTextarea
 }) => {
   const [textTitle, handleTextAbout] = useState(textEdited ? textEdited : title)
   const [isErrorText, setIsErrorText] = useState(false)
-
-  const handleEdit = () => {
-    onClickEdit()
-  }
 
   const handleTextAboutOnChange = e => {
     handleTextAbout(e.target.value)
@@ -92,7 +88,7 @@ const ColumnItemTextarea = ({
     e.preventDefault()
     if (!isErrorText && textTitle !== title) {
       setTextEditedChange(textTitle)
-      onClickEdit()
+      handleSaveTextarea(textTitle)
     }
   }
 
@@ -124,17 +120,6 @@ const ColumnItemTextarea = ({
 
       {isCompanyEditProfil && (
         <>
-          <ButtonEditPosition>
-            <ButtonIcon
-              title="Edytuj"
-              uppercase
-              fontIconSize="25"
-              fontSize="14"
-              icon={<MdEdit />}
-              secondColors
-              onClick={handleEdit}
-            />
-          </ButtonEditPosition>
           <CSSTransition
             in={editable}
             timeout={400}

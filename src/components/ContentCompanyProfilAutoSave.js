@@ -16,6 +16,7 @@ import {
   resetEditCompany,
   changeReserwationValue,
   changeEditedWorkerHours,
+  fetchSaveTextsCompany,
 } from "../state/actions"
 import AllCategoryOfServices from "./ItemsContentCompanyProfilAutoSave/AllCategoryOfServices"
 import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
@@ -24,6 +25,9 @@ import ReactTooltip from "react-tooltip"
 import DaysOffContent from "./ItemsContentCompanyProfilAutoSave/DaysOffContent"
 import HappyHoursConstContent from "./ItemsContentCompanyProfilAutoSave/HappyHoursConstContent"
 import HappyHoursNoConstContent from "./ItemsContentCompanyProfilAutoSave/HappyHoursNoConstContent"
+import AboutUsComponent from "./ItemsContentCompanyProfilAutoSave/AboutUsComponent"
+import ReserwationTextComponent from "./ItemsContentCompanyProfilAutoSave/ReserwationTextComponent"
+import LinksComponent from "./ItemsContentCompanyProfilAutoSave/LinksComponent"
 
 const TextH1 = styled.div`
   position: relative;
@@ -122,6 +126,15 @@ const ButtonEditPosition = styled.div`
   margin-top: 30px;
 `
 
+const ButtonTextPosition = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 40px;
+`
+
 const BackGroundImageCustomUrl = styled.div`
   height: 500px;
   width: 100%;
@@ -168,9 +181,6 @@ const ContentCompanyProfil = ({
   const [editMode, setEditMode] = useState(true)
   const [allCategoryEdit, setAllCategoryEdit] = useState(false)
   const [editOpinionAndAdress, setEditOpinionAndAdress] = useState(false)
-  const [editAboutUs, setEditAboutUs] = useState(false)
-  const [editRezerwationText, setEditRezerwationText] = useState(false)
-  const [editLinks, setEditLinks] = useState(false)
   const [changesTimeOpen, setChangesTimeOpen] = useState(false)
 
 
@@ -192,9 +202,6 @@ const ContentCompanyProfil = ({
   const handleClickEditMode = () => {
     setEditMode(prevState => !prevState)
     setEditOpinionAndAdress(false)
-    setEditAboutUs(false)
-    setEditRezerwationText(false)
-    setEditLinks(false)
     setChangesTimeOpen(false)
   }
 
@@ -225,18 +232,11 @@ const ContentCompanyProfil = ({
           )
         ),
       }
-      // console.log(company)
       dispatch(changeReserwationValue(valueWithCompanyId))
     }
 
-  // const filteredAllCategoriesWithItems = allCategoriesWithItems.filter(item => {
-  //   if (item.items.length > 0) {
-  //     return true
-  //   } else {
-  //     return false
-  //   }
-  // })
-
+    
+  
   let userHasPermToServices = !isCompanyEditProfil || isAdmin;
   if (!userHasPermToServices && selectedWorker) {
     userHasPermToServices = selectedWorker.permissions.some(perm => perm === 2)
@@ -329,29 +329,20 @@ const ContentCompanyProfil = ({
                 />
               </RightColumnItem>
             )}
-
-            {/*
-            <InputCustom />
             {userHasPermisionToOther && (
-              <RightColumnItem
+              <AboutUsComponent
+                RightColumnItem={RightColumnItem}
+                companyEditProfilProps={companyEditProfilProps}
                 {...companyEditProfilProps}
                 siteProps={siteProps}
-              >
-                <ColumnItemTextarea
-                  titleColumnItem="O NAS"
-                  TitleRightColumn={TitleRightColumn}
-                  ParagraphRightColumn={ParagraphRightColumn}
-                  {...companyEditProfilProps}
-                  ButtonEditPosition={ButtonEditPosition}
-                  title={company.title}
-                  editable={editAboutUs}
-                  onClickEdit={() => handleEdit(setEditAboutUs)}
-                  // setTextEditedChange={setTextAboutUs}
-                  // textEdited={textAboutUs}
-                  siteProps={siteProps}
-                />
-              </RightColumnItem>
+                TitleRightColumn={TitleRightColumn}
+                ParagraphRightColumn={ParagraphRightColumn}
+                company={company}
+                user={user}
+                ButtonTextPosition={ButtonTextPosition}
+              />
             )}
+            {/*
             {userHasPermisionToOther && (
               <RightColumnItem
                 {...companyEditProfilProps}
@@ -422,85 +413,63 @@ const ContentCompanyProfil = ({
               </>
             )}
                 */}
-
             {userHasPermToWorkers && (
-                <OurWorkersContent
-                  TitleRightColumn={TitleRightColumn}
-                  companyEditProfilProps={companyEditProfilProps}
-                  {...companyEditProfilProps}
-                  ButtonEditPosition={ButtonEditPosition}
-                  workers={[...company.workers]}
-                  owner={company.owner}
-                  companyId={company._id}
-                  ownerSpecialization={company.ownerData.specialization}
-                  // handleAddEditWorker={handleAddEditWorker}
-                  // handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
-                  companyServices={company.services}
-                  // editedWorkers={editedWorkers}
-                  // ownerSerwiceCategory={company.ownerData.servicesCategory}
-                  // newOwnerServicesCategory={newOwnerServicesCategory}
-                  company={company}
-                  editMode={editMode}
-                  siteProps={siteProps}
-                  isAdmin={isAdmin}
-                  ownerData={company.ownerData}
-                  company={company}
-                  RightColumnItem={RightColumnItem}
-                />
+              <OurWorkersContent
+                TitleRightColumn={TitleRightColumn}
+                companyEditProfilProps={companyEditProfilProps}
+                {...companyEditProfilProps}
+                ButtonEditPosition={ButtonEditPosition}
+                workers={[...company.workers]}
+                owner={company.owner}
+                companyId={company._id}
+                ownerSpecialization={company.ownerData.specialization}
+                // handleAddEditWorker={handleAddEditWorker}
+                // handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
+                companyServices={company.services}
+                // editedWorkers={editedWorkers}
+                // ownerSerwiceCategory={company.ownerData.servicesCategory}
+                // newOwnerServicesCategory={newOwnerServicesCategory}
+                company={company}
+                editMode={editMode}
+                siteProps={siteProps}
+                isAdmin={isAdmin}
+                ownerData={company.ownerData}
+                company={company}
+                RightColumnItem={RightColumnItem}
+              />
             )}
-            {/*
+
             {(company.reserationText || isCompanyEditProfil) &&
               userHasPermisionToOther && (
-                <RightColumnItem
+                <ReserwationTextComponent
+                  RightColumnItem={RightColumnItem}
+                  companyEditProfilProps={companyEditProfilProps}
                   {...companyEditProfilProps}
                   siteProps={siteProps}
-                >
-                  <ColumnItemTextarea
-                    titleColumnItem="ZASADY REZERWACJI"
-                    TitleRightColumn={TitleRightColumn}
-                    ParagraphRightColumn={ParagraphRightColumn}
-                    {...companyEditProfilProps}
-                    ButtonEditPosition={ButtonEditPosition}
-                    title={company.reserationText}
-                    editable={editRezerwationText}
-                    onClickEdit={() => handleEdit(setEditRezerwationText)}
-                    // setTextEditedChange={setTextRezerwation}
-                    // textEdited={textRezerwationText}
-                    siteProps={siteProps}
-                  />
-                </RightColumnItem>
+                  TitleRightColumn={TitleRightColumn}
+                  ParagraphRightColumn={ParagraphRightColumn}
+                  company={company}
+                  user={user}
+                  ButtonTextPosition={ButtonTextPosition}
+                />
               )}
             {(!!company.linkFacebook ||
               !!company.linkiWebsite ||
               !!company.linkInstagram ||
               isCompanyEditProfil) &&
               userHasPermisionToOther && (
-                <RightColumnItem
+                <LinksComponent
+                  RightColumnItem={RightColumnItem}
+                  companyEditProfilProps={companyEditProfilProps}
                   {...companyEditProfilProps}
                   siteProps={siteProps}
-                >
-                  <OurLinksContent
-                    TitleRightColumn={TitleRightColumn}
-                    companyEditProfilProps={companyEditProfilProps}
-                    {...companyEditProfilProps}
-                    ButtonEditPosition={ButtonEditPosition}
-                    editable={editLinks}
-                    siteProps={siteProps}
-                    onClickEdit={() => handleEdit(setEditLinks)}
-                    // handleSaveLinks={handleSaveLinks}
-                    linkFacebook={
-                      !!company.linkFacebook ? company.linkFacebook : ""
-                    }
-                    linkiWebsite={
-                      !!company.linkiWebsite ? company.linkiWebsite : ""
-                    }
-                    linkInstagram={
-                      !!company.linkInstagram ? company.linkInstagram : ""
-                    }
-                  />
-                </RightColumnItem>
+                  TitleRightColumn={TitleRightColumn}
+                  ParagraphRightColumn={ParagraphRightColumn}
+                  company={company}
+                  user={user}
+                  ButtonTextPosition={ButtonTextPosition}
+                />
               )}
-           */}
           </RightColumn>
         </ContentDiv>
         {isCompanyEditProfil && (

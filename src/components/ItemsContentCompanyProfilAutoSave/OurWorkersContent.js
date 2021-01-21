@@ -252,7 +252,6 @@ const OurWorkersContent = ({
 
   const [allCategories, setAllCategories] = useState([])
   const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
-  const [selectHeight, setSelectHeight] = useState(0)
   const user = useSelector(state => state.user)
 
   useEffect(() => {

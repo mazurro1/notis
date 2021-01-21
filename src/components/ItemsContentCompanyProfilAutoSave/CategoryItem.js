@@ -361,7 +361,6 @@ const CategoryItem = ({
       />
     )
   })
-
   return (
     <CategoryItemStyle
       data-sal={!isCompanyEditProfil && "zoom-in"}

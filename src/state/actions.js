@@ -31,6 +31,15 @@ export const CHANGE_REMIND_PASSWORD_EMAIL_SENT =
 export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
 export const CHANGE_LANGUAGE_STYLE = "CHANGE_LANGUAGE_STYLE"
 export const ADD_NEW_USER_ALERT = "ADD_NEW_USER_ALERT"
+export const CHANGE_ALERT_EXTRA = "CHANGE_ALERT_EXTRA"
+
+export const changeAlertExtra = (name, value) => {
+  return {
+    type: CHANGE_ALERT_EXTRA,
+    name: name,
+    value: value,
+  }
+}
 
 export const addNewUserAlert = data => {
   return {
@@ -516,6 +525,14 @@ export const COMPANY_PATCH_WORKER_CONST_TIME = "COMPANY_PATCH_WORKER_CONST_TIME"
 export const COMPANY_PATCH_WORKER_NO_CONST_HOURS = "COMPANY_PATCH_WORKER_NO_CONST_HOURS"
 export const COMPANY_ADD_WORKER_NO_CONST_HOURS = "COMPANY_ADD_WORKER_NO_CONST_HOURS"
 export const COMPANY_DELETE_WORKER_NO_CONST_HOURS = "COMPANY_DELETE_WORKER_NO_CONST_HOURS"
+export const UPDATE_COMPANY_TEKSTS = "UPDATE_COMPANY_TEKSTS"
+
+export const updateComanyTeksts = texts => {
+  return {
+    type: UPDATE_COMPANY_TEKSTS,
+    texts: texts,
+  }
+}
 
 export const companyDeleteWorkerNoConstHours = (workerId, noConstHourId) => {
   return {
@@ -1227,6 +1244,7 @@ export const fetchWorkerDisabledHours = (
   timeReserwation
 ) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Ładowanie wylnych godzin wybranego pracownika", true))
     dispatch(avaibleDateToReserwationUpdate(true))
     return axios
       .post(
@@ -1249,16 +1267,19 @@ export const fetchWorkerDisabledHours = (
       .then(response => {
           dispatch(avaibleDateToReserwationUpdate(false))
           dispatch(avaibleDateToReserwation(response.data.avaibleHours))
+          dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
           dispatch(avaibleDateToReserwationUpdate(false))
           dispatch(avaibleDateToReserwation([]))
+           dispatch(changeAlertExtra(null, false))
       })
   }
 }
 
 export const fetchPathCompany = (companyPath) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie dancyh o firmie", true))
     return axios
       .post(
         `${Site.serverUrl}/company-path`,
@@ -1273,11 +1294,13 @@ export const fetchPathCompany = (companyPath) => {
       )
       .then(response => {
         dispatch(updatePatchCompanyData(response.data.companyDoc))
+        dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
         dispatch(
           addAlertItem("Błąd podczas pobierania danych o firmie.", "red")
         )
+        dispatch(changeAlertExtra(null, false))
       })
   }
 }
@@ -1287,11 +1310,13 @@ export const fetchAllCompanys = (page = 1) => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
     }
+    dispatch(changeAlertExtra("Ładowanie firm", true))
     return axios
       .post(`${Site.serverUrl}/all-companys`, {
         page: page,
       })
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         if (page === 1) {
           dispatch(updatePlacesData(response.data.companysDoc))
           dispatch(changeLoadingPlaces(false))
@@ -1300,6 +1325,7 @@ export const fetchAllCompanys = (page = 1) => {
         }
       })
       .catch(error => {
+      dispatch(changeAlertExtra(null, false))
        if (error.response) {
          if (error.response.status === 403) {
            dispatch(
@@ -1322,12 +1348,14 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
     }
+    dispatch(changeAlertExtra("Ładowanie firm", true))
     return axios
       .post(`${Site.serverUrl}/all-companys-type`, {
         page: page,
         type: type,
       })
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
           dispatch(updatePlacesData(response.data.companysDoc))
@@ -1336,6 +1364,7 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
         }
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         if(error.response){
           if (error.response.status === 403) {
             dispatch(addAlertItem("Brak więcej firm w danej kategorii.", "blue")) 
@@ -1354,6 +1383,7 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
 
 export const fetchUserReserwations = token => {
   return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie rezerwacji", true))
     return axios
       .get(`${Site.serverUrl}/user-reserwations`, {
         headers: {
@@ -1361,9 +1391,11 @@ export const fetchUserReserwations = token => {
         },
       })
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(updateUserReserwations(response.data.reserwations))
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }
@@ -1371,6 +1403,7 @@ export const fetchUserReserwations = token => {
 
 export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie wszystkich rezerwacji", true))
     return axios
       .post(
         `${Site.serverUrl}/user-reserwations-all`,
@@ -1385,9 +1418,11 @@ export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
         }
       )
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(updateUserReserwations(response.data.reserwations))
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }
@@ -1431,6 +1466,7 @@ export const fetchDeleteReserwation = (
   changedName = ""
 ) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Aktualizacja rezerwacji", true))
     return axios
       .patch(
         `${Site.serverUrl}/update-reserwation`,
@@ -1447,12 +1483,14 @@ export const fetchDeleteReserwation = (
         }
       )
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         if ((changedName = "userReserwation")) {
           dispatch(updateUserOneReserwation(response.data.reserwation))
           dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
         }
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(addAlertItem("Błąd podczas aktualizacji rezerwacji.", "red"))
       })
   }
@@ -1529,6 +1567,7 @@ export const fetchUpdateUserAlert = (
 
 export const fetchGetMoreAlerts = (token, page) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Ładowanie alertów", true))
     return axios
       .post(
         `${Site.serverUrl}/get-more-alerts`,
@@ -1543,9 +1582,11 @@ export const fetchGetMoreAlerts = (token, page) => {
       )
       .then(response => {
         dispatch(addNewAlerts(response.data.newAllerts))
+        dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas aktualizacji powiadomień.", "red"))
+        dispatch(changeAlertExtra(null, false))
       })
   }
 }
@@ -1584,6 +1625,7 @@ export const fetchworkerUsersMoreInformationsHistory = (
   page
 ) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie informacji o kliencie", true))
     return axios
       .post(
         `${Site.serverUrl}/get-selected-users-reserwations`,
@@ -1599,6 +1641,7 @@ export const fetchworkerUsersMoreInformationsHistory = (
         }
       )
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(
           newWorkerUsersHistoryInformations(
             response.data.reserwations,
@@ -1607,6 +1650,7 @@ export const fetchworkerUsersMoreInformationsHistory = (
         )
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(
           addAlertItem("Błąd podczas ładowania historii klienta.", "red")
         )
@@ -1621,6 +1665,7 @@ export const fetchworkerUsersMoreInformationsMessage = (
   page
 ) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie informacji o kliencie", true))
     return axios
       .post(
         `${Site.serverUrl}/get-more-company-user-informations-messages`,
@@ -1636,7 +1681,7 @@ export const fetchworkerUsersMoreInformationsMessage = (
         }
       )
       .then(response => {
-        console.log(response.data)
+        dispatch(changeAlertExtra(null, false))
         dispatch(
           newWorkerUsersMessageInformations(
             response.data.newMessages,
@@ -1645,6 +1690,7 @@ export const fetchworkerUsersMoreInformationsMessage = (
         )
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(
           addAlertItem("Błąd podczas ładowania historii klienta.", "red")
         )
@@ -1659,6 +1705,7 @@ export const fetchCompanyUsersInformationsBlock = (
   isBlocked
 ) => {
   return dispatch => {
+    dispatch(changeAlertExtra("Blokowanie użytkownika", true))
     return axios
       .post(
         `${Site.serverUrl}/company-users-informations-block`,
@@ -1674,6 +1721,7 @@ export const fetchCompanyUsersInformationsBlock = (
         }
       )
       .then(response => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(newWorkerUsersInformationsBlock(selectedUserId, isBlocked))
         if (!!isBlocked) {
           dispatch(
@@ -1686,8 +1734,9 @@ export const fetchCompanyUsersInformationsBlock = (
         }
       })
       .catch(error => {
+        dispatch(changeAlertExtra(null, false))
         dispatch(
-          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
+          addAlertItem("Błąd podczas blokowania użytkownika.", "red")
         )
       })
   }
@@ -2070,7 +2119,6 @@ export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        // dispatch(changeEditWorkerHours(false, null))
         dispatch(
           addAlertItem(
             "Błąd podczas pobierania godzin pracy pracownika.",
@@ -2116,3 +2164,41 @@ export const deleteNoConstHour = (token, companyId, workerId, noConstDateId) => 
       })
   }
 }
+
+export const fetchSaveTextsCompany = (token, companyId, textAboutUs = null, textReserwation = null, links = null) => {
+  return dispatch => {
+    const allTextsCompany = {
+      textAboutUs: textAboutUs,
+      textReserwation: textReserwation,
+      links: links,
+    }
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-teksts-update`,
+        {
+          companyId: companyId,
+          allTextsCompany: allTextsCompany,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(updateComanyTeksts(allTextsCompany))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas aktualizacji tekstu.",
+            "red"
+          )
+        )
+      })
+  }
+}
+

@@ -21,7 +21,7 @@ import {ServiceColors} from '../../common/ServiceColors'
 const ServiceItem = styled.div`
   position: relative;
   background-color: ${props =>
-    props.clickDelete && !props.siteProps
+    props.clickDelete
       ? "#ffebee"
       : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
