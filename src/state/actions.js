@@ -526,6 +526,15 @@ export const COMPANY_PATCH_WORKER_NO_CONST_HOURS = "COMPANY_PATCH_WORKER_NO_CONS
 export const COMPANY_ADD_WORKER_NO_CONST_HOURS = "COMPANY_ADD_WORKER_NO_CONST_HOURS"
 export const COMPANY_DELETE_WORKER_NO_CONST_HOURS = "COMPANY_DELETE_WORKER_NO_CONST_HOURS"
 export const UPDATE_COMPANY_TEKSTS = "UPDATE_COMPANY_TEKSTS"
+export const UPDATE_COMPANY_OPENING_HOURS = "UPDATE_COMPANY_OPENING_HOURS"
+
+export const updateOpeningHoursCompany = (openingHours, daysOff) => {
+  return {
+    type: UPDATE_COMPANY_OPENING_HOURS,
+    openingHours: openingHours,
+    daysOff: daysOff,
+  }
+}
 
 export const updateComanyTeksts = texts => {
   return {
@@ -1309,23 +1318,23 @@ export const fetchAllCompanys = (page = 1) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
+    }else{
+      dispatch(changeAlertExtra("Ładowanie firm", true))
     }
-    dispatch(changeAlertExtra("Ładowanie firm", true))
     return axios
       .post(`${Site.serverUrl}/all-companys`, {
         page: page,
       })
       .then(response => {
-        dispatch(changeAlertExtra(null, false))
         if (page === 1) {
           dispatch(updatePlacesData(response.data.companysDoc))
           dispatch(changeLoadingPlaces(false))
         }else if (page > 1 && response.data.companysDoc.length > 0) {
           dispatch(updateNewPlacesData(response.data.companysDoc))
+          dispatch(changeAlertExtra(null, false))
         }
       })
       .catch(error => {
-      dispatch(changeAlertExtra(null, false))
        if (error.response) {
          if (error.response.status === 403) {
            dispatch(
@@ -1338,6 +1347,8 @@ export const fetchAllCompanys = (page = 1) => {
        if (page === 1) {
          dispatch(changeLoadingPlaces(false))
          dispatch(resetPlaces())
+       }else{
+        dispatch(changeAlertExtra(null, false))
        }
       })
   }
@@ -1347,24 +1358,24 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
+    }else{
+      dispatch(changeAlertExtra("Ładowanie firm", true))
     }
-    dispatch(changeAlertExtra("Ładowanie firm", true))
     return axios
       .post(`${Site.serverUrl}/all-companys-type`, {
         page: page,
         type: type,
       })
       .then(response => {
-        dispatch(changeAlertExtra(null, false))
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
           dispatch(updatePlacesData(response.data.companysDoc))
         } else if (page > 1 && response.data.companysDoc.length > 0) {
           dispatch(updateNewPlacesData(response.data.companysDoc))
+          dispatch(changeAlertExtra(null, false))
         }
       })
       .catch(error => {
-        dispatch(changeAlertExtra(null, false))
         if(error.response){
           if (error.response.status === 403) {
             dispatch(addAlertItem("Brak więcej firm w danej kategorii.", "blue")) 
@@ -1376,6 +1387,8 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
           dispatch(resetPlaces())
+        }else{
+          dispatch(changeAlertExtra(null, false))
         }
       })
   }
@@ -2202,3 +2215,43 @@ export const fetchSaveTextsCompany = (token, companyId, textAboutUs = null, text
   }
 }
 
+export const fetchSaveOpeningHoursCompany = (
+  token,
+  companyId,
+  openingHours = null,
+  daysOff = null
+) => {
+  return dispatch => {
+    const openingHoursCompany = {
+      openingHours: openingHours,
+      daysOff: daysOff,
+    }
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-opening-hours-update`,
+        {
+          companyId: companyId,
+          openingHoursCompany: openingHoursCompany,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(updateOpeningHoursCompany(openingHours, daysOff))
+        dispatch(
+          addAlertItem("Zaktualizowano godziny otwarcia.", "green")
+        )
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Błąd podczas aktualizacji godzin otwarcia.", "red")
+        )
+      })
+  }
+}

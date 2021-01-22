@@ -55,7 +55,7 @@ const MarginTopReserwation = styled.div`
 
    return (
      <MarginTopReserwation>
-       <RightColumnItem {...companyEditProfilProps} siteProps={siteProps}>
+       <RightColumnItem isCompanyEditProfil={editLinks} siteProps={siteProps}>
          <OurLinksContent
            TitleRightColumn={TitleRightColumn}
            companyEditProfilProps={companyEditProfilProps}
@@ -68,6 +68,7 @@ const MarginTopReserwation = styled.div`
            linkiWebsite={!!company.linkiWebsite ? company.linkiWebsite : ""}
            linkInstagram={!!company.linkInstagram ? company.linkInstagram : ""}
            company={company}
+           editLinks={editLinks}
          />
        </RightColumnItem>
        {isCompanyEditProfil && (

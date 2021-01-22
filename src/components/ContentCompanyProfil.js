@@ -55,7 +55,6 @@ const ContentDiv = styled.div`
 
 const LeftColumn = styled.div`
   width: 100%;
-  /* min-width: 668px; */
   padding: 10px;
   padding-top: 20px;
   @media all and (min-width: 991px) {

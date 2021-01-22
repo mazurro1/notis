@@ -178,11 +178,8 @@ const OurLinksContent = ({
   }
 
   return (
-    <HeightComponentLinks
-      isCompanyEditProfil={isCompanyEditProfil}
-      editable={editable}
-    >
-      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
+    <HeightComponentLinks isCompanyEditProfil={editable} editable={editable}>
+      <TitleRightColumn isCompanyEditProfil={editable} siteProps={siteProps}>
         LINKI
       </TitleRightColumn>
       <PositionLinksSites>

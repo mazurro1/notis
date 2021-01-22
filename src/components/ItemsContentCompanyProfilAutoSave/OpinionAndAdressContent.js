@@ -165,6 +165,7 @@ const IsCompanyPaused = styled.div`
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: ${props => props.color};
+  user-select: none;
 `
 
 const ReserwationItem = styled.div`

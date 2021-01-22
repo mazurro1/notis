@@ -280,7 +280,7 @@ const Reserwation = ({
         setSelectedWorkerUserId(null)
         setSelectedWorkerId(null)
         setIsDataActive(null)
-        setIsOtherActive(null)
+        setIsOtherActive(true)
         setSelectedDate(null)
         dispatch(avaibleDateToReserwation([]))
       }, 400)

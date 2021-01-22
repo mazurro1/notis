@@ -6,6 +6,8 @@ import { MdEdit } from "react-icons/md"
 import OpeningHoursItem from "./OpeningHoursItem"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { Colors } from "../../common/Colors"
+import {fetchSaveOpeningHoursCompany} from '../../state/actions'
+import { useDispatch } from "react-redux"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -18,16 +20,34 @@ const OpeningHoursContent = ({
   companyEditProfilProps,
   company,
   setChangesTimeOpen,
-  setOpeningHoursToSent,
   editMode,
   siteProps,
+  user
 }) => {
   const [openingHoursComponent, setOpeningHoursComponent] = useState(false)
   const [changesComponent, setChangesComponent] = useState(false)
   const [editable, setEditable] = useState(false)
+  const [arrayHoursData, setArrayHoursData] = useState([])
+
+  const dispatch = useDispatch()
+
   useEffect(() => {
+    const transformedHoursData = []
+    for (const key in hoursDate) {
+      transformedHoursData.push({
+        dayMonth: key,
+        dayValue: hoursDate[key].dayValue,
+        dayName: hoursDate[key].dayName,
+        start: hoursDate[key].start,
+        end: hoursDate[key].end,
+        disabled: hoursDate[key].disabled,
+      })
+    }
+    setArrayHoursData(transformedHoursData)
     setEditable(false)
-  }, [editMode])
+    setChangesComponent(false)
+  }, [editMode, company])
+
 
   const hoursDate = {
     mon: {
@@ -144,23 +164,6 @@ const OpeningHoursContent = ({
     },
   }
 
-  const [arrayHoursData, setArrayHoursData] = useState([])
-
-  useEffect(() => {
-    const transformedHoursData = []
-    for (const key in hoursDate) {
-      transformedHoursData.push({
-        dayMonth: key,
-        dayValue: hoursDate[key].dayValue,
-        dayName: hoursDate[key].dayName,
-        start: hoursDate[key].start,
-        end: hoursDate[key].end,
-        disabled: hoursDate[key].disabled,
-      })
-    }
-    setArrayHoursData(transformedHoursData)
-  }, [])
-
   const handleClickEdit = () => {
     setEditable(prevState => !prevState)
   }
@@ -235,9 +238,15 @@ const OpeningHoursContent = ({
   }
 
   const handleSaveAllComponent = () => {
-    handleClickEdit()
-    setOpeningHoursToSent(openingHoursComponent)
+    console.log(openingHoursComponent)
     setChangesTimeOpen(changesComponent)
+    dispatch(
+      fetchSaveOpeningHoursCompany(
+        user.token,
+        user.company._id,
+        openingHoursComponent
+      )
+    )
   }
 
   const date = new Date()
@@ -263,7 +272,7 @@ const OpeningHoursContent = ({
   return (
     <>
       <>
-        <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
+        <TitleRightColumn isCompanyEditProfil={editable} siteProps={siteProps}>
           GODZINY OTWARCIA
         </TitleRightColumn>
         {arrayHoursData.length > 0 && mapDayHours}
@@ -300,7 +309,7 @@ const OpeningHoursContent = ({
           ) : (
             <ButtonEditPosition>
               <ButtonIcon
-                title="Edytuj"
+                title="Edytuj godziny otwarcia"
                 uppercase
                 fontIconSize="25"
                 fontSize="14"

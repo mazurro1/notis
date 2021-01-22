@@ -47,6 +47,10 @@ const TextH1 = styled.div`
     props.isCompanyEditProfil
       ? Colors(props.siteProps).secondColor
       : Colors(props.siteProps).primaryColor};
+
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const ContentDiv = styled.div`
@@ -342,7 +346,6 @@ const ContentCompanyProfil = ({
                 ButtonTextPosition={ButtonTextPosition}
               />
             )}
-            {/*
             {userHasPermisionToOther && (
               <RightColumnItem
                 {...companyEditProfilProps}
@@ -355,9 +358,9 @@ const ContentCompanyProfil = ({
                   companyEditProfilProps={companyEditProfilProps}
                   company={company}
                   setChangesTimeOpen={setChangesTimeOpen}
-                  // setOpeningHoursToSent={setOpeningHoursToSent}
                   editMode={editMode}
                   siteProps={siteProps}
+                  user={user}
                 />
               </RightColumnItem>
             )}
@@ -374,14 +377,12 @@ const ContentCompanyProfil = ({
                       TitleRightColumn={TitleRightColumn}
                       siteProps={siteProps}
                       ButtonEditPosition={ButtonEditPosition}
-                      // setDeletedDayOffToSave={setDeletedDayOffToSave}
                       companyDaysOff={company.daysOff}
-                      // setCreatedDayOffToSave={setCreatedDayOffToSave}
-                      // deletedDayOffToSave={deletedDayOffToSave}
-                      // createdDayOffToSave={createdDayOffToSave}
+                      user={user}
                     />
                   </RightColumnItem>
                 )}
+                {/*
                 {userHasPermToHappyHours && (
                   <>
                     <RightColumnItem
@@ -410,9 +411,9 @@ const ContentCompanyProfil = ({
                     </RightColumnItem>
                   </>
                 )}
+                */}
               </>
             )}
-                */}
             {userHasPermToWorkers && (
               <OurWorkersContent
                 TitleRightColumn={TitleRightColumn}
@@ -423,12 +424,7 @@ const ContentCompanyProfil = ({
                 owner={company.owner}
                 companyId={company._id}
                 ownerSpecialization={company.ownerData.specialization}
-                // handleAddEditWorker={handleAddEditWorker}
-                // handleSaveOwnerSpecialization={handleSaveOwnerSpecialization}
                 companyServices={company.services}
-                // editedWorkers={editedWorkers}
-                // ownerSerwiceCategory={company.ownerData.servicesCategory}
-                // newOwnerServicesCategory={newOwnerServicesCategory}
                 company={company}
                 editMode={editMode}
                 siteProps={siteProps}

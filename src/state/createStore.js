@@ -32,6 +32,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_OPENING_HOURS,
   UPDATE_COMPANY_TEKSTS,
   COMPANY_DELETE_WORKER_NO_CONST_HOURS,
   COMPANY_ADD_WORKER_NO_CONST_HOURS,
@@ -323,6 +324,47 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case UPDATE_COMPANY_OPENING_HOURS: {
+      const newWorkCompanyDataOpeningHours = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : {}
+        if(!!action.openingHours){
+          action.openingHours.forEach(item => {
+            newWorkCompanyDataOpeningHours.openingDays[item.dayMonth].disabled = item.disabled
+            newWorkCompanyDataOpeningHours.openingDays[item.dayMonth].start = item.start
+            newWorkCompanyDataOpeningHours.openingDays[item.dayMonth].end = item.end
+          })
+        }
+        if(!!action.daysOff){
+            if (!!action.daysOff.deletedDayOff) {
+              const filterDAysOff = newWorkCompanyDataOpeningHours.daysOff.filter(item => {
+                const isInDeleted = action.daysOff.deletedDayOff.some(
+                  itemDayOff => {
+                    return itemDayOff == item._id
+                  }
+                )
+                return !isInDeleted
+              })
+              newWorkCompanyDataOpeningHours.daysOff = filterDAysOff
+            }
+
+            if (!!action.daysOff.createdDayOff) {
+              action.daysOff.createdDayOff.forEach(itemCreated => {
+                const newDayOff = {
+                  day: itemCreated.day,
+                  month: itemCreated.month,
+                  year: itemCreated.year,
+                }
+                newWorkCompanyDataOpeningHours.daysOff.push(newDayOff)
+              })
+            }
+        }
+      return {
+        ...state,
+        workCompanyData: newWorkCompanyDataOpeningHours,
+      }
+    }
 
     case UPDATE_COMPANY_TEKSTS: {
       const newWorkCompanyData = !!state.workCompanyData ? { ...state.workCompanyData } : {}

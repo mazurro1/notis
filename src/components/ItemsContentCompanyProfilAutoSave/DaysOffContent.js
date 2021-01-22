@@ -8,7 +8,7 @@ import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import DaysOffContentAdd from "./DaysOffContentAdd"
 import { useDispatch } from "react-redux"
-import { addAlertItem } from "../../state/actions"
+import { addAlertItem, fetchSaveOpeningHoursCompany } from "../../state/actions"
 import { sortItemsInArrayNumber } from "../../common/Functions"
 
 const DayOffContent = styled.div`
@@ -61,11 +61,8 @@ const DaysOffContent = ({
   siteProps,
   TitleRightColumn,
   ButtonEditPosition,
-  setDeletedDayOffToSave,
   companyDaysOff = [],
-  setCreatedDayOffToSave,
-  deletedDayOffToSave,
-  createdDayOffToSave,
+  user,
 }) => {
   const [createDayOff, setCreateDayOff] = useState(false)
   const [takeDateActive, setTakeDateActive] = useState(false)
@@ -77,8 +74,6 @@ const DaysOffContent = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // deletedDayOffToSave,
-    // createdDayOffToSave,
     const filterArrayDayOff = companyDaysOff.filter(item => {
       const isInServerData = deletedDayOff.some(
         itemDeleted => itemDeleted._id === item._id
@@ -90,7 +85,10 @@ const DaysOffContent = ({
     const sortMonth = sortItemsInArrayNumber(sortYear, "month")
     const sortDay = sortItemsInArrayNumber(sortMonth, "day")
     setDayOffData(sortDay)
-  }, [])
+    setEditable(false)
+    setDeletedDayOff([])
+    setCreatedDayOff([])
+  }, [companyDaysOff])
 
   useEffect(() => {
     if (!!!isCompanyEditProfil) {
@@ -121,8 +119,6 @@ const DaysOffContent = ({
     setDayOffData(companyDaysOff)
     setEditable(false)
     setCreateDayOff(false)
-    setDeletedDayOffToSave([])
-    setCreatedDayOffToSave([])
   }
 
   const handleAddNewDayOff = newDayOff => {
@@ -167,11 +163,13 @@ const DaysOffContent = ({
   }
 
   const handleSaveDayOff = () => {
-    const allDeletedDayOff = [...deletedDayOffToSave, ...deletedDayOff]
-    const allCreatedDayOff = [...createdDayOffToSave, ...createdDayOff]
-    setDeletedDayOffToSave(allDeletedDayOff)
-    setCreatedDayOffToSave(allCreatedDayOff)
-    setEditable(false)
+    const daysOff = {
+      deletedDayOff: deletedDayOff,
+      createdDayOff: createdDayOff,
+    }
+    dispatch(
+      fetchSaveOpeningHoursCompany(user.token, user.company._id, null, daysOff)
+    )
   }
 
   const mapDayOff = dayOffData.map((item, index) => {
@@ -183,14 +181,14 @@ const DaysOffContent = ({
         key={index}
         handleDeleteDay={handleDeleteDay}
         siteProps={siteProps}
-        isCompanyEditProfil={isCompanyEditProfil}
+        isCompanyEditProfil={editable}
         editable={editable}
       />
     )
   })
   return (
     <PaddingBottomStyle takeDateActive={takeDateActive}>
-      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
+      <TitleRightColumn isCompanyEditProfil={editable} siteProps={siteProps}>
         Dni wolne od pracy
       </TitleRightColumn>
       <DayOffContent>
@@ -235,7 +233,7 @@ const DaysOffContent = ({
         ) : (
           <ButtonEditPosition>
             <ButtonIcon
-              title="Edytuj"
+              title="Edytuj dni wolne"
               uppercase
               fontIconSize="25"
               fontSize="14"

@@ -207,14 +207,14 @@ const OpeningHoursItem = ({
       <OpenDate>
         <DayMonth
           isActualDate={actualDay == item.dayValue}
-          {...companyEditProfilProps}
+          isCompanyEditProfil={editable}
           siteProps={siteProps}
         >
           {item.dayName}:
         </DayMonth>
         <DayDate
           isActualDate={actualDay == item.dayValue}
-          {...companyEditProfilProps}
+          isCompanyEditProfil={editable}
           siteProps={siteProps}
         >
           {editable ? (
