@@ -62,6 +62,7 @@ const MarginTopReserwation = styled.div`
          isCompanyEditProfil={isCompanyEditProfil}
          siteProps={siteProps}
          active={editLinks}
+         disabledEditButtons={disabledEditButtons}
        >
          <OurLinksContent
            TitleRightColumn={TitleRightColumn}

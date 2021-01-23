@@ -386,6 +386,7 @@ const OurWorkersContent = ({
       <RightColumnItem
         isCompanyEditProfil={editedWorkers}
         siteProps={siteProps}
+        disabledEditButtons={disabledEditButtons}
       >
         <TitleRightColumn
           isCompanyEditProfil={editedWorkers}

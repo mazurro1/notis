@@ -51,6 +51,7 @@ import { MdEdit } from "react-icons/md"
          {...companyEditProfilProps}
          siteProps={siteProps}
          active={editAboutUs}
+         disabledEditButtons={disabledEditButtons}
        >
          <ColumnItemTextarea
            titleColumnItem="O NAS"

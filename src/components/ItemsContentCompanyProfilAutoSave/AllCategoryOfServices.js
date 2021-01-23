@@ -108,8 +108,10 @@ const BackgroundEditedComponent = styled.div`
   border-style: solid;
   border-color: ${props =>
     props.active ? Colors(props.siteProps).secondColor : "transparent"};
+  opacity: ${props =>
+    !props.active && props.disabledEditButtons ? "0.5" : "1"};
 
-  transition-property: background-color, padding, margin-top, border-color;
+  transition-property: background-color, padding, margin-top, border-color, opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -456,7 +458,11 @@ const AllCategoryOfServices = ({
     editedCategoryItems.length > 0
 
   return (
-    <BackgroundEditedComponent active={allCategoryEdit} siteProps={siteProps}>
+    <BackgroundEditedComponent
+      active={allCategoryEdit}
+      siteProps={siteProps}
+      disabledEditButtons={disabledEditButtons}
+    >
       {!!userIsBlocked && (
         <BlockUserInfo>
           Twoje konto zostało zablokowane na tej stronie

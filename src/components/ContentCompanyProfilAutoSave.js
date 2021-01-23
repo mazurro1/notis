@@ -85,12 +85,11 @@ const RightColumnItem = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).secondColor
-      : "transparent"};
+    props.active ? Colors(props.siteProps).secondColor : "transparent"};
   overflow: hidden;
   height: auto;
-  transition-property: color, background-color, border-color;
+  opacity: ${props => !props.active && props.disabledEditButtons ? "0.5": "1"};
+  transition-property: color, background-color, border-color, opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -330,6 +329,7 @@ const ContentCompanyProfil = ({
                 {...companyEditProfilProps}
                 siteProps={siteProps}
                 active={editOpinionAndAdress}
+                disabledEditButtons={disabledEditButtons}
               >
                 <OpinionAndAdressContent
                   {...companyEditProfilProps}
@@ -383,6 +383,7 @@ const ContentCompanyProfil = ({
                 {...companyEditProfilProps}
                 siteProps={siteProps}
                 active={editableOpeningHours}
+                disabledEditButtons={disabledEditButtons}
               >
                 <OpeningHoursContent
                   TitleRightColumn={TitleRightColumn}
@@ -409,6 +410,7 @@ const ContentCompanyProfil = ({
                     {...companyEditProfilProps}
                     siteProps={siteProps}
                     active={editableDaysOff}
+                    disabledEditButtons={disabledEditButtons}
                   >
                     <DaysOffContent
                       {...companyEditProfilProps}
@@ -434,6 +436,7 @@ const ContentCompanyProfil = ({
                       {...companyEditProfilProps}
                       siteProps={siteProps}
                       active={editConstHappyHours}
+                      disabledEditButtons={disabledEditButtons}
                     >
                       <HappyHoursConstContent
                         {...companyEditProfilProps}
@@ -454,6 +457,7 @@ const ContentCompanyProfil = ({
                       {...companyEditProfilProps}
                       siteProps={siteProps}
                       active={editNoConstHappyHours}
+                      disabledEditButtons={disabledEditButtons}
                     >
                       <HappyHoursNoConstContent
                         {...companyEditProfilProps}
@@ -551,7 +555,9 @@ const ContentCompanyProfil = ({
           <ReactTooltip id="editMode" effect="float" multiline={true}>
             {editMode ? (
               disabledEditButtons ? (
-                <span>Aby włączyć podgląd zakończ edycję wszystkich elementów.</span>
+                <span>
+                  Aby włączyć podgląd zakończ edycję wszystkich elementów.
+                </span>
               ) : (
                 <span>Włącz podgląd.</span>
               )

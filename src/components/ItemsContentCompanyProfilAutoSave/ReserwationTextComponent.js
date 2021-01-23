@@ -56,6 +56,7 @@ const MarginTopReserwation = styled.div`
          {...companyEditProfilProps}
          siteProps={siteProps}
          active={editedReserwation}
+         disabledEditButtons={disabledEditButtons}
        >
          <ColumnItemTextarea
            titleColumnItem="ZASADY REZERWACJI"
