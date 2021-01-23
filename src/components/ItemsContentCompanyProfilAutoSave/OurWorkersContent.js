@@ -231,8 +231,9 @@ const PositionRelative = styled.div`
     props.active
       ? Colors(props.siteProps).secondColor
       : "transparent"};
+  opacity: ${props => !props.active && props.disabledEditButtons ? "0.5": "1"};
 
-  transition-property: color, background-color, border-color;
+  transition-property: color, background-color, border-color, opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -382,11 +383,14 @@ const OurWorkersContent = ({
   })
 
   return (
-    <PositionRelative siteProps={siteProps} active={editedWorkers}>
+    <PositionRelative
+      siteProps={siteProps}
+      active={editedWorkers}
+      disabledEditButtons={disabledEditButtons}
+    >
       <RightColumnItem
         isCompanyEditProfil={editedWorkers}
         siteProps={siteProps}
-        disabledEditButtons={disabledEditButtons}
       >
         <TitleRightColumn
           isCompanyEditProfil={editedWorkers}
