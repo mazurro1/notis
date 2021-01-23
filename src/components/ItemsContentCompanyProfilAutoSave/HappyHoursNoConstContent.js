@@ -6,10 +6,15 @@ const HappyHoursNoConstContent = ({
   siteProps,
   TitleRightColumn,
   happyHoursNoConst = [],
+  editNoConstHappyHours,
+  setEditNoConstHappyHours,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
+  editMode,
 }) => {
   return (
     <>
-      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
+      <TitleRightColumn isCompanyEditProfil={false} siteProps={siteProps}>
         Zmienne Happy Hours
       </TitleRightColumn>
     </>

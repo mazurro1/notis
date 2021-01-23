@@ -4,7 +4,6 @@ import ActiveCompany from "./ActiveCompany"
 import Popup from "./Popup"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCompanyData } from "../state/actions"
-import ContentCompanyProfil from "./ContentCompanyProfil"
 import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
 
 const CompanyEditProfil = () => {

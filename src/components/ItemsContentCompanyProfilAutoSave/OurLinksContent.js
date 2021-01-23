@@ -29,6 +29,7 @@ const ButtonSubmit = styled.button`
 
 const BackgroundEdit = styled.div`
   position: absolute;
+  z-index: 10;
   top: 0;
   bottom: 0;
   left: 0;
@@ -86,7 +87,6 @@ const IconLinkToSite = styled.button`
 
 const OurLinksContent = ({
   TitleRightColumn,
-  companyEditProfilProps = {},
   isCompanyEditProfil = false,
   editable = false,
   onClickEdit = () => {},
@@ -96,6 +96,8 @@ const OurLinksContent = ({
   handleSaveLinks,
   siteProps,
   company,
+  editLinks,
+  editMode,
 }) => {
   const [facebookInput, setFacebookInput] = useState(linkFacebook)
   const [instagramInput, setInstagramInput] = useState(linkInstagram)
@@ -106,6 +108,12 @@ const OurLinksContent = ({
     setInstagramInput(linkInstagram)
     setWebsiteInput(linkiWebsite)
   }, [company.linkFacebook, company.linkInstagram, company.linkiWebsite])
+
+  useEffect(() => {
+    setFacebookInput(linkFacebook)
+    setInstagramInput(linkInstagram)
+    setWebsiteInput(linkiWebsite)
+  }, [editLinks, editMode])
 
   const isUrlFacebook = validURL(facebookInput)
   const isUrlInstagram = validURL(instagramInput)
@@ -233,9 +241,7 @@ const OurLinksContent = ({
             classNames="popup"
             unmountOnExit
           >
-            <BackgroundEdit
-            // onClick={handleResetButton}
-            >
+            <BackgroundEdit>
               <BackgroundEditContent
                 onClick={handleClickContent}
                 siteProps={siteProps}

@@ -17,18 +17,22 @@ const MarginTopReserwation = styled.div`
    siteProps,
    TitleRightColumn,
    ParagraphRightColumn,
-   ButtonTextPosition,
    company,
    user,
    isCompanyEditProfil = false,
+   ButtonEditPosition,
+   editedReserwation,
+   setEditedReserwation,
+   handleResetAllEditedComponents,
+   disabledEditButtons,
+   editMode,
  }) => {
-   const [editedReserwation, setEditedReserwation] = useState(false)
    const [textReserwation, setTextReserwation] = useState("")
    const dispatch = useDispatch()
 
    useEffect(() => {
      setEditedReserwation(false)
-   }, [company.reserationText])
+   }, [company.reserationText, editMode])
 
    const handleEdit = setChange => {
      setChange(prevState => !prevState)
@@ -48,7 +52,11 @@ const MarginTopReserwation = styled.div`
 
    return (
      <MarginTopReserwation>
-       <RightColumnItem {...companyEditProfilProps} siteProps={siteProps}>
+       <RightColumnItem
+         {...companyEditProfilProps}
+         siteProps={siteProps}
+         active={editedReserwation}
+       >
          <ColumnItemTextarea
            titleColumnItem="ZASADY REZERWACJI"
            TitleRightColumn={TitleRightColumn}
@@ -61,21 +69,28 @@ const MarginTopReserwation = styled.div`
            isCompanyEditProfil={editedReserwation}
            editable={editedReserwation}
            handleSaveTextarea={handleSaveChangesAboutUs}
+           editMode={editMode}
          />
+         {isCompanyEditProfil && (
+           <ButtonEditPosition>
+             <div data-tip data-for="disabledButton">
+               <ButtonIcon
+                 title="Edytuj tekst"
+                 uppercase
+                 fontIconSize="25"
+                 fontSize="14"
+                 icon={<MdEdit />}
+                 secondColors
+                 onClick={() => {
+                   handleResetAllEditedComponents()
+                   handleEdit(setEditedReserwation)
+                 }}
+                 disabled={disabledEditButtons}
+               />
+             </div>
+           </ButtonEditPosition>
+         )}
        </RightColumnItem>
-       {isCompanyEditProfil && (
-         <ButtonTextPosition>
-           <ButtonIcon
-             title="Edytuj tekst"
-             uppercase
-             fontIconSize="25"
-             fontSize="14"
-             icon={<MdEdit />}
-             secondColors
-             onClick={() => handleEdit(setEditedReserwation)}
-           />
-         </ButtonTextPosition>
-       )}
      </MarginTopReserwation>
    )
  }

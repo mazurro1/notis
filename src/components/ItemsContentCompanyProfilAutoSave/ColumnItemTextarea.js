@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
 import TextareaCustom from "../TextareaCustom"
 import styled from "styled-components"
@@ -35,6 +35,7 @@ const ButtonSubmit = styled.button`
 
 const BackgroundEdit = styled.div`
   position: absolute;
+  z-index: 10;
   top: 0;
   bottom: 0;
   left: 0;
@@ -67,10 +68,17 @@ const ColumnItemTextarea = ({
   setTextEditedChange,
   textEdited,
   siteProps,
-  handleSaveTextarea
+  handleSaveTextarea,
+  editMode = false,
 }) => {
   const [textTitle, handleTextAbout] = useState(textEdited ? textEdited : title)
   const [isErrorText, setIsErrorText] = useState(false)
+
+  useEffect(() => {
+    setTextEditedChange(null)
+    handleTextAbout(title)
+    setIsErrorText(false)
+  }, [editable, editMode])
 
   const handleTextAboutOnChange = e => {
     handleTextAbout(e.target.value)
@@ -164,9 +172,7 @@ const ColumnItemTextarea = ({
                           fontIconSize="16"
                           fontSize="14"
                           icon={<FaSave />}
-                          customColorButton={
-                            Colors(siteProps).successColorDark
-                          }
+                          customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                           disabled={disabledSave}
                         />

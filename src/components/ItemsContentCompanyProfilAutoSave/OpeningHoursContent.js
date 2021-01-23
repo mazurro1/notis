@@ -19,14 +19,15 @@ const OpeningHoursContent = ({
   isCompanyEditProfil,
   companyEditProfilProps,
   company,
-  setChangesTimeOpen,
   editMode,
   siteProps,
-  user
+  user,
+  editableOpeningHours,
+  setEditableOpeningHours,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
 }) => {
   const [openingHoursComponent, setOpeningHoursComponent] = useState(false)
-  const [changesComponent, setChangesComponent] = useState(false)
-  const [editable, setEditable] = useState(false)
   const [arrayHoursData, setArrayHoursData] = useState([])
 
   const dispatch = useDispatch()
@@ -44,10 +45,23 @@ const OpeningHoursContent = ({
       })
     }
     setArrayHoursData(transformedHoursData)
-    setEditable(false)
-    setChangesComponent(false)
+    setEditableOpeningHours(false)
   }, [editMode, company])
 
+  useEffect(() => {
+    const transformedHoursData = []
+    for (const key in hoursDate) {
+      transformedHoursData.push({
+        dayMonth: key,
+        dayValue: hoursDate[key].dayValue,
+        dayName: hoursDate[key].dayName,
+        start: hoursDate[key].start,
+        end: hoursDate[key].end,
+        disabled: hoursDate[key].disabled,
+      })
+    }
+    setArrayHoursData(transformedHoursData)
+  }, [editableOpeningHours, editMode])
 
   const hoursDate = {
     mon: {
@@ -165,7 +179,8 @@ const OpeningHoursContent = ({
   }
 
   const handleClickEdit = () => {
-    setEditable(prevState => !prevState)
+    handleResetAllEditedComponents()
+    setEditableOpeningHours(prevState => !prevState)
   }
 
   const handleSaveTimeDay = (
@@ -198,10 +213,8 @@ const OpeningHoursContent = ({
       JSON.stringify(transformedHoursDataCheck) ==
       JSON.stringify(arrayHoursData)
     ) {
-      setChangesComponent(false)
       setOpeningHoursComponent(null)
     } else {
-      setChangesComponent(true)
       setOpeningHoursComponent(arrayHoursData)
     }
   }
@@ -219,8 +232,7 @@ const OpeningHoursContent = ({
       })
     }
     setArrayHoursData(transformedHoursData)
-    setEditable(false)
-    setChangesComponent(false)
+    setEditableOpeningHours(false)
   }
 
   const handleResetOneDay = (day, index) => {
@@ -238,8 +250,6 @@ const OpeningHoursContent = ({
   }
 
   const handleSaveAllComponent = () => {
-    console.log(openingHoursComponent)
-    setChangesTimeOpen(changesComponent)
     dispatch(
       fetchSaveOpeningHoursCompany(
         user.token,
@@ -259,7 +269,7 @@ const OpeningHoursContent = ({
         index={index}
         actualDay={actualDay}
         companyEditProfilProps={companyEditProfilProps}
-        editable={editable}
+        editable={editableOpeningHours}
         MarginButton={MarginButton}
         ButtonEditPosition={ButtonEditPosition}
         handleSaveTimeDay={handleSaveTimeDay}
@@ -272,12 +282,15 @@ const OpeningHoursContent = ({
   return (
     <>
       <>
-        <TitleRightColumn isCompanyEditProfil={editable} siteProps={siteProps}>
+        <TitleRightColumn
+          isCompanyEditProfil={editableOpeningHours}
+          siteProps={siteProps}
+        >
           GODZINY OTWARCIA
         </TitleRightColumn>
         {arrayHoursData.length > 0 && mapDayHours}
         {isCompanyEditProfil ? (
-          editable ? (
+          editableOpeningHours ? (
             <>
               <ButtonEditPosition>
                 <MarginButton>
@@ -308,15 +321,18 @@ const OpeningHoursContent = ({
             </>
           ) : (
             <ButtonEditPosition>
-              <ButtonIcon
-                title="Edytuj godziny otwarcia"
-                uppercase
-                fontIconSize="25"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                onClick={handleClickEdit}
-              />
+              <div data-tip data-for="disabledButton">
+                <ButtonIcon
+                  title="Edytuj godziny otwarcia"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="14"
+                  icon={<MdEdit />}
+                  secondColors
+                  onClick={handleClickEdit}
+                  disabled={disabledEditButtons}
+                />
+              </div>
             </ButtonEditPosition>
           )
         ) : null}

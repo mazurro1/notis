@@ -1,25 +1,15 @@
 /*eslint-disable eqeqeq*/
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
-import ButtonIcon from "./ButtonIcon"
-import { FaSave } from "react-icons/fa"
-import InputCustom from "./InputCustom"
 import OpinionAndAdressContent from "./ItemsContentCompanyProfilAutoSave/OpinionAndAdressContent"
 import OurWorkersContent from "./ItemsContentCompanyProfilAutoSave/OurWorkersContent"
-import OurLinksContent from "./ItemsContentCompanyProfilAutoSave/OurLinksContent"
-import ColumnItemTextarea from "./ItemsContentCompanyProfilAutoSave/ColumnItemTextarea"
-import { CSSTransition } from "react-transition-group"
 import OpeningHoursContent from "./ItemsContentCompanyProfilAutoSave/OpeningHoursContent"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  resetEditCompany,
   changeReserwationValue,
-  changeEditedWorkerHours,
-  fetchSaveTextsCompany,
 } from "../state/actions"
 import AllCategoryOfServices from "./ItemsContentCompanyProfilAutoSave/AllCategoryOfServices"
-import { compareEditedArrayToServerArrayAndReturnNotCompareItems } from "../common/Functions"
 import { MdEdit } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import DaysOffContent from "./ItemsContentCompanyProfilAutoSave/DaysOffContent"
@@ -62,7 +52,6 @@ const ContentDiv = styled.div`
 
 const LeftColumn = styled.div`
   width: 100%;
-  /* min-width: 668px; */
   padding: 10px;
   padding-top: 20px;
   @media all and (min-width: 991px) {
@@ -93,10 +82,15 @@ const RightColumnItem = styled.div`
   padding: ${props => (props.noBg ? "10px 0px" : "10px 15px")};
   margin-bottom: 20px;
   padding-bottom: ${props => (props.isCompanyEditProfil ? "50px" : "10px")};
-  /* min-height: ${props => (props.isCompanyEditProfil ? "240px" : "auto")}; */
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${props =>
+    props.active
+      ? Colors(props.siteProps).secondColor
+      : "transparent"};
   overflow: hidden;
   height: auto;
-  transition-property: color, background-color;
+  transition-property: color, background-color, border-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -149,19 +143,12 @@ const BackGroundImageCustomUrl = styled.div`
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
 `
 
-const SaveChangesPosition = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-`
-
 const EditModeToChange = styled.div`
   position: absolute;
   right: -50px;
   top: 5px;
-  background-color: ${props => Colors(props.siteProps).darkColor};
+  background-color: ${props =>
+    props.disabled ? "#e0e0e0" : Colors(props.siteProps).secondDarkColor};
   padding: 8px;
   padding-bottom: 0px;
   border-radius: 50%;
@@ -171,7 +158,8 @@ const EditModeToChange = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    background-color: ${props => Colors(props.siteProps).darkColorDark};
+    background-color: ${props =>
+      props.disabled ? "#e0e0e0" : Colors(props.siteProps).secondColor};
   }
 `
 
@@ -185,14 +173,43 @@ const ContentCompanyProfil = ({
   const [editMode, setEditMode] = useState(true)
   const [allCategoryEdit, setAllCategoryEdit] = useState(false)
   const [editOpinionAndAdress, setEditOpinionAndAdress] = useState(false)
-  const [changesTimeOpen, setChangesTimeOpen] = useState(false)
-
+  const [editAboutUs, setEditAboutUs] = useState(false)
+  const [editableOpeningHours, setEditableOpeningHours] = useState(false)
+  const [editableDaysOff, setEditableDaysOff] = useState(false)
+  const [editedWorkers, setEditedWorkers] = useState(false)
+  const [editedReserwation, setEditedReserwation] = useState(false)
+  const [editLinks, setEditLinks] = useState(false)
+  const [editConstHappyHours, setEditConstHappyHours] = useState(false)
+  const [editNoConstHappyHours, setEditNoConstHappyHours] = useState(false)
 
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
-  console.log(company)
   const dispatch = useDispatch()
 
+    const disabledEditButtons =
+      allCategoryEdit ||
+      editOpinionAndAdress ||
+      editAboutUs ||
+      editableOpeningHours ||
+      editableDaysOff ||
+      editedWorkers ||
+      editedReserwation ||
+      editLinks ||
+      editConstHappyHours ||
+      editNoConstHappyHours
+
+  const handleResetAllEditedComponents = () => {
+    setAllCategoryEdit(false)
+    setEditOpinionAndAdress(false)
+    setEditAboutUs(false)
+    setEditableOpeningHours(false)
+    setEditableDaysOff(false)
+    setEditedWorkers(false)
+    setEditedReserwation(false)
+    setEditLinks(false)
+    setEditConstHappyHours(false)
+    setEditNoConstHappyHours(false)
+  }
 
   const handleEdit = setChange => {
     setChange(prevState => !prevState)
@@ -204,9 +221,10 @@ const ContentCompanyProfil = ({
   }
 
   const handleClickEditMode = () => {
-    setEditMode(prevState => !prevState)
-    setEditOpinionAndAdress(false)
-    setChangesTimeOpen(false)
+    if (!disabledEditButtons) {
+      setEditMode(prevState => !prevState)
+      setEditOpinionAndAdress(false)
+    }
   }
 
     const handleClickReserwation = (itemServices, companyId) => {
@@ -238,8 +256,6 @@ const ContentCompanyProfil = ({
       }
       dispatch(changeReserwationValue(valueWithCompanyId))
     }
-
-    
   
   let userHasPermToServices = !isCompanyEditProfil || isAdmin;
   if (!userHasPermToServices && selectedWorker) {
@@ -268,6 +284,7 @@ const ContentCompanyProfil = ({
       }
     }
   }
+
   
     return (
       <div>
@@ -280,6 +297,7 @@ const ContentCompanyProfil = ({
               data-place="bottom"
               onClick={handleClickEditMode}
               siteProps={siteProps}
+              disabled={disabledEditButtons}
             >
               <MdEdit />
             </EditModeToChange>
@@ -298,6 +316,9 @@ const ContentCompanyProfil = ({
                 user={user}
                 allCategoryEdit={allCategoryEdit}
                 setAllCategoryEdit={setAllCategoryEdit}
+                handleResetAllEditedComponents={handleResetAllEditedComponents}
+                disabledEditButtons={disabledEditButtons}
+                editMode={editMode}
               />
             )}
           </LeftColumn>
@@ -308,6 +329,7 @@ const ContentCompanyProfil = ({
                 noBg
                 {...companyEditProfilProps}
                 siteProps={siteProps}
+                active={editOpinionAndAdress}
               >
                 <OpinionAndAdressContent
                   {...companyEditProfilProps}
@@ -330,6 +352,11 @@ const ContentCompanyProfil = ({
                   companyIndustries={company.companyType}
                   user={user}
                   company={company}
+                  handleResetAllEditedComponents={
+                    handleResetAllEditedComponents
+                  }
+                  disabledEditButtons={disabledEditButtons}
+                  editMode={editMode}
                 />
               </RightColumnItem>
             )}
@@ -343,13 +370,19 @@ const ContentCompanyProfil = ({
                 ParagraphRightColumn={ParagraphRightColumn}
                 company={company}
                 user={user}
-                ButtonTextPosition={ButtonTextPosition}
+                ButtonEditPosition={ButtonEditPosition}
+                editAboutUs={editAboutUs}
+                setEditAboutUs={setEditAboutUs}
+                handleResetAllEditedComponents={handleResetAllEditedComponents}
+                disabledEditButtons={disabledEditButtons}
+                editMode={editMode}
               />
             )}
             {userHasPermisionToOther && (
               <RightColumnItem
                 {...companyEditProfilProps}
                 siteProps={siteProps}
+                active={editableOpeningHours}
               >
                 <OpeningHoursContent
                   TitleRightColumn={TitleRightColumn}
@@ -357,10 +390,15 @@ const ContentCompanyProfil = ({
                   {...companyEditProfilProps}
                   companyEditProfilProps={companyEditProfilProps}
                   company={company}
-                  setChangesTimeOpen={setChangesTimeOpen}
                   editMode={editMode}
                   siteProps={siteProps}
                   user={user}
+                  editableOpeningHours={editableOpeningHours}
+                  setEditableOpeningHours={setEditableOpeningHours}
+                  handleResetAllEditedComponents={
+                    handleResetAllEditedComponents
+                  }
+                  disabledEditButtons={disabledEditButtons}
                 />
               </RightColumnItem>
             )}
@@ -370,6 +408,7 @@ const ContentCompanyProfil = ({
                   <RightColumnItem
                     {...companyEditProfilProps}
                     siteProps={siteProps}
+                    active={editableDaysOff}
                   >
                     <DaysOffContent
                       {...companyEditProfilProps}
@@ -379,15 +418,22 @@ const ContentCompanyProfil = ({
                       ButtonEditPosition={ButtonEditPosition}
                       companyDaysOff={company.daysOff}
                       user={user}
+                      editableDaysOff={editableDaysOff}
+                      setEditableDaysOff={setEditableDaysOff}
+                      handleResetAllEditedComponents={
+                        handleResetAllEditedComponents
+                      }
+                      disabledEditButtons={disabledEditButtons}
+                      editMode={editMode}
                     />
                   </RightColumnItem>
                 )}
-                {/*
                 {userHasPermToHappyHours && (
                   <>
                     <RightColumnItem
                       {...companyEditProfilProps}
                       siteProps={siteProps}
+                      active={editConstHappyHours}
                     >
                       <HappyHoursConstContent
                         {...companyEditProfilProps}
@@ -395,11 +441,19 @@ const ContentCompanyProfil = ({
                         TitleRightColumn={TitleRightColumn}
                         siteProps={siteProps}
                         happyHoursConst={company.happyHoursConst}
+                        editConstHappyHours={editConstHappyHours}
+                        setEditConstHappyHours={setEditConstHappyHours}
+                        handleResetAllEditedComponents={
+                          handleResetAllEditedComponents
+                        }
+                        disabledEditButtons={disabledEditButtons}
+                        editMode={editMode}
                       />
                     </RightColumnItem>
                     <RightColumnItem
                       {...companyEditProfilProps}
                       siteProps={siteProps}
+                      active={editNoConstHappyHours}
                     >
                       <HappyHoursNoConstContent
                         {...companyEditProfilProps}
@@ -407,11 +461,17 @@ const ContentCompanyProfil = ({
                         TitleRightColumn={TitleRightColumn}
                         siteProps={siteProps}
                         happyHoursNoConst={company.happyHoursNoConst}
+                        editNoConstHappyHours={editNoConstHappyHours}
+                        setEditNoConstHappyHours={setEditNoConstHappyHours}
+                        handleResetAllEditedComponents={
+                          handleResetAllEditedComponents
+                        }
+                        disabledEditButtons={disabledEditButtons}
+                        editMode={editMode}
                       />
                     </RightColumnItem>
                   </>
                 )}
-                */}
               </>
             )}
             {userHasPermToWorkers && (
@@ -432,6 +492,11 @@ const ContentCompanyProfil = ({
                 ownerData={company.ownerData}
                 company={company}
                 RightColumnItem={RightColumnItem}
+                ButtonTextPosition={ButtonTextPosition}
+                editedWorkers={editedWorkers}
+                setEditedWorkers={setEditedWorkers}
+                handleResetAllEditedComponents={handleResetAllEditedComponents}
+                disabledEditButtons={disabledEditButtons}
               />
             )}
 
@@ -446,7 +511,14 @@ const ContentCompanyProfil = ({
                   ParagraphRightColumn={ParagraphRightColumn}
                   company={company}
                   user={user}
-                  ButtonTextPosition={ButtonTextPosition}
+                  ButtonEditPosition={ButtonEditPosition}
+                  editedReserwation={editedReserwation}
+                  setEditedReserwation={setEditedReserwation}
+                  handleResetAllEditedComponents={
+                    handleResetAllEditedComponents
+                  }
+                  disabledEditButtons={disabledEditButtons}
+                  editMode={editMode}
                 />
               )}
             {(!!company.linkFacebook ||
@@ -463,14 +535,37 @@ const ContentCompanyProfil = ({
                   ParagraphRightColumn={ParagraphRightColumn}
                   company={company}
                   user={user}
-                  ButtonTextPosition={ButtonTextPosition}
+                  ButtonEditPosition={ButtonEditPosition}
+                  editLinks={editLinks}
+                  setEditLinks={setEditLinks}
+                  handleResetAllEditedComponents={
+                    handleResetAllEditedComponents
+                  }
+                  disabledEditButtons={disabledEditButtons}
+                  editMode={editMode}
                 />
               )}
           </RightColumn>
         </ContentDiv>
         {isCompanyEditProfil && (
           <ReactTooltip id="editMode" effect="float" multiline={true}>
-            <span>Tryb edycji.</span>
+            {editMode ? (
+              disabledEditButtons ? (
+                <span>Aby włączyć podgląd zakończ edycję wszystkich elementów.</span>
+              ) : (
+                <span>Włącz podgląd.</span>
+              )
+            ) : (
+              <span>Włącz tryb edycji.</span>
+            )}
+          </ReactTooltip>
+        )}
+        {disabledEditButtons && (
+          <ReactTooltip id="disabledButton" effect="float" multiline={true}>
+            <span>
+              Aby móc edytować ten element zakończ edytowanie poprzedniego
+              elementu.
+            </span>
           </ReactTooltip>
         )}
       </div>

@@ -121,6 +121,7 @@ const OwnerWorker = ({
   ownerSpecialization,
   companyId,
   user,
+  editMode,
 }) => {
   const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
@@ -161,6 +162,33 @@ const OwnerWorker = ({
     setEditConstTimeWorker(false)
   }, [item, resetWorkerProps])
 
+  useEffect(() => {
+    const servicesWorker = ownerData.servicesCategory.map(serv => {
+      const findService = company.services.find(
+        companyServ => companyServ._id === serv
+      )
+      if (!!findService) {
+        return {
+          value: findService._id,
+          label: findService.serviceName,
+        }
+      } else {
+        return {
+          value: serv,
+          label: serv,
+        }
+      }
+    })
+    setOwnerServicesCategory(servicesWorker)
+    setToSaveWorkerHours([])
+    setInputSpecializationOwner(ownerData.specialization)
+    setOwnerEdit(false)
+    dispatch(resetWorkersPropsVisible())
+    setConstTimeOwner(false)
+    setEditConstTimeWorker(false)
+    setChooseTimeOwner(false)
+  }, [editedWorkers, editMode])
+
   const handleChooseTimeOwner = () => {
     setChooseTimeOwner(prevState => !prevState)
   }
@@ -178,11 +206,10 @@ const OwnerWorker = ({
     setOwnerEdit(prevState => !prevState)
   }
 
-  const handleResetDay = (itemWorkerId, dayOfTheWeek) => {
-  }
+  const handleResetDay = (itemWorkerId, dayOfTheWeek) => {}
 
   const handleSaveConstTimeWork = itemWorkerId => {
-     const selectWorker = toSaveWorkerHours.find(
+    const selectWorker = toSaveWorkerHours.find(
       hour => hour.indexWorker === itemWorkerId
     )
     dispatch(fetchSaveWorkerProps(user.token, companyId, null, selectWorker))

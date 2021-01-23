@@ -56,19 +56,22 @@ const PaddingBottomStyle = styled.div`
 `
 
 const DaysOffContent = ({
-  companyEditProfilProps = {},
   isCompanyEditProfil = false,
   siteProps,
   TitleRightColumn,
   ButtonEditPosition,
   companyDaysOff = [],
   user,
+  editableDaysOff,
+  setEditableDaysOff,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
+  editMode,
 }) => {
   const [createDayOff, setCreateDayOff] = useState(false)
   const [takeDateActive, setTakeDateActive] = useState(false)
   const [deletedDayOff, setDeletedDayOff] = useState([])
   const [createdDayOff, setCreatedDayOff] = useState([])
-  const [editable, setEditable] = useState(false)
   const [dayOffData, setDayOffData] = useState([])
 
   const dispatch = useDispatch()
@@ -85,17 +88,35 @@ const DaysOffContent = ({
     const sortMonth = sortItemsInArrayNumber(sortYear, "month")
     const sortDay = sortItemsInArrayNumber(sortMonth, "day")
     setDayOffData(sortDay)
-    setEditable(false)
+    setEditableDaysOff(false)
     setDeletedDayOff([])
     setCreatedDayOff([])
   }, [companyDaysOff])
 
   useEffect(() => {
+    const filterArrayDayOff = companyDaysOff.filter(item => {
+      const isInServerData = deletedDayOff.some(
+        itemDeleted => itemDeleted._id === item._id
+      )
+      return !isInServerData
+    })
+    const allDaysOff = [...filterArrayDayOff]
+    const sortYear = sortItemsInArrayNumber(allDaysOff, "year")
+    const sortMonth = sortItemsInArrayNumber(sortYear, "month")
+    const sortDay = sortItemsInArrayNumber(sortMonth, "day")
+    setDayOffData(sortDay)
+    setDeletedDayOff([])
+    setCreatedDayOff([])
+    setTakeDateActive(false)
+    setCreateDayOff(false)
+  }, [editableDaysOff, editMode])
+
+  useEffect(() => {
     if (!!!isCompanyEditProfil) {
       setCreateDayOff(false)
-      setEditable(false)
+      setEditableDaysOff(false)
     }
-  }, [isCompanyEditProfil])
+  }, [isCompanyEditProfil, editableDaysOff, editMode])
 
   const handleAddClose = () => {
     setCreateDayOff(false)
@@ -110,14 +131,15 @@ const DaysOffContent = ({
   }
 
   const handleClickEdit = () => {
-    setEditable(prevState => !prevState)
+    handleResetAllEditedComponents()
+    setEditableDaysOff(prevState => !prevState)
   }
 
   const handleResetEdit = () => {
     setDeletedDayOff([])
     setCreatedDayOff([])
     setDayOffData(companyDaysOff)
-    setEditable(false)
+    setEditableDaysOff(false)
     setCreateDayOff(false)
   }
 
@@ -181,19 +203,22 @@ const DaysOffContent = ({
         key={index}
         handleDeleteDay={handleDeleteDay}
         siteProps={siteProps}
-        isCompanyEditProfil={editable}
-        editable={editable}
+        isCompanyEditProfil={editableDaysOff}
+        editable={editableDaysOff}
       />
     )
   })
   return (
     <PaddingBottomStyle takeDateActive={takeDateActive}>
-      <TitleRightColumn isCompanyEditProfil={editable} siteProps={siteProps}>
+      <TitleRightColumn
+        isCompanyEditProfil={editableDaysOff}
+        siteProps={siteProps}
+      >
         Dni wolne od pracy
       </TitleRightColumn>
       <DayOffContent>
         {mapDayOff}
-        {!!isCompanyEditProfil && editable && (
+        {!!isCompanyEditProfil && editableDaysOff && (
           <CreateDayOff siteProps={siteProps} onClick={handleClickCreate}>
             <MdAddBox />
           </CreateDayOff>
@@ -201,7 +226,7 @@ const DaysOffContent = ({
       </DayOffContent>
 
       {isCompanyEditProfil ? (
-        editable ? (
+        editableDaysOff ? (
           <>
             <ButtonEditPosition>
               <MarginButton>
@@ -232,15 +257,18 @@ const DaysOffContent = ({
           </>
         ) : (
           <ButtonEditPosition>
-            <ButtonIcon
-              title="Edytuj dni wolne"
-              uppercase
-              fontIconSize="25"
-              fontSize="14"
-              icon={<MdEdit />}
-              secondColors
-              onClick={handleClickEdit}
-            />
+            <div data-tip data-for="disabledButton">
+              <ButtonIcon
+                title="Edytuj dni wolne"
+                uppercase
+                fontIconSize="25"
+                fontSize="14"
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
+              />
+            </div>
           </ButtonEditPosition>
         )
       ) : null}

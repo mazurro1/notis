@@ -168,8 +168,45 @@ const WorkerItem = ({
     setUserEditItem(false)
   }, [item])
 
-  useEffect(() => {
-    if (!!resetWorkerProps) {
+
+    useEffect(() => {
+      if (!!resetWorkerProps) {
+        const servicesWorker = item.servicesCategory.map(serv => {
+          const findService = company.services.find(
+            companyServ => companyServ._id === serv
+          )
+          if (!!findService) {
+            return {
+              value: findService._id,
+              label: findService.serviceName,
+            }
+          } else {
+            return {
+              value: serv,
+              label: serv,
+            }
+          }
+        })
+        if (!!item.permissions) {
+          const mapWorkerPermissions = item.permissions.map(itemPerm => {
+            const findPermission = Permissions.find(
+              itemVal => itemVal.value === itemPerm
+            )
+            return findPermission
+          })
+          setWorkerPermissionsCategory(mapWorkerPermissions)
+        }
+        setWorkerServicesCategory(servicesWorker)
+        setToSaveWorkerHours([])
+        setInputSpeciailization(item.specialization)
+        setUserEditItem(false)
+        setConstTimeWorker(false)
+        setEditConstTimeWorker(false)
+        dispatch(resetWorkersPropsVisible())
+      }
+    }, [resetWorkerProps])
+
+    useEffect(() => {
       const servicesWorker = item.servicesCategory.map(serv => {
         const findService = company.services.find(
           companyServ => companyServ._id === serv
@@ -199,11 +236,12 @@ const WorkerItem = ({
       setToSaveWorkerHours([])
       setInputSpeciailization(item.specialization)
       setUserEditItem(false)
+      setResetConstDays(true)
       setConstTimeWorker(false)
       setEditConstTimeWorker(false)
-      dispatch(resetWorkersPropsVisible())
-    }
-  }, [resetWorkerProps])
+      setChooseTimeWorker(true)
+      setToSaveWorkerHours([])
+    }, [editedWorkers, editMode])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -213,7 +251,7 @@ const WorkerItem = ({
     setUserEditItem(false)
     setUserConfirmDelete(false)
     setChooseTimeWorker(false)
-  }, [editMode])
+  }, [editMode, editedWorkers])
 
   useEffect(() => {
     if (!!item.servicesCategory) {
@@ -711,6 +749,7 @@ const WorkerItem = ({
             handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
             handleSaveConstTimeWork={handleSaveConstTimeWork}
             resetConstDays={resetConstDays}
+            editedWorkers={editedWorkers}
           />
         </>
       )}

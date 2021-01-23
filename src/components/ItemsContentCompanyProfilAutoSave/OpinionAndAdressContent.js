@@ -249,6 +249,9 @@ const OpinionAndAdressContent = ({
   user,
   company,
   setEditOpinionAndAdress,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
+  editMode,
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
   const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
@@ -294,6 +297,29 @@ const OpinionAndAdressContent = ({
       setIndustriesComponent(convertedCompanyIndustriesFromId)
     }
   }, [company])
+
+  useEffect(() => {
+    setNewIndustriesComponent([])
+    setDeletedIndustriesComponent([])
+    setCompanyNameInput(companyName)
+    setCityInput(city)
+    setDiscrictInput(district)
+    setAdressInput(adress)
+    setPhoneInput(phone)
+    setCompanyPausedItem(pauseCompany)
+    setReserwationEver(reservationEveryTimeServer)
+    setReserwationMonth(reservationMonthServer)
+
+    if (!!companyIndustries) {
+      const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
+        const selectedIndustriesComponent = AllIndustries[
+          siteProps.language
+        ].find(itemIndustries => itemIndustries.value === itemId)
+        return selectedIndustriesComponent
+      })
+      setIndustriesComponent(convertedCompanyIndustriesFromId)
+    }
+  }, [editable, editMode])
 
   const disabledButtonSubmit =
     deletedIndustriesComponent.length > 0 ||
@@ -393,6 +419,7 @@ const OpinionAndAdressContent = ({
   }
 
   const handleEdit = () => {
+    handleResetAllEditedComponents()
     onClickEdit()
   }
 
@@ -551,15 +578,18 @@ const OpinionAndAdressContent = ({
       {isCompanyEditProfil && (
         <>
           <ButtonEditPosition>
-            <ButtonIcon
-              title="Edytuj ustawienia"
-              uppercase
-              fontIconSize="25"
-              fontSize="14"
-              icon={<MdEdit />}
-              secondColors
-              onClick={handleEdit}
-            />
+            <div data-tip data-for="disabledButton">
+              <ButtonIcon
+                title="Edytuj ustawienia"
+                uppercase
+                fontIconSize="25"
+                fontSize="14"
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleEdit}
+                disabled={disabledEditButtons}
+              />
+            </div>
           </ButtonEditPosition>
 
           <CSSTransition

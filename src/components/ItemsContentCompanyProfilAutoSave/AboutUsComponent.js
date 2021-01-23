@@ -12,18 +12,22 @@ import { MdEdit } from "react-icons/md"
    siteProps,
    TitleRightColumn,
    ParagraphRightColumn,
-   ButtonTextPosition,
    company,
    user,
-   isCompanyEditProfil = false
+   isCompanyEditProfil = false,
+   ButtonEditPosition,
+   editAboutUs,
+   setEditAboutUs,
+   handleResetAllEditedComponents,
+   disabledEditButtons,
+   editMode,
  }) => {
-   const [editAboutUs, setEditAboutUs] = useState(false)
    const [textAboutUs, setTextAboutUs] = useState("")
    const dispatch = useDispatch()
 
    useEffect(() => {
      setEditAboutUs(false)
-   }, [company.title])
+   }, [company.title, editMode])
 
    const handleEdit = setChange => {
      setChange(prevState => !prevState)
@@ -43,7 +47,11 @@ import { MdEdit } from "react-icons/md"
 
    return (
      <>
-       <RightColumnItem {...companyEditProfilProps} siteProps={siteProps}>
+       <RightColumnItem
+         {...companyEditProfilProps}
+         siteProps={siteProps}
+         active={editAboutUs}
+       >
          <ColumnItemTextarea
            titleColumnItem="O NAS"
            TitleRightColumn={TitleRightColumn}
@@ -56,21 +64,28 @@ import { MdEdit } from "react-icons/md"
            siteProps={siteProps}
            handleSaveTextarea={handleSaveChangesAboutUs}
            isCompanyEditProfil={editAboutUs}
+           editMode={editMode}
          />
+         {isCompanyEditProfil && (
+           <ButtonEditPosition>
+             <div data-tip data-for="disabledButton">
+               <ButtonIcon
+                 title="Edytuj tekst"
+                 uppercase
+                 fontIconSize="25"
+                 fontSize="14"
+                 icon={<MdEdit />}
+                 secondColors
+                 onClick={() => {
+                   handleResetAllEditedComponents()
+                   handleEdit(setEditAboutUs)
+                 }}
+                 disabled={disabledEditButtons}
+               />
+             </div>
+           </ButtonEditPosition>
+         )}
        </RightColumnItem>
-       {isCompanyEditProfil && (
-         <ButtonTextPosition>
-           <ButtonIcon
-             title="Edytuj tekst"
-             uppercase
-             fontIconSize="25"
-             fontSize="14"
-             icon={<MdEdit />}
-             secondColors
-             onClick={() => handleEdit(setEditAboutUs)}
-           />
-         </ButtonTextPosition>
-       )}
      </>
    )
  }

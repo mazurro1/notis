@@ -6,7 +6,7 @@ import {
   sortItemsInArray,
 } from "../../common/Functions"
 import styled from "styled-components"
-import { MdAddBox, MdTitle, MdArrowBack } from "react-icons/md"
+import { MdAddBox, MdTitle, MdArrowBack, MdEdit } from "react-icons/md"
 import CategoryItem from "./CategoryItem"
 import ReactTooltip from "react-tooltip"
 import ButtonIcon from "../ButtonIcon"
@@ -57,6 +57,8 @@ const BackgroundEditContent = styled.div`
   border-radius: 5px;
   max-height: 90%;
   color: black;
+
+  
 `
 
 const IconAddCategory = styled.div`
@@ -86,12 +88,6 @@ const ButtonMargin = styled.div`
   margin: 5px;
 `
 
-const ButtonMarginSubmit = styled.button`
-  margin: 5px;
-  border: none;
-  background-color: transparent;
-`
-
 const BlockUserInfo = styled.div`
   text-align: center;
   margin-top: 20px;
@@ -102,12 +98,18 @@ const BlockUserInfo = styled.div`
 `
 
 const BackgroundEditedComponent = styled.div`
-  background-color: ${props => props.active ? "rgba(0,0,0,0.85)" : "rgna(0,0,0,0)"};
+  background-color: ${props =>
+    props.active ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0)"};
   padding: ${props => (props.active ? "10px" : "0px")};
   padding-top: 1px;
   margin-top: ${props => (props.active ? "10px" : "0px")};
   border-radius: 5px;
-  transition-property: background-color, padding, margin-top;
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${props =>
+    props.active ? Colors(props.siteProps).secondColor : "transparent"};
+
+  transition-property: background-color, padding, margin-top, border-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -125,13 +127,14 @@ const AllCategoryOfServices = ({
   user,
   allCategoryEdit,
   setAllCategoryEdit,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
+  editMode,
 }) => {
   const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
-
   const [newCategoryItems, setNewCategoryItems] = useState([])
   const [deletedCategoryItems, setDeletedCategoryItems] = useState([])
   const [editedCategoryItems, setEditedCategoryItems] = useState([])
-
   const [clickAddCategory, setClickAddCategory] = useState(false)
   const [newCategoryTitle, setNewCategoryTitle] = useState("")
   const siteProps = useSelector(state => state.siteProps)
@@ -159,6 +162,20 @@ const AllCategoryOfServices = ({
       setEditedCategoryItems([])
     }
   }, [services, setAllCategoriesWithItems, resetCompany, setAllCategoryEdit])
+
+  useEffect(() => {
+    const categories = getCategories([...services], "serviceCategory")
+    const items = categoryItemsMenu(categories, [...services])
+    const sortedItems = sortItemsInArray([...items], "category")
+    setAllCategoriesWithItems(sortedItems)
+    setNewCategoryItems([])
+    setDeletedCategoryItems([])
+    setEditedCategoryItems([])
+  }, [allCategoryEdit, editMode])
+
+  useEffect(() => {
+    setAllCategoryEdit(false)
+  }, [editMode])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -383,6 +400,7 @@ const AllCategoryOfServices = ({
   }
 
   const handleClickEditComponent = () => {
+    handleResetAllEditedComponents()
     setAllCategoryEdit(prevState => !prevState)
   }
 
@@ -530,15 +548,20 @@ const AllCategoryOfServices = ({
       <ButtonsEditPosition>
         {!allCategoryEdit ? (
           isCompanyEditProfil && (
-            <ButtonIcon
-              title="Edytuj usługi"
-              uppercase
-              fontIconSize="40"
-              fontSize="14"
-              icon={<MdArrowBack />}
-              onClick={handleClickEditComponent}
-              secondColors
-            />
+            <div data-tip data-for="disabledButton">
+              <ButtonIcon
+                title="Edytuj usługi"
+                uppercase
+                fontIconSize="40"
+                fontSize="14"
+                icon={<MdEdit />}
+                onClick={handleClickEditComponent}
+                secondColors
+                disabled={disabledEditButtons}
+                data-tip
+                data-for="disabledButton"
+              />
+            </div>
           )
         ) : (
           <>

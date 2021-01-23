@@ -6,10 +6,15 @@ const HappyHoursConstContent = ({
   siteProps,
   TitleRightColumn,
   happyHoursConst = [],
+  editConstHappyHours,
+  setEditConstHappyHours,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
+  editMode,
 }) => {
   return (
     <>
-      <TitleRightColumn {...companyEditProfilProps} siteProps={siteProps}>
+      <TitleRightColumn isCompanyEditProfil={false} siteProps={siteProps}>
         Stałe Happy Hours
       </TitleRightColumn>
     </>

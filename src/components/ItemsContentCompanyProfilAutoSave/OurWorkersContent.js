@@ -7,8 +7,8 @@ import InputIcon from "../InputIcon"
 import { fetchAddWorkerToCompany } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
-import { MdEmail, MdClose, MdEdit } from "react-icons/md"
-import { FaUserPlus } from "react-icons/fa"
+import { MdEmail, MdClose, MdEdit,  } from "react-icons/md"
+import { FaUserPlus, FaArrowLeft } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
 import ReactTooltip from "react-tooltip"
 import {
@@ -219,6 +219,22 @@ const ButtonDeleteStyle = styled.div`
 
 const PositionRelative = styled.div`
   position: relative;
+  background-color: ${props =>
+    props.noBg ? "" : Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  border-radius: 5px;
+  padding-bottom: 10px;
+  overflow: hidden;
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${props =>
+    props.active
+      ? Colors(props.siteProps).secondColor
+      : "transparent"};
+
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const ButtonEditPositionEdit = styled.div`
@@ -227,6 +243,7 @@ const ButtonEditPositionEdit = styled.div`
   justify-content: flex-end;
   align-items: center;
   margin-top: 10px;
+  margin-right: 10px;
 `
 
 const OurWorkersContent = ({
@@ -245,8 +262,11 @@ const OurWorkersContent = ({
   ownerData,
   companyServices,
   RightColumnItem,
+  editedWorkers,
+  setEditedWorkers,
+  handleResetAllEditedComponents,
+  disabledEditButtons,
 }) => {
-  const [editedWorkers, setEditedWorkers] = useState(false)
   const [isaddUser, setIsAdduser] = useState(false)
   const [emailInput, setEmailInput] = useState("")
 
@@ -257,6 +277,10 @@ const OurWorkersContent = ({
   useEffect(() => {
     ReactTooltip.rebuild()
   }, [])
+
+  useEffect(() => {
+    setEditedWorkers(false)
+  }, [editMode])
 
   useEffect(() => {
     const categories = getCategories([...companyServices], "serviceCategory")
@@ -273,6 +297,21 @@ const OurWorkersContent = ({
     setAllCategoriesWithItems(sortedItems)
   }, [company])
 
+  useEffect(() => {
+    const categories = getCategories([...companyServices], "serviceCategory")
+    const items = categoryItemsMenu(categories, [...companyServices])
+    const sortedItems = sortItemsInArray([...items], "category")
+    const newCategories = companyServices.map(itemValue => {
+      const newItem = {
+        value: itemValue._id,
+        label: itemValue.serviceName,
+      }
+      return newItem
+    })
+    setAllCategories(newCategories)
+    setAllCategoriesWithItems(sortedItems)
+  }, [editedWorkers, editMode])
+
   const dispatch = useDispatch()
 
   const handleSentInvation = e => {
@@ -282,7 +321,12 @@ const OurWorkersContent = ({
   }
 
   const handleEditWorkers = () => {
+    handleResetAllEditedComponents()
     setEditedWorkers(prevState => !prevState)
+  }
+
+  const handleEditWorkersReset = () => {
+    setEditedWorkers(false)
   }
 
   const handleEdit = () => {
@@ -305,8 +349,6 @@ const OurWorkersContent = ({
   const handleClickContent = e => {
     e.stopPropagation()
   }
-
- 
 
   const mapWorkers = workers.map((item, index) => {
     return (
@@ -340,7 +382,7 @@ const OurWorkersContent = ({
   })
 
   return (
-    <PositionRelative>
+    <PositionRelative siteProps={siteProps} active={editedWorkers}>
       <RightColumnItem
         isCompanyEditProfil={editedWorkers}
         siteProps={siteProps}
@@ -377,6 +419,7 @@ const OurWorkersContent = ({
             editedWorkers={editedWorkers}
             ownerSpecialization={ownerSpecialization}
             user={user}
+            editMode={editMode}
           />
           {mapWorkers}
         </WorkerContent>
@@ -393,63 +436,7 @@ const OurWorkersContent = ({
             />
           </ButtonEditPosition>
         ) : null}
-        {isAdmin && (
-          <CSSTransition
-            in={isaddUser}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
-          >
-            <PositionAddWorkers
-            // onClick={handleOnClickBg}
-            >
-              <ContentAddWorkers
-                onClick={handleClickContentAddWorkers}
-                siteProps={siteProps}
-              >
-                <form onSubmit={handleSentInvation}>
-                  <InputIcon
-                    icon={<FaUserPlus />}
-                    placeholder="Wpisz adres email"
-                    value={emailInput}
-                    type="email"
-                    secondColor
-                    onChange={e => handleChange(e, setEmailInput)}
-                    required
-                  />
-                  <ButtonSentPosition>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="14"
-                      icon={<MdEmail />}
-                      secondColors
-                      onClick={handleOnClickBg}
-                    />
-                  </ButtonSentPosition>
-                  <ButtonSentPosition>
-                    <ButtonAddWorker type="submit">
-                      <ButtonIcon
-                        title="Wyślij zaproszenie"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="14"
-                        icon={<MdEmail />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={!!!emailInput}
-                      />
-                    </ButtonAddWorker>
-                  </ButtonSentPosition>
-                </form>
-                <CloseAddWorkers onClick={handleOnClickBg}>
-                  <MdClose />
-                </CloseAddWorkers>
-              </ContentAddWorkers>
-            </PositionAddWorkers>
-          </CSSTransition>
-        )}
+
         {editedWorkers && (
           <>
             <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
@@ -474,18 +461,93 @@ const OurWorkersContent = ({
           </>
         )}
       </RightColumnItem>
-      {isCompanyEditProfil && (
-        <ButtonEditPositionEdit>
-          <ButtonIcon
-            title="Edytuj pracowników"
-            uppercase
-            fontIconSize="25"
-            fontSize="14"
-            icon={<MdEdit />}
-            secondColors
-            onClick={handleEditWorkers}
-          />
-        </ButtonEditPositionEdit>
+      {isCompanyEditProfil &&
+        (!editedWorkers ? (
+          <ButtonEditPositionEdit>
+            <div data-tip data-for="disabledButton">
+              <ButtonIcon
+                title="Edytuj pracowników"
+                uppercase
+                fontIconSize="25"
+                fontSize="14"
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleEditWorkers}
+                disabled={disabledEditButtons}
+              />
+            </div>
+          </ButtonEditPositionEdit>
+        ) : (
+          <ButtonEditPositionEdit>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="25"
+              fontSize="14"
+              icon={<FaArrowLeft />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleEditWorkersReset}
+            />
+          </ButtonEditPositionEdit>
+        ))}
+      {isAdmin && (
+        <CSSTransition
+          in={isaddUser}
+          timeout={400}
+          classNames="popup"
+          unmountOnExit
+        >
+          <PositionAddWorkers
+          // onClick={handleOnClickBg}
+          >
+            <ContentAddWorkers
+              onClick={handleClickContentAddWorkers}
+              siteProps={siteProps}
+            >
+              <form onSubmit={handleSentInvation}>
+                <InputIcon
+                  icon={<FaUserPlus />}
+                  placeholder="Wpisz adres email"
+                  value={emailInput}
+                  type="email"
+                  secondColor
+                  onChange={e => handleChange(e, setEmailInput)}
+                  required
+                />
+                <ButtonSentPosition>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleOnClickBg}
+                  />
+                </ButtonSentPosition>
+                <ButtonSentPosition>
+                  <ButtonAddWorker type="submit">
+                    <ButtonIcon
+                      title="Wyślij zaproszenie"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="14"
+                      icon={<MdEmail />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={!!!emailInput}
+                    />
+                  </ButtonAddWorker>
+                </ButtonSentPosition>
+              </form>
+              <CloseAddWorkers onClick={handleOnClickBg}>
+                <MdClose />
+              </CloseAddWorkers>
+            </ContentAddWorkers>
+          </PositionAddWorkers>
+        </CSSTransition>
       )}
     </PositionRelative>
   )

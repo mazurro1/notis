@@ -17,7 +17,7 @@ const DayOffStyle = styled.div`
   margin: 5px;
   font-size: 0.8rem;
   overflow: hidden;
-  width: 139px;
+  width: 135px;
   transition-property: background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;

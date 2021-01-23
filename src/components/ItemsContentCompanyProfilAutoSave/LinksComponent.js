@@ -16,17 +16,26 @@ const MarginTopReserwation = styled.div`
    companyEditProfilProps,
    siteProps,
    TitleRightColumn,
-   ButtonTextPosition,
    company,
    user,
    isCompanyEditProfil = false,
+   ButtonEditPosition,
+   editLinks,
+   setEditLinks,
+   handleResetAllEditedComponents,
+   disabledEditButtons,
+   editMode,
  }) => {
-  const [editLinks, setEditLinks] = useState(false)
    const dispatch = useDispatch()
 
    useEffect(() => {
      setEditLinks(false)
-   }, [company.linkFacebook, company.linkInstagram, company.linkiWebsite])
+   }, [
+     company.linkFacebook,
+     company.linkInstagram,
+     company.linkiWebsite,
+     editMode,
+   ])
 
    const handleEdit = setChange => {
      setChange(prevState => !prevState)
@@ -43,19 +52,17 @@ const MarginTopReserwation = styled.div`
        website: newWebsiteLink,
      }
      dispatch(
-       fetchSaveTextsCompany(
-         user.token,
-         user.company._id,
-         null,
-         null,
-         allLinks
-       )
+       fetchSaveTextsCompany(user.token, user.company._id, null, null, allLinks)
      )
    }
 
    return (
      <MarginTopReserwation>
-       <RightColumnItem isCompanyEditProfil={editLinks} siteProps={siteProps}>
+       <RightColumnItem
+         isCompanyEditProfil={isCompanyEditProfil}
+         siteProps={siteProps}
+         active={editLinks}
+       >
          <OurLinksContent
            TitleRightColumn={TitleRightColumn}
            companyEditProfilProps={companyEditProfilProps}
@@ -69,21 +76,28 @@ const MarginTopReserwation = styled.div`
            linkInstagram={!!company.linkInstagram ? company.linkInstagram : ""}
            company={company}
            editLinks={editLinks}
+           editMode={editMode}
          />
+         {isCompanyEditProfil && (
+           <ButtonEditPosition>
+             <div data-tip data-for="disabledButton">
+               <ButtonIcon
+                 title="Edytuj linki"
+                 uppercase
+                 fontIconSize="25"
+                 fontSize="14"
+                 icon={<MdEdit />}
+                 secondColors
+                 onClick={() => {
+                   handleResetAllEditedComponents()
+                   handleEdit(setEditLinks)
+                 }}
+                 disabled={disabledEditButtons}
+               />
+             </div>
+           </ButtonEditPosition>
+         )}
        </RightColumnItem>
-       {isCompanyEditProfil && (
-         <ButtonTextPosition>
-           <ButtonIcon
-             title="Edytuj linki"
-             uppercase
-             fontIconSize="25"
-             fontSize="14"
-             icon={<MdEdit />}
-             secondColors
-             onClick={() => handleEdit(setEditLinks)}
-           />
-         </ButtonTextPosition>
-       )}
      </MarginTopReserwation>
    )
  }
