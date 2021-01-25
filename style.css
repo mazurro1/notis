@@ -514,3 +514,8 @@ textarea:active {
     transform: rotate(0deg);
   }
 }
+
+.leaflet-container {
+  width: 100%; 
+  height: 300px;
+}

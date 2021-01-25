@@ -18,6 +18,8 @@ import HappyHoursNoConstContent from "./ItemsContentCompanyProfilAutoSave/HappyH
 import AboutUsComponent from "./ItemsContentCompanyProfilAutoSave/AboutUsComponent"
 import ReserwationTextComponent from "./ItemsContentCompanyProfilAutoSave/ReserwationTextComponent"
 import LinksComponent from "./ItemsContentCompanyProfilAutoSave/LinksComponent"
+import MapsComponent from "./MapsComponent"
+import MapsEditComponent from "./MapsEditComponent"
 
 const TextH1 = styled.div`
   position: relative;
@@ -81,6 +83,7 @@ const RightColumnItem = styled.div`
   border-radius: 5px;
   padding: ${props => (props.noBg ? "10px 0px" : "10px 15px")};
   margin-bottom: 20px;
+  margin-top: ${props => props.marginTop ? `${props.marginTop}px` : "0px"};
   padding-bottom: ${props => (props.isCompanyEditProfil ? "50px" : "10px")};
   border-width: 2px;
   border-style: solid;
@@ -88,7 +91,8 @@ const RightColumnItem = styled.div`
     props.active ? Colors(props.siteProps).secondColor : "transparent"};
   overflow: hidden;
   height: auto;
-  opacity: ${props => !props.active && props.disabledEditButtons ? "0.5": "1"};
+  opacity: ${props =>
+    !props.active && props.disabledEditButtons ? "0.5" : "1"};
   transition-property: color, background-color, border-color, opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -180,6 +184,7 @@ const ContentCompanyProfil = ({
   const [editLinks, setEditLinks] = useState(false)
   const [editConstHappyHours, setEditConstHappyHours] = useState(false)
   const [editNoConstHappyHours, setEditNoConstHappyHours] = useState(false)
+  const [editMap, setEditMap] = useState(false)
 
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
@@ -195,7 +200,8 @@ const ContentCompanyProfil = ({
       editedReserwation ||
       editLinks ||
       editConstHappyHours ||
-      editNoConstHappyHours
+      editNoConstHappyHours ||
+      editMap
 
   const handleResetAllEditedComponents = () => {
     setAllCategoryEdit(false)
@@ -208,6 +214,7 @@ const ContentCompanyProfil = ({
     setEditLinks(false)
     setEditConstHappyHours(false)
     setEditNoConstHappyHours(false)
+    setEditMap(false)
   }
 
   const handleEdit = setChange => {
@@ -321,8 +328,43 @@ const ContentCompanyProfil = ({
               />
             )}
           </LeftColumn>
-
           <RightColumn>
+            {editMode && isCompanyEditProfil ? (
+              <RightColumnItem
+                {...companyEditProfilProps}
+                siteProps={siteProps}
+                active={editMap}
+                disabledEditButtons={disabledEditButtons}
+                marginTop={10}
+              >
+                <MapsEditComponent
+                  editMap={editMap}
+                  setEditMap={setEditMap}
+                  disabledEditButtons={disabledEditButtons}
+                  handleResetAllEditedComponents={
+                    handleResetAllEditedComponents
+                  }
+                  user={user}
+                  companyLat={company.maps.lat}
+                  companyLong={company.maps.long}
+                  TitleRightColumn={TitleRightColumn}
+                  siteProps={siteProps}
+                  {...companyEditProfilProps}
+                  ButtonEditPosition={ButtonEditPosition}
+                />
+              </RightColumnItem>
+            ) : (
+              !!company.maps.lat &&
+              !!company.maps.long && (
+                <RightColumnItem noBg>
+                  <MapsComponent
+                    company={company}
+                    companyLat={company.maps.lat}
+                    companyLong={company.maps.long}
+                  />
+                </RightColumnItem>
+              )
+            )}
             {userHasPermisionToOther && (
               <RightColumnItem
                 noBg

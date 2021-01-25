@@ -527,6 +527,14 @@ export const COMPANY_ADD_WORKER_NO_CONST_HOURS = "COMPANY_ADD_WORKER_NO_CONST_HO
 export const COMPANY_DELETE_WORKER_NO_CONST_HOURS = "COMPANY_DELETE_WORKER_NO_CONST_HOURS"
 export const UPDATE_COMPANY_TEKSTS = "UPDATE_COMPANY_TEKSTS"
 export const UPDATE_COMPANY_OPENING_HOURS = "UPDATE_COMPANY_OPENING_HOURS"
+export const UPDATE_COMPANY_MAPS = "UPDATE_COMPANY_MAPS"
+
+export const updateCompanyMaps = (maps) => {
+  return {
+    type: UPDATE_COMPANY_MAPS,
+    maps: maps
+  }
+}
 
 export const updateOpeningHoursCompany = (openingHours, daysOff) => {
   return {
@@ -2251,6 +2259,41 @@ export const fetchSaveOpeningHoursCompany = (
         dispatch(changeSpinner(false))
         dispatch(
           addAlertItem("Błąd podczas aktualizacji godzin otwarcia.", "red")
+        )
+      })
+  }
+}
+
+
+export const fetchSaveMaps = (
+  token,
+  companyId,
+  maps,
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-map-update`,
+        {
+          companyId: companyId,
+          maps: maps,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyMaps(maps))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano mapę.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Błąd podczas aktualizacji mapy.", "red")
         )
       })
   }

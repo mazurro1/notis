@@ -32,6 +32,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_MAPS,
   UPDATE_COMPANY_OPENING_HOURS,
   UPDATE_COMPANY_TEKSTS,
   COMPANY_DELETE_WORKER_NO_CONST_HOURS,
@@ -324,6 +325,20 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case UPDATE_COMPANY_MAPS: {
+      const newWorkCompanyDataMaps = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : {}
+        if (!!action.maps) {
+          newWorkCompanyDataMaps.maps.lat = action.maps.lat
+          newWorkCompanyDataMaps.maps.long = action.maps.long
+        }
+      return {
+        ...state,
+        workCompanyData: newWorkCompanyDataMaps,
+      }
+    }
 
     case UPDATE_COMPANY_OPENING_HOURS: {
       const newWorkCompanyDataOpeningHours = !!state.workCompanyData
