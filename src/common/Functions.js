@@ -85,6 +85,27 @@ export const categoryItemsMenu = (categories, items) => {
   return allItems
 }
 
+export const categoryItemsConstHours = (categories, items) => {
+  let allItems = []
+  categories.forEach((itemCategory, index) => {
+    const filterItemsToCategory = items.filter(
+      item => item.dayWeekIndex === itemCategory
+    )
+    const mapItemsCategoryToAddCategoryId = filterItemsToCategory.map(item => {
+      item.dayWeekIndex = itemCategory
+      return item
+    })
+    const newAllItem = {
+      category: itemCategory,
+      items: mapItemsCategoryToAddCategoryId,
+    }
+    allItems.push(newAllItem)
+  })
+  return allItems
+}
+
+
+
 export const replacingEditedNamesAndAddingNewOnes = (
   allOldItems,
   editedItems,
