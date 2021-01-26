@@ -32,6 +32,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_HAPPY_HOURS_NO_CONST,
   UPDATE_CONST_HAPPY_HOURS,
   UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH,
   DELETE_COMPANY_HAPPY_HOUR_CONST,
@@ -346,7 +347,9 @@ const reducer = (state = initialState, action) => {
         const findIndexHappyHoursConst = patchWorkCompanyDataHappyHoursConst.happyHoursConst.findIndex(
           item => item._id === action.dateConst._id
         )
-        patchWorkCompanyDataHappyHoursConst.happyHoursConst[findIndexHappyHoursConst] = action.dateConst
+        patchWorkCompanyDataHappyHoursConst.happyHoursConst[
+          findIndexHappyHoursConst
+        ] = action.dateConst
       }
       return {
         ...state,
@@ -359,16 +362,30 @@ const reducer = (state = initialState, action) => {
       const deleteWorkCompanyDataHappyHoursConst = !!state.workCompanyData
         ? { ...state.workCompanyData }
         : {}
-        if(!!action.happyHourId){
-          const filterHappyHoursConst = deleteWorkCompanyDataHappyHoursConst.happyHoursConst.filter(
-            item => item._id !== action.happyHourId
-          )
-          deleteWorkCompanyDataHappyHoursConst.happyHoursConst = filterHappyHoursConst
-        }
-        return {
-          ...state,
-          workCompanyData: deleteWorkCompanyDataHappyHoursConst,
-        }
+      if (!!action.happyHourId) {
+        const filterHappyHoursConst = deleteWorkCompanyDataHappyHoursConst.happyHoursConst.filter(
+          item => item._id !== action.happyHourId
+        )
+        deleteWorkCompanyDataHappyHoursConst.happyHoursConst = filterHappyHoursConst
+      }
+      return {
+        ...state,
+        workCompanyData: deleteWorkCompanyDataHappyHoursConst,
+      }
+    }
+
+    case UPDATE_COMPANY_HAPPY_HOURS_NO_CONST: {
+      const newWorkCompanyDataHappyHoursNoConst = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : {}
+      if (!!action.noConstHappyHours) {
+        newWorkCompanyDataHappyHoursNoConst.happyHoursNoConst =
+          action.noConstHappyHours
+      }
+      return {
+        ...state,
+        workCompanyData: newWorkCompanyDataHappyHoursNoConst,
+      }
     }
 
     case UPDATE_COMPANY_HAPPY_HOURS_CONST: {

@@ -532,6 +532,7 @@ export const UPDATE_COMPANY_HAPPY_HOURS_CONST = "UPDATE_COMPANY_HAPPY_HOURS_CONS
 export const DELETE_COMPANY_HAPPY_HOUR_CONST = "DELETE_COMPANY_HAPPY_HOUR_CONST"
 export const UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH = "UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH"
 export const UPDATE_CONST_HAPPY_HOURS = "UPDATE_CONST_HAPPY_HOURS"
+export const UPDATE_COMPANY_HAPPY_HOURS_NO_CONST = "UPDATE_COMPANY_HAPPY_HOURS_NO_CONST"
 
 export const updateConstHappyHoursFunction = () => {
   return {
@@ -557,6 +558,13 @@ export const updateCompanyHappyHoursConst = (constHappyHours) => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOURS_CONST,
     constHappyHours: constHappyHours,
+  }
+}
+
+export const updateCompanyHappyHoursNoConst = noConstHappyHours => {
+  return {
+    type: UPDATE_COMPANY_HAPPY_HOURS_NO_CONST,
+    noConstHappyHours: noConstHappyHours,
   }
 }
 
@@ -2348,6 +2356,34 @@ export const fetchAddConstDateHappyHour = (token, companyId, constDate) => {
       )
       .then(response => {
         dispatch(updateCompanyHappyHoursConst(response.data.happyHoursConst))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano happy hour.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania happy hour.", "red"))
+      })
+  }
+}
+
+export const fetchAddNoConstDateHappyHour = (token, companyId, constDate) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/add-no-const-date-happy-hour`,
+        {
+          companyId: companyId,
+          constDate: constDate,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyHappyHoursNoConst(response.data.happyHoursNoConst))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano happy hour.", "green"))
       })

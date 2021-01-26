@@ -94,6 +94,7 @@ const HappyHoursConstContentNewItem = ({
   enableTimeEnd,
   companyServices,
   user,
+  happyHoursConst,
 }) => {
   const [selectedDayOfTheWeek, setSelectedDayOfTheWeek] = useState(null)
   const [promotionPercent, setPromotionPercent] = useState("")
@@ -115,6 +116,16 @@ const HappyHoursConstContentNewItem = ({
     ReactTooltip.rebuild()
   }, [disabledSave, newHappyHour])
 
+  useEffect(() => {
+    setNewHappyHour(false)
+    setSelectedDayOfTheWeek(null)
+    setPromotionPercent("")
+    setDisabledPromotion(false)
+    setTimeStart("10:00")
+    setTimeEnd("12:00")
+    setSelectedServicesIds([])
+  }, [happyHoursConst])
+
   const handleResetAdd = () => {
     setNewHappyHour(false)
     setSelectedDayOfTheWeek(null)
@@ -122,7 +133,7 @@ const HappyHoursConstContentNewItem = ({
     setDisabledPromotion(false)
     setTimeStart("10:00")
     setTimeEnd("12:00")
-    setSelectedServicesIds(null)
+    setSelectedServicesIds([])
   }
 
   const handleChangeDayOfTheWeek = value => {
@@ -175,12 +186,10 @@ const HappyHoursConstContentNewItem = ({
       servicesInPromotion: mapOnyIds,
       dayWeekIndex: selectedDayOfTheWeek.value,
     }
-    
-    dispatch(fetchAddConstDateHappyHour(
-      user.token,
-      user.company._id,
-      dataHappyHour
-    ))
+
+    dispatch(
+      fetchAddConstDateHappyHour(user.token, user.company._id, dataHappyHour)
+    )
   }
 
   const mapDaysOfTheWeek = DaySOfTheWeek.map(item => {

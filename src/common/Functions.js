@@ -254,6 +254,19 @@ export const sortItemsInArray = (arrayToSort, itemName) => {
   return arrayToSort
 }
 
+export const sortItemsInArrayDateConvert = (arrayToSort, itemName) => {
+  arrayToSort.sort((a, b) => {
+    const aSplitStartTime = a.start.split(":")
+    const bSplitStartTime = b.start.split(":")
+    const firstItemToSort = new Date(new Date(new Date(a[itemName]).setHours(Number(aSplitStartTime[0]))).setMinutes(Number(aSplitStartTime[1])))
+    const secondItemToSort = new Date(new Date(new Date(b[itemName]).setHours(Number(bSplitStartTime[0]))).setMinutes(Number(bSplitStartTime[1])))
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+  return arrayToSort
+}
+
 export const sortItemsInArrayNumber = (arrayToSort, itemName) => {
   arrayToSort.sort((a, b) => {
     const firstItemToSort = a[itemName]

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { MdEdit, MdAddBox } from "react-icons/md"
-import { FaArrowLeft, FaSave } from "react-icons/fa"
+import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from '../ButtonIcon'
@@ -21,7 +21,7 @@ const MarginButton = styled.div`
 
 const PositionRelative = styled.div`
   font-size: 1rem;
-  padding-bottom: ${props => (props.active ? props.componentHeight > 800 ? "0px" : `${800 - props.componentHeight}px` : "0px")};
+  padding-bottom: ${props => (props.active ? props.componentHeight > 700 ? "0px" : `${700 - props.componentHeight}px` : "0px")};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -36,7 +36,6 @@ const ItemsAddHappyHour = styled.div`
 `
 
 const HappyHoursConstContent = ({
-  companyEditProfilProps = {},
   isCompanyEditProfil = false,
   siteProps,
   TitleRightColumn,
@@ -58,14 +57,13 @@ const HappyHoursConstContent = ({
   const updateConstHappyHours = useSelector(
     state => state.updateConstHappyHours
   )
-
   const refConstHappyHour = useRef(null)
 
   useEffect(() => {
     if (!!refConstHappyHour) {
       setComponentHeight(refConstHappyHour.current.clientHeight)
     }
-  }, [refConstHappyHour, categoriesWithItems])
+  }, [refConstHappyHour, categoriesWithItems, happyHoursConst, newHappyHour])
   
 
   const dispatch = useDispatch()
@@ -113,7 +111,7 @@ const HappyHoursConstContent = ({
       />
     )
   })
-  console.log(componentHeight)
+  
   return (
     <PositionRelative
       active={newHappyHour || enableTimeStart || enableTimeEnd}
@@ -160,7 +158,7 @@ const HappyHoursConstContent = ({
           <ButtonEditPosition>
             <MarginButton>
               <ButtonIcon
-                title="Anuluj"
+                title="Zakończ edytowanie"
                 uppercase
                 fontIconSize="20"
                 fontSize="14"
@@ -168,18 +166,6 @@ const HappyHoursConstContent = ({
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleReset}
-              />
-            </MarginButton>
-            <MarginButton>
-              <ButtonIcon
-                title="Zapisz"
-                uppercase
-                fontIconSize="20"
-                fontSize="14"
-                icon={<FaSave />}
-                customColorButton={Colors(siteProps).successColorDark}
-                customColorIcon={Colors(siteProps).successColor}
-                // onClick={handleClickEdit}
               />
             </MarginButton>
           </ButtonEditPosition>
@@ -199,6 +185,7 @@ const HappyHoursConstContent = ({
             enableTimeEnd={enableTimeEnd}
             companyServices={companyServices}
             user={user}
+            happyHoursConst={happyHoursConst}
           />
         </>
       )}
