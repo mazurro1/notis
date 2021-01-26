@@ -528,6 +528,37 @@ export const COMPANY_DELETE_WORKER_NO_CONST_HOURS = "COMPANY_DELETE_WORKER_NO_CO
 export const UPDATE_COMPANY_TEKSTS = "UPDATE_COMPANY_TEKSTS"
 export const UPDATE_COMPANY_OPENING_HOURS = "UPDATE_COMPANY_OPENING_HOURS"
 export const UPDATE_COMPANY_MAPS = "UPDATE_COMPANY_MAPS"
+export const UPDATE_COMPANY_HAPPY_HOURS_CONST = "UPDATE_COMPANY_HAPPY_HOURS_CONST"
+export const DELETE_COMPANY_HAPPY_HOUR_CONST = "DELETE_COMPANY_HAPPY_HOUR_CONST"
+export const UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH = "UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH"
+export const UPDATE_CONST_HAPPY_HOURS = "UPDATE_CONST_HAPPY_HOURS"
+
+export const updateConstHappyHoursFunction = () => {
+  return {
+    type: UPDATE_CONST_HAPPY_HOURS
+  }
+}
+
+export const updateCompanyHappyHourConstPatch = (dateConst) => {
+  return {
+    type: UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH,
+    dateConst: dateConst,
+  }
+}
+
+export const deleteCompanyHappyHoursConst = (happyHourId) => {
+  return {
+    type: DELETE_COMPANY_HAPPY_HOUR_CONST,
+    happyHourId: happyHourId,
+  }
+}
+
+export const updateCompanyHappyHoursConst = (constHappyHours) => {
+  return {
+    type: UPDATE_COMPANY_HAPPY_HOURS_CONST,
+    constHappyHours: constHappyHours,
+  }
+}
 
 export const updateCompanyMaps = (maps) => {
   return {
@@ -2295,6 +2326,91 @@ export const fetchSaveMaps = (
         dispatch(
           addAlertItem("Błąd podczas aktualizacji mapy.", "red")
         )
+      })
+  }
+}
+
+export const fetchAddConstDateHappyHour = (token, companyId, constDate) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/add-const-date-happy-hour`,
+        {
+          companyId: companyId,
+          constDate: constDate,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyHappyHoursConst(response.data.happyHoursConst))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano happy hour.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania happy hour.", "red"))
+      })
+  }
+}
+
+export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/delete-const-date-happy-hour`,
+        {
+          companyId: companyId,
+          happyHourId: happyHourId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(deleteCompanyHappyHoursConst(happyHourId))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto happy hour.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas usuwania happy hour.", "red"))
+      })
+  }
+}
+
+export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/update-const-date-happy-hour`,
+        {
+          companyId: companyId,
+          constDate: constDate,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        // dispatch(updateCompanyHappyHoursConst(response.data.happyHoursConst))
+        dispatch(updateCompanyHappyHourConstPatch(constDate))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano happy hour.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas aktualizacji happy hour.", "red"))
       })
   }
 }

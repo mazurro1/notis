@@ -493,6 +493,9 @@ const ContentCompanyProfil = ({
                         }
                         disabledEditButtons={disabledEditButtons}
                         editMode={editMode}
+                        ButtonEditPosition={ButtonEditPosition}
+                        companyServices={company.services}
+                        user={user}
                       />
                     </RightColumnItem>
                     <RightColumnItem

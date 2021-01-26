@@ -23,7 +23,6 @@ const BorderMaps = styled.div`
    companyLat = "52.231918",
    companyLong = "21.006781",
  }) => {
-   console.log(company)
    const position = [companyLat, companyLong]
    return (
      <BorderMaps>
