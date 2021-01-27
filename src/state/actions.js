@@ -664,12 +664,20 @@ export const companyPatchSettings = (data) => {
   }
 }
 
-export const patchNewCompanyServices = (data, ownerDataServices, workers) => {
+export const patchNewCompanyServices = (
+  data,
+  ownerDataServices,
+  workers,
+  promotions,
+  happyHoursConst
+) => {
   return {
     type: COMPANY_PATCH_NEW_SERVICES,
     data: data,
     ownerDataServices: ownerDataServices,
-    workers: workers
+    workers: workers,
+    promotions: promotions,
+    happyHoursConst: happyHoursConst,
   }
 }
 
@@ -2016,7 +2024,9 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
           patchNewCompanyServices(
             response.data.services,
             response.data.ownerDataServices,
-            response.data.workers
+            response.data.workers,
+            response.data.promotions,
+            response.data.happyHoursConst
           )
         )
       })

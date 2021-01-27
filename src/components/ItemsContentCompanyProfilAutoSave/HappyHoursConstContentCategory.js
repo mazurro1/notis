@@ -5,6 +5,7 @@ import { Collapse } from "react-collapse"
 import styled from 'styled-components'
 import {Colors} from '../../common/Colors'
 import { MdExpandMore } from "react-icons/md"
+import { sortItemsInArrayOnlyNumber } from "../../common/Functions"
 
 const MarginComponent = styled.div`
   margin-bottom: 10px;
@@ -20,7 +21,9 @@ const TitleCategory = styled.div`
   background-color: ${props =>
     props.edited
       ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).primaryColor};
+      : props.disabled
+      ? Colors(props.siteProps).dangerColor
+      : Colors(props.siteProps).successColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
   cursor: pointer;
   font-size: 1.1rem;
@@ -33,7 +36,9 @@ const TitleCategory = styled.div`
     background-color: ${props =>
       props.edited
         ? Colors(props.siteProps).secondDarkColor
-        : Colors(props.siteProps).primaryColorDark};
+        : props.disabled
+        ? Colors(props.siteProps).dangerColorDark
+        : Colors(props.siteProps).successColorDark};
   }
 
   svg {
@@ -81,15 +86,24 @@ const DayComponent = styled.div`
      setCollapseActive(prevState => !prevState)
    }
 
-   const findDayOfTheWeek = category.dayWeekIndex.map((item, index) => {
+   const sortCategoryDayWeekIndex = sortItemsInArrayOnlyNumber([...category.dayWeekIndex]);
+   const filterSortedIfIsLastWeek = sortCategoryDayWeekIndex.filter(itemFilter => itemFilter === 0);
+   const filterOtherSortedIfIsLastWeek = sortCategoryDayWeekIndex.filter(itemFilter => itemFilter !== 0);
+
+   const sortedAndFilteredCategory = [
+     ...filterOtherSortedIfIsLastWeek,
+     ...filterSortedIfIsLastWeek,
+   ]
+
+   const findDayOfTheWeek = sortedAndFilteredCategory.map((item, index) => {
      const findDay = DaySOfTheWeek.find(
        itemDay => itemDay.dayOfTheWeek === item
      )
-     if(!!findDay){
+     if (!!findDay) {
        return <DayComponent key={index}>{findDay.title}</DayComponent>
      }
    })
-
+   
    return (
      <MarginComponent>
        <TitleCategory
@@ -97,6 +111,7 @@ const DayComponent = styled.div`
          onClick={handleClickCollapse}
          active={collapseActive}
          edited={editConstHappyHours}
+         disabled={category.disabled}
        >
          {findDayOfTheWeek}
          <ArrowPosition>

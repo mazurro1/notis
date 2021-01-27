@@ -40,7 +40,9 @@ const TitleItem = styled.div`
   background-color: ${props =>
     props.edited
       ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).primaryColor};
+      : props.disabled
+      ? Colors(props.siteProps).successColor
+      : Colors(props.siteProps).dangerColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
   padding: 5px 10px;
   padding-right: 40px;
@@ -56,7 +58,9 @@ const TitleItem = styled.div`
     background-color: ${props =>
       props.edited
         ? Colors(props.siteProps).secondDarkColor
-        : Colors(props.siteProps).primaryColorDark};
+        : props.disabled
+        ? Colors(props.siteProps).successColorDark
+        : Colors(props.siteProps).dangerColorDark};
   }
 
   svg {
@@ -231,8 +235,8 @@ const MarginButton = styled.div`
    const handleDeleteItem = () => {
      dispatch(fetchDeletePromotion(user.token, user.company._id, item._id))
    }
-   console.log(item)
-   const dateItemPromotion = new Date(item.end)
+   
+   const dateItemPromotion = new Date(new Date(new Date(item.end).setHours(23)).setMinutes(59));
    const isOld = dateItemPromotion < new Date()
 
    const validActive = isOld ? !isOld : !item.disabled
@@ -266,6 +270,7 @@ const MarginButton = styled.div`
          active={collapseActive}
          onClick={handleClickCollapse}
          edited={editPromotions}
+         disabled={validActive}
        >
          {`${item.start} - ${item.end}`}
          <ArrowPosition>

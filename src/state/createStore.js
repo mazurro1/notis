@@ -789,7 +789,9 @@ const reducer = (state = initialState, action) => {
     case COMPANY_PATCH_NEW_SERVICES: {
       if (!!state.workCompanyData) {
         const newWorkCompanyDataServices = { ...state.workCompanyData }
-        newWorkCompanyDataServices.services = action.data
+        newWorkCompanyDataServices.happyHoursConst = action.happyHoursConst;
+        newWorkCompanyDataServices.promotions = action.promotions;
+        newWorkCompanyDataServices.services = action.data;
         newWorkCompanyDataServices.ownerData.servicesCategory =
           action.ownerDataServices
         newWorkCompanyDataServices.workers.forEach((worker, index) => {
