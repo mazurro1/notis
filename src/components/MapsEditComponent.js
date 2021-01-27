@@ -42,7 +42,7 @@ const BackgroundEditContent = styled.div`
 
 const PositionRelative = styled.div`
   font-size: 1rem;
-  padding-bottom: ${props => (props.editMap ? "100px" : "0px")};
+  padding-bottom: ${props => (props.editMap ? "250px" : "0px")};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -120,10 +120,10 @@ const MapsEditComponent = ({
       <TitleRightColumn isCompanyEditProfil={editMap} siteProps={siteProps}>
         MAPA
       </TitleRightColumn>
-      <ParagraphStyle>
+      {!!!companyLat && !!!companyLong && <ParagraphStyle>
         Aby mapy działały wpisz lokalizacje geograficzną z generatora do którego
         podany jest link w edytorze.
-      </ParagraphStyle>
+      </ParagraphStyle>}
       <div>Latitude: {!!companyLat ? companyLat : "Brak"}</div>
       <div>Longitude: {!!companyLong ? companyLong : "Brak"}</div>
 

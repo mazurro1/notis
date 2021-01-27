@@ -8,14 +8,14 @@ import { MdExpandMore } from "react-icons/md"
 
 const MarginComponent = styled.div`
   margin-bottom: 10px;
+  border-radius: 5px;
 `
 
 const TitleCategory = styled.div`
   position: relative;
   padding: 5px 10px;
-  border-radius: 5px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   padding-right: 50px;
   background-color: ${props =>
     props.edited
@@ -56,6 +56,11 @@ const ArrowPosition = styled.div`
   font-size: 2rem;
 `
 
+const DayComponent = styled.div`
+  display: inline-block;
+  margin-right: 5px;
+`
+
  const HappyHoursConstContentCategory = ({
    category,
    siteProps,
@@ -76,25 +81,13 @@ const ArrowPosition = styled.div`
      setCollapseActive(prevState => !prevState)
    }
 
-   const findDayOfTheWeek = DaySOfTheWeek.find(
-     item => item.dayOfTheWeek === category.category
-   )
-
-   const mapItems = category.items.map((item, index) => {
-     return (
-       <HappyHoursConstContentCategoryItem
-         item={item}
-         key={index}
-         companyServices={companyServices}
-         siteProps={siteProps}
-         index={index}
-         editMode={editMode}
-         editConstHappyHours={editConstHappyHours}
-         user={user}
-         happyHoursConst={happyHoursConst}
-         TitleRightColumn={TitleRightColumn}
-       />
+   const findDayOfTheWeek = category.dayWeekIndex.map((item, index) => {
+     const findDay = DaySOfTheWeek.find(
+       itemDay => itemDay.dayOfTheWeek === item
      )
+     if(!!findDay){
+       return <DayComponent key={index}>{findDay.title}</DayComponent>
+     }
    })
 
    return (
@@ -105,13 +98,23 @@ const ArrowPosition = styled.div`
          active={collapseActive}
          edited={editConstHappyHours}
        >
-         {!!findDayOfTheWeek ? findDayOfTheWeek.title : "Zła nazwa"}
+         {findDayOfTheWeek}
          <ArrowPosition>
            <MdExpandMore />
          </ArrowPosition>
        </TitleCategory>
        <Collapse isOpened={collapseActive}>
-         <div>{mapItems}</div>
+         <HappyHoursConstContentCategoryItem
+           item={category}
+           companyServices={companyServices}
+           siteProps={siteProps}
+           index={0}
+           editMode={editMode}
+           editConstHappyHours={editConstHappyHours}
+           user={user}
+           happyHoursConst={happyHoursConst}
+           TitleRightColumn={TitleRightColumn}
+         />
        </Collapse>
      </MarginComponent>
    )

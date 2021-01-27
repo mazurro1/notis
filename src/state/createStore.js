@@ -32,6 +32,9 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_PROMOTIONS,
+  UPDATE_COMPANY_PATH_PROMOTION,
+  DELETE_COMPANY_PROMOTION,
   UPDATE_COMPANY_HAPPY_HOURS_NO_CONST,
   UPDATE_CONST_HAPPY_HOURS,
   UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH,
@@ -137,10 +140,10 @@ const initialState = {
   reserwationEnable: false,
   editWorkerHours: false,
   editWorkerHoursData: null,
-  // editedWorkersHours: [],
   pathCompanyData: null,
   workCompanyData: null,
   updateConstHappyHours: false,
+  updatePromotions: false,
   userHistoryReserwations: [],
   workerHistoryReserwations: null,
   resetWorkerProps: false,
@@ -332,6 +335,48 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case UPDATE_PROMOTIONS: {
+      return {
+        ...state,
+        updatePromotions: false,
+      }
+    }
+
+    case UPDATE_COMPANY_PATH_PROMOTION: {
+      const patchWorkCompanyPromotion = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : {}
+      if (!!action.promotionDate) {
+        const findIndexPromotion = patchWorkCompanyPromotion.promotions.findIndex(
+          item => item._id === action.promotionDate._id
+        )
+        patchWorkCompanyPromotion.promotions[findIndexPromotion] =
+          action.promotionDate
+
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyPromotion,
+        updatePromotions: true,
+      }
+    }
+
+    case DELETE_COMPANY_PROMOTION: {
+      const deleteCompanyPromotion = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : {}
+      if (!!action.promotionId) {
+        const filterHappyHoursConst = deleteCompanyPromotion.promotions.filter(
+          item => item._id !== action.promotionId
+        )
+        deleteCompanyPromotion.promotions = filterHappyHoursConst
+      }
+      return {
+        ...state,
+        workCompanyData: deleteCompanyPromotion,
+      }
+    }
+
     case UPDATE_CONST_HAPPY_HOURS: {
       return {
         ...state,
@@ -375,16 +420,15 @@ const reducer = (state = initialState, action) => {
     }
 
     case UPDATE_COMPANY_HAPPY_HOURS_NO_CONST: {
-      const newWorkCompanyDataHappyHoursNoConst = !!state.workCompanyData
+      const newWorkCompanyDataPromotions = !!state.workCompanyData
         ? { ...state.workCompanyData }
         : {}
-      if (!!action.noConstHappyHours) {
-        newWorkCompanyDataHappyHoursNoConst.happyHoursNoConst =
-          action.noConstHappyHours
+      if (!!action.promotions) {
+        newWorkCompanyDataPromotions.promotions = action.promotions
       }
       return {
         ...state,
-        workCompanyData: newWorkCompanyDataHappyHoursNoConst,
+        workCompanyData: newWorkCompanyDataPromotions,
       }
     }
 

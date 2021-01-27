@@ -9,15 +9,13 @@ import {
   FaCalendarDay,
   FaPercentage,
 } from "react-icons/fa"
-import { MdTimelapse } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import SelectCustom from "../SelectCustom"
-import TimePickerContent from "../TimePicker"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import SelectDataCalendar from "../SelectDataCalendar"
 import { useDispatch } from "react-redux"
-import {fetchAddNoConstDateHappyHour} from '../../state/actions'
+import { fetchUpdatePromotion } from "../../state/actions"
 
 const BackgroundEdit = styled.div`
   position: absolute;
@@ -86,55 +84,70 @@ const CheckboxStyle = styled.div`
   }
 `
 
- const HappyHoursNoConstContentNewItem = ({
+ const PromotionsContentItemEdit = ({
    TitleRightColumn,
-   newNoConstHappyHour,
+   newPromotion,
    siteProps,
-   setEditNoConstHappyHours,
-   setNewNoConstHappyHour,
+   setEditPromotions,
+   setNewPromotion,
    companyServices,
-   enableTimeEnd,
-   setEnableTimeEnd,
-   enableTimeStart,
-   setEnableTimeStart,
-   enableDatePicker,
-   setEnableDatePicker,
+   enableDatePickerStart,
+   setEnableDatePickerStart,
+   enableDatePickerEnd,
+   setEnableDatePickerEnd,
    user,
-   happyHoursNoConst,
+   promotions,
+   itemPromotion,
+   editPromotions,
+   updatePromotions,
  }) => {
    const [selectedServicesIds, setSelectedServicesIds] = useState([])
-   const [timeStart, setTimeStart] = useState("10:00")
-   const [timeEnd, setTimeEnd] = useState("12:00")
-   const [datePromotion, setDatePromotion] = useState("")
+   const [datePromotionStart, setDatePromotionStart] = useState("")
+   const [datePromotionEnd, setDatePromotionEnd] = useState("")
    const [promotionPercent, setPromotionPercent] = useState("")
    const [disabledPromotion, setDisabledPromotion] = useState(false)
-   const [selectedTime, setSelectedTime] = useState(new Date())
+   const [selectedTimeStart, setSelectedTimeStart] = useState(new Date())
+   const [selectedTimeEnd, setSelectedTimeEnd] = useState(new Date())
+   const [userSelectedTime, setUserSelectedTime] = useState(false)
 
    const dispatch = useDispatch()
 
+   useEffect(() => {
+     setNewPromotion(false)
+     setPromotionPercent(itemPromotion.promotionPercent)
+     setDisabledPromotion(itemPromotion.disabled)
+     setSelectedTimeStart(new Date(itemPromotion.start))
+     setSelectedTimeEnd(new Date(itemPromotion.end))
+     setUserSelectedTime(true)
+     setDatePromotionStart(itemPromotion.start)
+     setDatePromotionEnd(itemPromotion.end)
+
+     const mapServicesInPromotion = itemPromotion.servicesInPromotion.map(
+       servicePromotion => {
+         const findService = companyServices.find(
+           service => service._id === servicePromotion
+         )
+         return {
+           value: servicePromotion,
+           label: !!findService ? findService.serviceName : servicePromotion,
+         }
+       }
+     )
+     setSelectedServicesIds(mapServicesInPromotion)
+   }, [itemPromotion, promotions, editPromotions, updatePromotions])
+
    const disabledSave =
      !!promotionPercent &&
-     !!timeStart &&
-     !!timeEnd &&
-     !!datePromotion &&
+     !!datePromotionStart &&
+     !!datePromotionEnd &&
      selectedServicesIds.length > 0
 
    useEffect(() => {
      ReactTooltip.rebuild()
-   }, [disabledSave, newNoConstHappyHour])
+   }, [disabledSave, newPromotion])
 
    useEffect(() => {
-     setNewNoConstHappyHour(false)
-     setPromotionPercent("")
-     setDisabledPromotion(false)
-     setTimeStart("10:00")
-     setTimeEnd("12:00")
-     setSelectedServicesIds([])
-     setSelectedTime(new Date())
-   }, [happyHoursNoConst])
-
-   useEffect(() => {
-     const actualDate = selectedTime
+     const actualDate = selectedTimeStart
      const timeToPicker = `${actualDate.getFullYear()}-${
        actualDate.getMonth() + 1 < 10
          ? `0${actualDate.getMonth() + 1}`
@@ -144,59 +157,64 @@ const CheckboxStyle = styled.div`
          ? `0${actualDate.getDate()}`
          : actualDate.getDate()
      }`
-     setDatePromotion(timeToPicker)
-   }, [setDatePromotion, selectedTime])
+     setDatePromotionStart(timeToPicker)
+   }, [setDatePromotionStart, selectedTimeStart])
+
+   useEffect(() => {
+     const actualDate = selectedTimeEnd
+     const timeToPicker = `${actualDate.getFullYear()}-${
+       actualDate.getMonth() + 1 < 10
+         ? `0${actualDate.getMonth() + 1}`
+         : actualDate.getMonth() + 1
+     }-${
+       actualDate.getDate() < 10
+         ? `0${actualDate.getDate()}`
+         : actualDate.getDate()
+     }`
+     setDatePromotionEnd(timeToPicker)
+   }, [setDatePromotionEnd, selectedTimeEnd])
 
    const handleSaveHappyHour = () => {
      const mapOnyIds = selectedServicesIds.map(item => item.value)
-     const dataHappyHour = {
+     const dataPromotion = {
        disabled: disabledPromotion,
-       start: timeStart,
-       end: timeEnd,
+       start: datePromotionStart,
+       end: datePromotionEnd,
        promotionPercent: Number(promotionPercent),
        servicesInPromotion: mapOnyIds,
-       dateFull: datePromotion,
+       _id: itemPromotion._id,
      }
-     dispatch(
-       fetchAddNoConstDateHappyHour(user.token, user.company._id, dataHappyHour)
-     )
+
+     dispatch(fetchUpdatePromotion(user.token, user.company._id, dataPromotion))
    }
 
    const handleResetAdd = () => {
-     setNewNoConstHappyHour(false)
-     setPromotionPercent("")
-     setDisabledPromotion(false)
-     setTimeStart("10:00")
-     setTimeEnd("12:00")
-     setSelectedServicesIds([])
-     setSelectedTime(new Date())
+     setNewPromotion(false)
+     setPromotionPercent(itemPromotion.promotionPercent)
+     setDisabledPromotion(itemPromotion.disabled)
+     setSelectedTimeStart(new Date(itemPromotion.start))
+     setSelectedTimeEnd(new Date(itemPromotion.end))
+     setUserSelectedTime(true)
+     setDatePromotionStart(itemPromotion.start)
+     setDatePromotionEnd(itemPromotion.end)
+
+     const mapServicesInPromotion = itemPromotion.servicesInPromotion.map(
+       servicePromotion => {
+         const findService = companyServices.find(
+           service => service._id === servicePromotion
+         )
+         return {
+           value: servicePromotion,
+           label: !!findService ? findService.serviceName : servicePromotion,
+         }
+       }
+     )
+     setSelectedServicesIds(mapServicesInPromotion)
    }
 
    const handleChangeServicesIds = value => {
      const allValues = value ? value : []
      setSelectedServicesIds(allValues)
-   }
-
-   const handleUpdateTimeStart = time => {
-     setNewNoConstHappyHour(true)
-     setEnableTimeStart(false)
-     setTimeStart(time)
-   }
-
-   const handleUpdateTimeEnd = time => {
-     setNewNoConstHappyHour(true)
-     setEnableTimeEnd(false)
-     setTimeEnd(time)
-   }
-
-   const handleClickTimeStart = () => {
-     setNewNoConstHappyHour(false)
-     setEnableTimeStart(true)
-   }
-
-   const handleClickTimeEnd = () => {
-     setNewNoConstHappyHour(false)
-     setEnableTimeEnd(true)
    }
 
    const handleChangePercent = e => {
@@ -207,14 +225,37 @@ const CheckboxStyle = styled.div`
      setDisabledPromotion(prevState => !prevState)
    }
 
-   const handleClickDatePicker = () => {
-     setNewNoConstHappyHour(false)
-     setEnableDatePicker(true)
+   const handleClickDatePickerStart = () => {
+     setNewPromotion(false)
+     setEnableDatePickerStart(true)
    }
 
-   const handleCloseDateCalendar = () => {
-     setEnableDatePicker(false)
-     setNewNoConstHappyHour(true)
+   const handleClickDatePickerEnd = () => {
+     setNewPromotion(false)
+     setEnableDatePickerEnd(true)
+   }
+
+   const handleCloseDateCalendarStart = () => {
+     setEnableDatePickerStart(false)
+     setNewPromotion(true)
+   }
+
+   const handleCloseDateCalendarEnd = () => {
+     setEnableDatePickerEnd(false)
+     setNewPromotion(true)
+   }
+
+   const handleSelectTimeStart = time => {
+     if (!userSelectedTime) {
+       setSelectedTimeEnd(time)
+     }
+     setSelectedTimeStart(time)
+     setUserSelectedTime(true)
+   }
+
+   const handleSelectTimeEnd = time => {
+     setSelectedTimeEnd(time)
+     setUserSelectedTime(true)
    }
 
    const mapServices = companyServices.map(item => {
@@ -227,7 +268,7 @@ const CheckboxStyle = styled.div`
    return (
      <>
        <CSSTransition
-         in={newNoConstHappyHour}
+         in={newPromotion}
          timeout={400}
          classNames="popup"
          unmountOnExit
@@ -235,10 +276,10 @@ const CheckboxStyle = styled.div`
          <BackgroundEdit>
            <BackgroundEditContent siteProps={siteProps}>
              <TitleRightColumn
-               isCompanyEditProfil={setEditNoConstHappyHours}
+               isCompanyEditProfil={setEditPromotions}
                siteProps={siteProps}
              >
-               Nowe happy hours
+               Nowa promocja
              </TitleRightColumn>
              <SelectStyles>
                <SelectCustom
@@ -251,20 +292,23 @@ const CheckboxStyle = styled.div`
                  isClearable={false}
                  secondColor
                  isMulti
+                 closeMenuOnSelect={false}
                />
              </SelectStyles>
              <div>
                <MarginButtonTime>
                  <ButtonIcon
                    title={
-                     !!timeStart ? `Data: ${datePromotion}` : "Data promocji"
+                     !!datePromotionStart
+                       ? `Start: ${datePromotionStart}, 0:00`
+                       : "Data promocji"
                    }
                    uppercase
                    fontIconSize="16"
                    fontSize="14"
                    icon={<FaCalendarDay />}
                    secondColors
-                   onClick={handleClickDatePicker}
+                   onClick={handleClickDatePickerStart}
                  />
                </MarginButtonTime>
              </div>
@@ -272,31 +316,16 @@ const CheckboxStyle = styled.div`
                <MarginButtonTime>
                  <ButtonIcon
                    title={
-                     !!timeStart
-                       ? `Start: ${timeStart}`
-                       : "Godzina startu promocji"
+                     !!datePromotionEnd
+                       ? `Koniec: ${datePromotionEnd}, 23:59`
+                       : "Data promocji"
                    }
                    uppercase
                    fontIconSize="16"
                    fontSize="14"
-                   icon={<MdTimelapse />}
+                   icon={<FaCalendarDay />}
                    secondColors
-                   onClick={handleClickTimeStart}
-                 />
-               </MarginButtonTime>
-             </div>
-             <div>
-               <MarginButtonTime>
-                 <ButtonIcon
-                   title={
-                     !!timeEnd ? `Koniec: ${timeEnd}` : "Godzina końca promocji"
-                   }
-                   uppercase
-                   fontIconSize="16"
-                   fontSize="14"
-                   icon={<MdTimelapse />}
-                   secondColors
-                   onClick={handleClickTimeEnd}
+                   onClick={handleClickDatePickerEnd}
                  />
                </MarginButtonTime>
              </div>
@@ -344,7 +373,7 @@ const CheckboxStyle = styled.div`
                  {!disabledSave ? (
                    <div data-tip data-for="disabledButtonSave">
                      <ButtonIcon
-                       title="Dodaj"
+                       title="Zapisz"
                        uppercase
                        fontIconSize="16"
                        fontSize="14"
@@ -356,7 +385,7 @@ const CheckboxStyle = styled.div`
                    </div>
                  ) : (
                    <ButtonIcon
-                     title="Dodaj"
+                     title="Zapisz"
                      uppercase
                      fontIconSize="16"
                      fontSize="14"
@@ -373,39 +402,7 @@ const CheckboxStyle = styled.div`
          </BackgroundEdit>
        </CSSTransition>
        <CSSTransition
-         in={enableTimeStart}
-         timeout={400}
-         classNames="popup"
-         unmountOnExit
-       >
-         <BackgroundEdit>
-           <WidthTimePicker>
-             <TimePickerContent
-               setSelectedTime={handleUpdateTimeStart}
-               timeTimePicker={timeStart}
-               secondColor
-             />
-           </WidthTimePicker>
-         </BackgroundEdit>
-       </CSSTransition>
-       <CSSTransition
-         in={enableTimeEnd}
-         timeout={400}
-         classNames="popup"
-         unmountOnExit
-       >
-         <BackgroundEdit>
-           <WidthTimePicker>
-             <TimePickerContent
-               setSelectedTime={handleUpdateTimeEnd}
-               timeTimePicker={timeEnd}
-               secondColor
-             />
-           </WidthTimePicker>
-         </BackgroundEdit>
-       </CSSTransition>
-       <CSSTransition
-         in={enableDatePicker}
+         in={enableDatePickerStart}
          timeout={400}
          classNames="popup"
          unmountOnExit
@@ -413,9 +410,32 @@ const CheckboxStyle = styled.div`
          <BackgroundEdit>
            <WidthTimePicker>
              <SelectDataCalendar
-               setActualCalendarDate={setSelectedTime}
-               setIsDataActive={handleCloseDateCalendar}
+               setActualCalendarDate={handleSelectTimeStart}
+               setIsDataActive={handleCloseDateCalendarStart}
                minDateActive={true}
+               maxDate={userSelectedTime ? selectedTimeEnd : null}
+               activeData={new Date(selectedTimeStart)}
+             />
+           </WidthTimePicker>
+         </BackgroundEdit>
+       </CSSTransition>
+       <CSSTransition
+         in={enableDatePickerEnd}
+         timeout={400}
+         classNames="popup"
+         unmountOnExit
+       >
+         <BackgroundEdit>
+           <WidthTimePicker>
+             <SelectDataCalendar
+               setActualCalendarDate={handleSelectTimeEnd}
+               setIsDataActive={handleCloseDateCalendarEnd}
+               minDateActive={true}
+               minDateDefault={selectedTimeStart}
+               activeData={new Date(selectedTimeEnd)}
+               activeMonth={
+                 userSelectedTime ? selectedTimeStart : selectedTimeEnd
+               }
              />
            </WidthTimePicker>
          </BackgroundEdit>
@@ -423,4 +443,4 @@ const CheckboxStyle = styled.div`
      </>
    )
  }
-export default HappyHoursNoConstContentNewItem
+export default PromotionsContentItemEdit

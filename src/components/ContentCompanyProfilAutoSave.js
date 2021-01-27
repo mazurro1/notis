@@ -14,7 +14,7 @@ import { MdEdit } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import DaysOffContent from "./ItemsContentCompanyProfilAutoSave/DaysOffContent"
 import HappyHoursConstContent from "./ItemsContentCompanyProfilAutoSave/HappyHoursConstContent"
-import HappyHoursNoConstContent from "./ItemsContentCompanyProfilAutoSave/HappyHoursNoConstContent"
+import PromotionsContent from "./ItemsContentCompanyProfilAutoSave/PromotionsContent"
 import AboutUsComponent from "./ItemsContentCompanyProfilAutoSave/AboutUsComponent"
 import ReserwationTextComponent from "./ItemsContentCompanyProfilAutoSave/ReserwationTextComponent"
 import LinksComponent from "./ItemsContentCompanyProfilAutoSave/LinksComponent"
@@ -183,9 +183,9 @@ const ContentCompanyProfil = ({
   const [editedReserwation, setEditedReserwation] = useState(false)
   const [editLinks, setEditLinks] = useState(false)
   const [editConstHappyHours, setEditConstHappyHours] = useState(false)
-  const [editNoConstHappyHours, setEditNoConstHappyHours] = useState(false)
+  const [editPromotions, setEditPromotions] = useState(false)
   const [editMap, setEditMap] = useState(false)
-
+  
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
@@ -200,7 +200,7 @@ const ContentCompanyProfil = ({
       editedReserwation ||
       editLinks ||
       editConstHappyHours ||
-      editNoConstHappyHours ||
+      editPromotions ||
       editMap
 
   const handleResetAllEditedComponents = () => {
@@ -213,7 +213,7 @@ const ContentCompanyProfil = ({
     setEditedReserwation(false)
     setEditLinks(false)
     setEditConstHappyHours(false)
-    setEditNoConstHappyHours(false)
+    setEditPromotions(false)
     setEditMap(false)
   }
 
@@ -501,17 +501,17 @@ const ContentCompanyProfil = ({
                     <RightColumnItem
                       {...companyEditProfilProps}
                       siteProps={siteProps}
-                      active={editNoConstHappyHours}
+                      active={editPromotions}
                       disabledEditButtons={disabledEditButtons}
                     >
-                      <HappyHoursNoConstContent
+                      <PromotionsContent
                         {...companyEditProfilProps}
                         companyEditProfilProps={companyEditProfilProps}
                         TitleRightColumn={TitleRightColumn}
                         siteProps={siteProps}
-                        happyHoursNoConst={company.happyHoursNoConst}
-                        editNoConstHappyHours={editNoConstHappyHours}
-                        setEditNoConstHappyHours={setEditNoConstHappyHours}
+                        promotions={company.promotions}
+                        editPromotions={editPromotions}
+                        setEditPromotions={setEditPromotions}
                         handleResetAllEditedComponents={
                           handleResetAllEditedComponents
                         }

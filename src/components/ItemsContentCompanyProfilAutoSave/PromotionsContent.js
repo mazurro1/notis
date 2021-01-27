@@ -4,8 +4,8 @@ import ButtonIcon from '../ButtonIcon'
 import {Colors} from '../../common/Colors'
 import { FaArrowLeft } from "react-icons/fa"
 import { MdEdit, MdAddBox } from "react-icons/md"
-import HappyHoursNoConstContentNewItem from "./HappyHoursNoConstContentNewItem"
-import HappyHoursNoConstContentItem from "./HappyHoursNoConstContentItem"
+import PromotionsContentNewItem from "./PromotionsContentNewItem"
+import PromotionsContentItem from "./PromotionsContentItem"
 import {
   sortItemsInArray,
   sortItemsInArrayDateConvert,
@@ -13,13 +13,8 @@ import {
 
 const PositionRelative = styled.div`
   font-size: 1rem;
-  padding-bottom: ${props =>
-    props.active
-      ? props.componentHeight > 500
-        ? "0px"
-        : `${500 - props.componentHeight}px`
-      : "0px"};
-  transition-property: padding-bottom;
+  min-height: ${props => (props.active ? "500px" : "0px")};
+  transition-property: padding-bottom, min-height;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -36,7 +31,7 @@ const ItemsAddHappyHour = styled.div`
   align-items: center;
 `
 
-const ItemsNoConstHappyHours = styled.div`
+const ItemsPromotions = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -44,13 +39,13 @@ const ItemsNoConstHappyHours = styled.div`
   align-items: center;
 `
 
-const HappyHoursNoConstContent = ({
+const PromotionsContent = ({
   isCompanyEditProfil = false,
   siteProps,
   TitleRightColumn,
-  happyHoursNoConst = [],
-  editNoConstHappyHours,
-  setEditNoConstHappyHours,
+  promotions = [],
+  editPromotions,
+  setEditPromotions,
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
@@ -58,74 +53,65 @@ const HappyHoursNoConstContent = ({
   companyServices = [],
   user,
 }) => {
-  const [newNoConstHappyHour, setNewNoConstHappyHour] = useState(false)
-  const [enableTimeEnd, setEnableTimeEnd] = useState(false)
-  const [enableTimeStart, setEnableTimeStart] = useState(false)
-  const [enableDatePicker, setEnableDatePicker] = useState(false)
-  const [componentHeight, setComponentHeight] = useState(0)
-
-  const refNoConstHappyHour = useRef(null)
-
-    useEffect(() => {
-      if (!!refNoConstHappyHour) {
-        setComponentHeight(refNoConstHappyHour.current.clientHeight)
-      }
-    }, [refNoConstHappyHour, happyHoursNoConst, newNoConstHappyHour])
-
-    useEffect(() => {
-      setNewNoConstHappyHour(false)
-      setEnableTimeStart(false)
-      setEnableTimeEnd(false)
-    }, [happyHoursNoConst, editMode])
+  const [newPromotion, setNewPromotion] = useState(false)
+  const [enableDatePickerStart, setEnableDatePickerStart] = useState(false)
+  const [enableDatePickerEnd, setEnableDatePickerEnd] = useState(false)
+  
+  useEffect(() => {
+    setNewPromotion(false)
+  }, [promotions, editMode])
 
   const handleClickEdit = () => {
     handleResetAllEditedComponents()
-    setEditNoConstHappyHours(prevState => !prevState)
+    setEditPromotions(prevState => !prevState)
   }
 
   const handleReset = () => {
-    setEditNoConstHappyHours(false)
+    setEditPromotions(false)
   }
 
   const handleClickAddNewNoConsrHappyHour = () => {
-    setNewNoConstHappyHour(prevState => !prevState)
+    setNewPromotion(prevState => !prevState)
   }
-  const sortedNoConstHappyHoursConvert = sortItemsInArrayDateConvert([...happyHoursNoConst], "fullDate")
-  const mapNoConstHappyHours = sortedNoConstHappyHoursConvert.map((item, index) => {
+  const sortedPromotionsConvert = sortItemsInArrayDateConvert(
+    [...promotions],
+    "start"
+  )
+  const mapPromotions = sortedPromotionsConvert.map((item, index) => {
     return (
-      <HappyHoursNoConstContentItem
+      <PromotionsContentItem
         item={item}
         key={index}
         companyServices={companyServices}
         siteProps={siteProps}
-        editNoConstHappyHours={editNoConstHappyHours}
+        editPromotions={editPromotions}
         editMode={editMode}
+        user={user}
+        promotions={promotions}
+        TitleRightColumn={TitleRightColumn}
+        setEditPromotions={setEditPromotions}
       />
     )
   })
-  
   return (
     <PositionRelative
       active={
-        newNoConstHappyHour ||
-        enableTimeEnd ||
-        enableTimeStart ||
-        enableDatePicker
+        newPromotion ||
+        enableDatePickerStart ||
+        enableDatePickerEnd
       }
-      componentHeight={componentHeight}
-      ref={refNoConstHappyHour}
     >
       <TitleRightColumn
-        isCompanyEditProfil={editNoConstHappyHours}
+        isCompanyEditProfil={editPromotions}
         siteProps={siteProps}
       >
-        Zmienne Happy Hours
+        Promocje
       </TitleRightColumn>
-      <ItemsNoConstHappyHours>{mapNoConstHappyHours}</ItemsNoConstHappyHours>
+      <ItemsPromotions>{mapPromotions}</ItemsPromotions>
       <ItemsAddHappyHour>
-        {isCompanyEditProfil && editNoConstHappyHours && (
+        {isCompanyEditProfil && editPromotions && (
           <ButtonIcon
-            title="Dodaj happy hour"
+            title="Dodaj promocje"
             uppercase
             fontIconSize="25"
             fontSize="14"
@@ -135,11 +121,11 @@ const HappyHoursNoConstContent = ({
           />
         )}
       </ItemsAddHappyHour>
-      {isCompanyEditProfil && !editNoConstHappyHours ? (
+      {isCompanyEditProfil && !editPromotions ? (
         <ButtonEditPosition>
           <div data-tip data-for="disabledButton">
             <ButtonIcon
-              title="Edytuj zmienne happy hours"
+              title="Edytuj promocje"
               uppercase
               fontIconSize="25"
               fontSize="14"
@@ -169,24 +155,22 @@ const HappyHoursNoConstContent = ({
         )
       )}
       {isCompanyEditProfil && (
-        <HappyHoursNoConstContentNewItem
+        <PromotionsContentNewItem
           TitleRightColumn={TitleRightColumn}
-          newNoConstHappyHour={newNoConstHappyHour}
+          newPromotion={newPromotion}
           siteProps={siteProps}
-          setEditNoConstHappyHours={setEditNoConstHappyHours}
-          setNewNoConstHappyHour={setNewNoConstHappyHour}
+          setEditPromotions={setEditPromotions}
+          setNewPromotion={setNewPromotion}
           companyServices={companyServices}
-          enableTimeEnd={enableTimeEnd}
-          setEnableTimeEnd={setEnableTimeEnd}
-          enableTimeStart={enableTimeStart}
-          setEnableTimeStart={setEnableTimeStart}
-          enableDatePicker={enableDatePicker}
-          setEnableDatePicker={setEnableDatePicker}
+          enableDatePickerStart={enableDatePickerStart}
+          setEnableDatePickerStart={setEnableDatePickerStart}
+          enableDatePickerEnd={enableDatePickerEnd}
+          setEnableDatePickerEnd={setEnableDatePickerEnd}
           user={user}
-          happyHoursNoConst={happyHoursNoConst}
+          promotions={promotions}
         />
       )}
     </PositionRelative>
   )
 }
-export default HappyHoursNoConstContent
+export default PromotionsContent

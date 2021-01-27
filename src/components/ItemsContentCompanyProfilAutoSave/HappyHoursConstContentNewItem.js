@@ -82,6 +82,34 @@ const ButtonTextPositionHappy = styled.div`
   align-items: center;
   margin-top: 10px;
 `
+
+const ItemDayToSelect = styled.button`
+  padding: 2px 8px;
+  font-size: 1rem;
+  border-radius: 5px;
+  background-color: ${props =>
+    props.active
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).opinionColorDown};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  display: inline-block;
+  margin: 2px;
+  cursor: pointer;
+  border: none;
+  user-select: none;
+  transition-property: background-color, color, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${props => Colors(props.siteProps).secondColor};
+  }
+
+  &:active{
+    transform: scale(0.8);
+  }
+`
+
 const HappyHoursConstContentNewItem = ({
   siteProps,
   TitleRightColumn,
@@ -96,7 +124,7 @@ const HappyHoursConstContentNewItem = ({
   user,
   happyHoursConst,
 }) => {
-  const [selectedDayOfTheWeek, setSelectedDayOfTheWeek] = useState(null)
+  const [selectedDayOfTheWeek, setSelectedDayOfTheWeek] = useState([])
   const [promotionPercent, setPromotionPercent] = useState("")
   const [disabledPromotion, setDisabledPromotion] = useState(false)
   const [timeStart, setTimeStart] = useState("10:00")
@@ -106,7 +134,7 @@ const HappyHoursConstContentNewItem = ({
   const dispatch = useDispatch()
 
   const disabledSave =
-    !!selectedDayOfTheWeek &&
+    selectedDayOfTheWeek.length > 0 &&
     !!promotionPercent &&
     !!timeStart &&
     !!timeEnd &&
@@ -118,7 +146,7 @@ const HappyHoursConstContentNewItem = ({
 
   useEffect(() => {
     setNewHappyHour(false)
-    setSelectedDayOfTheWeek(null)
+    setSelectedDayOfTheWeek([])
     setPromotionPercent("")
     setDisabledPromotion(false)
     setTimeStart("10:00")
@@ -128,17 +156,12 @@ const HappyHoursConstContentNewItem = ({
 
   const handleResetAdd = () => {
     setNewHappyHour(false)
-    setSelectedDayOfTheWeek(null)
+    setSelectedDayOfTheWeek([])
     setPromotionPercent("")
     setDisabledPromotion(false)
     setTimeStart("10:00")
     setTimeEnd("12:00")
     setSelectedServicesIds([])
-  }
-
-  const handleChangeDayOfTheWeek = value => {
-    const allValues = value ? value : []
-    setSelectedDayOfTheWeek(allValues)
   }
 
   const handleChangeServicesIds = value => {
@@ -176,6 +199,17 @@ const HappyHoursConstContentNewItem = ({
     setEnableTimeEnd(true)
   }
 
+  const handleClickDaySelect = (itemId) => {
+    const isInSelected = selectedDayOfTheWeek.some(item => item === itemId);
+    if(isInSelected){
+      const filterSelectedIds = selectedDayOfTheWeek.filter(item => item !== itemId);
+      setSelectedDayOfTheWeek(filterSelectedIds)
+    }else{
+      const newItemsIds = [...selectedDayOfTheWeek, itemId]
+      setSelectedDayOfTheWeek(newItemsIds)
+    }
+  }
+
   const handleSaveHappyHour = () => {
     const mapOnyIds = selectedServicesIds.map(item => item.value)
     const dataHappyHour = {
@@ -184,7 +218,7 @@ const HappyHoursConstContentNewItem = ({
       end: timeEnd,
       promotionPercent: Number(promotionPercent),
       servicesInPromotion: mapOnyIds,
-      dayWeekIndex: selectedDayOfTheWeek.value,
+      dayWeekIndex: selectedDayOfTheWeek,
     }
 
     dispatch(
@@ -192,18 +226,26 @@ const HappyHoursConstContentNewItem = ({
     )
   }
 
-  const mapDaysOfTheWeek = DaySOfTheWeek.map(item => {
-    return {
-      value: item.dayOfTheWeek,
-      label: item.title,
-    }
-  })
-
   const mapServices = companyServices.map(item => {
     return {
       value: item._id,
       label: item.serviceName,
     }
+  })
+
+  const mapDaysToSelect = DaySOfTheWeek.map((item, index) => {
+    const isDayActive = selectedDayOfTheWeek.some(itemSelected => {
+      return itemSelected === item.dayOfTheWeek
+    });
+    return (
+      <ItemDayToSelect
+        key={index}
+        active={isDayActive}
+        onClick={() => handleClickDaySelect(item.dayOfTheWeek)}
+      >
+        {item.title}
+      </ItemDayToSelect>
+    )
   })
 
   return (
@@ -222,18 +264,7 @@ const HappyHoursConstContentNewItem = ({
             >
               Nowe happy hours
             </TitleRightColumn>
-            <SelectStyles>
-              <SelectCustom
-                options={mapDaysOfTheWeek}
-                value={selectedDayOfTheWeek}
-                handleChange={handleChangeDayOfTheWeek}
-                placeholder="Zaznacz dzień tygodnia..."
-                defaultMenuIsOpen={false}
-                widthAuto
-                isClearable={false}
-                secondColor
-              />
-            </SelectStyles>
+            <SelectStyles>{mapDaysToSelect}</SelectStyles>
             <SelectStyles>
               <SelectCustom
                 options={mapServices}
@@ -245,6 +276,7 @@ const HappyHoursConstContentNewItem = ({
                 isClearable={false}
                 secondColor
                 isMulti
+                closeMenuOnSelect={false}
               />
             </SelectStyles>
             <div>

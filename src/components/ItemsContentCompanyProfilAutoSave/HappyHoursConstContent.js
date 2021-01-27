@@ -21,8 +21,8 @@ const MarginButton = styled.div`
 
 const PositionRelative = styled.div`
   font-size: 1rem;
-  padding-bottom: ${props => (props.active ? props.componentHeight > 700 ? "0px" : `${700 - props.componentHeight}px` : "0px")};
-  transition-property: padding-bottom;
+  min-height: ${props => (props.active ? "700px" : "0px")};
+  transition-property: min-height;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -51,20 +51,11 @@ const HappyHoursConstContent = ({
 }) => {
   const [categoriesWithItems, setCategoriesWithItems] = useState([])
   const [newHappyHour, setNewHappyHour] = useState(false)
-  const [componentHeight, setComponentHeight] = useState(0)
   const [enableTimeStart, setEnableTimeStart] = useState(false)
   const [enableTimeEnd, setEnableTimeEnd] = useState(false)
   const updateConstHappyHours = useSelector(
     state => state.updateConstHappyHours
-  )
-  const refConstHappyHour = useRef(null)
-
-  useEffect(() => {
-    if (!!refConstHappyHour) {
-      setComponentHeight(refConstHappyHour.current.clientHeight)
-    }
-  }, [refConstHappyHour, categoriesWithItems, happyHoursConst, newHappyHour])
-  
+  )  
 
   const dispatch = useDispatch()
 
@@ -75,7 +66,7 @@ const HappyHoursConstContent = ({
     const sortedHas0 = sortedItems.filter(item => item.category === 0)
     const sortedOther = sortedItems.filter(item => item.category !== 0)
     const resultSorted = [...sortedOther, ...sortedHas0]
-    setCategoriesWithItems(resultSorted)
+    setCategoriesWithItems(happyHoursConst)
 
     setNewHappyHour(false)
     setEnableTimeStart(false)
@@ -115,8 +106,6 @@ const HappyHoursConstContent = ({
   return (
     <PositionRelative
       active={newHappyHour || enableTimeStart || enableTimeEnd}
-      ref={refConstHappyHour}
-      componentHeight={componentHeight}
     >
       <TitleRightColumn
         isCompanyEditProfil={editConstHappyHours}

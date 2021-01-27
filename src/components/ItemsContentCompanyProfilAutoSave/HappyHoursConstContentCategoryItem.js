@@ -133,15 +133,6 @@ const MarginButton = styled.div`
   margin: 5px;
 `
 
-const BackgroundEditContent = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
-  border-radius: 5px;
-  max-height: 90%;
-`
-
 const HappyHoursConstContentCategoryItem = ({
   item,
   companyServices,

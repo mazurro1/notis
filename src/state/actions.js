@@ -533,6 +533,29 @@ export const DELETE_COMPANY_HAPPY_HOUR_CONST = "DELETE_COMPANY_HAPPY_HOUR_CONST"
 export const UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH = "UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH"
 export const UPDATE_CONST_HAPPY_HOURS = "UPDATE_CONST_HAPPY_HOURS"
 export const UPDATE_COMPANY_HAPPY_HOURS_NO_CONST = "UPDATE_COMPANY_HAPPY_HOURS_NO_CONST"
+export const DELETE_COMPANY_PROMOTION = "DELETE_COMPANY_PROMOTION"
+export const UPDATE_COMPANY_PATH_PROMOTION = "UPDATE_COMPANY_PATH_PROMOTION"
+export const UPDATE_PROMOTIONS = "UPDATE_PROMOTIONS"
+
+export const updatePromotionsDispatch = () => {
+  return {
+    type: UPDATE_PROMOTIONS,
+  }
+}
+
+export const updateCompanyPathPromotion = (promotionDate) => {
+  return {
+    type: UPDATE_COMPANY_PATH_PROMOTION,
+    promotionDate: promotionDate,
+  }
+}
+
+export const deleteCompanyPromotion = (promotionId) => {
+  return {
+    type: DELETE_COMPANY_PROMOTION,
+    promotionId: promotionId,
+  }
+}
 
 export const updateConstHappyHoursFunction = () => {
   return {
@@ -561,10 +584,10 @@ export const updateCompanyHappyHoursConst = (constHappyHours) => {
   }
 }
 
-export const updateCompanyHappyHoursNoConst = noConstHappyHours => {
+export const updateCompanyPromotions = promotions => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOURS_NO_CONST,
-    noConstHappyHours: noConstHappyHours,
+    promotions: promotions,
   }
 }
 
@@ -2366,15 +2389,15 @@ export const fetchAddConstDateHappyHour = (token, companyId, constDate) => {
   }
 }
 
-export const fetchAddNoConstDateHappyHour = (token, companyId, constDate) => {
+export const fetchAddPromotion = (token, companyId, promotionDate) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
-        `${Site.serverUrl}/add-no-const-date-happy-hour`,
+        `${Site.serverUrl}/add-promotion`,
         {
           companyId: companyId,
-          constDate: constDate,
+          promotionDate: promotionDate,
         },
         {
           headers: {
@@ -2383,13 +2406,13 @@ export const fetchAddNoConstDateHappyHour = (token, companyId, constDate) => {
         }
       )
       .then(response => {
-        dispatch(updateCompanyHappyHoursNoConst(response.data.happyHoursNoConst))
+        dispatch(updateCompanyPromotions(response.data.promotions))
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Dodano happy hour.", "green"))
+        dispatch(addAlertItem("Dodano promocję.", "green"))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania happy hour.", "red"))
+        dispatch(addAlertItem("Błąd podczas dodawania promocji.", "red"))
       })
   }
 }
@@ -2422,6 +2445,8 @@ export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
   }
 }
 
+
+
 export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -2439,7 +2464,6 @@ export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
         }
       )
       .then(response => {
-        // dispatch(updateCompanyHappyHoursConst(response.data.happyHoursConst))
         dispatch(updateCompanyHappyHourConstPatch(constDate))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano happy hour.", "green"))
@@ -2447,6 +2471,62 @@ export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas aktualizacji happy hour.", "red"))
+      })
+  }
+}
+
+export const fetchDeletePromotion = (token, companyId, promotionId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/delete-promotion`,
+        {
+          companyId: companyId,
+          promotionId: promotionId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(deleteCompanyPromotion(promotionId))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto promocję.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas usuwania promocji.", "red"))
+      })
+  }
+}
+
+export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/update-promotion`,
+        {
+          companyId: companyId,
+          promotionDate: promotionDate,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyPathPromotion(promotionDate))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano happy hour.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania happy hour.", "red"))
       })
   }
 }

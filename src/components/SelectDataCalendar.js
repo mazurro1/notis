@@ -27,7 +27,6 @@ const StyleSimpleReactCalendar = styled.div`
     background-color: transparent;
   }
   .date_picker-week-day.is-selectable {
-    color: ${props => Colors(props.siteProps).calendarActiveDate};
     &:hover {
       background-color: ${props => Colors(props.siteProps).primaryColorDark};
       color: ${props => Colors(props.siteProps).textNormalWhite};
@@ -100,10 +99,11 @@ const SelectDataCalendar = ({
   setIsTimeActive = () => {},
   activeMonth = new Date(),
   maxDate = null,
-  minDateActive = true
+  minDateActive = true,
+  minDateDefault = null
 }) => {
   const siteProps = useSelector(state => state.siteProps)
-  const data = new Date()
+  const data = !!minDateDefault ? new Date(minDateDefault) : new Date()
   const prevYeat = new Date(data.getFullYear(), data.getMonth(), data.getDate())
   const nextYear = new Date(
     data.getFullYear() + 1,

@@ -82,6 +82,34 @@ const ButtonTextPositionHappy = styled.div`
   align-items: center;
   margin-top: 10px;
 `
+
+const ItemDayToSelect = styled.button`
+  padding: 2px 8px;
+  font-size: 1rem;
+  border-radius: 5px;
+  background-color: ${props =>
+    props.active
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).opinionColorDown};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  display: inline-block;
+  margin: 2px;
+  cursor: pointer;
+  border: none;
+  user-select: none;
+  transition-property: background-color, color, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${props => Colors(props.siteProps).secondColor};
+  }
+
+  &:active {
+    transform: scale(0.8);
+  }
+`
+
 const HappyHoursConstContentCategoryItemEdit = ({
   siteProps,
   TitleRightColumn,
@@ -97,7 +125,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
   dataHappyHourConst,
   happyHoursConst,
 }) => {
-  const [selectedDayOfTheWeek, setSelectedDayOfTheWeek] = useState(null)
+  const [selectedDayOfTheWeek, setSelectedDayOfTheWeek] = useState([])
   const [promotionPercent, setPromotionPercent] = useState("")
   const [disabledPromotion, setDisabledPromotion] = useState(false)
   const [timeStart, setTimeStart] = useState("10:00")
@@ -124,18 +152,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
       }
     )
     setSelectedServicesIds(mapServicesInPromotion)
-    const findDAyOfTheWeek = DaySOfTheWeek.filter(
-      day => day.dayOfTheWeek === dataHappyHourConst.dayWeekIndex
-    )
-    if (findDAyOfTheWeek) {
-      const mapFindDay = findDAyOfTheWeek.map(dayWeek => {
-        return {
-          value: dayWeek.dayOfTheWeek,
-          label: dayWeek.title,
-        }
-      })
-      setSelectedDayOfTheWeek(mapFindDay[0])
-    }
+    setSelectedDayOfTheWeek(dataHappyHourConst.dayWeekIndex)
   }, [dataHappyHourConst, happyHoursConst])
 
   const mapOnyIdsNewObject = selectedServicesIds.map(item => item.value)
@@ -143,7 +160,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
     servicesInPromotion: mapOnyIdsNewObject,
     _id: dataHappyHourConst._id,
     disabled: disabledPromotion,
-    dayWeekIndex: !!selectedDayOfTheWeek ? selectedDayOfTheWeek.value : 0,
+    dayWeekIndex: selectedDayOfTheWeek,
     start: timeStart,
     end: timeEnd,
     promotionPercent: Number(promotionPercent),
@@ -152,7 +169,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
   const isEq =
     JSON.stringify(newEditedObject) == JSON.stringify(dataHappyHourConst)
   const disabledSave =
-    !!selectedDayOfTheWeek &&
+    selectedDayOfTheWeek.length > 0 &&
     !!promotionPercent &&
     !!timeStart &&
     !!timeEnd &&
@@ -181,23 +198,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
       }
     )
     setSelectedServicesIds(mapServicesInPromotion)
-    const findDAyOfTheWeek = DaySOfTheWeek.filter(
-      day => day.dayOfTheWeek === dataHappyHourConst.dayWeekIndex
-    )
-    if (findDAyOfTheWeek) {
-      const mapFindDay = findDAyOfTheWeek.map(dayWeek => {
-        return {
-          value: dayWeek.dayOfTheWeek,
-          label: dayWeek.title,
-        }
-      })
-      setSelectedDayOfTheWeek(mapFindDay[0])
-    }
-  }
-
-  const handleChangeDayOfTheWeek = value => {
-    const allValues = value ? value : []
-    setSelectedDayOfTheWeek(allValues)
+    setSelectedDayOfTheWeek(dataHappyHourConst.dayWeekIndex)
   }
 
   const handleChangeServicesIds = value => {
@@ -245,11 +246,32 @@ const HappyHoursConstContentCategoryItemEdit = ({
     )
   }
 
-  const mapDaysOfTheWeek = DaySOfTheWeek.map(item => {
-    return {
-      value: item.dayOfTheWeek,
-      label: item.title,
+  const handleClickDaySelect = itemId => {
+    const isInSelected = selectedDayOfTheWeek.some(item => item === itemId)
+    if (isInSelected) {
+      const filterSelectedIds = selectedDayOfTheWeek.filter(
+        item => item !== itemId
+      )
+      setSelectedDayOfTheWeek(filterSelectedIds)
+    } else {
+      const newItemsIds = [...selectedDayOfTheWeek, itemId]
+      setSelectedDayOfTheWeek(newItemsIds)
     }
+  }
+
+  const mapDaysToSelect = DaySOfTheWeek.map((item, index) => {
+    const isDayActive = selectedDayOfTheWeek.some(itemSelected => {
+      return itemSelected === item.dayOfTheWeek
+    })
+    return (
+      <ItemDayToSelect
+        key={index}
+        active={isDayActive}
+        onClick={() => handleClickDaySelect(item.dayOfTheWeek)}
+      >
+        {item.title}
+      </ItemDayToSelect>
+    )
   })
 
   const mapServices = companyServices.map(item => {
@@ -273,20 +295,9 @@ const HappyHoursConstContentCategoryItemEdit = ({
               isCompanyEditProfil={editConstHappyHours}
               siteProps={siteProps}
             >
-              Nowe happy hours
+              Edytuj happy hours
             </TitleRightColumn>
-            <SelectStyles>
-              <SelectCustom
-                options={mapDaysOfTheWeek}
-                value={selectedDayOfTheWeek}
-                handleChange={handleChangeDayOfTheWeek}
-                placeholder="Zaznacz dzień tygodnia..."
-                defaultMenuIsOpen={false}
-                widthAuto
-                isClearable={false}
-                secondColor
-              />
-            </SelectStyles>
+            <SelectStyles>{mapDaysToSelect}</SelectStyles>
             <SelectStyles>
               <SelectCustom
                 options={mapServices}

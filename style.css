@@ -64,6 +64,10 @@ h6 {
   transition-timing-function: ease;
 }
 
+button{
+  font-family: "Poppins", sans-serif;
+}
+
 button:focus {
   outline: none;
 }
