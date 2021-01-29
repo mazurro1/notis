@@ -186,7 +186,9 @@ const AlertItemStyle = styled.div`
     dispatch(resetBellAlerts(!bellAlertsActive))
     const isSomeActive = allAlerts.some(item => item.active)
     if (bellAlertsActive === false && isSomeActive) {
-      dispatch(fetchUpdateUserAlert(user.token))
+      if (!!user.token) {
+        dispatch(fetchUpdateUserAlert(user.token))
+      }
     } else if (bellAlertsActive === false) {
       dispatch(resetUserAlerts())
     }

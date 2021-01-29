@@ -100,6 +100,7 @@ const CheckboxStyle = styled.div`
    itemPromotion,
    editPromotions,
    updatePromotions,
+   isOld,
  }) => {
    const [selectedServicesIds, setSelectedServicesIds] = useState([])
    const [datePromotionStart, setDatePromotionStart] = useState("")
@@ -218,7 +219,10 @@ const CheckboxStyle = styled.div`
    }
 
    const handleChangePercent = e => {
-     setPromotionPercent(e.target.value)
+     const isGoodValue = e.target.value.length <= 2
+     if (isGoodValue) {
+       setPromotionPercent(e.target.value)
+     }
    }
 
    const handleChangeDisabledPromotion = () => {
@@ -338,17 +342,17 @@ const CheckboxStyle = styled.div`
                required
                secondColor
              />
-             <CheckboxStyle siteProps={siteProps}>
+             {!isOld && <CheckboxStyle siteProps={siteProps}>
                <Checkbox
                  theme="material-checkbox"
                  value={disabledPromotion}
                  onChange={handleChangeDisabledPromotion}
                >
                  <TextCheckbox siteProps={siteProps}>
-                   Promocja wyłączona
+                   Wyłącz promocje
                  </TextCheckbox>
                </Checkbox>
-             </CheckboxStyle>
+             </CheckboxStyle>}
              <ButtonTextPositionHappy>
                <MarginButton>
                  <ButtonIcon

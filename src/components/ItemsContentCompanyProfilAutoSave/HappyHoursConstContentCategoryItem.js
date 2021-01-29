@@ -22,7 +22,7 @@ const ItemCategoryItem = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
   margin-bottom: 10px;
   overflow: hidden;
-  padding-bottom: ${props => (props.active ? "400px" : "0px")};
+  padding-bottom: ${props => (props.active ? "600px" : "0px")};
   transition-property: background-color, color, padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;

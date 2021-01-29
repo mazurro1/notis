@@ -4,7 +4,6 @@ import { MdExpandMore } from "react-icons/md"
 import { FaChrome } from "react-icons/fa"
 import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"
-import ReactTooltip from "react-tooltip"
 import UserHistoryCategoryItem from "./UserHistoryCategoryItem"
 import { useDispatch } from "react-redux"
 import { fetchDeleteReserwation } from "../state/actions"
@@ -91,6 +90,7 @@ const UserHistoryCategory = ({
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
   const dispatch = useDispatch()
+  
 
   const handleClickArrow = () => {
     setCollapseActive(prevState => !prevState)
@@ -121,6 +121,8 @@ const UserHistoryCategory = ({
         index={index}
         key={index}
         handleDeleteReserwation={handleDeleteReserwation}
+        userToken={userToken}
+        company={company}
       />
     )
   })
@@ -146,17 +148,6 @@ const UserHistoryCategory = ({
       <Collapse isOpened={collapseActive}>
         <div>{servicesMap}</div>
       </Collapse>
-
-      <ReactTooltip
-        id="deleteReserwationTooltip"
-        effect="float"
-        multiline={true}
-      >
-        <span>Odwołaj wizytę</span>
-      </ReactTooltip>
-      <ReactTooltip id="goToWebsite" effect="float" multiline={true}>
-        <span>Przejdz do strony internetowej firmy</span>
-      </ReactTooltip>
     </CategoryItemStyle>
   )
 }

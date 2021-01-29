@@ -170,7 +170,10 @@ const HappyHoursConstContentNewItem = ({
   }
 
   const handleChangePercent = e => {
-    setPromotionPercent(e.target.value)
+    const isGoodValue = e.target.value.length <= 2
+    if (isGoodValue) {
+      setPromotionPercent(e.target.value)
+    }
   }
 
   const handleChangeDisabledPromotion = () => {
@@ -317,6 +320,7 @@ const HappyHoursConstContentNewItem = ({
               value={promotionPercent}
               type="number"
               onChange={handleChangePercent}
+              maxLength={2}
               required
               secondColor
             />
@@ -327,7 +331,7 @@ const HappyHoursConstContentNewItem = ({
                 onChange={handleChangeDisabledPromotion}
               >
                 <TextCheckbox siteProps={siteProps}>
-                  Promocja wyłączona
+                  Wyłącz happy hour
                 </TextCheckbox>
               </Checkbox>
             </CheckboxStyle>

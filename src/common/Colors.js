@@ -84,5 +84,6 @@ export const Colors = (
       : siteProps.dark
       ? "#212121"
       : "#f5f4f5",
+    disabled: "#e0e0e0",
   }
 }

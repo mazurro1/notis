@@ -55,6 +55,7 @@ const LeftContent = styled.div`
 `
 
 const PriceService = styled.span`
+  position: relative;
   background-color: red;
   font-size: 0.8rem;
   padding: 2px 5px;
@@ -62,6 +63,7 @@ const PriceService = styled.span`
   margin-left: 10px;
   border-radius: 5px;
   color: ${props => Colors(props.siteProps).textNormalWhite};
+  overflow: hidden;
   background-color: ${props =>
     props.isCompanyEditProfil
       ? props.otherColor
@@ -69,7 +71,13 @@ const PriceService = styled.span`
         : Colors(props.siteProps).secondDarkColor
       : props.otherColor
       ? Colors(props.siteProps).darkColor
+      : props.active
+      ? Colors(props.siteProps).disabled
       : Colors(props.siteProps).primaryColorDark};
+
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 `
 
 const ItemSummary = styled.div`
@@ -221,6 +229,29 @@ const NoWorkersText = styled.div`
   margin-top: 10px;
 `
 
+const CrossPricePosition = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: ${props => (props.active ? "1" : "0")};
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+`
+
+const CrossPrice = styled.div`
+  width: 120%;
+  height: 2px;
+  background-color: ${props => Colors(props.siteProps).dangerColor};
+  transform: rotate(-20deg);
+`
+
 const Reserwation = ({
   handleCloseReserwation,
   reserwationEnable,
@@ -238,6 +269,7 @@ const Reserwation = ({
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
   const [selectedHour, setSelectedHour] = useState(null)
+  const [selectedPromotion, setSelectedPromotion] = useState(null)
   const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
   const [selectedWorkerId, setSelectedWorkerId] = useState(null)
   const [isDataActive, setIsDataActive] = useState(false)
@@ -267,7 +299,8 @@ const Reserwation = ({
           selectedDay,
           selectedMonth,
           selectedYear,
-          reserwationData.time
+          reserwationData.time,
+          reserwationData._id,
         )
       )
     }
@@ -277,6 +310,7 @@ const Reserwation = ({
     if (!!!reserwationEnable) {
       setTimeout(() => {
         setSelectedHour(null)
+        setSelectedPromotion(null)
         setSelectedWorkerUserId(null)
         setSelectedWorkerId(null)
         setIsDataActive(null)
@@ -333,15 +367,18 @@ const Reserwation = ({
     }
   }
 
-  const handleClickDateToReserw = clickedHour => {
+  const handleClickDateToReserw = (clickedHour, clickedPromotion) => {
     if (!!selectedHour) {
       if (selectedHour === clickedHour) {
         setSelectedHour(null)
+        setSelectedPromotion(null)
       } else {
         setSelectedHour(clickedHour)
+        setSelectedPromotion(clickedPromotion)
       }
     } else {
       setSelectedHour(clickedHour)
+      setSelectedPromotion(clickedPromotion)
     }
   }
 
@@ -487,6 +524,10 @@ const Reserwation = ({
   }
 
   const disabledReserwButton = !!selectedHour & !!selectedWorkerUserId
+  const priceInPromotion = selectedPromotion !== null
+  const newPriceAfterPromotion = Math.floor((Number(reserwationData.serviceCost) *(selectedPromotion !== null? 100 - selectedPromotion: 100)) /100)
+                    
+
   return (
     <>
       <CSSTransition
@@ -504,11 +545,21 @@ const Reserwation = ({
               <LeftContent>
                 <TitleService>
                   {reserwationData.serviceName}
-                  <PriceService siteProps={siteProps}>
+                  <PriceService siteProps={siteProps} active={priceInPromotion}>
                     {`${reserwationData.serviceCost}zł ${
                       reserwationData.extraCost ? "+" : ""
                     }`}
+                    <CrossPricePosition active={priceInPromotion}>
+                      <CrossPrice />
+                    </CrossPricePosition>
                   </PriceService>
+                  {priceInPromotion && (
+                    <PriceService siteProps={siteProps}>
+                      {`${newPriceAfterPromotion}zł ${
+                        reserwationData.extraCost ? "+" : ""
+                      }`}
+                    </PriceService>
+                  )}
                   <PriceService otherColor siteProps={siteProps}>
                     {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
                   </PriceService>
@@ -537,7 +588,15 @@ const Reserwation = ({
                   <ButtonIcon
                     title={
                       selectedDate
-                        ? `${selectedDateMonth} ${selectedDateDay}-${selectedDateFullMonth}-${selectedDateYear}`
+                        ? `${selectedDateMonth} ${
+                            selectedDateDay < 10
+                              ? `0${selectedDateDay}`
+                              : selectedDateDay
+                          }-${
+                            selectedDateFullMonth < 10
+                              ? `0${selectedDateFullMonth}`
+                              : selectedDateFullMonth
+                          }-${selectedDateYear}`
                         : "Wybierz dzień"
                     }
                     fontIconSize="20"
@@ -562,23 +621,20 @@ const Reserwation = ({
                     />
                   </>
                 )}
-                  <ButtonIcon
-                    title="Rezerwuj"
-                    fontIconSize="20"
-                    fontSize="25"
-                    icon={<FaCalendarCheck />}
-                    onClick={handleDoReserwation}
-                    uppercase
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={!disabledReserwButton}
-                  />
+                <ButtonIcon
+                  title="Rezerwuj"
+                  fontIconSize="20"
+                  fontSize="25"
+                  icon={<FaCalendarCheck />}
+                  onClick={handleDoReserwation}
+                  uppercase
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={!disabledReserwButton}
+                />
               </>
             )}
-            <ClosePopup
-              onClick={handleCloseReserwation}
-              siteProps={siteProps}
-            >
+            <ClosePopup onClick={handleCloseReserwation} siteProps={siteProps}>
               <MdClose />
             </ClosePopup>
           </PaddingContent>

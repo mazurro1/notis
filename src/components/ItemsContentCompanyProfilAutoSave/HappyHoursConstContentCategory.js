@@ -15,8 +15,7 @@ const MarginComponent = styled.div`
 const TitleCategory = styled.div`
   position: relative;
   padding: 5px 10px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-radius: 5px;
   padding-right: 50px;
   background-color: ${props =>
     props.edited

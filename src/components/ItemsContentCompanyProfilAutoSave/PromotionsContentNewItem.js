@@ -188,7 +188,10 @@ const CheckboxStyle = styled.div`
    }
 
    const handleChangePercent = e => {
+    const isGoodValue = e.target.value.length <= 2
+    if (isGoodValue) {
      setPromotionPercent(e.target.value)
+    }
    }
 
    const handleChangeDisabledPromotion = () => {
@@ -315,7 +318,7 @@ const CheckboxStyle = styled.div`
                  onChange={handleChangeDisabledPromotion}
                >
                  <TextCheckbox siteProps={siteProps}>
-                   Promocja wyłączona
+                   Wyłącz promocje
                  </TextCheckbox>
                </Checkbox>
              </CheckboxStyle>

@@ -82,9 +82,11 @@ const UserHistory = ({ siteProps, user }) => {
     true
   )
   const [disabledSwitch, setDisabledSwitch] = useState(false)
+
   const userHistoryReserwations = useSelector(
     state => state.userHistoryReserwations
   )
+
   const dispatch = useDispatch()
   useEffect(() => {
     if (!!hiddenCanceledReserwation) {
@@ -99,6 +101,15 @@ const UserHistory = ({ siteProps, user }) => {
       )
     }
   }, [hiddenCanceledReserwation, yearPicker, monthPicker])
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [
+    hiddenCanceledReserwation,
+    yearPicker,
+    monthPicker,
+    userHistoryReserwations,
+  ])
 
   useEffect(() => {
     const actualMonth = new Date().getMonth() + 1
@@ -213,6 +224,23 @@ const UserHistory = ({ siteProps, user }) => {
         ) : (
           <span>Pokaż wizyty zakończone oraz odwołane</span>
         )}
+      </ReactTooltip>
+      <ReactTooltip
+        id="deleteReserwationTooltip"
+        effect="float"
+        multiline={true}
+      >
+        <span>Odwołaj wizytę</span>
+      </ReactTooltip>
+      <ReactTooltip
+        id="addOpinionReserwationTooltip"
+        effect="float"
+        multiline={true}
+      >
+        <span>Dodaj opinię</span>
+      </ReactTooltip>
+      <ReactTooltip id="goToWebsite" effect="float" multiline={true}>
+        <span>Przejdz do strony internetowej firmy</span>
       </ReactTooltip>
     </>
   )

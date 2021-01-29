@@ -143,7 +143,7 @@ const ItemTitle = styled.div`
 
   span {
     padding-left: 5px;
-    color: ${props => Colors(props.siteProps).primaryColor};
+    color: ${props => Colors(props.siteProps).primaryColorDark};
   }
 `
 
@@ -267,7 +267,8 @@ const CalendarWorkerReserwatinEvent = ({
   
   let statusReserwation = ""
   let timeReserwation = ""
-  let costReserwation = ""
+  let costReserwation = "Brak ceny"
+  let costPromotionReserwation = ""
   let serviceName = ""
   let selectedDate = ""
   let selectMonthName = ""
@@ -285,7 +286,13 @@ const CalendarWorkerReserwatinEvent = ({
   let client = ""
   let reserwationMessage = " Brak"
   let isWorkerReserwation = false;
+  let activePromotion = false;
+
   if (!!selectedEvent) {
+    if (!!selectedEvent.activePromotion) {
+      activePromotion = true
+    }
+
     if (!!selectedEvent.workerReserwation){
       isWorkerReserwation = selectedEvent.workerReserwation
     }
@@ -328,7 +335,15 @@ const CalendarWorkerReserwatinEvent = ({
       reserwationMessage = ` ${selectedEvent.reserwationMessage}`
     }
 
-    costReserwation = `${selectedEvent.costReserwation}zł ${selectedEvent.extraCost ? "+" : ""}`
+    if (selectedEvent.basicPrice) {
+      costReserwation = `${
+        activePromotion
+          ? selectedEvent.basicPrice
+          : selectedEvent.costReserwation
+      }zł ${selectedEvent.extraCost ? "+" : ""}`
+    }
+
+    costPromotionReserwation = `${selectedEvent.costReserwation}zł ${selectedEvent.extraCost ? "+" : ""}`
 
     serviceName = selectedEvent.serviceName
 
@@ -556,6 +571,7 @@ const CalendarWorkerReserwatinEvent = ({
       </IconWarning>
     </WarningStyle>
   )
+  console.log(selectedEvent)
   return (
     <>
       <CSSTransition
@@ -598,10 +614,20 @@ const CalendarWorkerReserwatinEvent = ({
                 </span>
               </ItemTitle>
               {!isWorkerReserwation && (
-                <ItemTitle siteProps={siteProps}>
-                  Koszt usługi:
-                  <span>{costReserwation}</span>
-                </ItemTitle>
+                <>
+                  <ItemTitle siteProps={siteProps}>
+                    {activePromotion
+                      ? "Koszt usługi przed promocją:"
+                      : "Koszt usługi:"}
+                    <span>{costReserwation}</span>
+                  </ItemTitle>
+                  {activePromotion && (
+                    <ItemTitle siteProps={siteProps}>
+                      Koszt usługi po promocji:
+                      <span>{costPromotionReserwation}</span>
+                    </ItemTitle>
+                  )}
+                </>
               )}
               {!isWorkerReserwation && (
                 <ItemTitle siteProps={siteProps}>
@@ -619,7 +645,7 @@ const CalendarWorkerReserwatinEvent = ({
               </ItemTitle>
               <ItemTitle siteProps={siteProps}>
                 Wiadomość:
-                {reserwationMessage}
+                <span>{reserwationMessage}</span>
               </ItemTitle>
               {!isWorkerReserwation && (
                 <ItemTitle siteProps={siteProps}>
@@ -638,9 +664,7 @@ const CalendarWorkerReserwatinEvent = ({
             >
               <EventItemPosition>
                 <EventItemPositionContentDelete siteProps={siteProps}>
-                  <TitleDelete>
-                    Potwierdz usuwanie rezerwacji
-                  </TitleDelete>
+                  <TitleDelete>Potwierdz usuwanie rezerwacji</TitleDelete>
                   <ButtonItemStyleCancelReserwation>
                     <ButtonItemStyle>
                       <ButtonIcon

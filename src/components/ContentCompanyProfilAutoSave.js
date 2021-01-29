@@ -20,6 +20,7 @@ import ReserwationTextComponent from "./ItemsContentCompanyProfilAutoSave/Reserw
 import LinksComponent from "./ItemsContentCompanyProfilAutoSave/LinksComponent"
 import MapsComponent from "./MapsComponent"
 import MapsEditComponent from "./MapsEditComponent"
+import OpinionsComponent from './ItemsContentCompanyProfilAutoSave/OpinionsComponent'
 
 const TextH1 = styled.div`
   position: relative;
@@ -327,6 +328,11 @@ const ContentCompanyProfil = ({
                 editMode={editMode}
               />
             )}
+            <OpinionsComponent
+              companyOpinions={company.opinions}
+              siteProps={siteProps}
+              TitleRightColumn={TitleRightColumn}
+            />
           </LeftColumn>
           <RightColumn>
             {editMode && isCompanyEditProfil ? (

@@ -218,6 +218,7 @@ const PlacesItem = ({ item, filters, index }) => {
       </UnderMenuServices>
     </CSSTransition>
   )
+  
   return (
     <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
@@ -240,10 +241,10 @@ const PlacesItem = ({ item, filters, index }) => {
 
           <OpinionMainDiv siteProps={siteProps}>
             <PaddingOpinion>
-              {item.avarageOpinions ? item.avarageOpinions : 0}
+              {item.opinionsValue > 0 && item.opinionsCount > 0 ? Math.round((item.opinionsValue / item.opinionsCount) * 10) / 10 : 0}
             </PaddingOpinion>
             <OpinionBottom siteProps={siteProps}>
-              Opinie: {item.countOpinions ? item.countOpinions : 0}
+              Opinie: {item.opinionsCount}
             </OpinionBottom>
           </OpinionMainDiv>
           <ButtonReservContent>
@@ -282,9 +283,7 @@ const PlacesItem = ({ item, filters, index }) => {
             {allServices.length > 0 ? (
               allServices
             ) : (
-              <NoServicesText siteProps={siteProps}>
-                Brak usług
-              </NoServicesText>
+              <NoServicesText siteProps={siteProps}>Brak usług</NoServicesText>
             )}
           </SerivesDiv>
         </CSSTransition>

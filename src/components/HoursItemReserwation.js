@@ -23,13 +23,17 @@ const TextNoDate = styled.div`
 `
 
 const DateReserwStyle = styled.div`
+  position: relative;
   width: 60px;
-  /* height: 30px; */
+  height: 40px;
   text-align: center;
-  display: inline-block;
-  margin: 2.5px;
+  margin: 2.5px 5px;
   border-radius: 5px;
-  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   cursor: pointer;
   color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
@@ -40,11 +44,44 @@ const DateReserwStyle = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   margin-bottom: 10px;
+  user-select: none;
+
+  span {
+    position: relative;
+    top: ${props => props.promotionsValid ? "2px" : "0px"};
+  }
+
+  .promotionPosition {
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    padding: 1px 4px;
+    background-color: ${props => Colors(props.siteProps).dangerColor};
+    color: ${props => Colors(props.siteProps).textNormalWhite};
+    font-size: 0.8rem;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    transition-property: background-color, color, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
 
   &:hover {
     transform: scale(0.95);
     background-color: ${props => Colors(props.siteProps).primaryColorDark};
+
+    .promotionPosition {
+      background-color: ${props => Colors(props.siteProps).dangerColorDark};
+    }
   }
+`
+
+const DateFlex = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 `
 
 const HoursItemReserwation = ({
@@ -57,7 +94,7 @@ const HoursItemReserwation = ({
   selectedHour,
 }) => {
   const filterDate = itemsHours.filter(item => {
-    const splitItem = item.split(":")
+    const splitItem = item.time.split(":")
     if (
       Number(splitItem[0]) < minHourToFilter ||
       Number(splitItem[0]) >= maxHourToFilter
@@ -69,15 +106,20 @@ const HoursItemReserwation = ({
   })
 
   const mapDate = filterDate.map((item, index) => {
-    const isHourActive = selectedHour === item
+    const isHourActive = selectedHour === item.time
+    const promotionsValid = item.promotion !== null ? item.promotion : item.happyHour !== null ? item.happyHour : null;
     return (
       <DateReserwStyle
         siteProps={siteProps}
-        onClick={() => handleClickDateToReserw(item)}
+        onClick={() => handleClickDateToReserw(item.time, promotionsValid)}
         active={isHourActive}
         key={index}
+        promotionsValid={promotionsValid !== null}
       >
-        {item}
+        <span>{item.time}</span>
+        {promotionsValid !== null && (
+          <div className="promotionPosition">{`-${promotionsValid}%`}</div>
+        )}
       </DateReserwStyle>
     )
   })
@@ -87,7 +129,7 @@ const HoursItemReserwation = ({
         {title}
       </TextColumnAvaibleHours>
       {mapDate.length > 0 ? (
-        mapDate
+        <DateFlex>{mapDate}</DateFlex>
       ) : (
         <TextNoDate siteProps={siteProps}>Brak dostępnych godzin</TextNoDate>
       )}

@@ -356,6 +356,7 @@ const MarginButton = styled.div`
          promotions={promotions}
          itemPromotion={item}
          updatePromotions={updatePromotions}
+         isOld={isOld}
        />
      </ItemPromotion>
    )

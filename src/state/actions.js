@@ -1328,7 +1328,8 @@ export const fetchWorkerDisabledHours = (
   selectedDay,
   selectedMonth,
   selectedYear,
-  timeReserwation
+  timeReserwation,
+  serviceId,
 ) => {
   return dispatch => {
     dispatch(changeAlertExtra("Ładowanie wylnych godzin wybranego pracownika", true))
@@ -1344,6 +1345,7 @@ export const fetchWorkerDisabledHours = (
           selectedMonth: selectedMonth,
           selectedYear: selectedYear,
           timeReserwation: timeReserwation,
+          serviceId: serviceId,
         },
         {
           headers: {
@@ -1352,14 +1354,15 @@ export const fetchWorkerDisabledHours = (
         }
       )
       .then(response => {
-          dispatch(avaibleDateToReserwationUpdate(false))
-          dispatch(avaibleDateToReserwation(response.data.avaibleHours))
-          dispatch(changeAlertExtra(null, false))
+        //avaibleHoursWithPromotions avaibleHours
+        dispatch(avaibleDateToReserwationUpdate(false))
+        dispatch(avaibleDateToReserwation(response.data.avaibleHoursWithPromotions))
+        dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
-          dispatch(avaibleDateToReserwationUpdate(false))
-          dispatch(avaibleDateToReserwation([]))
-           dispatch(changeAlertExtra(null, false))
+        dispatch(avaibleDateToReserwationUpdate(false))
+        dispatch(avaibleDateToReserwation([]))
+        dispatch(changeAlertExtra(null, false))
       })
   }
 }
@@ -2020,6 +2023,12 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
+        console.log(services)
+        if (!!services.new){
+          if (services.new.length > 0) {
+            dispatch(addAlertItem("Nie zapomnij przypisać pracownika do dodanych usług.", "blue"))
+          }
+        }
         dispatch(
           patchNewCompanyServices(
             response.data.services,
@@ -2532,11 +2541,38 @@ export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
       .then(response => {
         dispatch(updateCompanyPathPromotion(promotionDate))
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Dodano happy hour.", "green"))
+        dispatch(addAlertItem("Zatualizowano promocję.", "green"))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania happy hour.", "red"))
+        dispatch(addAlertItem("Błąd podczas aktualizacji promocji.", "red"))
+      })
+  }
+}
+
+export const fetchAddOpinion = (token, opinionData) => {
+  console.log(opinionData)
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-opinion`,
+        {
+          opinionData: opinionData,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano opinie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania opinii.", "red"))
       })
   }
 }

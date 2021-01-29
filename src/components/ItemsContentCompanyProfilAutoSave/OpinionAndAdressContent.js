@@ -561,7 +561,9 @@ const OpinionAndAdressContent = ({
         <OpinionsContent>
           <OpinionRight>
             <OpinionUp siteProps={siteProps}>
-              <OpininPadding>{opinionsValue}</OpininPadding>
+              <OpininPadding>
+                {opinionsValue > 0 && opinionsCount > 0 ? Math.round((opinionsValue / opinionsCount) * 10) / 10 : 0}
+              </OpininPadding>
               <OpinionDown siteProps={siteProps}>
                 Opinie: {opinionsCount}
               </OpinionDown>

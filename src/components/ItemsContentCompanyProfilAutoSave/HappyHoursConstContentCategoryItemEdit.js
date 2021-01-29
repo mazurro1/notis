@@ -207,7 +207,10 @@ const HappyHoursConstContentCategoryItemEdit = ({
   }
 
   const handleChangePercent = e => {
-    setPromotionPercent(e.target.value)
+    const isGoodValue = e.target.value.length <= 2
+    if (isGoodValue) {
+      setPromotionPercent(e.target.value)
+    }
   }
 
   const handleChangeDisabledPromotion = () => {
@@ -359,7 +362,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
                 onChange={handleChangeDisabledPromotion}
               >
                 <TextCheckbox siteProps={siteProps}>
-                  Promocja wyłączona
+                  Wyłącz happy hour
                 </TextCheckbox>
               </Checkbox>
             </CheckboxStyle>
