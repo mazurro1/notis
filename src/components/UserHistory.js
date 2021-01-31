@@ -35,7 +35,7 @@ const PositionSwitchFlex = styled.div`
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px 0;
+  padding: 5px 0;
 `
 
 const PositionSelectAll = styled.div`
@@ -82,6 +82,7 @@ const UserHistory = ({ siteProps, user }) => {
     true
   )
   const [disabledSwitch, setDisabledSwitch] = useState(false)
+  const [onlyToOpinion, setOnlyToOpinion] = useState(false)
 
   const userHistoryReserwations = useSelector(
     state => state.userHistoryReserwations
@@ -89,18 +90,19 @@ const UserHistory = ({ siteProps, user }) => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (!!hiddenCanceledReserwation) {
+    if (!!hiddenCanceledReserwation && !onlyToOpinion) {
       dispatch(fetchUserReserwations(user.token))
     } else {
       dispatch(
         fetchUserReserwationsAll(
           user.token,
           yearPicker.value,
-          monthPicker.value
+          monthPicker.value,
+          onlyToOpinion
         )
       )
     }
-  }, [hiddenCanceledReserwation, yearPicker, monthPicker])
+  }, [hiddenCanceledReserwation, yearPicker, monthPicker, onlyToOpinion])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -109,6 +111,7 @@ const UserHistory = ({ siteProps, user }) => {
     yearPicker,
     monthPicker,
     userHistoryReserwations,
+    onlyToOpinion,
   ])
 
   useEffect(() => {
@@ -120,6 +123,22 @@ const UserHistory = ({ siteProps, user }) => {
   const handleHiddenCanceledReserwation = () => {
     if (!!!disabledSwitch) {
       setHiddenCanceledReserwation(prevState => !prevState)
+      if(onlyToOpinion){
+        setOnlyToOpinion(false)
+      }
+      setDisabledSwitch(true)
+      setTimeout(() => {
+        setDisabledSwitch(false)
+      }, 2000)
+    }
+  }
+
+  const handleOnlyToOpinion = () => {
+    if (!!!disabledSwitch) {
+      setOnlyToOpinion(prevState => !prevState)
+      if(hiddenCanceledReserwation){
+        setHiddenCanceledReserwation(false)
+      }
       setDisabledSwitch(true)
       setTimeout(() => {
         setDisabledSwitch(false)
@@ -142,7 +161,7 @@ const UserHistory = ({ siteProps, user }) => {
         setDisabledSwitch(false)
       }, 2000)
     }
-
+    
   const mapCategory = userHistoryReserwations.map((item, index) => {
     return (
       <UserHistoryCategory
@@ -213,6 +232,23 @@ const UserHistory = ({ siteProps, user }) => {
           />
         </SwitchPosition>
       </PositionSwitchFlex>
+      <PositionSwitchFlex>
+        {Translates[siteProps.language].buttons.reserwationOpinion}
+        <SwitchPosition data-tip data-for="switchOpinions">
+          <Switch
+            onChange={handleOnlyToOpinion}
+            checked={onlyToOpinion}
+            activeBoxShadow={`0 0 2px 3px ${
+              Colors(siteProps).primaryColorDark
+            }`}
+            onColor={Colors(siteProps).primaryColorDark}
+            height={22}
+            uncheckedIcon
+            checkedIcon
+            disabled={disabledSwitch}
+          />
+        </SwitchPosition>
+      </PositionSwitchFlex>
       {mapCategory.length > 0 ? (
         mapCategory
       ) : (
@@ -223,6 +259,13 @@ const UserHistory = ({ siteProps, user }) => {
           <span>Ukryj wizyty zakończone oraz odwołane</span>
         ) : (
           <span>Pokaż wizyty zakończone oraz odwołane</span>
+        )}
+      </ReactTooltip>
+      <ReactTooltip id="switchOpinions" effect="float" multiline={true}>
+        {!!!onlyToOpinion ? (
+          <span>Pokaż rezerwacje, w których można dodać opinie</span>
+        ) : (
+          <span>Pokaż rezerwację z opiniami oraz bez</span>
         )}
       </ReactTooltip>
       <ReactTooltip

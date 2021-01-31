@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import {
   MdDeleteForever,
@@ -224,13 +224,26 @@ const StarsPositions = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
+
+  span{
+    margin-right: 10px;
+  }
 `
 
 const StarItem = styled.div`
   font-size: 1.4rem;
+  margin-top: 4px;
   cursor: pointer;
   color: ${props =>
     props.active ? "#ffc107" : Colors(props.siteProps).disabled};
+
+  transition-property: transform, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    transform: scale(1.4);
+  }
 `
 
 const UserHistoryCategoryItem = ({
@@ -245,6 +258,13 @@ const UserHistoryCategoryItem = ({
   const [addOpinion, setAddOpinion] = useState(false)
   const [opinionText, setOpinionText] = useState("")
   const [opinionStars, setOpinionStars] = useState(5)
+
+  useEffect(()=>{
+    setConfirmDelete(false)
+    setAddOpinion(false)
+    setOpinionText("")
+    setOpinionStars(5)
+  }, [item.opinionId])
 
   const dispatch = useDispatch()
 
@@ -281,7 +301,7 @@ const UserHistoryCategoryItem = ({
       company: item.company._id,
       reserwationId: item._id,
     }
-    dispatch(fetchAddOpinion(userToken, opinionData))
+    dispatch(fetchAddOpinion(userToken, opinionData, company))
   }
 
   let timeService = ""
@@ -482,7 +502,9 @@ const UserHistoryCategoryItem = ({
                 <BackgroundEditContentBg siteProps={siteProps}>
                   <TitleAddOpnion>Dodawanie opinii</TitleAddOpnion>
                   <PaddingBackground>
-                    <StarsPositions>{renderStars}</StarsPositions>
+                    <StarsPositions>
+                      <span>Ocena: </span>{renderStars}
+                    </StarsPositions>
                     <InputIcon
                       icon={<MdComment />}
                       placeholder="Opinia"
@@ -512,6 +534,7 @@ const UserHistoryCategoryItem = ({
                           onClick={handleUpdateOpinion}
                           customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
+                          disabled={opinionText.length < 2}
                         />
                       </ButtonMargin>
                     </ButtonsAddPositionOpinion>

@@ -536,6 +536,36 @@ export const UPDATE_COMPANY_HAPPY_HOURS_NO_CONST = "UPDATE_COMPANY_HAPPY_HOURS_N
 export const DELETE_COMPANY_PROMOTION = "DELETE_COMPANY_PROMOTION"
 export const UPDATE_COMPANY_PATH_PROMOTION = "UPDATE_COMPANY_PATH_PROMOTION"
 export const UPDATE_PROMOTIONS = "UPDATE_PROMOTIONS"
+export const ADD_NEW_OPINIONS_COMPANY = "ADD_NEW_OPINIONS_COMPANY"
+export const ADD_REPLAY_TO_OPINION = "ADD_REPLAY_TO_OPINION"
+export const ADD_NEW_OPINION_TO_RESERWATION = "ADD_NEW_OPINION_TO_RESERWATION"
+
+export const addNewOpinionToReserwation = (reserwationId, opinion, company, companyId) => {
+  return {
+    type: ADD_NEW_OPINION_TO_RESERWATION,
+    reserwationId: reserwationId,
+    opinion: opinion,
+    companyName: company,
+    companyId: companyId,
+  }
+}
+
+export const addReplayToOpinion = (opinionId, replay, companyId) => {
+  return {
+    type: ADD_REPLAY_TO_OPINION,
+    opinionId: opinionId,
+    replay: replay,
+    companyId: companyId,
+  }
+}
+
+export const addNewOpinionsCompany = (companyId, opinions) => {
+  return {
+    type: ADD_NEW_OPINIONS_COMPANY,
+    companyId: companyId,
+    opinions: opinions,
+  }
+}
 
 export const updatePromotionsDispatch = () => {
   return {
@@ -1475,15 +1505,18 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
   }
 }
 
-export const fetchUserReserwations = token => {
+export const fetchUserReserwations = (token) => {
   return dispatch => {
     dispatch(changeAlertExtra("Pobieranie rezerwacji", true))
     return axios
-      .get(`${Site.serverUrl}/user-reserwations`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .get(
+        `${Site.serverUrl}/user-reserwations`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then(response => {
         dispatch(changeAlertExtra(null, false))
         dispatch(updateUserReserwations(response.data.reserwations))
@@ -1495,7 +1528,12 @@ export const fetchUserReserwations = token => {
   }
 }
 
-export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
+export const fetchUserReserwationsAll = (
+  token,
+  yearPicker,
+  monthPicker,
+  onlyToOpinion
+) => {
   return dispatch => {
     dispatch(changeAlertExtra("Pobieranie wszystkich rezerwacji", true))
     return axios
@@ -1504,6 +1542,7 @@ export const fetchUserReserwationsAll = (token, yearPicker, monthPicker) => {
         {
           yearPicker: yearPicker,
           monthPicker: monthPicker,
+          onlyToOpinion: onlyToOpinion,
         },
         {
           headers: {
@@ -2550,8 +2589,7 @@ export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
   }
 }
 
-export const fetchAddOpinion = (token, opinionData) => {
-  console.log(opinionData)
+export const fetchAddOpinion = (token, opinionData, company) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -2567,12 +2605,74 @@ export const fetchAddOpinion = (token, opinionData) => {
         }
       )
       .then(response => {
+        console.log(response.data.opinion)
+        dispatch(
+          addNewOpinionToReserwation(
+            opinionData.reserwationId,
+            response.data.opinion,
+            company,
+            opinionData.company,
+          )
+        )
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano opinie.", "green"))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas dodawania opinii.", "red"))
+      })
+  }
+}
+
+export const fetchLoadMoreOpinions = (page, companyId) => {
+  return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie opinii", true))
+    return axios
+      .post(`${Site.serverUrl}/load-more-opinions`, {
+        page: page,
+        companyId: companyId,
+      })
+      .then(response => {
+        dispatch(addNewOpinionsCompany(companyId, response.data.opinions))
+        dispatch(changeAlertExtra(null, false))
+      })
+      .catch(error => {
+        dispatch(changeAlertExtra(null, false))
+      })
+  }
+}
+
+
+export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-replay-opinion`,
+        {
+          companyId: companyId,
+          replay: replay,
+          opinionId: opinionId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addReplayToOpinion(opinionId, replay, companyId))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano odpowiedz do opinii.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas dodawania odpowiedzi do opinii opinii.",
+            "red"
+          )
+        )
       })
   }
 }

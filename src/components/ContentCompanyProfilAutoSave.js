@@ -331,7 +331,13 @@ const ContentCompanyProfil = ({
             <OpinionsComponent
               companyOpinions={company.opinions}
               siteProps={siteProps}
-              TitleRightColumn={TitleRightColumn}
+              opinionsCount={company.opinionsCount}
+              opinionsValue={company.opinionsValue}
+              companyName={company.name}
+              companyId={company._id}
+              isCompanyEditProfil={isCompanyEditProfil}
+              isAdmin={isAdmin}
+              user={user}
             />
           </LeftColumn>
           <RightColumn>
