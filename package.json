@@ -43,6 +43,7 @@
     "react-collapse": "^5.0.1",
     "react-dom": "^16.12.0",
     "react-icons": "^3.11.0",
+    "react-image-gallery": "^1.0.8",
     "react-input-checkbox": "^0.1.6",
     "react-leaflet": "^3.0.5",
     "react-pin-field": "^1.0.5",

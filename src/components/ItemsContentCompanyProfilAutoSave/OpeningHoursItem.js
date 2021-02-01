@@ -198,7 +198,7 @@ const OpeningHoursItem = ({
       setItemEditable(false)
     }
   }
-
+  
   return (
     <HeightComponent
       activeTimePickerOpen={activeTimePickerOpen}

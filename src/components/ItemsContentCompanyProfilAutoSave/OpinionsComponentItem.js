@@ -211,8 +211,8 @@ const PaddingBackground = styled.div`
 
    return (
      <div
-       data-sal={index % 2 === 0 ? "slide-left" : "slide-right"}
-       data-sal-duration="1000"
+       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
+       data-sal-duration="500"
        data-sal-easing="ease-out-bounce"
      >
        <OpinionStyle siteProps={siteProps}>

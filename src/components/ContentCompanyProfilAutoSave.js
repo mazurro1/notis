@@ -21,6 +21,7 @@ import LinksComponent from "./ItemsContentCompanyProfilAutoSave/LinksComponent"
 import MapsComponent from "./MapsComponent"
 import MapsEditComponent from "./MapsEditComponent"
 import OpinionsComponent from './ItemsContentCompanyProfilAutoSave/OpinionsComponent'
+import GalleryContent from './ItemsContentCompanyProfilAutoSave/GalleryContent'
 
 const TextH1 = styled.div`
   position: relative;
@@ -137,16 +138,6 @@ const ButtonTextPosition = styled.div`
   margin-bottom: 40px;
 `
 
-const BackGroundImageCustomUrl = styled.div`
-  height: 500px;
-  width: 100%;
-  background: url(${props => props.url}) 50% 0 no-repeat;
-  background-position: center;
-  background-size: cover;
-  border-radius: 5px;
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
-`
-
 const EditModeToChange = styled.div`
   position: absolute;
   right: -50px;
@@ -186,6 +177,7 @@ const ContentCompanyProfil = ({
   const [editConstHappyHours, setEditConstHappyHours] = useState(false)
   const [editPromotions, setEditPromotions] = useState(false)
   const [editMap, setEditMap] = useState(false)
+  const [editGallery, setEditGallery] = useState(false)
   
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
@@ -202,7 +194,8 @@ const ContentCompanyProfil = ({
       editLinks ||
       editConstHappyHours ||
       editPromotions ||
-      editMap
+      editMap ||
+      editGallery
 
   const handleResetAllEditedComponents = () => {
     setAllCategoryEdit(false)
@@ -216,6 +209,7 @@ const ContentCompanyProfil = ({
     setEditConstHappyHours(false)
     setEditPromotions(false)
     setEditMap(false)
+    setEditGallery(false)
   }
 
   const handleEdit = setChange => {
@@ -312,7 +306,18 @@ const ContentCompanyProfil = ({
         </TextH1>
         <ContentDiv>
           <LeftColumn>
-            <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
+            <GalleryContent
+              {...companyEditProfilProps}
+              siteProps={siteProps}
+              user={user}
+              companyId={company._id}
+              companyImages={company.imagesUrl}
+              mainImage={company.mainImageUrl}
+              editMode={editMode}
+              editGallery={editGallery}
+              setEditGallery={setEditGallery}
+              handleResetAllEditedComponents={handleResetAllEditedComponents}
+            />
             {userHasPermToServices && (
               <AllCategoryOfServices
                 services={company.services}

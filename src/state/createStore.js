@@ -32,6 +32,10 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  CHANGE_COMPANY_MAIN_IMAGE,
+  UPDATED_IMAGE_ID_COMPANY,
+  UPDATE_COMPANY_IMAGE,
+  DELETE_COMPANY_IMAGE,
   ADD_NEW_OPINION_TO_RESERWATION,
   ADD_REPLAY_TO_OPINION,
   ADD_NEW_OPINIONS_COMPANY,
@@ -134,6 +138,7 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  updatedImageIdCompany: null,
   bellAlertsActive: false,
   companyUsersInformations: [],
   avaibleHoursReserwation: [],
@@ -338,8 +343,82 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case CHANGE_COMPANY_MAIN_IMAGE: {
+      const patchWorkCompanyUpdateMainImage = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if (!!patchWorkCompanyUpdateMainImage) {
+        if (patchWorkCompanyUpdateMainImage._id === action.companyId) {
+          if (!!action.imagePath) {
+            patchWorkCompanyUpdateMainImage.mainImageUrl = action.imagePath
+          }
+        }
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyUpdateMainImage,
+        updatedImageIdCompany: true,
+      }
+    }
+
+    case UPDATED_IMAGE_ID_COMPANY: {
+      return {
+        ...state,
+        updatedImageIdCompany: false,
+      }
+    }
+
+    case UPDATE_COMPANY_IMAGE: {
+      const patchWorkCompanyUpdateImage = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if (!!patchWorkCompanyUpdateImage) {
+        if (patchWorkCompanyUpdateImage._id === action.companyId) {
+          if (!!action.pathImage) {
+            if (!!patchWorkCompanyUpdateImage.imagesUrl){
+              if(patchWorkCompanyUpdateImage.imagesUrl.length === 0){
+                patchWorkCompanyUpdateImage.mainImageUrl = action.pathImage
+              }
+            }
+              patchWorkCompanyUpdateImage.imagesUrl.push(action.pathImage)
+          }
+        }
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyUpdateImage,
+        updatedImageIdCompany: action.imageId,
+      }
+    }
+
+    case DELETE_COMPANY_IMAGE: {
+      const patchWorkCompanyDeleteImage = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if(!!patchWorkCompanyDeleteImage){
+        if (patchWorkCompanyDeleteImage._id === action.companyId) {
+          const filterImages = patchWorkCompanyDeleteImage.imagesUrl.filter(
+            item => item !== action.pathImage
+          )
+          patchWorkCompanyDeleteImage.imagesUrl = filterImages
+
+          const isMainImage = action.pathImage === patchWorkCompanyDeleteImage.mainImageUrl
+          if(isMainImage){
+            patchWorkCompanyDeleteImage.mainImageUrl = "";
+          }
+        }
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyDeleteImage,
+      }
+    }
+
     case ADD_NEW_OPINION_TO_RESERWATION: {
-      const userHistoryReserwationsNew = [...state.userHistoryReserwations];
+      const userHistoryReserwationsNew = [...state.userHistoryReserwations]
       const patchWorkCompanyDataNew = !!state.workCompanyData
         ? { ...state.workCompanyData }
         : null
@@ -348,22 +427,32 @@ const reducer = (state = initialState, action) => {
         ? { ...state.pathCompanyData }
         : null
 
-      if(!!patchWorkCompanyDataNew){
-        if(patchWorkCompanyDataNew._id === action.companyId){
+      if (!!patchWorkCompanyDataNew) {
+        if (patchWorkCompanyDataNew._id === action.companyId) {
           patchWorkCompanyDataNew.opinions.unshift(action.opinion)
-          const validValue = !!patchWorkCompanyDataNew.opinionsValue ? patchWorkCompanyDataNew.opinionsValue : 0;
-          const validCount = !!patchWorkCompanyDataNew.opinionsCount ? patchWorkCompanyDataNew.opinionsCount : 0;
-          patchWorkCompanyDataNew.opinionsValue = validValue + action.opinion.opinionStars;
-          patchWorkCompanyDataNew.opinionsCount = validCount + 1;
+          const validValue = !!patchWorkCompanyDataNew.opinionsValue
+            ? patchWorkCompanyDataNew.opinionsValue
+            : 0
+          const validCount = !!patchWorkCompanyDataNew.opinionsCount
+            ? patchWorkCompanyDataNew.opinionsCount
+            : 0
+          patchWorkCompanyDataNew.opinionsValue =
+            validValue + action.opinion.opinionStars
+          patchWorkCompanyDataNew.opinionsCount = validCount + 1
         }
       }
 
       if (!!patchCompanyDataNew) {
         if (patchCompanyDataNew._id === action.companyId) {
           patchCompanyDataNew.opinions.unshift(action.opinion)
-          const validValue = !!patchCompanyDataNew.opinionsValue ? patchCompanyDataNew.opinionsValue : 0;
-          const validCount = !!patchCompanyDataNew.opinionsCount ? patchCompanyDataNew.opinionsCount : 0;
-          patchCompanyDataNew.opinionsValue = validValue + action.opinion.opinionStars;
+          const validValue = !!patchCompanyDataNew.opinionsValue
+            ? patchCompanyDataNew.opinionsValue
+            : 0
+          const validCount = !!patchCompanyDataNew.opinionsCount
+            ? patchCompanyDataNew.opinionsCount
+            : 0
+          patchCompanyDataNew.opinionsValue =
+            validValue + action.opinion.opinionStars
           patchCompanyDataNew.opinionsCount = validCount + 1
         }
       }
@@ -373,18 +462,22 @@ const reducer = (state = initialState, action) => {
           return item.company === action.companyName
         }
       )
-      if (indexReserwationCompany >= 0){
-        const findIndexReserwationCompanyItem = userHistoryReserwationsNew[indexReserwationCompany].items.findIndex(item => item._id === action.reserwationId);
-        if(findIndexReserwationCompanyItem >= 0){
-          userHistoryReserwationsNew[indexReserwationCompany].items[findIndexReserwationCompanyItem].opinionId = action.opinion
+      if (indexReserwationCompany >= 0) {
+        const findIndexReserwationCompanyItem = userHistoryReserwationsNew[
+          indexReserwationCompany
+        ].items.findIndex(item => item._id === action.reserwationId)
+        if (findIndexReserwationCompanyItem >= 0) {
+          userHistoryReserwationsNew[indexReserwationCompany].items[
+            findIndexReserwationCompanyItem
+          ].opinionId = action.opinion
         }
       }
-        return {
-          ...state,
-          userHistoryReserwations: userHistoryReserwationsNew,
-          workCompanyData: patchWorkCompanyDataNew,
-          pathCompanyData: patchCompanyDataNew,
-        }
+      return {
+        ...state,
+        userHistoryReserwations: userHistoryReserwationsNew,
+        workCompanyData: patchWorkCompanyDataNew,
+        pathCompanyData: patchCompanyDataNew,
+      }
     }
 
     case ADD_REPLAY_TO_OPINION: {

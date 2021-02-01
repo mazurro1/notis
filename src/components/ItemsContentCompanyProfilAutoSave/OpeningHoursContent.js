@@ -267,7 +267,7 @@ const OpeningHoursContent = ({
         key={index}
         item={item}
         index={index}
-        actualDay={actualDay}
+        actualDay={actualDay === 0 ? 7 : actualDay}
         companyEditProfilProps={companyEditProfilProps}
         editable={editableOpeningHours}
         MarginButton={MarginButton}

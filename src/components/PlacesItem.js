@@ -6,6 +6,7 @@ import { CSSTransition } from "react-transition-group"
 import { MdWork } from "react-icons/md"
 import { useSelector } from "react-redux"
 import { LinkEffect } from "../common/LinkEffect"
+import {Site} from '../common/Site'
 
 const PlaceItem = styled.div`
   position: relative;
@@ -227,8 +228,15 @@ const PlacesItem = ({ item, filters, index }) => {
     >
       <PlaceItem siteProps={siteProps}>
         <PlaceImage>
-          {/* <BackGroundImageCustomUrl url={item.image} /> */}
-          <BackGroundImageCustomUrl url="https://2.bp.blogspot.com/-HDIxQDdW_nY/UznBk9GuJtI/AAAAAAAAlg4/ubYdAfZFlNs/s1600/01-jolantabork.jpg" />
+          <BackGroundImageCustomUrl
+            url={
+              !!item.mainImageUrl || item.imagesUrl.length > 0
+                ? `${Site.awsUrl}/${
+                    !!item.mainImageUrl ? item.mainImageUrl : item.imagesUrl[0]
+                  }`
+                : ""
+            }
+          />
         </PlaceImage>
         <PlaceContent siteProps={siteProps}>
           <h1>{item.name}</h1>
@@ -241,7 +249,10 @@ const PlacesItem = ({ item, filters, index }) => {
 
           <OpinionMainDiv siteProps={siteProps}>
             <PaddingOpinion>
-              {item.opinionsValue > 0 && item.opinionsCount > 0 ? Math.round((item.opinionsValue / item.opinionsCount) * 10) / 10 : 0}
+              {item.opinionsValue > 0 && item.opinionsCount > 0
+                ? Math.round((item.opinionsValue / item.opinionsCount) * 10) /
+                  10
+                : 0}
             </PaddingOpinion>
             <OpinionBottom siteProps={siteProps}>
               Opinie: {item.opinionsCount}

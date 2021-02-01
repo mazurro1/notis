@@ -539,6 +539,41 @@ export const UPDATE_PROMOTIONS = "UPDATE_PROMOTIONS"
 export const ADD_NEW_OPINIONS_COMPANY = "ADD_NEW_OPINIONS_COMPANY"
 export const ADD_REPLAY_TO_OPINION = "ADD_REPLAY_TO_OPINION"
 export const ADD_NEW_OPINION_TO_RESERWATION = "ADD_NEW_OPINION_TO_RESERWATION"
+export const DELETE_COMPANY_IMAGE = "DELETE_COMPANY_IMAGE"
+export const UPDATE_COMPANY_IMAGE = "UPDATE_COMPANY_IMAGE"
+export const UPDATED_IMAGE_ID_COMPANY = "UPDATED_IMAGE_ID_COMPANY"
+export const CHANGE_COMPANY_MAIN_IMAGE = "CHANGE_COMPANY_MAIN_IMAGE"
+
+export const changeCompanyMainImage = (companyId, imagePath) => {
+  return {
+    type: CHANGE_COMPANY_MAIN_IMAGE,
+    companyId: companyId,
+    imagePath: imagePath,
+  }
+}
+
+export const updateUpdatedImageIdCompany = () => {
+  return {
+    type: UPDATED_IMAGE_ID_COMPANY,
+  }
+}
+
+export const updateCompanyImage = (companyId, pathImage, imageId) => {
+  return {
+    type: UPDATE_COMPANY_IMAGE,
+    pathImage: pathImage,
+    companyId: companyId,
+    imageId: imageId,
+  }
+}
+
+export const deleteCompanyImage = (companyId, pathImage) => {
+  return {
+    type: DELETE_COMPANY_IMAGE,
+    companyId: companyId,
+    pathImage: pathImage,
+  }
+}
 
 export const addNewOpinionToReserwation = (reserwationId, opinion, company, companyId) => {
   return {
@@ -2673,6 +2708,90 @@ export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
             "red"
           )
         )
+      })
+  }
+}
+
+export const fetchCompanyUploadImage = (token, companyId, file, imageId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-upload-image`,
+        {
+          companyId: companyId,
+          image: file,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyImage(companyId, response.data.imageUrl, imageId))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano zdjęcie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania zdjęcia.", "red"))
+      })
+  }
+}
+
+export const fetchCompanyDeleteImage = (token, companyId, imagePath) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-delete-image`,
+        {
+          companyId: companyId,
+          imagePath: imagePath,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(deleteCompanyImage(companyId, imagePath))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
+      })
+  }
+}
+
+export const fetchCompanyMainImage = (token, companyId, imagePath) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-main-image`,
+        {
+          companyId: companyId,
+          imagePath: imagePath,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeCompanyMainImage(companyId, imagePath))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Ustawiono nowe główne zdjęcie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas ustawiania nowego głównego zdjęcia.", "red"))
       })
   }
 }

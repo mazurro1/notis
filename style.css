@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Lato|Poppins");
 @import "./node_modules/sal.js/dist/sal.css";
 @import "./node_modules/react-big-calendar/lib/css/react-big-calendar.css";
+@import "~react-image-gallery/styles/css/image-gallery.css";
 
 :root {
   --primaryColor: #3fd0d4;

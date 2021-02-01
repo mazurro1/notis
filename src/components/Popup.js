@@ -10,7 +10,10 @@ const TitlePagePopup = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  background-color: ${props =>
+    props.secondColors
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColorDark};
   color: ${props => Colors(props.siteProps).textNormalWhite};
   font-size: 1.4rem;
   padding: 5px 10px;
@@ -52,7 +55,8 @@ const PopupContent = styled.div`
 const PaddingContnent = styled.div`
   padding: 10px 15px;
   overflow-y: auto;
-  height: calc(100% - 41px);
+  min-height: calc(100% - 41px);
+  max-height: calc(80vh - 41px);
 `
 
 const ClosePopup = styled.div`
@@ -68,7 +72,10 @@ const ClosePopup = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: ease;
   &:hover {
-    color: ${props => Colors(props.siteProps).primaryColor};
+    color: ${props =>
+      props.secondColors
+        ? Colors(props.siteProps).secondDarkColor
+        : Colors(props.siteProps).primaryColor};
   }
 `
 
@@ -92,6 +99,7 @@ const Popup = ({
   calendar = false,
   title = null,
   opacity = false,
+  secondColors = false
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -121,12 +129,13 @@ const Popup = ({
       siteProps={siteProps}
     >
       {isTitleOn && (
-        <TitlePagePopup siteProps={siteProps}>
+        <TitlePagePopup siteProps={siteProps} secondColors={secondColors}>
           {title}
           <ClosePopup
             onClick={handleOnClick}
             siteProps={siteProps}
             titleOn={isTitleOn}
+            secondColors={secondColors}
           >
             <MdClose />
           </ClosePopup>
