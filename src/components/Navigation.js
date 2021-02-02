@@ -42,6 +42,7 @@ import {
   changeCreateCompanyVisible,
   changeReserwationValue,
   changeEditWorkerHours,
+  changeEditEmployeeWorkingHours,
   changeBlindStyle,
   changeDarkStyle,
   fetchAllCompanys,
@@ -67,6 +68,7 @@ import BellAlerts from "./BellAlerts"
 import openSocket from "socket.io-client"
 import {Site} from '../common/Site'
 import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
+import EmployeeWorkingHours from "./EmployeeWorkingHours"
 import WorkerUsersInformation from "./WorkerUsersInformation"
 import AlertExtra from "./AlertExtra"
 
@@ -335,9 +337,11 @@ const Navigation = ({ children, isMainPage }) => {
   const [selectedName, setSelectedName] = useState("")
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
+  const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(false)
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
+  const editEmplyeeWorkingHours = useSelector(state => state.editEmplyeeWorkingHours)
   const editWorkerHoursData = useSelector(state => state.editWorkerHoursData)
   const createCompanyVisible = useSelector(state => state.createCompanyVisible)
   const registrationVisible = useSelector(state => state.registrationVisible)
@@ -440,6 +444,11 @@ const Navigation = ({ children, isMainPage }) => {
     setTimeout(() => {
       setIsDataActive(true)
     }, 400)
+  }
+
+  const handleEmplyeeWorkingHoursVisible = () => {
+    setEmplyeeWorkingHoursVisible(prevState => !prevState)
+    setWorkPropsVisible(prevState => !prevState)
   }
 
   const handleClickTakePlace = () => {
@@ -632,6 +641,21 @@ const Navigation = ({ children, isMainPage }) => {
         item={editWorkerHoursData}
         editWorkerHours={editWorkerHours}
         handleClose={() => dispatch(changeEditWorkerHours(false, null))}
+      />
+    </Popup>
+  )
+
+  const PopupEmployeeWorkingHours = (
+    <Popup
+      popupEnable={emplyeeWorkingHoursVisible}
+      handleClose={handleEmplyeeWorkingHoursVisible}
+      noContent
+      calendar
+    >
+      <EmployeeWorkingHours
+        item={editWorkerHoursData}
+        editWorkerHours={editWorkerHours}
+        handleClose={handleEmplyeeWorkingHoursVisible}
       />
     </Popup>
   )
@@ -876,7 +900,7 @@ const Navigation = ({ children, isMainPage }) => {
             fontIconSize="25"
             fontSize="16"
             icon={<MdTimelapse />}
-            // onClick={handleWorkerReserwations}
+            onClick={handleEmplyeeWorkingHoursVisible}
           />
         </MarginButtonsWork>
         {workerHasAccessClientsOpinions && (
@@ -1028,6 +1052,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupWorkersUsersInformations}
       {PopupWorkerPropsVisible}
       {PopupWorkerEditHours}
+      {PopupEmployeeWorkingHours}
       {PopupReserwation}
       {PopupActiveAccount}
       {PopupRemindPassword}

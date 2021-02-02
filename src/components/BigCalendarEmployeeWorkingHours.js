@@ -17,20 +17,11 @@ import {
   FaArrowLeft,
 } from "react-icons/fa"
 import SelectCustom from "./SelectCustom"
-import CalendarWorkerReserwatinEvent from "./CalendarWorkerReserwatinEvent"
 import { useSelector, useDispatch } from "react-redux"
 import { AllMonths } from "../common/AllMonths"
 import Popup from "./Popup"
 import SelectDataCalendar from "./SelectDataCalendar"
-import {
-  fetchUpdateWorkerReserwation,
-  fetchDoReserwationWorker,
-} from "../state/actions"
-import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
-import { ServiceColorsReserwationsConvert } from "../common/ServiceColorsReserwationsConvert"
-import CalendarEventItemClicked from "./CalendarEventItemClicked"
 import NewEventView from "./BigCalendarWorkerNoConstHoursTooltip"
-import CalendarWorkerHoursNewEvent from "./CalendarWorkerHoursNewEvent"
 
 const BackgroundContentCalendar = styled.div`
   position: relative;
@@ -45,7 +36,6 @@ const BackgroundCalendarStyle = styled.div`
   max-width: 90vw;
   width: 900px;
   min-width: 800px;
-  /* border-radius: 5px; */
   overflow: hidden;
   overflow-y: auto;
   opacity: 0.95;
@@ -74,12 +64,6 @@ const BackgroundCalendarStyle = styled.div`
     background-color: #e53935 !important;
     &:hover {
       background-color: #c62828 !important;
-    }
-  }
-  .blue-event {
-    background-color: #039be5 !important;
-    &:hover {
-      background-color: #0277bd !important;
     }
   }
   .yellow-event {
@@ -112,11 +96,17 @@ const BackgroundCalendarStyle = styled.div`
       background-color: #6a1b9a !important;
     }
   }
+  .blue-event {
+    background-color: ${props => Colors(props.siteProps).primaryColor};
+    &:hover {
+      background-color: ${props => Colors(props.siteProps).primaryColorDark};
+    }
+  }
   .rbc-time-view {
     border: none;
   }
   .rbc-event {
-    background-color: ${props => Colors(props.siteProps).secondColor};
+    background-color: ${props => Colors(props.siteProps).primaryColor};
     color: ${props => Colors(props.siteProps).textNormalWhite};
     border: none;
     border: 1px solid white;
@@ -127,7 +117,7 @@ const BackgroundCalendarStyle = styled.div`
     transition-timing-function: ease;
 
     &:hover {
-      background-color: ${props => Colors(props.siteProps).secondDarkColor};
+      background-color: ${props => Colors(props.siteProps).primaryColorDark};
     }
   }
 
@@ -245,17 +235,6 @@ const ButtonsPosition = styled.div`
 const ButtonItemStyle = styled.div`
   margin-left: 10px;
 `
-const WarningStyle = styled.div`
-  position: relative;
-  background-color: ${props => Colors(props.siteProps).dangerColorDark};
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding-left: 50px;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-  border-radius: 5px;
-`
-
 const WidthSelect = styled.div`
   width: 160px;
   margin-right: 20px;
@@ -269,35 +248,8 @@ const ContentSelect = styled.div`
   margin-bottom: 10px;
 `
 
-const ContentWorkersAdmin = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-`
-const WorkerItemStyle = styled.div`
-  background-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).secondDarkColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  margin-right: 10px;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition-property: transform, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
 
-  &:hover {
-    transform: scale(1.1);
-  }
-`
-
-const BigCalendarWorkerHoursAutoSave = ({
+const BigCalendarEmployeeWorkingHours = ({
   item,
   handleClose,
   dateCalendar,
@@ -308,14 +260,8 @@ const BigCalendarWorkerHoursAutoSave = ({
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
-  const [selectedEventOpen, setSelectedEventOpen] = useState(null)
-  const [selectedEvent, setSelectedEvent] = useState(null)
-  const [newEvent, setNewEvent] = useState(null)
-  const [newEventOpen, setNewEventOpen] = useState(null)
   const [allEvents, setAllEvents] = useState([])
   const siteProps = useSelector(state => state.siteProps)
-  const timerToClearNew = useRef(null)
-  const timerToClearEdited = useRef(null)
 
   const allYears = [
     {
@@ -346,8 +292,6 @@ const BigCalendarWorkerHoursAutoSave = ({
     label: "Styczeń",
   })
 
-  const dispatch = useDispatch()
-
   useEffect(() => {
     const newDate = new Date(
       datePicker.getFullYear(),
@@ -375,26 +319,163 @@ const BigCalendarWorkerHoursAutoSave = ({
 
   useEffect(() => {
     if (!!item) {
-      const mapItemNoConstantWorkingHoursDate = item.noConstantWorkingHours.map(
-        itemMaped => {
-          const itemMapedResult = {
-            end: new Date(itemMaped.end),
-            start: new Date(itemMaped.start),
-            fullDate: itemMaped.fullDate,
-            _id: itemMaped._id,
-            holidays: itemMaped.holidays,
+      const arrayOpeningDays = [
+        {
+          id: 0,
+          start: item.openingDays.sun.start,
+          end: item.openingDays.sun.end,
+          disabled: item.openingDays.sun.disabled,
+        },
+        {
+          id: 1,
+          start: item.openingDays.mon.start,
+          end: item.openingDays.mon.end,
+          disabled: item.openingDays.mon.disabled,
+        },
+        {
+          id: 2,
+          start: item.openingDays.tue.start,
+          end: item.openingDays.tue.end,
+          disabled: item.openingDays.tue.disabled,
+        },
+        {
+          id: 3,
+          start: item.openingDays.wed.start,
+          end: item.openingDays.wed.end,
+          disabled: item.openingDays.wed.disabled,
+        },
+        {
+          id: 4,
+          start: item.openingDays.thu.start,
+          end: item.openingDays.thu.end,
+          disabled: item.openingDays.thu.disabled,
+        },
+        {
+          id: 5,
+          start: item.openingDays.fri.start,
+          end: item.openingDays.fri.end,
+          disabled: item.openingDays.fri.disabled,
+        },
+        {
+          id: 6,
+          start: item.openingDays.sat.start,
+          end: item.openingDays.sat.end,
+          disabled: item.openingDays.sat.disabled,
+        },
+      ]
+
+      const daysMonth = new Date(
+        dateCalendar.getFullYear(),
+        dateCalendar.getMonth() + 1,
+        0
+      ).getDate()
+
+      const allDaysCalendar = []
+
+      for(let i = 1; i<= daysMonth; i++){
+        const generateDayDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth(),
+          i
+        )
+        const generateFullDayDate = `${dateCalendar.getFullYear()}-${dateCalendar.getMonth()+1}-${i}`
+        const generateDayWeek = generateDayDate.getDay()
+        const selectedDayNoConst = item.noConstWorkingHours.find(noConstDay => {
+          const noConstDayTimeStart = new Date(noConstDay.start).getDate()
+          return i === noConstDayTimeStart
+        })
+        let selectedDayOff = null;
+        let selectedConstWorkingHour = null;
+        if(!!!selectedDayNoConst){
+          selectedDayOff = item.daysOff.find(dayOff => {
+            const dayOffDate = `${dayOff.year}-${dayOff.month}-${dayOff.day}`
+            return generateFullDayDate === dayOffDate
+          })
+          if(!!!selectedDayOff){
+            selectedConstWorkingHour = item.constWorkingHours.find(constHour => {
+              return constHour.dayOfTheWeek === generateDayWeek
+            })
           }
-          return itemMapedResult
         }
-      )
-        setAllEvents(mapItemNoConstantWorkingHoursDate)
+        let dayToRender = null
+
+        if(!!selectedDayNoConst){
+          dayToRender = {
+            end: new Date(selectedDayNoConst.end),
+            start: new Date(selectedDayNoConst.start),
+            holidays: selectedDayNoConst.holidays,
+            fullDate: generateFullDayDate,
+          }
+        } else if(!!selectedDayOff){
+          const selectOpeningDays = arrayOpeningDays[generateDayWeek]
+          if (!!selectOpeningDays) {
+            if (!!!selectOpeningDays.disabled) {
+              const splitDateStart = selectOpeningDays.start.split(":")
+              const splitDateEnd = selectOpeningDays.end.split(":")
+              const timeStartDayOff = new Date(
+                dateCalendar.getFullYear(),
+                dateCalendar.getMonth(),
+                i,
+                Number(splitDateStart[0]),
+                Number(splitDateStart[1])
+              )
+              const timeEndDayOff = new Date(
+                dateCalendar.getFullYear(),
+                dateCalendar.getMonth(),
+                i,
+                Number(splitDateEnd[0]),
+                Number(splitDateEnd[1])
+              )
+              dayToRender = {
+                end: timeEndDayOff,
+                start: timeStartDayOff,
+                holidays: true,
+                fullDate: generateFullDayDate,
+              }
+            }
+          }
+        }else if(!!selectedConstWorkingHour){
+          if (!selectedConstWorkingHour.disabled) {
+            const splitDateStartConst = selectedConstWorkingHour.startWorking.split(
+              ":"
+            )
+            const splitDateEndConst = selectedConstWorkingHour.endWorking.split(
+              ":"
+            )
+            const timeStartDayConst = new Date(
+              dateCalendar.getFullYear(),
+              dateCalendar.getMonth(),
+              i,
+              Number(splitDateStartConst[0]),
+              Number(splitDateStartConst[1])
+            )
+            const timeEndDayConst = new Date(
+              dateCalendar.getFullYear(),
+              dateCalendar.getMonth(),
+              i,
+              Number(splitDateEndConst[0]),
+              Number(splitDateEndConst[1])
+            )
+            dayToRender = {
+              end: timeEndDayConst,
+              start: timeStartDayConst,
+              holidays: selectedConstWorkingHour.disabled,
+              fullDate: generateFullDayDate,
+            }
+          }
+          
+        }
+        if (!!dayToRender) {
+          allDaysCalendar.push(dayToRender)
+        }
+      }
+      setAllEvents(allDaysCalendar)
     }
   }, [item])
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
-    item.company.openingDays
+    item.openingDays
   )
-  
   const localizer = momentLocalizer(moment)
   const arrMaxHours = selectedDayString.maxHours.split(":")
   const arrMinHours = selectedDayString.minHours.split(":")
@@ -446,16 +527,8 @@ const BigCalendarWorkerHoursAutoSave = ({
     }, 2000)
   }
 
-  const handleOnSelecting = slots => {
-    const takeDateStart = new Date(slots.start)
-    if (
-      dateCalendar.getFullYear() === takeDateStart.getFullYear() &&
-      dateCalendar.getMonth() === takeDateStart.getMonth()
-    ) {
-      return true
-    } else {
-      return false
-    }
+  const handleOnSelecting = () => {
+    return false
   }
 
   const handleSlotPropGetterOpenHoursCompany = date => {
@@ -469,7 +542,7 @@ const BigCalendarWorkerHoursAutoSave = ({
     )
 
     const selectedDayToCompany = getMonthAndReturnEng(takeDateStart.getDay())
-    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
+    const selectedHoursCompany = item.openingDays[selectedDayToCompany]
     const arrSerwerMaxHours = selectedHoursCompany.end.split(":")
     const arrSerwerMinHours = selectedHoursCompany.start.split(":")
     const calendarDate =
@@ -528,18 +601,11 @@ const BigCalendarWorkerHoursAutoSave = ({
       }
     } else {
       return {
-        className: "orange-event",
+        className: "blue-event",
       }
     }
   }
 
-  const handleOnSelectSlot = eventItem => {
-    if (eventItem.slots.length > 2) {
-      clearInterval(timerToClearNew.current)
-      setNewEvent(eventItem)
-      setNewEventOpen(true)
-    }
-  }
 
   const handleChangeDate = value => {
     let newDate = new Date()
@@ -588,32 +654,6 @@ const BigCalendarWorkerHoursAutoSave = ({
     }
   }
 
-  const handleClickEvent = eventItem => {
-    clearInterval(timerToClearEdited.current)
-    const selectItemReserwation = item.noConstantWorkingHours.find(
-      itemRes => itemRes._id === eventItem._id
-    )
-    if (!!selectItemReserwation) {
-      setSelectedEvent({ ...selectItemReserwation, ...eventItem })
-    } else {
-      setSelectedEvent(eventItem)
-    }
-    setSelectedEventOpen(true)
-  }
-
-  const handleClosePopupEventItem = () => {
-    timerToClearEdited.current = setTimeout(() => {
-      setSelectedEvent(null)
-    }, 400)
-    setSelectedEventOpen(false)
-  }
-
-  const handleCloseNewEventItem = () => {
-    timerToClearNew.current = setTimeout(() => {
-      setNewEvent(null)
-    }, 400)
-    setNewEventOpen(false)
-  }
 
   const handleCloseCalendar = () => {
     handleClose()
@@ -624,11 +664,11 @@ const BigCalendarWorkerHoursAutoSave = ({
   }
 
   const slotsValue =
-    item.company.reservationEveryTime === 5
+    item.reservationEveryTime === 5
       ? 10
-      : item.company.reservationEveryTime === 10
+      : item.reservationEveryTime === 10
       ? 5
-      : item.company.reservationEveryTime === 15
+      : item.reservationEveryTime === 15
       ? 4
       : 2
 
@@ -735,16 +775,13 @@ const BigCalendarWorkerHoursAutoSave = ({
             startAccessor="start"
             endAccessor="end"
             timeslots={slotsValue}
-            step={item.company.reservationEveryTime}
+            step={item.reservationEveryTime}
             toolbar={false}
             min={minHoursInCalendar} // 8.00 AM
             max={maxHoursInCalendar} // Max will be 6.00 PM!
-            onSelectSlot={handleOnSelectSlot} // zdarzenie po zaznaczeniu okresu
             onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
-            // slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru
             slotPropGetter={handleSlotPropGetterOpenHoursCompany} // nadanie koloru godzin otwartych firmy
             eventPropGetter={handleEventPropGetter}
-            onSelectEvent={handleClickEvent}
             components={{ event: NewEventView }}
           />
         </BackgroundCalendarStyle>
@@ -763,28 +800,6 @@ const BigCalendarWorkerHoursAutoSave = ({
             />
           </ButtonItemStyle>
         </ButtonsPosition>
-        <CalendarWorkerHoursNewEvent
-          siteProps={siteProps}
-          handleClosePopupEventItem={handleClosePopupEventItem}
-          selectedEvent={selectedEvent}
-          screenOpen={selectedEventOpen}
-          allEvents={allEvents}
-          itemCompanyHours={item.company.openingDays}
-          user={user}
-          workerId={item._id}
-          item={item}
-        />
-        <CalendarWorkerHoursNewEvent
-          siteProps={siteProps}
-          handleClosePopupEventItem={handleCloseNewEventItem}
-          selectedEvent={newEvent}
-          screenOpen={newEventOpen}
-          allEvents={allEvents}
-          itemCompanyHours={item.company.openingDays}
-          user={user}
-          workerId={item._id}
-          item={item}
-        />
       </BackgroundContentCalendar>
       <Popup
         popupEnable={datePickerActive}
@@ -801,4 +816,4 @@ const BigCalendarWorkerHoursAutoSave = ({
     </>
   )
 }
-export default BigCalendarWorkerHoursAutoSave
+export default BigCalendarEmployeeWorkingHours

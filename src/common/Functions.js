@@ -501,6 +501,39 @@ export const getMonthNamePl = intMonth => {
   return monthToReturn
 }
 
+export const getMonthNumber = monthName => {
+  let monthToReturn = ""
+  switch (monthName) {
+    case "sun":
+      monthToReturn = 0
+      break
+    case "mon":
+      monthToReturn = 1
+      break
+
+    case "tue":
+      monthToReturn = 2
+      break
+    case "wed":
+      monthToReturn = 3
+      break
+    case "thu":
+      monthToReturn = 4
+      break
+    case "fri":
+      monthToReturn = 5
+      break
+    case "sat":
+      monthToReturn = 6
+      break
+
+    default:
+      monthToReturn = -1
+  }
+
+  return monthToReturn
+}
+
 export const checkAndReturnMinAndMaxValueFromDaysHours = openingDays => {
   let maxNumber = 0
   let minNumber = 1440

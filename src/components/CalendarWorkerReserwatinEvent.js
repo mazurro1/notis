@@ -571,7 +571,7 @@ const CalendarWorkerReserwatinEvent = ({
       </IconWarning>
     </WarningStyle>
   )
-  console.log(selectedEvent)
+  
   return (
     <>
       <CSSTransition

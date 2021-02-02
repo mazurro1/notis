@@ -161,6 +161,7 @@ const GalleryContent = ({
   editGallery,
   setEditGallery,
   handleResetAllEditedComponents,
+  isAdmin = false,
 }) => {
   const [allImagesCompany, setAllImagesCompany] = useState([])
   const [addedImages, setAddedImages] = useState([])
@@ -320,9 +321,11 @@ const GalleryContent = ({
       {allImagesCompany.length > 0 ? (
         <ImageGallery items={allImagesCompany} lazyLoad />
       ) : (
-        <DefaultNonImage siteProps={siteProps}><MdImage/></DefaultNonImage>
+        <DefaultNonImage siteProps={siteProps}>
+          <MdImage />
+        </DefaultNonImage>
       )}
-      {editMode && isCompanyEditProfil && (
+      {editMode && isAdmin && isCompanyEditProfil && (
         <ButtonTextPositionMap>
           <ButtonIcon
             title="Edytuj galerie"
@@ -335,7 +338,7 @@ const GalleryContent = ({
           />
         </ButtonTextPositionMap>
       )}
-      <Popup
+      {isAdmin && <Popup
         popupEnable={editGallery}
         handleClose={handleCloseEditGalery}
         title="Edytuj galerie"
@@ -400,7 +403,7 @@ const GalleryContent = ({
         <ReactTooltip id="mainImage" effect="float" multiline={true}>
           <span>Ustaw zdjęcie jako zdjęcie główne</span>
         </ReactTooltip>
-      </Popup>
+      </Popup>}
     </PositionRelative>
   )
 }

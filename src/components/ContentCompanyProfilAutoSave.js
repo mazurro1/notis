@@ -317,6 +317,7 @@ const ContentCompanyProfil = ({
               editGallery={editGallery}
               setEditGallery={setEditGallery}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
+              isAdmin={isAdmin}
             />
             {userHasPermToServices && (
               <AllCategoryOfServices

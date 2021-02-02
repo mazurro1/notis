@@ -32,6 +32,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  CHANGE_WORKING_HOURS,
   RESET_OPINION,
   CHANGE_COMPANY_MAIN_IMAGE,
   UPDATED_IMAGE_ID_COMPANY,
@@ -158,6 +159,7 @@ const initialState = {
   workerHistoryReserwations: null,
   resetWorkerProps: false,
   resetOpinion: false,
+  workingHours: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -345,6 +347,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_WORKING_HOURS: {
+      return {
+        ...state,
+        workingHours: action.dataWorkingHours,
+      }
+    }
 
     case CHANGE_COMPANY_MAIN_IMAGE: {
       const patchWorkCompanyUpdateMainImage = !!state.workCompanyData

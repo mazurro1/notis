@@ -545,6 +545,14 @@ export const UPDATED_IMAGE_ID_COMPANY = "UPDATED_IMAGE_ID_COMPANY"
 export const CHANGE_COMPANY_MAIN_IMAGE = "CHANGE_COMPANY_MAIN_IMAGE"
 export const ADD_EDITED_OPINION_TO_RESERWATION = "ADD_EDITED_OPINION_TO_RESERWATION"
 export const RESET_OPINION = "RESET_OPINION"
+export const CHANGE_WORKING_HOURS = "CHANGE_WORKING_HOURS"
+
+export const changeWorkerHours = dataWorkingHours => {
+  return {
+    type: CHANGE_WORKING_HOURS,
+    dataWorkingHours: dataWorkingHours,
+  }
+}
 
 export const changeCompanyMainImage = (companyId, imagePath) => {
   return {
@@ -2288,6 +2296,95 @@ export const fetchGetOwnerNoConstData = (
         dispatch(
           addAlertItem(
             "Błąd podczas pobierania godzin pracy pracownika.",
+            "red"
+          )
+        )
+      })
+  }
+}
+
+export const fetchGetWorkerWorkingHours = (
+  token,
+  companyId,
+  workerId,
+  year,
+  month
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-workers-working-hours`,
+        {
+          companyId: companyId,
+          workerId: workerId,
+          year: year,
+          month: month,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        const dataWorkingHours = {
+          constWorkingHours: response.data.constWorkingHours,
+          noConstWorkingHours: response.data.noConstWorkingHours,
+          daysOff: response.data.daysOff,
+          openingDays: response.data.openingDays,
+          reservationEveryTime: response.data.reservationEveryTime,
+        }
+        dispatch(changeWorkerHours(dataWorkingHours))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(changeEditWorkerHours(false, null))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas pobierania godzin pracy.",
+            "red"
+          )
+        )
+      })
+  }
+}
+
+export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-owner-working-hours`,
+        {
+          companyId: companyId,
+          year: year,
+          month: month,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        const dataWorkingHours = {
+          constWorkingHours: response.data.constWorkingHours,
+          noConstWorkingHours: response.data.noConstWorkingHours,
+          daysOff: response.data.daysOff,
+          openingDays: response.data.openingDays,
+          reservationEveryTime: response.data.reservationEveryTime,
+        }
+        dispatch(changeWorkerHours(dataWorkingHours))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(changeEditWorkerHours(false, null))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas pobierania godzin pracy.",
             "red"
           )
         )
