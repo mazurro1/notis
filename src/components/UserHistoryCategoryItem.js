@@ -6,13 +6,14 @@ import {
   MdComment,
   MdSave,
   MdStar,
+  MdEdit,
 } from "react-icons/md"
 import { Colors } from "../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import InputIcon from './InputIcon'
 import { useDispatch } from "react-redux"
-import { fetchAddOpinion } from '../state/actions'
+import { fetchAddOpinion, fetchUpdateEditedOpinion } from "../state/actions"
 
 const BackgroundEdit = styled.div`
   position: absolute;
@@ -246,6 +247,59 @@ const StarItem = styled.div`
   }
 `
 
+const OpinionText = styled.div`
+  position: relative;
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  padding: 10px 20px;
+  padding-bottom: 10px;
+  width: 100%;
+  border-radius: 5px;
+
+  .replayCompany {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    background-color: ${props => Colors(props.siteProps).companyItemBackground};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 40px;
+  }
+
+  .replayCompanyName {
+    position: absolute;
+    font-size: 0.9rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+    top: -20px;
+    text-transform: uppercase;
+  }
+`
+
+const OpinionTextReserwation = styled.div`
+  margin-top: 20px;
+  font-weight: 700;
+  padding-left: 5px;
+`
+
+const EditedMessage = styled.div`
+  margin-bottom: 10px;
+
+  .editedSmallText {
+    font-size: 0.85rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
+const NoEditedMessage = styled.div`
+  .editedSmallText {
+    font-size: 0.85rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
+
 const UserHistoryCategoryItem = ({
   siteProps,
   item,
@@ -258,12 +312,23 @@ const UserHistoryCategoryItem = ({
   const [addOpinion, setAddOpinion] = useState(false)
   const [opinionText, setOpinionText] = useState("")
   const [opinionStars, setOpinionStars] = useState(5)
+  const [editedOpinionText, setEditedOpinionText] = useState("")
+  const [editedOpinion, setEditedOpinion] = useState(false)
+
 
   useEffect(()=>{
     setConfirmDelete(false)
     setAddOpinion(false)
     setOpinionText("")
-    setOpinionStars(5)
+    setEditedOpinion(false)
+    let numberStars = 5;
+    let resetEditedOpinionText = ""
+    if(!!item.opinionId){
+      numberStars = item.opinionId.opinionStars;
+      resetEditedOpinionText = !!item.opinionId.opinionMessage ? item.opinionId.opinionMessage : ""
+    }
+    setEditedOpinionText(resetEditedOpinionText)
+    setOpinionStars(numberStars)
   }, [item.opinionId])
 
   const dispatch = useDispatch()
@@ -271,6 +336,7 @@ const UserHistoryCategoryItem = ({
   const handleConfirmDeleteReserwation = () => {
     setConfirmDelete(prevState => !prevState)
   }
+
   const handleToDeleteReserwation = () => {
     setConfirmDelete(prevState => !prevState)
     handleDeleteReserwation(item._id)
@@ -283,11 +349,27 @@ const UserHistoryCategoryItem = ({
   const handleResetAddOpinion = () => {
     setAddOpinion(false)
     setOpinionText("")
-    setOpinionStars(5)
+    setEditedOpinion(false)
+    let numberStars = 5
+    let resetEditedOpinionText = ""
+    if(!!item.opinionId){
+      numberStars = item.opinionId.opinionStars;
+      resetEditedOpinionText = !!item.opinionId.opinionMessage ? item.opinionId.opinionMessage : ""
+    }
+    setEditedOpinionText(resetEditedOpinionText)
+    setOpinionStars(numberStars)
   }
 
   const handleChangeTextOpinion = e => {
     setOpinionText(e.target.value)
+  }
+
+  const handleChangeEditOpinion = () => {
+    setEditedOpinion(prevState => !prevState)
+  }
+
+  const handleChangeTextEditedOpinion = (e) => {
+    setEditedOpinionText(e.target.value)
   }
 
   const handleClickStar = indexStar => {
@@ -304,6 +386,18 @@ const UserHistoryCategoryItem = ({
     dispatch(fetchAddOpinion(userToken, opinionData, company))
   }
 
+  const handleUpdateEditedOpinion = () => {
+    const opinionData = {
+      opinionId: item.opinionId,
+      opinionEditedMessage: editedOpinionText,
+      company: item.company._id,
+      reserwationId: item._id,
+    }
+    dispatch(
+      fetchUpdateEditedOpinion(userToken, opinionData, company)
+    )
+  }
+  
   let timeService = ""
   if (Number(item.time) <= 60) {
     timeService = `${item.timeReserwation}min`
@@ -430,6 +524,34 @@ const UserHistoryCategoryItem = ({
           </StatusReserwation>
         )}
       </div>
+      {!!item.opinionId && (
+        <>
+          <OpinionTextReserwation>Wystawiona opinia:</OpinionTextReserwation>
+          <OpinionText siteProps={siteProps}>
+            <StarsPositions>
+              <span>Ocena: </span>
+              {renderStars}
+            </StarsPositions>
+            {!!item.opinionId.editedOpinionMessage && (
+              <EditedMessage siteProps={siteProps}>
+                <div className="editedSmallText">Edytowana opinia:</div>
+                {item.opinionId.editedOpinionMessage}
+              </EditedMessage>
+            )}
+            <NoEditedMessage siteProps={siteProps}>
+              <div className="editedSmallText">Opinia:</div>
+              {item.opinionId.opinionMessage}
+            </NoEditedMessage>
+
+            {!!item.opinionId.replayOpinionMessage && (
+              <div className="replayCompany">
+                <div className="replayCompanyName">{company.company.name}</div>
+                {item.opinionId.replayOpinionMessage}
+              </div>
+            )}
+          </OpinionText>
+        </>
+      )}
       {!!isReserwationEnd &&
       !!!item.visitNotFinished &&
       !!!item.visitCanceled ? (
@@ -480,36 +602,100 @@ const UserHistoryCategoryItem = ({
             </BackgroundEdit>
           </CSSTransition>
         </>
+      ) : !!!item.opinionId && !!!item.visitCanceled ? (
+        <>
+          <ArrowAddOpinionReserwation
+            siteProps={siteProps}
+            data-tip
+            data-for="addOpinionReserwationTooltip"
+            onClick={handleAddOpinion}
+          >
+            <MdComment />
+          </ArrowAddOpinionReserwation>
+          <CSSTransition
+            in={addOpinion}
+            timeout={400}
+            classNames="popup"
+            unmountOnExit
+          >
+            <BackgroundEdit>
+              <BackgroundEditContentBg siteProps={siteProps}>
+                <TitleAddOpnion>Nowa opinia</TitleAddOpnion>
+                <PaddingBackground>
+                  <StarsPositions>
+                    <span>Ocena: </span>
+                    {renderStars}
+                  </StarsPositions>
+                  <InputIcon
+                    icon={<MdComment />}
+                    placeholder="Opinia"
+                    value={opinionText}
+                    onChange={handleChangeTextOpinion}
+                  />
+                  <ButtonsAddPositionOpinion>
+                    <ButtonMargin>
+                      <ButtonIcon
+                        title="Anuluj"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="15"
+                        icon={<MdArrowBack />}
+                        onClick={handleResetAddOpinion}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
+                      />
+                    </ButtonMargin>
+                    <ButtonMargin>
+                      <ButtonIcon
+                        title="Dodaj opinie"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="15"
+                        icon={<MdSave />}
+                        onClick={handleUpdateOpinion}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={opinionText.length < 2}
+                      />
+                    </ButtonMargin>
+                  </ButtonsAddPositionOpinion>
+                </PaddingBackground>
+              </BackgroundEditContentBg>
+            </BackgroundEdit>
+          </CSSTransition>
+        </>
       ) : (
-        !!!item.opinionId &&
-        !!!item.visitCanceled && (
+        !!item.opinionId &&
+        !!!item.visitCanceled &&
+        !!!item.opinionId.editedOpinionMessage && (
           <>
             <ArrowAddOpinionReserwation
               siteProps={siteProps}
               data-tip
-              data-for="addOpinionReserwationTooltip"
-              onClick={handleAddOpinion}
+              data-for="editOpinionReserwationTooltip"
+              onClick={handleChangeEditOpinion}
             >
-              <MdComment />
+              <MdEdit />
             </ArrowAddOpinionReserwation>
             <CSSTransition
-              in={addOpinion}
+              in={editedOpinion}
               timeout={400}
               classNames="popup"
               unmountOnExit
             >
               <BackgroundEdit>
                 <BackgroundEditContentBg siteProps={siteProps}>
-                  <TitleAddOpnion>Dodawanie opinii</TitleAddOpnion>
+                  <TitleAddOpnion>Edytowanie opinii</TitleAddOpnion>
                   <PaddingBackground>
                     <StarsPositions>
-                      <span>Ocena: </span>{renderStars}
+                      <span>Ocena: </span>
+                      {renderStars}
                     </StarsPositions>
                     <InputIcon
                       icon={<MdComment />}
                       placeholder="Opinia"
-                      value={opinionText}
-                      onChange={handleChangeTextOpinion}
+                      value={editedOpinionText}
+                      onChange={handleChangeTextEditedOpinion}
                     />
                     <ButtonsAddPositionOpinion>
                       <ButtonMargin>
@@ -531,10 +717,13 @@ const UserHistoryCategoryItem = ({
                           fontIconSize="20"
                           fontSize="15"
                           icon={<MdSave />}
-                          onClick={handleUpdateOpinion}
+                          onClick={handleUpdateEditedOpinion}
                           customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
-                          disabled={opinionText.length < 2}
+                          disabled={
+                            editedOpinionText.length < 2 ||
+                            editedOpinionText === item.opinionId.opinionMessage
+                          }
                         />
                       </ButtonMargin>
                     </ButtonsAddPositionOpinion>

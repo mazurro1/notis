@@ -32,11 +32,13 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  RESET_OPINION,
   CHANGE_COMPANY_MAIN_IMAGE,
   UPDATED_IMAGE_ID_COMPANY,
   UPDATE_COMPANY_IMAGE,
   DELETE_COMPANY_IMAGE,
   ADD_NEW_OPINION_TO_RESERWATION,
+  ADD_EDITED_OPINION_TO_RESERWATION,
   ADD_REPLAY_TO_OPINION,
   ADD_NEW_OPINIONS_COMPANY,
   UPDATE_PROMOTIONS,
@@ -155,6 +157,7 @@ const initialState = {
   userHistoryReserwations: [],
   workerHistoryReserwations: null,
   resetWorkerProps: false,
+  resetOpinion: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -417,6 +420,64 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case ADD_EDITED_OPINION_TO_RESERWATION: {
+      const userHistoryReserwationsNew = [...state.userHistoryReserwations]
+      const patchWorkCompanyDataNew = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      const patchCompanyDataNew = !!state.pathCompanyData
+        ? { ...state.pathCompanyData }
+        : null
+
+      if (!!patchWorkCompanyDataNew) {
+        if (patchWorkCompanyDataNew._id === action.companyId) {
+          console.log(patchWorkCompanyDataNew._id, action.companyId)
+          const findOpinionIndex = patchWorkCompanyDataNew.opinions.findIndex(item => {
+            return item._id === action.opinionId._id
+          })
+          if(findOpinionIndex >= 0){
+            patchWorkCompanyDataNew.opinions[
+              findOpinionIndex
+            ].editedOpinionMessage = action.opinionEdited
+          }
+        }
+      }
+
+      if (!!patchCompanyDataNew) {
+        if (patchCompanyDataNew._id === action.companyId) {
+          const findOpinionIndex = patchCompanyDataNew.opinions.findIndex(item => item._id === action.opinionId._id)
+          if(findOpinionIndex>=0){
+            patchCompanyDataNew.opinions[
+              findOpinionIndex
+            ].editedOpinionMessage = action.opinionEdited
+          }
+        }
+      }
+
+      const indexReserwationCompany = userHistoryReserwationsNew.findIndex(
+        item => {
+          return item.company === action.companyName
+        }
+      )
+      if (indexReserwationCompany >= 0) {
+        const findIndexReserwationCompanyItem = userHistoryReserwationsNew[
+          indexReserwationCompany
+        ].items.findIndex(item => item._id === action.reserwationId)
+        if (findIndexReserwationCompanyItem >= 0) {
+          userHistoryReserwationsNew[indexReserwationCompany].items[
+            findIndexReserwationCompanyItem
+          ].opinionId.editedOpinionMessage = action.opinionEdited
+        }
+      }
+      return {
+        ...state,
+        userHistoryReserwations: userHistoryReserwationsNew,
+        workCompanyData: patchWorkCompanyDataNew,
+        pathCompanyData: patchCompanyDataNew,
+      }
+    }
+
     case ADD_NEW_OPINION_TO_RESERWATION: {
       const userHistoryReserwationsNew = [...state.userHistoryReserwations]
       const patchWorkCompanyDataNew = !!state.workCompanyData
@@ -518,6 +579,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         workCompanyData: patchWorkCompanyDataReplay,
         pathCompanyData: patchCompanyDataReplay,
+        resetOpinion: true,
+      }
+    }
+
+    case RESET_OPINION: {
+      return {
+        ...state,
+        resetOpinion: false,
       }
     }
 

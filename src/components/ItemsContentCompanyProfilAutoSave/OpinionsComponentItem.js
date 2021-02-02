@@ -5,8 +5,11 @@ import { MdStar, MdComment, MdSave, MdArrowBack } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
-import { useDispatch } from "react-redux"
-import {fetchAddReplayOpinion} from '../../state/actions'
+import { useDispatch, useSelector } from "react-redux"
+import {
+  fetchAddReplayOpinion,
+  resetOpinionFunction,
+} from "../../state/actions"
 
 const BackgroundEdit = styled.div`
   position: absolute;
@@ -139,6 +142,22 @@ const PaddingBackground = styled.div`
   padding: 10px;
 `
 
+const EditedMessage = styled.div`
+  margin-bottom: 10px;
+
+  .editedSmallText {
+    font-size: 0.85rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
+const NoEditedMessage = styled.div`
+  .editedSmallText {
+    font-size: 0.85rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
  const OpinionsComponentItem = ({
    siteProps,
    opinion,
@@ -153,11 +172,17 @@ const PaddingBackground = styled.div`
  }) => {
    const [addReplay, setAddReplay] = useState(false)
    const [opinionText, setOpinionText] = useState("")
+   const resetOpinion = useSelector(state => state.resetOpinion)
 
    useEffect(() => {
      setAddReplay(false)
-     setOpinionText("")
-   }, [opinion.replayOpinionMessage])
+     let opinionCompanyItem = ""
+     if (!!opinion.replayOpinionMessage) {
+       opinionCompanyItem = opinion.replayOpinionMessage
+     }
+     setOpinionText(opinionCompanyItem)
+     dispatch(resetOpinionFunction())
+   }, [opinion, resetOpinion])
 
    const dispatch = useDispatch()
 
@@ -170,7 +195,11 @@ const PaddingBackground = styled.div`
    }
 
    const handleResetReplay = () => {
-     setOpinionText("")
+     let opinionCompanyItem = ""
+     if (!!opinion.replayOpinionMessage) {
+       opinionCompanyItem = opinion.replayOpinionMessage
+     }
+     setOpinionText(opinionCompanyItem)
      setAddReplay(false)
    }
 
@@ -229,7 +258,18 @@ const PaddingBackground = styled.div`
            Pracownik: <span>{`${workerName} ${workerSurname}`}</span>
          </ExtraInOpinion>
          <BackgroundOpinion siteProps={siteProps} active={addReplay}>
-           <OpinionWrap>{opinion.opinionMessage}</OpinionWrap>
+           <OpinionWrap>
+             {!!opinion.editedOpinionMessage && (
+               <EditedMessage siteProps={siteProps}>
+                 <div className="editedSmallText">Edytowana opinia:</div>
+                 {opinion.editedOpinionMessage}
+               </EditedMessage>
+             )}
+             <NoEditedMessage siteProps={siteProps}>
+               <div className="editedSmallText">Opinia:</div>
+               {opinion.opinionMessage}
+             </NoEditedMessage>
+           </OpinionWrap>
            {!!opinion.replayOpinionMessage && (
              <ReplayMessage siteProps={siteProps}>
                <ReplayStyle siteProps={siteProps}>
@@ -244,10 +284,10 @@ const PaddingBackground = styled.div`
          <TimeCreateStyle siteProps={siteProps}>
            {timeCreateRender}
          </TimeCreateStyle>
-         {isAdmin && isCompanyEditProfil && !!!opinion.replayOpinionMessage && (
+         {isAdmin && isCompanyEditProfil && (
            <ButtonMoreOpinion>
              <ButtonIcon
-               title="Odpowiedz na opinie"
+               title={!!!opinion.replayOpinionMessage ? "Odpowiedz na opinie" : "Edytuj opinie"}
                uppercase
                fontIconSize="20"
                fontSize="16"
@@ -265,7 +305,11 @@ const PaddingBackground = styled.div`
          >
            <BackgroundEdit>
              <BackgroundEditContentBg siteProps={siteProps}>
-               <TitleAddOpnion>Odpowiedz na opinie</TitleAddOpnion>
+               <TitleAddOpnion>
+                 {!!opinion.replayOpinionMessage
+                   ? "Edytuj opinie"
+                   : "Odpowiedz na opinie"}
+               </TitleAddOpnion>
                <PaddingBackground>
                  <InputIcon
                    icon={<MdComment />}
@@ -288,7 +332,11 @@ const PaddingBackground = styled.div`
                    </ButtonMargin>
                    <ButtonMargin>
                      <ButtonIcon
-                       title="Dodaj opinie"
+                       title={
+                         !!opinion.replayOpinionMessage
+                           ? "Aktualizuj opinie"
+                           : "Dodaj opinie"
+                       }
                        uppercase
                        fontIconSize="20"
                        fontSize="15"

@@ -543,6 +543,8 @@ export const DELETE_COMPANY_IMAGE = "DELETE_COMPANY_IMAGE"
 export const UPDATE_COMPANY_IMAGE = "UPDATE_COMPANY_IMAGE"
 export const UPDATED_IMAGE_ID_COMPANY = "UPDATED_IMAGE_ID_COMPANY"
 export const CHANGE_COMPANY_MAIN_IMAGE = "CHANGE_COMPANY_MAIN_IMAGE"
+export const ADD_EDITED_OPINION_TO_RESERWATION = "ADD_EDITED_OPINION_TO_RESERWATION"
+export const RESET_OPINION = "RESET_OPINION"
 
 export const changeCompanyMainImage = (companyId, imagePath) => {
   return {
@@ -575,6 +577,23 @@ export const deleteCompanyImage = (companyId, pathImage) => {
   }
 }
 
+export const addEditedOpinionToReserwation = (
+  reserwationId,
+  opinionEdited,
+  company,
+  companyId,
+  opinionId
+) => {
+  return {
+    type: ADD_EDITED_OPINION_TO_RESERWATION,
+    reserwationId: reserwationId,
+    opinionEdited: opinionEdited,
+    companyName: company,
+    companyId: companyId,
+    opinionId: opinionId,
+  }
+}
+
 export const addNewOpinionToReserwation = (reserwationId, opinion, company, companyId) => {
   return {
     type: ADD_NEW_OPINION_TO_RESERWATION,
@@ -591,6 +610,12 @@ export const addReplayToOpinion = (opinionId, replay, companyId) => {
     opinionId: opinionId,
     replay: replay,
     companyId: companyId,
+  }
+}
+
+export const resetOpinionFunction = () => {
+  return {
+    type: RESET_OPINION,
   }
 }
 
@@ -2640,13 +2665,48 @@ export const fetchAddOpinion = (token, opinionData, company) => {
         }
       )
       .then(response => {
-        console.log(response.data.opinion)
         dispatch(
           addNewOpinionToReserwation(
             opinionData.reserwationId,
             response.data.opinion,
             company,
             opinionData.company,
+          )
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano opinie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania opinii.", "red"))
+      })
+  }
+}
+
+export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-edited-opinion`,
+        {
+          opinionData: opinionData,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        console.log(company)
+        dispatch(
+          addEditedOpinionToReserwation(
+            opinionData.reserwationId,
+            opinionData.opinionEditedMessage,
+            company,
+            opinionData.company,
+            opinionData.opinionId,
           )
         )
         dispatch(changeSpinner(false))

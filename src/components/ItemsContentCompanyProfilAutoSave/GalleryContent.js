@@ -136,6 +136,20 @@ const TextGallery = styled.div`
   }
 `
 
+const DefaultNonImage = styled.div`
+  height: 470px;
+  max-height: 80vh;
+  width: 100%;
+  border-radius: 5px;
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 6rem;
+`
+
 const GalleryContent = ({
   siteProps,
   companyId,
@@ -303,7 +317,11 @@ const GalleryContent = ({
 
   return (
     <PositionRelative siteProps={siteProps}>
-      <ImageGallery items={allImagesCompany} lazyLoad />
+      {allImagesCompany.length > 0 ? (
+        <ImageGallery items={allImagesCompany} lazyLoad />
+      ) : (
+        <DefaultNonImage siteProps={siteProps}><MdImage/></DefaultNonImage>
+      )}
       {editMode && isCompanyEditProfil && (
         <ButtonTextPositionMap>
           <ButtonIcon

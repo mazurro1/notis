@@ -282,6 +282,13 @@ const UserHistory = ({ siteProps, user }) => {
       >
         <span>Dodaj opinię</span>
       </ReactTooltip>
+      <ReactTooltip
+        id="editOpinionReserwationTooltip"
+        effect="float"
+        multiline={true}
+      >
+        <span>Edytuj opinię</span>
+      </ReactTooltip>
       <ReactTooltip id="goToWebsite" effect="float" multiline={true}>
         <span>Przejdz do strony internetowej firmy</span>
       </ReactTooltip>

@@ -7,6 +7,9 @@ import { MdWork } from "react-icons/md"
 import { useSelector } from "react-redux"
 import { LinkEffect } from "../common/LinkEffect"
 import {Site} from '../common/Site'
+import {
+  MdImage,
+} from "react-icons/md"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -88,6 +91,19 @@ const BackGroundImageCustomUrl = styled.div`
   background-position: center;
   background-size: cover;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+`
+
+const BackGroundImageDefault = styled.div`
+  height: 300px;
+  width: 100%;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 6rem;
 `
 
 const PaddingRight = styled.div`
@@ -228,15 +244,25 @@ const PlacesItem = ({ item, filters, index }) => {
     >
       <PlaceItem siteProps={siteProps}>
         <PlaceImage>
-          <BackGroundImageCustomUrl
-            url={
-              !!item.mainImageUrl || item.imagesUrl.length > 0
-                ? `${Site.awsUrl}/${
-                    !!item.mainImageUrl ? item.mainImageUrl : item.imagesUrl[0]
-                  }`
-                : ""
-            }
-          />
+          {!!item.mainImageUrl || item.imagesUrl.length > 0 ? (
+            <BackGroundImageCustomUrl
+              url={
+                !!item.mainImageUrl || item.imagesUrl.length > 0
+                  ? `${Site.awsUrl}/${
+                      !!item.mainImageUrl
+                        ? item.mainImageUrl
+                        : item.imagesUrl[0]
+                    }`
+                  : ""
+              }
+            />
+          ) : (
+            <BackGroundImageDefault
+              siteProps={siteProps}
+            >
+              <MdImage/>
+            </BackGroundImageDefault>
+          )}
         </PlaceImage>
         <PlaceContent siteProps={siteProps}>
           <h1>{item.name}</h1>
