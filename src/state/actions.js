@@ -546,6 +546,29 @@ export const CHANGE_COMPANY_MAIN_IMAGE = "CHANGE_COMPANY_MAIN_IMAGE"
 export const ADD_EDITED_OPINION_TO_RESERWATION = "ADD_EDITED_OPINION_TO_RESERWATION"
 export const RESET_OPINION = "RESET_OPINION"
 export const CHANGE_WORKING_HOURS = "CHANGE_WORKING_HOURS"
+export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
+export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE"
+export const RESET_USER_PROFIL = "RESET_USER_PROFIL"
+
+export const resetUserProfil = () => {
+  return {
+    type: RESET_USER_PROFIL,
+  }
+}
+
+export const updateUserImage = (imageUrl) => {
+  return {
+    type: UPDATE_USER_IMAGE,
+    imageUrl: imageUrl,
+  }
+}
+
+export const changeActiveWorker = (value) => {
+  return {
+    type: CHANGE_ACTIVE_WORKER,
+    value: value
+  }
+}
 
 export const changeWorkerHours = dataWorkingHours => {
   return {
@@ -1629,7 +1652,86 @@ export const fetchUserReserwationsAll = (
   }
 }
 
-export const fetchWorkerReserwationsAll = (token, workerUserId, yearPicker, monthPicker, companyId) => {
+export const fetchGetWorkerWorkingHours = (
+  token,
+  companyId,
+  workerId,
+  year,
+  month
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-workers-working-hours`,
+        {
+          companyId: companyId,
+          workerId: workerId,
+          year: year,
+          month: month,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        const dataWorkingHours = {
+          constWorkingHours: response.data.constWorkingHours,
+          noConstWorkingHours: response.data.noConstWorkingHours,
+          daysOff: response.data.daysOff,
+          openingDays: response.data.openingDays,
+          reservationEveryTime: response.data.reservationEveryTime,
+        }
+        dispatch(changeWorkerHours(dataWorkingHours))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(changeEditWorkerHours(false, null))
+        dispatch(addAlertItem("Błąd podczas pobierania godzin pracy.", "red"))
+      })
+  }
+}
+
+export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-owner-working-hours`,
+        {
+          companyId: companyId,
+          year: year,
+          month: month,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        const dataWorkingHours = {
+          constWorkingHours: response.data.constWorkingHours,
+          noConstWorkingHours: response.data.noConstWorkingHours,
+          daysOff: response.data.daysOff,
+          openingDays: response.data.openingDays,
+          reservationEveryTime: response.data.reservationEveryTime,
+        }
+        dispatch(changeWorkerHours(dataWorkingHours))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(changeEditWorkerHours(false, null))
+        dispatch(addAlertItem("Błąd podczas pobierania godzin pracy.", "red"))
+      })
+  }
+}
+
+export const fetchWorkerReserwationsAll = (token, workerUserId, yearPicker, monthPicker, companyId, isAdmin) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -1648,7 +1750,22 @@ export const fetchWorkerReserwationsAll = (token, workerUserId, yearPicker, mont
         }
       )
       .then(response => {
-        dispatch(changeSpinner(false))
+        if (!!isAdmin) {
+          dispatch(
+            fetchGetOwnerWorkingHours(token, companyId, yearPicker, monthPicker)
+          )
+        }else{
+          dispatch(
+            fetchGetWorkerWorkingHours(
+              token,
+              companyId,
+              workerUserId,
+              yearPicker,
+              monthPicker
+            )
+          )
+        }
+        // dispatch(changeSpinner(false))
         dispatch(updateWorkerReserwations(response.data.reserwations))
       })
       .catch(error => {
@@ -2303,94 +2420,6 @@ export const fetchGetOwnerNoConstData = (
   }
 }
 
-export const fetchGetWorkerWorkingHours = (
-  token,
-  companyId,
-  workerId,
-  year,
-  month
-) => {
-  return dispatch => {
-    dispatch(changeSpinner(true))
-    return axios
-      .patch(
-        `${Site.serverUrl}/company-workers-working-hours`,
-        {
-          companyId: companyId,
-          workerId: workerId,
-          year: year,
-          month: month,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then(response => {
-        const dataWorkingHours = {
-          constWorkingHours: response.data.constWorkingHours,
-          noConstWorkingHours: response.data.noConstWorkingHours,
-          daysOff: response.data.daysOff,
-          openingDays: response.data.openingDays,
-          reservationEveryTime: response.data.reservationEveryTime,
-        }
-        dispatch(changeWorkerHours(dataWorkingHours))
-        dispatch(changeSpinner(false))
-      })
-      .catch(error => {
-        dispatch(changeSpinner(false))
-        dispatch(changeEditWorkerHours(false, null))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas pobierania godzin pracy.",
-            "red"
-          )
-        )
-      })
-  }
-}
-
-export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
-  return dispatch => {
-    dispatch(changeSpinner(true))
-    return axios
-      .patch(
-        `${Site.serverUrl}/company-owner-working-hours`,
-        {
-          companyId: companyId,
-          year: year,
-          month: month,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then(response => {
-        const dataWorkingHours = {
-          constWorkingHours: response.data.constWorkingHours,
-          noConstWorkingHours: response.data.noConstWorkingHours,
-          daysOff: response.data.daysOff,
-          openingDays: response.data.openingDays,
-          reservationEveryTime: response.data.reservationEveryTime,
-        }
-        dispatch(changeWorkerHours(dataWorkingHours))
-        dispatch(changeSpinner(false))
-      })
-      .catch(error => {
-        dispatch(changeSpinner(false))
-        dispatch(changeEditWorkerHours(false, null))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas pobierania godzin pracy.",
-            "red"
-          )
-        )
-      })
-  }
-}
 
 export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
   return dispatch => {
@@ -2949,6 +2978,60 @@ export const fetchCompanyMainImage = (token, companyId, imagePath) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas ustawiania nowego głównego zdjęcia.", "red"))
+      })
+  }
+}
+
+export const fetchUserUploadImage = (token, image) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-upload-image`,
+        {
+          image: image,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateUserImage(response.data.imageUrl))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano zdjęcie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania zdjęcia.", "red"))
+      })
+  }
+}
+
+export const fetchUserDeleteImage = (token, imagePath) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-delete-image`,
+        {
+          imagePath: imagePath,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateUserImage(""))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
       })
   }
 }

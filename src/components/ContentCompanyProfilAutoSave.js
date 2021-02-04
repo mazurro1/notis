@@ -243,6 +243,7 @@ const ContentCompanyProfil = ({
         name: company.owner.name,
         surname: company.owner.surname,
         ownerId: company.owner._id,
+        ownerImageUrl: company.owner.imageUrl,
       }
       const valueWithCompanyId = {
         ...itemServices,
@@ -334,17 +335,6 @@ const ContentCompanyProfil = ({
                 editMode={editMode}
               />
             )}
-            <OpinionsComponent
-              companyOpinions={company.opinions}
-              siteProps={siteProps}
-              opinionsCount={company.opinionsCount}
-              opinionsValue={company.opinionsValue}
-              companyName={company.name}
-              companyId={company._id}
-              isCompanyEditProfil={isCompanyEditProfil}
-              isAdmin={isAdmin}
-              user={user}
-            />
           </LeftColumn>
           <RightColumn>
             {editMode && isCompanyEditProfil ? (
@@ -616,6 +606,17 @@ const ContentCompanyProfil = ({
                 />
               )}
           </RightColumn>
+          <OpinionsComponent
+            companyOpinions={company.opinions}
+            siteProps={siteProps}
+            opinionsCount={company.opinionsCount}
+            opinionsValue={company.opinionsValue}
+            companyName={company.name}
+            companyId={company._id}
+            isCompanyEditProfil={isCompanyEditProfil}
+            isAdmin={isAdmin}
+            user={user}
+          />
         </ContentDiv>
         {isCompanyEditProfil && (
           <ReactTooltip id="editMode" effect="float" multiline={true}>

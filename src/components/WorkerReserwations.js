@@ -12,6 +12,7 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
    const workerHistoryReserwations = useSelector(
      state => state.workerHistoryReserwations
    )
+   const workingHours = useSelector(state => state.workingHours)
 
    const dispatch = useDispatch()
    
@@ -24,7 +25,8 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
          isAdmin ? userWorkerActive : user.userId,
          dateCalendar.getFullYear(),
          dateCalendar.getMonth() + 1,
-         user.company._id
+         user.company._id,
+         isAdmin
        )
      )
    }, [
@@ -36,7 +38,7 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
    ])
    return (
      <>
-       {!!workerHistoryReserwations ? (
+       {!!workerHistoryReserwations && !!workingHours ? (
          <BigCalendarWorkerReserwations
            item={workerHistoryReserwations}
            handleClose={handleClose}
@@ -48,6 +50,7 @@ import {fetchWorkerReserwationsAll} from '../state/actions'
            isAdmin={isAdmin}
            userWorkerActive={userWorkerActive}
            setUserWorkerActive={setUserWorkerActive}
+           workingHours={workingHours}
          />
        ) : (
          "Brak uprawnien"

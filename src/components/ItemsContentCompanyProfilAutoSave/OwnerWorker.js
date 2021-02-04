@@ -20,6 +20,7 @@ import {
   resetWorkersPropsVisible,
 } from "../../state/actions"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
+import {Site} from '../../common/Site'
 
 
 const HolidayDays = styled.div`
@@ -98,6 +99,8 @@ const InputStyles = styled.div`
   }
 `
 
+
+
 const OwnerWorker = ({
   ButtonDeleteStyle,
   ButtonContent,
@@ -122,6 +125,9 @@ const OwnerWorker = ({
   companyId,
   user,
   editMode,
+  handleClickActiveWorker,
+  activeWorkerUserId,
+  BackGroundImageCustomUrl,
 }) => {
   const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
@@ -189,7 +195,9 @@ const OwnerWorker = ({
     setChooseTimeOwner(false)
   }, [editedWorkers, editMode])
 
-  const handleChooseTimeOwner = () => {
+  const handleChooseTimeOwner = (e) => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     setChooseTimeOwner(prevState => !prevState)
   }
 
@@ -202,7 +210,9 @@ const OwnerWorker = ({
     dispatch(changeEditWorkerHours(true, itemsToSent))
   }
 
-  const handleClickOwnerEdit = () => {
+  const handleClickOwnerEdit = (e) => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     setOwnerEdit(prevState => !prevState)
   }
 
@@ -331,17 +341,30 @@ const OwnerWorker = ({
     user: owner,
     _id: "owner",
   }
-
+  console.log()
   return (
     <WorkerItemStyle
       userEditItem={ownerEdit}
       selectHeight={200}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
+      onClick={() =>
+        handleClickActiveWorker({
+          user: owner._id,
+          services: ownerData.servicesCategory,
+        })
+      }
+      active={
+        !!activeWorkerUserId ? activeWorkerUserId.user === owner._id : false
+      }
     >
-      <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
-        <FaUser />
-      </WorkerCircle>
+      {!!owner.imageUrl ? (
+        <BackGroundImageCustomUrl url={`${Site.awsUrl}/${owner.imageUrl}`} />
+      ) : (
+        <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
+          <FaUser />
+        </WorkerCircle>
+      )}
       <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecializationOwner}</WorkerSpecjalization>
       {editedWorkers && (

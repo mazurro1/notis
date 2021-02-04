@@ -12,7 +12,6 @@ import {
   MdArrowBack,
 } from "react-icons/md"
 import { FaDollarSign } from "react-icons/fa"
-import ReactTooltip from "react-tooltip"
 import ServicesItem from "./ServicesItem"
 import { Collapse } from "react-collapse"
 import { CSSTransition } from "react-transition-group"
@@ -226,6 +225,7 @@ const CategoryItem = ({
   const [categoryTitle, setCategoryTitle] = useState("")
   const resetCompany = useSelector(state => state.resetCompany)
   const siteProps = useSelector(state => state.siteProps)
+  const activeWorkerUserId = useSelector(state => state.activeWorkerUserId)
 
   useEffect(()=>{
     setClickDelete(false)
@@ -358,6 +358,7 @@ const CategoryItem = ({
         companyId={companyId}
         siteProps={siteProps}
         userIsBlocked={userIsBlocked}
+        activeWorkerUserId={activeWorkerUserId}
       />
     )
   })

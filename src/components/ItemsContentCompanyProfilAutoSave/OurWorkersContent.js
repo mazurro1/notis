@@ -4,7 +4,10 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
-import { fetchAddWorkerToCompany } from "../../state/actions"
+import {
+  fetchAddWorkerToCompany,
+  changeActiveWorker,
+} from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
 import { MdEmail, MdClose, MdEdit,  } from "react-icons/md"
@@ -32,10 +35,13 @@ const WorkerItemStyle = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${props =>
-    props.siteProps.blind || props.siteProps.dark
+    props.active
+      ? Colors(props.siteProps).primaryColorLight
+      : props.siteProps.blind || props.siteProps.dark
       ? "rgba(255, 255, 255, 0.1)"
       : "rgba(255, 255, 255, 0.8)"};
   padding: 10px 10px 5px 10px;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   border-radius: 5px;
   margin-bottom: 10px;
   overflow: hidden;
@@ -49,7 +55,9 @@ const WorkerItemStyle = styled.div`
       : props.isAdmin
       ? "50px"
       : "10px"};
-  transition-property: padding-bottom;
+  cursor: pointer;
+  user-select: none;
+  transition-property: padding-bottom, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -143,7 +151,10 @@ const WorkerCircle = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.8rem;
+  border: 2px solid transparent;
+  border-color: ${props => Colors(props.siteProps).primaryColor};
 `
+
 
 const WorkerName = styled.div`
   font-size: 1rem;
@@ -247,6 +258,20 @@ const ButtonEditPositionEdit = styled.div`
   margin-right: 10px;
 `
 
+const BackGroundImageCustomUrl = styled.div`
+  position: relative;
+  height: 50px;
+  width: 50px;
+  border: 2px solid transparent;
+  border-color: ${props => Colors(props.siteProps).primaryColor};
+  background: url(${props => props.url}) 50% 0 no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
+  overflow: hidden;
+`
+
 const OurWorkersContent = ({
   TitleRightColumn,
   ButtonEditPosition,
@@ -274,6 +299,7 @@ const OurWorkersContent = ({
   const [allCategories, setAllCategories] = useState([])
   const [allCategoriesWithItems, setAllCategoriesWithItems] = useState([])
   const user = useSelector(state => state.user)
+  const activeWorkerUserId = useSelector(state => state.activeWorkerUserId)
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -351,6 +377,10 @@ const OurWorkersContent = ({
     e.stopPropagation()
   }
 
+  const  handleClickActiveWorker = (workerUserId) => {
+    dispatch(changeActiveWorker(workerUserId))
+  }
+
   const mapWorkers = workers.map((item, index) => {
     return (
       <WorkerItem
@@ -378,6 +408,9 @@ const OurWorkersContent = ({
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
         editedWorkers={editedWorkers}
+        handleClickActiveWorker={handleClickActiveWorker}
+        activeWorkerUserId={activeWorkerUserId}
+        BackGroundImageCustomUrl={BackGroundImageCustomUrl}
       />
     )
   })
@@ -425,6 +458,9 @@ const OurWorkersContent = ({
             ownerSpecialization={ownerSpecialization}
             user={user}
             editMode={editMode}
+            handleClickActiveWorker={handleClickActiveWorker}
+            activeWorkerUserId={activeWorkerUserId}
+            BackGroundImageCustomUrl={BackGroundImageCustomUrl}
           />
           {mapWorkers}
         </WorkerContent>

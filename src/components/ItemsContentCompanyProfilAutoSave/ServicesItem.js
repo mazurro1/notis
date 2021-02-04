@@ -23,6 +23,8 @@ const ServiceItem = styled.div`
   background-color: ${props =>
     props.clickDelete
       ? "#ffebee"
+      : props.active
+      ? Colors(props.siteProps).primaryColorLight
       : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
@@ -121,6 +123,7 @@ const ServicesItem = ({
   companyId,
   siteProps,
   userIsBlocked,
+  activeWorkerUserId,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
@@ -222,11 +225,7 @@ const ServicesItem = ({
         time: timeInput,
         _id: itemServices._id,
       }
-      handleChangeSaveEdit(
-        itemServices._id,
-        itemServices.categoryId,
-        newItem
-      )
+      handleChangeSaveEdit(itemServices._id, itemServices.categoryId, newItem)
       setClickEdit(false)
     }
   }
@@ -246,13 +245,22 @@ const ServicesItem = ({
       } ${numberOfMinutes}min`
     }
   }
-
+  let selectedServiceItem = false;
+  if(!!activeWorkerUserId){
+    if(!!activeWorkerUserId.services){
+      selectedServiceItem = activeWorkerUserId.services.some(
+        serviceWorker => serviceWorker === itemServices._id
+      )
+    }
+  }
+  
   return (
     <ServiceItem
       index={index === 0}
       clickDelete={clickDelete}
       clickEdit={clickEdit}
       siteProps={siteProps}
+      active={selectedServiceItem}
     >
       <LeftContent>
         <TitleService>

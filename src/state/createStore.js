@@ -27,11 +27,14 @@ import {
   CHANGE_DARK_STYLE,
   CHANGE_LANGUAGE_STYLE,
   CHANGE_ALERT_EXTRA,
+  RESET_USER_PROFIL,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_USER_IMAGE,
+  CHANGE_ACTIVE_WORKER,
   CHANGE_WORKING_HOURS,
   RESET_OPINION,
   CHANGE_COMPANY_MAIN_IMAGE,
@@ -99,6 +102,7 @@ const initialState = {
     language: "PL",
   },
   user: null,
+  userProfilReset: false,
   userId: null,
   userPhone: null,
   page: 1,
@@ -160,6 +164,7 @@ const initialState = {
   resetWorkerProps: false,
   resetOpinion: false,
   workingHours: null,
+  activeWorkerUserId: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -342,11 +347,42 @@ const reducer = (state = initialState, action) => {
         localizationVisible: false,
       }
 
+    case UPDATE_USER_IMAGE: {
+      const userImage = !!state.user ? state.user : null
+      if (userImage) {
+        userImage.imageUrl = action.imageUrl
+      }
+      return {
+        ...state,
+        user: userImage,
+        userProfilReset: true,
+      }
+    }
+
+    case RESET_USER_PROFIL: {
+      return {
+        ...state,
+        userProfilReset: false,
+      }
+    }
+
     //COMPANY
     //COMPANY
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_ACTIVE_WORKER: {
+      const valueToActiveWorker = !!state.activeWorkerUserId
+        ? state.activeWorkerUserId.user === action.value.user
+          ? null
+          : action.value
+        : action.value
+      return {
+        ...state,
+        activeWorkerUserId: valueToActiveWorker,
+      }
+    }
 
     case CHANGE_WORKING_HOURS: {
       return {
@@ -389,12 +425,12 @@ const reducer = (state = initialState, action) => {
       if (!!patchWorkCompanyUpdateImage) {
         if (patchWorkCompanyUpdateImage._id === action.companyId) {
           if (!!action.pathImage) {
-            if (!!patchWorkCompanyUpdateImage.imagesUrl){
-              if(patchWorkCompanyUpdateImage.imagesUrl.length === 0){
+            if (!!patchWorkCompanyUpdateImage.imagesUrl) {
+              if (patchWorkCompanyUpdateImage.imagesUrl.length === 0) {
                 patchWorkCompanyUpdateImage.mainImageUrl = action.pathImage
               }
             }
-              patchWorkCompanyUpdateImage.imagesUrl.push(action.pathImage)
+            patchWorkCompanyUpdateImage.imagesUrl.push(action.pathImage)
           }
         }
       }
@@ -410,16 +446,17 @@ const reducer = (state = initialState, action) => {
         ? { ...state.workCompanyData }
         : null
 
-      if(!!patchWorkCompanyDeleteImage){
+      if (!!patchWorkCompanyDeleteImage) {
         if (patchWorkCompanyDeleteImage._id === action.companyId) {
           const filterImages = patchWorkCompanyDeleteImage.imagesUrl.filter(
             item => item !== action.pathImage
           )
           patchWorkCompanyDeleteImage.imagesUrl = filterImages
 
-          const isMainImage = action.pathImage === patchWorkCompanyDeleteImage.mainImageUrl
-          if(isMainImage){
-            patchWorkCompanyDeleteImage.mainImageUrl = "";
+          const isMainImage =
+            action.pathImage === patchWorkCompanyDeleteImage.mainImageUrl
+          if (isMainImage) {
+            patchWorkCompanyDeleteImage.mainImageUrl = ""
           }
         }
       }
@@ -442,10 +479,12 @@ const reducer = (state = initialState, action) => {
       if (!!patchWorkCompanyDataNew) {
         if (patchWorkCompanyDataNew._id === action.companyId) {
           console.log(patchWorkCompanyDataNew._id, action.companyId)
-          const findOpinionIndex = patchWorkCompanyDataNew.opinions.findIndex(item => {
-            return item._id === action.opinionId._id
-          })
-          if(findOpinionIndex >= 0){
+          const findOpinionIndex = patchWorkCompanyDataNew.opinions.findIndex(
+            item => {
+              return item._id === action.opinionId._id
+            }
+          )
+          if (findOpinionIndex >= 0) {
             patchWorkCompanyDataNew.opinions[
               findOpinionIndex
             ].editedOpinionMessage = action.opinionEdited
@@ -455,8 +494,10 @@ const reducer = (state = initialState, action) => {
 
       if (!!patchCompanyDataNew) {
         if (patchCompanyDataNew._id === action.companyId) {
-          const findOpinionIndex = patchCompanyDataNew.opinions.findIndex(item => item._id === action.opinionId._id)
-          if(findOpinionIndex>=0){
+          const findOpinionIndex = patchCompanyDataNew.opinions.findIndex(
+            item => item._id === action.opinionId._id
+          )
+          if (findOpinionIndex >= 0) {
             patchCompanyDataNew.opinions[
               findOpinionIndex
             ].editedOpinionMessage = action.opinionEdited

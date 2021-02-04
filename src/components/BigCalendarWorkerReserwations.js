@@ -306,6 +306,7 @@ const BigCalendarWorkerReserwations = ({
   isAdmin = false,
   userWorkerActive,
   setUserWorkerActive,
+  workingHours,
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -314,6 +315,7 @@ const BigCalendarWorkerReserwations = ({
   const [newEvent, setNewEvent] = useState(null)
   const [newEventOpen, setNewEventOpen] = useState(null)
   const [allEvents, setAllEvents] = useState([])
+  const [allWorkingHours, setAllWorkingHours] = useState([])
   const siteProps = useSelector(state => state.siteProps)
   const timerToClearNew = useRef(null)
   const timerToClearEdited = useRef(null)
@@ -357,6 +359,167 @@ const BigCalendarWorkerReserwations = ({
     )
     setDateCalendar(newDate)
   }, [datePicker])
+
+  useEffect(() => {
+    if (!!workingHours) {
+      const arrayOpeningDays = [
+        {
+          id: 0,
+          start: workingHours.openingDays.sun.start,
+          end: workingHours.openingDays.sun.end,
+          disabled: workingHours.openingDays.sun.disabled,
+        },
+        {
+          id: 1,
+          start: workingHours.openingDays.mon.start,
+          end: workingHours.openingDays.mon.end,
+          disabled: workingHours.openingDays.mon.disabled,
+        },
+        {
+          id: 2,
+          start: workingHours.openingDays.tue.start,
+          end: workingHours.openingDays.tue.end,
+          disabled: workingHours.openingDays.tue.disabled,
+        },
+        {
+          id: 3,
+          start: workingHours.openingDays.wed.start,
+          end: workingHours.openingDays.wed.end,
+          disabled: workingHours.openingDays.wed.disabled,
+        },
+        {
+          id: 4,
+          start: workingHours.openingDays.thu.start,
+          end: workingHours.openingDays.thu.end,
+          disabled: workingHours.openingDays.thu.disabled,
+        },
+        {
+          id: 5,
+          start: workingHours.openingDays.fri.start,
+          end: workingHours.openingDays.fri.end,
+          disabled: workingHours.openingDays.fri.disabled,
+        },
+        {
+          id: 6,
+          start: workingHours.openingDays.sat.start,
+          end: workingHours.openingDays.sat.end,
+          disabled: workingHours.openingDays.sat.disabled,
+        },
+      ]
+
+      const daysMonth = new Date(
+        dateCalendar.getFullYear(),
+        dateCalendar.getMonth() + 1,
+        0
+      ).getDate()
+
+      const allDaysCalendar = []
+
+      for (let i = 1; i <= daysMonth; i++) {
+        const generateDayDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth(),
+          i
+        )
+        const generateFullDayDate = `${dateCalendar.getFullYear()}-${
+          dateCalendar.getMonth() + 1
+        }-${i}`
+        const generateDayWeek = generateDayDate.getDay()
+        const selectedDayNoConst = workingHours.noConstWorkingHours.find(
+          noConstDay => {
+            const noConstDayTimeStart = new Date(noConstDay.start).getDate()
+            return i === noConstDayTimeStart
+          }
+        )
+        let selectedDayOff = null
+        let selectedConstWorkingHour = null
+        if (!!!selectedDayNoConst) {
+          selectedDayOff = workingHours.daysOff.find(dayOff => {
+            const dayOffDate = `${dayOff.year}-${dayOff.month}-${dayOff.day}`
+            return generateFullDayDate === dayOffDate
+          })
+          if (!!!selectedDayOff) {
+            selectedConstWorkingHour = workingHours.constWorkingHours.find(
+              constHour => {
+                return constHour.dayOfTheWeek === generateDayWeek
+              }
+            )
+          }
+        }
+        let dayToRender = null
+
+        if (!!selectedDayNoConst) {
+          dayToRender = {
+            end: new Date(selectedDayNoConst.end),
+            start: new Date(selectedDayNoConst.start),
+            holidays: selectedDayNoConst.holidays,
+            fullDate: generateFullDayDate,
+          }
+        } else if (!!selectedDayOff) {
+          const selectOpeningDays = arrayOpeningDays[generateDayWeek]
+          if (!!selectOpeningDays) {
+            if (!!!selectOpeningDays.disabled) {
+              const splitDateStart = selectOpeningDays.start.split(":")
+              const splitDateEnd = selectOpeningDays.end.split(":")
+              const timeStartDayOff = new Date(
+                dateCalendar.getFullYear(),
+                dateCalendar.getMonth(),
+                i,
+                Number(splitDateStart[0]),
+                Number(splitDateStart[1])
+              )
+              const timeEndDayOff = new Date(
+                dateCalendar.getFullYear(),
+                dateCalendar.getMonth(),
+                i,
+                Number(splitDateEnd[0]),
+                Number(splitDateEnd[1])
+              )
+              dayToRender = {
+                end: timeEndDayOff,
+                start: timeStartDayOff,
+                holidays: true,
+                fullDate: generateFullDayDate,
+              }
+            }
+          }
+        } else if (!!selectedConstWorkingHour) {
+          if (!selectedConstWorkingHour.disabled) {
+            const splitDateStartConst = selectedConstWorkingHour.startWorking.split(
+              ":"
+            )
+            const splitDateEndConst = selectedConstWorkingHour.endWorking.split(
+              ":"
+            )
+            const timeStartDayConst = new Date(
+              dateCalendar.getFullYear(),
+              dateCalendar.getMonth(),
+              i,
+              Number(splitDateStartConst[0]),
+              Number(splitDateStartConst[1])
+            )
+            const timeEndDayConst = new Date(
+              dateCalendar.getFullYear(),
+              dateCalendar.getMonth(),
+              i,
+              Number(splitDateEndConst[0]),
+              Number(splitDateEndConst[1])
+            )
+            dayToRender = {
+              end: timeEndDayConst,
+              start: timeStartDayConst,
+              holidays: selectedConstWorkingHour.disabled,
+              fullDate: generateFullDayDate,
+            }
+          }
+        }
+        if (!!dayToRender) {
+          allDaysCalendar.push(dayToRender)
+        }
+      }
+      setAllWorkingHours(allDaysCalendar)
+    }
+  }, [workingHours])
 
   useEffect(() => {
     const actualMonth = dateCalendar.getMonth() + 1
@@ -505,45 +668,54 @@ const BigCalendarWorkerReserwations = ({
     const getterDay = takeDateStart.getDate()
     const getterMonth = takeDateStart.getMonth() + 1
     const getterYear = takeDateStart.getFullYear()
-    const getterFullDate = `${getterDay}-${getterMonth}-${getterYear}`
-    const findInAllEvents = allEvents.find(
-      item => item.fullDate === getterFullDate
-    )
-
-    const selectedDayToCompany = getMonthAndReturnEng(takeDateStart.getDay())
-    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
-    const arrSerwerMaxHours = selectedHoursCompany.end.split(":")
-    const arrSerwerMinHours = selectedHoursCompany.start.split(":")
-    const calendarDate =
-      takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
-    const numberMax =
-      Number(arrSerwerMaxHours[0]) * 60 + Number(arrSerwerMaxHours[1])
-    const numberMin =
-      Number(arrSerwerMinHours[0]) * 60 + Number(arrSerwerMinHours[1])
+    const getterFullDateNewPosition = `${getterYear}-${getterMonth}-${getterDay}`
+    const selectDayWorkingHours = allWorkingHours.find(hour => hour.fullDate === getterFullDateNewPosition)
     const isActualMonth =
       dateCalendar.getFullYear() === takeDateStart.getFullYear() &&
       dateCalendar.getMonth() === takeDateStart.getMonth()
-    if (
-      calendarDate >= numberMin &&
-      calendarDate < numberMax &&
-      !selectedHoursCompany.disabled
-    ) {
-      if (!!findInAllEvents) {
-        if (isActualMonth) {
-          return {
-            className:
-              "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+
+    if (!!selectDayWorkingHours) {
+       const calendarDate =
+         takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
+       const numberMax =
+         Number(selectDayWorkingHours.end.getHours()) * 60 +
+         Number(selectDayWorkingHours.end.getMinutes())
+       const numberMin =
+         Number(selectDayWorkingHours.start.getHours()) * 60 +
+         Number(selectDayWorkingHours.start.getMinutes())
+       
+      if (
+        calendarDate >= numberMin &&
+        calendarDate < numberMax &&
+        !selectDayWorkingHours.holidays
+      ) {
+        if (!!selectDayWorkingHours) {
+          if (isActualMonth) {
+            return {
+              className:
+                "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+            }
+          } else {
+            return {
+              className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
+            }
           }
         } else {
-          return {
-            className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
+          if (isActualMonth) {
+            return {
+              className:
+                "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+            }
+          } else {
+            return {
+              className: "rbc-day-slot rbc-time-slot rbc-disabled-active",
+            }
           }
         }
       } else {
         if (isActualMonth) {
           return {
-            className:
-              "rbc-day-slot rbc-time-slot rbc-time-work-company-active",
+            className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active ",
           }
         } else {
           return {
@@ -551,7 +723,7 @@ const BigCalendarWorkerReserwations = ({
           }
         }
       }
-    } else {
+    }else{
       if (isActualMonth) {
         return {
           className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active ",
@@ -829,7 +1001,6 @@ const BigCalendarWorkerReserwations = ({
         </WorkerItemStyle>
       )
     })
-
   return (
     <>
       <BackgroundContentCalendar>

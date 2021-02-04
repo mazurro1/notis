@@ -161,7 +161,9 @@ const Popup = ({
       classNames={opacity ? "opacitySpinner" : "popup"}
       unmountOnExit
     >
-      <PopupWindow onClick={handleOnClick} calendar={calendar}>
+      <PopupWindow 
+      onClick={handleOnClick} 
+      calendar={calendar}>
         {contentComponent}
       </PopupWindow>
     </CSSTransition>

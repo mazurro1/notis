@@ -32,6 +32,7 @@ import InputIcon from "../InputIcon"
 import ButtonIcon from "../ButtonIcon"
 import ReactTooltip from "react-tooltip"
 import {Permissions} from '../../common/Permissions'
+import {Site} from '../../common/Site'
 
 const ActiveWorkerStyle = styled.div`
   position: absolute;
@@ -126,6 +127,9 @@ const WorkerItem = ({
   EditUserBackgroundContent,
   ButtonDeleteStyle,
   ButtonContent,
+  handleClickActiveWorker,
+  activeWorkerUserId,
+  BackGroundImageCustomUrl,
 }) => {
   const [resetConstDays, setResetConstDays] = useState(false)
   const [constTimeWorker, setConstTimeWorker] = useState(false)
@@ -168,45 +172,8 @@ const WorkerItem = ({
     setUserEditItem(false)
   }, [item])
 
-
-    useEffect(() => {
-      if (!!resetWorkerProps) {
-        const servicesWorker = item.servicesCategory.map(serv => {
-          const findService = company.services.find(
-            companyServ => companyServ._id === serv
-          )
-          if (!!findService) {
-            return {
-              value: findService._id,
-              label: findService.serviceName,
-            }
-          } else {
-            return {
-              value: serv,
-              label: serv,
-            }
-          }
-        })
-        if (!!item.permissions) {
-          const mapWorkerPermissions = item.permissions.map(itemPerm => {
-            const findPermission = Permissions.find(
-              itemVal => itemVal.value === itemPerm
-            )
-            return findPermission
-          })
-          setWorkerPermissionsCategory(mapWorkerPermissions)
-        }
-        setWorkerServicesCategory(servicesWorker)
-        setToSaveWorkerHours([])
-        setInputSpeciailization(item.specialization)
-        setUserEditItem(false)
-        setConstTimeWorker(false)
-        setEditConstTimeWorker(false)
-        dispatch(resetWorkersPropsVisible())
-      }
-    }, [resetWorkerProps])
-
-    useEffect(() => {
+  useEffect(() => {
+    if (!!resetWorkerProps) {
       const servicesWorker = item.servicesCategory.map(serv => {
         const findService = company.services.find(
           companyServ => companyServ._id === serv
@@ -236,12 +203,48 @@ const WorkerItem = ({
       setToSaveWorkerHours([])
       setInputSpeciailization(item.specialization)
       setUserEditItem(false)
-      setResetConstDays(true)
       setConstTimeWorker(false)
       setEditConstTimeWorker(false)
-      setChooseTimeWorker(true)
-      setToSaveWorkerHours([])
-    }, [editedWorkers, editMode])
+      dispatch(resetWorkersPropsVisible())
+    }
+  }, [resetWorkerProps])
+
+  useEffect(() => {
+    const servicesWorker = item.servicesCategory.map(serv => {
+      const findService = company.services.find(
+        companyServ => companyServ._id === serv
+      )
+      if (!!findService) {
+        return {
+          value: findService._id,
+          label: findService.serviceName,
+        }
+      } else {
+        return {
+          value: serv,
+          label: serv,
+        }
+      }
+    })
+    if (!!item.permissions) {
+      const mapWorkerPermissions = item.permissions.map(itemPerm => {
+        const findPermission = Permissions.find(
+          itemVal => itemVal.value === itemPerm
+        )
+        return findPermission
+      })
+      setWorkerPermissionsCategory(mapWorkerPermissions)
+    }
+    setWorkerServicesCategory(servicesWorker)
+    setToSaveWorkerHours([])
+    setInputSpeciailization(item.specialization)
+    setUserEditItem(false)
+    setResetConstDays(true)
+    setConstTimeWorker(false)
+    setEditConstTimeWorker(false)
+    setChooseTimeWorker(true)
+    setToSaveWorkerHours([])
+  }, [editedWorkers, editMode])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -283,15 +286,21 @@ const WorkerItem = ({
 
   const dispatch = useDispatch()
 
-  const handleUserConfirmDelete = () => {
+  const handleUserConfirmDelete = (e) => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     setUserConfirmDelete(prevState => !prevState)
   }
 
-  const handleChooseTimeWorker = () => {
+  const handleChooseTimeWorker = (e) => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     setChooseTimeWorker(prevState => !prevState)
   }
-  const handleUserItemEdit = () => {
-      setUserEditItem(prevState => !prevState)
+  const handleUserItemEdit = (e) => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    setUserEditItem(prevState => !prevState)
   }
 
   const handleClickContent = e => {
@@ -381,13 +390,11 @@ const WorkerItem = ({
     setWorkerPermissionsCategory(valueToSave)
   }
   const handleUserTimeWork = () => {
-    
-      const itemsToSent = {
-        ...item,
-        company: company,
-      }
-      dispatch(changeEditWorkerHours(true, itemsToSent))
-    
+    const itemsToSent = {
+      ...item,
+      company: company,
+    }
+    dispatch(changeEditWorkerHours(true, itemsToSent))
   }
 
   const handleCancelConstTimeWork = () => {
@@ -460,17 +467,32 @@ const WorkerItem = ({
     setConstTimeWorker(true)
     setEditConstTimeWorker(true)
   }
-
+  
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
       selectHeight={selectHeight}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
+      onClick={() =>
+        handleClickActiveWorker({
+          user: item.user._id,
+          services: item.servicesCategory,
+        })
+      }
+      active={
+        !!activeWorkerUserId ? activeWorkerUserId.user === item.user._id : false
+      }
     >
-      <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
-        <FaUser />
-      </WorkerCircle>
+      {!!item.user.imageUrl ? (
+        <BackGroundImageCustomUrl
+          url={`${Site.awsUrl}/${item.user.imageUrl}`}
+        />
+      ) : (
+        <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
+          <FaUser />
+        </WorkerCircle>
+      )}
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecialization}</WorkerSpecjalization>
       {editedWorkers && (

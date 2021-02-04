@@ -820,8 +820,9 @@ const Navigation = ({ children, isMainPage }) => {
       popupEnable={userProfilVisible}
       handleClose={handleUserProfil}
       title="Dane użytkownika"
+      fullScreen
     >
-      <UserProfil />
+      <UserProfil userProfilVisible={userProfilVisible} />
     </Popup>
   )
 

@@ -17,6 +17,7 @@ import { getMonthAndReturn } from "../common/Functions"
 import { CgSpinner } from "react-icons/cg"
 import HoursItemReserwation from "./HoursItemReserwation"
 import InputIcon from "./InputIcon"
+import {Site} from '../common/Site'
 
 const ServiceItem = styled.div`
   position: relative;
@@ -252,6 +253,20 @@ const CrossPrice = styled.div`
   transform: rotate(-20deg);
 `
 
+const BackGroundImageCustomUrl = styled.div`
+  position: relative;
+  height: 50px;
+  width: 50px;
+  border: 2px solid transparent;
+  border-color: ${props => Colors(props.siteProps).primaryColor};
+  background: url(${props => props.url}) 50% 0 no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
+  overflow: hidden;
+`
+
 const Reserwation = ({
   handleCloseReserwation,
   reserwationEnable,
@@ -407,7 +422,7 @@ const Reserwation = ({
   const ownerIsSelected = !!selectedWorkerUserId
     ? selectedWorkerUserId === reserwationData.ownerData.ownerId
     : false
-
+    
   const ownerWorkerToSelect = ownerHasServiceCategory &&
     !!reserwationData.ownerData && (
       <WorkerItem
@@ -420,9 +435,15 @@ const Reserwation = ({
         active={ownerIsSelected}
         siteProps={siteProps}
       >
-        <div>
-          <FaUser />
-        </div>
+        {!!reserwationData.ownerData.ownerImageUrl ? (
+          <BackGroundImageCustomUrl
+            url={`${Site.awsUrl}/${reserwationData.ownerData.ownerImageUrl}`}
+          />
+        ) : (
+          <div>
+            <FaUser />
+          </div>
+        )}
         <WorkerNameStyle active={ownerIsSelected} siteProps={siteProps}>
           {reserwationData.ownerData.name} {reserwationData.ownerData.surname}
         </WorkerNameStyle>
@@ -453,9 +474,15 @@ const Reserwation = ({
         active={workerIsSelected}
         siteProps={siteProps}
       >
-        <div>
-          <FaUser />
-        </div>
+        {!!worker.user.imageUrl ? (
+          <BackGroundImageCustomUrl
+            url={`${Site.awsUrl}/${worker.user.imageUrl}`}
+          />
+        ) : (
+          <div>
+            <FaUser />
+          </div>
+        )}
         <WorkerNameStyle siteProps={siteProps} active={workerIsSelected}>
           {worker.user.name} {worker.user.surname}
         </WorkerNameStyle>

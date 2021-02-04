@@ -349,7 +349,7 @@ const GalleryContent = ({
             <span>
               <MdPhotoSizeSelectLarge />
             </span>
-            Optymalny rozmiar zdjęcia: 800x400px.
+            Optymalny rozmiar zdjęcia: 800x600px.
           </div>
           <div>
             <span>
