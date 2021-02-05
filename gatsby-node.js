@@ -17,4 +17,9 @@ exports.onCreatePage = async ({ page, actions }) => {
     // Update the page.
     createPage(page)
   }
+  if (page.path.match(/^\/login-facebook/)) {
+    page.matchPath = "/login-facebook/*"
+    // Update the page.
+    createPage(page)
+  }
 }

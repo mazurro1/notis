@@ -48,10 +48,10 @@ export const addNewUserAlert = data => {
   }
 }
 
-export const changeLanguageStyle = (value) => {
+export const changeLanguageStyle = value => {
   return {
     type: CHANGE_LANGUAGE_STYLE,
-    value: value
+    value: value,
   }
 }
 
@@ -247,7 +247,7 @@ export const fetchRegisterUser = (
   phone,
   password,
   dateBirth = 1,
-  monthBirth = 0,
+  monthBirth = 0
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -309,7 +309,7 @@ export const fetchAutoLogin = (
                 addAlertItem("Pomyślnie utworzono konto firmowe.", "green")
               )
               dispatch(changeCreateCompanyVisible(false))
-                dispatch(changeSpinner(false))
+              dispatch(changeSpinner(false))
             }
           })
           .catch(error => {
@@ -321,21 +321,52 @@ export const fetchAutoLogin = (
                 // dispatch(logout())
               }
               if (!noSpinner) {
-                  dispatch(changeSpinner(false))
+                dispatch(changeSpinner(false))
               }
               if (lastSpinnerCreateCompany) {
                 dispatch(
                   addAlertItem("Błąd podczas tworzenia konta firmowego.", "red")
                 )
-                  dispatch(changeSpinner(false))
+                dispatch(changeSpinner(false))
               }
             } else {
               // dispatch(logout())
-                dispatch(changeSpinner(false))
+              dispatch(changeSpinner(false))
             }
           })
       }
     }
+  }
+}
+
+export const fetchLoginFacebookUser = (token, id) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+
+    axios
+      .post(`${Site.serverUrl}/auto-login`, {
+        userId: id,
+        token: token,
+      })
+      .then(response => {
+        dispatch(
+          addAlertItem("Logowanie za pomocą facebooka powiodło się", "green")
+        )
+        dispatch(loginUser(response.data))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error.response) {
+          dispatch(
+            addAlertItem(
+              "Logowanie za pomocą facebooka nie powiodło się",
+              "red"
+            )
+          )
+        } else {
+        }
+        dispatch(changeSpinner(false))
+      })
   }
 }
 
@@ -425,11 +456,11 @@ export const fetchActiveAccount = (codeToVerified, token, userId) => {
       .then(response => {
         dispatch(addAlertItem("Pomyślnie aktywowano konto", "green"))
         dispatch(fetchAutoLogin(true, true, token, userId))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas aktywowania konta.", "red"))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -507,7 +538,8 @@ export const AVAIBLE_UPDATE_PAGE = "AVAIBLE_UPDATE_PAGE"
 export const UPDATE_NEW_PLACES_DATA = "UPDATE_NEW_PLACES_DATA"
 export const RESET_USER_ALERTS = "RESET_USER_ALERTS"
 export const ADD_NEW_ALERTS = "ADD_NEW_ALERTS"
-export const ADD_NEW_PHONE_WORKER_USER_INFORMATION = "ADD_NEW_PHONE_WORKER_USER_INFORMATION"
+export const ADD_NEW_PHONE_WORKER_USER_INFORMATION =
+  "ADD_NEW_PHONE_WORKER_USER_INFORMATION"
 export const ADD_NEW_MESSAGE_WORKER_USER_INFORMATION =
   "ADD_NEW_MESSAGE_WORKER_USER_INFORMATION"
 export const RESET_BELL_ALERT = "RESET_BELL_ALERT"
@@ -522,17 +554,23 @@ export const COMPANY_PATCH_SETTINGS = "COMPANY_PATCH_SETTINGS"
 export const COMPANY_PATCH_WORKER_SETTINGS = "COMPANY_PATCH_WORKER_SETTINGS"
 export const RESET_WORKER_PROPS_VISIBLE = "RESET_WORKER_PROPS_VISIBLE"
 export const COMPANY_PATCH_WORKER_CONST_TIME = "COMPANY_PATCH_WORKER_CONST_TIME"
-export const COMPANY_PATCH_WORKER_NO_CONST_HOURS = "COMPANY_PATCH_WORKER_NO_CONST_HOURS"
-export const COMPANY_ADD_WORKER_NO_CONST_HOURS = "COMPANY_ADD_WORKER_NO_CONST_HOURS"
-export const COMPANY_DELETE_WORKER_NO_CONST_HOURS = "COMPANY_DELETE_WORKER_NO_CONST_HOURS"
+export const COMPANY_PATCH_WORKER_NO_CONST_HOURS =
+  "COMPANY_PATCH_WORKER_NO_CONST_HOURS"
+export const COMPANY_ADD_WORKER_NO_CONST_HOURS =
+  "COMPANY_ADD_WORKER_NO_CONST_HOURS"
+export const COMPANY_DELETE_WORKER_NO_CONST_HOURS =
+  "COMPANY_DELETE_WORKER_NO_CONST_HOURS"
 export const UPDATE_COMPANY_TEKSTS = "UPDATE_COMPANY_TEKSTS"
 export const UPDATE_COMPANY_OPENING_HOURS = "UPDATE_COMPANY_OPENING_HOURS"
 export const UPDATE_COMPANY_MAPS = "UPDATE_COMPANY_MAPS"
-export const UPDATE_COMPANY_HAPPY_HOURS_CONST = "UPDATE_COMPANY_HAPPY_HOURS_CONST"
+export const UPDATE_COMPANY_HAPPY_HOURS_CONST =
+  "UPDATE_COMPANY_HAPPY_HOURS_CONST"
 export const DELETE_COMPANY_HAPPY_HOUR_CONST = "DELETE_COMPANY_HAPPY_HOUR_CONST"
-export const UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH = "UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH"
+export const UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH =
+  "UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH"
 export const UPDATE_CONST_HAPPY_HOURS = "UPDATE_CONST_HAPPY_HOURS"
-export const UPDATE_COMPANY_HAPPY_HOURS_NO_CONST = "UPDATE_COMPANY_HAPPY_HOURS_NO_CONST"
+export const UPDATE_COMPANY_HAPPY_HOURS_NO_CONST =
+  "UPDATE_COMPANY_HAPPY_HOURS_NO_CONST"
 export const DELETE_COMPANY_PROMOTION = "DELETE_COMPANY_PROMOTION"
 export const UPDATE_COMPANY_PATH_PROMOTION = "UPDATE_COMPANY_PATH_PROMOTION"
 export const UPDATE_PROMOTIONS = "UPDATE_PROMOTIONS"
@@ -543,7 +581,8 @@ export const DELETE_COMPANY_IMAGE = "DELETE_COMPANY_IMAGE"
 export const UPDATE_COMPANY_IMAGE = "UPDATE_COMPANY_IMAGE"
 export const UPDATED_IMAGE_ID_COMPANY = "UPDATED_IMAGE_ID_COMPANY"
 export const CHANGE_COMPANY_MAIN_IMAGE = "CHANGE_COMPANY_MAIN_IMAGE"
-export const ADD_EDITED_OPINION_TO_RESERWATION = "ADD_EDITED_OPINION_TO_RESERWATION"
+export const ADD_EDITED_OPINION_TO_RESERWATION =
+  "ADD_EDITED_OPINION_TO_RESERWATION"
 export const RESET_OPINION = "RESET_OPINION"
 export const CHANGE_WORKING_HOURS = "CHANGE_WORKING_HOURS"
 export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
@@ -556,17 +595,17 @@ export const resetUserProfil = () => {
   }
 }
 
-export const updateUserImage = (imageUrl) => {
+export const updateUserImage = imageUrl => {
   return {
     type: UPDATE_USER_IMAGE,
     imageUrl: imageUrl,
   }
 }
 
-export const changeActiveWorker = (value) => {
+export const changeActiveWorker = value => {
   return {
     type: CHANGE_ACTIVE_WORKER,
-    value: value
+    value: value,
   }
 }
 
@@ -625,7 +664,12 @@ export const addEditedOpinionToReserwation = (
   }
 }
 
-export const addNewOpinionToReserwation = (reserwationId, opinion, company, companyId) => {
+export const addNewOpinionToReserwation = (
+  reserwationId,
+  opinion,
+  company,
+  companyId
+) => {
   return {
     type: ADD_NEW_OPINION_TO_RESERWATION,
     reserwationId: reserwationId,
@@ -664,14 +708,14 @@ export const updatePromotionsDispatch = () => {
   }
 }
 
-export const updateCompanyPathPromotion = (promotionDate) => {
+export const updateCompanyPathPromotion = promotionDate => {
   return {
     type: UPDATE_COMPANY_PATH_PROMOTION,
     promotionDate: promotionDate,
   }
 }
 
-export const deleteCompanyPromotion = (promotionId) => {
+export const deleteCompanyPromotion = promotionId => {
   return {
     type: DELETE_COMPANY_PROMOTION,
     promotionId: promotionId,
@@ -680,25 +724,25 @@ export const deleteCompanyPromotion = (promotionId) => {
 
 export const updateConstHappyHoursFunction = () => {
   return {
-    type: UPDATE_CONST_HAPPY_HOURS
+    type: UPDATE_CONST_HAPPY_HOURS,
   }
 }
 
-export const updateCompanyHappyHourConstPatch = (dateConst) => {
+export const updateCompanyHappyHourConstPatch = dateConst => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH,
     dateConst: dateConst,
   }
 }
 
-export const deleteCompanyHappyHoursConst = (happyHourId) => {
+export const deleteCompanyHappyHoursConst = happyHourId => {
   return {
     type: DELETE_COMPANY_HAPPY_HOUR_CONST,
     happyHourId: happyHourId,
   }
 }
 
-export const updateCompanyHappyHoursConst = (constHappyHours) => {
+export const updateCompanyHappyHoursConst = constHappyHours => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOURS_CONST,
     constHappyHours: constHappyHours,
@@ -712,10 +756,10 @@ export const updateCompanyPromotions = promotions => {
   }
 }
 
-export const updateCompanyMaps = (maps) => {
+export const updateCompanyMaps = maps => {
   return {
     type: UPDATE_COMPANY_MAPS,
-    maps: maps
+    maps: maps,
   }
 }
 
@@ -760,25 +804,25 @@ export const companyPatchWorkerNoConstHours = (workerId, data) => {
 
 export const resetWorkersPropsVisible = () => {
   return {
-    type: RESET_WORKER_PROPS_VISIBLE
+    type: RESET_WORKER_PROPS_VISIBLE,
   }
 }
 
-export const companyPatchWorkerContTime = (dataTime) => {
+export const companyPatchWorkerContTime = dataTime => {
   return {
     type: COMPANY_PATCH_WORKER_CONST_TIME,
     dataTime: dataTime,
   }
 }
 
-export const companyPatchWorkerSettings = (dataWorker) => {
+export const companyPatchWorkerSettings = dataWorker => {
   return {
     type: COMPANY_PATCH_WORKER_SETTINGS,
     dataWorker: dataWorker,
   }
 }
 
-export const companyPatchSettings = (data) => {
+export const companyPatchSettings = data => {
   return {
     type: COMPANY_PATCH_SETTINGS,
     data: data,
@@ -810,21 +854,21 @@ export const addSelectedUserReserwations = (userSelectedId, reserwations) => {
   }
 }
 
-  export const addToUserInformations = (userSelectedId, messages) => {
-    return {
-      type: ADD_TO_USER_INFORMATIONS,
-      userSelectedId: userSelectedId,
-      messages: messages,
-    }
+export const addToUserInformations = (userSelectedId, messages) => {
+  return {
+    type: ADD_TO_USER_INFORMATIONS,
+    userSelectedId: userSelectedId,
+    messages: messages,
   }
+}
 
-  export const newWorkerUsersMessageInformations = (data, selectedUserId) => {
-    return {
-      type: WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
-      data: data,
-      selectedUserId: selectedUserId,
-    }
+export const newWorkerUsersMessageInformations = (data, selectedUserId) => {
+  return {
+    type: WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
+    data: data,
+    selectedUserId: selectedUserId,
   }
+}
 
 const deleteMessageToUserInformation = (selectedUserId, messageId) => {
   return {
@@ -834,12 +878,12 @@ const deleteMessageToUserInformation = (selectedUserId, messageId) => {
   }
 }
 
-  export const resetBellAlerts = (value) => {
-    return {
-      type: RESET_BELL_ALERT,
-      value: value
-    }
+export const resetBellAlerts = value => {
+  return {
+    type: RESET_BELL_ALERT,
+    value: value,
   }
+}
 
 export const addNewMessageToUserInformation = (selectedUserId, newMessage) => {
   return {
@@ -857,7 +901,6 @@ export const addPhoneToWorkerUserInformation = (selectedUserId, userPhone) => {
   }
 }
 
-
 export const newWorkerUsersInformationsBlock = (selectedUserId, isBlocked) => {
   return {
     type: WORKER_USERS_INFORMATIONS_BLOCK,
@@ -874,36 +917,36 @@ export const newWorkerUsersHistoryInformations = (data, userSelectedId) => {
   }
 }
 
-export const newWorkerUsersInformations = (data) => {
+export const newWorkerUsersInformations = data => {
   return {
     type: WORKER_USERS_INFORMATIONS,
     data: data,
   }
 }
 
-export const addNewAlerts = (data) => {
+export const addNewAlerts = data => {
   return {
     type: ADD_NEW_ALERTS,
-    data: data
+    data: data,
   }
 }
 
 export const resetUserAlerts = () => {
-  return{
-    type: RESET_USER_ALERTS
+  return {
+    type: RESET_USER_ALERTS,
   }
 }
 
 export const resetPlaces = () => {
   return {
-    type: RESET_PLACES
+    type: RESET_PLACES,
   }
 }
 
-export const avaibleUpdatePage = (value) => {
+export const avaibleUpdatePage = value => {
   return {
     type: AVAIBLE_UPDATE_PAGE,
-    value: value
+    value: value,
   }
 }
 
@@ -940,7 +983,6 @@ export const updatePlacesData = data => {
     data: data,
   }
 }
-
 
 export const updateNewPlacesData = data => {
   return {
@@ -1132,13 +1174,13 @@ export const fetchActiveCompanyAccount = (
       .then(response => {
         dispatch(addAlertItem("Pomyślnie aktywowano konto firmowe", "green"))
         dispatch(fetchAutoLogin(true, true, token, userId))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
       .catch(error => {
         dispatch(
           addAlertItem("Błąd podczas aktywowania konta firmowego.", "red")
         )
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -1160,12 +1202,12 @@ export const fetchCompanyData = (companyId, token) => {
       )
       .then(response => {
         dispatch(replaceCompanyData(response.data.companyProfil))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
         dispatch(resetEditCompany(true))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas ładowania konta firmowego.", "red"))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
         dispatch(resetEditCompany(false))
       })
   }
@@ -1195,7 +1237,7 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas dodawania pracownika.", "red"))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -1223,7 +1265,7 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
             "green"
           )
         )
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
       .catch(error => {
         dispatch(
@@ -1232,7 +1274,7 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
             "red"
           )
         )
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -1252,13 +1294,13 @@ export const fetchConfirmAddWorkerToCompany = (
       })
       .then(response => {
         dispatch(addAlertItem("Dodano użytkownika do firmy.", "green"))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
       .catch(error => {
         dispatch(
           addAlertItem("Błąd podczas dodawania pracownika do firmy.", "red")
         )
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -1285,7 +1327,7 @@ export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas usuwania pracownika.", "red"))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -1364,7 +1406,7 @@ export const fetchDoReserwation = (
   dateStart,
   dateFull,
   reserwationMessage,
-  serviceId,
+  serviceId
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1389,11 +1431,11 @@ export const fetchDoReserwation = (
       .then(response => {
         dispatch(addAlertItem("Dokonano rezerwacji.", "green"))
         dispatch(changeReserwationValue(null))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
       .catch(error => {
         dispatch(addAlertItem("Błąd podczas robienia rezerwacji.", "red"))
-          dispatch(changeSpinner(false))
+        dispatch(changeSpinner(false))
       })
   }
 }
@@ -1407,7 +1449,7 @@ export const fetchDoReserwationWorker = (
   dateFull,
   reserwationMessage,
   yearPicker,
-  monthPicker,
+  monthPicker
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1431,7 +1473,13 @@ export const fetchDoReserwationWorker = (
       .then(response => {
         dispatch(addAlertItem("Dokonano rezerwacje czasu.", "green"))
         dispatch(
-          fetchWorkerReserwationsAll(token, workerUserId, yearPicker, monthPicker, companyId)
+          fetchWorkerReserwationsAll(
+            token,
+            workerUserId,
+            yearPicker,
+            monthPicker,
+            companyId
+          )
         )
       })
       .catch(error => {
@@ -1450,10 +1498,12 @@ export const fetchWorkerDisabledHours = (
   selectedMonth,
   selectedYear,
   timeReserwation,
-  serviceId,
+  serviceId
 ) => {
   return dispatch => {
-    dispatch(changeAlertExtra("Ładowanie wylnych godzin wybranego pracownika", true))
+    dispatch(
+      changeAlertExtra("Ładowanie wylnych godzin wybranego pracownika", true)
+    )
     dispatch(avaibleDateToReserwationUpdate(true))
     return axios
       .post(
@@ -1477,7 +1527,9 @@ export const fetchWorkerDisabledHours = (
       .then(response => {
         //avaibleHoursWithPromotions avaibleHours
         dispatch(avaibleDateToReserwationUpdate(false))
-        dispatch(avaibleDateToReserwation(response.data.avaibleHoursWithPromotions))
+        dispatch(
+          avaibleDateToReserwation(response.data.avaibleHoursWithPromotions)
+        )
         dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
@@ -1488,7 +1540,7 @@ export const fetchWorkerDisabledHours = (
   }
 }
 
-export const fetchPathCompany = (companyPath) => {
+export const fetchPathCompany = companyPath => {
   return dispatch => {
     dispatch(changeAlertExtra("Pobieranie dancyh o firmie", true))
     return axios
@@ -1496,7 +1548,7 @@ export const fetchPathCompany = (companyPath) => {
         `${Site.serverUrl}/company-path`,
         {
           companyPath: companyPath,
-        },
+        }
         // {
         //   headers: {
         //     Authorization: "Bearer " + token,
@@ -1520,7 +1572,7 @@ export const fetchAllCompanys = (page = 1) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
-    }else{
+    } else {
       dispatch(changeAlertExtra("Ładowanie firm", true))
     }
     return axios
@@ -1531,27 +1583,27 @@ export const fetchAllCompanys = (page = 1) => {
         if (page === 1) {
           dispatch(updatePlacesData(response.data.companysDoc))
           dispatch(changeLoadingPlaces(false))
-        }else if (page > 1 && response.data.companysDoc.length > 0) {
+        } else if (page > 1 && response.data.companysDoc.length > 0) {
           dispatch(updateNewPlacesData(response.data.companysDoc))
           dispatch(changeAlertExtra(null, false))
         }
       })
       .catch(error => {
-       if (error.response) {
-         if (error.response.status === 403) {
-           dispatch(
-             addAlertItem("Brak więcej firm w danej kategorii.", "blue")
-           )
-         }
-       } else {
-         dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
-       }
-       if (page === 1) {
-         dispatch(changeLoadingPlaces(false))
-         dispatch(resetPlaces())
-       }else{
-        dispatch(changeAlertExtra(null, false))
-       }
+        if (error.response) {
+          if (error.response.status === 403) {
+            dispatch(
+              addAlertItem("Brak więcej firm w danej kategorii.", "blue")
+            )
+          }
+        } else {
+          dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
+        }
+        if (page === 1) {
+          dispatch(changeLoadingPlaces(false))
+          dispatch(resetPlaces())
+        } else {
+          dispatch(changeAlertExtra(null, false))
+        }
       })
   }
 }
@@ -1560,7 +1612,7 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
-    }else{
+    } else {
       dispatch(changeAlertExtra("Ładowanie firm", true))
     }
     return axios
@@ -1578,36 +1630,34 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
         }
       })
       .catch(error => {
-        if(error.response){
+        if (error.response) {
           if (error.response.status === 403) {
-            dispatch(addAlertItem("Brak więcej firm w danej kategorii.", "blue")) 
+            dispatch(
+              addAlertItem("Brak więcej firm w danej kategorii.", "blue")
+            )
           }
-          
-        }else{
-          dispatch(addAlertItem("Błąd podczas pobierania firm.", "red")) 
+        } else {
+          dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
         }
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
           dispatch(resetPlaces())
-        }else{
+        } else {
           dispatch(changeAlertExtra(null, false))
         }
       })
   }
 }
 
-export const fetchUserReserwations = (token) => {
+export const fetchUserReserwations = token => {
   return dispatch => {
     dispatch(changeAlertExtra("Pobieranie rezerwacji", true))
     return axios
-      .get(
-        `${Site.serverUrl}/user-reserwations`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .get(`${Site.serverUrl}/user-reserwations`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then(response => {
         dispatch(changeAlertExtra(null, false))
         dispatch(updateUserReserwations(response.data.reserwations))
@@ -1731,7 +1781,14 @@ export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
   }
 }
 
-export const fetchWorkerReserwationsAll = (token, workerUserId, yearPicker, monthPicker, companyId, isAdmin) => {
+export const fetchWorkerReserwationsAll = (
+  token,
+  workerUserId,
+  yearPicker,
+  monthPicker,
+  companyId,
+  isAdmin
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -1754,7 +1811,7 @@ export const fetchWorkerReserwationsAll = (token, workerUserId, yearPicker, mont
           dispatch(
             fetchGetOwnerWorkingHours(token, companyId, yearPicker, monthPicker)
           )
-        }else{
+        } else {
           dispatch(
             fetchGetWorkerWorkingHours(
               token,
@@ -1825,7 +1882,7 @@ export const fetchUpdateWorkerReserwation = (
   monthPicker,
   companyId,
   newTimeStart,
-  newTimeEnd,
+  newTimeEnd
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1849,7 +1906,13 @@ export const fetchUpdateWorkerReserwation = (
       )
       .then(response => {
         dispatch(
-          fetchWorkerReserwationsAll(token, workerUserId, yearPicker, monthPicker, companyId)
+          fetchWorkerReserwationsAll(
+            token,
+            workerUserId,
+            yearPicker,
+            monthPicker,
+            companyId
+          )
         )
         dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
       })
@@ -1860,9 +1923,7 @@ export const fetchUpdateWorkerReserwation = (
   }
 }
 
-export const fetchUpdateUserAlert = (
-  token,
-) => {
+export const fetchUpdateUserAlert = token => {
   return dispatch => {
     return axios
       .post(
@@ -1890,7 +1951,7 @@ export const fetchGetMoreAlerts = (token, page) => {
       .post(
         `${Site.serverUrl}/get-more-alerts`,
         {
-          page: page
+          page: page,
         },
         {
           headers: {
@@ -1929,12 +1990,13 @@ export const fetchworkerUsersInformations = (token, companyId) => {
         dispatch(newWorkerUsersInformations(response.data.reserwations))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas ładowania informacji o klientach.", "red"))
+        dispatch(
+          addAlertItem("Błąd podczas ładowania informacji o klientach.", "red")
+        )
         dispatch(changeSpinner(false))
       })
   }
 }
-
 
 export const fetchworkerUsersMoreInformationsHistory = (
   token,
@@ -2053,9 +2115,7 @@ export const fetchCompanyUsersInformationsBlock = (
       })
       .catch(error => {
         dispatch(changeAlertExtra(null, false))
-        dispatch(
-          addAlertItem("Błąd podczas blokowania użytkownika.", "red")
-        )
+        dispatch(addAlertItem("Błąd podczas blokowania użytkownika.", "red"))
       })
   }
 }
@@ -2131,12 +2191,7 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
   }
 }
 
-
-export const fetchCustomUserPhone = (
-  token,
-  selectedUserId,
-  companyId
-) => {
+export const fetchCustomUserPhone = (token, selectedUserId, companyId) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -2167,10 +2222,9 @@ export const fetchCustomUserPhone = (
   }
 }
 
-
 export const fetchUserInformations = (token, companyId, userSelectedId) => {
   return dispatch => {
-  dispatch(changeSpinner(true))
+    dispatch(changeSpinner(true))
     return axios
       .post(
         `${Site.serverUrl}/get-selected-users-informations-message`,
@@ -2197,8 +2251,11 @@ export const fetchUserInformations = (token, companyId, userSelectedId) => {
   }
 }
 
-
-export const fetchSelectedUserReserwations = (token, userSelectedId, companyId) => {
+export const fetchSelectedUserReserwations = (
+  token,
+  userSelectedId,
+  companyId
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -2207,7 +2264,7 @@ export const fetchSelectedUserReserwations = (token, userSelectedId, companyId) 
         {
           companyId: companyId,
           userSelectedId: userSelectedId,
-          page: 1
+          page: 1,
         },
         {
           headers: {
@@ -2217,7 +2274,12 @@ export const fetchSelectedUserReserwations = (token, userSelectedId, companyId) 
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(addSelectedUserReserwations(userSelectedId, response.data.reserwations))
+        dispatch(
+          addSelectedUserReserwations(
+            userSelectedId,
+            response.data.reserwations
+          )
+        )
       })
       .catch(error => {
         dispatch(changeSpinner(false))
@@ -2227,7 +2289,6 @@ export const fetchSelectedUserReserwations = (token, userSelectedId, companyId) 
       })
   }
 }
-
 
 export const fetchSaveCompanyServices = (token, companyId, services) => {
   return dispatch => {
@@ -2248,9 +2309,14 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
       .then(response => {
         dispatch(changeSpinner(false))
         console.log(services)
-        if (!!services.new){
+        if (!!services.new) {
           if (services.new.length > 0) {
-            dispatch(addAlertItem("Nie zapomnij przypisać pracownika do dodanych usług.", "blue"))
+            dispatch(
+              addAlertItem(
+                "Nie zapomnij przypisać pracownika do dodanych usług.",
+                "blue"
+              )
+            )
           }
         }
         dispatch(
@@ -2292,7 +2358,9 @@ export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji ustawień firmy.", "red"))
+        dispatch(
+          addAlertItem("Błąd podczas aktualizacji ustawień firmy.", "red")
+        )
       })
   }
 }
@@ -2324,10 +2392,10 @@ export const fetchSaveWorkerProps = (
         if (!!dateProps) {
           dispatch(companyPatchWorkerSettings(dateProps))
         }
-        if (!!constTime){
+        if (!!constTime) {
           dispatch(companyPatchWorkerContTime(constTime))
         }
-          dispatch(addAlertItem("Zaktualizowano pracownika.", "green"))
+        dispatch(addAlertItem("Zaktualizowano pracownika.", "green"))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
@@ -2364,24 +2432,25 @@ export const fetchGetWorkerNoConstData = (
         dispatch(changeSpinner(false))
         dispatch(
           companyPatchWorkerNoConstHours(
-            workerId, response.data.noConstWorkingHours
+            workerId,
+            response.data.noConstWorkingHours
           )
         )
       })
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(changeEditWorkerHours(false, null))
-        dispatch(addAlertItem("Błąd podczas pobierania godzin pracy pracownika.", "red"))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas pobierania godzin pracy pracownika.",
+            "red"
+          )
+        )
       })
   }
 }
 
-export const fetchGetOwnerNoConstData = (
-  token,
-  companyId,
-  year,
-  month
-) => {
+export const fetchGetOwnerNoConstData = (token, companyId, year, month) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -2420,7 +2489,6 @@ export const fetchGetOwnerNoConstData = (
   }
 }
 
-
 export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -2430,7 +2498,7 @@ export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
         {
           companyId: companyId,
           workerId: workerId,
-          newDate: newDate
+          newDate: newDate,
         },
         {
           headers: {
@@ -2456,7 +2524,12 @@ export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
   }
 }
 
-export const deleteNoConstHour = (token, companyId, workerId, noConstDateId) => {
+export const deleteNoConstHour = (
+  token,
+  companyId,
+  workerId,
+  noConstDateId
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -2475,9 +2548,7 @@ export const deleteNoConstHour = (token, companyId, workerId, noConstDateId) => 
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(
-          companyDeleteWorkerNoConstHours(workerId, noConstDateId)
-        )
+        dispatch(companyDeleteWorkerNoConstHours(workerId, noConstDateId))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
@@ -2492,7 +2563,13 @@ export const deleteNoConstHour = (token, companyId, workerId, noConstDateId) => 
   }
 }
 
-export const fetchSaveTextsCompany = (token, companyId, textAboutUs = null, textReserwation = null, links = null) => {
+export const fetchSaveTextsCompany = (
+  token,
+  companyId,
+  textAboutUs = null,
+  textReserwation = null,
+  links = null
+) => {
   return dispatch => {
     const allTextsCompany = {
       textAboutUs: textAboutUs,
@@ -2519,12 +2596,7 @@ export const fetchSaveTextsCompany = (token, companyId, textAboutUs = null, text
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas aktualizacji tekstu.",
-            "red"
-          )
-        )
+        dispatch(addAlertItem("Błąd podczas aktualizacji tekstu.", "red"))
       })
   }
 }
@@ -2557,9 +2629,7 @@ export const fetchSaveOpeningHoursCompany = (
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(updateOpeningHoursCompany(openingHours, daysOff))
-        dispatch(
-          addAlertItem("Zaktualizowano godziny otwarcia.", "green")
-        )
+        dispatch(addAlertItem("Zaktualizowano godziny otwarcia.", "green"))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
@@ -2570,12 +2640,7 @@ export const fetchSaveOpeningHoursCompany = (
   }
 }
 
-
-export const fetchSaveMaps = (
-  token,
-  companyId,
-  maps,
-) => {
+export const fetchSaveMaps = (token, companyId, maps) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -2598,9 +2663,7 @@ export const fetchSaveMaps = (
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem("Błąd podczas aktualizacji mapy.", "red")
-        )
+        dispatch(addAlertItem("Błąd podczas aktualizacji mapy.", "red"))
       })
   }
 }
@@ -2688,8 +2751,6 @@ export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
       })
   }
 }
-
-
 
 export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
   return dispatch => {
@@ -2796,7 +2857,7 @@ export const fetchAddOpinion = (token, opinionData, company) => {
             opinionData.reserwationId,
             response.data.opinion,
             company,
-            opinionData.company,
+            opinionData.company
           )
         )
         dispatch(changeSpinner(false))
@@ -2832,7 +2893,7 @@ export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
             opinionData.opinionEditedMessage,
             company,
             opinionData.company,
-            opinionData.opinionId,
+            opinionData.opinionId
           )
         )
         dispatch(changeSpinner(false))
@@ -2862,7 +2923,6 @@ export const fetchLoadMoreOpinions = (page, companyId) => {
       })
   }
 }
-
 
 export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
   return dispatch => {
@@ -2977,7 +3037,12 @@ export const fetchCompanyMainImage = (token, companyId, imagePath) => {
       })
       .catch(error => {
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas ustawiania nowego głównego zdjęcia.", "red"))
+        dispatch(
+          addAlertItem(
+            "Błąd podczas ustawiania nowego głównego zdjęcia.",
+            "red"
+          )
+        )
       })
   }
 }
@@ -3032,6 +3097,31 @@ export const fetchUserDeleteImage = (token, imagePath) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
+      })
+  }
+}
+
+export const fetchLoginFacebook = () => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/auth/facebook`,
+        {},
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then(response => {
+        console.log(response.data)
+        dispatch(addAlertItem("Zalogowano za pomocą facebooka.", "green"))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas logowania facebooka.", "red"))
       })
   }
 }

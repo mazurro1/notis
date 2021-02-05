@@ -112,7 +112,7 @@ const RegisterContent = () => {
         onChange={e => handleChange(e, setPhoneInput)}
         required
       />
-      <InputIcon
+      {/* <InputIcon
         icon={<FaCalendarDay />}
         placeholder="Dzień urodzenia"
         value={dateBirth}
@@ -127,7 +127,7 @@ const RegisterContent = () => {
         type="number"
         onChange={e => handleChange(e, setMonthBirth)}
         required
-      />
+      /> */}
       <InputIcon
         icon={<MdLock />}
         placeholder="Hasło"

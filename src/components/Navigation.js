@@ -16,7 +16,12 @@ import {
   FaBox,
   FaUsers,
 } from "react-icons/fa"
-import { MdWork, MdPowerSettingsNew, MdTimelapse, MdClose } from "react-icons/md"
+import {
+  MdWork,
+  MdPowerSettingsNew,
+  MdTimelapse,
+  MdClose,
+} from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
@@ -62,11 +67,11 @@ import Reserwation from "./Reserwation"
 import WorkerReserwations from "./WorkerReserwations"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
-import Footer from './Footer'
-import {Translates} from '../common/Translates'
+import Footer from "./Footer"
+import { Translates } from "../common/Translates"
 import BellAlerts from "./BellAlerts"
 import openSocket from "socket.io-client"
-import {Site} from '../common/Site'
+import { Site } from "../common/Site"
 import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
 import EmployeeWorkingHours from "./EmployeeWorkingHours"
 import WorkerUsersInformation from "./WorkerUsersInformation"
@@ -147,7 +152,7 @@ const ButtonsNav = styled.div`
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  @media all and (max-width: ${props => props.isUser ? "1200px" : "800px"}) {
+  @media all and (max-width: ${props => (props.isUser ? "1200px" : "800px")}) {
     display: none;
   }
 `
@@ -298,9 +303,7 @@ const IconCloseStyle = styled.div`
 
 const MinHeightContent = styled.div`
   min-height: ${props =>
-    props.isMainPage
-      ? "calc(100vh - 70px - 152px)"
-      : "calc(100vh - 70px)"};
+    props.isMainPage ? "calc(100vh - 70px - 152px)" : "calc(100vh - 70px)"};
 `
 
 const CloseMenuLeft = styled.div`
@@ -323,8 +326,13 @@ const PositionEn = styled.div`
 
 const Navigation = ({ children, isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(false)
-  const [workerUsersInformationVisible, setWorkerUsersInformationVisible] = useState(false)
+  const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
+    false
+  )
+  const [
+    workerUsersInformationVisible,
+    setWorkerUsersInformationVisible,
+  ] = useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [workPropsVisible, setWorkPropsVisible] = useState(false)
   const [popupTakeData, setPopupTakeData] = useState(false)
@@ -337,11 +345,12 @@ const Navigation = ({ children, isMainPage }) => {
   const [selectedName, setSelectedName] = useState("")
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
-  const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(false)
+  const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(
+    false
+  )
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
-  const editEmplyeeWorkingHours = useSelector(state => state.editEmplyeeWorkingHours)
   const editWorkerHoursData = useSelector(state => state.editWorkerHoursData)
   const createCompanyVisible = useSelector(state => state.createCompanyVisible)
   const registrationVisible = useSelector(state => state.registrationVisible)
@@ -364,7 +373,7 @@ const Navigation = ({ children, isMainPage }) => {
     state => state.remindPasswordVisible
   )
   const dispatch = useDispatch()
-  
+
   useEffect(() => {
     if (!!userId) {
       const socket = openSocket(Site.serverUrl)
@@ -496,42 +505,42 @@ const Navigation = ({ children, isMainPage }) => {
     setWorkPropsVisible(prevState => !prevState)
   }
 
-   const handleMenuOpen = () => {
-     setMenuOpen(prevState => !prevState)
-   }
+  const handleMenuOpen = () => {
+    setMenuOpen(prevState => !prevState)
+  }
 
-   const handleCloseMenu = () => {
-     setMenuOpen(false)
-   }
+  const handleCloseMenu = () => {
+    setMenuOpen(false)
+  }
 
-   const handleWorkerReserwations = () => {
+  const handleWorkerReserwations = () => {
     setWorkPropsVisible(false)
     setWorkerReserwationsVisible(true)
-   }
+  }
 
-   const handleWorkerUsersInformation = () => {
+  const handleWorkerUsersInformation = () => {
     setWorkPropsVisible(false)
     setWorkerUsersInformationVisible(true)
-   }
+  }
 
-   const handleCloseWorkerUsersInformation = () => {
-     setWorkerUsersInformationVisible(false)
-     setWorkPropsVisible(true)
-   }
+  const handleCloseWorkerUsersInformation = () => {
+    setWorkerUsersInformationVisible(false)
+    setWorkPropsVisible(true)
+  }
 
-   const handleCloseWorkerReserwations = () => {
+  const handleCloseWorkerReserwations = () => {
     setWorkerReserwationsVisible(false)
     setWorkPropsVisible(true)
-   }
+  }
 
-   const handleChangeLanguage = () => {
-     const languageSelected = siteProps.language === "PL" ? "EN" : "PL"
-     dispatch(changeLanguageStyle(languageSelected))
-   }
+  const handleChangeLanguage = () => {
+    const languageSelected = siteProps.language === "PL" ? "EN" : "PL"
+    dispatch(changeLanguageStyle(languageSelected))
+  }
 
-   const handleClickAdminPanel = () => {
-     setWorkPropsVisible(false)
-   }
+  const handleClickAdminPanel = () => {
+    setWorkPropsVisible(false)
+  }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
     const isIndustriesActive = industries === item.value
@@ -601,34 +610,31 @@ const Navigation = ({ children, isMainPage }) => {
     </CSSTransition>
   )
 
-    
+  const PopupWorkersReserwations = (
+    <Popup
+      popupEnable={workerReserwationsVisible}
+      handleClose={handleCloseWorkerReserwations}
+      noContent
+      calendar
+    >
+      <WorkerReserwations handleClose={handleCloseWorkerReserwations} />
+    </Popup>
+  )
 
-      const PopupWorkersReserwations = (
-        <Popup
-          popupEnable={workerReserwationsVisible}
-          handleClose={handleCloseWorkerReserwations}
-          noContent
-          calendar
-        >
-          <WorkerReserwations handleClose={handleCloseWorkerReserwations} />
-        </Popup>
-      )
-
-      const PopupWorkersUsersInformations = (
-        <Popup
-          popupEnable={workerUsersInformationVisible}
-          handleClose={handleCloseWorkerUsersInformation}
-          title="Klienci"
-          fullScreen
-        >
-          <WorkerUsersInformation
-            handleClose={handleCloseWorkerUsersInformation}
-            user={user}
-            siteProps={siteProps}
-          />
-        </Popup>
-      )
-
+  const PopupWorkersUsersInformations = (
+    <Popup
+      popupEnable={workerUsersInformationVisible}
+      handleClose={handleCloseWorkerUsersInformation}
+      title="Klienci"
+      fullScreen
+    >
+      <WorkerUsersInformation
+        handleClose={handleCloseWorkerUsersInformation}
+        user={user}
+        siteProps={siteProps}
+      />
+    </Popup>
+  )
 
   const PopupWorkerEditHours = (
     <Popup
@@ -724,7 +730,11 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   const PopupCreateCompany = (
-    <Popup popupEnable={createCompanyVisible} handleClose={handleCreateCompany} title="Stwórz konto firmowe">
+    <Popup
+      popupEnable={createCompanyVisible}
+      handleClose={handleCreateCompany}
+      title="Stwórz konto firmowe"
+    >
       <CreateCompany />
     </Popup>
   )
@@ -827,16 +837,16 @@ const Navigation = ({ children, isMainPage }) => {
   )
 
   console.log(user)
-  let workerHasAccessButton = false;
+  let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
   let hasCompany = false
-  if(!!user){
-    if(user.hasCompany){
+  if (!!user) {
+    if (user.hasCompany) {
       const selectWorker = user.company.workers.find(
         worker => worker.user === user.userId
       )
-      workerHasAccessClientsOpinions = user.company.owner === user.userId;
+      workerHasAccessClientsOpinions = user.company.owner === user.userId
       workerHasAccessAvailability = user.company.owner === user.userId
       hasCompany = true
       if (!!selectWorker) {
@@ -847,7 +857,7 @@ const Navigation = ({ children, isMainPage }) => {
           workerHasAccessButton = true
         }
 
-        if(!workerHasAccessClientsOpinions){
+        if (!workerHasAccessClientsOpinions) {
           const hasPermissionClientsOpinion = selectWorker.permissions.some(
             perm => perm === 6
           )
@@ -864,10 +874,10 @@ const Navigation = ({ children, isMainPage }) => {
             workerHasAccessAvailability = true
           }
         }
-        }
       }
     }
-  
+  }
+
   const PopupWorkerPropsVisible = (
     <Popup
       popupEnable={workPropsVisible}
@@ -942,22 +952,10 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-    const renderCompanyOrCreateCompany =
-      !!user && user.hasCompany ? (
-        user.company.owner === user.userId || workerHasAccessButton ? (
-          <>
-            <ButtonNavStyle>
-              <ButtonIcon
-                title={Translates[siteProps.language].buttons.work}
-                uppercase
-                fontIconSize="25"
-                fontSize="16"
-                icon={<MdWork />}
-                onClick={handleClickWork}
-              />
-            </ButtonNavStyle>
-          </>
-        ) : (
+  const renderCompanyOrCreateCompany =
+    !!user && user.hasCompany ? (
+      user.company.owner === user.userId || workerHasAccessButton ? (
+        <>
           <ButtonNavStyle>
             <ButtonIcon
               title={Translates[siteProps.language].buttons.work}
@@ -968,24 +966,36 @@ const Navigation = ({ children, isMainPage }) => {
               onClick={handleClickWork}
             />
           </ButtonNavStyle>
-        )
+        </>
       ) : (
         <ButtonNavStyle>
-          <LinkEffect
-            path="/your-company"
-            text={
-              <ButtonIcon
-                title="dla firm"
-                uppercase
-                fontIconSize="25"
-                fontSize="16"
-                icon={<MdWork />}
-                secondColors
-              />
-            }
+          <ButtonIcon
+            title={Translates[siteProps.language].buttons.work}
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<MdWork />}
+            onClick={handleClickWork}
           />
         </ButtonNavStyle>
       )
+    ) : (
+      <ButtonNavStyle>
+        <LinkEffect
+          path="/your-company"
+          text={
+            <ButtonIcon
+              title="dla firm"
+              uppercase
+              fontIconSize="25"
+              fontSize="16"
+              icon={<MdWork />}
+              secondColors
+            />
+          }
+        />
+      </ButtonNavStyle>
+    )
 
   const renderButtonsUp = !!user ? (
     <>

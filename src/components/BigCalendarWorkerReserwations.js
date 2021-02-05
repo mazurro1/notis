@@ -555,14 +555,19 @@ const BigCalendarWorkerReserwations = ({
         const selectServiceColor = ServiceColorsReserwationsConvert.find(
           conv => conv.value === selectedColorEvent
         )
-        const userName = Buffer.from(
-          itemMaped.fromUser.name,
-          "base64"
-        ).toString("ascii")
-        const userSurname = Buffer.from(
-          itemMaped.fromUser.surname,
-          "base64"
-        ).toString("ascii")
+        let userName = "Brak użytkownika"
+        if (!!itemMaped.fromUser) {
+          userName = Buffer.from(itemMaped.fromUser.name, "base64").toString(
+            "ascii"
+          )
+        }
+        let userSurname = ""
+        if (!!itemMaped.fromUser) {
+          userSurname = Buffer.from(
+            itemMaped.fromUser.surname,
+            "base64"
+          ).toString("ascii")
+        }
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
         const itemMapedResult = {
@@ -669,21 +674,23 @@ const BigCalendarWorkerReserwations = ({
     const getterMonth = takeDateStart.getMonth() + 1
     const getterYear = takeDateStart.getFullYear()
     const getterFullDateNewPosition = `${getterYear}-${getterMonth}-${getterDay}`
-    const selectDayWorkingHours = allWorkingHours.find(hour => hour.fullDate === getterFullDateNewPosition)
+    const selectDayWorkingHours = allWorkingHours.find(
+      hour => hour.fullDate === getterFullDateNewPosition
+    )
     const isActualMonth =
       dateCalendar.getFullYear() === takeDateStart.getFullYear() &&
       dateCalendar.getMonth() === takeDateStart.getMonth()
 
     if (!!selectDayWorkingHours) {
-       const calendarDate =
-         takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
-       const numberMax =
-         Number(selectDayWorkingHours.end.getHours()) * 60 +
-         Number(selectDayWorkingHours.end.getMinutes())
-       const numberMin =
-         Number(selectDayWorkingHours.start.getHours()) * 60 +
-         Number(selectDayWorkingHours.start.getMinutes())
-       
+      const calendarDate =
+        takeDateStart.getHours() * 60 + takeDateStart.getMinutes()
+      const numberMax =
+        Number(selectDayWorkingHours.end.getHours()) * 60 +
+        Number(selectDayWorkingHours.end.getMinutes())
+      const numberMin =
+        Number(selectDayWorkingHours.start.getHours()) * 60 +
+        Number(selectDayWorkingHours.start.getMinutes())
+
       if (
         calendarDate >= numberMin &&
         calendarDate < numberMax &&
@@ -723,7 +730,7 @@ const BigCalendarWorkerReserwations = ({
           }
         }
       }
-    }else{
+    } else {
       if (isActualMonth) {
         return {
           className: "rbc-day-slot rbc-time-slot rbc-no-disabled-active ",
