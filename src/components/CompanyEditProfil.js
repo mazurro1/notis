@@ -35,10 +35,10 @@ const CompanyEditProfil = () => {
       <ActiveCompany />
     </Popup>
   )
-  
-  let isAdminCompany = false;
-  let userHasAccess = false;
-  let selectedWorker = null;
+
+  let isAdminCompany = false
+  let userHasAccess = false
+  let selectedWorker = null
   if (!!workCompanyData) {
     isAdminCompany = user.userId === workCompanyData.owner._id
     const findWorker = workCompanyData.workers.find(
@@ -58,7 +58,6 @@ const CompanyEditProfil = () => {
       userHasAccess = workCompanyData.owner._id === user.userId
     }
   }
-
 
   return (
     <>

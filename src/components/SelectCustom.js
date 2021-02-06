@@ -7,7 +7,7 @@ import { useSelector } from "react-redux"
 
 const SelectDiv = styled.div`
   font-size: 1rem;
-  margin: ${props => props.marginAuto ? "0 auto" : "0"};
+  margin: ${props => (props.marginAuto ? "0 auto" : "0")};
   width: ${props => (props.widthAuto ? "auto" : "500px")};
   max-width: 90vw;
   font-size: 0.9rem;
@@ -36,7 +36,7 @@ const SelectCustom = ({
   menuIsOpen = false,
   isClearable = true,
   isDisabled = false,
-  marginAuto = true
+  marginAuto = true,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnChange = value => {

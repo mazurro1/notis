@@ -6,10 +6,8 @@ import { CSSTransition } from "react-transition-group"
 import { MdWork } from "react-icons/md"
 import { useSelector } from "react-redux"
 import { LinkEffect } from "../common/LinkEffect"
-import {Site} from '../common/Site'
-import {
-  MdImage,
-} from "react-icons/md"
+import { Site } from "../common/Site"
+import { MdImage } from "react-icons/md"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -235,7 +233,7 @@ const PlacesItem = ({ item, filters, index }) => {
       </UnderMenuServices>
     </CSSTransition>
   )
-  
+
   return (
     <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
@@ -257,10 +255,8 @@ const PlacesItem = ({ item, filters, index }) => {
               }
             />
           ) : (
-            <BackGroundImageDefault
-              siteProps={siteProps}
-            >
-              <MdImage/>
+            <BackGroundImageDefault siteProps={siteProps}>
+              <MdImage />
             </BackGroundImageDefault>
           )}
         </PlaceImage>

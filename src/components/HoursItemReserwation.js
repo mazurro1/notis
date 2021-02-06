@@ -48,7 +48,7 @@ const DateReserwStyle = styled.div`
 
   span {
     position: relative;
-    top: ${props => props.promotionsValid ? "2px" : "0px"};
+    top: ${props => (props.promotionsValid ? "2px" : "0px")};
   }
 
   .promotionPosition {
@@ -107,7 +107,12 @@ const HoursItemReserwation = ({
 
   const mapDate = filterDate.map((item, index) => {
     const isHourActive = selectedHour === item.time
-    const promotionsValid = item.promotion !== null ? item.promotion : item.happyHour !== null ? item.happyHour : null;
+    const promotionsValid =
+      item.promotion !== null
+        ? item.promotion
+        : item.happyHour !== null
+        ? item.happyHour
+        : null
     return (
       <DateReserwStyle
         siteProps={siteProps}

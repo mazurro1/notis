@@ -4,19 +4,15 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import { FaSave } from "react-icons/fa"
-import {
-  MdClose,
-  MdInfo,
-  MdTimelapse,
-} from "react-icons/md"
+import { MdClose, MdInfo, MdTimelapse } from "react-icons/md"
 import {
   getMonthNamePl,
   getMonthAndReturnFull,
   getMonthAndReturnEng,
 } from "../common/Functions"
-import Popup from './Popup'
+import Popup from "./Popup"
 import InputIcon from "./InputIcon"
-import TimePickerContent from './TimePicker'
+import TimePickerContent from "./TimePicker"
 
 const EventItemPosition = styled.div`
   position: absolute;
@@ -203,7 +199,9 @@ const CalendarWorkerReserwatinNewEvent = ({
   }
 
   const handleAddReserwationWorkerComponent = () => {
-     const selectedDateFull = `${selectedEvent.start.getDate()}-${selectedEvent.start.getMonth() + 1}-${selectedEvent.start.getFullYear()}`
+    const selectedDateFull = `${selectedEvent.start.getDate()}-${
+      selectedEvent.start.getMonth() + 1
+    }-${selectedEvent.start.getFullYear()}`
     handleAddWorkerReserwation(
       !!newTimeStart ? newTimeStart : dateStart,
       !!newTimeEnd ? newTimeEnd : dateEnd,
@@ -252,7 +250,9 @@ const CalendarWorkerReserwatinNewEvent = ({
     const selectedDayWeek = selectedEvent.start.getDay()
     selectedDayWeekName = getMonthAndReturnFull(selectedDayWeek)
 
-    titleEvent = !!selectedEvent.action ? "Tworzenie rezerwacji czasu" : "Czas pracy"
+    titleEvent = !!selectedEvent.action
+      ? "Tworzenie rezerwacji czasu"
+      : "Czas pracy"
 
     selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
       ? "Uwaga rezerwacja jest edytowana w dzień w którym firma jest nieczynna"
@@ -260,7 +260,8 @@ const CalendarWorkerReserwatinNewEvent = ({
 
     const isOldDate = new Date() > selectedEvent.end
 
-    renderDateStart = <ButtonItemStyleTime>
+    renderDateStart = (
+      <ButtonItemStyleTime>
         <ButtonIcon
           title={!!newTimeStart ? newTimeStart : dateStart}
           uppercase
@@ -270,9 +271,10 @@ const CalendarWorkerReserwatinNewEvent = ({
           onClick={handleOpenDateStartTimePicker}
         />
       </ButtonItemStyleTime>
-    
+    )
 
-    renderDateEnd = <ButtonItemStyleTime>
+    renderDateEnd = (
+      <ButtonItemStyleTime>
         <ButtonIcon
           title={!!newTimeEnd ? newTimeEnd : dateEnd}
           uppercase
@@ -282,7 +284,7 @@ const CalendarWorkerReserwatinNewEvent = ({
           onClick={handleOpenDateEndTimePicker}
         />
       </ButtonItemStyleTime>
-    
+    )
 
     selectButtonsToEvents = !!selectedEvent.action && (
       <ButtonItemStyle>

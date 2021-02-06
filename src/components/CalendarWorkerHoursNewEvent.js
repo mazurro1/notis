@@ -4,19 +4,15 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import { FaSave } from "react-icons/fa"
-import {
-  MdClose,
-  MdInfo,
-  MdTimelapse,
-} from "react-icons/md"
+import { MdClose, MdInfo, MdTimelapse } from "react-icons/md"
 import {
   getMonthNamePl,
   getMonthAndReturnFull,
   getMonthAndReturnEng,
 } from "../common/Functions"
-import Popup from './Popup'
+import Popup from "./Popup"
 import InputIcon from "./InputIcon"
-import TimePickerContent from './TimePicker'
+import TimePickerContent from "./TimePicker"
 import { Checkbox } from "react-input-checkbox"
 import { addNewNoConstHour, deleteNoConstHour } from "../state/actions"
 import { useDispatch } from "react-redux"
@@ -182,9 +178,9 @@ const CalendarWorkerReserwatinNewEvent = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-     setNewTimeStart(null)
-     setNewTimeEnd(null)
-     handleClosePopupEventItem()
+    setNewTimeStart(null)
+    setNewTimeEnd(null)
+    handleClosePopupEventItem()
   }, [item])
 
   useEffect(() => {
@@ -252,13 +248,12 @@ const CalendarWorkerReserwatinNewEvent = ({
     const splitDateEndToSent = dateEndToSent.split(":")
     const newDate = new Date(selectedEvent.start)
 
-        const selectedDayToCompany = getMonthAndReturnEng(
-          selectedEvent.start.getDay()
-        )
-        const selectedHoursCompany =
-          item.company.openingDays[selectedDayToCompany]
-        const companyDateStart = selectedHoursCompany.start.split(":")
-        const companyDateEnd = selectedHoursCompany.end.split(":")
+    const selectedDayToCompany = getMonthAndReturnEng(
+      selectedEvent.start.getDay()
+    )
+    const selectedHoursCompany = item.company.openingDays[selectedDayToCompany]
+    const companyDateStart = selectedHoursCompany.start.split(":")
+    const companyDateEnd = selectedHoursCompany.end.split(":")
 
     const newNoConstHour = {
       fullDate: `${newDate.getDate()}-${
@@ -307,9 +302,15 @@ const CalendarWorkerReserwatinNewEvent = ({
   }
 
   const handleDeleteNoConstHours = () => {
-    dispatch(deleteNoConstHour(user.token, user.company._id, item.user._id === user.userId ? "owner" : workerId, selectedEvent._id))
+    dispatch(
+      deleteNoConstHour(
+        user.token,
+        user.company._id,
+        item.user._id === user.userId ? "owner" : workerId,
+        selectedEvent._id
+      )
+    )
   }
-
 
   let selectedDate = ""
   let selectMonthName = ""
@@ -374,8 +375,11 @@ const CalendarWorkerReserwatinNewEvent = ({
         ? "Podczas tworzenia dotychczasowy czas pracy zostanie zastąpiony"
         : null
 
-    const disabledEditButton = (!!newTimeStart || !!newTimeEnd) ? (dateStart === newTimeStart || dateEnd === newTimeEnd) : true
-      
+    const disabledEditButton =
+      !!newTimeStart || !!newTimeEnd
+        ? dateStart === newTimeStart || dateEnd === newTimeEnd
+        : true
+
     renderDateStart = (
       <ButtonItemStyleTime>
         <ButtonIcon
@@ -523,14 +527,18 @@ const CalendarWorkerReserwatinNewEvent = ({
                   Data:
                   <span>{selectedDate}</span>
                 </ItemTitle>
-                {!isHolidays && (<><ItemTitle siteProps={siteProps}>
-                  Początek pracy:
-                  {renderDateStart}
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
-                  Koniec pracy:
-                  {renderDateEnd}
-                </ItemTitle></>)}
+                {!isHolidays && (
+                  <>
+                    <ItemTitle siteProps={siteProps}>
+                      Początek pracy:
+                      {renderDateStart}
+                    </ItemTitle>
+                    <ItemTitle siteProps={siteProps}>
+                      Koniec pracy:
+                      {renderDateEnd}
+                    </ItemTitle>
+                  </>
+                )}
                 {switchButtonHolidays}
                 <ButtonsItemEvent>{selectButtonsToEvents}</ButtonsItemEvent>
               </EventItemPositionContentPadding>

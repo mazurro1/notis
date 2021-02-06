@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
-import styled from 'styled-components'
-import ButtonIcon from '../ButtonIcon'
-import {Colors} from '../../common/Colors'
+import styled from "styled-components"
+import ButtonIcon from "../ButtonIcon"
+import { Colors } from "../../common/Colors"
 import { FaArrowLeft } from "react-icons/fa"
 import { MdEdit, MdAddBox } from "react-icons/md"
 import PromotionsContentNewItem from "./PromotionsContentNewItem"
@@ -56,7 +56,7 @@ const PromotionsContent = ({
   const [newPromotion, setNewPromotion] = useState(false)
   const [enableDatePickerStart, setEnableDatePickerStart] = useState(false)
   const [enableDatePickerEnd, setEnableDatePickerEnd] = useState(false)
-  
+
   useEffect(() => {
     setNewPromotion(false)
   }, [promotions, editMode])
@@ -95,11 +95,7 @@ const PromotionsContent = ({
   })
   return (
     <PositionRelative
-      active={
-        newPromotion ||
-        enableDatePickerStart ||
-        enableDatePickerEnd
-      }
+      active={newPromotion || enableDatePickerStart || enableDatePickerEnd}
     >
       <TitleRightColumn
         isCompanyEditProfil={editPromotions}

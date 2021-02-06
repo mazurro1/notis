@@ -9,7 +9,7 @@ import {
   avaibleDateToReserwation,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import { FaUser } from "react-icons/fa"
+import { FaUser, FaStamp } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "../components/ButtonIcon"
 import { FaCalendarDay, FaCalendarCheck } from "react-icons/fa"
@@ -17,7 +17,29 @@ import { getMonthAndReturn } from "../common/Functions"
 import { CgSpinner } from "react-icons/cg"
 import HoursItemReserwation from "./HoursItemReserwation"
 import InputIcon from "./InputIcon"
-import {Site} from '../common/Site'
+import { Site } from "../common/Site"
+import ReactTooltip from "react-tooltip"
+import { Checkbox } from "react-input-checkbox"
+
+const TextCheckbox = styled.span`
+  padding-left: 10px;
+  font-weight: 600;
+  user-select: none;
+`
+
+const CheckboxStyle = styled.div`
+  margin-bottom: 30px;
+  margin-top: 20px;
+
+  .material-checkbox__input:checked + .material-checkbox__image {
+    background-color: ${props => Colors(props.siteProps).primaryColor};
+  }
+
+  span {
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
+  }
+`
 
 const ServiceItem = styled.div`
   position: relative;
@@ -87,7 +109,7 @@ const ItemSummary = styled.div`
   border-radius: 5px;
   max-width: 90vw;
   width: 800px;
-  padding-top: 60px;
+  padding-top: 40px;
   overflow: hidden;
 `
 
@@ -267,6 +289,36 @@ const BackGroundImageCustomUrl = styled.div`
   overflow: hidden;
 `
 
+const IconStamp = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+
+  .bgStamp {
+    color: ${props =>
+      props.active
+        ? Colors(props.siteProps).successColor
+        : Colors(props.siteProps).dangerColor};
+    padding: 10px;
+    border: 2px dashed transparent;
+    border-color: ${props =>
+      props.active
+        ? Colors(props.siteProps).successColor
+        : Colors(props.siteProps).dangerColor};
+    border-radius: 50%;
+    font-size: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    transition-property: color, border-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+`
+
 const Reserwation = ({
   handleCloseReserwation,
   reserwationEnable,
@@ -283,6 +335,7 @@ const Reserwation = ({
   },
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
+  const [numberPhone, setNumberPhone] = useState("")
   const [selectedHour, setSelectedHour] = useState(null)
   const [selectedPromotion, setSelectedPromotion] = useState(null)
   const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
@@ -290,6 +343,11 @@ const Reserwation = ({
   const [isDataActive, setIsDataActive] = useState(false)
   const [isOtherActive, setIsOtherActive] = useState(true)
   const [selectedDate, setSelectedDate] = useState(null)
+  const [isStampActive, setIsStampActive] = useState(false)
+  const [
+    selectedHappyHourOrPromotion,
+    setSelectedHappyHourOrPromotion,
+  ] = useState(false)
   const user = useSelector(state => state.user)
   const avaibleHoursReserwation = useSelector(
     state => state.avaibleHoursReserwation
@@ -315,7 +373,7 @@ const Reserwation = ({
           selectedMonth,
           selectedYear,
           reserwationData.time,
-          reserwationData._id,
+          reserwationData._id
         )
       )
     }
@@ -332,12 +390,20 @@ const Reserwation = ({
         setIsOtherActive(true)
         setSelectedDate(null)
         dispatch(avaibleDateToReserwation([]))
+        setIsStampActive(false)
+        setIsStampActive(false)
+        setSelectedHappyHourOrPromotion(false)
       }, 400)
     }
   }, [reserwationEnable])
 
   const handleSelectDay = () => {
+    setIsStampActive(false)
     setIsOtherActive(false)
+    setSelectedHour(null)
+    setIsStampActive(false)
+    setSelectedHappyHourOrPromotion(false)
+    setSelectedPromotion(null)
     setTimeout(() => {
       setIsDataActive(true)
     }, 500)
@@ -349,7 +415,8 @@ const Reserwation = ({
       const selectedMonth = selectedDate.getMonth() + 1
       const selectedYear = selectedDate.getFullYear()
       const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
-      console.log(reserwationData)
+      const validNumberUser = !!numberPhone ? numberPhone : null
+
       dispatch(
         fetchDoReserwation(
           user.token,
@@ -360,17 +427,23 @@ const Reserwation = ({
           dateFullToSent, //dateFull
           reserwationMessage,
           reserwationData._id,
+          validNumberUser,
+          isStampActive
         )
       )
     }
   }
 
   const handleSelectWorker = (workerUserId, workerId) => {
+    setIsStampActive(false)
+    setSelectedPromotion(null)
+    setSelectedHappyHourOrPromotion(false)
     if (!!selectedWorkerUserId) {
       if (selectedWorkerUserId === workerUserId) {
         setSelectedWorkerUserId(null)
         setSelectedWorkerId(null)
         setSelectedDate(null)
+        setSelectedHour(null)
         dispatch(avaibleDateToReserwation([]))
       } else {
         setSelectedWorkerUserId(workerUserId)
@@ -383,13 +456,24 @@ const Reserwation = ({
   }
 
   const handleClickDateToReserw = (clickedHour, clickedPromotion) => {
+    setIsStampActive(false)
+    if (clickedPromotion !== null) {
+      setSelectedHappyHourOrPromotion(true)
+    } else {
+      setSelectedHappyHourOrPromotion(false)
+    }
     if (!!selectedHour) {
       if (selectedHour === clickedHour) {
         setSelectedHour(null)
         setSelectedPromotion(null)
+        setIsStampActive(false)
       } else {
         setSelectedHour(clickedHour)
         setSelectedPromotion(clickedPromotion)
+        if (clickedPromotion !== null) {
+          setIsStampActive(false)
+          setSelectedHappyHourOrPromotion(true)
+        }
       }
     } else {
       setSelectedHour(clickedHour)
@@ -397,8 +481,21 @@ const Reserwation = ({
     }
   }
 
-  const handleReserwationMessage = (e) => {
+  const handleReserwationMessage = e => {
     setReserwationMessage(e.target.value)
+  }
+
+  const handleChangeNumberPhone = e => {
+    setNumberPhone(e.target.value)
+  }
+
+  const handleChangeCheckbox = companyStampPromotionPercent => {
+    if (!isStampActive) {
+      setSelectedPromotion(companyStampPromotionPercent)
+    } else {
+      setSelectedPromotion(null)
+    }
+    setIsStampActive(prevState => !prevState)
   }
 
   let timeService = ""
@@ -422,7 +519,7 @@ const Reserwation = ({
   const ownerIsSelected = !!selectedWorkerUserId
     ? selectedWorkerUserId === reserwationData.ownerData.ownerId
     : false
-    
+
   const ownerWorkerToSelect = ownerHasServiceCategory &&
     !!reserwationData.ownerData && (
       <WorkerItem
@@ -550,10 +647,98 @@ const Reserwation = ({
     selectedDateFullMonth = selectedDate.getMonth() + 1
   }
 
-  const disabledReserwButton = !!selectedHour & !!selectedWorkerUserId
+  const disabledPhoneNumber = user.hasPhone
+    ? false
+    : numberPhone.length === 9
+    ? false
+    : true
+
+  const disabledReserwButton =
+    !!selectedHour & !!selectedWorkerUserId && !disabledPhoneNumber
   const priceInPromotion = selectedPromotion !== null
-  const newPriceAfterPromotion = Math.floor((Number(reserwationData.serviceCost) *(selectedPromotion !== null? 100 - selectedPromotion: 100)) /100)
-                    
+  const newPriceAfterPromotion = Math.floor(
+    (Number(reserwationData.serviceCost) *
+      (selectedPromotion !== null ? 100 - selectedPromotion : 100)) /
+      100
+  )
+
+  const stampSelected = reserwationData.companyStamps.find(stamp => {
+    const isServiceInStamp = stamp.servicesId.some(
+      serviceStamp => serviceStamp === reserwationData._id
+    )
+    return isServiceInStamp
+  })
+
+  let stampValid = false
+  let numberOfActiveUserStamps = 0
+  let countStampsToActive = 0
+  let companyStampPromotionPercent = 0
+
+  if (!!stampSelected) {
+    if (!!!stampSelected.disabled) {
+      stampValid = true
+      companyStampPromotionPercent = stampSelected.promotionPercent
+      countStampsToActive = stampSelected.countStampsToActive
+      const selectedUserStamp = user.stamps.find(stampItem => {
+        return stampItem.companyId === reserwationData.companyId
+      })
+
+      if (!!selectedUserStamp) {
+        selectedUserStamp.reserwations.forEach(stampReserwation => {
+          const splitDateEnd = stampReserwation.dateEnd.split("")
+          const reserwationStampDateEnd = new Date(
+            stampReserwation.dateYear,
+            stampReserwation.dateMonth,
+            stampReserwation.dateDay,
+            Number(splitDateEnd[0]),
+            Number(splitDateEnd[1])
+          )
+
+          if (
+            !!!stampReserwation.visitCanceled &&
+            reserwationStampDateEnd < new Date()
+          ) {
+            numberOfActiveUserStamps = numberOfActiveUserStamps + 1
+          }
+        })
+      }
+    }
+  }
+
+  const renderStampCheckbox = !!stampValid &&
+    !selectedHappyHourOrPromotion &&
+    disabledReserwButton && (
+      <CheckboxStyle siteProps={siteProps}>
+        <Checkbox
+          theme="material-checkbox"
+          value={isStampActive}
+          onChange={() => handleChangeCheckbox(companyStampPromotionPercent)}
+        >
+          <TextCheckbox>Aktywuj rabat z pieczątek</TextCheckbox>
+        </Checkbox>
+      </CheckboxStyle>
+    )
+
+  const stampColorValid = stampValid && !!!selectedPromotion && !isStampActive
+  const stempValidUserCanTakeStempRabat =
+    stampValid &&
+    countStampsToActive <= numberOfActiveUserStamps &&
+    !!selectedDate &&
+    avaibleHoursReserwation.length > 0
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [
+    numberPhone,
+    selectedHour,
+    selectedWorkerUserId,
+    selectedDate,
+    avaibleHoursReserwation,
+    avaibleHoursReserwationUpdate,
+    user,
+    stampColorValid,
+    stampValid,
+  ])
 
   return (
     <>
@@ -568,6 +753,12 @@ const Reserwation = ({
             <SummaryReserwationText siteProps={siteProps}>
               Rezerwacja
             </SummaryReserwationText>
+            <IconStamp siteProps={siteProps} active={stampColorValid}>
+              <div className="bgStamp" data-tip data-for="stampTooltip">
+                <FaStamp />
+              </div>
+            </IconStamp>
+
             <ServiceItem siteProps={siteProps}>
               <LeftContent>
                 <TitleService>
@@ -596,7 +787,6 @@ const Reserwation = ({
                 </ServiceParagraph>
               </LeftContent>
             </ServiceItem>
-
             {!!!ownerHasServiceCategory && filterWorkers.length === 0 ? (
               <NoWorkersText>Brak dostępnych pracowników</NoWorkersText>
             ) : (
@@ -648,17 +838,37 @@ const Reserwation = ({
                     />
                   </>
                 )}
-                <ButtonIcon
-                  title="Rezerwuj"
-                  fontIconSize="20"
-                  fontSize="25"
-                  icon={<FaCalendarCheck />}
-                  onClick={handleDoReserwation}
-                  uppercase
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  disabled={!disabledReserwButton}
-                />
+                {!!selectedDate &&
+                  avaibleHoursReserwation.length > 0 &&
+                  !user.hasPhone && (
+                    <>
+                      <InputIcon
+                        placeholder="Numer telefonu"
+                        inputActive={true}
+                        type="number"
+                        value={numberPhone}
+                        onChange={handleChangeNumberPhone}
+                      />
+                    </>
+                  )}
+                {!!stempValidUserCanTakeStempRabat
+                  ? !!renderStampCheckbox
+                    ? renderStampCheckbox
+                    : null
+                  : null}
+                <div data-tip data-for="reserwationAlert">
+                  <ButtonIcon
+                    title="Rezerwuj"
+                    fontIconSize="20"
+                    fontSize="25"
+                    icon={<FaCalendarCheck />}
+                    onClick={handleDoReserwation}
+                    uppercase
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    disabled={!disabledReserwButton}
+                  />
+                </div>
               </>
             )}
             <ClosePopup onClick={handleCloseReserwation} siteProps={siteProps}>
@@ -682,6 +892,22 @@ const Reserwation = ({
           />
         </div>
       </CSSTransition>
+      {!disabledReserwButton && (
+        <ReactTooltip id="reserwationAlert" effect="float" multiline={true}>
+          <span>
+            {disabledPhoneNumber
+              ? "Wybierz pracownika, zaznacz godzine oraz wpisz numer telefonu."
+              : "Wybierz pracownika oraz zaznacz godzine"}
+          </span>
+        </ReactTooltip>
+      )}
+      <ReactTooltip id="stampTooltip" effect="float" multiline={true}>
+        <span>
+          {stampColorValid
+            ? "Podczas rezerwacji zostanie dodana pieczatka"
+            : "Pieczątka niedostępna w tej rezerwacji"}
+        </span>
+      </ReactTooltip>
     </>
   )
 }

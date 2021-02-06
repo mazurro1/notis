@@ -10,7 +10,7 @@ import {
 } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
-import { MdEmail, MdClose, MdEdit,  } from "react-icons/md"
+import { MdEmail, MdClose, MdEdit } from "react-icons/md"
 import { FaUserPlus, FaArrowLeft } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
 import ReactTooltip from "react-tooltip"
@@ -80,9 +80,7 @@ const EditUserBackgroundContent = styled.div`
   position: ${props => (props.noRelative ? "" : "relative")};
   width: 90%;
   background-color: ${props =>
-    props.noBg
-      ? "transparent"
-      : Colors(props.siteProps).companyItemBackground};
+    props.noBg ? "transparent" : Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   padding: 5px;
   font-size: 0.9rem;
@@ -154,7 +152,6 @@ const WorkerCircle = styled.div`
   border: 2px solid transparent;
   border-color: ${props => Colors(props.siteProps).primaryColor};
 `
-
 
 const WorkerName = styled.div`
   font-size: 1rem;
@@ -239,10 +236,9 @@ const PositionRelative = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).secondColor
-      : "transparent"};
-  opacity: ${props => !props.active && props.disabledEditButtons ? "0.5": "1"};
+    props.active ? Colors(props.siteProps).secondColor : "transparent"};
+  opacity: ${props =>
+    !props.active && props.disabledEditButtons ? "0.5" : "1"};
 
   transition-property: color, background-color, border-color, opacity;
   transition-duration: 0.3s;
@@ -377,7 +373,7 @@ const OurWorkersContent = ({
     e.stopPropagation()
   }
 
-  const  handleClickActiveWorker = (workerUserId) => {
+  const handleClickActiveWorker = workerUserId => {
     dispatch(changeActiveWorker(workerUserId))
   }
 

@@ -31,8 +31,8 @@ import { Colors } from "../../common/Colors"
 import InputIcon from "../InputIcon"
 import ButtonIcon from "../ButtonIcon"
 import ReactTooltip from "react-tooltip"
-import {Permissions} from '../../common/Permissions'
-import {Site} from '../../common/Site'
+import { Permissions } from "../../common/Permissions"
+import { Site } from "../../common/Site"
 
 const ActiveWorkerStyle = styled.div`
   position: absolute;
@@ -286,18 +286,18 @@ const WorkerItem = ({
 
   const dispatch = useDispatch()
 
-  const handleUserConfirmDelete = (e) => {
+  const handleUserConfirmDelete = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     setUserConfirmDelete(prevState => !prevState)
   }
 
-  const handleChooseTimeWorker = (e) => {
+  const handleChooseTimeWorker = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     setChooseTimeWorker(prevState => !prevState)
   }
-  const handleUserItemEdit = (e) => {
+  const handleUserItemEdit = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     setUserEditItem(prevState => !prevState)
@@ -467,7 +467,7 @@ const WorkerItem = ({
     setConstTimeWorker(true)
     setEditConstTimeWorker(true)
   }
-  
+
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}

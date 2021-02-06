@@ -26,8 +26,8 @@ import { CSSTransition } from "react-transition-group"
 import { MdDone } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import { fetchEditUser } from "../state/actions"
-import  UserProfilImage  from "./UserProfilImage"
-import {Site} from '../common/Site'
+import UserProfilImage from "./UserProfilImage"
+import { Site } from "../common/Site"
 
 const AddImage = styled.div`
   position: relative;
@@ -121,7 +121,7 @@ const UserNameImage = styled.div`
   flex-wrap: wrap;
   margin-bottom: 20px;
 
-  span{
+  span {
     font-size: 1.4rem;
   }
 `
@@ -238,11 +238,12 @@ const UserProfil = ({ userProfilVisible }) => {
 
   useEffect(() => {
     if (!!user && !userPhone) {
-      dispatch(fetchUserPhone(user.token))
+      if (user.hasPhone) {
+        dispatch(fetchUserPhone(user.token))
+      }
     }
   }, [user, userPhone, dispatch])
 
-  
   useEffect(() => {
     if (!!user.imageUrl) {
       setAddedImages([
@@ -265,20 +266,20 @@ const UserProfil = ({ userProfilVisible }) => {
     }
   }, [userPhone])
 
-    const handleEditImage = () => {
-      setEditImage(prevState => !prevState)
-      if (!!user.imageUrl) {
-        setAddedImages([
-          {
-            src: `${Site.awsUrl}/${user.imageUrl}`,
-            originalPath: user.imageUrl,
-            isNew: false,
-          },
-        ])
-      } else {
-        setAddedImages([])
-      }
+  const handleEditImage = () => {
+    setEditImage(prevState => !prevState)
+    if (!!user.imageUrl) {
+      setAddedImages([
+        {
+          src: `${Site.awsUrl}/${user.imageUrl}`,
+          originalPath: user.imageUrl,
+          isNew: false,
+        },
+      ])
+    } else {
+      setAddedImages([])
     }
+  }
 
   const handleChangeInput = (e, setChange) => {
     setChange(e.target.value)

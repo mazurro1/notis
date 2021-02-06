@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
-import ButtonIcon from './ButtonIcon'
+import ButtonIcon from "./ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import { FaMapMarkerAlt, FaSave, FaArrowLeft } from "react-icons/fa"
-import styled from 'styled-components'
+import styled from "styled-components"
 import { CSSTransition } from "react-transition-group"
-import {Colors} from '../common/Colors'
+import { Colors } from "../common/Colors"
 import InputIcon from "./InputIcon"
-import {fetchSaveMaps} from '../state/actions'
+import { fetchSaveMaps } from "../state/actions"
 import { useDispatch } from "react-redux"
 
 const ParagraphStyle = styled.div`
@@ -67,29 +67,29 @@ const MapsEditComponent = ({
   ButtonEditPosition,
   companyLat,
   companyLong,
-  user
+  user,
 }) => {
-    const [latText, setLatText] = useState("")
-    const [longText, setLongText] = useState("")
+  const [latText, setLatText] = useState("")
+  const [longText, setLongText] = useState("")
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-      if (!!companyLat) {
-        setLatText(companyLat)
-      }else{
-          setLatText("")
-      }
-      if (!!companyLong) {
-        setLongText(companyLong)
-      }else{
-          setLongText("")
-      }
-    }, [companyLat, companyLong, editMap])
+  useEffect(() => {
+    if (!!companyLat) {
+      setLatText(companyLat)
+    } else {
+      setLatText("")
+    }
+    if (!!companyLong) {
+      setLongText(companyLong)
+    } else {
+      setLongText("")
+    }
+  }, [companyLat, companyLong, editMap])
 
-    useEffect(() => {
-      setEditMap(false)
-    }, [companyLat, companyLong])
+  useEffect(() => {
+    setEditMap(false)
+  }, [companyLat, companyLong])
 
   const handleClickEdit = () => {
     handleResetAllEditedComponents()
@@ -97,7 +97,7 @@ const MapsEditComponent = ({
   }
 
   const handleReset = () => {
-      setEditMap(false)
+    setEditMap(false)
   }
 
   const handleChange = (e, setChange) => {
@@ -105,25 +105,26 @@ const MapsEditComponent = ({
   }
 
   const handleSaveMap = () => {
-      const maps = {
-        lat: latText,
-        long: longText,
-      }
-      dispatch(fetchSaveMaps(user.token, user.company._id, maps))
+    const maps = {
+      lat: latText,
+      long: longText,
+    }
+    dispatch(fetchSaveMaps(user.token, user.company._id, maps))
   }
 
-  const disabledButtonSave =
-  latText !== companyLat || longText !== companyLong
+  const disabledButtonSave = latText !== companyLat || longText !== companyLong
 
   return (
     <PositionRelative editMap={editMap}>
       <TitleRightColumn isCompanyEditProfil={editMap} siteProps={siteProps}>
         MAPA
       </TitleRightColumn>
-      {!!!companyLat && !!!companyLong && <ParagraphStyle>
-        Aby mapy działały wpisz lokalizacje geograficzną z generatora do którego
-        podany jest link w edytorze.
-      </ParagraphStyle>}
+      {!!!companyLat && !!!companyLong && (
+        <ParagraphStyle>
+          Aby mapy działały wpisz lokalizacje geograficzną z generatora do
+          którego podany jest link w edytorze.
+        </ParagraphStyle>
+      )}
       <div>Latitude: {!!companyLat ? companyLat : "Brak"}</div>
       <div>Longitude: {!!companyLong ? companyLong : "Brak"}</div>
 

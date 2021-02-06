@@ -99,7 +99,7 @@ const Popup = ({
   calendar = false,
   title = null,
   opacity = false,
-  secondColors = false
+  secondColors = false,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -161,9 +161,7 @@ const Popup = ({
       classNames={opacity ? "opacitySpinner" : "popup"}
       unmountOnExit
     >
-      <PopupWindow 
-      onClick={handleOnClick} 
-      calendar={calendar}>
+      <PopupWindow onClick={handleOnClick} calendar={calendar}>
         {contentComponent}
       </PopupWindow>
     </CSSTransition>

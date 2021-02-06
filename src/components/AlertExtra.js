@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 import { CgSpinner } from "react-icons/cg"
-import {Colors} from '../common/Colors'
+import { Colors } from "../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import { useSelector } from "react-redux"
 
@@ -35,24 +35,23 @@ const SpinnerDiv = styled.div`
   height: 52px;
 `
 
- const AlertExtra = ({ siteProps }) => {
-   
+const AlertExtra = ({ siteProps }) => {
   const alertExtra = useSelector(state => state.alertExtra)
 
-   return (
-     <CSSTransition
-       in={alertExtra.active}
-       timeout={400}
-       classNames="opacitySpinner"
-       unmountOnExit
-     >
-       <PositionAlertExtra>
-         {alertExtra.name}
-         <SpinnerDiv siteProps={siteProps}>
-           <CgSpinner />
-         </SpinnerDiv>
-       </PositionAlertExtra>
-     </CSSTransition>
-   )
- }
+  return (
+    <CSSTransition
+      in={alertExtra.active}
+      timeout={400}
+      classNames="opacitySpinner"
+      unmountOnExit
+    >
+      <PositionAlertExtra>
+        {alertExtra.name}
+        <SpinnerDiv siteProps={siteProps}>
+          <CgSpinner />
+        </SpinnerDiv>
+      </PositionAlertExtra>
+    </CSSTransition>
+  )
+}
 export default AlertExtra

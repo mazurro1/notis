@@ -9,10 +9,10 @@ import styled from "styled-components"
 import Switch from "react-switch"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-import SelectCustom from './SelectCustom'
+import SelectCustom from "./SelectCustom"
 import { AllMonths } from "../common/AllMonths"
 import { CSSTransition } from "react-transition-group"
-import {Translates} from '../common/Translates'
+import { Translates } from "../common/Translates"
 
 const NoReserwationsStyle = styled.div`
   position: absolute;
@@ -123,7 +123,7 @@ const UserHistory = ({ siteProps, user }) => {
   const handleHiddenCanceledReserwation = () => {
     if (!!!disabledSwitch) {
       setHiddenCanceledReserwation(prevState => !prevState)
-      if(onlyToOpinion){
+      if (onlyToOpinion) {
         setOnlyToOpinion(false)
       }
       setDisabledSwitch(true)
@@ -136,7 +136,7 @@ const UserHistory = ({ siteProps, user }) => {
   const handleOnlyToOpinion = () => {
     if (!!!disabledSwitch) {
       setOnlyToOpinion(prevState => !prevState)
-      if(hiddenCanceledReserwation){
+      if (hiddenCanceledReserwation) {
         setHiddenCanceledReserwation(false)
       }
       setDisabledSwitch(true)
@@ -146,22 +146,22 @@ const UserHistory = ({ siteProps, user }) => {
     }
   }
 
-    const handleChangeYear = value => {
-      setYearPicker(value)
-      setDisabledSwitch(true)
-      setTimeout(() => {
-        setDisabledSwitch(false)
-      }, 2000)
-    }
+  const handleChangeYear = value => {
+    setYearPicker(value)
+    setDisabledSwitch(true)
+    setTimeout(() => {
+      setDisabledSwitch(false)
+    }, 2000)
+  }
 
-    const handleChangeMonth = value => {
-      setMonthPicker(value)
-      setDisabledSwitch(true)
-      setTimeout(() => {
-        setDisabledSwitch(false)
-      }, 2000)
-    }
-    
+  const handleChangeMonth = value => {
+    setMonthPicker(value)
+    setDisabledSwitch(true)
+    setTimeout(() => {
+      setDisabledSwitch(false)
+    }, 2000)
+  }
+
   const mapCategory = userHistoryReserwations.map((item, index) => {
     return (
       <UserHistoryCategory
@@ -176,7 +176,6 @@ const UserHistory = ({ siteProps, user }) => {
       />
     )
   })
-
 
   return (
     <>

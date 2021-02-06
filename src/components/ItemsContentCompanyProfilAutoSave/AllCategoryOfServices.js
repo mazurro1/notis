@@ -14,7 +14,7 @@ import InputIcon from "../InputIcon"
 import { CSSTransition } from "react-transition-group"
 import sal from "sal.js"
 import { Colors } from "../../common/Colors"
-import {fetchSaveCompanyServices} from '../../state/actions'
+import { fetchSaveCompanyServices } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 
 const AddCategory = styled.div`
@@ -57,8 +57,6 @@ const BackgroundEditContent = styled.div`
   border-radius: 5px;
   max-height: 90%;
   color: black;
-
-  
 `
 
 const IconAddCategory = styled.div`
@@ -111,7 +109,8 @@ const BackgroundEditedComponent = styled.div`
   opacity: ${props =>
     !props.active && props.disabledEditButtons ? "0.5" : "1"};
 
-  transition-property: background-color, padding, margin-top, border-color, opacity;
+  transition-property: background-color, padding, margin-top, border-color,
+    opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `

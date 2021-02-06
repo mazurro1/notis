@@ -387,14 +387,14 @@ const BigCalendarWorkerHoursAutoSave = ({
           return itemMapedResult
         }
       )
-        setAllEvents(mapItemNoConstantWorkingHoursDate)
+      setAllEvents(mapItemNoConstantWorkingHoursDate)
     }
   }, [item])
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
     item.company.openingDays
   )
-  
+
   const localizer = momentLocalizer(moment)
   const arrMaxHours = selectedDayString.maxHours.split(":")
   const arrMinHours = selectedDayString.minHours.split(":")

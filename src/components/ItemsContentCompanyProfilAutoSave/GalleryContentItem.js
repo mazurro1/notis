@@ -1,12 +1,8 @@
-import React, {useState, useEffect} from 'react'
-import styled from 'styled-components'
-import {Colors} from '../../common/Colors'
-import {
-  MdDelete,
-  MdFileUpload,
-  MdWallpaper,
-} from "react-icons/md"
-import ButtonIcon from '../ButtonIcon'
+import React, { useState, useEffect } from "react"
+import styled from "styled-components"
+import { Colors } from "../../common/Colors"
+import { MdDelete, MdFileUpload, MdWallpaper } from "react-icons/md"
+import ButtonIcon from "../ButtonIcon"
 import { FaArrowLeft } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 
@@ -44,7 +40,6 @@ const BackgroundToDelete = styled.div`
     rgba(0, 0, 0, 0.30015756302521013) 100%
   );
 `
-
 
 const IconDelete = styled.div`
   position: absolute;
@@ -133,100 +128,100 @@ const MarginButton = styled.div`
   margin: 5px;
 `
 
- const GalleryContentItem = ({
-   item,
-   isMainImage,
-   index,
-   siteProps,
-   handleClickDeleteImage,
-   handleUploadImage,
-   handleClickMainImage,
-   updatedImageIdCompany,
- }) => {
-   const [confirmDelete, setConfirmDelete] = useState(false)
+const GalleryContentItem = ({
+  item,
+  isMainImage,
+  index,
+  siteProps,
+  handleClickDeleteImage,
+  handleUploadImage,
+  handleClickMainImage,
+  updatedImageIdCompany,
+}) => {
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
-   useEffect(() => {
-       setConfirmDelete(false)
-   }, [updatedImageIdCompany])
+  useEffect(() => {
+    setConfirmDelete(false)
+  }, [updatedImageIdCompany])
 
-   const handleConfirmDelete = () => {
-     setConfirmDelete(prevState => !prevState)
-   }
+  const handleConfirmDelete = () => {
+    setConfirmDelete(prevState => !prevState)
+  }
 
-   return (
-     <BackGroundImageCustomUrl url={item.original} key={index}>
-       <BackgroundToDelete>
-         <IconDelete
-           data-tip
-           data-for="deleteImage"
-           siteProps={siteProps}
-           onClick={handleConfirmDelete}
-         >
-           <MdDelete />
-         </IconDelete>
+  return (
+    <BackGroundImageCustomUrl url={item.original} key={index}>
+      <BackgroundToDelete>
+        <IconDelete
+          data-tip
+          data-for="deleteImage"
+          siteProps={siteProps}
+          onClick={handleConfirmDelete}
+        >
+          <MdDelete />
+        </IconDelete>
 
-         {item.isNew ? (
-           <>
-             <IconUpload
-               data-tip
-               data-for="saveImage"
-               onClick={() =>
-                 handleUploadImage(item.original, item.originalPath)
-               }
-             >
-               <MdFileUpload />
-             </IconUpload>
-             <NewName>Zapisz zdjęcie</NewName>
-           </>
-         ) : (
-           <IconMain
-             active={isMainImage}
-             data-tip
-             data-for="mainImage"
-             onClick={() => handleClickMainImage(item.originalPath)}
-           >
-             <MdWallpaper />
-           </IconMain>
-         )}
-       </BackgroundToDelete>
-       <CSSTransition
-         in={confirmDelete}
-         timeout={400}
-         classNames="popup"
-         unmountOnExit
-       >
-         <BackgroundEdit>
-           <BackgroundDeleteConfirm>
-             <MarginButton>
-               <ButtonIcon
-                 title="Anuluj"
-                 uppercase
-                 fontIconSize="20"
-                 fontSize="16"
-                 icon={<FaArrowLeft />}
-                 onClick={handleConfirmDelete}
-                 customColorButton={Colors(siteProps).successColorDark}
-                 customColorIcon={Colors(siteProps).successColor}
-               />
-             </MarginButton>
-             <MarginButton>
-               <ButtonIcon
-                 title="Usuń"
-                 uppercase
-                 fontIconSize="20"
-                 fontSize="16"
-                 icon={<MdDelete />}
-                 customColorButton={Colors(siteProps).dangerColorDark}
-                 customColorIcon={Colors(siteProps).dangerColor}
-                 onClick={() =>
-                   handleClickDeleteImage(item.originalPath, item.isNew)
-                 }
-               />
-             </MarginButton>
-           </BackgroundDeleteConfirm>
-         </BackgroundEdit>
-       </CSSTransition>
-     </BackGroundImageCustomUrl>
-   )
- }
+        {item.isNew ? (
+          <>
+            <IconUpload
+              data-tip
+              data-for="saveImage"
+              onClick={() =>
+                handleUploadImage(item.original, item.originalPath)
+              }
+            >
+              <MdFileUpload />
+            </IconUpload>
+            <NewName>Zapisz zdjęcie</NewName>
+          </>
+        ) : (
+          <IconMain
+            active={isMainImage}
+            data-tip
+            data-for="mainImage"
+            onClick={() => handleClickMainImage(item.originalPath)}
+          >
+            <MdWallpaper />
+          </IconMain>
+        )}
+      </BackgroundToDelete>
+      <CSSTransition
+        in={confirmDelete}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <BackgroundEdit>
+          <BackgroundDeleteConfirm>
+            <MarginButton>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaArrowLeft />}
+                onClick={handleConfirmDelete}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+              />
+            </MarginButton>
+            <MarginButton>
+              <ButtonIcon
+                title="Usuń"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdDelete />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={() =>
+                  handleClickDeleteImage(item.originalPath, item.isNew)
+                }
+              />
+            </MarginButton>
+          </BackgroundDeleteConfirm>
+        </BackgroundEdit>
+      </CSSTransition>
+    </BackGroundImageCustomUrl>
+  )
+}
 export default GalleryContentItem

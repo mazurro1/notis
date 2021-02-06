@@ -1529,24 +1529,17 @@ const reducer = (state = initialState, action) => {
       const itemReserwation = !!action.value
         ? action.value
         : state.reserwationData
-      // if (!!action.value) {
+
+      let userHasPhone = state.user
+      if (!!!action.value) {
+        userHasPhone.hasPhone = true
+      }
       return {
         ...state,
         reserwationData: itemReserwation,
         reserwationEnable: reserwationEnable,
+        user: userHasPhone,
       }
-    // } else {
-    //   setTimeout(() => {
-    //     return {
-    //       ...state,
-    //       reserwationData: itemReserwation,
-    //     }
-    //   }, 1)
-    //   return {
-    //     ...state,
-    //     reserwationEnable: reserwationEnable,
-    //   }
-    // }
 
     case REPLACE_COMPANY_DATA:
       return {

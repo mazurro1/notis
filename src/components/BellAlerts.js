@@ -1,9 +1,7 @@
-import React, {useState, useEffect, useRef} from 'react'
-import {
-  FaBell,
-} from "react-icons/fa"
-import styled from 'styled-components'
-import {Colors} from '../common/Colors'
+import React, { useState, useEffect, useRef } from "react"
+import { FaBell } from "react-icons/fa"
+import styled from "styled-components"
+import { Colors } from "../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import BellAlertsItem from "./BellAlertsItem"
 import { useDispatch, useSelector } from "react-redux"
@@ -14,7 +12,7 @@ import {
   resetBellAlerts,
 } from "../state/actions"
 import sal from "sal.js"
-import {useOutsideAlerter} from '../common/Functions'
+import { useOutsideAlerter } from "../common/Functions"
 
 const BellAlertsStyle = styled.div`
   position: relative;
@@ -117,72 +115,70 @@ const AlertItemStyle = styled.div`
 
   span {
     color: ${props =>
-        props.alertColor === "blue"
-          ? Colors(props.siteProps).primaryColorDark
-          : props.alertColor === "red"
-          ? Colors(props.siteProps).dangerColorDark
-          : props.alertColor === "green"
-          ? Colors(props.siteProps).successColorDark
-          : props.alertColor === "orange"
-          ? Colors(props.siteProps).secondDarkColor
-          : Colors(props.siteProps).darkColorDark
-        };
+      props.alertColor === "blue"
+        ? Colors(props.siteProps).primaryColorDark
+        : props.alertColor === "red"
+        ? Colors(props.siteProps).dangerColorDark
+        : props.alertColor === "green"
+        ? Colors(props.siteProps).successColorDark
+        : props.alertColor === "orange"
+        ? Colors(props.siteProps).secondDarkColor
+        : Colors(props.siteProps).darkColorDark};
     font-weight: 700;
   }
 `
 
- const BellAlerts = ({ siteProps, user }) => {
-   const [allAlerts, setAllAlerts] = useState([])
-   const [alertVisible, setAlertVisible] = useState(false)
-   const [scrollPosition, setScrollPosition] = useState(0)
-   const [pageUpdate, setPageUpdate] = useState(1)
-   const refBell = useRef(null)
-   const bellAlertsActive = useSelector(state => state.bellAlertsActive)
-   
+const BellAlerts = ({ siteProps, user }) => {
+  const [allAlerts, setAllAlerts] = useState([])
+  const [alertVisible, setAlertVisible] = useState(false)
+  const [scrollPosition, setScrollPosition] = useState(0)
+  const [pageUpdate, setPageUpdate] = useState(1)
+  const refBell = useRef(null)
+  const bellAlertsActive = useSelector(state => state.bellAlertsActive)
+
   useOutsideAlerter(refBell)
-   const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-     const refAllAllerts= useRef(null)
-     useEffect(() => {
-       if (!!refAllAllerts) {
-         if (!!refAllAllerts.current) {
-           const indexLastChildren = refAllAllerts.current.childNodes.length
-           if ( indexLastChildren > 0) {
-             const isLastPlaceVisible =
-               refAllAllerts.current.childNodes[indexLastChildren - 1]
-                 .className === "sal-animate"
-             if (isLastPlaceVisible) {
-               refAllAllerts.current.childNodes[
-                 indexLastChildren - 1
-               ].className = "sal-animate active-update"
-                setPageUpdate(prevState => prevState + 1)
-                dispatch(fetchGetMoreAlerts(user.token, pageUpdate))
-             }
-           }
-         }
-       }
-     }, [refAllAllerts, user.alerts, scrollPosition])
+  const refAllAllerts = useRef(null)
+  useEffect(() => {
+    if (!!refAllAllerts) {
+      if (!!refAllAllerts.current) {
+        const indexLastChildren = refAllAllerts.current.childNodes.length
+        if (indexLastChildren > 0) {
+          const isLastPlaceVisible =
+            refAllAllerts.current.childNodes[indexLastChildren - 1]
+              .className === "sal-animate"
+          if (isLastPlaceVisible) {
+            refAllAllerts.current.childNodes[indexLastChildren - 1].className =
+              "sal-animate active-update"
+            setPageUpdate(prevState => prevState + 1)
+            dispatch(fetchGetMoreAlerts(user.token, pageUpdate))
+          }
+        }
+      }
+    }
+  }, [refAllAllerts, user.alerts, scrollPosition])
 
-     useEffect(() => {
-       sal({
-         threshold: 0.01,
-         once: true,
-       })
-     }, [user, bellAlertsActive])
+  useEffect(() => {
+    sal({
+      threshold: 0.01,
+      once: true,
+    })
+  }, [user, bellAlertsActive])
 
   useEffect(() => {
     if (!!user.alerts) {
       setAllAlerts(user.alerts)
     }
   }, [user])
-  
+
   const handleScrollContainer = () => {
     setScrollPosition(prevState => prevState + 1)
   }
 
-   const handleClickAlertVisible = () => {
+  const handleClickAlertVisible = () => {
     // setAlertVisible(prevState => !prevState)
-    
+
     dispatch(resetBellAlerts(!bellAlertsActive))
     const isSomeActive = allAlerts.some(item => item.active)
     if (bellAlertsActive === false && isSomeActive) {
@@ -192,71 +188,71 @@ const AlertItemStyle = styled.div`
     } else if (bellAlertsActive === false) {
       dispatch(resetUserAlerts())
     }
-      if (bellAlertsActive === true) {
-        const mapAllerts = allAlerts.map(item => {
-          item.active = false
-          return item
-        })
-        setAllAlerts(mapAllerts)
-      }
-   }
+    if (bellAlertsActive === true) {
+      const mapAllerts = allAlerts.map(item => {
+        item.active = false
+        return item
+      })
+      setAllAlerts(mapAllerts)
+    }
+  }
 
-   const mapAlerts = allAlerts.map((alert, index) => {
-     if(!!alert.reserwationId){
-       return (
-         <BellAlertsItem
-           key={index}
-           alert={alert}
-           siteProps={siteProps}
-           AlertItemStyle={AlertItemStyle}
-           user={user}
-         />
-       )
-     }
-   })
-   
-   return (
-     <PositionRelative>
-       <BellAlertsStyle
-         siteProps={siteProps}
-         onClick={handleClickAlertVisible}
-         ref={refBell}
-       >
-         <IconStyle className="bell-action">
-           <FaBell />
-         </IconStyle>
-       </BellAlertsStyle>
-       <CSSTransition
-         in={user.alertActiveCount > 0}
-         timeout={400}
-         classNames="popup"
-         unmountOnExit
-       >
-         <CountAlerts siteProps={siteProps} onClick={handleClickAlertVisible}>
-           {user.alertActiveCount}
-         </CountAlerts>
-       </CSSTransition>
-       <CSSTransition
-         in={bellAlertsActive}
-         timeout={400}
-         classNames="popup"
-         unmountOnExit
-       >
-         <AllAlerts siteProps={siteProps}>
-           <ContentAllAlerts
-             siteProps={siteProps}
-             onScroll={handleScrollContainer}
-           >
-             {mapAlerts.length > 0 ? (
-               <div ref={refAllAllerts}>{mapAlerts}</div>
-             ) : (
-               <AlertItemStyle noTime>Brak alertów</AlertItemStyle>
-             )}
-           </ContentAllAlerts>
-         </AllAlerts>
-       </CSSTransition>
-     </PositionRelative>
-   )
- }
+  const mapAlerts = allAlerts.map((alert, index) => {
+    if (!!alert.reserwationId) {
+      return (
+        <BellAlertsItem
+          key={index}
+          alert={alert}
+          siteProps={siteProps}
+          AlertItemStyle={AlertItemStyle}
+          user={user}
+        />
+      )
+    }
+  })
+
+  return (
+    <PositionRelative>
+      <BellAlertsStyle
+        siteProps={siteProps}
+        onClick={handleClickAlertVisible}
+        ref={refBell}
+      >
+        <IconStyle className="bell-action">
+          <FaBell />
+        </IconStyle>
+      </BellAlertsStyle>
+      <CSSTransition
+        in={user.alertActiveCount > 0}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <CountAlerts siteProps={siteProps} onClick={handleClickAlertVisible}>
+          {user.alertActiveCount}
+        </CountAlerts>
+      </CSSTransition>
+      <CSSTransition
+        in={bellAlertsActive}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <AllAlerts siteProps={siteProps}>
+          <ContentAllAlerts
+            siteProps={siteProps}
+            onScroll={handleScrollContainer}
+          >
+            {mapAlerts.length > 0 ? (
+              <div ref={refAllAllerts}>{mapAlerts}</div>
+            ) : (
+              <AlertItemStyle noTime>Brak alertów</AlertItemStyle>
+            )}
+          </ContentAllAlerts>
+        </AllAlerts>
+      </CSSTransition>
+    </PositionRelative>
+  )
+}
 
 export default BellAlerts

@@ -20,8 +20,7 @@ import {
   resetWorkersPropsVisible,
 } from "../../state/actions"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
-import {Site} from '../../common/Site'
-
+import { Site } from "../../common/Site"
 
 const HolidayDays = styled.div`
   position: absolute;
@@ -98,8 +97,6 @@ const InputStyles = styled.div`
     padding: 5px 10px;
   }
 `
-
-
 
 const OwnerWorker = ({
   ButtonDeleteStyle,
@@ -195,7 +192,7 @@ const OwnerWorker = ({
     setChooseTimeOwner(false)
   }, [editedWorkers, editMode])
 
-  const handleChooseTimeOwner = (e) => {
+  const handleChooseTimeOwner = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     setChooseTimeOwner(prevState => !prevState)
@@ -210,7 +207,7 @@ const OwnerWorker = ({
     dispatch(changeEditWorkerHours(true, itemsToSent))
   }
 
-  const handleClickOwnerEdit = (e) => {
+  const handleClickOwnerEdit = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     setOwnerEdit(prevState => !prevState)

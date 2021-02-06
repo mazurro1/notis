@@ -11,7 +11,7 @@ import {
 import { Colors } from "../common/Colors"
 import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
-import InputIcon from './InputIcon'
+import InputIcon from "./InputIcon"
 import { useDispatch } from "react-redux"
 import { fetchAddOpinion, fetchUpdateEditedOpinion } from "../state/actions"
 
@@ -155,7 +155,9 @@ const PriceService = styled.span`
   background-color: ${props =>
     props.otherColor
       ? Colors(props.siteProps).darkColor
-      : props.active ? Colors(props.siteProps).disabled : Colors(props.siteProps).primaryColorDark};
+      : props.active
+      ? Colors(props.siteProps).disabled
+      : Colors(props.siteProps).primaryColorDark};
 
   color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: color, background-color;
@@ -226,7 +228,7 @@ const StarsPositions = styled.div`
   align-items: center;
   flex-wrap: wrap;
 
-  span{
+  span {
     margin-right: 10px;
   }
 `
@@ -299,7 +301,6 @@ const NoEditedMessage = styled.div`
   }
 `
 
-
 const UserHistoryCategoryItem = ({
   siteProps,
   item,
@@ -315,17 +316,18 @@ const UserHistoryCategoryItem = ({
   const [editedOpinionText, setEditedOpinionText] = useState("")
   const [editedOpinion, setEditedOpinion] = useState(false)
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setConfirmDelete(false)
     setAddOpinion(false)
     setOpinionText("")
     setEditedOpinion(false)
-    let numberStars = 5;
+    let numberStars = 5
     let resetEditedOpinionText = ""
-    if(!!item.opinionId){
-      numberStars = item.opinionId.opinionStars;
-      resetEditedOpinionText = !!item.opinionId.opinionMessage ? item.opinionId.opinionMessage : ""
+    if (!!item.opinionId) {
+      numberStars = item.opinionId.opinionStars
+      resetEditedOpinionText = !!item.opinionId.opinionMessage
+        ? item.opinionId.opinionMessage
+        : ""
     }
     setEditedOpinionText(resetEditedOpinionText)
     setOpinionStars(numberStars)
@@ -352,9 +354,11 @@ const UserHistoryCategoryItem = ({
     setEditedOpinion(false)
     let numberStars = 5
     let resetEditedOpinionText = ""
-    if(!!item.opinionId){
-      numberStars = item.opinionId.opinionStars;
-      resetEditedOpinionText = !!item.opinionId.opinionMessage ? item.opinionId.opinionMessage : ""
+    if (!!item.opinionId) {
+      numberStars = item.opinionId.opinionStars
+      resetEditedOpinionText = !!item.opinionId.opinionMessage
+        ? item.opinionId.opinionMessage
+        : ""
     }
     setEditedOpinionText(resetEditedOpinionText)
     setOpinionStars(numberStars)
@@ -368,7 +372,7 @@ const UserHistoryCategoryItem = ({
     setEditedOpinion(prevState => !prevState)
   }
 
-  const handleChangeTextEditedOpinion = (e) => {
+  const handleChangeTextEditedOpinion = e => {
     setEditedOpinionText(e.target.value)
   }
 
@@ -393,11 +397,9 @@ const UserHistoryCategoryItem = ({
       company: item.company._id,
       reserwationId: item._id,
     }
-    dispatch(
-      fetchUpdateEditedOpinion(userToken, opinionData, company)
-    )
+    dispatch(fetchUpdateEditedOpinion(userToken, opinionData, company))
   }
-  
+
   let timeService = ""
   if (Number(item.time) <= 60) {
     timeService = `${item.timeReserwation}min`
@@ -451,7 +453,10 @@ const UserHistoryCategoryItem = ({
       </StarItem>
     )
   })
-  
+
+  const historyItemHasActiveSomePromotion =
+    !!item.activePromotion || item.activeHappyHour || item.activeStamp
+
   return (
     <ServiceItem
       key={index}
@@ -465,15 +470,18 @@ const UserHistoryCategoryItem = ({
     >
       <TitleService>
         {item.serviceName}
-        <PriceService siteProps={siteProps} active={!!item.activePromotion}>
+        <PriceService
+          siteProps={siteProps}
+          active={historyItemHasActiveSomePromotion}
+        >
           {`${!!item.basicPrice ? item.basicPrice : item.costReserwation}zł ${
             item.extraCost ? "+" : ""
           }`}
-          <CrossPricePosition active={!!item.activePromotion}>
+          <CrossPricePosition active={historyItemHasActiveSomePromotion}>
             <CrossPrice />
           </CrossPricePosition>
         </PriceService>
-        {!!item.activePromotion && (
+        {historyItemHasActiveSomePromotion && (
           <PriceService siteProps={siteProps}>
             {`${item.costReserwation}zł ${item.extraCost ? "+" : ""}`}
           </PriceService>
@@ -498,6 +506,20 @@ const UserHistoryCategoryItem = ({
       {!!item.reserwationMessage && (
         <div>
           Wiadomość: <b>{item.reserwationMessage}</b>
+        </div>
+      )}
+      {!!historyItemHasActiveSomePromotion && (
+        <div>
+          Promocja:{" "}
+          <b>
+            {!!item.activePromotion
+              ? "Promocja"
+              : !!item.activeHappyHour
+              ? "Happy hour"
+              : !!item.activeStamp
+              ? "Komplet pieczątek"
+              : ""}
+          </b>
         </div>
       )}
       <div>

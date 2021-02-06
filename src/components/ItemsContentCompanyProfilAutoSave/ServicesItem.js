@@ -16,7 +16,7 @@ import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import SelectCustom from "../SelectCustom"
-import {ServiceColors} from '../../common/ServiceColors'
+import { ServiceColors } from "../../common/ServiceColors"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -245,15 +245,15 @@ const ServicesItem = ({
       } ${numberOfMinutes}min`
     }
   }
-  let selectedServiceItem = false;
-  if(!!activeWorkerUserId){
-    if(!!activeWorkerUserId.services){
+  let selectedServiceItem = false
+  if (!!activeWorkerUserId) {
+    if (!!activeWorkerUserId.services) {
       selectedServiceItem = activeWorkerUserId.services.some(
         serviceWorker => serviceWorker === itemServices._id
       )
     }
   }
-  
+
   return (
     <ServiceItem
       index={index === 0}

@@ -16,9 +16,9 @@ import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
 import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
-import SelectCustom from '../SelectCustom'
-import {AllIndustries} from '../../common/AllIndustries'
-import {fetchSaveCompanySettings} from '../../state/actions'
+import SelectCustom from "../SelectCustom"
+import { AllIndustries } from "../../common/AllIndustries"
+import { fetchSaveCompanySettings } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
@@ -562,7 +562,9 @@ const OpinionAndAdressContent = ({
           <OpinionRight>
             <OpinionUp siteProps={siteProps}>
               <OpininPadding>
-                {opinionsValue > 0 && opinionsCount > 0 ? Math.round((opinionsValue / opinionsCount) * 10) / 10 : 0}
+                {opinionsValue > 0 && opinionsCount > 0
+                  ? Math.round((opinionsValue / opinionsCount) * 10) / 10
+                  : 0}
               </OpininPadding>
               <OpinionDown siteProps={siteProps}>
                 Opinie: {opinionsCount}

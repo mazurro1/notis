@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react'
-import {Colors} from '../../common/Colors'
-import styled from 'styled-components'
+import React, { useEffect, useState } from "react"
+import { Colors } from "../../common/Colors"
+import styled from "styled-components"
 import OpinionsComponentItem from "./OpinionsComponentItem"
 import { MdStar, MdStarHalf, MdComment } from "react-icons/md"
 import sal from "sal.js"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import { useDispatch } from "react-redux"
 import { fetchLoadMoreOpinions } from "../../state/actions"
 
@@ -67,7 +67,7 @@ const CountOpinionContent = styled.div`
   text-align: center;
   font-size: 1.8rem;
 
-  span{
+  span {
     font-size: 1rem;
   }
 `
@@ -89,104 +89,104 @@ const ButtonMoreOpinion = styled.div`
   align-items: center;
 `
 
- const OpinionsComponent = ({
-   companyOpinions = [],
-   siteProps,
-   opinionsCount = 0,
-   opinionsValue = 0,
-   companyName = "",
-   companyId = null,
-   isAdmin,
-   isCompanyEditProfil,
-   user
- }) => {
-   const [pageOpinions, setPAgeOpinions] = useState(1)
-   const dispatch = useDispatch()
+const OpinionsComponent = ({
+  companyOpinions = [],
+  siteProps,
+  opinionsCount = 0,
+  opinionsValue = 0,
+  companyName = "",
+  companyId = null,
+  isAdmin,
+  isCompanyEditProfil,
+  user,
+}) => {
+  const [pageOpinions, setPAgeOpinions] = useState(1)
+  const dispatch = useDispatch()
 
-   useEffect(() => {
-     sal({
-       threshold: 0.1,
-       once: true,
-     })
-   }, [companyOpinions])
+  useEffect(() => {
+    sal({
+      threshold: 0.1,
+      once: true,
+    })
+  }, [companyOpinions])
 
-   const handleLoadMoreOpinions = () => {
-     dispatch(fetchLoadMoreOpinions(pageOpinions, companyId))
-     setPAgeOpinions(prevState => prevState + 1)
-   }
+  const handleLoadMoreOpinions = () => {
+    dispatch(fetchLoadMoreOpinions(pageOpinions, companyId))
+    setPAgeOpinions(prevState => prevState + 1)
+  }
 
-   const mapOpinions = companyOpinions.map((item, index) => {
-     return (
-       <OpinionsComponentItem
-         opinion={item}
-         siteProps={siteProps}
-         key={index}
-         StarsContent={StarsContent}
-         companyName={companyName}
-         index={index}
-         isAdmin={isAdmin}
-         isCompanyEditProfil={isCompanyEditProfil}
-         ButtonMoreOpinion={ButtonMoreOpinion}
-         user={user}
-         companyId={companyId}
-       />
-     )
-   })
+  const mapOpinions = companyOpinions.map((item, index) => {
+    return (
+      <OpinionsComponentItem
+        opinion={item}
+        siteProps={siteProps}
+        key={index}
+        StarsContent={StarsContent}
+        companyName={companyName}
+        index={index}
+        isAdmin={isAdmin}
+        isCompanyEditProfil={isCompanyEditProfil}
+        ButtonMoreOpinion={ButtonMoreOpinion}
+        user={user}
+        companyId={companyId}
+      />
+    )
+  })
 
-   const opinionSummary =
-     opinionsValue > 0 && opinionsCount > 0
-       ? Math.round((opinionsValue / opinionsCount) * 10) / 10
-       : 0
+  const opinionSummary =
+    opinionsValue > 0 && opinionsCount > 0
+      ? Math.round((opinionsValue / opinionsCount) * 10) / 10
+      : 0
 
-   const renderStars = [...Array(5)].map((_, index) => {
-     const starActive = opinionSummary >= index + 1
-     const halfStar =
-       opinionSummary >= index + 0.5 && opinionSummary >= index + 0.01
-     return (
-       <StarItem
-         key={index}
-         active={starActive || halfStar}
-         siteProps={siteProps}
-       >
-         {starActive ? <MdStar /> : halfStar ? <MdStarHalf /> : <MdStar />}
-       </StarItem>
-     )
-   })
+  const renderStars = [...Array(5)].map((_, index) => {
+    const starActive = opinionSummary >= index + 1
+    const halfStar =
+      opinionSummary >= index + 0.5 && opinionSummary >= index + 0.01
+    return (
+      <StarItem
+        key={index}
+        active={starActive || halfStar}
+        siteProps={siteProps}
+      >
+        {starActive ? <MdStar /> : halfStar ? <MdStarHalf /> : <MdStar />}
+      </StarItem>
+    )
+  })
 
-   return (
-     companyOpinions.length > 0 && (
-       <OpinionsComponentStyle siteProps={siteProps}>
-         <div>
-           <TitleRightColumnOpinion siteProps={siteProps}>
-             Opinie
-           </TitleRightColumnOpinion>
-         </div>
-         <OpinionsSummary>
-           <CountOpinionContent>
-             {opinionSummary}
-             <span>/5</span>
-           </CountOpinionContent>
-           <StarsContent>{renderStars}</StarsContent>
-           <AllOpinionsSummary siteProps={siteProps}>
-             Opinie: {opinionsCount}
-           </AllOpinionsSummary>
-         </OpinionsSummary>
-         {mapOpinions}
-         {!(opinionsCount <= companyOpinions.length) && (
-           <ButtonMoreOpinion>
-             <ButtonIcon
-               title="Pokaż więcej opinii"
-               uppercase
-               fontIconSize="20"
-               fontSize="16"
-               icon={<MdComment />}
-               onClick={handleLoadMoreOpinions}
-             />
-           </ButtonMoreOpinion>
-         )}
-       </OpinionsComponentStyle>
-     )
-   )
- }
+  return (
+    companyOpinions.length > 0 && (
+      <OpinionsComponentStyle siteProps={siteProps}>
+        <div>
+          <TitleRightColumnOpinion siteProps={siteProps}>
+            Opinie
+          </TitleRightColumnOpinion>
+        </div>
+        <OpinionsSummary>
+          <CountOpinionContent>
+            {opinionSummary}
+            <span>/5</span>
+          </CountOpinionContent>
+          <StarsContent>{renderStars}</StarsContent>
+          <AllOpinionsSummary siteProps={siteProps}>
+            Opinie: {opinionsCount}
+          </AllOpinionsSummary>
+        </OpinionsSummary>
+        {mapOpinions}
+        {!(opinionsCount <= companyOpinions.length) && (
+          <ButtonMoreOpinion>
+            <ButtonIcon
+              title="Pokaż więcej opinii"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<MdComment />}
+              onClick={handleLoadMoreOpinions}
+            />
+          </ButtonMoreOpinion>
+        )}
+      </OpinionsComponentStyle>
+    )
+  )
+}
 
 export default OpinionsComponent

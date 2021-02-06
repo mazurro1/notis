@@ -6,7 +6,7 @@ import { MdEdit } from "react-icons/md"
 import OpeningHoursItem from "./OpeningHoursItem"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { Colors } from "../../common/Colors"
-import {fetchSaveOpeningHoursCompany} from '../../state/actions'
+import { fetchSaveOpeningHoursCompany } from "../../state/actions"
 import { useDispatch } from "react-redux"
 
 const MarginButton = styled.div`

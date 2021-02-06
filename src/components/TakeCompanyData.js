@@ -10,7 +10,7 @@ const TakeCompanyData = ({ pathCompany = null }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-      dispatch(fetchPathCompany(pathCompany))
+    dispatch(fetchPathCompany(pathCompany))
   }, [pathCompany])
 
   let renderContent = null

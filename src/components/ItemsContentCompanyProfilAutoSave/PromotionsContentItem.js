@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react'
-import styled from 'styled-components'
-import {Colors} from '../../common/Colors'
+import React, { useState, useEffect } from "react"
+import styled from "styled-components"
+import { Colors } from "../../common/Colors"
 import { MdEdit, MdDelete, MdExpandMore } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import { Collapse } from "react-collapse"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import { CSSTransition } from "react-transition-group"
 import {
   fetchDeletePromotion,
@@ -186,179 +186,181 @@ const MarginButton = styled.div`
   margin: 5px;
 `
 
- const PromotionsContentItem = ({
-   item,
-   companyServices,
-   siteProps,
-   editPromotions,
-   setEditPromotions,
-   editMode,
-   user,
-   promotions,
-   TitleRightColumn,
- }) => {
-   const [collapseActive, setCollapseActive] = useState(false)
-   const [deleteItemEnable, setDeleteItemEnable] = useState(false)
-   const [editItemEnable, setEditItemEnable] = useState(false)
-   const [enableDatePickerStart, setEnableDatePickerStart] = useState(false)
-   const [enableDatePickerEnd, setEnableDatePickerEnd] = useState(false)
-   const updatePromotions = useSelector(state => state.updatePromotions)
+const PromotionsContentItem = ({
+  item,
+  companyServices,
+  siteProps,
+  editPromotions,
+  setEditPromotions,
+  editMode,
+  user,
+  promotions,
+  TitleRightColumn,
+}) => {
+  const [collapseActive, setCollapseActive] = useState(false)
+  const [deleteItemEnable, setDeleteItemEnable] = useState(false)
+  const [editItemEnable, setEditItemEnable] = useState(false)
+  const [enableDatePickerStart, setEnableDatePickerStart] = useState(false)
+  const [enableDatePickerEnd, setEnableDatePickerEnd] = useState(false)
+  const updatePromotions = useSelector(state => state.updatePromotions)
 
-   const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-   useEffect(() => {
-     setDeleteItemEnable(false)
-     setCollapseActive(false)
-   }, [promotions])
+  useEffect(() => {
+    setDeleteItemEnable(false)
+    setCollapseActive(false)
+  }, [promotions])
 
-   useEffect(() => {
-     setDeleteItemEnable(false)
-     setCollapseActive(false)
-     setEditItemEnable(false)
-     setEnableDatePickerStart(false)
-     setEnableDatePickerEnd(false)
-     dispatch(updatePromotionsDispatch())
-   }, [updatePromotions])
+  useEffect(() => {
+    setDeleteItemEnable(false)
+    setCollapseActive(false)
+    setEditItemEnable(false)
+    setEnableDatePickerStart(false)
+    setEnableDatePickerEnd(false)
+    dispatch(updatePromotionsDispatch())
+  }, [updatePromotions])
 
-   const handleClickCollapse = () => {
-     setCollapseActive(prevState => !prevState)
-   }
+  const handleClickCollapse = () => {
+    setCollapseActive(prevState => !prevState)
+  }
 
-   const handleDeleteItemEnable = () => {
-     setDeleteItemEnable(prevState => !prevState)
-   }
+  const handleDeleteItemEnable = () => {
+    setDeleteItemEnable(prevState => !prevState)
+  }
 
-   const handleEditItemEnable = () => {
-     setEditItemEnable(prevState => !prevState)
-   }
+  const handleEditItemEnable = () => {
+    setEditItemEnable(prevState => !prevState)
+  }
 
-   const handleDeleteItem = () => {
-     dispatch(fetchDeletePromotion(user.token, user.company._id, item._id))
-   }
-   
-   const dateItemPromotion = new Date(new Date(new Date(item.end).setHours(23)).setMinutes(59));
-   const isOld = dateItemPromotion < new Date()
+  const handleDeleteItem = () => {
+    dispatch(fetchDeletePromotion(user.token, user.company._id, item._id))
+  }
 
-   const validActive = isOld ? !isOld : !item.disabled
+  const dateItemPromotion = new Date(
+    new Date(new Date(item.end).setHours(23)).setMinutes(59)
+  )
+  const isOld = dateItemPromotion < new Date()
 
-   const mapServicesInPromotion = item.servicesInPromotion.map(
-     (service, indexService) => {
-       const findService = companyServices.find(
-         companyService => companyService._id === service
-       )
-       if (!!findService) {
-         return (
-           <ServiceInPromotion
-             siteProps={siteProps}
-             key={indexService}
-             active={validActive}
-           >
-             {findService.serviceName}
-           </ServiceInPromotion>
-         )
-       }
-     }
-   )
+  const validActive = isOld ? !isOld : !item.disabled
 
-   return (
-     <ItemPromotion
-       siteProps={siteProps}
-       active={editItemEnable || enableDatePickerStart || enableDatePickerEnd}
-     >
-       <TitleItem
-         siteProps={siteProps}
-         active={collapseActive}
-         onClick={handleClickCollapse}
-         edited={editPromotions}
-         disabled={validActive}
-       >
-         {`${item.start} - ${item.end}`}
-         <ArrowPosition>
-           <MdExpandMore />
-         </ArrowPosition>
-       </TitleItem>
-       <Collapse isOpened={collapseActive}>
-         <PaddingContent>
-           <ContentText siteProps={siteProps} active={validActive}>
-             Promocja: <span>{item.promotionPercent}%</span>
-           </ContentText>
-           <ContentTextDisabled siteProps={siteProps} active={validActive}>
-             {!validActive ? (
-               <span>Promocja zakończona</span>
-             ) : (
-               <span>Promocja aktywna</span>
-             )}
-           </ContentTextDisabled>
-           {mapServicesInPromotion}
-           {editPromotions && editMode && (
-             <EditModeAndDeleteIcons>
-               <IconDelete
-                 siteProps={siteProps}
-                 onClick={handleDeleteItemEnable}
-               >
-                 <MdDelete />
-               </IconDelete>
-               <IconEdit siteProps={siteProps} onClick={handleEditItemEnable}>
-                 <MdEdit />
-               </IconEdit>
-             </EditModeAndDeleteIcons>
-           )}
-         </PaddingContent>
-       </Collapse>
-       <CSSTransition
-         in={deleteItemEnable}
-         timeout={400}
-         classNames="popup"
-         unmountOnExit
-       >
-         <BackgroundEdit>
-           <BackgroundDeleteConfirm>
-             <MarginButton>
-               <ButtonIcon
-                 title="Anuluj"
-                 uppercase
-                 fontIconSize="20"
-                 fontSize="16"
-                 icon={<FaArrowLeft />}
-                 onClick={handleDeleteItemEnable}
-                 customColorButton={Colors(siteProps).successColorDark}
-                 customColorIcon={Colors(siteProps).successColor}
-               />
-             </MarginButton>
-             <MarginButton>
-               <ButtonIcon
-                 title="Usuń"
-                 uppercase
-                 fontIconSize="20"
-                 fontSize="16"
-                 icon={<MdDelete />}
-                 customColorButton={Colors(siteProps).dangerColorDark}
-                 customColorIcon={Colors(siteProps).dangerColor}
-                 onClick={handleDeleteItem}
-               />
-             </MarginButton>
-           </BackgroundDeleteConfirm>
-         </BackgroundEdit>
-       </CSSTransition>
-       <PromotionsContentItemEdit
-         TitleRightColumn={TitleRightColumn}
-         newPromotion={editItemEnable}
-         siteProps={siteProps}
-         editPromotions={editPromotions}
-         setEditPromotions={setEditPromotions}
-         setNewPromotion={setEditItemEnable}
-         companyServices={companyServices}
-         enableDatePickerStart={enableDatePickerStart}
-         setEnableDatePickerStart={setEnableDatePickerStart}
-         enableDatePickerEnd={enableDatePickerEnd}
-         setEnableDatePickerEnd={setEnableDatePickerEnd}
-         user={user}
-         promotions={promotions}
-         itemPromotion={item}
-         updatePromotions={updatePromotions}
-         isOld={isOld}
-       />
-     </ItemPromotion>
-   )
- }
+  const mapServicesInPromotion = item.servicesInPromotion.map(
+    (service, indexService) => {
+      const findService = companyServices.find(
+        companyService => companyService._id === service
+      )
+      if (!!findService) {
+        return (
+          <ServiceInPromotion
+            siteProps={siteProps}
+            key={indexService}
+            active={validActive}
+          >
+            {findService.serviceName}
+          </ServiceInPromotion>
+        )
+      }
+    }
+  )
+
+  return (
+    <ItemPromotion
+      siteProps={siteProps}
+      active={editItemEnable || enableDatePickerStart || enableDatePickerEnd}
+    >
+      <TitleItem
+        siteProps={siteProps}
+        active={collapseActive}
+        onClick={handleClickCollapse}
+        edited={editPromotions}
+        disabled={validActive}
+      >
+        {`${item.start} - ${item.end}`}
+        <ArrowPosition>
+          <MdExpandMore />
+        </ArrowPosition>
+      </TitleItem>
+      <Collapse isOpened={collapseActive}>
+        <PaddingContent>
+          <ContentText siteProps={siteProps} active={validActive}>
+            Promocja: <span>{item.promotionPercent}%</span>
+          </ContentText>
+          <ContentTextDisabled siteProps={siteProps} active={validActive}>
+            {!validActive ? (
+              <span>Promocja zakończona</span>
+            ) : (
+              <span>Promocja aktywna</span>
+            )}
+          </ContentTextDisabled>
+          {mapServicesInPromotion}
+          {editPromotions && editMode && (
+            <EditModeAndDeleteIcons>
+              <IconDelete
+                siteProps={siteProps}
+                onClick={handleDeleteItemEnable}
+              >
+                <MdDelete />
+              </IconDelete>
+              <IconEdit siteProps={siteProps} onClick={handleEditItemEnable}>
+                <MdEdit />
+              </IconEdit>
+            </EditModeAndDeleteIcons>
+          )}
+        </PaddingContent>
+      </Collapse>
+      <CSSTransition
+        in={deleteItemEnable}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <BackgroundEdit>
+          <BackgroundDeleteConfirm>
+            <MarginButton>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaArrowLeft />}
+                onClick={handleDeleteItemEnable}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+              />
+            </MarginButton>
+            <MarginButton>
+              <ButtonIcon
+                title="Usuń"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdDelete />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleDeleteItem}
+              />
+            </MarginButton>
+          </BackgroundDeleteConfirm>
+        </BackgroundEdit>
+      </CSSTransition>
+      <PromotionsContentItemEdit
+        TitleRightColumn={TitleRightColumn}
+        newPromotion={editItemEnable}
+        siteProps={siteProps}
+        editPromotions={editPromotions}
+        setEditPromotions={setEditPromotions}
+        setNewPromotion={setEditItemEnable}
+        companyServices={companyServices}
+        enableDatePickerStart={enableDatePickerStart}
+        setEnableDatePickerStart={setEnableDatePickerStart}
+        enableDatePickerEnd={enableDatePickerEnd}
+        setEnableDatePickerEnd={setEnableDatePickerEnd}
+        user={user}
+        promotions={promotions}
+        itemPromotion={item}
+        updatePromotions={updatePromotions}
+        isOld={isOld}
+      />
+    </ItemPromotion>
+  )
+}
 export default PromotionsContentItem

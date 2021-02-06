@@ -100,7 +100,7 @@ const SelectDataCalendar = ({
   activeMonth = new Date(),
   maxDate = null,
   minDateActive = true,
-  minDateDefault = null
+  minDateDefault = null,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const data = !!minDateDefault ? new Date(minDateDefault) : new Date()

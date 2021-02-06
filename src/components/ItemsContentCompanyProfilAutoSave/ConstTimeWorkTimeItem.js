@@ -32,9 +32,7 @@ const EditUserBackgroundContentCosntHour = styled.div`
   position: relative;
   width: 90%;
   background-color: ${props =>
-    props.noBg
-      ? "transparent"
-      : Colors(props.siteProps).companyItemBackground};
+    props.noBg ? "transparent" : Colors(props.siteProps).companyItemBackground};
   z-index: 10;
   border-radius: 5px;
   padding: 5px;

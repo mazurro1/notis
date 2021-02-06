@@ -248,7 +248,6 @@ const ContentSelect = styled.div`
   margin-bottom: 10px;
 `
 
-
 const BigCalendarEmployeeWorkingHours = ({
   item,
   handleClose,
@@ -372,41 +371,45 @@ const BigCalendarEmployeeWorkingHours = ({
 
       const allDaysCalendar = []
 
-      for(let i = 1; i<= daysMonth; i++){
+      for (let i = 1; i <= daysMonth; i++) {
         const generateDayDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth(),
           i
         )
-        const generateFullDayDate = `${dateCalendar.getFullYear()}-${dateCalendar.getMonth()+1}-${i}`
+        const generateFullDayDate = `${dateCalendar.getFullYear()}-${
+          dateCalendar.getMonth() + 1
+        }-${i}`
         const generateDayWeek = generateDayDate.getDay()
         const selectedDayNoConst = item.noConstWorkingHours.find(noConstDay => {
           const noConstDayTimeStart = new Date(noConstDay.start).getDate()
           return i === noConstDayTimeStart
         })
-        let selectedDayOff = null;
-        let selectedConstWorkingHour = null;
-        if(!!!selectedDayNoConst){
+        let selectedDayOff = null
+        let selectedConstWorkingHour = null
+        if (!!!selectedDayNoConst) {
           selectedDayOff = item.daysOff.find(dayOff => {
             const dayOffDate = `${dayOff.year}-${dayOff.month}-${dayOff.day}`
             return generateFullDayDate === dayOffDate
           })
-          if(!!!selectedDayOff){
-            selectedConstWorkingHour = item.constWorkingHours.find(constHour => {
-              return constHour.dayOfTheWeek === generateDayWeek
-            })
+          if (!!!selectedDayOff) {
+            selectedConstWorkingHour = item.constWorkingHours.find(
+              constHour => {
+                return constHour.dayOfTheWeek === generateDayWeek
+              }
+            )
           }
         }
         let dayToRender = null
 
-        if(!!selectedDayNoConst){
+        if (!!selectedDayNoConst) {
           dayToRender = {
             end: new Date(selectedDayNoConst.end),
             start: new Date(selectedDayNoConst.start),
             holidays: selectedDayNoConst.holidays,
             fullDate: generateFullDayDate,
           }
-        } else if(!!selectedDayOff){
+        } else if (!!selectedDayOff) {
           const selectOpeningDays = arrayOpeningDays[generateDayWeek]
           if (!!selectOpeningDays) {
             if (!!!selectOpeningDays.disabled) {
@@ -434,7 +437,7 @@ const BigCalendarEmployeeWorkingHours = ({
               }
             }
           }
-        }else if(!!selectedConstWorkingHour){
+        } else if (!!selectedConstWorkingHour) {
           if (!selectedConstWorkingHour.disabled) {
             const splitDateStartConst = selectedConstWorkingHour.startWorking.split(
               ":"
@@ -463,7 +466,6 @@ const BigCalendarEmployeeWorkingHours = ({
               fullDate: generateFullDayDate,
             }
           }
-          
         }
         if (!!dayToRender) {
           allDaysCalendar.push(dayToRender)
@@ -606,7 +608,6 @@ const BigCalendarEmployeeWorkingHours = ({
     }
   }
 
-
   const handleChangeDate = value => {
     let newDate = new Date()
     if (value === "plus") {
@@ -653,7 +654,6 @@ const BigCalendarEmployeeWorkingHours = ({
       setDateCalendar(newDate)
     }
   }
-
 
   const handleCloseCalendar = () => {
     handleClose()

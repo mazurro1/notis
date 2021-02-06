@@ -15,6 +15,7 @@ import {
   FaCalendarAlt,
   FaBox,
   FaUsers,
+  FaStamp,
 } from "react-icons/fa"
 import {
   MdWork,
@@ -322,6 +323,39 @@ const PositionEn = styled.div`
   text-align: left;
   padding-left: 7px;
   color: ${props => Colors(props.siteProps).textNormalWhite};
+`
+
+const BellAlertsStyle = styled.div`
+  position: relative;
+  background-color: ${props => Colors(props.siteProps).darkColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    .bell-action {
+      animation-name: bellActionAnimate;
+      animation-duration: 1s;
+      animation-timing-function: inline;
+      animation-iteration-count: 1;
+    }
+  }
+`
+
+const IconStyle = styled.div`
+  position: absolute;
+  top: 6px;
+  user-select: none;
 `
 
 const Navigation = ({ children, isMainPage }) => {
@@ -1169,7 +1203,13 @@ const Navigation = ({ children, isMainPage }) => {
                   {renderCompanyOrCreateCompany}
                   {renderButtonsUp}
                 </ButtonsNav>
+                <BellAlertsStyle siteProps={siteProps}>
+                  <IconStyle className="bell-action">
+                    <FaStamp />
+                  </IconStyle>
+                </BellAlertsStyle>
                 {!!user && <BellAlerts siteProps={siteProps} user={user} />}
+
                 <BurgerButton onClick={handleMenuOpen}>
                   <FaBars />
                 </BurgerButton>

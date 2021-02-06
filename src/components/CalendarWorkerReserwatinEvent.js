@@ -18,8 +18,8 @@ import {
   getMonthAndReturnEng,
 } from "../common/Functions"
 import { Checkbox } from "react-input-checkbox"
-import Popup from './Popup'
-import TimePickerContent from './TimePicker'
+import Popup from "./Popup"
+import TimePickerContent from "./TimePicker"
 
 const EventItemPosition = styled.div`
   position: absolute;
@@ -194,7 +194,9 @@ const CalendarWorkerReserwatinEvent = ({
   handleChangeReserwationStatus,
   itemCompanyHours,
 }) => {
-  const [confirmCancelReserwation, setConfirmCancelReserwation] = useState(false)
+  const [confirmCancelReserwation, setConfirmCancelReserwation] = useState(
+    false
+  )
   const [openDateStart, setOpenDateStart] = useState(false)
   const [openDateEnd, setOpenDateEnd] = useState(false)
   const [newTimeStart, setNewTimeStart] = useState(null)
@@ -264,7 +266,7 @@ const CalendarWorkerReserwatinEvent = ({
   const handleConfirmCancelReserwation = () => {
     setConfirmCancelReserwation(prevState => !prevState)
   }
-  
+
   let statusReserwation = ""
   let timeReserwation = ""
   let costReserwation = "Brak ceny"
@@ -285,20 +287,34 @@ const CalendarWorkerReserwatinEvent = ({
   let diabledUpdateButtonEnd = true
   let client = ""
   let reserwationMessage = " Brak"
-  let isWorkerReserwation = false;
-  let activePromotion = false;
+  let isWorkerReserwation = false
+  let activePromotion = false
+  let promotionName = ""
 
   if (!!selectedEvent) {
-    if (!!selectedEvent.activePromotion) {
+    if (
+      !!selectedEvent.activePromotion ||
+      !!selectedEvent.activeHappyHour ||
+      !!selectedEvent.activeStamp
+    ) {
       activePromotion = true
+      promotionName = !!selectedEvent.activePromotion
+        ? "Promocja"
+        : !!selectedEvent.activeHappyHour
+        ? "Happy hour"
+        : !!selectedEvent.activeStamp
+        ? "Komplet pieczątek"
+        : ""
     }
 
-    if (!!selectedEvent.workerReserwation){
+    if (!!selectedEvent.workerReserwation) {
       isWorkerReserwation = selectedEvent.workerReserwation
     }
 
     if (Number(selectedEvent.timeReserwation) <= 60) {
-      timeReserwation = `${selectedEvent.timeReserwation}min ${selectedEvent.extraTime ? "+" : ""}`
+      timeReserwation = `${selectedEvent.timeReserwation}min ${
+        selectedEvent.extraTime ? "+" : ""
+      }`
     } else {
       const numberTime = Number(selectedEvent.timeReserwation)
       const numberOfHours = Math.floor(numberTime / 60)
@@ -316,7 +332,7 @@ const CalendarWorkerReserwatinEvent = ({
       }
     }
 
-    if (!!selectedEvent.fromUser){
+    if (!!selectedEvent.fromUser) {
       const userName = Buffer.from(
         selectedEvent.fromUser.name,
         "base64"
@@ -327,11 +343,11 @@ const CalendarWorkerReserwatinEvent = ({
       ).toString("ascii")
 
       client = `${userName} ${userSurname}`
-    }else{
+    } else {
       client = "Uzytkownik skasował konto"
     }
 
-    if(!!selectedEvent.reserwationMessage){
+    if (!!selectedEvent.reserwationMessage) {
       reserwationMessage = ` ${selectedEvent.reserwationMessage}`
     }
 
@@ -343,7 +359,9 @@ const CalendarWorkerReserwatinEvent = ({
       }zł ${selectedEvent.extraCost ? "+" : ""}`
     }
 
-    costPromotionReserwation = `${selectedEvent.costReserwation}zł ${selectedEvent.extraCost ? "+" : ""}`
+    costPromotionReserwation = `${selectedEvent.costReserwation}zł ${
+      selectedEvent.extraCost ? "+" : ""
+    }`
 
     serviceName = selectedEvent.serviceName
 
@@ -392,7 +410,9 @@ const CalendarWorkerReserwatinEvent = ({
 
     const isOldDate = new Date() > selectedEvent.end
 
-    diabledUpdateButtonStart = !!newTimeStart ? newTimeStart === dateStart : true
+    diabledUpdateButtonStart = !!newTimeStart
+      ? newTimeStart === dateStart
+      : true
     diabledUpdateButtonEnd = !!newTimeEnd ? newTimeEnd === dateEnd : true
 
     renderDateStart = isOldDate ? (
@@ -571,7 +591,7 @@ const CalendarWorkerReserwatinEvent = ({
       </IconWarning>
     </WarningStyle>
   )
-  
+
   return (
     <>
       <CSSTransition
@@ -622,10 +642,16 @@ const CalendarWorkerReserwatinEvent = ({
                     <span>{costReserwation}</span>
                   </ItemTitle>
                   {activePromotion && (
-                    <ItemTitle siteProps={siteProps}>
-                      Koszt usługi po promocji:
-                      <span>{costPromotionReserwation}</span>
-                    </ItemTitle>
+                    <>
+                      <ItemTitle siteProps={siteProps}>
+                        Koszt usługi po promocji:
+                        <span>{costPromotionReserwation}</span>
+                      </ItemTitle>
+                      <ItemTitle>
+                        Nazwa promocji:
+                        <span>{promotionName}</span>
+                      </ItemTitle>
+                    </>
                   )}
                 </>
               )}

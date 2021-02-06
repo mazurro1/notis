@@ -3,7 +3,7 @@ import { MdEdit, MdAddBox } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import HappyHoursConstContentNewItem from "./HappyHoursConstContentNewItem"
 import {
   getCategories,
@@ -12,8 +12,7 @@ import {
 } from "../../common/Functions"
 import HappyHoursConstContentCategory from "./HappyHoursConstContentCategory"
 import { useDispatch, useSelector } from "react-redux"
-import {updateConstHappyHoursFunction} from '../../state/actions'
-
+import { updateConstHappyHoursFunction } from "../../state/actions"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -55,7 +54,7 @@ const HappyHoursConstContent = ({
   const [enableTimeEnd, setEnableTimeEnd] = useState(false)
   const updateConstHappyHours = useSelector(
     state => state.updateConstHappyHours
-  )  
+  )
 
   const dispatch = useDispatch()
 
@@ -102,11 +101,9 @@ const HappyHoursConstContent = ({
       />
     )
   })
-  
+
   return (
-    <PositionRelative
-      active={newHappyHour || enableTimeStart || enableTimeEnd}
-    >
+    <PositionRelative active={newHappyHour || enableTimeStart || enableTimeEnd}>
       <TitleRightColumn
         isCompanyEditProfil={editConstHappyHours}
         siteProps={siteProps}

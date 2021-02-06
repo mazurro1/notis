@@ -4,11 +4,7 @@ import styled from "styled-components"
 import { MdEmail, MdLock } from "react-icons/md"
 import { FaFacebookF } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
-import {
-  fetchLoginUser,
-  changeRemindPasswordVisible,
-  fetchLoginFacebook,
-} from "../state/actions"
+import { fetchLoginUser, changeRemindPasswordVisible } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ButtonIcon from "../components/ButtonIcon"
 import { FaUser, FaQuestion } from "react-icons/fa"
@@ -92,10 +88,6 @@ const LoginContent = () => {
     dispatch(changeRemindPasswordVisible(!remindPasswordVisible))
   }
 
-  const handleLoginFacebook = () => {
-    dispatch(fetchLoginFacebook())
-  }
-
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -160,7 +152,6 @@ const LoginContent = () => {
               fontSize="16"
               icon={<FaFacebookF />}
               disabled={validButtonLogin}
-              // onClick={handleLoginFacebook}
             />
           </a>
         </ButtonFacebook>

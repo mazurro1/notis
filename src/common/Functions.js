@@ -1,7 +1,7 @@
 /*eslint-disable eqeqeq*/
-import React, {useEffect} from 'react'
+import React, { useEffect } from "react"
 import { useDispatch } from "react-redux"
-import {resetBellAlerts} from '../state/actions'
+import { resetBellAlerts } from "../state/actions"
 
 export const checkIfBadValue = value => {
   const textHaveVal1 = value.includes("$")
@@ -72,8 +72,8 @@ export const categoryItemsMenu = (categories, items) => {
       item => item.serviceCategory === itemCategory
     )
     const mapItemsCategoryToAddCategoryId = filterItemsToCategory.map(item => {
-      item.categoryId = index;
-      return item;
+      item.categoryId = index
+      return item
     })
     const newAllItem = {
       category: itemCategory,
@@ -103,8 +103,6 @@ export const categoryItemsConstHours = (categories, items) => {
   })
   return allItems
 }
-
-
 
 export const replacingEditedNamesAndAddingNewOnes = (
   allOldItems,
@@ -276,7 +274,7 @@ export const sortItemsInArrayNumber = (arrayToSort, itemName) => {
   return arrayToSort
 }
 
-export const sortItemsInArrayOnlyNumber = (arrayToSort) => {
+export const sortItemsInArrayOnlyNumber = arrayToSort => {
   arrayToSort.sort((a, b) => {
     const firstItemToSort = a
     const secondItemToSort = b

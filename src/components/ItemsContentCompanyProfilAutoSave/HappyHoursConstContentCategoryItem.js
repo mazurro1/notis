@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react'
-import styled from 'styled-components'
-import {Colors} from '../../common/Colors'
+import React, { useState, useEffect } from "react"
+import styled from "styled-components"
+import { Colors } from "../../common/Colors"
 import { MdEdit, MdDelete } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import { useDispatch } from "react-redux"
 import { fetchDeleteConstHappyHour } from "../../state/actions"
 import HappyHoursConstContentCategoryItemEdit from "./HappyHoursConstContentCategoryItemEdit"

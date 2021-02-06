@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import "../../style.css"
-import { useDispatch,useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import PlacesItem from "../components/PlacesItem"
 import ButtonIcon from "../components/ButtonIcon"
 import styled from "styled-components"
@@ -16,7 +16,7 @@ import sal from "sal.js"
 import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { AllIndustries } from "../common/AllIndustries"
-import {Translates} from '../common/Translates'
+import { Translates } from "../common/Translates"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -68,11 +68,13 @@ const Home = () => {
 
   useEffect(() => {
     if (!!refAllPlaces) {
-      if(!!refAllPlaces.current){
+      if (!!refAllPlaces.current) {
         const indexLastChildren = refAllPlaces.current.childNodes.length
         if (indexLastChildren % 10 === 0 && indexLastChildren > 0) {
-          const isLastPlaceVisible = refAllPlaces.current.childNodes[indexLastChildren - 1].className === "sal-animate";
-          if(isLastPlaceVisible){
+          const isLastPlaceVisible =
+            refAllPlaces.current.childNodes[indexLastChildren - 1].className ===
+            "sal-animate"
+          if (isLastPlaceVisible) {
             refAllPlaces.current.childNodes[indexLastChildren - 1].className =
               "sal-animate active-update"
             dispatch(updatePage())
@@ -81,7 +83,7 @@ const Home = () => {
       }
     }
   }, [refAllPlaces, placesData, scrollPosition])
-  
+
   useScrollPosition(({ _, currPos }) => {
     if (
       currPos.y !== 0 &&
@@ -104,11 +106,11 @@ const Home = () => {
       <PlacesItem key={item._id} item={item} filters={filters} index={index} />
     )
   })
-  
+
   const findIndustrie = AllIndustries[siteProps.language].find(
     item => item.value === industries
   )
-  
+
   const industriesText = !!findIndustrie ? (
     <TextH1 siteProps={siteProps}>{findIndustrie.label}</TextH1>
   ) : (
@@ -162,7 +164,9 @@ const Home = () => {
         classNames="popup"
         unmountOnExit
       >
-        <MarginBottomPlaces ref={refAllPlaces}>{mapPlacesData}</MarginBottomPlaces>
+        <MarginBottomPlaces ref={refAllPlaces}>
+          {mapPlacesData}
+        </MarginBottomPlaces>
       </CSSTransition>
     </div>
   )

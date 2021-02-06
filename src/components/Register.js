@@ -35,8 +35,6 @@ const RegulationsText = styled.div`
 `
 
 const RegisterContent = () => {
-  const [dateBirth, setDateBirth] = useState("")
-  const [monthBirth, setMonthBirth] = useState("")
   const [emailInput, setEmailInput] = useState("")
   const [nameInput, setNameInput] = useState("")
   const [surnameInput, setSurnameInput] = useState("")
@@ -59,9 +57,7 @@ const RegisterContent = () => {
         nameInput,
         surnameInput,
         phoneInput,
-        repeatPasswordInput,
-        dateBirth,
-        monthBirth
+        repeatPasswordInput
       )
     )
   }

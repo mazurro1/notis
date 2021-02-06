@@ -4,14 +4,14 @@ import { FaArrowLeft, FaSave, FaPercentage } from "react-icons/fa"
 import { MdTimelapse } from "react-icons/md"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
 import SelectCustom from "../SelectCustom"
-import InputIcon from '../InputIcon'
+import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import TimePickerContent from "../TimePicker"
 import ReactTooltip from "react-tooltip"
-import {fetchAddConstDateHappyHour} from '../../state/actions'
+import { fetchAddConstDateHappyHour } from "../../state/actions"
 import { useDispatch } from "react-redux"
 
 const MarginButton = styled.div`
@@ -32,7 +32,6 @@ const TextCheckbox = styled.span`
   padding-left: 10px;
   user-select: none;
 `
-
 
 const CheckboxStyle = styled.div`
   margin-top: 20px;
@@ -105,7 +104,7 @@ const ItemDayToSelect = styled.button`
     background-color: ${props => Colors(props.siteProps).secondColor};
   }
 
-  &:active{
+  &:active {
     transform: scale(0.8);
   }
 `
@@ -202,12 +201,14 @@ const HappyHoursConstContentNewItem = ({
     setEnableTimeEnd(true)
   }
 
-  const handleClickDaySelect = (itemId) => {
-    const isInSelected = selectedDayOfTheWeek.some(item => item === itemId);
-    if(isInSelected){
-      const filterSelectedIds = selectedDayOfTheWeek.filter(item => item !== itemId);
+  const handleClickDaySelect = itemId => {
+    const isInSelected = selectedDayOfTheWeek.some(item => item === itemId)
+    if (isInSelected) {
+      const filterSelectedIds = selectedDayOfTheWeek.filter(
+        item => item !== itemId
+      )
       setSelectedDayOfTheWeek(filterSelectedIds)
-    }else{
+    } else {
       const newItemsIds = [...selectedDayOfTheWeek, itemId]
       setSelectedDayOfTheWeek(newItemsIds)
     }
@@ -239,7 +240,7 @@ const HappyHoursConstContentNewItem = ({
   const mapDaysToSelect = DaySOfTheWeek.map((item, index) => {
     const isDayActive = selectedDayOfTheWeek.some(itemSelected => {
       return itemSelected === item.dayOfTheWeek
-    });
+    })
     return (
       <ItemDayToSelect
         key={index}

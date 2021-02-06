@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import {LinkEffect} from '../common/LinkEffect'
+import React from "react"
+import styled from "styled-components"
+import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 
 const TimeStyle = styled.div`
@@ -34,7 +34,7 @@ const ButtonAlertCompany = styled.button`
   margin-right: 5px;
   padding: 5px 10px;
   background-color: ${props =>
-       props.alertColor === "blue"
+    props.alertColor === "blue"
       ? Colors(props.siteProps).primaryColorDark
       : props.alertColor === "red"
       ? Colors(props.siteProps).dangerColorDark
@@ -42,8 +42,7 @@ const ButtonAlertCompany = styled.button`
       ? Colors(props.siteProps).successColorDark
       : props.alertColor === "orange"
       ? Colors(props.siteProps).secondDarkColor
-      : Colors(props.siteProps).darkColorDark
-      };
+      : Colors(props.siteProps).darkColorDark};
   color: ${props => Colors(props.siteProps).textNormalWhite};
   cursor: pointer;
   border: none;
@@ -54,233 +53,232 @@ const ButtonAlertCompany = styled.button`
 
   &:hover {
     background-color: ${props =>
-        props.alertColor === "blue"
-          ? Colors(props.siteProps).primaryColor
-          : props.alertColor === "red"
-          ? Colors(props.siteProps).dangerColor
-          : props.alertColor === "green"
-          ? Colors(props.siteProps).successColor
-          : props.alertColor === "orange"
-          ? Colors(props.siteProps).secondColor
-          : Colors(props.siteProps).primaryColor
-        };
+      props.alertColor === "blue"
+        ? Colors(props.siteProps).primaryColor
+        : props.alertColor === "red"
+        ? Colors(props.siteProps).dangerColor
+        : props.alertColor === "green"
+        ? Colors(props.siteProps).successColor
+        : props.alertColor === "orange"
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor};
   }
 `
 
- const BellAlertsItem = ({
-   siteProps,
-   alert,
-   AlertItemStyle,
-   user
- }) => {
-   let isUserReserwation = false;
-   let isCompanyChangedReserwation = !!alert.companyChanged ? alert.companyChanged : false
-   if(!!alert.reserwationId){
-     if(!!alert.reserwationId.fromUser){
-       if(!!alert.reserwationId.fromUser._id){
+const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
+  let isUserReserwation = false
+  let isCompanyChangedReserwation = !!alert.companyChanged
+    ? alert.companyChanged
+    : false
+  if (!!alert.reserwationId) {
+    if (!!alert.reserwationId.fromUser) {
+      if (!!alert.reserwationId.fromUser._id) {
         isUserReserwation = user.userId === alert.reserwationId.fromUser._id
-       }
-     }
-   }
+      }
+    }
+  }
 
-   let alertMessage = ""
-   let textBeginningAlert = ""
-   let alertColor = 'default'
+  let alertMessage = ""
+  let textBeginningAlert = ""
+  let alertColor = "default"
 
-   const reserwationDate = `${
-     alert.reserwationId.dateDay < 10
-       ? `0${alert.reserwationId.dateDay}`
-       : alert.reserwationId.dateDay
-   }-${
-     alert.reserwationId.dateMonth < 10
-       ? `0${alert.reserwationId.dateMonth}`
-       : alert.reserwationId.dateMonth
-   }-${alert.reserwationId.dateYear}`
+  const reserwationDate = `${
+    alert.reserwationId.dateDay < 10
+      ? `0${alert.reserwationId.dateDay}`
+      : alert.reserwationId.dateDay
+  }-${
+    alert.reserwationId.dateMonth < 10
+      ? `0${alert.reserwationId.dateMonth}`
+      : alert.reserwationId.dateMonth
+  }-${alert.reserwationId.dateYear}`
 
-   let userName = null;
-   let userSurname = null;
+  let userName = null
+  let userSurname = null
 
-   if (!!alert.reserwationId){
-     if(!!alert.reserwationId.fromUser){
-       if(!!alert.reserwationId.fromUser.name){
-          userName = Buffer.from(
-            alert.reserwationId.fromUser.name,
-            "base64"
-          ).toString("ascii")
-          userSurname = Buffer.from(
-            alert.reserwationId.fromUser.surname,
-            "base64"
-          ).toString("ascii")
-       }
-     }
-   }
+  if (!!alert.reserwationId) {
+    if (!!alert.reserwationId.fromUser) {
+      if (!!alert.reserwationId.fromUser.name) {
+        userName = Buffer.from(
+          alert.reserwationId.fromUser.name,
+          "base64"
+        ).toString("ascii")
+        userSurname = Buffer.from(
+          alert.reserwationId.fromUser.surname,
+          "base64"
+        ).toString("ascii")
+      }
+    }
+  }
 
-
-   if (alert.type === "rezerwation_created") {
-     alertColor = "blue"
-     if(!isCompanyChangedReserwation){
-       textBeginningAlert = isUserReserwation
-         ? "Rezerwacja została utworzona w firmie"
-         : "dokonał rezerwacji"
-     }else{
-        textBeginningAlert = isUserReserwation
-          ? ""
-          : ""
-     }
-   } else if (alert.type === "rezerwation_changed") {
-     alertColor = "orange"
-     if(!isCompanyChangedReserwation){
-      textBeginningAlert = isUserReserwation ? "Rezerwacja została zmieniona w firmie" : "zmienił rezerwację"
-     }else{
+  if (alert.type === "rezerwation_created") {
+    alertColor = "blue"
+    if (!isCompanyChangedReserwation) {
+      textBeginningAlert = isUserReserwation
+        ? "Rezerwacja została utworzona w firmie"
+        : "dokonał rezerwacji"
+    } else {
+      textBeginningAlert = isUserReserwation ? "" : ""
+    }
+  } else if (alert.type === "rezerwation_changed") {
+    alertColor = "orange"
+    if (!isCompanyChangedReserwation) {
+      textBeginningAlert = isUserReserwation
+        ? "Rezerwacja została zmieniona w firmie"
+        : "zmienił rezerwację"
+    } else {
       textBeginningAlert = isUserReserwation
         ? "Twoja rezerwacja została zmieniona przez firmę"
         : "Dokonano zmianę w rezerwacji"
-     }
-   } else if (alert.type === "rezerwation_canceled") {
-     alertColor = "red"
-     if(!isCompanyChangedReserwation){
-     textBeginningAlert = isUserReserwation ? "Rezerwacja została odwołana w firmie" : "odowłał rezerwację"
-     }else{
-     textBeginningAlert = isUserReserwation
-       ? "Rezerwacja została odwołana przez firmę"
-       : "Odwołano rezerwację"
-     }
-   } else if (alert.type === "reserwation_not_finished") {
-     alertColor = "red"
-     if(!isCompanyChangedReserwation){
-     textBeginningAlert = isUserReserwation ? "Rezerwacja nie została odbyta w firmie" : "nie odbył wizyty"
-     }else{
-     textBeginningAlert = isUserReserwation
-       ? "Zmieniono status twojej rezerwacji na nie odbytą w firmie"
-       : "Zmieniono status rezerwacji na nie odbytą"
-     }
-   } else if (alert.type === "reserwation_finished") {
-     alertColor = "green"
-     if(!isCompanyChangedReserwation){
+    }
+  } else if (alert.type === "rezerwation_canceled") {
+    alertColor = "red"
+    if (!isCompanyChangedReserwation) {
+      textBeginningAlert = isUserReserwation
+        ? "Rezerwacja została odwołana w firmie"
+        : "odowłał rezerwację"
+    } else {
+      textBeginningAlert = isUserReserwation
+        ? "Rezerwacja została odwołana przez firmę"
+        : "Odwołano rezerwację"
+    }
+  } else if (alert.type === "reserwation_not_finished") {
+    alertColor = "red"
+    if (!isCompanyChangedReserwation) {
+      textBeginningAlert = isUserReserwation
+        ? "Rezerwacja nie została odbyta w firmie"
+        : "nie odbył wizyty"
+    } else {
+      textBeginningAlert = isUserReserwation
+        ? "Zmieniono status twojej rezerwacji na nie odbytą w firmie"
+        : "Zmieniono status rezerwacji na nie odbytą"
+    }
+  } else if (alert.type === "reserwation_finished") {
+    alertColor = "green"
+    if (!isCompanyChangedReserwation) {
       textBeginningAlert = isUserReserwation
         ? "Rezerwacja została odbyta w firmie"
         : "odbył wizytę"
-     }else{
+    } else {
       textBeginningAlert = isUserReserwation
         ? "Zmieniono status twojej rezerwacji na odbytą"
         : "Zmieniono status rezerwacji na odbytą"
-     }
-   } else{
-     alertColor = "default"
-   }
+    }
+  } else {
+    alertColor = "default"
+  }
 
-   if (isUserReserwation) {
-     alertMessage = (
-       <>
-         <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
-         <LinkEffect
-           path={`company/${alert.reserwationId.company.linkPath}`}
-           text={
-             <ButtonAlertCompany
-               siteProps={siteProps}
-               active={alert.active}
-               alertColor={alertColor}
-             >
-               {alert.reserwationId.company.name.toUpperCase()}
-             </ButtonAlertCompany>
-           }
-         />
-         <DivInlineBlock>
-           dnia: <span>{reserwationDate}</span>,
-         </DivInlineBlock>{" "}
-         na godzine:{" "}
-         <DivInlineBlock>
-           <span>
-             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
-           </span>
-         </DivInlineBlock>
-         , usługa: <span>{alert.reserwationId.serviceName}</span>
-       </>
-     )
-   } else {
-     alertMessage = isCompanyChangedReserwation ? (
-       <>
-         {textBeginningAlert} użytkowniowi{" "}
-         {!!userName && !!userSurname
-           ? `${userName} ${userSurname}`
-           : "Brak użytkownika"}{" "}
-         <DivInlineBlock>
-           dnia: <span>{reserwationDate}</span>,
-         </DivInlineBlock>{" "}
-         na godzine:{" "}
-         <DivInlineBlock>
-           <span>
-             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
-           </span>
-           ,
-         </DivInlineBlock>{" "}
-         usługa: <span>{alert.reserwationId.serviceName}</span>
-       </>
-     ) : (
-       <>
-         Użytkownik{" "}
-         {!!userName && !!userSurname
-           ? `${userName} ${userSurname}`
-           : "Brak użytkownika"}{" "}
-         {textBeginningAlert}
-         <DivInlineBlock>
-           dnia: <span>{reserwationDate}</span>,
-         </DivInlineBlock>{" "}
-         na godzine:{" "}
-         <DivInlineBlock>
-           <span>
-             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
-           </span>
-           ,{" "}
-         </DivInlineBlock>{" "}
-         usługa: <span>{alert.reserwationId.serviceName}</span>
-       </>
-     )
-   }
+  if (isUserReserwation) {
+    alertMessage = (
+      <>
+        <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
+        <LinkEffect
+          path={`company/${alert.reserwationId.company.linkPath}`}
+          text={
+            <ButtonAlertCompany
+              siteProps={siteProps}
+              active={alert.active}
+              alertColor={alertColor}
+            >
+              {alert.reserwationId.company.name.toUpperCase()}
+            </ButtonAlertCompany>
+          }
+        />
+        <DivInlineBlock>
+          dnia: <span>{reserwationDate}</span>,
+        </DivInlineBlock>{" "}
+        na godzine:{" "}
+        <DivInlineBlock>
+          <span>
+            {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+          </span>
+        </DivInlineBlock>
+        , usługa: <span>{alert.reserwationId.serviceName}</span>
+      </>
+    )
+  } else {
+    alertMessage = isCompanyChangedReserwation ? (
+      <>
+        {textBeginningAlert} użytkowniowi{" "}
+        {!!userName && !!userSurname
+          ? `${userName} ${userSurname}`
+          : "Brak użytkownika"}{" "}
+        <DivInlineBlock>
+          dnia: <span>{reserwationDate}</span>,
+        </DivInlineBlock>{" "}
+        na godzine:{" "}
+        <DivInlineBlock>
+          <span>
+            {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+          </span>
+          ,
+        </DivInlineBlock>{" "}
+        usługa: <span>{alert.reserwationId.serviceName}</span>
+      </>
+    ) : (
+      <>
+        Użytkownik{" "}
+        {!!userName && !!userSurname
+          ? `${userName} ${userSurname}`
+          : "Brak użytkownika"}{" "}
+        {textBeginningAlert}
+        <DivInlineBlock>
+          dnia: <span>{reserwationDate}</span>,
+        </DivInlineBlock>{" "}
+        na godzine:{" "}
+        <DivInlineBlock>
+          <span>
+            {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+          </span>
+          ,{" "}
+        </DivInlineBlock>{" "}
+        usługa: <span>{alert.reserwationId.serviceName}</span>
+      </>
+    )
+  }
 
-     return (
-       <div
-         data-sal="zoom-in"
-         data-sal-duration="300"
-         data-sal-easing="ease-out-bounce"
-       >
-         <AlertItemStyle
-           active={alert.active}
-           alertColor={alertColor}
-           siteProps={siteProps}
-           noTime={!!!alert.creationTime}
-         >
-           {!!alert.creationTime && (
-             <TimeStyle
-               active={alert.active}
-               alertColor={alertColor}
-               siteProps={siteProps}
-             >
-               <span>{`${
-                 new Date(alert.creationTime).getHours() < 10
-                   ? `0${new Date(alert.creationTime).getHours()}`
-                   : new Date(alert.creationTime).getHours()
-               }:${
-                 new Date(alert.creationTime).getMinutes() < 10
-                   ? `0${new Date(alert.creationTime).getMinutes()}`
-                   : new Date(alert.creationTime).getMinutes()
-               }`}</span>
-               {`
+  return (
+    <div
+      data-sal="zoom-in"
+      data-sal-duration="300"
+      data-sal-easing="ease-out-bounce"
+    >
+      <AlertItemStyle
+        active={alert.active}
+        alertColor={alertColor}
+        siteProps={siteProps}
+        noTime={!!!alert.creationTime}
+      >
+        {!!alert.creationTime && (
+          <TimeStyle
+            active={alert.active}
+            alertColor={alertColor}
+            siteProps={siteProps}
+          >
+            <span>{`${
+              new Date(alert.creationTime).getHours() < 10
+                ? `0${new Date(alert.creationTime).getHours()}`
+                : new Date(alert.creationTime).getHours()
+            }:${
+              new Date(alert.creationTime).getMinutes() < 10
+                ? `0${new Date(alert.creationTime).getMinutes()}`
+                : new Date(alert.creationTime).getMinutes()
+            }`}</span>
+            {`
               ${
                 new Date(alert.creationTime).getDate() < 10
                   ? `0${new Date(alert.creationTime).getDate()}`
                   : new Date(alert.creationTime).getDate()
               }-${
-                 new Date(alert.creationTime).getMonth() + 1 < 10
-                   ? `0${new Date(alert.creationTime).getMonth() + 1}`
-                   : new Date(alert.creationTime).getMonth() + 1
-               }-${new Date(alert.creationTime).getFullYear()}`}
-             </TimeStyle>
-           )}
-           {alertMessage}
-         </AlertItemStyle>
-       </div>
-     )
- }
+              new Date(alert.creationTime).getMonth() + 1 < 10
+                ? `0${new Date(alert.creationTime).getMonth() + 1}`
+                : new Date(alert.creationTime).getMonth() + 1
+            }-${new Date(alert.creationTime).getFullYear()}`}
+          </TimeStyle>
+        )}
+        {alertMessage}
+      </AlertItemStyle>
+    </div>
+  )
+}
 
 export default BellAlertsItem

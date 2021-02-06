@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import styled from 'styled-components'
+import styled from "styled-components"
 import {
   MdAddAPhoto,
   MdEdit,
@@ -7,7 +7,7 @@ import {
   MdMoveToInbox,
   MdImage,
 } from "react-icons/md"
-import { Colors } from '../../common/Colors'
+import { Colors } from "../../common/Colors"
 import {
   fetchCompanyUploadImage,
   fetchCompanyDeleteImage,
@@ -16,13 +16,13 @@ import {
   fetchCompanyMainImage,
 } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import {Site} from '../../common/Site'
+import { Site } from "../../common/Site"
 import ImageGallery from "react-image-gallery"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import { FaArrowLeft } from "react-icons/fa"
-import Popup from '../Popup'
+import Popup from "../Popup"
 import ReactTooltip from "react-tooltip"
-import GalleryContentItem from './GalleryContentItem'
+import GalleryContentItem from "./GalleryContentItem"
 
 const AddImage = styled.div`
   position: relative;
@@ -65,7 +65,6 @@ const ImagesPositionsFlex = styled.div`
   flex-wrap: wrap;
 `
 
-
 const MarginButton = styled.div`
   margin-left: 5px;
 `
@@ -99,12 +98,12 @@ const PositionRelative = styled.div`
     border-color: ${props => Colors(props.siteProps).primaryColorDark};
   }
 
-  .image-gallery-thumbnails-container{
+  .image-gallery-thumbnails-container {
     cursor: normal;
   }
 
-  .image-gallery-thumbnails-wrapper{
-    button{
+  .image-gallery-thumbnails-wrapper {
+    button {
       cursor: pointer;
     }
   }
@@ -338,72 +337,74 @@ const GalleryContent = ({
           />
         </ButtonTextPositionMap>
       )}
-      {isAdmin && <Popup
-        popupEnable={editGallery}
-        handleClose={handleCloseEditGalery}
-        title="Edytuj galerie"
-        secondColors
-      >
-        <TextGallery siteProps={siteProps}>
-          <div>
-            <span>
-              <MdPhotoSizeSelectLarge />
-            </span>
-            Optymalny rozmiar zdjęcia: 800x600px.
-          </div>
-          <div>
-            <span>
-              <MdMoveToInbox />
-            </span>
-            Maksymalny rozmiar zdjęcia: 2mpx.
-          </div>
-          <div>
-            <span>
-              <MdImage />
-            </span>
-            Maksymalna liczba zdjęć: 10.
-          </div>
-        </TextGallery>
-        <ImagesPositionsFlex>
-          {mapCompanyImages}
-          {!disabledAddImage && (
-            <AddImage>
-              <input
-                type="file"
-                id="file"
-                accept="image/*"
-                onChange={handleAddImage}
+      {isAdmin && (
+        <Popup
+          popupEnable={editGallery}
+          handleClose={handleCloseEditGalery}
+          title="Edytuj galerie"
+          secondColors
+        >
+          <TextGallery siteProps={siteProps}>
+            <div>
+              <span>
+                <MdPhotoSizeSelectLarge />
+              </span>
+              Optymalny rozmiar zdjęcia: 800x600px.
+            </div>
+            <div>
+              <span>
+                <MdMoveToInbox />
+              </span>
+              Maksymalny rozmiar zdjęcia: 2mpx.
+            </div>
+            <div>
+              <span>
+                <MdImage />
+              </span>
+              Maksymalna liczba zdjęć: 10.
+            </div>
+          </TextGallery>
+          <ImagesPositionsFlex>
+            {mapCompanyImages}
+            {!disabledAddImage && (
+              <AddImage>
+                <input
+                  type="file"
+                  id="file"
+                  accept="image/*"
+                  onChange={handleAddImage}
+                />
+                <label htmlFor="file">
+                  <MdAddAPhoto />
+                </label>
+              </AddImage>
+            )}
+          </ImagesPositionsFlex>
+          <ButtonTextPositionMap>
+            <MarginButton>
+              <ButtonIcon
+                title="Zakończ edycję"
+                uppercase
+                fontIconSize="16"
+                fontSize="14"
+                icon={<FaArrowLeft />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleCloseEditGalery}
               />
-              <label htmlFor="file">
-                <MdAddAPhoto />
-              </label>
-            </AddImage>
-          )}
-        </ImagesPositionsFlex>
-        <ButtonTextPositionMap>
-          <MarginButton>
-            <ButtonIcon
-              title="Zakończ edycję"
-              uppercase
-              fontIconSize="16"
-              fontSize="14"
-              icon={<FaArrowLeft />}
-              customColorButton={Colors(siteProps).dangerColorDark}
-              customColorIcon={Colors(siteProps).dangerColor}
-              onClick={handleCloseEditGalery}
-            />
-          </MarginButton>
-        </ButtonTextPositionMap>
-        <ReactTooltip id="saveImage" effect="float" multiline={true}>
-          <span>Zapisz zdjęcie</span>
-        </ReactTooltip>
-        <ReactTooltip id="deleteImage" effect="float" multiline={true}>
-          <span>Usuń zdjęcie</span>
-        </ReactTooltip>
-        <ReactTooltip id="mainImage" effect="float" multiline={true}>
-          <span>Ustaw zdjęcie jako zdjęcie główne</span>
-        </ReactTooltip>
-      </Popup>}
+            </MarginButton>
+          </ButtonTextPositionMap>
+          <ReactTooltip id="saveImage" effect="float" multiline={true}>
+            <span>Zapisz zdjęcie</span>
+          </ReactTooltip>
+          <ReactTooltip id="deleteImage" effect="float" multiline={true}>
+            <span>Usuń zdjęcie</span>
+          </ReactTooltip>
+          <ReactTooltip id="mainImage" effect="float" multiline={true}>
+            <span>Ustaw zdjęcie jako zdjęcie główne</span>
+          </ReactTooltip>
+        </Popup>
+      )}
     </PositionRelative>
   )
 }

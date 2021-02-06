@@ -5,7 +5,7 @@ import LoginFacebookComponent from "../components/LoginFacebookComponent"
 const LoginFacebook = props => {
   return (
     <Router>
-      <LoginFacebookComponent path="/login-facebook/:message/:id" />
+      <LoginFacebookComponent path="/login-facebook/:message/:id/:newAccount" />
     </Router>
   )
 }

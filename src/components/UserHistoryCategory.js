@@ -90,7 +90,6 @@ const UserHistoryCategory = ({
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
   const dispatch = useDispatch()
-  
 
   const handleClickArrow = () => {
     setCollapseActive(prevState => !prevState)

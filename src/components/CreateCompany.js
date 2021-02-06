@@ -17,7 +17,7 @@ import ReactTooltip from "react-tooltip"
 import ButtonIcon from "./ButtonIcon"
 import { FetchCompanyRegistration } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import {AllIndustries} from '../common/AllIndustries'
+import { AllIndustries } from "../common/AllIndustries"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -64,18 +64,18 @@ const CreateCompany = () => {
     setValue(e.target.value)
   }
 
-    const validButtonRegisterCompany =
-      emailInput.length > 0 &&
-      nameInput.length > 0 &&
-      phoneInput.length > 0 &&
-      cityInput.length > 0 &&
-      discrictInput.length > 0 &&
-      adressInput.length > 0 &&
-      industries.length > 0
+  const validButtonRegisterCompany =
+    emailInput.length > 0 &&
+    nameInput.length > 0 &&
+    phoneInput.length > 0 &&
+    cityInput.length > 0 &&
+    discrictInput.length > 0 &&
+    adressInput.length > 0 &&
+    industries.length > 0
 
   const handleSubmit = e => {
     e.preventDefault()
-    if (validButtonRegisterCompany){
+    if (validButtonRegisterCompany) {
       const mapedIndustries = industries.map(item => item.value)
       dispatch(
         FetchCompanyRegistration(
@@ -93,10 +93,10 @@ const CreateCompany = () => {
     }
   }
 
-    const handleChangeIndustries = value => {
-      const allValues = value ? value : []
-      setIndustries(allValues)
-    }
+  const handleChangeIndustries = value => {
+    const allValues = value ? value : []
+    setIndustries(allValues)
+  }
 
   const tooltipButtonRegister = !validButtonRegisterCompany && (
     <ReactTooltip id="alertRegistration" effect="float" multiline={true}>

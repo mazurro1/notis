@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
-import HappyHoursConstContentCategoryItem from './HappyHoursConstContentCategoryItem'
+import HappyHoursConstContentCategoryItem from "./HappyHoursConstContentCategoryItem"
 import { Collapse } from "react-collapse"
-import styled from 'styled-components'
-import {Colors} from '../../common/Colors'
+import styled from "styled-components"
+import { Colors } from "../../common/Colors"
 import { MdExpandMore } from "react-icons/md"
 import { sortItemsInArrayOnlyNumber } from "../../common/Functions"
 
@@ -65,72 +65,76 @@ const DayComponent = styled.div`
   margin-right: 5px;
 `
 
- const HappyHoursConstContentCategory = ({
-   category,
-   siteProps,
-   companyServices,
-   editConstHappyHours,
-   editMode,
-   user,
-   happyHoursConst,
-   TitleRightColumn,
- }) => {
-   const [collapseActive, setCollapseActive] = useState(false)
+const HappyHoursConstContentCategory = ({
+  category,
+  siteProps,
+  companyServices,
+  editConstHappyHours,
+  editMode,
+  user,
+  happyHoursConst,
+  TitleRightColumn,
+}) => {
+  const [collapseActive, setCollapseActive] = useState(false)
 
-   useEffect(() => {
-     setCollapseActive(false)
-   }, [happyHoursConst])
+  useEffect(() => {
+    setCollapseActive(false)
+  }, [happyHoursConst])
 
-   const handleClickCollapse = () => {
-     setCollapseActive(prevState => !prevState)
-   }
+  const handleClickCollapse = () => {
+    setCollapseActive(prevState => !prevState)
+  }
 
-   const sortCategoryDayWeekIndex = sortItemsInArrayOnlyNumber([...category.dayWeekIndex]);
-   const filterSortedIfIsLastWeek = sortCategoryDayWeekIndex.filter(itemFilter => itemFilter === 0);
-   const filterOtherSortedIfIsLastWeek = sortCategoryDayWeekIndex.filter(itemFilter => itemFilter !== 0);
+  const sortCategoryDayWeekIndex = sortItemsInArrayOnlyNumber([
+    ...category.dayWeekIndex,
+  ])
+  const filterSortedIfIsLastWeek = sortCategoryDayWeekIndex.filter(
+    itemFilter => itemFilter === 0
+  )
+  const filterOtherSortedIfIsLastWeek = sortCategoryDayWeekIndex.filter(
+    itemFilter => itemFilter !== 0
+  )
 
-   const sortedAndFilteredCategory = [
-     ...filterOtherSortedIfIsLastWeek,
-     ...filterSortedIfIsLastWeek,
-   ]
+  const sortedAndFilteredCategory = [
+    ...filterOtherSortedIfIsLastWeek,
+    ...filterSortedIfIsLastWeek,
+  ]
 
-   const findDayOfTheWeek = sortedAndFilteredCategory.map((item, index) => {
-     const findDay = DaySOfTheWeek.find(
-       itemDay => itemDay.dayOfTheWeek === item
-     )
-     if (!!findDay) {
-       return <DayComponent key={index}>{findDay.title}</DayComponent>
-     }
-   })
-   
-   return (
-     <MarginComponent>
-       <TitleCategory
-         siteProps={siteProps}
-         onClick={handleClickCollapse}
-         active={collapseActive}
-         edited={editConstHappyHours}
-         disabled={category.disabled}
-       >
-         {findDayOfTheWeek}
-         <ArrowPosition>
-           <MdExpandMore />
-         </ArrowPosition>
-       </TitleCategory>
-       <Collapse isOpened={collapseActive}>
-         <HappyHoursConstContentCategoryItem
-           item={category}
-           companyServices={companyServices}
-           siteProps={siteProps}
-           index={0}
-           editMode={editMode}
-           editConstHappyHours={editConstHappyHours}
-           user={user}
-           happyHoursConst={happyHoursConst}
-           TitleRightColumn={TitleRightColumn}
-         />
-       </Collapse>
-     </MarginComponent>
-   )
- }
+  const findDayOfTheWeek = sortedAndFilteredCategory.map((item, index) => {
+    const findDay = DaySOfTheWeek.find(itemDay => itemDay.dayOfTheWeek === item)
+    if (!!findDay) {
+      return <DayComponent key={index}>{findDay.title}</DayComponent>
+    }
+  })
+
+  return (
+    <MarginComponent>
+      <TitleCategory
+        siteProps={siteProps}
+        onClick={handleClickCollapse}
+        active={collapseActive}
+        edited={editConstHappyHours}
+        disabled={category.disabled}
+      >
+        {findDayOfTheWeek}
+        <ArrowPosition>
+          <MdExpandMore />
+        </ArrowPosition>
+      </TitleCategory>
+      <Collapse isOpened={collapseActive}>
+        <HappyHoursConstContentCategoryItem
+          item={category}
+          companyServices={companyServices}
+          siteProps={siteProps}
+          index={0}
+          editMode={editMode}
+          editConstHappyHours={editConstHappyHours}
+          user={user}
+          happyHoursConst={happyHoursConst}
+          TitleRightColumn={TitleRightColumn}
+        />
+      </Collapse>
+    </MarginComponent>
+  )
+}
 export default HappyHoursConstContentCategory

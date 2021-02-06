@@ -4,10 +4,10 @@ import { FaArrowLeft, FaSave, FaPercentage } from "react-icons/fa"
 import { MdTimelapse } from "react-icons/md"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import ButtonIcon from '../ButtonIcon'
+import ButtonIcon from "../ButtonIcon"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
 import SelectCustom from "../SelectCustom"
-import InputIcon from '../InputIcon'
+import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import TimePickerContent from "../TimePicker"
 import ReactTooltip from "react-tooltip"
@@ -32,7 +32,6 @@ const TextCheckbox = styled.span`
   padding-left: 10px;
   user-select: none;
 `
-
 
 const CheckboxStyle = styled.div`
   margin-top: 20px;

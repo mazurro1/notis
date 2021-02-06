@@ -227,7 +227,7 @@ const CategoryItem = ({
   const siteProps = useSelector(state => state.siteProps)
   const activeWorkerUserId = useSelector(state => state.activeWorkerUserId)
 
-  useEffect(()=>{
+  useEffect(() => {
     setClickDelete(false)
     setClickAdd(false)
     setClickEdit(false)
@@ -245,21 +245,21 @@ const CategoryItem = ({
     setCategoryTitle(item.category)
   }, [index, item, resetCompany])
 
-  const handleClickArrow = (e) => {
+  const handleClickArrow = e => {
     setCollapseActive(prevState => !prevState)
   }
 
-  const handleClickDelete = (e) => {
+  const handleClickDelete = e => {
     e.stopPropagation()
     setClickDelete(prevState => !prevState)
   }
 
-  const handleClickAdd = (e) => {
+  const handleClickAdd = e => {
     e.stopPropagation()
     setClickAdd(prevState => !prevState)
   }
 
-  const handleEditCategory = (e) => {
+  const handleEditCategory = e => {
     e.stopPropagation()
     setClickEdit(prevState => !prevState)
   }
@@ -294,8 +294,6 @@ const CategoryItem = ({
       !!timeInput &&
       !!priceInput
     ) {
-      
-
       handleAddItemInCategory(
         item.category,
         titleInput,
@@ -383,21 +381,21 @@ const CategoryItem = ({
         {isCompanyEditProfil && (
           <>
             <IconDeletePosition
-              onClick={(e)=>handleClickDelete(e)}
+              onClick={e => handleClickDelete(e)}
               data-tip
               data-for="deleteCategory"
             >
               <MdDeleteForever />
             </IconDeletePosition>
             <IconEditPosition
-              onClick={(e)=>handleEditCategory(e)}
+              onClick={e => handleEditCategory(e)}
               data-tip
               data-for="editCategory"
             >
               <MdEdit />
             </IconEditPosition>
             <IconAddPosition
-              onClick={(e)=>handleClickAdd(e)}
+              onClick={e => handleClickAdd(e)}
               data-tip
               data-for="addItem"
             >

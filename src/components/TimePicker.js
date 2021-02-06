@@ -9,8 +9,7 @@ import moment from "moment"
 
 const ButtonConfirmDate = styled.div`
   padding: 5px;
-  background-color: ${props =>
-    Colors(props.siteProps).timePickerTopBackground};
+  background-color: ${props => Colors(props.siteProps).timePickerTopBackground};
 `
 
 const MaxWidth = styled.div`

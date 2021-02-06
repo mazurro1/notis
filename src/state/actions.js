@@ -240,15 +240,7 @@ export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
   }
 }
 
-export const fetchRegisterUser = (
-  email,
-  name,
-  surname,
-  phone,
-  password,
-  dateBirth = 1,
-  monthBirth = 0
-) => {
+export const fetchRegisterUser = (email, name, surname, phone, password) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -258,8 +250,6 @@ export const fetchRegisterUser = (
         userSurname: surname,
         phoneNumber: phone,
         password: password,
-        dateBirth: dateBirth,
-        monthBirth: monthBirth,
       })
       .then(response => {
         dispatch(loginUser(response.data))
@@ -1406,7 +1396,9 @@ export const fetchDoReserwation = (
   dateStart,
   dateFull,
   reserwationMessage,
-  serviceId
+  serviceId,
+  numberPhone,
+  isStampActive
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1421,6 +1413,8 @@ export const fetchDoReserwation = (
           dateFull: dateFull,
           reserwationMessage: reserwationMessage,
           serviceId: serviceId,
+          numberPhone: numberPhone,
+          isStampActive: isStampActive,
         },
         {
           headers: {
@@ -3097,31 +3091,6 @@ export const fetchUserDeleteImage = (token, imagePath) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
-      })
-  }
-}
-
-export const fetchLoginFacebook = () => {
-  return dispatch => {
-    dispatch(changeSpinner(true))
-    return axios
-      .post(
-        `${Site.serverUrl}/auth/facebook`,
-        {},
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      )
-      .then(response => {
-        console.log(response.data)
-        dispatch(addAlertItem("Zalogowano za pomocą facebooka.", "green"))
-        dispatch(changeSpinner(false))
-      })
-      .catch(error => {
-        dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas logowania facebooka.", "red"))
       })
   }
 }
