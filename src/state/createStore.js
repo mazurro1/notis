@@ -33,6 +33,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  ADD_NEW_COMPANY_STAMPS,
   UPDATE_USER_IMAGE,
   CHANGE_ACTIVE_WORKER,
   CHANGE_WORKING_HOURS,
@@ -371,6 +372,22 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case ADD_NEW_COMPANY_STAMPS: {
+      const patchWorkCompanyNewStamp = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if (!!patchWorkCompanyNewStamp) {
+        if (patchWorkCompanyNewStamp._id === action.companyId) {
+          patchWorkCompanyNewStamp.companyStamps = action.newCompanyStamps
+        }
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyNewStamp,
+      }
+    }
 
     case CHANGE_ACTIVE_WORKER: {
       const valueToActiveWorker = !!state.activeWorkerUserId
@@ -1156,6 +1173,7 @@ const reducer = (state = initialState, action) => {
         newWorkCompanyDataServices.happyHoursConst = action.happyHoursConst
         newWorkCompanyDataServices.promotions = action.promotions
         newWorkCompanyDataServices.services = action.data
+        newWorkCompanyDataServices.companyStamps = action.companyStamps
         newWorkCompanyDataServices.ownerData.servicesCategory =
           action.ownerDataServices
         newWorkCompanyDataServices.workers.forEach((worker, index) => {

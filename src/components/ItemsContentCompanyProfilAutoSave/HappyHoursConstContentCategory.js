@@ -20,16 +20,28 @@ const TitleCategory = styled.div`
   background-color: ${props =>
     props.edited
       ? Colors(props.siteProps).secondColor
-      : props.disabled
-      ? Colors(props.siteProps).dangerColor
-      : Colors(props.siteProps).successColor};
+      : Colors(props.siteProps).primaryColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem;
   user-select: none;
+  padding-left: 40px;
   transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+
+  .circleActive {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    background-color: ${props =>
+      props.disabled
+        ? Colors(props.siteProps).dangerColor
+        : Colors(props.siteProps).successColor};
+  }
 
   &:hover {
     background-color: ${props =>
@@ -120,6 +132,7 @@ const HappyHoursConstContentCategory = ({
         <ArrowPosition>
           <MdExpandMore />
         </ArrowPosition>
+        <div className="circleActive" />
       </TitleCategory>
       <Collapse isOpened={collapseActive}>
         <HappyHoursConstContentCategoryItem

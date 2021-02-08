@@ -661,8 +661,19 @@ const Reserwation = ({
       (selectedPromotion !== null ? 100 - selectedPromotion : 100)) /
       100
   )
+  const filterDisabledCompanyStamps = reserwationData.companyStamps.filter(
+    itemStamp => itemStamp.disabled === false
+  )
 
-  const stampSelected = reserwationData.companyStamps.find(stamp => {
+  filterDisabledCompanyStamps.sort((a, b) => {
+    const firstItemToSort = a.promotionPercent
+    const secondItemToSort = b.promotionPercent
+    if (firstItemToSort < secondItemToSort) return 1
+    if (firstItemToSort > secondItemToSort) return -1
+    return 0
+  })
+
+  const stampSelected = filterDisabledCompanyStamps.find(stamp => {
     const isServiceInStamp = stamp.servicesId.some(
       serviceStamp => serviceStamp === reserwationData._id
     )
@@ -680,7 +691,7 @@ const Reserwation = ({
       companyStampPromotionPercent = stampSelected.promotionPercent
       countStampsToActive = stampSelected.countStampsToActive
       const selectedUserStamp = user.stamps.find(stampItem => {
-        return stampItem.companyId === reserwationData.companyId
+        return stampItem.companyId._id === reserwationData.companyId
       })
 
       if (!!selectedUserStamp) {
@@ -714,7 +725,9 @@ const Reserwation = ({
           value={isStampActive}
           onChange={() => handleChangeCheckbox(companyStampPromotionPercent)}
         >
-          <TextCheckbox>Aktywuj rabat z pieczątek</TextCheckbox>
+          <TextCheckbox>
+            Aktywuj rabat z pieczątek {companyStampPromotionPercent}%
+          </TextCheckbox>
         </Checkbox>
       </CheckboxStyle>
     )
@@ -738,6 +751,8 @@ const Reserwation = ({
     user,
     stampColorValid,
     stampValid,
+    reserwationEnable,
+    reserwationData,
   ])
 
   return (
@@ -904,7 +919,7 @@ const Reserwation = ({
       <ReactTooltip id="stampTooltip" effect="float" multiline={true}>
         <span>
           {stampColorValid
-            ? "Podczas rezerwacji zostanie dodana pieczatka"
+            ? "Podczas tej rezerwacji zostanie dodana pieczatka"
             : "Pieczątka niedostępna w tej rezerwacji"}
         </span>
       </ReactTooltip>

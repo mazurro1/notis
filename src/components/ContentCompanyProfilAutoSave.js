@@ -177,6 +177,7 @@ const ContentCompanyProfil = ({
   const [editPromotions, setEditPromotions] = useState(false)
   const [editMap, setEditMap] = useState(false)
   const [editGallery, setEditGallery] = useState(false)
+  const [editStamps, setEditStamps] = useState(false)
 
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
@@ -194,7 +195,8 @@ const ContentCompanyProfil = ({
     editConstHappyHours ||
     editPromotions ||
     editMap ||
-    editGallery
+    editGallery ||
+    editStamps
 
   const handleResetAllEditedComponents = () => {
     setAllCategoryEdit(false)
@@ -209,6 +211,7 @@ const ContentCompanyProfil = ({
     setEditPromotions(false)
     setEditMap(false)
     setEditGallery(false)
+    setEditStamps(false)
   }
 
   const handleEdit = setChange => {
@@ -524,11 +527,27 @@ const ContentCompanyProfil = ({
                       user={user}
                     />
                   </RightColumnItem>
-                  <RightColumnItem>
+                  <RightColumnItem
+                    {...companyEditProfilProps}
+                    siteProps={siteProps}
+                    active={editStamps}
+                    disabledEditButtons={disabledEditButtons}
+                  >
                     <StampsContent
                       {...companyEditProfilProps}
                       TitleRightColumn={TitleRightColumn}
                       siteProps={siteProps}
+                      editStamps={editStamps}
+                      setEditStamps={setEditStamps}
+                      ButtonEditPosition={ButtonEditPosition}
+                      handleResetAllEditedComponents={
+                        handleResetAllEditedComponents
+                      }
+                      companyStamps={company.companyStamps}
+                      services={company.services}
+                      editMode={editMode}
+                      disabledEditButtons={disabledEditButtons}
+                      user={user}
                     />
                   </RightColumnItem>
                 </>

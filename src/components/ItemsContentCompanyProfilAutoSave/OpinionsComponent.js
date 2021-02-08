@@ -41,7 +41,11 @@ const OpinionsSummary = styled.div`
   right: 0;
   padding: 5px 10px;
   border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  border-color: ${props =>
+    props.siteProps.dark || props.siteProps.blind
+      ? "rgba(255, 255, 255, 0.6)"
+      : "rgba(0, 0, 0, 0.2)"};
 
   @media all and (max-width: 498px) {
     position: relative;
@@ -77,9 +81,9 @@ const AllOpinionsSummary = styled.div`
   font-size: 0.9rem;
   color: ${props =>
     props.siteProps.dark || props.siteProps.blind
-      ? "rgba(255, 255, 255, 0.3)"
-      : "rgba(0, 0, 0, 0.3)"};
-  font-weight: 700;
+      ? "rgba(255, 255, 255, 0.8)"
+      : "rgba(0, 0, 0, 0.6)"};
+  /* font-weight: 700; */
 `
 
 const ButtonMoreOpinion = styled.div`
@@ -161,7 +165,7 @@ const OpinionsComponent = ({
             Opinie
           </TitleRightColumnOpinion>
         </div>
-        <OpinionsSummary>
+        <OpinionsSummary siteProps={siteProps}>
           <CountOpinionContent>
             {opinionSummary}
             <span>/5</span>

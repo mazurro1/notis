@@ -578,6 +578,15 @@ export const CHANGE_WORKING_HOURS = "CHANGE_WORKING_HOURS"
 export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
 export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE"
 export const RESET_USER_PROFIL = "RESET_USER_PROFIL"
+export const ADD_NEW_COMPANY_STAMPS = "ADD_NEW_COMPANY_STAMPS"
+
+export const addNewCompanyStamps = (companyId, newCompanyStamps) => {
+  return {
+    type: ADD_NEW_COMPANY_STAMPS,
+    newCompanyStamps: newCompanyStamps,
+    companyId: companyId,
+  }
+}
 
 export const resetUserProfil = () => {
   return {
@@ -824,7 +833,8 @@ export const patchNewCompanyServices = (
   ownerDataServices,
   workers,
   promotions,
-  happyHoursConst
+  happyHoursConst,
+  companyStamps
 ) => {
   return {
     type: COMPANY_PATCH_NEW_SERVICES,
@@ -833,6 +843,7 @@ export const patchNewCompanyServices = (
     workers: workers,
     promotions: promotions,
     happyHoursConst: happyHoursConst,
+    companyStamps: companyStamps,
   }
 }
 
@@ -2319,7 +2330,8 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
             response.data.ownerDataServices,
             response.data.workers,
             response.data.promotions,
-            response.data.happyHoursConst
+            response.data.happyHoursConst,
+            response.data.companyStamps
           )
         )
       })
@@ -3091,6 +3103,90 @@ export const fetchUserDeleteImage = (token, imagePath) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
+      })
+  }
+}
+
+export const companyAddStamp = (token, companyId, stampData) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-add-stamp`,
+        {
+          ...stampData,
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addNewCompanyStamps(companyId, response.data.newCompanyStamps))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano pieczątke.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania pieczątki.", "red"))
+      })
+  }
+}
+
+export const companyDeleteStamp = (token, companyId, stampId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-delete-stamp`,
+        {
+          stampId: stampId,
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addNewCompanyStamps(companyId, response.data.newCompanyStamps))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto pieczątke.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas usuwania pieczątki.", "red"))
+      })
+  }
+}
+
+export const companyUpdateStamp = (token, companyId, stampData) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-update-stamp`,
+        {
+          ...stampData,
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addNewCompanyStamps(companyId, response.data.newCompanyStamps))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano pieczątke.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas aktualizacji pieczątki.", "red"))
       })
   }
 }

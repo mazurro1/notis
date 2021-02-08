@@ -108,7 +108,7 @@ const HappyHoursConstContent = ({
         isCompanyEditProfil={editConstHappyHours}
         siteProps={siteProps}
       >
-        Stałe Happy Hours
+        Happy Hours
       </TitleRightColumn>
       {mapCategories}
       <ItemsAddHappyHour>
@@ -128,7 +128,7 @@ const HappyHoursConstContent = ({
         <ButtonEditPosition>
           <div data-tip data-for="disabledButton">
             <ButtonIcon
-              title="Edytuj stałe happy hours"
+              title="Edytuj happy hours"
               uppercase
               fontIconSize="25"
               fontSize="14"

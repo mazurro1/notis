@@ -77,6 +77,7 @@ import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
 import EmployeeWorkingHours from "./EmployeeWorkingHours"
 import WorkerUsersInformation from "./WorkerUsersInformation"
 import AlertExtra from "./AlertExtra"
+import UserStamps from "./UserStamps"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -382,6 +383,7 @@ const Navigation = ({ children, isMainPage }) => {
   const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(
     false
   )
+  const [stampsVisible, setStampsVisible] = useState(false)
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
@@ -574,6 +576,10 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleClickAdminPanel = () => {
     setWorkPropsVisible(false)
+  }
+
+  const handleUserStamps = () => {
+    setStampsVisible(prevState => !prevState)
   }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
@@ -870,6 +876,17 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
+  const PopupUserStamps = (
+    <Popup
+      popupEnable={stampsVisible}
+      handleClose={handleUserStamps}
+      title="Pieczątki"
+      fullScreen
+    >
+      <UserStamps />
+    </Popup>
+  )
+
   console.log(user)
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
@@ -1110,6 +1127,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupFilter}
       {PopupLocalization}
       {PopupUserProfil}
+      {PopupUserStamps}
       {PopupHistoryReserwations}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
@@ -1204,7 +1222,7 @@ const Navigation = ({ children, isMainPage }) => {
                   {renderButtonsUp}
                 </ButtonsNav>
                 <BellAlertsStyle siteProps={siteProps}>
-                  <IconStyle className="bell-action">
+                  <IconStyle className="bell-action" onClick={handleUserStamps}>
                     <FaStamp />
                   </IconStyle>
                 </BellAlertsStyle>
