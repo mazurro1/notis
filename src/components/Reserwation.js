@@ -766,6 +766,13 @@ const Reserwation = ({
         unmountOnExit
       >
         <ItemSummary siteProps={siteProps}>
+          <ReactTooltip id="stampTooltip" effect="float" multiline={true}>
+            <span>
+              {stampColorValid
+                ? "Podczas tej rezerwacji zostanie dodana pieczatka"
+                : "Pieczątka niedostępna w tej rezerwacji"}
+            </span>
+          </ReactTooltip>
           <PaddingContent>
             <SummaryReserwationText siteProps={siteProps}>
               Rezerwacja
@@ -918,13 +925,6 @@ const Reserwation = ({
           </span>
         </ReactTooltip>
       )}
-      <ReactTooltip id="stampTooltip" effect="float" multiline={true}>
-        <span>
-          {stampColorValid
-            ? "Podczas tej rezerwacji zostanie dodana pieczatka"
-            : "Pieczątka niedostępna w tej rezerwacji"}
-        </span>
-      </ReactTooltip>
     </>
   )
 }

@@ -15,7 +15,7 @@ const ButtonStyle = styled.div`
         ? Colors(props.siteProps).secondColor
         : Colors(props.siteProps).primaryColor
       : props.disabled
-      ? "#e0e0e0"
+      ? Colors(props.siteProps).disabled
       : props.buttonBgDark && props.icon
       ? Colors(props.siteProps).darkColorDark
       : props.secondColors

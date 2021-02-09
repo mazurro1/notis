@@ -144,6 +144,7 @@ const BackgroundStamp = styled.div`
 const StampItemTitle = styled.div`
   font-size: 1rem;
   margin-left: 5px;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   span {
     font-size: 1.1rem;
     font-weight: 700;
@@ -228,13 +229,13 @@ const UserStampsCompany = ({ company, siteProps }) => {
           <FlexAllServices siteProps={siteProps}>
             {mapStampServices}
           </FlexAllServices>
-          <StampItemTitle>
+          <StampItemTitle siteProps={siteProps}>
             Promocja: <span>{stamp.promotionPercent}%</span>
           </StampItemTitle>
-          <StampItemTitle>
+          <StampItemTitle siteProps={siteProps}>
             Wymagana ilość naklejek: <span>{stamp.countStampsToActive}</span>
           </StampItemTitle>
-          <StampItemTitle>
+          <StampItemTitle siteProps={siteProps}>
             Twoja ilość naklejek:{" "}
             <span>{numberFilterUserCompanyReserwations}</span>
           </StampItemTitle>

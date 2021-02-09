@@ -1222,11 +1222,11 @@ const Navigation = ({ children, isMainPage }) => {
                   {renderButtonsUp}
                 </ButtonsNav>
                 {!!user && (
-                  <BellAlertsStyle siteProps={siteProps}>
-                    <IconStyle
-                      className="bell-action"
-                      onClick={handleUserStamps}
-                    >
+                  <BellAlertsStyle
+                    siteProps={siteProps}
+                    onClick={handleUserStamps}
+                  >
+                    <IconStyle className="bell-action">
                       <FaStamp />
                     </IconStyle>
                   </BellAlertsStyle>
