@@ -876,14 +876,14 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-  const PopupUserStamps = (
+  const PopupUserStamps = user && (
     <Popup
       popupEnable={stampsVisible}
       handleClose={handleUserStamps}
       title="Pieczątki"
       fullScreen
     >
-      <UserStamps />
+      <UserStamps userStamps={user.stamps} siteProps={siteProps} />
     </Popup>
   )
 
@@ -1221,11 +1221,16 @@ const Navigation = ({ children, isMainPage }) => {
                   {renderCompanyOrCreateCompany}
                   {renderButtonsUp}
                 </ButtonsNav>
-                <BellAlertsStyle siteProps={siteProps}>
-                  <IconStyle className="bell-action" onClick={handleUserStamps}>
-                    <FaStamp />
-                  </IconStyle>
-                </BellAlertsStyle>
+                {!!user && (
+                  <BellAlertsStyle siteProps={siteProps}>
+                    <IconStyle
+                      className="bell-action"
+                      onClick={handleUserStamps}
+                    >
+                      <FaStamp />
+                    </IconStyle>
+                  </BellAlertsStyle>
+                )}
                 {!!user && <BellAlerts siteProps={siteProps} user={user} />}
 
                 <BurgerButton onClick={handleMenuOpen}>

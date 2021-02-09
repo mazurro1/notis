@@ -409,31 +409,6 @@ const Reserwation = ({
     }, 500)
   }
 
-  const handleDoReserwation = () => {
-    if (!!selectedDate && !!selectedWorkerUserId) {
-      const selectedDay = selectedDate.getDate()
-      const selectedMonth = selectedDate.getMonth() + 1
-      const selectedYear = selectedDate.getFullYear()
-      const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
-      const validNumberUser = !!numberPhone ? numberPhone : null
-
-      dispatch(
-        fetchDoReserwation(
-          user.token,
-          reserwationData.companyId,
-          selectedWorkerUserId, //workerUserId
-          selectedWorkerId, //workerUserId
-          selectedHour, //dateStart
-          dateFullToSent, //dateFull
-          reserwationMessage,
-          reserwationData._id,
-          validNumberUser,
-          isStampActive
-        )
-      )
-    }
-  }
-
   const handleSelectWorker = (workerUserId, workerId) => {
     setIsStampActive(false)
     setSelectedPromotion(null)
@@ -661,15 +636,16 @@ const Reserwation = ({
       (selectedPromotion !== null ? 100 - selectedPromotion : 100)) /
       100
   )
+
   const filterDisabledCompanyStamps = reserwationData.companyStamps.filter(
     itemStamp => itemStamp.disabled === false
   )
 
   filterDisabledCompanyStamps.sort((a, b) => {
-    const firstItemToSort = a.promotionPercent
-    const secondItemToSort = b.promotionPercent
-    if (firstItemToSort < secondItemToSort) return 1
-    if (firstItemToSort > secondItemToSort) return -1
+    const firstItemToSort = a.countStampsToActive
+    const secondItemToSort = b.countStampsToActive
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
     return 0
   })
 
@@ -699,7 +675,7 @@ const Reserwation = ({
           const splitDateEnd = stampReserwation.dateEnd.split("")
           const reserwationStampDateEnd = new Date(
             stampReserwation.dateYear,
-            stampReserwation.dateMonth,
+            stampReserwation.dateMonth - 1,
             stampReserwation.dateDay,
             Number(splitDateEnd[0]),
             Number(splitDateEnd[1])
@@ -754,6 +730,32 @@ const Reserwation = ({
     reserwationEnable,
     reserwationData,
   ])
+
+  const handleDoReserwation = () => {
+    if (!!selectedDate && !!selectedWorkerUserId) {
+      const selectedDay = selectedDate.getDate()
+      const selectedMonth = selectedDate.getMonth() + 1
+      const selectedYear = selectedDate.getFullYear()
+      const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
+      const validNumberUser = !!numberPhone ? numberPhone : null
+
+      dispatch(
+        fetchDoReserwation(
+          user.token,
+          reserwationData.companyId,
+          selectedWorkerUserId, //workerUserId
+          selectedWorkerId, //workerUserId
+          selectedHour, //dateStart
+          dateFullToSent, //dateFull
+          reserwationMessage,
+          reserwationData._id,
+          validNumberUser,
+          isStampActive,
+          countStampsToActive
+        )
+      )
+    }
+  }
 
   return (
     <>

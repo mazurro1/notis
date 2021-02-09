@@ -250,6 +250,7 @@ const ContentCompanyProfil = ({
 
     const valueWithCompanyId = {
       ...itemServices,
+      serviceId: itemServices._id,
       companyId: companyId,
       workers: company.workers,
       ownerData: ownerData,

@@ -212,7 +212,6 @@ const ServicesItem = ({
   const handleSaveEdit = e => {
     e.preventDefault()
     if (!disabledSaveButton) {
-      console.log(itemServices)
       const newItem = {
         categoryId: itemServices.categoryId,
         extraCost: extraPrice,

@@ -33,6 +33,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_USER_RESERWATIONS_COUNT,
   ADD_NEW_COMPANY_STAMPS,
   UPDATE_USER_IMAGE,
   CHANGE_ACTIVE_WORKER,
@@ -364,6 +365,68 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         userProfilReset: false,
+      }
+    }
+
+    case UPDATE_USER_RESERWATIONS_COUNT: {
+      const userProfilToResetReserwationsCount = !!state.user
+        ? state.user
+        : null
+      if (!!userProfilToResetReserwationsCount && action.isStampActive) {
+        const findIndexCompany = userProfilToResetReserwationsCount.stamps.findIndex(
+          item => item.companyId._id === action.companyId
+        )
+        if (findIndexCompany >= 0) {
+          userProfilToResetReserwationsCount.stamps[
+            findIndexCompany
+          ].reserwations.sort((a, b) => {
+            const firstItemToSort = new Date(a.fullDate)
+            const secondItemToSort = new Date(b.fullDate)
+            if (firstItemToSort < secondItemToSort) return -1
+            if (firstItemToSort > secondItemToSort) return 1
+            return 0
+          })
+          const badDateReserwations = []
+          const goodDateReserwations = []
+
+          userProfilToResetReserwationsCount.stamps[
+            findIndexCompany
+          ].reserwations.forEach(stampReserwation => {
+            const splitDateEnd = stampReserwation.dateEnd.split("")
+            const reserwationStampDateEnd = new Date(
+              stampReserwation.dateYear,
+              stampReserwation.dateMonth - 1,
+              stampReserwation.dateDay,
+              Number(splitDateEnd[0]),
+              Number(splitDateEnd[1])
+            )
+
+            if (
+              !!!stampReserwation.visitCanceled &&
+              reserwationStampDateEnd < new Date()
+            ) {
+              goodDateReserwations.push(stampReserwation)
+            } else {
+              badDateReserwations.push(stampReserwation)
+            }
+          })
+          const newGoodDateReserwation = goodDateReserwations.slice(
+            action.countStampsToActive
+          )
+
+          const newUserReserwationsCount = [
+            ...badDateReserwations,
+            ...newGoodDateReserwation,
+          ]
+
+          userProfilToResetReserwationsCount.stamps[
+            findIndexCompany
+          ].reserwations = newUserReserwationsCount
+        }
+      }
+      return {
+        ...state,
+        user: userProfilToResetReserwationsCount,
       }
     }
 

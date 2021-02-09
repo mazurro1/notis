@@ -579,6 +579,20 @@ export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
 export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE"
 export const RESET_USER_PROFIL = "RESET_USER_PROFIL"
 export const ADD_NEW_COMPANY_STAMPS = "ADD_NEW_COMPANY_STAMPS"
+export const UPDATE_USER_RESERWATIONS_COUNT = "UPDATE_USER_RESERWATIONS_COUNT"
+
+export const updateUserReserwationsCount = (
+  companyId,
+  isStampActive,
+  countStampsToActive
+) => {
+  return {
+    type: UPDATE_USER_RESERWATIONS_COUNT,
+    companyId: companyId,
+    isStampActive: isStampActive,
+    countStampsToActive: countStampsToActive,
+  }
+}
 
 export const addNewCompanyStamps = (companyId, newCompanyStamps) => {
   return {
@@ -1409,7 +1423,8 @@ export const fetchDoReserwation = (
   reserwationMessage,
   serviceId,
   numberPhone,
-  isStampActive
+  isStampActive,
+  countStampsToActive
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1434,6 +1449,15 @@ export const fetchDoReserwation = (
         }
       )
       .then(response => {
+        if (!!isStampActive) {
+          dispatch(
+            updateUserReserwationsCount(
+              companyId,
+              isStampActive,
+              countStampsToActive
+            )
+          )
+        }
         dispatch(addAlertItem("Dokonano rezerwacji.", "green"))
         dispatch(changeReserwationValue(null))
         dispatch(changeSpinner(false))
