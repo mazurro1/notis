@@ -17,18 +17,10 @@ import {
   FaArrowLeft,
 } from "react-icons/fa"
 import SelectCustom from "./SelectCustom"
-import CalendarWorkerReserwatinEvent from "./CalendarWorkerReserwatinEvent"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { AllMonths } from "../common/AllMonths"
 import Popup from "./Popup"
 import SelectDataCalendar from "./SelectDataCalendar"
-import {
-  fetchUpdateWorkerReserwation,
-  fetchDoReserwationWorker,
-} from "../state/actions"
-import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
-import { ServiceColorsReserwationsConvert } from "../common/ServiceColorsReserwationsConvert"
-import CalendarEventItemClicked from "./CalendarEventItemClicked"
 import NewEventView from "./BigCalendarWorkerNoConstHoursTooltip"
 import CalendarWorkerHoursNewEvent from "./CalendarWorkerHoursNewEvent"
 
@@ -245,16 +237,6 @@ const ButtonsPosition = styled.div`
 const ButtonItemStyle = styled.div`
   margin-left: 10px;
 `
-const WarningStyle = styled.div`
-  position: relative;
-  background-color: ${props => Colors(props.siteProps).dangerColorDark};
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding-left: 50px;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-  border-radius: 5px;
-`
 
 const WidthSelect = styled.div`
   width: 160px;
@@ -267,34 +249,6 @@ const ContentSelect = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 10px;
-`
-
-const ContentWorkersAdmin = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-`
-const WorkerItemStyle = styled.div`
-  background-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).secondDarkColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  margin-right: 10px;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition-property: transform, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
 `
 
 const BigCalendarWorkerHoursAutoSave = ({
@@ -345,8 +299,6 @@ const BigCalendarWorkerHoursAutoSave = ({
     value: 1,
     label: "Styczeń",
   })
-
-  const dispatch = useDispatch()
 
   useEffect(() => {
     const newDate = new Date(

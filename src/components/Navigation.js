@@ -16,6 +16,7 @@ import {
   FaBox,
   FaUsers,
   FaStamp,
+  FaHeart,
 } from "react-icons/fa"
 import {
   MdWork,
@@ -78,6 +79,7 @@ import EmployeeWorkingHours from "./EmployeeWorkingHours"
 import WorkerUsersInformation from "./WorkerUsersInformation"
 import AlertExtra from "./AlertExtra"
 import UserStamps from "./UserStamps"
+import UserFavourites from "./UserFavourites"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -342,6 +344,8 @@ const BellAlertsStyle = styled.div`
   overflow: hidden;
   cursor: pointer;
   user-select: none;
+  margin-right: 5px;
+  margin-left: 5px;
 
   &:hover {
     .bell-action {
@@ -384,6 +388,7 @@ const Navigation = ({ children, isMainPage }) => {
     false
   )
   const [stampsVisible, setStampsVisible] = useState(false)
+  const [favouritesVisible, setFavouritesVisible] = useState(false)
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
@@ -580,6 +585,10 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleUserStamps = () => {
     setStampsVisible(prevState => !prevState)
+  }
+
+  const handleUserFavourites = () => {
+    setFavouritesVisible(prevState => !prevState)
   }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
@@ -887,6 +896,21 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
+  const PopupUserFavourites = user && (
+    <Popup
+      popupEnable={favouritesVisible}
+      handleClose={handleUserFavourites}
+      title="Ulubione"
+      fullScreen
+    >
+      <UserFavourites
+        siteProps={siteProps}
+        favouritesCompanys={user.favouritesCompanys}
+        user={user}
+      />
+    </Popup>
+  )
+
   console.log(user)
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
@@ -1128,6 +1152,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupLocalization}
       {PopupUserProfil}
       {PopupUserStamps}
+      {PopupUserFavourites}
       {PopupHistoryReserwations}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
@@ -1221,6 +1246,16 @@ const Navigation = ({ children, isMainPage }) => {
                   {renderCompanyOrCreateCompany}
                   {renderButtonsUp}
                 </ButtonsNav>
+                {!!user && (
+                  <BellAlertsStyle
+                    siteProps={siteProps}
+                    onClick={handleUserFavourites}
+                  >
+                    <IconStyle className="bell-action">
+                      <FaHeart />
+                    </IconStyle>
+                  </BellAlertsStyle>
+                )}
                 {!!user && (
                   <BellAlertsStyle
                     siteProps={siteProps}

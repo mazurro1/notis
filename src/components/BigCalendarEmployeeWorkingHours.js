@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Calendar, momentLocalizer } from "react-big-calendar"
 import moment from "moment"
 import styled from "styled-components"
@@ -408,6 +408,7 @@ const BigCalendarEmployeeWorkingHours = ({
             start: new Date(selectedDayNoConst.start),
             holidays: selectedDayNoConst.holidays,
             fullDate: generateFullDayDate,
+            _id: i,
           }
         } else if (!!selectedDayOff) {
           const selectOpeningDays = arrayOpeningDays[generateDayWeek]
@@ -434,6 +435,7 @@ const BigCalendarEmployeeWorkingHours = ({
                 start: timeStartDayOff,
                 holidays: true,
                 fullDate: generateFullDayDate,
+                _id: i,
               }
             }
           }
@@ -464,6 +466,7 @@ const BigCalendarEmployeeWorkingHours = ({
               start: timeStartDayConst,
               holidays: selectedConstWorkingHour.disabled,
               fullDate: generateFullDayDate,
+              _id: i,
             }
           }
         }

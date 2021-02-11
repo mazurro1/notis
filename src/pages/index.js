@@ -63,6 +63,7 @@ const Home = () => {
   const loadingPlaces = useSelector(state => state.loadingPlaces)
   const siteProps = useSelector(state => state.siteProps)
   const avaibleUpdatePage = useSelector(state => state.avaibleUpdatePage)
+  const user = useSelector(state => state.user)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
 
@@ -103,7 +104,13 @@ const Home = () => {
 
   const mapPlacesData = placesData.map((item, index) => {
     return (
-      <PlacesItem key={item._id} item={item} filters={filters} index={index} />
+      <PlacesItem
+        key={item._id}
+        item={item}
+        filters={filters}
+        index={index}
+        user={user}
+      />
     )
   })
 

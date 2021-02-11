@@ -28,6 +28,9 @@ import {
   CHANGE_LANGUAGE_STYLE,
   CHANGE_ALERT_EXTRA,
   RESET_USER_PROFIL,
+  ADD_FAVOURITES_COMPANY,
+  DELETE_FAVOURITES_COMPANY,
+  RESET_USER_FAVOURITES,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -106,6 +109,7 @@ const initialState = {
   user: null,
   userProfilReset: false,
   userId: null,
+  userResetFavourites: false,
   userPhone: null,
   page: 1,
   avaibleUpdatePage: false,
@@ -427,6 +431,53 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: userProfilToResetReserwationsCount,
+      }
+    }
+
+    case DELETE_FAVOURITES_COMPANY: {
+      const userProfilFavouritesDelete = !!state.user ? state.user : null
+
+      if (!!userProfilFavouritesDelete) {
+        const filterUserFavourites = userProfilFavouritesDelete.favouritesCompanys.filter(
+          item => {
+            return item._id !== action.companyId
+          }
+        )
+        userProfilFavouritesDelete.favouritesCompanys = filterUserFavourites
+      }
+
+      return {
+        ...state,
+        user: userProfilFavouritesDelete,
+        userResetFavourites: true,
+      }
+    }
+
+    case ADD_FAVOURITES_COMPANY: {
+      const userProfilFavouritesAdd = !!state.user ? state.user : null
+
+      if (!!userProfilFavouritesAdd) {
+        const isInUserFavourites = userProfilFavouritesAdd.favouritesCompanys.some(
+          item => item === action.favouriteAddData._id
+        )
+        if (!isInUserFavourites) {
+          userProfilFavouritesAdd.favouritesCompanys.push(
+            action.favouriteAddData
+          )
+        }
+      }
+
+      return {
+        ...state,
+        user: userProfilFavouritesAdd,
+        userResetFavourites: true,
+      }
+    }
+
+    case RESET_USER_FAVOURITES: {
+      return {
+        ...state,
+        userResetFavourites: false,
       }
     }
 

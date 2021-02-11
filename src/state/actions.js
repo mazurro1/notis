@@ -580,6 +580,29 @@ export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE"
 export const RESET_USER_PROFIL = "RESET_USER_PROFIL"
 export const ADD_NEW_COMPANY_STAMPS = "ADD_NEW_COMPANY_STAMPS"
 export const UPDATE_USER_RESERWATIONS_COUNT = "UPDATE_USER_RESERWATIONS_COUNT"
+export const DELETE_FAVOURITES_COMPANY = "DELETE_FAVOURITES_COMPANY"
+export const ADD_FAVOURITES_COMPANY = "ADD_FAVOURITES_COMPANY"
+export const RESET_USER_FAVOURITES = "RESET_USER_FAVOURITES"
+
+export const resetUserFavourites = () => {
+  return {
+    type: RESET_USER_FAVOURITES,
+  }
+}
+
+export const deleteFavouritesCompany = companyId => {
+  return {
+    type: DELETE_FAVOURITES_COMPANY,
+    companyId: companyId,
+  }
+}
+
+export const addFavouritesCompany = favouriteAddData => {
+  return {
+    type: ADD_FAVOURITES_COMPANY,
+    favouriteAddData: favouriteAddData,
+  }
+}
 
 export const updateUserReserwationsCount = (
   companyId,
@@ -3211,6 +3234,60 @@ export const companyUpdateStamp = (token, companyId, stampData) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas aktualizacji pieczątki.", "red"))
+      })
+  }
+}
+
+export const addCompanyFavourites = (token, favouriteAddData) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/add-company-favourites`,
+        {
+          companyId: favouriteAddData._id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addFavouritesCompany(favouriteAddData))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano do ulubionych.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas dodawania do ulubionych.", "red"))
+      })
+  }
+}
+
+export const deleteCompanyFavourites = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/delete-company-favourites`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(deleteFavouritesCompany(companyId))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto z ulubionych.", "green"))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd usuwania z ulubionych.", "red"))
       })
   }
 }

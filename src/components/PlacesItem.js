@@ -1,13 +1,19 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "../components/ButtonIcon"
 import { CSSTransition } from "react-transition-group"
-import { MdWork } from "react-icons/md"
-import { useSelector } from "react-redux"
+import { MdWork, MdImage } from "react-icons/md"
+import { useSelector, useDispatch } from "react-redux"
 import { LinkEffect } from "../common/LinkEffect"
 import { Site } from "../common/Site"
-import { MdImage } from "react-icons/md"
+import { FaHeart, FaRegHeart } from "react-icons/fa"
+import ReactTooltip from "react-tooltip"
+import {
+  addCompanyFavourites,
+  deleteCompanyFavourites,
+  resetUserFavourites,
+} from "../state/actions"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -59,6 +65,24 @@ const PlaceContent = styled.div`
     margin-bottom: 0;
     padding-right: 60px;
     text-transform: uppercase;
+
+    span {
+      position: relative;
+      top: 3px;
+      cursor: pointer;
+      padding-left: 10px;
+      font-size: 1.4rem;
+      color: ${props =>
+        !props.active
+          ? Colors(props.siteProps).darkColorDark
+          : Colors(props.siteProps).dangerColorDark};
+      transition-property: color;
+      transition-duration: 0.3s;
+      transition-timing-function: ease;
+      &:hover {
+        color: ${props => Colors(props.siteProps).dangerColorDark};
+      }
+    }
   }
 
   h6 {
@@ -184,9 +208,23 @@ const NoServicesText = styled.div`
   color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
-const PlacesItem = ({ item, filters, index }) => {
+const PlacesItem = ({ item, filters, index, user }) => {
   const [servicesVisible, setServicesVisible] = useState(false)
+  const [isCompanyInFavourites, setIsCompanyInFavourites] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
+  const userResetFavourites = useSelector(state => state.userResetFavourites)
+
+  useEffect(() => {
+    if (!!user) {
+      const isCompanyInFav = user.favouritesCompanys.some(
+        itemCompany => itemCompany._id === item._id
+      )
+      setIsCompanyInFavourites(isCompanyInFav)
+    }
+    dispatch(resetUserFavourites())
+  }, [user, userResetFavourites])
+
+  const dispatch = useDispatch()
 
   const handleServicesVisible = () => {
     setServicesVisible(prevValue => !prevValue)
@@ -234,6 +272,25 @@ const PlacesItem = ({ item, filters, index }) => {
     </CSSTransition>
   )
 
+  const handleAddRemoveFromFavourites = () => {
+    if (!!user) {
+      if (!isCompanyInFavourites) {
+        const favouriteAddData = {
+          linkPath: item.linkPath,
+          name: item.name,
+          _id: item._id,
+        }
+        dispatch(addCompanyFavourites(user.token, favouriteAddData))
+      } else {
+        dispatch(deleteCompanyFavourites(user.token, item._id))
+      }
+    }
+  }
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [user, isCompanyInFavourites])
+
   return (
     <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
@@ -260,8 +317,33 @@ const PlacesItem = ({ item, filters, index }) => {
             </BackGroundImageDefault>
           )}
         </PlaceImage>
-        <PlaceContent siteProps={siteProps}>
-          <h1>{item.name}</h1>
+        {user && (
+          <ReactTooltip
+            id={`addToFavourites${index}`}
+            effect="float"
+            multiline={true}
+          >
+            <span>
+              {!isCompanyInFavourites
+                ? "Dodaj do ulubionych"
+                : "Usuń z ulubionych"}
+            </span>
+          </ReactTooltip>
+        )}
+        <PlaceContent siteProps={siteProps} active={isCompanyInFavourites}>
+          <h1>
+            {item.name}{" "}
+            {user && (
+              <span
+                data-tip
+                data-for={`addToFavourites${index}`}
+                onClick={handleAddRemoveFromFavourites}
+              >
+                {isCompanyInFavourites ? <FaHeart /> : <FaRegHeart />}
+              </span>
+            )}
+          </h1>
+
           <MarginBottomTitle>
             <h6>{`${item.city}, ${item.district}, ${item.adress}`}</h6>
           </MarginBottomTitle>
