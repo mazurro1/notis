@@ -314,98 +314,102 @@ const GalleryContent = ({
       )
     }
   )
-
+  console.log(isAdmin)
   return (
-    <PositionRelative siteProps={siteProps}>
-      {allImagesCompany.length > 0 ? (
-        <ImageGallery items={allImagesCompany} lazyLoad />
-      ) : (
-        <DefaultNonImage siteProps={siteProps}>
-          <MdImage />
-        </DefaultNonImage>
-      )}
-      {editMode && isAdmin && isCompanyEditProfil && (
-        <ButtonTextPositionMap>
-          <ButtonIcon
-            title="Edytuj galerie"
-            uppercase
-            fontIconSize="16"
-            fontSize="14"
-            icon={<MdEdit />}
-            secondColors
-            onClick={handleEditGalery}
-          />
-        </ButtonTextPositionMap>
-      )}
-      {isAdmin && (
-        <Popup
-          popupEnable={editGallery}
-          handleClose={handleCloseEditGalery}
-          title="Edytuj galerie"
-          secondColors
-        >
-          <TextGallery siteProps={siteProps}>
-            <div>
-              <span>
-                <MdPhotoSizeSelectLarge />
-              </span>
-              Optymalny rozmiar zdjęcia: 800x600px.
-            </div>
-            <div>
-              <span>
-                <MdMoveToInbox />
-              </span>
-              Maksymalny rozmiar zdjęcia: 2mpx.
-            </div>
-            <div>
-              <span>
-                <MdImage />
-              </span>
-              Maksymalna liczba zdjęć: 10.
-            </div>
-          </TextGallery>
-          <ImagesPositionsFlex>
-            {mapCompanyImages}
-            {!disabledAddImage && (
-              <AddImage>
-                <input
-                  type="file"
-                  id="file"
-                  accept="image/*"
-                  onChange={handleAddImage}
-                />
-                <label htmlFor="file">
-                  <MdAddAPhoto />
-                </label>
-              </AddImage>
-            )}
-          </ImagesPositionsFlex>
-          <ButtonTextPositionMap>
-            <MarginButton>
+    <>
+      {(isAdmin || !isCompanyEditProfil) && (
+        <PositionRelative siteProps={siteProps}>
+          {allImagesCompany.length > 0 ? (
+            <ImageGallery items={allImagesCompany} lazyLoad />
+          ) : (
+            <DefaultNonImage siteProps={siteProps}>
+              <MdImage />
+            </DefaultNonImage>
+          )}
+          {editMode && isAdmin && isCompanyEditProfil && (
+            <ButtonTextPositionMap>
               <ButtonIcon
-                title="Zakończ edycję"
+                title="Edytuj galerie"
                 uppercase
                 fontIconSize="16"
                 fontSize="14"
-                icon={<FaArrowLeft />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleCloseEditGalery}
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleEditGalery}
               />
-            </MarginButton>
-          </ButtonTextPositionMap>
-          <ReactTooltip id="saveImage" effect="float" multiline={true}>
-            <span>Zapisz zdjęcie</span>
-          </ReactTooltip>
-          <ReactTooltip id="deleteImage" effect="float" multiline={true}>
-            <span>Usuń zdjęcie</span>
-          </ReactTooltip>
-          <ReactTooltip id="mainImage" effect="float" multiline={true}>
-            <span>Ustaw zdjęcie jako zdjęcie główne</span>
-          </ReactTooltip>
-        </Popup>
+            </ButtonTextPositionMap>
+          )}
+          {isAdmin && (
+            <Popup
+              popupEnable={editGallery}
+              handleClose={handleCloseEditGalery}
+              title="Edytuj galerie"
+              secondColors
+            >
+              <TextGallery siteProps={siteProps}>
+                <div>
+                  <span>
+                    <MdPhotoSizeSelectLarge />
+                  </span>
+                  Optymalny rozmiar zdjęcia: 800x600px.
+                </div>
+                <div>
+                  <span>
+                    <MdMoveToInbox />
+                  </span>
+                  Maksymalny rozmiar zdjęcia: 2mpx.
+                </div>
+                <div>
+                  <span>
+                    <MdImage />
+                  </span>
+                  Maksymalna liczba zdjęć: 10.
+                </div>
+              </TextGallery>
+              <ImagesPositionsFlex>
+                {mapCompanyImages}
+                {!disabledAddImage && (
+                  <AddImage>
+                    <input
+                      type="file"
+                      id="file"
+                      accept="image/*"
+                      onChange={handleAddImage}
+                    />
+                    <label htmlFor="file">
+                      <MdAddAPhoto />
+                    </label>
+                  </AddImage>
+                )}
+              </ImagesPositionsFlex>
+              <ButtonTextPositionMap>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Zakończ edycję"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleCloseEditGalery}
+                  />
+                </MarginButton>
+              </ButtonTextPositionMap>
+              <ReactTooltip id="saveImage" effect="float" multiline={true}>
+                <span>Zapisz zdjęcie</span>
+              </ReactTooltip>
+              <ReactTooltip id="deleteImage" effect="float" multiline={true}>
+                <span>Usuń zdjęcie</span>
+              </ReactTooltip>
+              <ReactTooltip id="mainImage" effect="float" multiline={true}>
+                <span>Ustaw zdjęcie jako zdjęcie główne</span>
+              </ReactTooltip>
+            </Popup>
+          )}
+        </PositionRelative>
       )}
-    </PositionRelative>
+    </>
   )
 }
 export default GalleryContent

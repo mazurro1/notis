@@ -36,6 +36,10 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  EDIT_USER_COMPANY_AVAILABILITY,
+  DELETE_USER_COMPANY_AVAILABILITY,
+  RESER_USER_COMPANY_AVAILABILITY,
+  ADD_USER_COMPANY_AVAILABILITY,
   UPDATE_USER_RESERWATIONS_COUNT,
   ADD_NEW_COMPANY_STAMPS,
   UPDATE_USER_IMAGE,
@@ -151,6 +155,9 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  userCompanyAvailability: [],
+  userCompanyAvailabilityPermission: false,
+  resetUserCompanyAvailability: false,
   updatedImageIdCompany: null,
   bellAlertsActive: false,
   companyUsersInformations: [],
@@ -486,6 +493,60 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case EDIT_USER_COMPANY_AVAILABILITY: {
+      let editUserCompanyAvailability = [...state.userCompanyAvailability]
+      if (editUserCompanyAvailability.length > 0 && action.itemId) {
+        const findIndexItem = editUserCompanyAvailability.findIndex(
+          item => item._id === action.itemId
+        )
+        if (findIndexItem >= 0) {
+          editUserCompanyAvailability[findIndexItem].itemName = action.itemName
+          editUserCompanyAvailability[findIndexItem].itemCount =
+            action.itemCount
+        }
+      }
+      return {
+        ...state,
+        userCompanyAvailability: editUserCompanyAvailability,
+        resetUserCompanyAvailability: true,
+      }
+    }
+
+    case DELETE_USER_COMPANY_AVAILABILITY: {
+      let newUserCompanyAvailability = [...state.userCompanyAvailability]
+      if (newUserCompanyAvailability.length > 0 && action.itemId) {
+        const filterItemsAvailability = newUserCompanyAvailability.filter(
+          item => item._id !== action.itemId
+        )
+        newUserCompanyAvailability = filterItemsAvailability
+      }
+      return {
+        ...state,
+        userCompanyAvailability: newUserCompanyAvailability,
+        resetUserCompanyAvailability: true,
+      }
+    }
+
+    case RESER_USER_COMPANY_AVAILABILITY: {
+      return {
+        ...state,
+        resetUserCompanyAvailability: false,
+      }
+    }
+
+    case ADD_USER_COMPANY_AVAILABILITY: {
+      let newUserCompanyAvailability = [...state.userCompanyAvailability]
+      if (action.data.length > 0) {
+        newUserCompanyAvailability = [...action.data]
+      }
+      return {
+        ...state,
+        userCompanyAvailability: newUserCompanyAvailability,
+        userCompanyAvailabilityPermission: action.hasPermission,
+        resetUserCompanyAvailability: true,
+      }
+    }
 
     case ADD_NEW_COMPANY_STAMPS: {
       const patchWorkCompanyNewStamp = !!state.workCompanyData

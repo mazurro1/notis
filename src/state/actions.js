@@ -583,6 +583,41 @@ export const UPDATE_USER_RESERWATIONS_COUNT = "UPDATE_USER_RESERWATIONS_COUNT"
 export const DELETE_FAVOURITES_COMPANY = "DELETE_FAVOURITES_COMPANY"
 export const ADD_FAVOURITES_COMPANY = "ADD_FAVOURITES_COMPANY"
 export const RESET_USER_FAVOURITES = "RESET_USER_FAVOURITES"
+export const ADD_USER_COMPANY_AVAILABILITY = "ADD_USER_COMPANY_AVAILABILITY"
+export const RESER_USER_COMPANY_AVAILABILITY = "RESER_USER_COMPANY_AVAILABILITY"
+export const DELETE_USER_COMPANY_AVAILABILITY =
+  "DELETE_USER_COMPANY_AVAILABILITY"
+export const EDIT_USER_COMPANY_AVAILABILITY = "EXIT_USER_COMPANY_AVAILABILITY"
+
+export const editUserCompanyAvailability = (itemId, itemName, itemCount) => {
+  return {
+    type: EDIT_USER_COMPANY_AVAILABILITY,
+    itemId: itemId,
+    itemName: itemName,
+    itemCount: itemCount,
+  }
+}
+
+export const deleteUserCompanyAvailability = itemId => {
+  return {
+    type: DELETE_USER_COMPANY_AVAILABILITY,
+    itemId: itemId,
+  }
+}
+
+export const resetFetchUserCompanyAvailability = () => {
+  return {
+    type: RESER_USER_COMPANY_AVAILABILITY,
+  }
+}
+
+export const addUserCompanyAvailability = (data, hasPermission) => {
+  return {
+    type: ADD_USER_COMPANY_AVAILABILITY,
+    data: data,
+    hasPermission: hasPermission,
+  }
+}
 
 export const resetUserFavourites = () => {
   return {
@@ -3288,6 +3323,136 @@ export const deleteCompanyFavourites = (token, companyId) => {
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd usuwania z ulubionych.", "red"))
+      })
+  }
+}
+
+export const getCompanyAvailability = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeAlertExtra("Pobieranie stanu magazynowego", true))
+    return axios
+      .post(
+        `${Site.serverUrl}/get-company-availability`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addUserCompanyAvailability(
+            response.data.availability,
+            response.data.hasPermission
+          )
+        )
+        dispatch(changeAlertExtra(null, false))
+      })
+      .catch(error => {
+        dispatch(changeAlertExtra(null, false))
+        dispatch(
+          addAlertItem("Błąd podczas pobierania stanu magazynowego.", "red")
+        )
+      })
+  }
+}
+
+export const addCompanyAvailability = (
+  token,
+  companyId,
+  itemName,
+  itemCount
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-company-availability`,
+        {
+          companyId: companyId,
+          itemName: itemName,
+          itemCount: itemCount,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addUserCompanyAvailability(response.data.availability))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Błąd podczas pobierania stanu magazynowego.", "red")
+        )
+      })
+  }
+}
+
+export const deleteCompanyAvailability = (token, companyId, itemId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/delete-company-availability`,
+        {
+          companyId: companyId,
+          itemId: itemId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(deleteUserCompanyAvailability(itemId))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas usuwania przedmiotu.", "red"))
+      })
+  }
+}
+
+export const editCompanyAvailability = (
+  token,
+  companyId,
+  itemId,
+  itemName,
+  itemCount
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/edit-company-availability`,
+        {
+          companyId: companyId,
+          itemId: itemId,
+          itemName: itemName,
+          itemCount: itemCount,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(editUserCompanyAvailability(itemId, itemName, itemCount))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas edytowania przedmiotu.", "red"))
       })
   }
 }

@@ -23,6 +23,7 @@ const TitleCategory = styled.div`
   text-transform: uppercase;
   padding-right: 50px;
   margin-bottom: 10px;
+  overflow: hidden;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -87,6 +88,7 @@ const BackgroundEdit = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  border-radius: 5px;
 `
 
 const BackgroundEditContent = styled.div`

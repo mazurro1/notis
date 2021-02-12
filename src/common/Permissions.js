@@ -9,16 +9,16 @@ export const Permissions = [
   },
   {
     value: 3,
-    label: "Happy hours",
+    label: "Happy hours, promocje, pieczątki",
   },
   {
     value: 4,
     label: "Grafik wszystkich pracowników",
   },
-  {
-    value: 5,
-    label: "Historia rezerwacji wszystkich pracowników",
-  },
+  // {
+  //   value: 5,
+  //   label: "Historia rezerwacji wszystkich pracowników",
+  // },
   {
     value: 6,
     label: "Opinie o klientach",

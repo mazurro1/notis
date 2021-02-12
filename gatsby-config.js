@@ -5,7 +5,11 @@
  */
 
 module.exports = {
-  /* Your site config here */
+  siteMetadata: {
+    title: `Nootis rezerwations`,
+    author: `Hubert Mazur`,
+    description: `Rezerwacje online`,
+  },
 
   plugins: [
     {
@@ -37,5 +41,22 @@ module.exports = {
     "gatsby-plugin-transition-link",
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
+    `gatsby-plugin-offline`,
   ],
 }
+
+const siteMetadata = module.exports.siteMetadata
+
+module.exports.plugins.push({
+  resolve: `gatsby-plugin-manifest`,
+  options: {
+    name: siteMetadata.title,
+    short_name: `Nootis`,
+    start_url: `/`,
+    background_color: `#FF453C`,
+    theme_color: `#070707`,
+    display: "standalone",
+    icon: "src/images/favicon-32x32.png",
+    legacy: true,
+  },
+})

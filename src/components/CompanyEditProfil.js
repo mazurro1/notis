@@ -48,7 +48,7 @@ const CompanyEditProfil = () => {
       selectedWorker = findWorker
       if (!!findWorker.permissions) {
         const workerHasPermission = findWorker.permissions.some(
-          perm => perm === 2 || perm === 3 || perm === 4
+          perm => perm === 2 || perm === 3 || perm === 4 || perm === 6
         )
         if (workerHasPermission) {
           userHasAccess = true

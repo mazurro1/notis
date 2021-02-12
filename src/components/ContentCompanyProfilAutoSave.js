@@ -279,6 +279,11 @@ const ContentCompanyProfil = ({
     userHasPermToWorkers = selectedWorker.permissions.some(perm => perm === 4)
   }
 
+  let userHasPermToOpinions = !isCompanyEditProfil || isAdmin
+  if (!userHasPermToOpinions && selectedWorker) {
+    userHasPermToOpinions = selectedWorker.permissions.some(perm => perm === 6)
+  }
+
   let userHasPermisionToOther = !isCompanyEditProfil || isAdmin
   let userIsBlocked = false
   if (!!company.usersInformation && !!user) {
@@ -341,7 +346,7 @@ const ContentCompanyProfil = ({
           )}
         </LeftColumn>
         <RightColumn>
-          {editMode && isCompanyEditProfil ? (
+          {editMode && isCompanyEditProfil && isAdmin ? (
             <RightColumnItem
               {...companyEditProfilProps}
               siteProps={siteProps}
@@ -364,6 +369,7 @@ const ContentCompanyProfil = ({
               />
             </RightColumnItem>
           ) : (
+            (isAdmin || !isCompanyEditProfil) &&
             !!company.maps.lat &&
             !!company.maps.long && (
               <RightColumnItem noBg>
@@ -623,17 +629,19 @@ const ContentCompanyProfil = ({
               />
             )}
         </RightColumn>
-        <OpinionsComponent
-          companyOpinions={company.opinions}
-          siteProps={siteProps}
-          opinionsCount={company.opinionsCount}
-          opinionsValue={company.opinionsValue}
-          companyName={company.name}
-          companyId={company._id}
-          isCompanyEditProfil={isCompanyEditProfil}
-          isAdmin={isAdmin}
-          user={user}
-        />
+        {userHasPermToOpinions && (
+          <OpinionsComponent
+            companyOpinions={company.opinions}
+            siteProps={siteProps}
+            opinionsCount={company.opinionsCount}
+            opinionsValue={company.opinionsValue}
+            companyName={company.name}
+            companyId={company._id}
+            isCompanyEditProfil={isCompanyEditProfil}
+            isAdmin={isAdmin}
+            user={user}
+          />
+        )}
       </ContentDiv>
       {isCompanyEditProfil && (
         <ReactTooltip id="editMode" effect="float" multiline={true}>

@@ -43,7 +43,7 @@ const PopupContent = styled.div`
   position: relative;
   background-color: white;
   max-width: ${props => props.maxWidth + "px"};
-  width: 100%;
+  width: 90%;
   height: ${props => (props.fullScreen ? "100vh" : "auto")};
   margin: 0 auto;
   border-radius: 5px;

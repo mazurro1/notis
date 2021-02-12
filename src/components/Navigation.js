@@ -80,6 +80,7 @@ import WorkerUsersInformation from "./WorkerUsersInformation"
 import AlertExtra from "./AlertExtra"
 import UserStamps from "./UserStamps"
 import UserFavourites from "./UserFavourites"
+import CompanyAvailability from "./CompanyAvailability"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -389,6 +390,7 @@ const Navigation = ({ children, isMainPage }) => {
   )
   const [stampsVisible, setStampsVisible] = useState(false)
   const [favouritesVisible, setFavouritesVisible] = useState(false)
+  const [availabilityVisible, setAvailabilityVisible] = useState(false)
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
@@ -589,6 +591,11 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleUserFavourites = () => {
     setFavouritesVisible(prevState => !prevState)
+  }
+
+  const handleClickAvailability = () => {
+    setAvailabilityVisible(prevState => !prevState)
+    setWorkPropsVisible(prevState => !prevState)
   }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
@@ -911,11 +918,27 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
+  const PopupCompanyAvailability = user && (
+    <Popup
+      popupEnable={availabilityVisible}
+      handleClose={handleClickAvailability}
+      title="Stan magazynowy"
+      fullScreen
+    >
+      <CompanyAvailability
+        siteProps={siteProps}
+        user={user}
+        siteProps={siteProps}
+      />
+    </Popup>
+  )
+
   console.log(user)
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
   let hasCompany = false
+  let hasPermission = false
   if (!!user) {
     if (user.hasCompany) {
       const selectWorker = user.company.workers.find(
@@ -924,10 +947,13 @@ const Navigation = ({ children, isMainPage }) => {
       workerHasAccessClientsOpinions = user.company.owner === user.userId
       workerHasAccessAvailability = user.company.owner === user.userId
       hasCompany = true
+      hasPermission = user.company.owner === user.userId
       if (!!selectWorker) {
-        const hasPermission = selectWorker.permissions.some(
-          perm => perm === 2 || perm === 3 || perm === 4
-        )
+        if (!!!hasPermission) {
+          hasPermission = selectWorker.permissions.some(
+            perm => perm === 2 || perm === 3 || perm === 4 || perm == 6
+          )
+        }
         if (hasPermission) {
           workerHasAccessButton = true
         }
@@ -961,7 +987,7 @@ const Navigation = ({ children, isMainPage }) => {
       maxWidth="300"
     >
       <div>
-        {hasCompany && (
+        {hasCompany && hasPermission && (
           <div onClick={handleClickAdminPanel}>
             <LinkEffect
               path="/company-profil"
@@ -1019,7 +1045,7 @@ const Navigation = ({ children, isMainPage }) => {
               fontIconSize="20"
               fontSize="16"
               icon={<FaBox />}
-              // onClick={handleClickWork}
+              onClick={handleClickAvailability}
             />
           </MarginButtonsWork>
         )}
@@ -1153,6 +1179,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupUserProfil}
       {PopupUserStamps}
       {PopupUserFavourites}
+      {PopupCompanyAvailability}
       {PopupHistoryReserwations}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
