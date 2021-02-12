@@ -201,7 +201,7 @@ const BackgroundCalendarStyle = styled.div`
       border-left: 1px solid #e0e0e0 !important;
     }
     .rbc-header {
-      font-weight: 500;
+      font-family: "Poppins-Regular", sans-serif;
     }
     .rbc-today {
       background-color: #5ec2d7;

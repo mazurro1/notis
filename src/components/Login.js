@@ -34,7 +34,7 @@ const ButtonFacebook = styled.div`
 const TextCheckbox = styled.span`
   color: ${props => Colors(props.siteProps).primaryColor};
   padding-left: 10px;
-  font-weight: 600;
+  font-family: "Poppins-Bold", sans-serif;
   user-select: none;
 `
 

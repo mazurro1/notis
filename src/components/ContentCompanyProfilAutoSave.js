@@ -102,7 +102,7 @@ const RightColumnItem = styled.div`
 const TitleRightColumn = styled.h2`
   font-size: ${props => (props.adress ? "0.85rem" : "1.25rem")};
   display: inline-block;
-  font-weight: ${props => (props.adress ? "700" : "500")};
+  font-family: ${props => (props.adress ? "Poppins-Bold" : "Poppins-Regular")};
   word-wrap: break-word;
   border-bottom: 2px solid
     ${props =>

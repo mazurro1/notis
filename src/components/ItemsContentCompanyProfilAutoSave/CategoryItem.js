@@ -26,7 +26,7 @@ const TextCheckbox = styled.span`
   position: relative;
   top: -7px;
   padding-left: 10px;
-  font-weight: 600;
+  font-family: "Poppins-Bold", sans-serif;
   user-select: none;
   font-size: 1rem;
 `

@@ -258,7 +258,7 @@ const TimeReserwation = styled.div`
 
   .statusReserwation {
     display: inline-block;
-    font-weight: 700;
+    font-family: "Poppins-Bold", sans-serif;
     color: ${props =>
       props.color === "green"
         ? Colors(props.siteProps).successColorDark

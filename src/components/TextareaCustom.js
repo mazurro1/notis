@@ -30,7 +30,7 @@ const CustomStyleTextarea = styled.textarea`
 
 const ErrorText = styled.div`
   font-size: 0.75rem;
-  font-weight: bold;
+  font-family: "Poppins-Bold", sans-serif;
   color: ${props => Colors(props.siteProps).dangerColor};
   padding-left: 10px;
 `

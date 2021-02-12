@@ -86,6 +86,10 @@ const ServiceItem = styled.div`
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+
+  .bold {
+    font-family: "Poppins-Medium", sans-serif;
+  }
 `
 
 const ArrowDeleteReserwation = styled.div`
@@ -140,7 +144,7 @@ const ArrowAddOpinionReserwation = styled.div`
 
 const TitleService = styled.div`
   font-size: 1.1rem;
-  font-weight: bold;
+  font-family: "Poppins-Bold", sans-serif;
 `
 
 const PriceService = styled.span`
@@ -148,7 +152,7 @@ const PriceService = styled.span`
   background-color: red;
   font-size: 0.8rem;
   padding: 2px 5px;
-  font-weight: 500;
+  font-family: "Poppins-Regular", sans-serif;
   color: white;
   margin-left: 10px;
   border-radius: 5px;
@@ -281,7 +285,7 @@ const OpinionText = styled.div`
 
 const OpinionTextReserwation = styled.div`
   margin-top: 20px;
-  font-weight: 700;
+  font-family: "Poppins-Bold", sans-serif;
   padding-left: 5px;
 `
 
@@ -492,26 +496,29 @@ const UserHistoryCategoryItem = ({
       </TitleService>
       <div>
         Wykonawca usługi:
-        <b>{workerName}</b>
+        <span className="bold">{workerName}</span>
       </div>
       <div>
         Data usługi:
-        <b>{` ${item.dateDay < 10 ? `0${item.dateDay}` : item.dateDay}-${
-          item.dateMonth < 10 ? `0${item.dateMonth}` : item.dateMonth
-        }-${item.dateYear}`}</b>
+        <span className="bold">{` ${
+          item.dateDay < 10 ? `0${item.dateDay}` : item.dateDay
+        }-${item.dateMonth < 10 ? `0${item.dateMonth}` : item.dateMonth}-${
+          item.dateYear
+        }`}</span>
       </div>
       <div>
-        Godzina usługi:<b>{` ${item.dateStart}-${item.dateEnd}`}</b>
+        Godzina usługi:
+        <span className="bold">{` ${item.dateStart}-${item.dateEnd}`}</span>
       </div>
       {!!item.reserwationMessage && (
         <div>
-          Wiadomość: <b>{item.reserwationMessage}</b>
+          Wiadomość: <span className="bold">{item.reserwationMessage}</span>
         </div>
       )}
       {!!historyItemHasActiveSomePromotion && (
         <div>
           Promocja:{" "}
-          <b>
+          <span className="bold">
             {!!item.activePromotion
               ? "Promocja"
               : !!item.activeHappyHour
@@ -519,7 +526,7 @@ const UserHistoryCategoryItem = ({
               : !!item.activeStamp
               ? "Komplet pieczątek"
               : ""}
-          </b>
+          </span>
         </div>
       )}
       <div>

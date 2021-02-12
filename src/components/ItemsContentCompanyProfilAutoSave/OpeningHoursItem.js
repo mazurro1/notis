@@ -12,7 +12,7 @@ import { useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
-  font-weight: 600;
+  font-family: "Poppins-Bold", sans-serif;
   user-select: none;
 `
 

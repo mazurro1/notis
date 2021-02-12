@@ -47,7 +47,7 @@ const ServiceItem = styled.div`
 `
 
 const TitleService = styled.div`
-  font-weight: bold;
+  font-family: "Poppins-Bold", sans-serif;
   font-size: 1.1rem;
 `
 
@@ -76,7 +76,7 @@ const PriceService = styled.span`
   background-color: red;
   font-size: 0.8rem;
   padding: 2px 5px;
-  font-weight: 500;
+  font-family: "Poppins-Regular", sans-serif;
   color: white;
   margin-left: 10px;
   border-radius: 5px;
@@ -99,7 +99,7 @@ const TextCheckbox = styled.span`
   position: relative;
   top: -2px;
   padding-left: 10px;
-  font-weight: 600;
+  font-family: "Poppins-Bold", sans-serif;
   user-select: none;
   font-size: 1rem;
 `

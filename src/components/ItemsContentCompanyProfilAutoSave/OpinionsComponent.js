@@ -25,7 +25,7 @@ const OpinionsComponentStyle = styled.div`
 const TitleRightColumnOpinion = styled.h2`
   position: relative;
   display: inline-block;
-  font-weight: ${props => (props.adress ? "700" : "500")};
+  font-family: ${props => (props.adress ? "Poppins-Bold" : "Poppins-Regular")};
   word-wrap: break-word;
   font-size: 2rem;
   border-bottom: 2px solid
@@ -83,7 +83,6 @@ const AllOpinionsSummary = styled.div`
     props.siteProps.dark || props.siteProps.blind
       ? "rgba(255, 255, 255, 0.8)"
       : "rgba(0, 0, 0, 0.6)"};
-  /* font-weight: 700; */
 `
 
 const ButtonMoreOpinion = styled.div`

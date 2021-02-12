@@ -10,7 +10,7 @@ import styled from "styled-components"
 const DayHoursStyle = styled.h2`
   font-size: 1.25rem;
   display: inline-block;
-  font-weight: 500;
+  font-family: "Poppins-Regular", sans-serif;
   border-bottom: 2px solid ${props => Colors(props.siteProps).secondColor};
 `
 

@@ -18,7 +18,7 @@ const TimeStyle = styled.div`
         ? `${Colors(props.siteProps).textNormalBlack} !important`
         : `${Colors(props.siteProps).textNormalBlack} !important`};
     margin-right: 5px;
-    font-weight: 500 !important;
+    font-family: "Poppins-Regular", sans-serif !important;
   }
 `
 const TextBeforeCompany = styled.div`

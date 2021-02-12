@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
-  font-weight: 600;
+  font-family: "Poppins-Bold", sans-serif;
   user-select: none;
 `
 
@@ -161,7 +161,7 @@ const ButtonSubmit = styled.button`
 `
 
 const IsCompanyPaused = styled.div`
-  font-weight: bold;
+  font-family: "Poppins-Bold", sans-serif;
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: ${props => props.color};

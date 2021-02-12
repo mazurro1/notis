@@ -1,7 +1,7 @@
 export const Permissions = [
   {
     value: 1,
-    label: "Stan magazynowy",
+    label: "Edycja stanu magazynowego",
   },
   {
     value: 2,

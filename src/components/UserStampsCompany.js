@@ -147,7 +147,7 @@ const StampItemTitle = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
   span {
     font-size: 1.1rem;
-    font-weight: 700;
+    font-family: "Poppins-Bold", sans-serif;
   }
 `
 

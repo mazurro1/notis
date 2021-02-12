@@ -124,7 +124,7 @@ const AlertItemStyle = styled.div`
         : props.alertColor === "orange"
         ? Colors(props.siteProps).secondDarkColor
         : Colors(props.siteProps).darkColorDark};
-    font-weight: 700;
+    font-family: "Poppins-Bold", sans-serif;
   }
 `
 

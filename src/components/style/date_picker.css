@@ -115,7 +115,7 @@
   color: rgba(172, 179, 187, 0.85);
 }
 .date_picker-week-day.is-today {
-  font-weight: 700;
+  font-family: "Poppins-Bold", sans-serif;
 }
 .date_picker-week-day.is-selected {
   background: #e3effc;
@@ -200,7 +200,7 @@
 }
 .date_picker-notice {
   font-size: 11px;
-  font-weight: 700;
+  font-family: "Poppins-Bold", sans-serif;
   margin-bottom: 15px;
   border-radius: 5px;
   padding: 15px;
