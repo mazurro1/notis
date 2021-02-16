@@ -5,6 +5,7 @@ import { FaChrome, FaStamp } from "react-icons/fa"
 import { Collapse } from "react-collapse"
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
+import { Site } from "../common/Site"
 
 const CategoryItemStyle = styled.div`
   margin-top: 5px;
@@ -22,10 +23,15 @@ const TitleCategory = styled.div`
   user-select: none;
   text-transform: uppercase;
   cursor: pointer;
-  padding-right: 250px;
+  padding-right: 100px;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    padding-bottom: 40px;
+    padding-right: 10px;
+  }
 `
 
 const PositionCompanyLink = styled.div`
@@ -51,6 +57,11 @@ const PositionCompanyLink = styled.div`
       color: ${props => Colors(props.siteProps).primaryColorDark};
     }
   }
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    top: auto;
+    bottom: -5px;
+  }
 `
 
 const IconArrowPosition = styled.div`
@@ -75,6 +86,10 @@ const IconArrowPosition = styled.div`
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
+  }
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    top: auto;
+    bottom: 0px;
   }
 `
 

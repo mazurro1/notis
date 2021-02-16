@@ -10,7 +10,7 @@ import {
   MdLocationCity,
 } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
-import SelectCustom from "./SelectCustom"
+import SelectCreated from "./SelectCreated"
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
@@ -107,7 +107,7 @@ const CreateCompany = () => {
   return (
     <form onSubmit={handleSubmit}>
       <SelectStyles>
-        <SelectCustom
+        <SelectCreated
           options={AllIndustries[siteProps.language]}
           value={industries}
           handleChange={handleChangeIndustries}
@@ -116,6 +116,7 @@ const CreateCompany = () => {
           widthAuto
           isMulti
           isClearable={false}
+          darkSelect
         />
       </SelectStyles>
       <InputIcon

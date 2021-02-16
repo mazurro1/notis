@@ -21,6 +21,7 @@ import MapsEditComponent from "./MapsEditComponent"
 import OpinionsComponent from "./ItemsContentCompanyProfilAutoSave/OpinionsComponent"
 import GalleryContent from "./ItemsContentCompanyProfilAutoSave/GalleryContent"
 import StampsContent from "./ItemsContentCompanyProfilAutoSave/StampsContent"
+import ShopStoreContent from "./ItemsContentCompanyProfilAutoSave/ShopStoreContent"
 
 const TextH1 = styled.div`
   position: relative;
@@ -102,7 +103,7 @@ const RightColumnItem = styled.div`
 const TitleRightColumn = styled.h2`
   font-size: ${props => (props.adress ? "0.85rem" : "1.25rem")};
   display: inline-block;
-  font-family: ${props => (props.adress ? "Poppins-Bold" : "Poppins-Regular")};
+  font-family: ${props => (props.adress ? "Poppins-Bold" : "Poppins-Medium")};
   word-wrap: break-word;
   border-bottom: 2px solid
     ${props =>
@@ -178,6 +179,7 @@ const ContentCompanyProfil = ({
   const [editMap, setEditMap] = useState(false)
   const [editGallery, setEditGallery] = useState(false)
   const [editStamps, setEditStamps] = useState(false)
+  const [editShopStore, setEditShopStore] = useState(false)
 
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
@@ -196,7 +198,8 @@ const ContentCompanyProfil = ({
     editPromotions ||
     editMap ||
     editGallery ||
-    editStamps
+    editStamps ||
+    editShopStore
 
   const handleResetAllEditedComponents = () => {
     setAllCategoryEdit(false)
@@ -212,6 +215,7 @@ const ContentCompanyProfil = ({
     setEditMap(false)
     setEditGallery(false)
     setEditStamps(false)
+    setEditShopStore(false)
   }
 
   const handleEdit = setChange => {
@@ -284,6 +288,11 @@ const ContentCompanyProfil = ({
     userHasPermToOpinions = selectedWorker.permissions.some(perm => perm === 6)
   }
 
+  let userHasPermToShopStore = !isCompanyEditProfil || isAdmin
+  if (!userHasPermToShopStore && selectedWorker) {
+    userHasPermToShopStore = selectedWorker.permissions.some(perm => perm === 7)
+  }
+
   let userHasPermisionToOther = !isCompanyEditProfil || isAdmin
   let userIsBlocked = false
   if (!!company.usersInformation && !!user) {
@@ -328,6 +337,7 @@ const ContentCompanyProfil = ({
             setEditGallery={setEditGallery}
             handleResetAllEditedComponents={handleResetAllEditedComponents}
             isAdmin={isAdmin}
+            disabledEditButtons={disabledEditButtons}
           />
           {userHasPermToServices && (
             <AllCategoryOfServices
@@ -344,6 +354,19 @@ const ContentCompanyProfil = ({
               editMode={editMode}
             />
           )}
+          {/* {userHasPermToShopStore && (
+            <ShopStoreContent
+              ButtonEditPosition={ButtonEditPosition}
+              handleResetAllEditedComponents={handleResetAllEditedComponents}
+              disabledEditButtons={disabledEditButtons}
+              editShopStore={editShopStore}
+              setEditShopStore={setEditShopStore}
+              siteProps={siteProps}
+              editMode={editMode}
+              {...companyEditProfilProps}
+              companyShopStore={company.shopStore}
+            />
+          )} */}
         </LeftColumn>
         <RightColumn>
           {editMode && isCompanyEditProfil && isAdmin ? (

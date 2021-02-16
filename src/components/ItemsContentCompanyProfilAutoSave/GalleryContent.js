@@ -80,6 +80,11 @@ const ButtonTextPositionMap = styled.div`
 const PositionRelative = styled.div`
   position: relative;
   overflow: hidden;
+  opacity: ${props => (props.disabled ? "0.5" : "1")};
+
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 
   .image-gallery-slide-wrapper {
     border-radius: 5px;
@@ -110,8 +115,12 @@ const PositionRelative = styled.div`
 
   .image-gallery-swipe {
     img {
-      height: 400px;
+      height: 600px;
       max-height: 80vh;
+
+      @media all and (max-width: ${Site.mobileSize + "px"}) {
+        height: 230px;
+      }
     }
   }
 
@@ -161,6 +170,7 @@ const GalleryContent = ({
   setEditGallery,
   handleResetAllEditedComponents,
   isAdmin = false,
+  disabledEditButtons,
 }) => {
   const [allImagesCompany, setAllImagesCompany] = useState([])
   const [addedImages, setAddedImages] = useState([])
@@ -314,11 +324,14 @@ const GalleryContent = ({
       )
     }
   )
-  console.log(isAdmin)
+
   return (
     <>
       {(isAdmin || !isCompanyEditProfil) && (
-        <PositionRelative siteProps={siteProps}>
+        <PositionRelative
+          siteProps={siteProps}
+          disabled={disabledEditButtons && !editGallery}
+        >
           {allImagesCompany.length > 0 ? (
             <ImageGallery items={allImagesCompany} lazyLoad />
           ) : (
@@ -335,6 +348,7 @@ const GalleryContent = ({
                 fontSize="14"
                 icon={<MdEdit />}
                 secondColors
+                disabled={disabledEditButtons}
                 onClick={handleEditGalery}
               />
             </ButtonTextPositionMap>

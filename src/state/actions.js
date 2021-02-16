@@ -2233,7 +2233,6 @@ export const fetchCompanyUsersInformationsMessage = (
         dispatch(
           addNewMessageToUserInformation(selectedUserId, response.data.message)
         )
-        console.log(response.data.message)
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano wiadomość o kliencie.", "green"))
       })
@@ -2395,7 +2394,6 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        console.log(services)
         if (!!services.new) {
           if (services.new.length > 0) {
             dispatch(
@@ -2974,7 +2972,6 @@ export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
         }
       )
       .then(response => {
-        console.log(company)
         dispatch(
           addEditedOpinionToReserwation(
             opinionData.reserwationId,
@@ -3384,7 +3381,7 @@ export const addCompanyAvailability = (
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(addUserCompanyAvailability(response.data.availability))
+        dispatch(addUserCompanyAvailability(response.data.availability, null))
       })
       .catch(error => {
         dispatch(changeSpinner(false))

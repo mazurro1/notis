@@ -492,7 +492,7 @@ const AllCategoryOfServices = ({
               classNames="popup"
               unmountOnExit
             >
-              <BackgroundEdit>
+              <BackgroundEdit onClick={handleClickContent}>
                 <BackgroundEditContent onClick={handleClickContent}>
                   <InputIcon
                     icon={<MdTitle />}

@@ -47,6 +47,7 @@ const ButtonAlertCompany = styled.button`
   cursor: pointer;
   border: none;
   border-radius: 5px;
+  font-family: "Poppins-Medium", sans-serif;
   transition-property: background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;

@@ -17,6 +17,7 @@ import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { AllIndustries } from "../common/AllIndustries"
 import { Translates } from "../common/Translates"
+import SelectCreated from "../components/SelectCreated"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -31,7 +32,10 @@ const ButtonMargin = styled.div`
   margin-top: 10px;
 `
 
-const TextH1 = styled.div`
+const MarginBottomPlaces = styled.div`
+  margin-bottom: 150px;
+`
+const TitleIndexValue = styled.span`
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -47,10 +51,6 @@ const TextH1 = styled.div`
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: ${props => Colors(props.siteProps).primaryColor};
-`
-
-const MarginBottomPlaces = styled.div`
-  margin-bottom: 150px;
 `
 
 const Home = () => {
@@ -119,16 +119,25 @@ const Home = () => {
   )
 
   const industriesText = !!findIndustrie ? (
-    <TextH1 siteProps={siteProps}>{findIndustrie.label}</TextH1>
+    <TitleIndexValue siteProps={siteProps}>
+      {findIndustrie.label}
+    </TitleIndexValue>
   ) : (
-    <TextH1 siteProps={siteProps}>
+    <TitleIndexValue siteProps={siteProps}>
       {Translates[siteProps.language].buttons.all}
-    </TextH1>
+    </TitleIndexValue>
   )
 
   return (
     <div>
       {industriesText}
+      <SelectCreated
+        options={AllIndustries[siteProps.language]}
+        darkSelect
+        isMulti
+        onlyText
+        placeholder="Wybierz"
+      />
       <ButtonsFilters>
         <ButtonMargin>
           <ButtonIcon
@@ -142,7 +151,11 @@ const Home = () => {
         </ButtonMargin>
         <ButtonMargin>
           <ButtonIcon
-            title={!!filters ? `filtruj po: ${filters.label}` : "filtruj"}
+            title={
+              !!filters
+                ? `filtruj po: ${filters.label}`
+                : "filtruj po wybranej usłudze"
+            }
             uppercase
             fontIconSize="35"
             fontSize="16"

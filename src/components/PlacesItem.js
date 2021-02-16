@@ -65,6 +65,12 @@ const PlaceContent = styled.div`
     margin-bottom: 0;
     padding-right: 60px;
     text-transform: uppercase;
+    font-family: "Poppins-Bold", sans-serif;
+    @media all and (max-width: 920px) {
+      & {
+        padding-right: 0px;
+      }
+    }
 
     span {
       position: relative;
@@ -90,6 +96,8 @@ const PlaceContent = styled.div`
     border-bottom: 2px solid ${props => Colors(props.siteProps).primaryColor};
     padding-bottom: 5px;
     font-size: 0.8rem;
+    line-height: 30px;
+    font-family: "Poppins-Medium", sans-serif;
   }
 
   p {
@@ -113,6 +121,7 @@ const BackGroundImageCustomUrl = styled.div`
   background-position: center;
   background-size: cover;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 `
 
 const BackGroundImageDefault = styled.div`
@@ -175,9 +184,15 @@ const OpinionBottom = styled.div`
 
 const ButtonReservContent = styled.div`
   position: absolute;
-  width: 63%;
+  width: 65%;
   bottom: 0px;
-  right: 7px;
+  right: 0px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 
   @media all and (max-width: 920px) {
     width: 100%;
@@ -185,13 +200,8 @@ const ButtonReservContent = styled.div`
 `
 
 const ButtonReserv = styled.div`
-  display: inline-block;
-  width: ${props => (props.services ? "33%" : "63%")};
-  color: white;
-  border: none;
-  border-radius: 5px;
-  overflow: hidden;
-  margin: 1%;
+  width: 250px;
+  max-width: 49%;
 `
 
 const SerivesDiv = styled.div`
@@ -300,21 +310,31 @@ const PlacesItem = ({ item, filters, index, user }) => {
       <PlaceItem siteProps={siteProps}>
         <PlaceImage>
           {!!item.mainImageUrl || item.imagesUrl.length > 0 ? (
-            <BackGroundImageCustomUrl
-              url={
-                !!item.mainImageUrl || item.imagesUrl.length > 0
-                  ? `${Site.awsUrl}/${
-                      !!item.mainImageUrl
-                        ? item.mainImageUrl
-                        : item.imagesUrl[0]
-                    }`
-                  : ""
+            <LinkEffect
+              path={`/company/${item.linkPath}`}
+              text={
+                <BackGroundImageCustomUrl
+                  url={
+                    !!item.mainImageUrl || item.imagesUrl.length > 0
+                      ? `${Site.awsUrl}/${
+                          !!item.mainImageUrl
+                            ? item.mainImageUrl
+                            : item.imagesUrl[0]
+                        }`
+                      : ""
+                  }
+                />
               }
             />
           ) : (
-            <BackGroundImageDefault siteProps={siteProps}>
-              <MdImage />
-            </BackGroundImageDefault>
+            <LinkEffect
+              path={`/company/${item.linkPath}`}
+              text={
+                <BackGroundImageDefault siteProps={siteProps}>
+                  <MdImage />
+                </BackGroundImageDefault>
+              }
+            />
           )}
         </PlaceImage>
         {user && (

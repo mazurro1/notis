@@ -6,7 +6,7 @@ import ButtonIcon from "../ButtonIcon"
 import { FaArrowLeft, FaSave, FaPercentage, FaStamp } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
 import InputIcon from "../InputIcon"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import { Checkbox } from "react-input-checkbox"
 import { useDispatch } from "react-redux"
 import { companyAddStamp } from "../../state/actions"
@@ -159,17 +159,18 @@ const StampsContentItemEdit = ({
       <BackgroundEdit>
         <BackgroundEditContent>
           <SelectStyles>
-            <SelectCustom
+            <SelectCreated
               options={mapServices}
               value={selectedServicesIds}
               handleChange={handleChangeServicesIds}
-              placeholder="Zaznacz usługi..."
+              placeholder="Zaznaczone usługi"
               defaultMenuIsOpen={false}
               widthAuto
               isClearable={false}
-              secondColor
+              darkSelect
               isMulti
               closeMenuOnSelect={false}
+              onlyText
             />
           </SelectStyles>
           <InputIcon

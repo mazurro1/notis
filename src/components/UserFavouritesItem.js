@@ -9,6 +9,7 @@ import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import { deleteCompanyFavourites } from "../state/actions"
 import { useDispatch } from "react-redux"
+import { Site } from "../common/Site"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -21,12 +22,17 @@ const TitleCategory = styled.div`
   overflow: hidden;
   user-select: none;
   text-transform: uppercase;
-  padding-right: 50px;
+  padding-right: 100px;
   margin-bottom: 10px;
   overflow: hidden;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    padding-bottom: 40px;
+    padding-right: 10px;
+  }
 `
 
 const PositionCompanyLink = styled.div`
@@ -52,6 +58,10 @@ const PositionCompanyLink = styled.div`
       color: ${props => Colors(props.siteProps).primaryColorDark};
     }
   }
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    top: auto;
+    bottom: -5px;
+  }
 `
 
 const PositionCompanyFavDelete = styled.div`
@@ -70,6 +80,10 @@ const PositionCompanyFavDelete = styled.div`
   &:hover {
     transform: scale(1.2);
     color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    top: auto;
+    bottom: 0px;
   }
 `
 

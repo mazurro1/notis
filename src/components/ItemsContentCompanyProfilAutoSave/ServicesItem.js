@@ -44,6 +44,12 @@ const ServiceItem = styled.div`
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+
+  @media all and (max-width: 990px) {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
 `
 
 const TitleService = styled.div`
@@ -55,10 +61,11 @@ const ServiceParagraph = styled.p`
   margin: 0;
   padding: 0;
   font-size: 0.9rem;
+  margin-top: 10px;
 `
 
 const LeftContent = styled.div`
-  min-width: 300px;
+  max-width: 100%;
 `
 
 const RightContent = styled.div`
@@ -66,6 +73,13 @@ const RightContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media all and (max-width: 990px) {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 20px;
+    width: 100%;
+  }
 `
 const SelectStyle = styled.div`
   margin-top: 10px;
@@ -73,6 +87,7 @@ const SelectStyle = styled.div`
 `
 
 const PriceService = styled.span`
+  display: inline-block;
   background-color: red;
   font-size: 0.8rem;
   padding: 2px 5px;
@@ -93,6 +108,11 @@ const PriceService = styled.span`
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: inline;
+
+  @media all and (max-width: 990px) {
+    margin-left: 0px;
+    margin-right: 10px;
+  }
 `
 
 const TextCheckbox = styled.span`
@@ -102,6 +122,20 @@ const TextCheckbox = styled.span`
   font-family: "Poppins-Bold", sans-serif;
   user-select: none;
   font-size: 1rem;
+`
+
+const WrapPrices = styled.div`
+  display: inline-block;
+
+  @media all and (max-width: 990px) {
+    display: block;
+  }
+`
+
+const WidthButtonRezerv = styled.div`
+  @media all and (max-width: 990px) {
+    max-width: 100%;
+  }
 `
 
 const ServicesItem = ({
@@ -147,14 +181,15 @@ const ServicesItem = ({
     ? itemServices.serviceColor
     : 1
 
-  const disabledSaveButton =
-    colorServiceComponent.value === indexValueColorService &&
-    extraPrice === itemServices.extraCost &&
-    extraTime === itemServices.extraTime &&
-    titleInput === itemServices.serviceName &&
-    contentInput === itemServices.serviceText &&
-    timeInput === itemServices.time &&
-    priceInput === itemServices.serviceCost
+  const disabledSaveButton = !!colorServiceComponent
+    ? colorServiceComponent.value === indexValueColorService
+    : true &&
+      extraPrice === itemServices.extraCost &&
+      extraTime === itemServices.extraTime &&
+      titleInput === itemServices.serviceName &&
+      contentInput === itemServices.serviceText &&
+      timeInput === itemServices.time &&
+      priceInput === itemServices.serviceCost
 
   useEffect(() => {
     setExtraPrice(itemServices.extraCost)
@@ -264,21 +299,23 @@ const ServicesItem = ({
       <LeftContent>
         <TitleService>
           {itemServices.serviceName}
-          <PriceService
-            isCompanyEditProfil={isCompanyEditProfil}
-            siteProps={siteProps}
-          >
-            {`${itemServices.serviceCost}zł ${
-              itemServices.extraCost ? "+" : ""
-            }`}
-          </PriceService>
-          <PriceService
-            isCompanyEditProfil={isCompanyEditProfil}
-            otherColor
-            siteProps={siteProps}
-          >
-            {`${timeService} ${itemServices.extraTime ? "+" : ""}`}
-          </PriceService>
+          <WrapPrices>
+            <PriceService
+              isCompanyEditProfil={isCompanyEditProfil}
+              siteProps={siteProps}
+            >
+              {`${itemServices.serviceCost}zł ${
+                itemServices.extraCost ? "+" : ""
+              }`}
+            </PriceService>
+            <PriceService
+              isCompanyEditProfil={isCompanyEditProfil}
+              otherColor
+              siteProps={siteProps}
+            >
+              {`${timeService} ${itemServices.extraTime ? "+" : ""}`}
+            </PriceService>
+          </WrapPrices>
         </TitleService>
         <ServiceParagraph>{itemServices.serviceText}</ServiceParagraph>
       </LeftContent>
@@ -311,7 +348,7 @@ const ServicesItem = ({
           </>
         ) : (
           <>
-            <div data-tip data-for="userIsBlocked">
+            <WidthButtonRezerv data-tip data-for="userIsBlocked">
               <ButtonIcon
                 title="Rezerwuj"
                 uppercase
@@ -322,7 +359,7 @@ const ServicesItem = ({
                 onClick={() => handleClickReserwation(itemServices, companyId)}
                 disabled={userIsBlocked}
               />
-            </div>
+            </WidthButtonRezerv>
           </>
         )}
       </RightContent>
@@ -394,9 +431,10 @@ const ServicesItem = ({
                 <SelectCustom
                   options={ServiceColors}
                   value={colorServiceComponent}
+                  secondColor
                   handleChange={handleChangeColorService}
                   isLoading={false}
-                  secondColor
+                  darkSelect
                   defaultMenuIsOpen={false}
                   placeholder="Wybierz kolor usługi..."
                   marginAuto={false}

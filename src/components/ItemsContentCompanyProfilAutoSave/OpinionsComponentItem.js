@@ -181,8 +181,13 @@ const OpinionsComponentItem = ({
       opinionCompanyItem = opinion.replayOpinionMessage
     }
     setOpinionText(opinionCompanyItem)
-    dispatch(resetOpinionFunction())
   }, [opinion, resetOpinion])
+
+  useEffect(() => {
+    if (!!resetOpinion) {
+      dispatch(resetOpinionFunction())
+    }
+  }, [resetOpinion])
 
   const dispatch = useDispatch()
 

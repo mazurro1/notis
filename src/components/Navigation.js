@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Colors } from "../common/Colors"
 import { AllIndustries } from "../common/AllIndustries"
 import ButtonIcon from "../components/ButtonIcon"
@@ -23,6 +23,7 @@ import {
   MdPowerSettingsNew,
   MdTimelapse,
   MdClose,
+  MdExpandMore,
 } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { CSSTransition } from "react-transition-group"
@@ -69,7 +70,6 @@ import Reserwation from "./Reserwation"
 import WorkerReserwations from "./WorkerReserwations"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
-import Footer from "./Footer"
 import { Translates } from "../common/Translates"
 import BellAlerts from "./BellAlerts"
 import openSocket from "socket.io-client"
@@ -81,6 +81,7 @@ import AlertExtra from "./AlertExtra"
 import UserStamps from "./UserStamps"
 import UserFavourites from "./UserFavourites"
 import CompanyAvailability from "./CompanyAvailability"
+import UseWindowSize from "../common/UseWindowSize"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -89,7 +90,7 @@ const MarginButtonsWork = styled.div`
 const SpanSwitch = styled.span`
   font-size: 0.8rem;
   position: absolute;
-  top: 10px;
+  top: 5px;
   left: 10px;
   right: 0;
   color: ${props => Colors(props.siteProps).textNormalBlack};
@@ -102,7 +103,7 @@ const LabelStyle = styled.div`
 
 const ButtonNavStyle = styled.div`
   position: relative;
-  padding: 10px 5px;
+  padding: 3px 5px;
   min-width: 140px;
   user-select: none;
 `
@@ -140,9 +141,13 @@ const WrapperNavigationUnder = styled.div`
   right: 0;
   background-color: ${props => Colors(props.siteProps).navDownBackground};
   padding-top: 20px;
-  padding-bottom: 10px;
-  height: 152px;
+  padding-bottom: ${props =>
+    props.active ? `${props.heightPadding + 80}px` : "10px"};
+  height: 137px;
   overflow: hidden;
+  transition-property: background-color, color, padding-bottom;
+  transition-timing-function: ease-out;
+  transition-duration: 0.3s;
 `
 
 const NavigationDiv = styled.div`
@@ -167,20 +172,44 @@ const NavigationItems = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  flex-wrap: wrap;
   padding-left: 200px;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    padding-left: 80px;
+  }
 `
 
 const UnderMenuIndustries = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
+  padding: 5px;
   padding-top: 10px;
   padding-bottom: 5px;
-  overflow-y: auto;
-  height: 58px;
+  overflow: hidden;
+  padding-right: 160px;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    padding-top: 50px;
+    padding-right: 5px;
+  }
+`
+
+const ButtonShowMore = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 5px;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    left: 5px;
+    z-index: 10;
+  }
 `
 
 const LogoStyle = styled.div`
@@ -210,10 +239,15 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  padding-top: ${props => (props.topNavVisibleMenu ? "222px" : "70px")};
-  transition-property: padding-top, margin-bottom;
+  padding-top: ${props =>
+    props.topNavVisibleMenu
+      ? props.active
+        ? `${props.heightPadding + 170}px`
+        : "207px"
+      : "70px"};
+  transition-property: padding-top;
   transition-duration: 0.3s;
-  transition-timing-function: inline;
+  transition-timing-function: linear;
   transition-delay: ${props => (props.topNavVisibleMenu ? "0" : "0.195s")};
 `
 
@@ -308,7 +342,7 @@ const IconCloseStyle = styled.div`
 
 const MinHeightContent = styled.div`
   min-height: ${props =>
-    props.isMainPage ? "calc(100vh - 70px - 152px)" : "calc(100vh - 70px)"};
+    props.isMainPage ? "calc(100vh - 70px - 137px)" : "calc(100vh - 70px)"};
 `
 
 const CloseMenuLeft = styled.div`
@@ -364,6 +398,19 @@ const IconStyle = styled.div`
   user-select: none;
 `
 
+const NootisLogo = styled.div`
+  font-size: 1.8rem;
+  background-color: ${props => Colors(props.siteProps).primaryColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+`
+
 const Navigation = ({ children, isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
@@ -375,13 +422,7 @@ const Navigation = ({ children, isMainPage }) => {
   ] = useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [workPropsVisible, setWorkPropsVisible] = useState(false)
-  const [popupTakeData, setPopupTakeData] = useState(false)
   const [popupTakePlace, setPopupTakePlace] = useState(false)
-  const [isDataActive, setIsDataActive] = useState(true)
-  const [isTimeActive, setIsTimeActive] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedTime, setSelectedTime] = useState(null)
-  const [selectedDateAndTime, setSelectedDateAndTime] = useState("")
   const [selectedName, setSelectedName] = useState("")
   const [topNavVisible, setTopNavVisible] = useState(false)
   const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
@@ -415,7 +456,22 @@ const Navigation = ({ children, isMainPage }) => {
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
   )
+  const [visibleMenuIndustries, setVisibleMenuIndustries] = useState(false)
+  const [heightMenuIndustries, setHeightMenuIndustries] = useState(0)
+
+  const refUnderMenuIndustries = useRef(null)
+
   const dispatch = useDispatch()
+
+  const size = UseWindowSize()
+
+  useEffect(() => {
+    if (!!refUnderMenuIndustries) {
+      if (!!refUnderMenuIndustries.current) {
+        setHeightMenuIndustries(refUnderMenuIndustries.current.offsetHeight)
+      }
+    }
+  }, [refUnderMenuIndustries, userId, visibleMenuIndustries])
 
   useEffect(() => {
     if (!!userId) {
@@ -458,24 +514,7 @@ const Navigation = ({ children, isMainPage }) => {
     } else {
       dispatch(fetchAllCompanys(page))
     }
-  }, [
-    selectedDateAndTime,
-    selectedName,
-    sorts,
-    filters,
-    localization,
-    page,
-    industries,
-  ])
-
-  useEffect(() => {
-    if (!!selectedDate && !!selectedTime && !!!popupTakeData) {
-      const newDate = `${selectedTime} ${selectedDate.getDate()}.${
-        selectedDate.getMonth() + 1
-      }.${selectedDate.getFullYear()}`
-      setSelectedDateAndTime(newDate)
-    }
-  }, [selectedDate, selectedTime, setSelectedDateAndTime, popupTakeData])
+  }, [selectedName, sorts, filters, localization, page, industries])
 
   const handleClickLogin = () => {
     dispatch(changeLoginVisible(!loginVisible))
@@ -483,19 +522,6 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleClickRegister = () => {
     dispatch(changeRegistrationVisible(!registrationVisible))
-  }
-
-  const handleClickTakeData = () => {
-    setPopupTakeData(prevValue => !prevValue)
-  }
-
-  const handleResetTakeData = () => {
-    setPopupTakeData(false)
-    setIsTimeActive(false)
-    setIsDataActive(false)
-    setTimeout(() => {
-      setIsDataActive(true)
-    }, 400)
   }
 
   const handleEmplyeeWorkingHoursVisible = () => {
@@ -598,6 +624,10 @@ const Navigation = ({ children, isMainPage }) => {
     setWorkPropsVisible(prevState => !prevState)
   }
 
+  const handleClickMenuIndustries = () => {
+    setVisibleMenuIndustries(prevState => !prevState)
+  }
+
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
     const isIndustriesActive = industries === item.value
     return (
@@ -613,6 +643,8 @@ const Navigation = ({ children, isMainPage }) => {
     )
   })
 
+  const isMobileSize = Site.mobileSize >= size.width
+
   const renderExtraPropsInMainMenu = topNavVisible && (
     <CSSTransition
       in={topNavVisibleMenu}
@@ -620,7 +652,11 @@ const Navigation = ({ children, isMainPage }) => {
       classNames="popup3"
       unmountOnExit
     >
-      <WrapperNavigationUnder siteProps={siteProps}>
+      <WrapperNavigationUnder
+        siteProps={siteProps}
+        active={visibleMenuIndustries}
+        heightPadding={heightMenuIndustries}
+      >
         <NavigationDiv>
           <AllInputs>
             <ButtonTakeData
@@ -634,22 +670,8 @@ const Navigation = ({ children, isMainPage }) => {
               }
               onClick={handleClickTakePlace}
             />
-
-            <ButtonTakeData
-              icon={<FaCalendarDay />}
-              setResetText={() => {
-                setSelectedDateAndTime("")
-              }}
-              resetTextEnable={!!selectedDateAndTime}
-              text={
-                !!selectedDateAndTime
-                  ? selectedDateAndTime
-                  : "Wybierz dogodny termin..."
-              }
-              onClick={handleClickTakeData}
-            />
           </AllInputs>
-          <UnderMenuIndustries>
+          <UnderMenuIndustries ref={refUnderMenuIndustries}>
             <PaddingRight>
               <ButtonIconStyles
                 active={industries === null}
@@ -660,6 +682,22 @@ const Navigation = ({ children, isMainPage }) => {
               </ButtonIconStyles>
             </PaddingRight>
             {mapIndustries}
+            <ButtonShowMore>
+              <ButtonIcon
+                title={
+                  isMobileSize
+                    ? "Wybierz specializacje"
+                    : visibleMenuIndustries
+                    ? "Pokaż mniej"
+                    : "Pokaż więcej"
+                }
+                uppercase
+                fontIconSize="20"
+                fontSize="15"
+                icon={<MdExpandMore />}
+                onClick={handleClickMenuIndustries}
+              />
+            </ButtonShowMore>
           </UnderMenuIndustries>
         </NavigationDiv>
       </WrapperNavigationUnder>
@@ -822,40 +860,6 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-  const PopupTakeData = (
-    <Popup
-      popupEnable={popupTakeData}
-      handleClose={handleResetTakeData}
-      noContent
-    >
-      <CSSTransition
-        in={isDataActive}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <SelectDataCalendar
-          setActualCalendarDate={setSelectedDate}
-          setIsDataActive={setIsDataActive}
-          setIsTimeActive={setIsTimeActive}
-        />
-      </CSSTransition>
-      <CSSTransition
-        in={isTimeActive}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <WidthTimePicker>
-          <TimePickerContent
-            handleResetTakeData={handleResetTakeData}
-            setSelectedTime={setSelectedTime}
-          />
-        </WidthTimePicker>
-      </CSSTransition>
-    </Popup>
-  )
-
   const PopupTakePlace = (
     <Popup
       popupEnable={popupTakePlace}
@@ -933,7 +937,7 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-  console.log(user)
+  // console.log(user)
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
@@ -951,7 +955,8 @@ const Navigation = ({ children, isMainPage }) => {
       if (!!selectWorker) {
         if (!!!hasPermission) {
           hasPermission = selectWorker.permissions.some(
-            perm => perm === 2 || perm === 3 || perm === 4 || perm == 6
+            perm =>
+              perm === 2 || perm === 3 || perm === 4 || perm == 6 || perm == 7
           )
         }
         if (hasPermission) {
@@ -1112,7 +1117,7 @@ const Navigation = ({ children, isMainPage }) => {
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
-          title={`${user.userName} ${user.userSurname}`}
+          title={`${user.userName}`}
           uppercase
           fontIconSize="20"
           fontSize="16"
@@ -1171,7 +1176,6 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupLogin}
       {PopupCreateCompany}
       {PopupRegister}
-      {PopupTakeData}
       {PopupTakePlace}
       {PopupSort}
       {PopupFilter}
@@ -1266,8 +1270,17 @@ const Navigation = ({ children, isMainPage }) => {
           <WrapperNavigation siteProps={siteProps} menuOpen={menuOpen}>
             <NavigationDiv siteProps={siteProps}>
               <NavigationItems>
-                <LogoStyle>
-                  <LinkEffect text="NOOTIS" path="/" />
+                <LogoStyle siteProps={siteProps}>
+                  <LinkEffect
+                    text={
+                      isMobileSize ? (
+                        <NootisLogo siteProps={siteProps}>N</NootisLogo>
+                      ) : (
+                        "NOOTIS"
+                      )
+                    }
+                    path="/"
+                  />
                 </LogoStyle>
                 <ButtonsNav isUser={!!user}>
                   {renderCompanyOrCreateCompany}
@@ -1304,12 +1317,13 @@ const Navigation = ({ children, isMainPage }) => {
           {renderExtraPropsInMainMenu}
           <PaddingContent
             topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
+            heightPadding={heightMenuIndustries}
+            active={visibleMenuIndustries}
           >
             <MinHeightContent isMainPage={isMainPage}>
               {children}
             </MinHeightContent>
           </PaddingContent>
-          <Footer />
         </BackgroundColorPage>
       </ContentMenu>
     </>

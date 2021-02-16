@@ -5,9 +5,9 @@ import {
   FaCalendarWeek,
   FaArrowLeft,
 } from "react-icons/fa"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import ReactTooltip from "react-tooltip"
-import { MdEdit, MdClose, MdDone, MdTimelapse, MdToday } from "react-icons/md"
+import { MdEdit, MdClose, MdDone, MdTimelapse } from "react-icons/md"
 import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
@@ -22,42 +22,6 @@ import {
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
 import { Site } from "../../common/Site"
 
-const HolidayDays = styled.div`
-  position: absolute;
-  bottom: 5px;
-  left: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: nowrap;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 5px;
-  border-top-right-radius: 5px;
-  user-select: none;
-`
-
-const HolidayDaysIcon = styled.div`
-  position: relative;
-  left: -2px;
-  font-size: 1.25rem;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  border-radius: 50%;
-  padding: 5px;
-  background-color: ${props =>
-    props.isCompanyEditProfil
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).primaryColor};
-  height: 30px;
-  transform: scale(1.2);
-`
-
-const HolidayDaysDay = styled.div`
-  padding: 5px 10px;
-  font-size: 1rem;
-`
 const ButtonContentEdit = styled.div`
   display: flex;
   flex-direction: row;
@@ -338,7 +302,7 @@ const OwnerWorker = ({
     user: owner,
     _id: "owner",
   }
-  console.log()
+
   return (
     <WorkerItemStyle
       userEditItem={ownerEdit}
@@ -410,18 +374,20 @@ const OwnerWorker = ({
                   <>
                     <SelectStyle>
                       Wykonywane usługi
-                      <SelectCustom
+                      <SelectCreated
                         widthAuto
                         defaultMenuIsOpen={false}
-                        secondColor
                         options={allCategories}
                         handleChange={handleChangeSelectOwner}
                         value={ownerServicesCategory}
-                        placeholder="Usługi..."
+                        placeholder="Usługi"
                         isMulti
                         closeMenuOnSelect={false}
                         menuIsOpen
                         isClearable={false}
+                        darkSelect
+                        onlyText
+                        maxMenuHeight={200}
                       />
                     </SelectStyle>
                   </>

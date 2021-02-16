@@ -229,8 +229,6 @@ const StampsContentItem = ({
   }
 
   const handleDeleteItem = () => {
-    console.log("delete item")
-
     dispatch(companyDeleteStamp(user.token, user.company._id, stamp._id))
   }
 

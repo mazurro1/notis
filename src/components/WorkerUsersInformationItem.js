@@ -29,6 +29,7 @@ import {
 import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import WorkerUsersInformationItemMessage from "./WorkerUsersInformationItemMessage"
+import { Site } from "../common/Site"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -106,6 +107,10 @@ const ServiceItemHistory = styled.div`
   transition-property: all;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+
+  @media all and (max-width: 990px) {
+    padding-top: 40px;
+  }
 `
 
 const CategoryItemStyle = styled.div`
@@ -124,18 +129,23 @@ const TitleCategory = styled.div`
   padding: 10px;
   border-radius: 5px;
   padding-right: 280px;
-  padding-bottom: ${props => (props.clickAdd ? "250px" : "20px")};
+  padding-bottom: ${props => (props.clickAdd ? "250px !important" : "20px")};
   overflow: hidden;
   user-select: none;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    padding-bottom: 50px;
+    padding-right: 60px;
+  }
 `
 
 const IconPosition = styled.div`
   position: absolute;
   top: 0;
-  right: ${props => props.right};
+  right: ${props => props.right + "px"};
   font-size: 2rem;
   padding: 13px;
   padding-bottom: 0;
@@ -145,6 +155,12 @@ const IconPosition = styled.div`
   transition-timing-function: ease;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    top: auto;
+    bottom: -5px;
+    right: ${props => props.right - 58 + "px"};
   }
 `
 
@@ -205,6 +221,7 @@ const ButtonsAddPosition = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  flex-wrap: wrap;
 `
 
 const ButtonMargin = styled.div`
@@ -243,6 +260,12 @@ const ReserwationsCountStyle = styled.div`
   bottom: 5px;
   left: 10px;
   font-size: 0.8rem;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    position: relative;
+    left: 0;
+    bottom: 0;
+  }
 `
 
 const TimeReserwation = styled.div`
@@ -266,6 +289,11 @@ const TimeReserwation = styled.div`
         ? Colors(props.siteProps).dangerColorDark
         : Colors(props.siteProps).primaryColorDark};
     margin-left: 10px;
+
+    @media all and (max-width: 990px) {
+      display: block;
+      margin-left: 0px;
+    }
   }
 `
 
@@ -665,11 +693,11 @@ const WorkerUsersInformationItem = ({
         <ReserwationsCountStyle>
           Liczba rezerwacji: {userInfo.reserwationsCount}
         </ReserwationsCountStyle>
-        <IconCollapse collapseActive={userCollapseActive} right="0px">
+        <IconCollapse collapseActive={userCollapseActive} right={0}>
           <MdExpandMore />
         </IconCollapse>
         <IconPosition
-          right="58px"
+          right={58}
           data-tip
           data-for={
             !!userInfo.isBlocked
@@ -684,7 +712,7 @@ const WorkerUsersInformationItem = ({
           onClick={handleClickAdd}
           data-tip
           data-for="addItemUserInfo"
-          right="116px"
+          right={116}
         >
           <MdLibraryAdd />
         </IconPosition>
@@ -692,14 +720,14 @@ const WorkerUsersInformationItem = ({
           onClick={handleClickHistory}
           data-tip
           data-for="historyItemUserInfo"
-          right="174px"
+          right={174}
         >
           <MdHistory />
         </IconPosition>
         <IconPosition
           data-tip
           data-for="phoneItemUserInfo"
-          right="232px"
+          right={232}
           onClick={handleClickPhone}
         >
           <MdPhone />

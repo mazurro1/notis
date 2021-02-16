@@ -543,7 +543,10 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         userCompanyAvailability: newUserCompanyAvailability,
-        userCompanyAvailabilityPermission: action.hasPermission,
+        userCompanyAvailabilityPermission:
+          action.hasPermission !== null
+            ? action.hasPermission
+            : state.userCompanyAvailabilityPermission,
         resetUserCompanyAvailability: true,
       }
     }
@@ -670,7 +673,6 @@ const reducer = (state = initialState, action) => {
 
       if (!!patchWorkCompanyDataNew) {
         if (patchWorkCompanyDataNew._id === action.companyId) {
-          console.log(patchWorkCompanyDataNew._id, action.companyId)
           const findOpinionIndex = patchWorkCompanyDataNew.opinions.findIndex(
             item => {
               return item._id === action.opinionId._id

@@ -10,6 +10,7 @@ import ButtonIcon from "../components/ButtonIcon"
 import { FaUser, FaQuestion } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { Colors } from "../common/Colors"
+import { Site } from "../common/Site"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -142,18 +143,16 @@ const LoginContent = () => {
         {tooltipButtonLogin}
 
         <ButtonFacebook>
-          <a href="http://localhost:3000/auth/facebook">
-            <ButtonIcon
-              title="ZALOGUJ SIĘ PRZEZ FACEBOOKA"
-              uppercase
-              customColorButton="#0062e0"
-              customColorIcon="#18acfe"
-              fontIconSize="16"
-              fontSize="16"
-              icon={<FaFacebookF />}
-              disabled={validButtonLogin}
-            />
-          </a>
+          <ButtonIcon
+            title="ZALOGUJ SIĘ PRZEZ FACEBOOKA"
+            uppercase
+            customColorButton="#0062e0"
+            customColorIcon="#18acfe"
+            fontIconSize="16"
+            fontSize="16"
+            icon={<FaFacebookF />}
+            disabled={validButtonLogin}
+          />
         </ButtonFacebook>
       </form>
     </>

@@ -9,7 +9,7 @@ import {
   MdDone,
   MdTimelapse,
 } from "react-icons/md"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import ConstTimeWorkTime from "./ConstTimeWorkTime"
 import {
   FaUser,
@@ -257,22 +257,6 @@ const WorkerItem = ({
   }, [editMode, editedWorkers])
 
   useEffect(() => {
-    if (!!item.servicesCategory) {
-      if (item.servicesCategory.length > 0) {
-        const valuePadding =
-          [...Permissions, ...allCategoriesWithItems].length * 23 + 15
-        setSelectHeight(valuePadding)
-      }
-    }
-  }, [item, setSelectHeight, allCategoriesWithItems.length, Permissions])
-
-  useEffect(() => {
-    if (!!selectRef.current) {
-      setSelectHeight(selectRef.current.clientHeight)
-    }
-  }, [selectRef, workerServicesCategory, item])
-
-  useEffect(() => {
     if (!!item.permissions) {
       const mapWorkerPermissions = item.permissions.map(itemPerm => {
         const findPermission = Permissions.find(
@@ -471,7 +455,7 @@ const WorkerItem = ({
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
-      selectHeight={selectHeight}
+      selectHeight={selectHeight + 300}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
       onClick={() =>
@@ -583,18 +567,20 @@ const WorkerItem = ({
                   <>
                     <SelectStyle ref={selectRef}>
                       Wykonywane usługi
-                      <SelectCustom
+                      <SelectCreated
                         widthAuto
                         defaultMenuIsOpen={false}
-                        secondColor
                         options={allCategories}
                         handleChange={handleChangeSelect}
                         value={workerServicesCategory}
-                        placeholder="Usługi..."
+                        placeholder="Usługi"
                         isMulti
                         closeMenuOnSelect={false}
                         menuIsOpen
                         isClearable={false}
+                        darkSelect
+                        onlyText
+                        maxMenuHeight={250}
                       />
                     </SelectStyle>
                   </>
@@ -602,18 +588,19 @@ const WorkerItem = ({
                 {isAdmin && (
                   <SelectStyle>
                     Uprawnienia do
-                    <SelectCustom
+                    <SelectCreated
                       widthAuto
                       defaultMenuIsOpen={false}
-                      secondColor
                       options={Permissions}
                       handleChange={handleChangeSelectPermissions}
                       value={workerPermissionsCategory}
-                      placeholder="Uprawnienia..."
+                      placeholder="Uprawnienia"
                       isMulti
                       closeMenuOnSelect={false}
                       menuIsOpen
-                      isClearable={false}
+                      maxMenuHeight={250}
+                      onlyText
+                      darkSelect
                     />
                   </SelectStyle>
                 )}

@@ -23,4 +23,8 @@ export const Permissions = [
     value: 6,
     label: "Opinie o klientach",
   },
+  {
+    value: 7,
+    label: "Stan sklepu",
+  },
 ]

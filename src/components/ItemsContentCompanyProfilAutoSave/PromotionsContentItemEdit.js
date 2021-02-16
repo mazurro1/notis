@@ -10,7 +10,7 @@ import {
   FaPercentage,
 } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import SelectDataCalendar from "../SelectDataCalendar"
@@ -283,20 +283,21 @@ const PromotionsContentItemEdit = ({
               isCompanyEditProfil={setEditPromotions}
               siteProps={siteProps}
             >
-              Nowa promocja
+              Edytuj promocje
             </TitleRightColumn>
             <SelectStyles>
-              <SelectCustom
+              <SelectCreated
                 options={mapServices}
                 value={selectedServicesIds}
                 handleChange={handleChangeServicesIds}
-                placeholder="Zaznacz usługi..."
+                placeholder="Zaznaczone usługi"
                 defaultMenuIsOpen={false}
                 widthAuto
                 isClearable={false}
-                secondColor
                 isMulti
                 closeMenuOnSelect={false}
+                darkSelect
+                onlyText
               />
             </SelectStyles>
             <div>

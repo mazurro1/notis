@@ -78,6 +78,7 @@ const ItemNames = styled.div`
   span {
     font-size: 1.1rem;
     color: ${props => Colors(props.siteProps).primaryColor};
+    font-family: "Poppins-Medium", sans-serif;
   }
 `
 

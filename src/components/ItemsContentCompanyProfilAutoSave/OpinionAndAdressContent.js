@@ -16,7 +16,7 @@ import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
 import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import { AllIndustries } from "../../common/AllIndustries"
 import { fetchSaveCompanySettings } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
@@ -660,16 +660,18 @@ const OpinionAndAdressContent = ({
                     {mapReserwationDelayMonth}
                   </AllReserwationTime>
                   Typ działalności:
-                  <SelectCustom
+                  <SelectCreated
                     options={AllIndustries[siteProps.language]}
                     value={industriesComponent}
                     handleChange={handleChangeIndystries}
-                    placeholder="Działalność..."
+                    placeholder="Typy działalności"
                     defaultMenuIsOpen={false}
                     widthAuto
-                    secondColor
                     isMulti
                     isClearable={false}
+                    darkSelect
+                    onlyText
+                    maxMenuHeight={200}
                   />
                   <CheckboxStyle siteProps={siteProps}>
                     <Checkbox

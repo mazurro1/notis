@@ -79,6 +79,7 @@ const CountOpinionContent = styled.div`
 const AllOpinionsSummary = styled.div`
   text-align: center;
   font-size: 0.9rem;
+  font-family: "Poppins-Medium", sans-serif;
   color: ${props =>
     props.siteProps.dark || props.siteProps.blind
       ? "rgba(255, 255, 255, 0.8)"
