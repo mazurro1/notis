@@ -15,7 +15,7 @@ import { FaDollarSign, FaCalendarAlt } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import { ServiceColors } from "../../common/ServiceColors"
 
 const ServiceItem = styled.div`
@@ -428,16 +428,18 @@ const ServicesItem = ({
                 </Checkbox>
               </CheckboxStyle>
               <SelectStyle>
-                <SelectCustom
+                <SelectCreated
                   options={ServiceColors}
                   value={colorServiceComponent}
-                  secondColor
                   handleChange={handleChangeColorService}
                   isLoading={false}
                   darkSelect
                   defaultMenuIsOpen={false}
                   placeholder="Wybierz kolor usługi..."
                   marginAuto={false}
+                  closeMenuOnSelect
+                  maxMenuHeight={100}
+                  deleteItem={false}
                 />
               </SelectStyle>
               <ButtonsAddPosition>

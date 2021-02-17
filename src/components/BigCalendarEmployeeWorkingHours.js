@@ -16,8 +16,8 @@ import {
   FaCalendarMinus,
   FaArrowLeft,
 } from "react-icons/fa"
-import SelectCustom from "./SelectCustom"
-import { useSelector, useDispatch } from "react-redux"
+import SelectCreated from "./SelectCreated"
+import { useSelector } from "react-redux"
 import { AllMonths } from "../common/AllMonths"
 import Popup from "./Popup"
 import SelectDataCalendar from "./SelectDataCalendar"
@@ -695,7 +695,7 @@ const BigCalendarEmployeeWorkingHours = ({
       <BackgroundContentCalendar>
         <ContentSelect>
           <WidthSelect>
-            <SelectCustom
+            <SelectCreated
               options={allYears}
               value={yearPicker}
               handleChange={handleChangeYear}
@@ -704,10 +704,11 @@ const BigCalendarEmployeeWorkingHours = ({
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
+              deleteItem={false}
             />
           </WidthSelect>
           <WidthSelect>
-            <SelectCustom
+            <SelectCreated
               options={AllMonths}
               value={monthPicker}
               handleChange={handleChangeMonth}
@@ -716,6 +717,7 @@ const BigCalendarEmployeeWorkingHours = ({
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
+              deleteItem={false}
             />
           </WidthSelect>
           <ButtonIcon

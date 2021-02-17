@@ -1,5 +1,5 @@
 import React from "react"
-import SelectCustom from "../components/SelectCustom"
+import SelectCreated from "../components/SelectCreated"
 import { useDispatch, useSelector } from "react-redux"
 import { changeSortValue } from "../state/actions"
 import { SortsNames } from "../common/SortsNames"
@@ -15,7 +15,7 @@ const Sort = () => {
   }
 
   return (
-    <SelectCustom
+    <SelectCreated
       options={SortsNames}
       value={sorts}
       handleChange={handleChange}

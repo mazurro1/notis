@@ -1,5 +1,5 @@
 import React from "react"
-import SelectCustom from "../components/SelectCustom"
+import InputIcon from "../components/InputIcon"
 import { useDispatch, useSelector } from "react-redux"
 import { changeFilterValue } from "../state/actions"
 
@@ -14,14 +14,6 @@ const Filter = () => {
     dispatch(changeFilterValue(value))
   }
 
-  return (
-    <SelectCustom
-      options={filtersData}
-      value={filters}
-      handleChange={handleChange}
-      isLoading={filterDataLoading}
-      placeholder="Filtruj po..."
-    />
-  )
+  return <InputIcon placeholder="Filtruj po..." />
 }
 export default Filter

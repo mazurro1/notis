@@ -19,7 +19,7 @@ import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import { useSelector } from "react-redux"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import { ServiceColors } from "../../common/ServiceColors"
 
 const TextCheckbox = styled.span`
@@ -551,15 +551,17 @@ const CategoryItem = ({
                       </Checkbox>
                     </CheckboxStyle>
                     <SelectStyle>
-                      <SelectCustom
+                      <SelectCreated
                         options={ServiceColors}
                         value={colorServiceComponent}
                         handleChange={handleChangeColorService}
                         isLoading={false}
-                        secondColor
                         defaultMenuIsOpen={false}
                         placeholder="Wybierz kolor usługi..."
                         marginAuto={false}
+                        darkSelect
+                        maxMenuHeight={100}
+                        deleteItem={false}
                       />
                     </SelectStyle>
                     <ButtonsAddPosition>

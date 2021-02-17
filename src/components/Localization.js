@@ -1,5 +1,5 @@
 import React from "react"
-import SelectCustom from "../components/SelectCustom"
+import InputIcon from "../components/InputIcon"
 import { useDispatch, useSelector } from "react-redux"
 import { changeLocalizationValue } from "../state/actions"
 
@@ -16,14 +16,6 @@ const Localization = () => {
     dispatch(changeLocalizationValue(value))
   }
 
-  return (
-    <SelectCustom
-      options={localizationData}
-      value={localization}
-      handleChange={handleChange}
-      isLoading={localizationDataLoading}
-      placeholder="Lokalizacja..."
-    />
-  )
+  return <InputIcon placeholder="Lokalizacja..." />
 }
 export default Localization

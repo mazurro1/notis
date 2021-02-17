@@ -6,7 +6,7 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import TimePickerContent from "../TimePicker"
@@ -301,16 +301,17 @@ const HappyHoursConstContentCategoryItemEdit = ({
             </TitleRightColumn>
             <SelectStyles>{mapDaysToSelect}</SelectStyles>
             <SelectStyles>
-              <SelectCustom
+              <SelectCreated
                 options={mapServices}
                 value={selectedServicesIds}
                 handleChange={handleChangeServicesIds}
-                placeholder="Zaznacz usługi..."
+                placeholder="Zaznaczone usługi"
                 defaultMenuIsOpen={false}
                 widthAuto
                 isClearable={false}
-                secondColor
+                darkSelect
                 isMulti
+                onlyText
               />
             </SelectStyles>
             <div>

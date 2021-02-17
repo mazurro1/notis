@@ -16,7 +16,7 @@ import {
   FaCalendarMinus,
   FaArrowLeft,
 } from "react-icons/fa"
-import SelectCustom from "./SelectCustom"
+import SelectCreated from "./SelectCreated"
 import { useSelector } from "react-redux"
 import { AllMonths } from "../common/AllMonths"
 import Popup from "./Popup"
@@ -295,10 +295,7 @@ const BigCalendarWorkerHoursAutoSave = ({
     label: new Date().getFullYear(),
   })
 
-  const [monthPicker, setMonthPicker] = useState({
-    value: 1,
-    label: "Styczeń",
-  })
+  const [monthPicker, setMonthPicker] = useState(null)
 
   useEffect(() => {
     const newDate = new Date(
@@ -312,6 +309,7 @@ const BigCalendarWorkerHoursAutoSave = ({
   useEffect(() => {
     const actualMonth = dateCalendar.getMonth() + 1
     const findMonth = AllMonths.find(item => item.value === actualMonth)
+    console.log(findMonth)
     setMonthPicker(findMonth)
   }, [AllMonths, dateCalendar])
 
@@ -604,7 +602,7 @@ const BigCalendarWorkerHoursAutoSave = ({
       <BackgroundContentCalendar>
         <ContentSelect>
           <WidthSelect>
-            <SelectCustom
+            <SelectCreated
               options={allYears}
               value={yearPicker}
               handleChange={handleChangeYear}
@@ -613,20 +611,24 @@ const BigCalendarWorkerHoursAutoSave = ({
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
+              deleteItem={false}
             />
           </WidthSelect>
-          <WidthSelect>
-            <SelectCustom
-              options={AllMonths}
-              value={monthPicker}
-              handleChange={handleChangeMonth}
-              placeholder="Miesiąc..."
-              defaultMenuIsOpen={false}
-              isClearable={false}
-              widthAuto
-              isDisabled={disabledSwitch}
-            />
-          </WidthSelect>
+          {!!monthPicker && (
+            <WidthSelect>
+              <SelectCreated
+                options={AllMonths}
+                value={monthPicker}
+                handleChange={handleChangeMonth}
+                placeholder="Miesiąc..."
+                defaultMenuIsOpen={false}
+                isClearable={false}
+                widthAuto
+                isDisabled={disabledSwitch}
+                deleteItem={false}
+              />
+            </WidthSelect>
+          )}
           <ButtonIcon
             title={selectedDayCalendar}
             uppercase

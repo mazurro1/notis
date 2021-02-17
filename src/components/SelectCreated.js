@@ -175,6 +175,7 @@ const SelectCreated = ({
   secondColor = false,
   darkSelect = false,
   onlyText = false,
+  deleteItem = true,
 }) => {
   const [selectActive, setSelectActive] = useState(
     isDisabled ? false : defaultMenuIsOpen
@@ -186,6 +187,10 @@ const SelectCreated = ({
   const refSelect = UseOuterClick(e => {
     setSelectActive(false)
   })
+
+  useEffect(() => {
+    setSelectActive(false)
+  }, [isDisabled])
 
   useEffect(() => {
     if (selectedItems.length === 0) {
@@ -209,6 +214,8 @@ const SelectCreated = ({
     e.preventDefault()
     if (!isDisabled) {
       let valueToSentHandleChange = null
+      let valueToSelect = []
+
       const isItemInSelected = selectedItems.some(
         item => item.value === selectedItem.value
       )
@@ -216,7 +223,7 @@ const SelectCreated = ({
         const filterSelectedItem = selectedItems.filter(
           item => item.value !== selectedItem.value
         )
-        setSelectedItems(filterSelectedItem)
+        valueToSelect = filterSelectedItem
         if (isMulti) {
           valueToSentHandleChange = filterSelectedItem
         } else {
@@ -234,44 +241,52 @@ const SelectCreated = ({
               allSelectedItems.length > 0 ? allSelectedItems[0] : null
             valueToSentHandleChange = validallSelectedItems
           }
-          setSelectedItems(allSelectedItems)
+          valueToSelect = allSelectedItems
         } else {
           if (isMulti) {
             valueToSentHandleChange = [selectedItem]
           } else {
             valueToSentHandleChange = selectedItem
           }
-          setSelectedItems([selectedItem])
+          valueToSelect = [selectedItem]
         }
       }
       if (closeMenuOnSelect) {
         setSelectActive(false)
       }
-      handleChange(valueToSentHandleChange)
+
+      if (deleteItem || !!valueToSentHandleChange) {
+        handleChange(valueToSentHandleChange)
+        setSelectedItems(valueToSelect)
+      }
     }
   }
 
-  const handleClearSelect = () => {
-    setSelectedItems([])
+  const handleClearSelect = e => {
+    e.preventDefault()
+    let valueToSentHandle = null
     if (isMulti) {
-      handleChange([])
-    } else {
-      handleChange(null)
+      valueToSentHandle = []
     }
+
+    handleChange(valueToSentHandle)
+    setSelectedItems([])
   }
 
   const handleDeleteSelectedItem = (e, selectedItem) => {
-    e.stopPropagation()
-    e.nativeEvent.stopImmediatePropagation()
-    if (!isDisabled) {
-      const filterSelectedItem = selectedItems.filter(
-        item => item.value !== selectedItem.value
-      )
-      setSelectedItems(filterSelectedItem)
-      if (isMulti) {
-        handleChange(filterSelectedItem)
-      } else {
-        handleChange(null)
+    if (deleteItem) {
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
+      if (!isDisabled) {
+        const filterSelectedItem = selectedItems.filter(
+          item => item.value !== selectedItem.value
+        )
+        setSelectedItems(filterSelectedItem)
+        if (isMulti) {
+          handleChange(filterSelectedItem)
+        } else {
+          handleChange(null)
+        }
       }
     }
   }
@@ -318,9 +333,13 @@ const SelectCreated = ({
       >
         <FlexItemSelectedName>
           {item.label}
-          <DeleteItemSelected onClick={e => handleDeleteSelectedItem(e, item)}>
-            <MdClose />
-          </DeleteItemSelected>
+          {deleteItem && (
+            <DeleteItemSelected
+              onClick={e => handleDeleteSelectedItem(e, item)}
+            >
+              <MdClose />
+            </DeleteItemSelected>
+          )}
         </FlexItemSelectedName>
       </SelectedItemValue>
     )
@@ -369,7 +388,7 @@ const SelectCreated = ({
         </PositionValues>
       </CSSTransition>
       {isClearable && !isDisabled && (
-        <ClearSelect onClick={handleClearSelect}>
+        <ClearSelect onClick={e => handleClearSelect(e)}>
           <MdClose />
         </ClearSelect>
       )}

@@ -9,7 +9,7 @@ import styled from "styled-components"
 import Switch from "react-switch"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-import SelectCustom from "./SelectCustom"
+import SelectCreated from "./SelectCreated"
 import { AllMonths } from "../common/AllMonths"
 import { CSSTransition } from "react-transition-group"
 import { Translates } from "../common/Translates"
@@ -147,7 +147,13 @@ const UserHistory = ({ siteProps, user }) => {
   }
 
   const handleChangeYear = value => {
-    setYearPicker(value)
+    const validValue = !!value
+      ? value
+      : {
+          value: new Date().getFullYear(),
+          label: new Date().getFullYear(),
+        }
+    setYearPicker(validValue)
     setDisabledSwitch(true)
     setTimeout(() => {
       setDisabledSwitch(false)
@@ -155,7 +161,13 @@ const UserHistory = ({ siteProps, user }) => {
   }
 
   const handleChangeMonth = value => {
-    setMonthPicker(value)
+    const validValieMonth = !!value
+      ? value
+      : {
+          value: 1,
+          label: "Styczeń",
+        }
+    setMonthPicker(validValieMonth)
     setDisabledSwitch(true)
     setTimeout(() => {
       setDisabledSwitch(false)
@@ -188,7 +200,7 @@ const UserHistory = ({ siteProps, user }) => {
         >
           <PositionSelectAll>
             <WidthSelect>
-              <SelectCustom
+              <SelectCreated
                 options={allYears}
                 value={yearPicker}
                 handleChange={handleChangeYear}
@@ -197,10 +209,11 @@ const UserHistory = ({ siteProps, user }) => {
                 isClearable={false}
                 widthAuto
                 isDisabled={disabledSwitch}
+                deleteItem={false}
               />
             </WidthSelect>
             <WidthSelect>
-              <SelectCustom
+              <SelectCreated
                 options={AllMonths}
                 value={monthPicker}
                 handleChange={handleChangeMonth}
@@ -209,6 +222,7 @@ const UserHistory = ({ siteProps, user }) => {
                 isClearable={false}
                 widthAuto
                 isDisabled={disabledSwitch}
+                deleteItem={false}
               />
             </WidthSelect>
           </PositionSelectAll>

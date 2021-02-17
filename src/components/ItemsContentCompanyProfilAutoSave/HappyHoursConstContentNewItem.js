@@ -6,7 +6,7 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
-import SelectCustom from "../SelectCustom"
+import SelectCreated from "../SelectCreated"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import TimePickerContent from "../TimePicker"
@@ -84,7 +84,7 @@ const ButtonTextPositionHappy = styled.div`
 
 const ItemDayToSelect = styled.button`
   padding: 2px 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   border-radius: 5px;
   background-color: ${props =>
     props.active
@@ -270,15 +270,16 @@ const HappyHoursConstContentNewItem = ({
             </TitleRightColumn>
             <SelectStyles>{mapDaysToSelect}</SelectStyles>
             <SelectStyles>
-              <SelectCustom
+              <SelectCreated
                 options={mapServices}
                 value={selectedServicesIds}
                 handleChange={handleChangeServicesIds}
-                placeholder="Zaznacz usługi..."
+                placeholder="Zaznaczone usługi"
                 defaultMenuIsOpen={false}
                 widthAuto
                 isClearable={false}
-                secondColor
+                darkSelect
+                onlyText
                 isMulti
                 closeMenuOnSelect={false}
               />

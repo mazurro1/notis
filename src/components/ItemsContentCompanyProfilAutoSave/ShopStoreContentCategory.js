@@ -14,6 +14,7 @@ import {
 import { FaDollarSign } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import { Collapse } from "react-collapse"
+import SelectCreated from "../SelectCreated"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -316,7 +317,7 @@ const ShopStoreContentCategory = ({
                       </Checkbox>
                     </CheckboxStyle>
                     <SelectStyle>
-                      <SelectCustom
+                      <SelectCreated
                         options={ServiceColors}
                         value={colorServiceComponent}
                         handleChange={handleChangeColorService}

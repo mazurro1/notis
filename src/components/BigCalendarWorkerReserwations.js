@@ -16,7 +16,7 @@ import {
   FaCalendarMinus,
   FaArrowLeft,
 } from "react-icons/fa"
-import SelectCustom from "./SelectCustom"
+import SelectCreated from "./SelectCreated"
 import CalendarWorkerReserwatinEvent from "./CalendarWorkerReserwatinEvent"
 import { useSelector, useDispatch } from "react-redux"
 import { AllMonths } from "../common/AllMonths"
@@ -1013,7 +1013,7 @@ const BigCalendarWorkerReserwations = ({
       <BackgroundContentCalendar>
         <ContentSelect>
           <WidthSelect>
-            <SelectCustom
+            <SelectCreated
               options={allYears}
               value={yearPicker}
               handleChange={handleChangeYear}
@@ -1022,10 +1022,11 @@ const BigCalendarWorkerReserwations = ({
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
+              deleteItem={false}
             />
           </WidthSelect>
           <WidthSelect>
-            <SelectCustom
+            <SelectCreated
               options={AllMonths}
               value={monthPicker}
               handleChange={handleChangeMonth}
@@ -1034,6 +1035,7 @@ const BigCalendarWorkerReserwations = ({
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
+              deleteItem={false}
             />
           </WidthSelect>
           <ButtonIcon
