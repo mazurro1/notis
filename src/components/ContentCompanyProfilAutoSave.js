@@ -158,7 +158,7 @@ const EditModeToChange = styled.div`
   }
 `
 
-const ContentCompanyProfil = ({
+const ContentCompanyProfilAutoSave = ({
   company = null,
   isAdmin = false,
   isCompanyEditProfil = false,
@@ -354,7 +354,7 @@ const ContentCompanyProfil = ({
               editMode={editMode}
             />
           )}
-          {/* {userHasPermToShopStore && (
+          {userHasPermToShopStore && (
             <ShopStoreContent
               ButtonEditPosition={ButtonEditPosition}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
@@ -364,9 +364,10 @@ const ContentCompanyProfil = ({
               siteProps={siteProps}
               editMode={editMode}
               {...companyEditProfilProps}
-              companyShopStore={company.shopStore}
+              companyShopStore={[...company.shopStore]}
+              user={user}
             />
-          )} */}
+          )}
         </LeftColumn>
         <RightColumn>
           {editMode && isCompanyEditProfil && isAdmin ? (
@@ -692,4 +693,4 @@ const ContentCompanyProfil = ({
     </div>
   )
 }
-export default ContentCompanyProfil
+export default ContentCompanyProfilAutoSave

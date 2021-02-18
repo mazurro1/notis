@@ -36,6 +36,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  SAVE_EDITED_COMPANY_SHOP_STORE,
   EDIT_USER_COMPANY_AVAILABILITY,
   DELETE_USER_COMPANY_AVAILABILITY,
   RESER_USER_COMPANY_AVAILABILITY,
@@ -88,7 +89,6 @@ import {
   RESET_EDIT_COMPANY,
   CHANGE_RESERWATION_VALUE,
   CHANGE_EDIT_WORKER_HOURS,
-  CHANGE_EDITED_WORKER_HOURS,
   AVAIBLE_DATE_TO_RESERWATION,
   AVAIBLE_DATE_TO_RESERWATION_UPDATE,
   UPDATE_PATCH_COMPANY_DATA,
@@ -493,6 +493,20 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case SAVE_EDITED_COMPANY_SHOP_STORE: {
+      const patchWorkCompanyShopStore = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if (!!patchWorkCompanyShopStore) {
+        patchWorkCompanyShopStore.shopStore = action.shopStore
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyShopStore,
+      }
+    }
 
     case EDIT_USER_COMPANY_AVAILABILITY: {
       let editUserCompanyAvailability = [...state.userCompanyAvailability]
@@ -1027,7 +1041,7 @@ const reducer = (state = initialState, action) => {
               item => {
                 const isInDeleted = action.daysOff.deletedDayOff.some(
                   itemDayOff => {
-                    return itemDayOff == item._id
+                    return itemDayOff === item._id
                   }
                 )
                 return !isInDeleted

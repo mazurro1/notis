@@ -20,7 +20,7 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
     if (!!userId) {
       dispatch(fetchworkerUsersInformations(user.token, user.company._id))
     }
-  }, [user.alerts, userId])
+  }, [user.alerts, userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     sal({
@@ -45,6 +45,7 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
         )
         return isInThisName
       }
+      return false
     })
     setFilterUsersInformations(newFilterUsers)
   }, [filterUsers, companyUsersInformations])

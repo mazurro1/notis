@@ -17,7 +17,6 @@ import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { AllIndustries } from "../common/AllIndustries"
 import { Translates } from "../common/Translates"
-import SelectCreated from "../components/SelectCreated"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -83,7 +82,7 @@ const Home = () => {
         }
       }
     }
-  }, [refAllPlaces, placesData, scrollPosition])
+  }, [refAllPlaces, placesData, scrollPosition]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useScrollPosition(({ _, currPos }) => {
     if (
@@ -131,13 +130,6 @@ const Home = () => {
   return (
     <div>
       {industriesText}
-      <SelectCreated
-        options={AllIndustries[siteProps.language]}
-        darkSelect
-        isMulti
-        onlyText
-        placeholder="Wybierz"
-      />
       <ButtonsFilters>
         <ButtonMargin>
           <ButtonIcon

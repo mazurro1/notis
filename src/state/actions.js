@@ -588,6 +588,14 @@ export const RESER_USER_COMPANY_AVAILABILITY = "RESER_USER_COMPANY_AVAILABILITY"
 export const DELETE_USER_COMPANY_AVAILABILITY =
   "DELETE_USER_COMPANY_AVAILABILITY"
 export const EDIT_USER_COMPANY_AVAILABILITY = "EXIT_USER_COMPANY_AVAILABILITY"
+export const SAVE_EDITED_COMPANY_SHOP_STORE = "SAVE_EDITED_COMPANY_SHOP_STORE"
+
+export const saveEditedCompanyShopStore = shopStore => {
+  return {
+    type: SAVE_EDITED_COMPANY_SHOP_STORE,
+    shopStore: shopStore,
+  }
+}
 
 export const editUserCompanyAvailability = (itemId, itemName, itemCount) => {
   return {
@@ -3450,6 +3458,41 @@ export const editCompanyAvailability = (
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas edytowania przedmiotu.", "red"))
+      })
+  }
+}
+
+export const fetchSaveShopStore = (
+  token,
+  companyId,
+  newCategorys,
+  editedCategory,
+  deletedCategory
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/edit-company-shop-store`,
+        {
+          companyId: companyId,
+          newCategorys: newCategorys,
+          editedCategory: editedCategory,
+          deletedCategory: deletedCategory,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(saveEditedCompanyShopStore(response.data.shopStore))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas edytowania stanu sklepu.", "red"))
       })
   }
 }

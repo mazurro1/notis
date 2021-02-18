@@ -118,6 +118,23 @@ const BackgroundEditedComponent = styled.div`
 const MarginButtonLeft = styled.div`
   margin-left: 10px;
 `
+const TitleRightColumnOpinion = styled.h2`
+  position: relative;
+  display: inline-block;
+  font-family: ${props => (props.adress ? "Poppins-Bold" : "Poppins-Regular")};
+  word-wrap: break-word;
+  font-size: 2rem;
+  border-bottom: 2px solid
+    ${props =>
+      props.isCompanyEditProfil
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor};
+
+  color: ${props =>
+    props.isCompanyEditProfil
+      ? Colors(props.siteProps).textNormalWhite
+      : Colors(props.siteProps).textNormalBlack};
+`
 
 const AllCategoryOfServices = ({
   isCompanyEditProfil,
@@ -467,6 +484,14 @@ const AllCategoryOfServices = ({
           Twoje konto zostało zablokowane na tej stronie
         </BlockUserInfo>
       )}
+
+      <TitleRightColumnOpinion
+        siteProps={siteProps}
+        isCompanyEditProfil={allCategoryEdit}
+      >
+        Usługi
+      </TitleRightColumnOpinion>
+
       {mapCategories}
       {userIsBlocked && (
         <ReactTooltip id="userIsBlocked" effect="float" multiline={true}>

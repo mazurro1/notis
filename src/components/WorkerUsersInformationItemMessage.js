@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { MdDelete, MdArrowBack, MdAddBox } from "react-icons/md"
+import { MdDelete, MdArrowBack } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import { Colors } from "../common/Colors"

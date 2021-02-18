@@ -414,7 +414,7 @@ const WorkerUsersInformationItem = ({
         }
       }
     }
-  }, [refAllHistory, userInfo, scrollPosition])
+  }, [refAllHistory, userInfo, scrollPosition]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!refAllMessages) {
@@ -440,7 +440,7 @@ const WorkerUsersInformationItem = ({
         }
       }
     }
-  }, [refAllMessages, userInfo, scrollPositionMessages])
+  }, [refAllMessages, userInfo, scrollPositionMessages]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     sal({
