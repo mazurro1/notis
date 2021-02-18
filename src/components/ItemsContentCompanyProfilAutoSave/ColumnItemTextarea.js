@@ -78,7 +78,7 @@ const ColumnItemTextarea = ({
     setTextEditedChange(null)
     handleTextAbout(title)
     setIsErrorText(false)
-  }, [editable, editMode])
+  }, [editable, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleTextAboutOnChange = e => {
     handleTextAbout(e.target.value)

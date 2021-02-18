@@ -11,7 +11,6 @@ import {
   getMonthAndReturnEng,
 } from "../common/Functions"
 import Popup from "./Popup"
-import InputIcon from "./InputIcon"
 import TimePickerContent from "./TimePicker"
 import { Checkbox } from "react-input-checkbox"
 import { addNewNoConstHour, deleteNoConstHour } from "../state/actions"
@@ -181,7 +180,7 @@ const CalendarWorkerReserwatinNewEvent = ({
     setNewTimeStart(null)
     setNewTimeEnd(null)
     handleClosePopupEventItem()
-  }, [item])
+  }, [item]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!selectedEvent) {

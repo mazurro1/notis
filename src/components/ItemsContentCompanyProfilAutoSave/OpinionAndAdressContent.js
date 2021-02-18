@@ -296,7 +296,7 @@ const OpinionAndAdressContent = ({
       })
       setIndustriesComponent(convertedCompanyIndustriesFromId)
     }
-  }, [company])
+  }, [company]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setNewIndustriesComponent([])
@@ -319,7 +319,7 @@ const OpinionAndAdressContent = ({
       })
       setIndustriesComponent(convertedCompanyIndustriesFromId)
     }
-  }, [editable, editMode])
+  }, [editable, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const disabledButtonSubmit =
     deletedIndustriesComponent.length > 0 ||
@@ -343,16 +343,6 @@ const OpinionAndAdressContent = ({
       const updatePhoneInput = phoneInput !== phone ? phoneInput : null
       const updateNompanyNameInput =
         companyNameInput !== companyName ? companyNameInput : null
-
-      let newIndustriesComponentToServer = null
-      if (newIndustriesComponent.length > 0) {
-        newIndustriesComponentToServer = newIndustriesComponent
-      }
-
-      let deletedIndustriesToServer = null
-      if (deletedIndustriesComponent.length > 0) {
-        deletedIndustriesToServer = deletedIndustriesComponent
-      }
 
       let pauseCompanyToServer = null
       if (pauseCompany !== companyPausedItem) {
@@ -385,8 +375,6 @@ const OpinionAndAdressContent = ({
       dispatch(
         fetchSaveCompanySettings(user.token, user.company._id, dataSettings)
       )
-
-      // onClickEdit()
     }
   }
 

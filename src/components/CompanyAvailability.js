@@ -41,12 +41,12 @@ const CompanyAvailability = ({ user, siteProps }) => {
     if (resetUserCompanyAvailability) {
       dispatch(resetFetchUserCompanyAvailability())
     }
-  }, [resetUserCompanyAvailability])
+  }, [resetUserCompanyAvailability]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getCompanyAvailability(user.token, user.company._id))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAddItemVisible = () => {
     setAddItemVisible(prevState => !prevState)

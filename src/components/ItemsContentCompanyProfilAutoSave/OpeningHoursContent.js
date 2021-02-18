@@ -46,7 +46,7 @@ const OpeningHoursContent = ({
     }
     setArrayHoursData(transformedHoursData)
     setEditableOpeningHours(false)
-  }, [editMode, company])
+  }, [editMode, company]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const transformedHoursData = []
@@ -61,7 +61,7 @@ const OpeningHoursContent = ({
       })
     }
     setArrayHoursData(transformedHoursData)
-  }, [editableOpeningHours, editMode])
+  }, [editableOpeningHours, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const hoursDate = {
     mon: {

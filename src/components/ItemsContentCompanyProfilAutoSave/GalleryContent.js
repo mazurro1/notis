@@ -213,7 +213,7 @@ const GalleryContent = ({
       setAddedImages(filterNewImages)
     }
     dispatch(updateUpdatedImageIdCompany())
-  }, [companyImages, mainImage, updatedImageIdCompany])
+  }, [companyImages, mainImage, updatedImageIdCompany]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleUploadImage = (file, originalPath) => {
     if (!disabledAddImage) {

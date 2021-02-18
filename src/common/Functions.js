@@ -1,5 +1,5 @@
 /*eslint-disable eqeqeq*/
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { resetBellAlerts } from "../state/actions"
 
@@ -582,5 +582,5 @@ export function useOutsideAlerter(ref) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [ref])
+  }, [ref]) // eslint-disable-line react-hooks/exhaustive-deps
 }

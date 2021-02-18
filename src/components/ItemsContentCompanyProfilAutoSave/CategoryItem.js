@@ -236,7 +236,7 @@ const CategoryItem = ({
   useEffect(() => {
     const selectedDefaultColor = ServiceColors.find(col => col.value === 1)
     setColorServiceComponent(selectedDefaultColor)
-  }, [ServiceColors])
+  }, [ServiceColors]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const disabledCategorySave =
     categoryTitle.toLowerCase() === item.category.toLowerCase()

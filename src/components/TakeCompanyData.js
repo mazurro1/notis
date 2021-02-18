@@ -5,13 +5,12 @@ import { useDispatch, useSelector } from "react-redux"
 import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
 
 const TakeCompanyData = ({ pathCompany = null }) => {
-  const user = useSelector(state => state.user)
   const pathCompanyData = useSelector(state => state.pathCompanyData)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(fetchPathCompany(pathCompany))
-  }, [pathCompany])
+  }, [pathCompany]) // eslint-disable-line react-hooks/exhaustive-deps
 
   let renderContent = null
 

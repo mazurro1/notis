@@ -89,7 +89,7 @@ const MapsEditComponent = ({
 
   useEffect(() => {
     setEditMap(false)
-  }, [companyLat, companyLong])
+  }, [companyLat, companyLong]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {
     handleResetAllEditedComponents()

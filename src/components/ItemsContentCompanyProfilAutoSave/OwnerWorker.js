@@ -127,7 +127,7 @@ const OwnerWorker = ({
     setConstTimeOwner(false)
     setChooseTimeOwner(false)
     setEditConstTimeWorker(false)
-  }, [item, resetWorkerProps])
+  }, [item, resetWorkerProps]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const servicesWorker = ownerData.servicesCategory.map(serv => {
@@ -154,7 +154,7 @@ const OwnerWorker = ({
     setConstTimeOwner(false)
     setEditConstTimeWorker(false)
     setChooseTimeOwner(false)
-  }, [editedWorkers, editMode])
+  }, [editedWorkers, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChooseTimeOwner = e => {
     e.stopPropagation()

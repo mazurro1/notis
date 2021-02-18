@@ -123,12 +123,11 @@ const SelectDataCalendar = ({
       <SimpleReactCalendar
         activeMonth={activeMonth}
         blockClassName="date_picker"
-        maxDate={nextYear}
+        maxDate={!!maxDate ? maxDate : nextYear}
         minDate={minDateActive ? prevYeat : null}
         selected={activeData}
         disabledIntervals={disabledDatas}
         onSelect={date => handleSelectedDate(date)}
-        maxDate={maxDate}
       />
     </StyleSimpleReactCalendar>
   )

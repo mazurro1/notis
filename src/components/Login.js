@@ -10,7 +10,6 @@ import ButtonIcon from "../components/ButtonIcon"
 import { FaUser, FaQuestion } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { Colors } from "../common/Colors"
-import { Site } from "../common/Site"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;

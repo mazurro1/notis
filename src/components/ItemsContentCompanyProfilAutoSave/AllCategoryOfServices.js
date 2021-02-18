@@ -189,11 +189,11 @@ const AllCategoryOfServices = ({
     setNewCategoryItems([])
     setDeletedCategoryItems([])
     setEditedCategoryItems([])
-  }, [allCategoryEdit, editMode])
+  }, [allCategoryEdit, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setAllCategoryEdit(false)
-  }, [editMode])
+  }, [editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -462,11 +462,11 @@ const AllCategoryOfServices = ({
     )
   })
 
-  const disabledAddCategoryButton = newCategoryTitle.length <= 3 || isInCategory
-
   const isInCategory = allCategoriesWithItems.some(
     item => item.category.toLowerCase() === newCategoryTitle.toLowerCase()
   )
+
+  const disabledAddCategoryButton = newCategoryTitle.length <= 3 || isInCategory
 
   const isAnyChanges =
     newCategoryItems.length > 0 ||

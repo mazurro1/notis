@@ -17,7 +17,7 @@ const UseWindowSize = () => {
     }
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
-  }, [isClient]) // Empty array ensures that effect is only run on mount and unmount
+  }, [isClient]) // eslint-disable-line react-hooks/exhaustive-deps
   return windowSize
 }
 export default UseWindowSize

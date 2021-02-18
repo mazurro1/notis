@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect } from "react"
+import { useDispatch } from "react-redux"
 import { fetchSaveTextsCompany } from "../../state/actions"
 import OurLinksContent from "./OurLinksContent"
 import ButtonIcon from "../ButtonIcon"
@@ -34,6 +34,7 @@ const LinksComponent = ({
     company.linkInstagram,
     company.linkiWebsite,
     editMode,
+    setEditLinks,
   ])
 
   const handleEdit = setChange => {

@@ -18,7 +18,7 @@ const CompanyEditProfil = () => {
         dispatch(fetchCompanyData(user.company._id, user.token))
       }
     }
-  }, [userId, dispatch])
+  }, [userId, dispatch]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const PopupActiveCompany = (
     <Popup

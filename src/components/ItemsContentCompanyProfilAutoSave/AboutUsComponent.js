@@ -26,7 +26,7 @@ const AboutUsComponent = ({
 
   useEffect(() => {
     setEditAboutUs(false)
-  }, [company.title, editMode])
+  }, [company.title, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = setChange => {
     setChange(prevState => !prevState)

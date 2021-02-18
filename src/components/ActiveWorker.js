@@ -9,7 +9,7 @@ const ActiveWorker = ({ companyId, workerEmail, codeToActive }) => {
     dispatch(
       fetchConfirmAddWorkerToCompany(companyId, workerEmail, codeToActive)
     )
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div>Dodawanie pracownika</div>
 }

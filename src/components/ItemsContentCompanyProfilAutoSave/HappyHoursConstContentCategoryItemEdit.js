@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect } from "react"
 import { CSSTransition } from "react-transition-group"
 import { FaArrowLeft, FaSave, FaPercentage } from "react-icons/fa"
@@ -152,7 +153,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
     )
     setSelectedServicesIds(mapServicesInPromotion)
     setSelectedDayOfTheWeek(dataHappyHourConst.dayWeekIndex)
-  }, [dataHappyHourConst, happyHoursConst])
+  }, [dataHappyHourConst, happyHoursConst]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const mapOnyIdsNewObject = selectedServicesIds.map(item => item.value)
   const newEditedObject = {

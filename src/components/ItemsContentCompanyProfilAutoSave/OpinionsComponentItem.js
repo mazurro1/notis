@@ -187,7 +187,7 @@ const OpinionsComponentItem = ({
     if (!!resetOpinion) {
       dispatch(resetOpinionFunction())
     }
-  }, [resetOpinion])
+  }, [resetOpinion]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const dispatch = useDispatch()
 

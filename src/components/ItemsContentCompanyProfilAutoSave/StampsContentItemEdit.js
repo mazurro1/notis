@@ -106,7 +106,7 @@ const StampsContentItemEdit = ({
       }
     })
     setSelectedServicesIds(mapServicesInPromotion)
-  }, [reset, companyStamps])
+  }, [reset, companyStamps]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangePercent = e => {
     if (Number(e.target.value) >= 0) {

@@ -142,7 +142,6 @@ const WorkerItem = ({
   const [editConstTimeWorker, setEditConstTimeWorker] = useState(false)
   const [workerServicesCategory, setWorkerServicesCategory] = useState([])
   const [workerPermissionsCategory, setWorkerPermissionsCategory] = useState([])
-  const [selectHeight, setSelectHeight] = useState(0)
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
 
   const resetWorkerProps = useSelector(state => state.resetWorkerProps)
@@ -170,7 +169,7 @@ const WorkerItem = ({
     setToSaveWorkerHours([])
     setInputSpeciailization(item.specialization)
     setUserEditItem(false)
-  }, [item])
+  }, [item]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!resetWorkerProps) {
@@ -207,7 +206,7 @@ const WorkerItem = ({
       setEditConstTimeWorker(false)
       dispatch(resetWorkersPropsVisible())
     }
-  }, [resetWorkerProps])
+  }, [resetWorkerProps]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const servicesWorker = item.servicesCategory.map(serv => {
@@ -244,7 +243,7 @@ const WorkerItem = ({
     setEditConstTimeWorker(false)
     setChooseTimeWorker(true)
     setToSaveWorkerHours([])
-  }, [editedWorkers, editMode])
+  }, [editedWorkers, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -455,7 +454,7 @@ const WorkerItem = ({
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
-      selectHeight={selectHeight + 300}
+      selectHeight={300}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
       onClick={() =>

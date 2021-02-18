@@ -145,7 +145,6 @@ const ShopStoreContent = ({
           siteProps={siteProps}
           key={indexCategory}
           isCompanyEditProfil={editShopStore}
-          siteProps={siteProps}
           handleClickContent={handleClickContent}
           deletedCategory={deletedCategory}
           setDeletedCategory={setDeletedCategory}

@@ -377,7 +377,7 @@ const Reserwation = ({
         )
       )
     }
-  }, [selectedDate, selectedWorkerUserId])
+  }, [selectedDate, selectedWorkerUserId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!!reserwationEnable) {
@@ -395,7 +395,7 @@ const Reserwation = ({
         setSelectedHappyHourOrPromotion(false)
       }, 400)
     }
-  }, [reserwationEnable])
+  }, [reserwationEnable]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSelectDay = () => {
     setIsStampActive(false)

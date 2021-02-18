@@ -63,7 +63,7 @@ const CompanyAvailabilityItemEdit = ({
     if (!!itemName) {
       setEditedName(itemName)
     }
-  }, [resetUserCompanyAvailability])
+  }, [resetUserCompanyAvailability]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeItemName = e => {
     setEditedName(e.target.value)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import ButtonIcon from "../ButtonIcon"
 import { Colors } from "../../common/Colors"
@@ -6,10 +6,7 @@ import { FaArrowLeft } from "react-icons/fa"
 import { MdEdit, MdAddBox } from "react-icons/md"
 import PromotionsContentNewItem from "./PromotionsContentNewItem"
 import PromotionsContentItem from "./PromotionsContentItem"
-import {
-  sortItemsInArray,
-  sortItemsInArrayDateConvert,
-} from "../../common/Functions"
+import { sortItemsInArrayDateConvert } from "../../common/Functions"
 
 const PositionRelative = styled.div`
   font-size: 1rem;

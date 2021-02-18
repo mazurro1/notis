@@ -102,7 +102,7 @@ const UserHistory = ({ siteProps, user }) => {
         )
       )
     }
-  }, [hiddenCanceledReserwation, yearPicker, monthPicker, onlyToOpinion])
+  }, [hiddenCanceledReserwation, yearPicker, monthPicker, onlyToOpinion]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -118,7 +118,7 @@ const UserHistory = ({ siteProps, user }) => {
     const actualMonth = new Date().getMonth() + 1
     const findMonth = AllMonths.find(item => item.value === actualMonth)
     setMonthPicker(findMonth)
-  }, [AllMonths])
+  }, [])
 
   const handleHiddenCanceledReserwation = () => {
     if (!!!disabledSwitch) {

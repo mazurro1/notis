@@ -151,7 +151,7 @@ const HappyHoursConstContentNewItem = ({
     setTimeStart("10:00")
     setTimeEnd("12:00")
     setSelectedServicesIds([])
-  }, [happyHoursConst])
+  }, [happyHoursConst]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleResetAdd = () => {
     setNewHappyHour(false)

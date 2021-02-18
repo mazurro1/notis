@@ -304,14 +304,14 @@ const BigCalendarWorkerHoursAutoSave = ({
       datePicker.getDate()
     )
     setDateCalendar(newDate)
-  }, [datePicker])
+  }, [datePicker]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const actualMonth = dateCalendar.getMonth() + 1
     const findMonth = AllMonths.find(item => item.value === actualMonth)
     console.log(findMonth)
     setMonthPicker(findMonth)
-  }, [AllMonths, dateCalendar])
+  }, [AllMonths, dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (dateCalendar.getFullYear() !== yearPicker.value) {
@@ -321,7 +321,7 @@ const BigCalendarWorkerHoursAutoSave = ({
       }
       setYearPicker(newYear)
     }
-  }, [dateCalendar])
+  }, [dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!item) {

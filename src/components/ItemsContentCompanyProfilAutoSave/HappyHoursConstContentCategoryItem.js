@@ -185,6 +185,14 @@ const HappyHoursConstContentCategoryItem = ({
             {findService.serviceName}
           </ServiceInPromotion>
         )
+      } else {
+        return (
+          <ServiceInPromotion
+            siteProps={siteProps}
+            key={indexService}
+            active={!item.disabled}
+          ></ServiceInPromotion>
+        )
       }
     }
   )

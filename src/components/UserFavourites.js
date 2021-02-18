@@ -11,7 +11,7 @@ const UserFavourites = ({ siteProps, favouritesCompanys, user }) => {
   useEffect(() => {
     setSelectedCompanyFavourites(favouritesCompanys)
     dispatch(resetUserFavourites())
-  }, [userResetFavourites, user])
+  }, [userResetFavourites, user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const mapFavourites = selectedCompanyFavourites.map((item, index) => {
     return (

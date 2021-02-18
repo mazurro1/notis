@@ -8,7 +8,6 @@ import {
   FaUserPlus,
   FaUser,
   FaSearch,
-  FaCalendarDay,
   FaShoppingBag,
   FaBars,
   FaChrome,
@@ -31,8 +30,6 @@ import Popup from "./Popup"
 import LoginContent from "./Login"
 import RegisterContent from "./Register"
 import Spinner from "./Spinner"
-import SelectDataCalendar from "./SelectDataCalendar"
-import TimePickerContent from "./TimePicker"
 import FindPlaceContent from "./FindPlace"
 import { useDispatch, useSelector } from "react-redux"
 import "react-input-checkbox/lib/react-input-checkbox.min.css"
@@ -50,7 +47,6 @@ import {
   changeCreateCompanyVisible,
   changeReserwationValue,
   changeEditWorkerHours,
-  changeEditEmployeeWorkingHours,
   changeBlindStyle,
   changeDarkStyle,
   fetchAllCompanys,
@@ -106,12 +102,6 @@ const ButtonNavStyle = styled.div`
   padding: 3px 5px;
   min-width: 140px;
   user-select: none;
-`
-
-const WidthTimePicker = styled.div`
-  background-color: transparent;
-  min-width: 280px;
-  max-width: 90%;
 `
 
 const BackgroundColorPage = styled.div`
@@ -482,7 +472,7 @@ const Navigation = ({ children, isMainPage }) => {
         }
       })
     }
-  }, [userId])
+  }, [userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!!user) {
@@ -514,7 +504,7 @@ const Navigation = ({ children, isMainPage }) => {
     } else {
       dispatch(fetchAllCompanys(page))
     }
-  }, [selectedName, sorts, filters, localization, page, industries])
+  }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickLogin = () => {
     dispatch(changeLoginVisible(!loginVisible))
@@ -837,7 +827,6 @@ const Navigation = ({ children, isMainPage }) => {
     <Popup
       popupEnable={historyReserwations}
       handleClose={handleHistoryReserwations}
-      maxWidth="400"
       title={Translates[siteProps.language].buttons.bookingHistory}
       fullScreen
       maxWidth="800"
@@ -929,11 +918,7 @@ const Navigation = ({ children, isMainPage }) => {
       title="Stan magazynowy"
       fullScreen
     >
-      <CompanyAvailability
-        siteProps={siteProps}
-        user={user}
-        siteProps={siteProps}
-      />
+      <CompanyAvailability siteProps={siteProps} user={user} />
     </Popup>
   )
 
@@ -956,7 +941,7 @@ const Navigation = ({ children, isMainPage }) => {
         if (!!!hasPermission) {
           hasPermission = selectWorker.permissions.some(
             perm =>
-              perm === 2 || perm === 3 || perm === 4 || perm == 6 || perm == 7
+              perm === 2 || perm === 3 || perm === 4 || perm === 6 || perm === 7
           )
         }
         if (hasPermission) {
@@ -993,7 +978,7 @@ const Navigation = ({ children, isMainPage }) => {
     >
       <div>
         {hasCompany && hasPermission && (
-          <div onClick={handleClickAdminPanel}>
+          <div onClick={handleClickAdminPanel} aria-hidden="true">
             <LinkEffect
               path="/company-profil"
               text={
@@ -1187,7 +1172,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupHistoryReserwations}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
-          <div onClick={handleMenuOpen}>
+          <div onClick={handleMenuOpen} aria-hidden="true">
             {renderCompanyOrCreateCompany}
             {renderButtonsUp}
           </div>
@@ -1204,7 +1189,6 @@ const Navigation = ({ children, isMainPage }) => {
                 }`}
                 onColor={Colors(siteProps).primaryColor}
                 offColor={Colors(siteProps).primaryColor}
-                onColor={Colors(siteProps).primaryColor}
                 height={22}
                 uncheckedIcon={
                   <PositionPl siteProps={siteProps}>PL</PositionPl>

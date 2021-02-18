@@ -219,7 +219,6 @@ const CalendarWorkerReserwatinNewEvent = ({
   let selectedDayWeekName = ""
   let selectButtonsToEvents = null
   let selectedEventInAllEventWarningExtraTime = null
-  let selectedEventInAllEvent = null
   let titleEvent = ""
   let companyOpenHours = null
   let renderDateStart = ""
@@ -229,10 +228,6 @@ const CalendarWorkerReserwatinNewEvent = ({
       selectedEvent.start.getDay()
     )
     companyOpenHours = itemCompanyHours[selectedDayOpenCompany]
-
-    selectedEventInAllEvent = allEvents.find(
-      item => item.start.getDate() === selectedEvent.start.getDate()
-    )
 
     selectedDate = `${
       selectedEvent.start.getDate() < 10
@@ -257,8 +252,6 @@ const CalendarWorkerReserwatinNewEvent = ({
     selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
       ? "Uwaga rezerwacja jest edytowana w dzień w którym firma jest nieczynna"
       : null
-
-    const isOldDate = new Date() > selectedEvent.end
 
     renderDateStart = (
       <ButtonItemStyleTime>

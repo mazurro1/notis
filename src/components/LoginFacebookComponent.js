@@ -20,7 +20,7 @@ const LoginFacebookComponent = ({ message, id, newAccount }) => {
     } else {
       navigate("/")
     }
-  }, [message])
+  }, [message]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div></div>
 }

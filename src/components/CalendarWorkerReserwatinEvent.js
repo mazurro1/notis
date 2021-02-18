@@ -277,7 +277,6 @@ const CalendarWorkerReserwatinEvent = ({
   let selectedDayWeekName = ""
   let selectButtonsToEvents = null
   let selectedEventInAllEventWarningExtraTime = null
-  let selectedEventInAllEvent = null
   let titleEvent = ""
   let switchButtonHolidays = null
   let companyOpenHours = null
@@ -369,10 +368,6 @@ const CalendarWorkerReserwatinEvent = ({
       selectedEvent.start.getDay()
     )
     companyOpenHours = itemCompanyHours[selectedDayOpenCompany]
-
-    selectedEventInAllEvent = allEvents.find(
-      item => item.start.getDate() === selectedEvent.start.getDate()
-    )
 
     selectedDate = `${
       selectedEvent.start.getDate() < 10

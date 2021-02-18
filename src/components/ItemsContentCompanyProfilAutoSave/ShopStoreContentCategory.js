@@ -7,8 +7,6 @@ import {
   MdDeleteForever,
   MdEdit,
   MdTitle,
-  MdReorder,
-  MdAccessTime,
   MdArrowBack,
 } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"

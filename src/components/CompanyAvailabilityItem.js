@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
-import { MdDelete, MdEdit, MdArrowBack, MdSave } from "react-icons/md"
+import { MdDelete, MdEdit, MdArrowBack } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import { useDispatch } from "react-redux"
@@ -108,13 +108,6 @@ const ButtonsAddPosition = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-`
-
-const ButtonsAdd = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
 `
 

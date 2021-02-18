@@ -130,7 +130,6 @@ const AlertItemStyle = styled.div`
 
 const BellAlerts = ({ siteProps, user }) => {
   const [allAlerts, setAllAlerts] = useState([])
-  const [alertVisible, setAlertVisible] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const [pageUpdate, setPageUpdate] = useState(1)
   const refBell = useRef(null)
@@ -157,7 +156,7 @@ const BellAlerts = ({ siteProps, user }) => {
         }
       }
     }
-  }, [refAllAllerts, user.alerts, scrollPosition])
+  }, [refAllAllerts, user.alerts, scrollPosition]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     sal({
@@ -208,6 +207,8 @@ const BellAlerts = ({ siteProps, user }) => {
           user={user}
         />
       )
+    } else {
+      return null
     }
   })
 

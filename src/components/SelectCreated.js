@@ -202,7 +202,7 @@ const SelectCreated = ({
         setSelectedItems([])
       }
     }
-  }, [value])
+  }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickSelect = () => {
     if (!isDisabled) {
@@ -347,7 +347,11 @@ const SelectCreated = ({
 
   return (
     <SizeSelect width={width} isClearable={isClearable} ref={refSelect}>
-      <div onMouseEnter={handleOnMouseOn} onMouseLeave={handleOnMouseLeave}>
+      <div
+        onMouseEnter={handleOnMouseOn}
+        onMouseLeave={handleOnMouseLeave}
+        aria-hidden="true"
+      >
         <ButtonIcon
           title={
             selectedItems.length === 0 ? (

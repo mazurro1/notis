@@ -298,13 +298,13 @@ const BigCalendarEmployeeWorkingHours = ({
       datePicker.getDate()
     )
     setDateCalendar(newDate)
-  }, [datePicker])
+  }, [datePicker]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const actualMonth = dateCalendar.getMonth() + 1
     const findMonth = AllMonths.find(item => item.value === actualMonth)
     setMonthPicker(findMonth)
-  }, [AllMonths, dateCalendar])
+  }, [AllMonths, dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (dateCalendar.getFullYear() !== yearPicker.value) {
@@ -314,7 +314,7 @@ const BigCalendarEmployeeWorkingHours = ({
       }
       setYearPicker(newYear)
     }
-  }, [dateCalendar])
+  }, [dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!item) {
@@ -476,7 +476,7 @@ const BigCalendarEmployeeWorkingHours = ({
       }
       setAllEvents(allDaysCalendar)
     }
-  }, [item])
+  }, [item]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
     item.openingDays

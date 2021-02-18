@@ -601,7 +601,6 @@ const ContentCompanyProfilAutoSave = ({
               siteProps={siteProps}
               isAdmin={isAdmin}
               ownerData={company.ownerData}
-              company={company}
               RightColumnItem={RightColumnItem}
               ButtonTextPosition={ButtonTextPosition}
               editedWorkers={editedWorkers}

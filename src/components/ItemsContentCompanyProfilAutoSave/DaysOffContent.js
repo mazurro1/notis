@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { getMonthNamePl } from "../../common/Functions"
@@ -91,7 +92,7 @@ const DaysOffContent = ({
     setEditableDaysOff(false)
     setDeletedDayOff([])
     setCreatedDayOff([])
-  }, [companyDaysOff])
+  }, [companyDaysOff]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const filterArrayDayOff = companyDaysOff.filter(item => {
@@ -109,14 +110,14 @@ const DaysOffContent = ({
     setCreatedDayOff([])
     setTakeDateActive(false)
     setCreateDayOff(false)
-  }, [editableDaysOff, editMode])
+  }, [editableDaysOff, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!!isCompanyEditProfil) {
       setCreateDayOff(false)
       setEditableDaysOff(false)
     }
-  }, [isCompanyEditProfil, editableDaysOff, editMode])
+  }, [isCompanyEditProfil, editableDaysOff, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAddClose = () => {
     setCreateDayOff(false)

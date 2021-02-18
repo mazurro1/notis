@@ -232,7 +232,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
       setIsCompanyInFavourites(isCompanyInFav)
     }
     dispatch(resetUserFavourites())
-  }, [user, userResetFavourites])
+  }, [user, userResetFavourites]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const dispatch = useDispatch()
 
@@ -358,6 +358,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
                 data-tip
                 data-for={`addToFavourites${index}`}
                 onClick={handleAddRemoveFromFavourites}
+                aria-hidden="true"
               >
                 {isCompanyInFavourites ? <FaHeart /> : <FaRegHeart />}
               </span>

@@ -116,6 +116,8 @@ const HappyHoursConstContentCategory = ({
     const findDay = DaySOfTheWeek.find(itemDay => itemDay.dayOfTheWeek === item)
     if (!!findDay) {
       return <DayComponent key={index}>{findDay.title}</DayComponent>
+    } else {
+      return <DayComponent key={index}></DayComponent>
     }
   })
 

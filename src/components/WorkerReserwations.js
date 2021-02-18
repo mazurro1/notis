@@ -29,13 +29,7 @@ const WorkerReserwations = ({ handleClose }) => {
         isAdmin
       )
     )
-  }, [
-    dateCalendar.getMonth(),
-    dateCalendar.getFullYear(),
-    isAdmin,
-    userWorkerActive,
-    user,
-  ])
+  }, [dateCalendar, isAdmin, userWorkerActive, user]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       {!!workerHistoryReserwations && !!workingHours ? (

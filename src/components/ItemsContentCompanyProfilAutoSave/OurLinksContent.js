@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit } from "react-icons/md"
 import { FaFacebook, FaInstagram, FaChrome } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
@@ -107,13 +106,13 @@ const OurLinksContent = ({
     setFacebookInput(linkFacebook)
     setInstagramInput(linkInstagram)
     setWebsiteInput(linkiWebsite)
-  }, [company.linkFacebook, company.linkInstagram, company.linkiWebsite])
+  }, [company.linkFacebook, company.linkInstagram, company.linkiWebsite]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setFacebookInput(linkFacebook)
     setInstagramInput(linkInstagram)
     setWebsiteInput(linkiWebsite)
-  }, [editLinks, editMode])
+  }, [editLinks, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const isUrlFacebook = validURL(facebookInput)
   const isUrlInstagram = validURL(instagramInput)

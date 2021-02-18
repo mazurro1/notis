@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { fetchSaveTextsCompany } from "../../state/actions"
 import ColumnItemTextarea from "./ColumnItemTextarea"
 import ButtonIcon from "../ButtonIcon"
@@ -31,7 +31,7 @@ const ReserwationTextComponent = ({
 
   useEffect(() => {
     setEditedReserwation(false)
-  }, [company.reserationText, editMode])
+  }, [company.reserationText, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = setChange => {
     setChange(prevState => !prevState)

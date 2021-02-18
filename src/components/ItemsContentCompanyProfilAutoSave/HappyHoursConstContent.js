@@ -1,15 +1,10 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { MdEdit, MdAddBox } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import HappyHoursConstContentNewItem from "./HappyHoursConstContentNewItem"
-import {
-  getCategories,
-  categoryItemsConstHours,
-  sortItemsInArrayNumber,
-} from "../../common/Functions"
 import HappyHoursConstContentCategory from "./HappyHoursConstContentCategory"
 import { useDispatch, useSelector } from "react-redux"
 import { updateConstHappyHoursFunction } from "../../state/actions"
@@ -59,19 +54,12 @@ const HappyHoursConstContent = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const categories = getCategories([...happyHoursConst], "dayWeekIndex")
-    const items = categoryItemsConstHours(categories, [...happyHoursConst])
-    const sortedItems = sortItemsInArrayNumber([...items], "category")
-    const sortedHas0 = sortedItems.filter(item => item.category === 0)
-    const sortedOther = sortedItems.filter(item => item.category !== 0)
-    const resultSorted = [...sortedOther, ...sortedHas0]
     setCategoriesWithItems(happyHoursConst)
-
     setNewHappyHour(false)
     setEnableTimeStart(false)
     setEnableTimeEnd(false)
     dispatch(updateConstHappyHoursFunction())
-  }, [happyHoursConst, editMode, updateConstHappyHours])
+  }, [happyHoursConst, editMode, updateConstHappyHours]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {
     handleResetAllEditedComponents()

@@ -6,7 +6,6 @@ import { Colors } from "../common/Colors"
 import "moment/locale/pl"
 import {
   checkAndReturnMinAndMaxValueFromDaysHours,
-  getMonthAndReturnEng,
   getMonthNamePl,
 } from "../common/Functions"
 import ButtonIcon from "./ButtonIcon"
@@ -243,16 +242,6 @@ const ButtonsPosition = styled.div`
 const ButtonItemStyle = styled.div`
   margin-left: 10px;
 `
-const WarningStyle = styled.div`
-  position: relative;
-  background-color: ${props => Colors(props.siteProps).dangerColorDark};
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding-left: 50px;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-  border-radius: 5px;
-`
 
 const WidthSelect = styled.div`
   width: 160px;
@@ -358,7 +347,7 @@ const BigCalendarWorkerReserwations = ({
       datePicker.getDate()
     )
     setDateCalendar(newDate)
-  }, [datePicker])
+  }, [datePicker]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!workingHours) {
@@ -519,13 +508,13 @@ const BigCalendarWorkerReserwations = ({
       }
       setAllWorkingHours(allDaysCalendar)
     }
-  }, [workingHours])
+  }, [workingHours]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const actualMonth = dateCalendar.getMonth() + 1
     const findMonth = AllMonths.find(item => item.value === actualMonth)
     setMonthPicker(findMonth)
-  }, [AllMonths, dateCalendar])
+  }, [AllMonths, dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (dateCalendar.getFullYear() !== yearPicker.value) {
@@ -535,7 +524,7 @@ const BigCalendarWorkerReserwations = ({
       }
       setYearPicker(newYear)
     }
-  }, [dateCalendar])
+  }, [dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!item) {

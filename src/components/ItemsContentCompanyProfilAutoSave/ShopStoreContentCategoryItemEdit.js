@@ -54,7 +54,7 @@ const ShopStoreContentCategoryItemEdit = ({
       setProductCount(shopItem.count)
       setProductDisabled(shopItem.disabled)
     }
-  }, [])
+  }, [shopItem])
 
   const handleChangeInput = (e, setChange) => {
     setChange(e.target.value)

@@ -1,22 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
-import {
-  MdLibraryAdd,
-  MdEdit,
-  MdTitle,
-  MdReorder,
-  MdAccessTime,
-  MdArrowBack,
-  MdDeleteForever,
-} from "react-icons/md"
-import { FaDollarSign, FaCalendarAlt } from "react-icons/fa"
+import { MdEdit, MdArrowBack, MdDeleteForever } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
-import InputIcon from "../InputIcon"
-import { Checkbox } from "react-input-checkbox"
-import SelectCreated from "../SelectCreated"
-import { ServiceColors } from "../../common/ServiceColors"
 import ShopStoreContentCategoryItemEdit from "./ShopStoreContentCategoryItemEdit"
 
 const ServiceItem = styled.div`
@@ -81,10 +68,6 @@ const RightContent = styled.div`
     margin-top: 20px;
     width: 100%;
   }
-`
-const SelectStyle = styled.div`
-  margin-top: 10px;
-  margin-bottom: 20px;
 `
 
 const PriceService = styled.span`

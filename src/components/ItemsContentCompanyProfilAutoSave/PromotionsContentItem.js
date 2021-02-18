@@ -231,7 +231,7 @@ const PromotionsContentItem = ({
     setEnableDatePickerStart(false)
     setEnableDatePickerEnd(false)
     dispatch(updatePromotionsDispatch())
-  }, [updatePromotions])
+  }, [updatePromotions]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickCollapse = () => {
     setCollapseActive(prevState => !prevState)
@@ -270,6 +270,14 @@ const PromotionsContentItem = ({
           >
             {findService.serviceName}
           </ServiceInPromotion>
+        )
+      } else {
+        return (
+          <ServiceInPromotion
+            siteProps={siteProps}
+            key={indexService}
+            active={validActive}
+          ></ServiceInPromotion>
         )
       }
     }

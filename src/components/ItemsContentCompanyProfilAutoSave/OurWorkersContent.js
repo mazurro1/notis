@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
@@ -303,7 +303,7 @@ const OurWorkersContent = ({
 
   useEffect(() => {
     setEditedWorkers(false)
-  }, [editMode])
+  }, [editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const categories = getCategories([...companyServices], "serviceCategory")
@@ -318,7 +318,7 @@ const OurWorkersContent = ({
     })
     setAllCategories(newCategories)
     setAllCategoriesWithItems(sortedItems)
-  }, [company])
+  }, [company]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const categories = getCategories([...companyServices], "serviceCategory")
@@ -333,7 +333,7 @@ const OurWorkersContent = ({
     })
     setAllCategories(newCategories)
     setAllCategoriesWithItems(sortedItems)
-  }, [editedWorkers, editMode])
+  }, [editedWorkers, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const dispatch = useDispatch()
 

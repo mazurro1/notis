@@ -127,7 +127,7 @@ const PromotionsContentNewItem = ({
     setSelectedTimeStart(new Date())
     setSelectedTimeEnd(new Date())
     setUserSelectedTime(false)
-  }, [promotions])
+  }, [promotions]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const actualDate = selectedTimeStart

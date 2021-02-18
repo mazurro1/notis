@@ -135,7 +135,7 @@ const PromotionsContentItemEdit = ({
       }
     )
     setSelectedServicesIds(mapServicesInPromotion)
-  }, [itemPromotion, promotions, editPromotions, updatePromotions])
+  }, [itemPromotion, promotions, editPromotions, updatePromotions]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const disabledSave =
     !!promotionPercent &&
