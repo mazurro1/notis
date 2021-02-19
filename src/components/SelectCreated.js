@@ -12,6 +12,7 @@ const WrapSelectedElements = styled.div`
   max-height: 100px;
   overflow-x: hidden;
   overflow-y: auto;
+  text-align: left;
 `
 
 const SizeSelect = styled.div`
@@ -71,6 +72,14 @@ const DataItem = styled.button`
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
+  span {
+    position: relative;
+    left: 0;
+    transition-property: left;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+
   &:hover {
     background-color: ${props =>
       props.active
@@ -83,7 +92,9 @@ const DataItem = styled.button`
   }
 
   &:active {
-    transform: scale(1.08);
+    span {
+      left: -5px;
+    }
   }
 `
 
@@ -157,7 +168,14 @@ const DeleteItemSelected = styled.div`
 
 const DefaultPlaceholderStyle = styled.div`
   font-size: 0.9rem;
-  padding: 2.5px;
+  padding: 1.5px;
+`
+
+const TextSelect = styled.div`
+  font-size: 0.8rem;
+  margin-left: 5px;
+  font-family: "Poppins-Bold", sans-serif;
+  height: 17px;
 `
 
 const SelectCreated = ({
@@ -165,7 +183,7 @@ const SelectCreated = ({
   isMulti = false,
   maxMenuHeight = 300,
   closeMenuOnSelect = false,
-  placeholder = "Wybierz wartości...",
+  placeholder = "Wybierz wartości",
   isClearable = false,
   defaultMenuIsOpen = false,
   isDisabled = false,
@@ -176,6 +194,7 @@ const SelectCreated = ({
   darkSelect = false,
   onlyText = false,
   deleteItem = true,
+  textUp = false,
 }) => {
   const [selectActive, setSelectActive] = useState(
     isDisabled ? false : defaultMenuIsOpen
@@ -274,9 +293,9 @@ const SelectCreated = ({
   }
 
   const handleDeleteSelectedItem = (e, selectedItem) => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     if (deleteItem) {
-      e.stopPropagation()
-      e.nativeEvent.stopImmediatePropagation()
       if (!isDisabled) {
         const filterSelectedItem = selectedItems.filter(
           item => item.value !== selectedItem.value
@@ -317,7 +336,7 @@ const SelectCreated = ({
         key={index}
         secondColor={secondColor}
       >
-        {item.label}
+        <span>{item.label}</span>
       </DataItem>
     )
   })
@@ -352,6 +371,13 @@ const SelectCreated = ({
         onMouseLeave={handleOnMouseLeave}
         aria-hidden="true"
       >
+        {
+          <TextSelect>
+            {!!placeholder && selectedItems.length > 0 && textUp
+              ? placeholder
+              : ""}
+          </TextSelect>
+        }
         <ButtonIcon
           title={
             selectedItems.length === 0 ? (

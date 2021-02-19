@@ -16,6 +16,7 @@ import {
   FaUsers,
   FaStamp,
   FaHeart,
+  FaChartBar,
 } from "react-icons/fa"
 import {
   MdWork,
@@ -78,6 +79,7 @@ import UserStamps from "./UserStamps"
 import UserFavourites from "./UserFavourites"
 import CompanyAvailability from "./CompanyAvailability"
 import UseWindowSize from "../common/UseWindowSize"
+import CompanyStatistics from "./CompanyStatistics"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -422,6 +424,7 @@ const Navigation = ({ children, isMainPage }) => {
   const [stampsVisible, setStampsVisible] = useState(false)
   const [favouritesVisible, setFavouritesVisible] = useState(false)
   const [availabilityVisible, setAvailabilityVisible] = useState(false)
+  const [companyStatistics, setCompanyStatistics] = useState(false)
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
@@ -616,6 +619,11 @@ const Navigation = ({ children, isMainPage }) => {
 
   const handleClickMenuIndustries = () => {
     setVisibleMenuIndustries(prevState => !prevState)
+  }
+
+  const handleClickCompanyStatistics = () => {
+    setCompanyStatistics(prevState => !prevState)
+    setWorkPropsVisible(prevState => !prevState)
   }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
@@ -922,7 +930,18 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-  // console.log(user)
+  const PopupCompanyStatistics = user && (
+    <Popup
+      popupEnable={companyStatistics}
+      handleClose={handleClickCompanyStatistics}
+      title="Statystyki firmy"
+      fullScreen
+    >
+      <CompanyStatistics siteProps={siteProps} user={user} />
+    </Popup>
+  )
+
+  console.log(user)
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
@@ -978,22 +997,34 @@ const Navigation = ({ children, isMainPage }) => {
     >
       <div>
         {hasCompany && hasPermission && (
-          <div onClick={handleClickAdminPanel} aria-hidden="true">
-            <LinkEffect
-              path="/company-profil"
-              text={
-                <ButtonIcon
-                  title="Panel administracyjny"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="16"
-                  icon={<FaChrome />}
-                  secondColors
-                />
-              }
-            />
-          </div>
-          // </ButtonNavStyle>
+          <>
+            <div onClick={handleClickAdminPanel} aria-hidden="true">
+              <LinkEffect
+                path="/company-profil"
+                text={
+                  <ButtonIcon
+                    title="Panel administracyjny"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="16"
+                    icon={<FaChrome />}
+                    secondColors
+                  />
+                }
+              />
+            </div>
+            <MarginButtonsWork>
+              <ButtonIcon
+                title="Statystyki firmy"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaChartBar />}
+                secondColors
+                onClick={handleClickCompanyStatistics}
+              />
+            </MarginButtonsWork>
+          </>
         )}
         <MarginButtonsWork>
           <ButtonIcon
@@ -1170,6 +1201,7 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupUserFavourites}
       {PopupCompanyAvailability}
       {PopupHistoryReserwations}
+      {PopupCompanyStatistics}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">

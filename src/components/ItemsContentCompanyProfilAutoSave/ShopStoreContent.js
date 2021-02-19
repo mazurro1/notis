@@ -12,7 +12,7 @@ import { fetchSaveShopStore } from "../../state/actions"
 
 const PositionRelative = styled.div`
   position: relative;
-  padding: 5px 10px;
+  padding: ${props => (props.active ? "5px 10px" : "0px")};
   padding-bottom: 80px;
   margin-top: 60px;
   background-color: ${props =>
@@ -26,7 +26,7 @@ const PositionRelative = styled.div`
     props.active
       ? Colors(props.siteProps).textNormalWhite
       : Colors(props.siteProps).textNormalBlack};
-  transition-property: background-color, color, border-color;
+  transition-property: background-color, color, border-color, padding;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `

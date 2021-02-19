@@ -110,7 +110,9 @@ const ItemSummary = styled.div`
   max-width: 90vw;
   width: 800px;
   padding-top: 40px;
-  overflow: hidden;
+  overflow-x: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
 `
 
 const PaddingContent = styled.div`

@@ -309,7 +309,6 @@ const BigCalendarWorkerHoursAutoSave = ({
   useEffect(() => {
     const actualMonth = dateCalendar.getMonth() + 1
     const findMonth = AllMonths.find(item => item.value === actualMonth)
-    console.log(findMonth)
     setMonthPicker(findMonth)
   }, [AllMonths, dateCalendar]) // eslint-disable-line react-hooks/exhaustive-deps
 

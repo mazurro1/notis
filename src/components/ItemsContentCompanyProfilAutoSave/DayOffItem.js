@@ -21,6 +21,12 @@ const DayOffStyle = styled.div`
   transition-property: background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+  overflow-wrap: break-word;
+  word-break: break-word;
+
+  @media all and (min-width: 991px) and (max-width: 1200px) {
+    width: 105px;
+  }
 `
 
 const DayOffPadding = styled.div`

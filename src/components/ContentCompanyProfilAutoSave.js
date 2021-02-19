@@ -1,5 +1,5 @@
 /*eslint-disable eqeqeq*/
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import OpinionAndAdressContent from "./ItemsContentCompanyProfilAutoSave/OpinionAndAdressContent"
@@ -184,6 +184,10 @@ const ContentCompanyProfilAutoSave = ({
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    setEditShopStore(false)
+  }, [company.shopStore])
 
   const disabledEditButtons =
     allCategoryEdit ||

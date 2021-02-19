@@ -7,7 +7,7 @@ import { MdWork, MdImage } from "react-icons/md"
 import { useSelector, useDispatch } from "react-redux"
 import { LinkEffect } from "../common/LinkEffect"
 import { Site } from "../common/Site"
-import { FaHeart, FaRegHeart } from "react-icons/fa"
+import { FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
 import {
   addCompanyFavourites,
@@ -401,8 +401,8 @@ const PlacesItem = ({ item, filters, index, user }) => {
                   <ButtonIcon
                     title="REZERWUJ"
                     uppercase
-                    fontIconSize="25"
-                    icon={<MdWork />}
+                    fontIconSize="20"
+                    icon={<FaCalendarAlt />}
                   />
                 }
               />

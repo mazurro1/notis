@@ -355,8 +355,6 @@ const ShopStoreContentCategory = ({
   }
 
   const handleSaveEditedProduct = (categoryId, newEditedItem) => {
-    console.log(categoryId, newEditedItem)
-
     //in new
     const newNewCategorys = [...newCategorys]
     const newEditedCategory = [...editedCategory]
@@ -429,7 +427,11 @@ const ShopStoreContentCategory = ({
   })
 
   return (
-    <>
+    <div
+      data-sal={!isCompanyEditProfil && "zoom-in"}
+      data-sal-duration={!isCompanyEditProfil && "1000"}
+      data-sal-easing={!isCompanyEditProfil && "ease-out-bounce"}
+    >
       <TitleCategory
         isCompanyEditProfil={isCompanyEditProfil}
         clickDelete={clickDelete}
@@ -586,7 +588,7 @@ const ShopStoreContentCategory = ({
       <Collapse isOpened={collapseActive}>
         <div>{itemsMap}</div>
       </Collapse>
-    </>
+    </div>
   )
 }
 export default ShopStoreContentCategory

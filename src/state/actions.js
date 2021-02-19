@@ -589,6 +589,14 @@ export const DELETE_USER_COMPANY_AVAILABILITY =
   "DELETE_USER_COMPANY_AVAILABILITY"
 export const EDIT_USER_COMPANY_AVAILABILITY = "EXIT_USER_COMPANY_AVAILABILITY"
 export const SAVE_EDITED_COMPANY_SHOP_STORE = "SAVE_EDITED_COMPANY_SHOP_STORE"
+export const SAVE_COMPANY_STATS = "SAVE_COMPANY_STATS"
+
+export const saveCompanyStats = stats => {
+  return {
+    type: SAVE_COMPANY_STATS,
+    stats: stats,
+  }
+}
 
 export const saveEditedCompanyShopStore = shopStore => {
   return {
@@ -3489,10 +3497,39 @@ export const fetchSaveShopStore = (
       .then(response => {
         dispatch(saveEditedCompanyShopStore(response.data.shopStore))
         dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano stan sklepu.", "green"))
       })
       .catch(error => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Błąd podczas edytowania stanu sklepu.", "red"))
+      })
+  }
+}
+
+export const fetchCompanyStaticts = (token, companyId, months, year) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/get-company-statistics`,
+        {
+          companyId: companyId,
+          months: months,
+          year: year,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(saveCompanyStats(response.data.stats))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Błąd podczas pobierania statystyk.", "red"))
       })
   }
 }

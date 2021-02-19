@@ -9,6 +9,10 @@ const ColumnAvaibleHours = styled.div`
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   margin-bottom: 10px;
+
+  @media all and (max-width: 767px) {
+    width: 100%;
+  }
 `
 
 const TextColumnAvaibleHours = styled.div`
@@ -45,10 +49,14 @@ const DateReserwStyle = styled.div`
   transition-timing-function: ease;
   margin-bottom: 10px;
   user-select: none;
+  @media all and (min-width: 767px) and (max-width: 992px) {
+    width: 45px;
+  }
 
   span {
     position: relative;
     top: ${props => (props.promotionsValid ? "2px" : "0px")};
+    font-size: 1rem;
   }
 
   .promotionPosition {

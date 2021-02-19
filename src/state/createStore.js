@@ -36,6 +36,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  SAVE_COMPANY_STATS,
   SAVE_EDITED_COMPANY_SHOP_STORE,
   EDIT_USER_COMPANY_AVAILABILITY,
   DELETE_USER_COMPANY_AVAILABILITY,
@@ -178,6 +179,7 @@ const initialState = {
   resetOpinion: false,
   workingHours: null,
   activeWorkerUserId: null,
+  companyStats: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -493,6 +495,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case SAVE_COMPANY_STATS: {
+      return {
+        ...state,
+        companyStats: !!action.stats ? action.stats : null,
+      }
+    }
 
     case SAVE_EDITED_COMPANY_SHOP_STORE: {
       const patchWorkCompanyShopStore = !!state.workCompanyData
