@@ -240,3 +240,127 @@ export const chartResState = (companyStats, companyName) => {
     allLabels: allLabels,
   }
 }
+
+export const chartServicesState = (companyStats, services) => {
+  const allStats = []
+  const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
+    const actualDate = new Date()
+    const splitDateEnd = item.dateEnd.split(":")
+    const dateItem = new Date(
+      item.dateYear,
+      item.dateMonth - 1,
+      item.dateDay,
+      Number(splitDateEnd[0]),
+      Number(splitDateEnd[1])
+    )
+    if (item.visitCanceled || item.visitNotFinished || actualDate < dateItem) {
+      return false
+    } else {
+      return true
+    }
+  })
+
+  filterCompanyStatsNoActiveAndDate.forEach(state => {
+    const findIndexInAllStats = allStats.findIndex(
+      item => item.serviceId === state.serviceId
+    )
+    if (findIndexInAllStats >= 0) {
+      allStats[findIndexInAllStats].countReserwations =
+        allStats[findIndexInAllStats].countReserwations + 1
+    } else {
+      const findServiceName = services.find(
+        item => item._id === state.serviceId
+      )
+      let serviceName = "Brak usługi"
+      if (!!findServiceName) {
+        serviceName = findServiceName.serviceName
+      }
+      const dateToChar = {
+        countReserwations: 1,
+        serviceId: state.serviceId,
+        user: serviceName,
+      }
+      allStats.push(dateToChar)
+    }
+  })
+  const allLabels = [
+    {
+      dataKey: "countReserwations",
+      label: "Liczba rezerwacj",
+      extraValueLabel: "",
+      color: "primaryColor",
+    },
+  ]
+
+  return {
+    allStats: allStats,
+    allLabels: allLabels,
+  }
+}
+
+export const chartMonthsState = (companyStats, allMonths) => {
+  const allStats = []
+  const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
+    const actualDate = new Date()
+    const splitDateEnd = item.dateEnd.split(":")
+    const dateItem = new Date(
+      item.dateYear,
+      item.dateMonth - 1,
+      item.dateDay,
+      Number(splitDateEnd[0]),
+      Number(splitDateEnd[1])
+    )
+    if (item.visitCanceled || item.visitNotFinished || actualDate < dateItem) {
+      return false
+    } else {
+      return true
+    }
+  })
+
+  filterCompanyStatsNoActiveAndDate.forEach(state => {
+    const findIndexInAllStats = allStats.findIndex(
+      item => item.dateMonth === state.dateMonth
+    )
+    if (findIndexInAllStats >= 0) {
+      allStats[findIndexInAllStats].countReserwations =
+        allStats[findIndexInAllStats].countReserwations + 1
+
+      allStats[findIndexInAllStats].allCosts =
+        allStats[findIndexInAllStats].allCosts + state.costReserwation
+    } else {
+      const findMonthName = allMonths.find(
+        item => item.value === state.dateMonth
+      )
+      let monthName = "Brak danych"
+      if (!!findMonthName) {
+        monthName = findMonthName.label
+      }
+      const dateToChar = {
+        countReserwations: 1,
+        dateMonth: state.dateMonth,
+        user: monthName,
+        allCosts: state.costReserwation,
+      }
+      allStats.push(dateToChar)
+    }
+  })
+  const allLabels = [
+    {
+      dataKey: "allCosts",
+      label: "Uzbierana kwota",
+      extraValueLabel: "zł",
+      color: "primaryColor",
+    },
+    {
+      dataKey: "countReserwations",
+      label: "Liczba rezerwacj",
+      extraValueLabel: "",
+      color: "primaryColorDark",
+    },
+  ]
+
+  return {
+    allStats: allStats,
+    allLabels: allLabels,
+  }
+}

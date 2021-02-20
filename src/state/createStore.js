@@ -497,9 +497,16 @@ const reducer = (state = initialState, action) => {
     //COMPANY
 
     case SAVE_COMPANY_STATS: {
+      let dateCompanyStats = null
+      if (!!action.services && !!action.stats) {
+        dateCompanyStats = {
+          services: action.services,
+          stats: action.stats,
+        }
+      }
       return {
         ...state,
-        companyStats: !!action.stats ? action.stats : null,
+        companyStats: dateCompanyStats,
       }
     }
 

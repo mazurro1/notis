@@ -8,7 +8,12 @@ import ButtonIcon from "./ButtonIcon"
 import { fetchCompanyStaticts } from "../state/actions"
 import ChartReserwationsStats from "./Charts/ChartReserwationsStats"
 import { ChartsAdmin } from "../common/Charts"
-import { chartErnings, chartResState } from "./Charts/FunctionsChart"
+import {
+  chartErnings,
+  chartResState,
+  chartServicesState,
+  chartMonthsState,
+} from "./Charts/FunctionsChart"
 
 import { FaSearch } from "react-icons/fa"
 const ButtonsPosition = styled.div`
@@ -82,9 +87,22 @@ const CompanyStatistics = ({ siteProps, user }) => {
     if (!!companyStats && chartPicker) {
       let statsConvertedCharts = null
       if (chartPicker.value === 1) {
-        statsConvertedCharts = chartErnings(companyStats, user.company.name)
+        statsConvertedCharts = chartErnings(
+          companyStats.stats,
+          user.company.name
+        )
       } else if (chartPicker.value === 2) {
-        statsConvertedCharts = chartResState(companyStats, user.company.name)
+        statsConvertedCharts = chartResState(
+          companyStats.stats,
+          user.company.name
+        )
+      } else if (chartPicker.value === 3) {
+        statsConvertedCharts = chartServicesState(
+          companyStats.stats,
+          companyStats.services
+        )
+      } else if (chartPicker.value === 4) {
+        statsConvertedCharts = chartMonthsState(companyStats.stats, AllMonths)
       }
 
       if (!!statsConvertedCharts) {
@@ -158,8 +176,6 @@ const CompanyStatistics = ({ siteProps, user }) => {
     setChartPicker(validValue)
   }
 
-  console.log(companyStats)
-
   return (
     <div ref={refChart}>
       <ButtonsPosition>
@@ -221,14 +237,15 @@ const CompanyStatistics = ({ siteProps, user }) => {
         />
       </MarginSelectChar>
       {!!companyStats ? (
-        !!chartPicker && (
+        !!chartPicker && dataToChar.length > 0 ? (
           <ChartReserwationsStats
             statsWidth={statsWidth}
-            companyStats={companyStats}
             siteProps={siteProps}
             dataToChar={dataToChar}
             allLabels={labelsToChar}
           />
+        ) : (
+          <NoElementsInfo>Brak danych</NoElementsInfo>
         )
       ) : (
         <NoElementsInfo>Brak informacji</NoElementsInfo>

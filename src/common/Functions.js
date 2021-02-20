@@ -252,6 +252,17 @@ export const sortItemsInArray = (arrayToSort, itemName) => {
   return arrayToSort
 }
 
+export const sortItemsInArrayToString = (arrayToSort, itemName) => {
+  arrayToSort.sort((a, b) => {
+    const firstItemToSort = a[itemName].toString().toLowerCase()
+    const secondItemToSort = b[itemName].toString().toLowerCase()
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+  return arrayToSort
+}
+
 export const sortItemsInArrayDateConvert = (arrayToSort, itemName) => {
   arrayToSort.sort((a, b) => {
     const firstItemToSort = new Date(a[itemName])

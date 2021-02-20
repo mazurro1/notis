@@ -4,7 +4,15 @@ export const ChartsAdmin = [
     label: "Zarobek w wybranym okresie",
   },
   {
+    value: 3,
+    label: "Najczęściej rezerwowane usługi",
+  },
+  {
     value: 2,
     label: "Statystyki rezerwacji",
+  },
+  {
+    value: 4,
+    label: "Porównanie miesięcy",
   },
 ]

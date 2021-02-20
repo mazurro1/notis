@@ -934,7 +934,7 @@ const Navigation = ({ children, isMainPage }) => {
     <Popup
       popupEnable={companyStatistics}
       handleClose={handleClickCompanyStatistics}
-      title="Statystyki firmy"
+      title="Statystyki"
       fullScreen
     >
       <CompanyStatistics siteProps={siteProps} user={user} />
@@ -1015,12 +1015,11 @@ const Navigation = ({ children, isMainPage }) => {
             </div>
             <MarginButtonsWork>
               <ButtonIcon
-                title="Statystyki firmy"
+                title="Statystyki"
                 uppercase
                 fontIconSize="20"
                 fontSize="16"
                 icon={<FaChartBar />}
-                secondColors
                 onClick={handleClickCompanyStatistics}
               />
             </MarginButtonsWork>

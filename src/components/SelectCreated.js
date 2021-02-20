@@ -6,6 +6,7 @@ import { CSSTransition } from "react-transition-group"
 import { useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
 import UseOuterClick from "../common/UseOuterClick"
+import { sortItemsInArrayToString } from "../common/Functions"
 
 const WrapSelectedElements = styled.div`
   width: 100%;
@@ -323,6 +324,14 @@ const SelectCreated = ({
   const handleOnMouseLeave = () => {
     setHoverActive(false)
   }
+
+  selectedItems.sort((a, b) => {
+    const firstItemToSort = a.value.toString().toLowerCase()
+    const secondItemToSort = b.value.toString().toLowerCase()
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
 
   const mapOptions = options.map((item, index) => {
     const isItemActive = selectedItems.some(

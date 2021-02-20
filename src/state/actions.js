@@ -591,10 +591,11 @@ export const EDIT_USER_COMPANY_AVAILABILITY = "EXIT_USER_COMPANY_AVAILABILITY"
 export const SAVE_EDITED_COMPANY_SHOP_STORE = "SAVE_EDITED_COMPANY_SHOP_STORE"
 export const SAVE_COMPANY_STATS = "SAVE_COMPANY_STATS"
 
-export const saveCompanyStats = stats => {
+export const saveCompanyStats = (stats, services) => {
   return {
     type: SAVE_COMPANY_STATS,
     stats: stats,
+    services: services,
   }
 }
 
@@ -3524,7 +3525,7 @@ export const fetchCompanyStaticts = (token, companyId, months, year) => {
         }
       )
       .then(response => {
-        dispatch(saveCompanyStats(response.data.stats))
+        dispatch(saveCompanyStats(response.data.stats, response.data.services))
         dispatch(changeSpinner(false))
       })
       .catch(error => {
