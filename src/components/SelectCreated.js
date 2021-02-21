@@ -6,7 +6,6 @@ import { CSSTransition } from "react-transition-group"
 import { useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
 import UseOuterClick from "../common/UseOuterClick"
-import { sortItemsInArrayToString } from "../common/Functions"
 
 const WrapSelectedElements = styled.div`
   width: 100%;

@@ -226,10 +226,12 @@ const PlacesItem = ({ item, filters, index, user }) => {
 
   useEffect(() => {
     if (!!user) {
-      const isCompanyInFav = user.favouritesCompanys.some(
-        itemCompany => itemCompany._id === item._id
-      )
-      setIsCompanyInFavourites(isCompanyInFav)
+      if (!!user.favouritesCompanys) {
+        const isCompanyInFav = user.favouritesCompanys.some(
+          itemCompany => itemCompany._id === item._id
+        )
+        setIsCompanyInFavourites(isCompanyInFav)
+      }
     }
     dispatch(resetUserFavourites())
   }, [user, userResetFavourites]) // eslint-disable-line react-hooks/exhaustive-deps

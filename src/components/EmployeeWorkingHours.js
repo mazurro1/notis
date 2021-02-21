@@ -36,7 +36,15 @@ const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
         )
       )
     }
-  }, [dateCalendar, dispatch, isAdmin, userWorkerActive, user, editWorkerHours])
+  }, [
+    dateCalendar.getFullYear(),
+    dateCalendar.getMonth(),
+    dispatch,
+    isAdmin,
+    userWorkerActive,
+    user,
+    editWorkerHours,
+  ])
   return (
     <>
       {!!workingHours ? (

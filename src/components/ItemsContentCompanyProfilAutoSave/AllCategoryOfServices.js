@@ -8,7 +8,6 @@ import {
 import styled from "styled-components"
 import { MdAddBox, MdTitle, MdArrowBack, MdEdit } from "react-icons/md"
 import CategoryItem from "./CategoryItem"
-import ReactTooltip from "react-tooltip"
 import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { CSSTransition } from "react-transition-group"
@@ -16,6 +15,7 @@ import sal from "sal.js"
 import { Colors } from "../../common/Colors"
 import { fetchSaveCompanyServices } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
+import ReactTooltip from "react-tooltip"
 
 const AddCategory = styled.div`
   position: relative;
@@ -142,6 +142,8 @@ const AllCategoryOfServices = ({
   handleClickReserwation,
   companyId,
   userIsBlocked,
+  isWorkerBlocked,
+  userCannotMakeReservation,
   user,
   allCategoryEdit,
   setAllCategoryEdit,
@@ -194,10 +196,6 @@ const AllCategoryOfServices = ({
   useEffect(() => {
     setAllCategoryEdit(false)
   }, [editMode]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  }, [userIsBlocked])
 
   const handleClickContent = e => {
     e.stopPropagation()
@@ -458,6 +456,8 @@ const AllCategoryOfServices = ({
         handleClickReserwation={handleClickReserwation}
         companyId={companyId}
         userIsBlocked={userIsBlocked}
+        userCannotMakeReservation={userCannotMakeReservation}
+        isWorkerBlocked={isWorkerBlocked}
       />
     )
   })
@@ -485,18 +485,17 @@ const AllCategoryOfServices = ({
         </BlockUserInfo>
       )}
 
-      <TitleRightColumnOpinion
-        siteProps={siteProps}
-        isCompanyEditProfil={allCategoryEdit}
-      >
-        Usługi
-      </TitleRightColumnOpinion>
+      {(services.length > 0 || isCompanyEditProfil) && (
+        <>
+          <TitleRightColumnOpinion
+            siteProps={siteProps}
+            isCompanyEditProfil={allCategoryEdit}
+          >
+            Usługi
+          </TitleRightColumnOpinion>
 
-      {mapCategories}
-      {userIsBlocked && (
-        <ReactTooltip id="userIsBlocked" effect="float" multiline={true}>
-          <span>Twoje konto zostało zablokowane na tej stronie</span>
-        </ReactTooltip>
+          {mapCategories}
+        </>
       )}
       {allCategoryEdit && (
         <>

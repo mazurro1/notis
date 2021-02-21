@@ -9,6 +9,8 @@ import ShopStoreContentCategory from "./ShopStoreContentCategory"
 import ShopStoreContentAddCategory from "./ShopStoreContentAddCategory"
 import { useDispatch } from "react-redux"
 import { fetchSaveShopStore } from "../../state/actions"
+import sal from "sal.js"
+import { sortItemsInArrayToString } from "../../common/Functions"
 
 const PositionRelative = styled.div`
   position: relative;
@@ -72,6 +74,10 @@ const ShopStoreContent = ({
     setNewCategorys([])
     setEditedCategory([])
     setDeletedCategory([])
+    sal({
+      threshold: 0.01,
+      once: true,
+    })
   }, [companyShopStore])
 
   useEffect(() => {
@@ -137,7 +143,12 @@ const ShopStoreContent = ({
     )
   }
 
-  const mapAllCategories = allCompanyShopStore.map(
+  const sortedAllCompanyShopStore = sortItemsInArrayToString(
+    allCompanyShopStore,
+    "category"
+  )
+
+  const mapAllCategories = sortedAllCompanyShopStore.map(
     (category, indexCategory) => {
       return (
         <ShopStoreContentCategory
@@ -167,15 +178,20 @@ const ShopStoreContent = ({
 
   return (
     <PositionRelative active={editShopStore} siteProps={siteProps}>
-      <div>
-        <TitleRightColumnOpinion
-          siteProps={siteProps}
-          isCompanyEditProfil={editShopStore}
-        >
-          Stan sklepu
-        </TitleRightColumnOpinion>
-      </div>
-      {mapAllCategories}
+      {(companyShopStore.length > 0 ||
+        (isCompanyEditProfil && editMode && editShopStore)) && (
+        <>
+          <div>
+            <TitleRightColumnOpinion
+              siteProps={siteProps}
+              isCompanyEditProfil={editShopStore}
+            >
+              Stan sklepu
+            </TitleRightColumnOpinion>
+          </div>
+          {mapAllCategories}
+        </>
+      )}
       {isCompanyEditProfil && editMode && editShopStore && (
         <>
           <ShopStoreContentAddCategory

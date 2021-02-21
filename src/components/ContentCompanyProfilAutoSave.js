@@ -299,6 +299,36 @@ const ContentCompanyProfilAutoSave = ({
 
   let userHasPermisionToOther = !isCompanyEditProfil || isAdmin
   let userIsBlocked = false
+  let userCannotMakeReservation = !!user
+  let isWorkerBlocked = false
+
+  if (!!user) {
+    isWorkerBlocked = company.owner._id === user.userId
+    if (!isWorkerBlocked) {
+      const userIsInWorkers = company.workers.some(
+        item => item.user._id === user.userId
+      )
+      if (userIsInWorkers) {
+        isWorkerBlocked = true
+      }
+    }
+  }
+
+  if (!userCannotMakeReservation) {
+    if (!!user) {
+      userCannotMakeReservation = company.owner._id === user.userId
+      if (!userCannotMakeReservation) {
+        const userIsInWorkers = company.workers.some(
+          item => item.user._id === user.userId
+        )
+        if (userIsInWorkers) {
+          userCannotMakeReservation = false
+          isWorkerBlocked = true
+        }
+      }
+    }
+  }
+
   if (!!company.usersInformation && !!user) {
     const isUserInAllUsers = company.usersInformation.find(
       itemInfo => itemInfo.userId === user.userId
@@ -350,6 +380,8 @@ const ContentCompanyProfilAutoSave = ({
               handleClickReserwation={handleClickReserwation}
               companyId={company._id}
               userIsBlocked={userIsBlocked}
+              isWorkerBlocked={isWorkerBlocked}
+              userCannotMakeReservation={userCannotMakeReservation}
               user={user}
               allCategoryEdit={allCategoryEdit}
               setAllCategoryEdit={setAllCategoryEdit}

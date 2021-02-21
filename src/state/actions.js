@@ -95,10 +95,12 @@ export const changeUserProfilVisible = value => {
   }
 }
 
-export const addUserPhone = phone => {
+export const addUserPhone = (phone, email, token) => {
   return {
     type: ADD_USER_PHONE,
     phone: phone,
+    email: email,
+    token: token,
   }
 }
 
@@ -413,8 +415,15 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
         }
       )
       .then(response => {
-        dispatch(loginUser(response.data))
-        dispatch(addUserPhone(response.data.userPhone))
+        // dispatch(loginUser(response.data))
+
+        dispatch(
+          addUserPhone(
+            response.data.userPhone,
+            response.data.email,
+            response.data.token
+          )
+        )
         dispatch(
           addAlertItem("Pomyślnie zaktualizowano dane użytkownika", "green")
         )

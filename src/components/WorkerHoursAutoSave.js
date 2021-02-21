@@ -36,7 +36,14 @@ const WorkerHoursAutoSave = ({ handleClose, item, editWorkerHours }) => {
         )
       )
     }
-  }, [dateCalendar, isAdmin, userWorkerActive, user, editWorkerHours]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    dateCalendar.getFullYear(),
+    dateCalendar.getMonth(),
+    isAdmin,
+    userWorkerActive,
+    user,
+    editWorkerHours,
+  ]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       {!!item ? (

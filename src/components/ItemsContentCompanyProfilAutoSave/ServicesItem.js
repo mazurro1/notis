@@ -17,6 +17,7 @@ import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import SelectCreated from "../SelectCreated"
 import { ServiceColors } from "../../common/ServiceColors"
+import ReactTooltip from "react-tooltip"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -158,6 +159,8 @@ const ServicesItem = ({
   siteProps,
   userIsBlocked,
   activeWorkerUserId,
+  isWorkerBlocked,
+  userCannotMakeReservation,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
@@ -176,6 +179,10 @@ const ServicesItem = ({
     setClickEdit(false)
     setClickButtonDelete(false)
   }, [isCompanyEditProfil])
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [userIsBlocked, userCannotMakeReservation, isWorkerBlocked])
 
   const indexValueColorService = !!itemServices.serviceColor
     ? itemServices.serviceColor
@@ -296,6 +303,21 @@ const ServicesItem = ({
       siteProps={siteProps}
       active={selectedServiceItem}
     >
+      {(userIsBlocked || !userCannotMakeReservation || isWorkerBlocked) && (
+        <ReactTooltip
+          id={`userIsBlockedAlert${itemServices._id}`}
+          effect="float"
+          multiline={true}
+        >
+          {isWorkerBlocked ? (
+            <span>Pracownik nie może dokonać rezerwacji</span>
+          ) : !userCannotMakeReservation ? (
+            <span>Zaloguj się aby dokonać rezerwacji</span>
+          ) : (
+            <span>Twoje konto zostało zablokowane na tej stronie</span>
+          )}
+        </ReactTooltip>
+      )}
       <LeftContent>
         <TitleService>
           {itemServices.serviceName}
@@ -348,7 +370,10 @@ const ServicesItem = ({
           </>
         ) : (
           <>
-            <WidthButtonRezerv data-tip data-for="userIsBlocked">
+            <WidthButtonRezerv
+              data-tip
+              data-for={`userIsBlockedAlert${itemServices._id}`}
+            >
               <ButtonIcon
                 title="Rezerwuj"
                 uppercase
@@ -357,7 +382,9 @@ const ServicesItem = ({
                 icon={<FaCalendarAlt />}
                 secondColors={isCompanyEditProfil}
                 onClick={() => handleClickReserwation(itemServices, companyId)}
-                disabled={userIsBlocked}
+                disabled={
+                  userIsBlocked || !userCannotMakeReservation || isWorkerBlocked
+                }
               />
             </WidthButtonRezerv>
           </>

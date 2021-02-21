@@ -843,7 +843,7 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-  const PopupReserwation = (
+  const PopupReserwation = userId && (
     <Popup
       popupEnable={reserwationEnable}
       handleClose={handleCloseReserwation}

@@ -15,6 +15,7 @@ import ButtonIcon from "../ButtonIcon"
 import ShopStoreContentCategoryNewItem from "./ShopStoreContentCategoryNewItem"
 import ShopStoreContentCategoryItem from "./ShopStoreContentCategoryItem"
 import InputIcon from "../InputIcon"
+import { sortItemsInArrayToString } from "../../common/Functions"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -401,7 +402,9 @@ const ShopStoreContentCategory = ({
     }
   }
 
-  const itemsMap = category.items.map((shopItem, shopIndex) => {
+  const sortedCategoryItems = sortItemsInArrayToString(category.items, "name")
+
+  const itemsMap = sortedCategoryItems.map((shopItem, shopIndex) => {
     return (
       <ShopStoreContentCategoryItem
         shopItem={shopItem}

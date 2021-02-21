@@ -250,9 +250,15 @@ const reducer = (state = initialState, action) => {
       }
 
     case ADD_USER_PHONE:
+      const newUserEdited = !!state.user ? { ...state.user } : null
+      if (!!action.email || action.token) {
+        newUserEdited.token = action.token
+        newUserEdited.email = action.email
+      }
       return {
         ...state,
         userPhone: action.phone,
+        user: newUserEdited,
       }
 
     case ADD_ALERT_ITEM: {
