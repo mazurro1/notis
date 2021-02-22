@@ -124,7 +124,7 @@ const WrapperNavigation = styled.div`
 `
 
 const WrapperNavigationUnder = styled.div`
-  position: absolute;
+  position: relative;
   z-index: 90;
   top: 70px;
   left: 0;
@@ -284,7 +284,7 @@ const ContentMenu = styled.div`
       ? "translate(20%, -15%) scale(0.6) rotateY(-50deg) rotateX(-15deg) rotateZ(17deg);"
       : ""}; */
   box-shadow: 0 0 40px 1px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  /* overflow: hidden; */
   transition-property: transform, padding-left;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -1272,7 +1272,7 @@ const Navigation = ({ children, isMainPage }) => {
         noContent
       />
       <ContentMenu active={menuOpen}>
-        <BackgroundColorPage className="heightElement" siteProps={siteProps}>
+        <BackgroundColorPage siteProps={siteProps}>
           <Spinner spinnerEnable={spinnerEnable} />
           <Alerts />
           <AlertExtra siteProps={siteProps} />
@@ -1324,7 +1324,7 @@ const Navigation = ({ children, isMainPage }) => {
             </NavigationDiv>
           </WrapperNavigation>
           {renderExtraPropsInMainMenu}
-          <PaddingContent
+          {/* <PaddingContent
             topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
             heightPadding={heightMenuIndustries}
             active={visibleMenuIndustries}
@@ -1332,7 +1332,7 @@ const Navigation = ({ children, isMainPage }) => {
             <MinHeightContent isMainPage={isMainPage}>
               {children}
             </MinHeightContent>
-          </PaddingContent>
+          </PaddingContent> */}
         </BackgroundColorPage>
       </ContentMenu>
     </>
