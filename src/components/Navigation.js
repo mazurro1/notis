@@ -484,10 +484,19 @@ const Navigation = ({ children, isMainPage }) => {
   useEffect(() => {
     if (!!industries || industries === 0) {
       dispatch(
-        fetchAllCompanysOfType(page, industries, sorts, filters, localization)
+        fetchAllCompanysOfType(
+          page,
+          industries,
+          sorts,
+          filters,
+          localization,
+          selectedName
+        )
       )
     } else {
-      dispatch(fetchAllCompanys(page, sorts, filters, localization))
+      dispatch(
+        fetchAllCompanys(page, sorts, filters, localization, selectedName)
+      )
     }
   }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -628,7 +637,7 @@ const Navigation = ({ children, isMainPage }) => {
   const renderExtraPropsInMainMenu = topNavVisible && (
     <CSSTransition
       in={topNavVisibleMenu}
-      timeout={100}
+      timeout={400}
       classNames="popup3"
       unmountOnExit
     >
@@ -848,6 +857,7 @@ const Navigation = ({ children, isMainPage }) => {
         handleClose={handleClickTakePlace}
         setSelectedName={setSelectedName}
         selectedName={selectedName}
+        siteProps={siteProps}
       />
     </Popup>
   )

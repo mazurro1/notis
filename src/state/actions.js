@@ -1850,7 +1850,13 @@ export const fetchPathCompany = companyPath => {
   }
 }
 
-export const fetchAllCompanys = (page = 1, sorts, filters, localization) => {
+export const fetchAllCompanys = (
+  page = 1,
+  sorts,
+  filters,
+  localization,
+  selectedName
+) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
@@ -1863,6 +1869,7 @@ export const fetchAllCompanys = (page = 1, sorts, filters, localization) => {
         sorts: sorts,
         filters: filters,
         localization: localization,
+        selectedName: selectedName,
       })
       .then(response => {
         if (page === 1) {
@@ -1900,7 +1907,8 @@ export const fetchAllCompanysOfType = (
   type = 1,
   sorts,
   filters,
-  localization
+  localization,
+  selectedName
 ) => {
   return dispatch => {
     if (page === 1) {
@@ -1915,6 +1923,7 @@ export const fetchAllCompanysOfType = (
         sorts: sorts,
         filters: filters,
         localization: localization,
+        selectedName: selectedName,
       })
       .then(response => {
         if (page === 1) {

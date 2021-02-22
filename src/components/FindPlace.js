@@ -1,14 +1,29 @@
 import React, { useState } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
-import { FaSearch } from "react-icons/fa"
 import ButtonIcon from "./ButtonIcon"
+import { Colors } from "../common/Colors"
+import { MdSearch, MdClose } from "react-icons/md"
+import { FaArrowLeft, FaSearch } from "react-icons/fa"
 
-const ConfirmName = styled.div`
-  margin-top: 30px;
+const ButtonsPosition = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
 `
 
-const FindPlaceContent = ({ handleClose, setSelectedName, selectedName }) => {
+const ButtonsMargin = styled.div`
+  margin: 5px;
+`
+
+const FindPlaceContent = ({
+  handleClose,
+  setSelectedName,
+  selectedName,
+  siteProps,
+}) => {
   const [nameInput, setNameInput] = useState(selectedName)
 
   const handleChange = e => {
@@ -20,7 +35,10 @@ const FindPlaceContent = ({ handleClose, setSelectedName, selectedName }) => {
     handleClose()
   }
 
-  const disabledNameButton = nameInput.length > 0
+  const handleReset = () => {
+    setSelectedName("")
+    handleClose()
+  }
 
   return (
     <>
@@ -31,18 +49,44 @@ const FindPlaceContent = ({ handleClose, setSelectedName, selectedName }) => {
         type="text"
         onChange={handleChange}
       />
-
-      <ConfirmName>
-        <ButtonIcon
-          title="POTWIERDZ"
-          uppercase
-          fontIconSize="24"
-          icon={<FaSearch />}
-          disabled={!disabledNameButton}
-          fontSize="20"
-          onClick={handleConfirm}
-        />
-      </ConfirmName>
+      <ButtonsPosition>
+        <ButtonsMargin>
+          <ButtonIcon
+            title="Anuluj"
+            uppercase
+            fontIconSize="20"
+            fontSize="14"
+            icon={<FaArrowLeft />}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
+            onClick={handleClose}
+          />
+        </ButtonsMargin>
+        <ButtonsMargin>
+          <ButtonIcon
+            title="Resetuj"
+            uppercase
+            fontIconSize="25"
+            fontSize="14"
+            icon={<MdClose />}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
+            onClick={handleReset}
+          />
+        </ButtonsMargin>
+        <ButtonsMargin>
+          <ButtonIcon
+            title="Szukaj"
+            uppercase
+            fontIconSize="25"
+            fontSize="14"
+            icon={<MdSearch />}
+            customColorButton={Colors(siteProps).successColorDark}
+            customColorIcon={Colors(siteProps).successColor}
+            onClick={handleConfirm}
+          />
+        </ButtonsMargin>
+      </ButtonsPosition>
     </>
   )
 }
