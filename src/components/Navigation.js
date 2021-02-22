@@ -224,23 +224,6 @@ const PaddingRight = styled.div`
   padding-bottom: 5px;
 `
 
-const PaddingContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 1%;
-  padding-right: 1%;
-  padding-top: ${props =>
-    props.topNavVisibleMenu
-      ? props.active
-        ? `${props.heightPadding + 170}px`
-        : "207px"
-      : "70px"};
-  transition-property: padding-top;
-  transition-duration: 0.3s;
-  transition-timing-function: linear;
-  transition-delay: ${props => (props.topNavVisibleMenu ? "0" : "0.195s")};
-`
-
 const ButtonIconStyles = styled.div`
   padding: 4px 10px;
   padding-left: 10px;
@@ -500,7 +483,9 @@ const Navigation = ({ children, isMainPage }) => {
 
   useEffect(() => {
     if (!!industries || industries === 0) {
-      dispatch(fetchAllCompanysOfType(page, industries))
+      dispatch(
+        fetchAllCompanysOfType(page, industries, sorts, filters, localization)
+      )
     } else {
       dispatch(fetchAllCompanys(page, sorts, filters, localization))
     }
@@ -643,7 +628,7 @@ const Navigation = ({ children, isMainPage }) => {
   const renderExtraPropsInMainMenu = topNavVisible && (
     <CSSTransition
       in={topNavVisibleMenu}
-      timeout={400}
+      timeout={100}
       classNames="popup3"
       unmountOnExit
     >

@@ -1895,7 +1895,13 @@ export const fetchAllCompanys = (page = 1, sorts, filters, localization) => {
   }
 }
 
-export const fetchAllCompanysOfType = (page = 1, type = 1) => {
+export const fetchAllCompanysOfType = (
+  page = 1,
+  type = 1,
+  sorts,
+  filters,
+  localization
+) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
@@ -1906,6 +1912,9 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
       .post(`${Site.serverUrl}/all-companys-type`, {
         page: page,
         type: type,
+        sorts: sorts,
+        filters: filters,
+        localization: localization,
       })
       .then(response => {
         if (page === 1) {

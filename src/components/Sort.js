@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import SelectCreated from "../components/SelectCreated"
 import { useDispatch, useSelector } from "react-redux"
 import { changeSortValue } from "../state/actions"
@@ -7,11 +7,18 @@ import { SortsNames } from "../common/SortsNames"
 const Sort = () => {
   const sortDataLoading = useSelector(state => state.sortDataLoading)
   const sorts = useSelector(state => state.sorts)
-
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    dispatch(changeSortValue(SortsNames[1]))
+  }, [])
+
   const handleChange = value => {
-    dispatch(changeSortValue(value))
+    if (!!value) {
+      dispatch(changeSortValue(value))
+    } else {
+      dispatch(changeSortValue(SortsNames[1]))
+    }
   }
 
   return (
@@ -23,6 +30,7 @@ const Sort = () => {
       placeholder="Sortuj"
       closeMenuOnSelect
       width="250px"
+      deleteItem={false}
     />
   )
 }

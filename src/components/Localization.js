@@ -110,7 +110,7 @@ const Localization = ({ handleClose, siteProps }) => {
             title="Anuluj"
             uppercase
             fontIconSize="20"
-            fontSize="16"
+            fontSize="14"
             icon={<FaArrowLeft />}
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
@@ -122,7 +122,7 @@ const Localization = ({ handleClose, siteProps }) => {
             title="Resetuj"
             uppercase
             fontIconSize="25"
-            fontSize="16"
+            fontSize="14"
             icon={<MdClose />}
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
@@ -134,7 +134,7 @@ const Localization = ({ handleClose, siteProps }) => {
             title="Szukaj"
             uppercase
             fontIconSize="25"
-            fontSize="16"
+            fontSize="14"
             icon={<MdSearch />}
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
