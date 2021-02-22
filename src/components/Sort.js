@@ -20,7 +20,9 @@ const Sort = () => {
       value={sorts}
       handleChange={handleChange}
       isLoading={sortDataLoading}
-      placeholder="Sortuj po..."
+      placeholder="Sortuj"
+      closeMenuOnSelect
+      width="250px"
     />
   )
 }

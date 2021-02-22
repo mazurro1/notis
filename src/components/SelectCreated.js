@@ -379,13 +379,13 @@ const SelectCreated = ({
         onMouseLeave={handleOnMouseLeave}
         aria-hidden="true"
       >
-        {
+        {textUp && (
           <TextSelect>
             {!!placeholder && selectedItems.length > 0 && textUp
               ? placeholder
               : ""}
           </TextSelect>
-        }
+        )}
         <ButtonIcon
           title={
             selectedItems.length === 0 ? (

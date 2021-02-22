@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux"
 import PlacesItem from "../components/PlacesItem"
 import ButtonIcon from "../components/ButtonIcon"
 import styled from "styled-components"
-import { MdFilterList, MdSort, MdLocationOn } from "react-icons/md"
+import { MdFilterList, MdLocationOn, MdClose } from "react-icons/md"
 import {
-  changeSortVisible,
   changeFilterVisible,
   changeLocaliaztionVisible,
   updatePage,
+  changeFilterValue,
+  changeLocalizationValue,
 } from "../state/actions"
 import { Colors } from "../common/Colors"
 import sal from "sal.js"
@@ -17,6 +18,7 @@ import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { AllIndustries } from "../common/AllIndustries"
 import { Translates } from "../common/Translates"
+import Sort from "../components/Sort"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -52,11 +54,42 @@ const TitleIndexValue = styled.span`
   background-color: ${props => Colors(props.siteProps).primaryColor};
 `
 
+const TextButtonsSearch = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 2px;
+`
+
+const ResetFilter = styled.div`
+  font-size: 1rem;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 10px;
+  background-color: ${props => Colors(props.siteProps).primaryColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  border-radius: 50%;
+  padding: 2px;
+
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
 const Home = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
   const placesData = useSelector(state => state.placesData)
   const filters = useSelector(state => state.filters)
-  const sorts = useSelector(state => state.sorts)
   const localization = useSelector(state => state.localization)
   const industries = useSelector(state => state.industries)
   const loadingPlaces = useSelector(state => state.loadingPlaces)
@@ -101,6 +134,18 @@ const Home = () => {
     })
   }, [loadingPlaces, placesData])
 
+  const handleResetFilter = e => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    dispatch(changeFilterValue(null))
+  }
+
+  const handleResetLocalization = e => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    dispatch(changeLocalizationValue(null))
+  }
+
   const mapPlacesData = placesData.map((item, index) => {
     return (
       <PlacesItem
@@ -132,25 +177,30 @@ const Home = () => {
       {industriesText}
       <ButtonsFilters>
         <ButtonMargin>
-          <ButtonIcon
-            title={!!sorts ? `sortuj po: ${sorts.label}` : "sortuj"}
-            uppercase
-            fontIconSize="35"
-            fontSize="16"
-            icon={<MdSort />}
-            onClick={() => dispatch(changeSortVisible())}
-          />
+          <Sort />
         </ButtonMargin>
         <ButtonMargin>
           <ButtonIcon
             title={
-              !!filters
-                ? `filtruj po: ${filters.label}`
-                : "filtruj po wybranej usłudze"
+              !!filters ? (
+                <TextButtonsSearch>
+                  filtruj po: {filters.label}
+                  <ResetFilter
+                    siteProps={siteProps}
+                    onClick={handleResetFilter}
+                  >
+                    <MdClose />
+                  </ResetFilter>
+                </TextButtonsSearch>
+              ) : (
+                <TextButtonsSearch>
+                  filtruj po wybranej usłudze
+                </TextButtonsSearch>
+              )
             }
             uppercase
             fontIconSize="35"
-            fontSize="16"
+            fontSize="14"
             icon={<MdFilterList />}
             onClick={() => dispatch(changeFilterVisible())}
           />
@@ -158,13 +208,23 @@ const Home = () => {
         <ButtonMargin>
           <ButtonIcon
             title={
-              !!localization
-                ? `lokalizacja: ${localization.label}`
-                : "lokalizacja"
+              !!localization ? (
+                <TextButtonsSearch>
+                  lokalizacja: {localization.label}
+                  <ResetFilter
+                    siteProps={siteProps}
+                    onClick={handleResetLocalization}
+                  >
+                    <MdClose />
+                  </ResetFilter>
+                </TextButtonsSearch>
+              ) : (
+                <TextButtonsSearch>lokalizacja</TextButtonsSearch>
+              )
             }
             uppercase
-            fontIconSize="35"
-            fontSize="16"
+            fontIconSize="22"
+            fontSize="14"
             icon={<MdLocationOn />}
             onClick={() => dispatch(changeLocaliaztionVisible())}
           />

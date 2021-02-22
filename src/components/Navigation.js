@@ -35,7 +35,6 @@ import FindPlaceContent from "./FindPlace"
 import { useDispatch, useSelector } from "react-redux"
 import "react-input-checkbox/lib/react-input-checkbox.min.css"
 import {
-  changeSortVisible,
   changeFilterVisible,
   changeLocaliaztionVisible,
   changeIndustries,
@@ -55,7 +54,6 @@ import {
   changeLanguageStyle,
   addNewUserAlert,
 } from "../state/actions"
-import Sort from "./Sort"
 import Filter from "./Filter"
 import Localization from "./Localization"
 import Alerts from "./Alerts"
@@ -433,7 +431,6 @@ const Navigation = ({ children, isMainPage }) => {
   const registrationVisible = useSelector(state => state.registrationVisible)
   const loginVisible = useSelector(state => state.loginVisible)
   const spinnerEnable = useSelector(state => state.spinnerEnable)
-  const sortVisible = useSelector(state => state.sortVisible)
   const filterVisible = useSelector(state => state.filterVisible)
   const localizationVisible = useSelector(state => state.localizationVisible)
   const sorts = useSelector(state => state.sorts)
@@ -505,7 +502,7 @@ const Navigation = ({ children, isMainPage }) => {
     if (!!industries || industries === 0) {
       dispatch(fetchAllCompanysOfType(page, industries))
     } else {
-      dispatch(fetchAllCompanys(page))
+      dispatch(fetchAllCompanys(page, sorts, filters, localization))
     }
   }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -758,23 +755,17 @@ const Navigation = ({ children, isMainPage }) => {
     </Popup>
   )
 
-  const PopupSort = (
-    <Popup
-      popupEnable={sortVisible}
-      handleClose={() => dispatch(changeSortVisible())}
-      noContent
-    >
-      <Sort />
-    </Popup>
-  )
-
   const PopupFilter = (
     <Popup
       popupEnable={filterVisible}
       handleClose={() => dispatch(changeFilterVisible())}
-      noContent
+      title="Filtruj"
+      maxWidth={600}
     >
-      <Filter />
+      <Filter
+        handleClose={() => dispatch(changeFilterVisible())}
+        siteProps={siteProps}
+      />
     </Popup>
   )
 
@@ -782,9 +773,13 @@ const Navigation = ({ children, isMainPage }) => {
     <Popup
       popupEnable={localizationVisible}
       handleClose={() => dispatch(changeLocaliaztionVisible())}
-      noContent
+      title="Lokalizacja"
+      maxWidth={600}
     >
-      <Localization />
+      <Localization
+        handleClose={() => dispatch(changeLocaliaztionVisible())}
+        siteProps={siteProps}
+      />
     </Popup>
   )
 
@@ -1192,7 +1187,6 @@ const Navigation = ({ children, isMainPage }) => {
       {PopupCreateCompany}
       {PopupRegister}
       {PopupTakePlace}
-      {PopupSort}
       {PopupFilter}
       {PopupLocalization}
       {PopupUserProfil}

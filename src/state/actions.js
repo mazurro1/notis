@@ -236,7 +236,17 @@ export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas logowania się", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas logowania się", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -260,7 +270,17 @@ export const fetchRegisterUser = (email, name, surname, phone, password) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas tworzenia konta", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas tworzenia konta", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -305,25 +325,32 @@ export const fetchAutoLogin = (
             }
           })
           .catch(error => {
-            if (!!error.response) {
-              if (!noAlert) {
-                dispatch(addAlertItem("Autologowanie się nie powiodło", "red"))
-              }
-              if (error.response.status === 401) {
-                // dispatch(logout())
-              }
-              if (!noSpinner) {
+            if (!!error) {
+              if (!!error.response) {
+                if (!noAlert) {
+                  dispatch(
+                    addAlertItem("Autologowanie się nie powiodło", "red")
+                  )
+                }
+                if (error.response.status === 401) {
+                  dispatch(logout())
+                }
+                if (!noSpinner) {
+                  dispatch(changeSpinner(false))
+                }
+                if (lastSpinnerCreateCompany) {
+                  dispatch(
+                    addAlertItem(
+                      "Błąd podczas tworzenia konta firmowego.",
+                      "red"
+                    )
+                  )
+                  dispatch(changeSpinner(false))
+                }
+              } else {
+                dispatch(addAlertItem("Brak internetu.", "red"))
                 dispatch(changeSpinner(false))
               }
-              if (lastSpinnerCreateCompany) {
-                dispatch(
-                  addAlertItem("Błąd podczas tworzenia konta firmowego.", "red")
-                )
-                dispatch(changeSpinner(false))
-              }
-            } else {
-              // dispatch(logout())
-              dispatch(changeSpinner(false))
             }
           })
       }
@@ -348,14 +375,21 @@ export const fetchLoginFacebookUser = (token, id) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        if (!!error.response) {
-          dispatch(
-            addAlertItem(
-              "Logowanie za pomocą facebooka nie powiodło się",
-              "red"
-            )
-          )
-        } else {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Logowanie za pomocą facebooka nie powiodło się",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
         }
         dispatch(changeSpinner(false))
       })
@@ -376,9 +410,22 @@ export const fetchSentAgainActivedEmail = token => {
         )
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas wysyłania kodu aktywującego konto.", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania kodu aktywującego konto",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -394,7 +441,21 @@ export const fetchUserPhone = token => {
       .then(response => {
         dispatch(addUserPhone(response.data.userPhone))
       })
-      .catch(error => {})
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+      })
   }
 }
 
@@ -430,9 +491,22 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
         dispatch(changeUserProfilVisible(false))
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas aktualizowania danych użytkownika", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas aktualizowania danych użytkownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -458,7 +532,17 @@ export const fetchActiveAccount = (codeToVerified, token, userId) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas aktywowania konta.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktywowania konta", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -480,12 +564,22 @@ export const fetchSentEmailResetPassword = email => {
         )
       })
       .catch(error => {
-        dispatch(
-          addAlertItem(
-            "Błąd podczas wysyłania na adres email kodu resetującego hasło.",
-            "red"
-          )
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania na adres email kodu restartującego hasło",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -504,7 +598,17 @@ export const fetchResetPassword = (email, password, codeReset) => {
         dispatch(addAlertItem("Pomyślnie zresetowano hasło.", "green"))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas resetowania hasła.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas restartowania hasła", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -1166,7 +1270,19 @@ export const FetchAddCompanyToUser = (companyId, userToken, userId) => {
         dispatch(fetchAutoLogin(true, true, userToken, userId, true))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas tworzenia konta firmowego.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas tworzenia konta firmowego", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1210,7 +1326,19 @@ export const FetchCompanyRegistration = (
         )
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas tworzenia konta firmowego.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas tworzenia konta firmowego", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1239,12 +1367,22 @@ export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
         )
       })
       .catch(error => {
-        dispatch(
-          addAlertItem(
-            "Błąd podczas wysyłania kodu aktywującego konto firmowe.",
-            "red"
-          )
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania kodu aktywującego konto firmowe",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -1276,9 +1414,19 @@ export const fetchActiveCompanyAccount = (
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas aktywowania konta firmowego.", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktywowania konta firmowego", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1305,7 +1453,19 @@ export const fetchCompanyData = (companyId, token) => {
         dispatch(resetEditCompany(true))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas ładowania konta firmowego.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas ładowania konta firmowego", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
         dispatch(resetEditCompany(false))
       })
@@ -1335,7 +1495,17 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
         dispatch(fetchCompanyData(companyId, token))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas dodawania pracownika.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania pracownika", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1367,12 +1537,22 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(
-          addAlertItem(
-            "Błąd podczas ponownego wysyłania linku aktywacyjnego.",
-            "red"
-          )
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas ponownego wysyłania linku aktywującego",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1396,9 +1576,22 @@ export const fetchConfirmAddWorkerToCompany = (
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas dodawania pracownika do firmy.", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas dodawania pracownika do firmy",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1425,77 +1618,21 @@ export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
         dispatch(fetchCompanyData(companyId, token))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas usuwania pracownika.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania pracownika", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
 }
-
-// export const fetchUpdateCompanyProfil = (
-//   token,
-//   companyId,
-//   textAboutUsToSent,
-//   textRezerwationTextToSent,
-//   editedWorkersToSent,
-//   editedAdressToSent,
-//   editedLinksToSent,
-//   ownerSpecializationToSent,
-//   openingHoursToSentFinall,
-//   companyPaused,
-//   services,
-//   reservationEveryTime,
-//   reservationMonthTime,
-//   newOwnerServicesCategory,
-//   editedWorkersHours,
-//   createdDayOffToSaveIsChanges,
-//   deletedDayOffToSaveIsChanges,
-//   newIndustriesToSent,
-//   deletedIndustriesToSent
-// ) => {
-//   return dispatch => {
-//     dispatch(changeSpinner(true))
-//     return axios
-//       .patch(
-//         `${Site.serverUrl}/update-company-profil`,
-//         {
-//           companyId: companyId,
-//           textAboutUs: textAboutUsToSent,
-//           textRezerwation: textRezerwationTextToSent,
-//           ownerSpecialization: ownerSpecializationToSent,
-//           editedWorkers: editedWorkersToSent,
-//           editedAdress: editedAdressToSent,
-//           editedLinks: editedLinksToSent,
-//           openingHours: openingHoursToSentFinall,
-//           companyPaused: companyPaused,
-//           services: services,
-//           reservationEveryTime: reservationEveryTime,
-//           reservationMonthTime: reservationMonthTime,
-//           ownerSerwiceCategory: newOwnerServicesCategory,
-//           editedWorkersHours: editedWorkersHours,
-//           createdDayOff: createdDayOffToSaveIsChanges,
-//           deletedDayOff: deletedDayOffToSaveIsChanges,
-//           newIndustries: newIndustriesToSent,
-//           deletedIndustries: deletedIndustriesToSent,
-//         },
-//         {
-//           headers: {
-//             Authorization: "Bearer " + token,
-//           },
-//         }
-//       )
-//       .then(response => {
-//         dispatch(addAlertItem("Zaktualizowano profil firmowy.", "green"))
-//         dispatch(fetchCompanyData(companyId, token))
-//       })
-//       .catch(error => {
-//         dispatch(
-//           addAlertItem("Błąd podczas aktualizowania profilu firmowego.", "red")
-//         )
-//         dispatch(resetEditCompany(false))
-//           dispatch(changeSpinner(false))
-//       })
-//   }
-// }
 
 export const fetchDoReserwation = (
   token,
@@ -1547,7 +1684,17 @@ export const fetchDoReserwation = (
         dispatch(changeSpinner(false))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas robienia rezerwacji.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas robienia rezerwacji", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1596,7 +1743,19 @@ export const fetchDoReserwationWorker = (
         )
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas robienia rezerwacji czasu.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas robienia rezerwacji czasu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -1638,7 +1797,6 @@ export const fetchWorkerDisabledHours = (
         }
       )
       .then(response => {
-        //avaibleHoursWithPromotions avaibleHours
         dispatch(avaibleDateToReserwationUpdate(false))
         dispatch(
           avaibleDateToReserwation(response.data.avaibleHoursWithPromotions)
@@ -1646,6 +1804,15 @@ export const fetchWorkerDisabledHours = (
         dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(avaibleDateToReserwationUpdate(false))
         dispatch(avaibleDateToReserwation([]))
         dispatch(changeAlertExtra(null, false))
@@ -1657,31 +1824,33 @@ export const fetchPathCompany = companyPath => {
   return dispatch => {
     dispatch(changeAlertExtra("Pobieranie dancyh o firmie", true))
     return axios
-      .post(
-        `${Site.serverUrl}/company-path`,
-        {
-          companyPath: companyPath,
-        }
-        // {
-        //   headers: {
-        //     Authorization: "Bearer " + token,
-        //   },
-        // }
-      )
+      .post(`${Site.serverUrl}/company-path`, {
+        companyPath: companyPath,
+      })
       .then(response => {
         dispatch(updatePatchCompanyData(response.data.companyDoc))
         dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas pobierania danych o firmie.", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania danych o firmie", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
       })
   }
 }
 
-export const fetchAllCompanys = (page = 1) => {
+export const fetchAllCompanys = (page = 1, sorts, filters, localization) => {
   return dispatch => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
@@ -1691,6 +1860,9 @@ export const fetchAllCompanys = (page = 1) => {
     return axios
       .post(`${Site.serverUrl}/all-companys`, {
         page: page,
+        sorts: sorts,
+        filters: filters,
+        localization: localization,
       })
       .then(response => {
         if (page === 1) {
@@ -1702,14 +1874,16 @@ export const fetchAllCompanys = (page = 1) => {
         }
       })
       .catch(error => {
-        if (error.response) {
+        if (!!error.response) {
           if (error.response.status === 403) {
             dispatch(
               addAlertItem("Brak więcej firm w danej kategorii.", "blue")
             )
+          } else if (error.response.status === 401) {
+            dispatch(logout())
+          } else {
+            dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
           }
-        } else {
-          dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
         }
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
@@ -1743,14 +1917,16 @@ export const fetchAllCompanysOfType = (page = 1, type = 1) => {
         }
       })
       .catch(error => {
-        if (error.response) {
+        if (!!error.response) {
           if (error.response.status === 403) {
             dispatch(
               addAlertItem("Brak więcej firm w danej kategorii.", "blue")
             )
+          } else if (error.response.status === 401) {
+            dispatch(logout())
+          } else {
+            dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
           }
-        } else {
-          dispatch(addAlertItem("Błąd podczas pobierania firm.", "red"))
         }
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
@@ -1776,8 +1952,20 @@ export const fetchUserReserwations = token => {
         dispatch(updateUserReserwations(response.data.reserwations))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania rezerwacji", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
-        dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }
 }
@@ -1809,8 +1997,20 @@ export const fetchUserReserwationsAll = (
         dispatch(updateUserReserwations(response.data.reserwations))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania rezerwacji", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
-        dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }
 }
@@ -1851,9 +2051,21 @@ export const fetchGetWorkerWorkingHours = (
         dispatch(changeSpinner(false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania godzin pracy", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
         dispatch(changeEditWorkerHours(false, null))
-        dispatch(addAlertItem("Błąd podczas pobierania godzin pracy.", "red"))
       })
   }
 }
@@ -1887,9 +2099,21 @@ export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania godzin rpacy", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
         dispatch(changeEditWorkerHours(false, null))
-        dispatch(addAlertItem("Błąd podczas pobierania godzin pracy.", "red"))
       })
   }
 }
@@ -1935,12 +2159,23 @@ export const fetchWorkerReserwationsAll = (
             )
           )
         }
-        // dispatch(changeSpinner(false))
         dispatch(updateWorkerReserwations(response.data.reserwations))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania rezerwacji", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas pobierania rezerwacji.", "red"))
       })
   }
 }
@@ -1978,8 +2213,20 @@ export const fetchDeleteReserwation = (
         }
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji rezerwacji", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji rezerwacji.", "red"))
       })
   }
 }
@@ -2030,7 +2277,19 @@ export const fetchUpdateWorkerReserwation = (
         dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas aktualizacji rezerwacji.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji rezerwacji", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -2052,7 +2311,19 @@ export const fetchUpdateUserAlert = token => {
         dispatch(resetUserAlerts())
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas aktualizacji powiadomień.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji powiadomień", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -2077,7 +2348,19 @@ export const fetchGetMoreAlerts = (token, page) => {
         dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd podczas aktualizacji powiadomień.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji powiadomień", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
       })
   }
@@ -2103,9 +2386,22 @@ export const fetchworkerUsersInformations = (token, companyId) => {
         dispatch(newWorkerUsersInformations(response.data.reserwations))
       })
       .catch(error => {
-        dispatch(
-          addAlertItem("Błąd podczas ładowania informacji o klientach.", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas ładowania infromacji o klientach",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -2143,10 +2439,20 @@ export const fetchworkerUsersMoreInformationsHistory = (
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas ładowania historii klienta", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
-        dispatch(
-          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
-        )
       })
   }
 }
@@ -2184,9 +2490,19 @@ export const fetchworkerUsersMoreInformationsMessage = (
       })
       .catch(error => {
         dispatch(changeAlertExtra(null, false))
-        dispatch(
-          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
-        )
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas ładowania historii klienta", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
       })
   }
 }
@@ -2227,8 +2543,20 @@ export const fetchCompanyUsersInformationsBlock = (
         }
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas blokowania użytkownika", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
-        dispatch(addAlertItem("Błąd podczas blokowania użytkownika.", "red"))
       })
   }
 }
@@ -2263,7 +2591,19 @@ export const fetchCompanyUsersInformationsMessage = (
         dispatch(addAlertItem("Dodano wiadomość o kliencie.", "green"))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd dodawania wiadomości o kliencie.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd dodawania wiadomości o kliencie", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -2297,7 +2637,19 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
         dispatch(addAlertItem("Usunięto wiadomość o kliencie.", "green"))
       })
       .catch(error => {
-        dispatch(addAlertItem("Błąd dodawania wiadomości o kliencie.", "red"))
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd dodawania wiadomości i klienicie", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -2329,6 +2681,19 @@ export const fetchCustomUserPhone = (token, selectedUserId, companyId) => {
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }
@@ -2355,10 +2720,20 @@ export const fetchUserInformations = (token, companyId, userSelectedId) => {
         dispatch(addToUserInformations(userSelectedId, response.data.message))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas ładowania historii klienta", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem("Błąd podczas ładowania historii klienta.", "red")
-        )
       })
   }
 }
@@ -2394,10 +2769,20 @@ export const fetchSelectedUserReserwations = (
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas ładowania rezerwacji klienta", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem("Błąd podczas ładowania rezerwacji klienta.", "red")
-        )
       })
   }
 }
@@ -2442,8 +2827,18 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktualizacji usług", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji usług.", "red"))
       })
   }
 }
@@ -2469,10 +2864,20 @@ export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
         dispatch(companyPatchSettings(dataSettings))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji ustawień firmy", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem("Błąd podczas aktualizacji ustawień firmy.", "red")
-        )
       })
   }
 }
@@ -2510,8 +2915,20 @@ export const fetchSaveWorkerProps = (
         dispatch(addAlertItem("Zaktualizowano pracownika.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji pracownika", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji pracownika.", "red"))
       })
   }
 }
@@ -2550,14 +2967,24 @@ export const fetchGetWorkerNoConstData = (
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania godzin pracy pracownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
         dispatch(changeEditWorkerHours(false, null))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas pobierania godzin pracy pracownika.",
-            "red"
-          )
-        )
       })
   }
 }
@@ -2589,14 +3016,24 @@ export const fetchGetOwnerNoConstData = (token, companyId, year, month) => {
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania godzin pracy pracownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
         dispatch(changeEditWorkerHours(false, null))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas pobierania godzin pracy pracownika.",
-            "red"
-          )
-        )
       })
   }
 }
@@ -2625,13 +3062,23 @@ export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
         )
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania godzin pracy pracownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas pobierania godzin pracy pracownika.",
-            "red"
-          )
-        )
       })
   }
 }
@@ -2663,14 +3110,23 @@ export const deleteNoConstHour = (
         dispatch(companyDeleteWorkerNoConstHours(workerId, noConstDateId))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania godzin pracy pracownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        // dispatch(changeEditWorkerHours(false, null))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas pobierania godzin pracy pracownika.",
-            "red"
-          )
-        )
       })
   }
 }
@@ -2707,8 +3163,18 @@ export const fetchSaveTextsCompany = (
         dispatch(updateComanyTeksts(allTextsCompany))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktaulizacji tekstu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji tekstu.", "red"))
       })
   }
 }
@@ -2744,10 +3210,20 @@ export const fetchSaveOpeningHoursCompany = (
         dispatch(addAlertItem("Zaktualizowano godziny otwarcia.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji godzin otwarcia", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem("Błąd podczas aktualizacji godzin otwarcia.", "red")
-        )
       })
   }
 }
@@ -2774,8 +3250,18 @@ export const fetchSaveMaps = (token, companyId, maps) => {
         dispatch(addAlertItem("Zaktualizowano mapę.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktualizacji mapy", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji mapy.", "red"))
       })
   }
 }
@@ -2802,8 +3288,18 @@ export const fetchAddConstDateHappyHour = (token, companyId, constDate) => {
         dispatch(addAlertItem("Dodano happy hour.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania kappy hour", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania happy hour.", "red"))
       })
   }
 }
@@ -2830,8 +3326,18 @@ export const fetchAddPromotion = (token, companyId, promotionDate) => {
         dispatch(addAlertItem("Dodano promocję.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania promocji", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania promocji.", "red"))
       })
   }
 }
@@ -2858,8 +3364,18 @@ export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
         dispatch(addAlertItem("Usunięto happy hour.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania happy hour", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas usuwania happy hour.", "red"))
       })
   }
 }
@@ -2886,8 +3402,20 @@ export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
         dispatch(addAlertItem("Zaktualizowano happy hour.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji happy hour", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji happy hour.", "red"))
       })
   }
 }
@@ -2914,8 +3442,18 @@ export const fetchDeletePromotion = (token, companyId, promotionId) => {
         dispatch(addAlertItem("Usunięto promocję.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania promocji", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas usuwania promocji.", "red"))
       })
   }
 }
@@ -2942,8 +3480,20 @@ export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
         dispatch(addAlertItem("Zatualizowano promocję.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji promocji", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji promocji.", "red"))
       })
   }
 }
@@ -2976,8 +3526,18 @@ export const fetchAddOpinion = (token, opinionData, company) => {
         dispatch(addAlertItem("Dodano opinie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania opinii.", "red"))
       })
   }
 }
@@ -3011,8 +3571,18 @@ export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
         dispatch(addAlertItem("Dodano opinie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania opinii.", "red"))
       })
   }
 }
@@ -3030,6 +3600,15 @@ export const fetchLoadMoreOpinions = (page, companyId) => {
         dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
       })
   }
@@ -3058,13 +3637,23 @@ export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
         dispatch(addAlertItem("Dodano odpowiedz do opinii.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas dodawania odpowiedzi do opinii",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas dodawania odpowiedzi do opinii opinii.",
-            "red"
-          )
-        )
       })
   }
 }
@@ -3091,8 +3680,18 @@ export const fetchCompanyUploadImage = (token, companyId, file, imageId) => {
         dispatch(addAlertItem("Dodano zdjęcie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania zdjęcia", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania zdjęcia.", "red"))
       })
   }
 }
@@ -3119,8 +3718,18 @@ export const fetchCompanyDeleteImage = (token, companyId, imagePath) => {
         dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania zdjęcia", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
       })
   }
 }
@@ -3147,13 +3756,23 @@ export const fetchCompanyMainImage = (token, companyId, imagePath) => {
         dispatch(addAlertItem("Ustawiono nowe główne zdjęcie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas ustawiania nowego głównego zdjęcia",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem(
-            "Błąd podczas ustawiania nowego głównego zdjęcia.",
-            "red"
-          )
-        )
       })
   }
 }
@@ -3179,8 +3798,18 @@ export const fetchUserUploadImage = (token, image) => {
         dispatch(addAlertItem("Dodano zdjęcie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania zdjęcia", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania zdjęcia.", "red"))
       })
   }
 }
@@ -3206,8 +3835,18 @@ export const fetchUserDeleteImage = (token, imagePath) => {
         dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania zdjęcia", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas usuwania zdjęcia.", "red"))
       })
   }
 }
@@ -3234,8 +3873,18 @@ export const companyAddStamp = (token, companyId, stampData) => {
         dispatch(addAlertItem("Dodano pieczątke.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania pieczątki", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania pieczątki.", "red"))
       })
   }
 }
@@ -3262,8 +3911,18 @@ export const companyDeleteStamp = (token, companyId, stampId) => {
         dispatch(addAlertItem("Usunięto pieczątke.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania pieczątki", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas usuwania pieczątki.", "red"))
       })
   }
 }
@@ -3290,8 +3949,20 @@ export const companyUpdateStamp = (token, companyId, stampData) => {
         dispatch(addAlertItem("Zaktualizowano pieczątke.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji pieczątki", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas aktualizacji pieczątki.", "red"))
       })
   }
 }
@@ -3317,8 +3988,20 @@ export const addCompanyFavourites = (token, favouriteAddData) => {
         dispatch(addAlertItem("Dodano do ulubionych.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas dodawania do ulubionych", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas dodawania do ulubionych.", "red"))
       })
   }
 }
@@ -3344,8 +4027,20 @@ export const deleteCompanyFavourites = (token, companyId) => {
         dispatch(addAlertItem("Usunięto z ulubionych.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas usuwania z ulubionych", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd usuwania z ulubionych.", "red"))
       })
   }
 }
@@ -3375,10 +4070,23 @@ export const getCompanyAvailability = (token, companyId) => {
         dispatch(changeAlertExtra(null, false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania stanu magazynowego",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeAlertExtra(null, false))
-        dispatch(
-          addAlertItem("Błąd podczas pobierania stanu magazynowego.", "red")
-        )
       })
   }
 }
@@ -3410,10 +4118,23 @@ export const addCompanyAvailability = (
         dispatch(addUserCompanyAvailability(response.data.availability, null))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania stanu magazynowego",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(
-          addAlertItem("Błąd podczas pobierania stanu magazynowego.", "red")
-        )
       })
   }
 }
@@ -3439,8 +4160,18 @@ export const deleteCompanyAvailability = (token, companyId, itemId) => {
         dispatch(deleteUserCompanyAvailability(itemId))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania przedmiotu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas usuwania przedmiotu.", "red"))
       })
   }
 }
@@ -3474,8 +4205,20 @@ export const editCompanyAvailability = (
         dispatch(changeSpinner(false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas edytowania przedmiotu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas edytowania przedmiotu.", "red"))
       })
   }
 }
@@ -3510,8 +4253,20 @@ export const fetchSaveShopStore = (
         dispatch(addAlertItem("Zaktualizowano stan sklepu.", "green"))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas edytowania stanu sklepu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas edytowania stanu sklepu.", "red"))
       })
   }
 }
@@ -3538,8 +4293,18 @@ export const fetchCompanyStaticts = (token, companyId, months, year) => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas pobierania statystyk", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Błąd podczas pobierania statystyk.", "red"))
       })
   }
 }

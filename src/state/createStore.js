@@ -128,18 +128,9 @@ const initialState = {
   registrationVisible: false,
   localizationVisible: false,
   localization: false,
-  localizationData: [
-    { value: "warszawa", label: "Warszawa" },
-    { value: "krakow", label: "Kraków" },
-  ],
   localizationDataLoading: false,
   filterVisible: false,
   filters: null,
-  filtersData: [
-    { value: "Hybryda", label: "Hybryda" },
-    { value: "strawberry1", label: "Strawberry1" },
-    { value: "vanilla1", label: "Vanilla1" },
-  ],
   filterDataLoading: false,
   sortVisible: false,
   sorts: null,

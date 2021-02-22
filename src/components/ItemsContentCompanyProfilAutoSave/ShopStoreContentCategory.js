@@ -24,8 +24,8 @@ const TitleCategory = styled.div`
   color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).primaryColor};
+      ? Colors(props.siteProps).secondDarkColor
+      : Colors(props.siteProps).primaryColorDark};
   padding: 10px;
   border-radius: 5px;
   padding-right: ${props => (props.isCompanyEditProfil ? "190px" : "50px")};
