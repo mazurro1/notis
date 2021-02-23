@@ -384,7 +384,7 @@ const NootisLogo = styled.div`
   border-radius: 50%;
 `
 
-const Navigation = ({ children, isMainPage }) => {
+const Navigation = ({ isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
     false

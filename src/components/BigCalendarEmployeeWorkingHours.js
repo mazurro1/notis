@@ -35,7 +35,6 @@ const BackgroundCalendarStyle = styled.div`
   max-height: 70vh;
   max-width: 90vw;
   width: 900px;
-  min-width: 800px;
   overflow: hidden;
   overflow-y: auto;
   opacity: 0.95;
@@ -214,6 +213,14 @@ const TitleMonthYear = styled.div`
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  @media all and (max-width: 767px) {
+    display: block;
+    width: 100%;
+
+    .marginItems {
+      margin: 5px;
+    }
+  }
 `
 
 const TitleMonthYearContent = styled.div`
@@ -223,6 +230,7 @@ const TitleMonthYearContent = styled.div`
   border-top-right-radius: 5px;
   padding: 5px 20px;
   font-size: 1.6rem;
+  text-align: center;
 `
 
 const ButtonsPosition = styled.div`
@@ -237,6 +245,7 @@ const ButtonItemStyle = styled.div`
 `
 const WidthSelect = styled.div`
   width: 160px;
+  margin: 5px;
   margin-right: 20px;
 `
 
@@ -246,6 +255,7 @@ const ContentSelect = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 `
 
 const BigCalendarEmployeeWorkingHours = ({
@@ -255,7 +265,7 @@ const BigCalendarEmployeeWorkingHours = ({
   setDateCalendar,
   disabledSwitch,
   setDisabledSwitch,
-  user,
+  isMobile = false,
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -613,11 +623,12 @@ const BigCalendarEmployeeWorkingHours = ({
 
   const handleChangeDate = value => {
     let newDate = new Date()
+    const plusDaysValid = isMobile ? 1 : 7
     if (value === "plus") {
       const afterAddedDays = new Date(
         takeDateYear,
         takeDateDayToday,
-        dateCalendar.getDate() + 7
+        dateCalendar.getDate() + plusDaysValid
       )
 
       const disabledNextWeek =
@@ -627,7 +638,7 @@ const BigCalendarEmployeeWorkingHours = ({
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth(),
-          dateCalendar.getDate() + 7
+          dateCalendar.getDate() + plusDaysValid
         )
       } else {
         newDate = new Date(
@@ -640,12 +651,13 @@ const BigCalendarEmployeeWorkingHours = ({
     } else if (value === "today") {
       setDateCalendar(new Date())
     } else if (value === "minus") {
-      const disabledPrevWeek = Math.ceil(dateCalendar.getDate() / 7) === 1
+      const disabledPrevWeek =
+        Math.ceil(dateCalendar.getDate() / plusDaysValid) === 1
       if (!disabledPrevWeek) {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth(),
-          dateCalendar.getDate() - 7
+          dateCalendar.getDate() - plusDaysValid
         )
       } else {
         newDate = new Date(
@@ -730,9 +742,9 @@ const BigCalendarEmployeeWorkingHours = ({
           />
         </ContentSelect>
         <TitleMonthYear>
-          <div>
+          <div className="marginItems">
             <ButtonIcon
-              title="Poprzedni tydzień"
+              title={isMobile ? "Poprzedni dzień" : "Poprzedni tydzień"}
               uppercase
               fontIconSize="20"
               fontSize="16"
@@ -740,10 +752,10 @@ const BigCalendarEmployeeWorkingHours = ({
               onClick={() => handleChangeDate("minus")}
             />
           </div>
-          <TitleMonthYearContent siteProps={siteProps}>
+          <TitleMonthYearContent siteProps={siteProps} className="marginItems">
             {finnalDate}
           </TitleMonthYearContent>
-          <div>
+          <div className="marginItems">
             <ButtonIcon
               title="Dzisiaj"
               uppercase
@@ -753,9 +765,9 @@ const BigCalendarEmployeeWorkingHours = ({
               onClick={() => handleChangeDate("today")}
             />
           </div>
-          <div>
+          <div className="marginItems">
             <ButtonIcon
-              title="Kolejny tydzień"
+              title={isMobile ? "Kolejny dzień" : "Kolejny tydzień"}
               uppercase
               fontIconSize="20"
               fontSize="16"
@@ -768,15 +780,16 @@ const BigCalendarEmployeeWorkingHours = ({
           <Calendar
             tooltipAccessor={null}
             culture="pl"
-            views={["week"]}
+            views={["week", "day"]}
             selectable
             localizer={localizer}
             events={allEvents}
-            defaultView="week"
+            defaultView={isMobile ? "day" : "week"}
             date={dateCalendar}
             onNavigate={date => {
               setDateCalendar(date)
             }}
+            view={isMobile ? "day" : "week"}
             startAccessor="start"
             endAccessor="end"
             timeslots={slotsValue}

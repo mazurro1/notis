@@ -5,6 +5,7 @@ import {
   fetchGetOwnerNoConstData,
 } from "../state/actions"
 import BigCalendarWorkerHoursAutoSave from "./BigCalendarWorkerHoursAutoSave"
+import UseWindowSize from "../common/UseWindowSize"
 
 const WorkerHoursAutoSave = ({ handleClose, item, editWorkerHours }) => {
   const user = useSelector(state => state.user)
@@ -15,6 +16,13 @@ const WorkerHoursAutoSave = ({ handleClose, item, editWorkerHours }) => {
   const dispatch = useDispatch()
 
   const isAdmin = user.userId === user.company.owner
+
+  const size = UseWindowSize()
+  let isMobile = false
+  if (!!size) {
+    isMobile = size.width > 768 ? false : true
+  }
+
   useEffect(() => {
     if (item.user._id === user.userId) {
       dispatch(
@@ -58,6 +66,7 @@ const WorkerHoursAutoSave = ({ handleClose, item, editWorkerHours }) => {
           isAdmin={isAdmin}
           userWorkerActive={userWorkerActive}
           setUserWorkerActive={setUserWorkerActive}
+          isMobile={isMobile}
         />
       ) : (
         "Brak uprawnien"

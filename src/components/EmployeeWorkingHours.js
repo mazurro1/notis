@@ -5,6 +5,7 @@ import {
   fetchGetWorkerWorkingHours,
 } from "../state/actions"
 import BigCalendarEmployeeWorkingHours from "./BigCalendarEmployeeWorkingHours"
+import UseWindowSize from "../common/UseWindowSize"
 
 const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
   const user = useSelector(state => state.user)
@@ -13,6 +14,12 @@ const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
   const [dateCalendar, setDateCalendar] = useState(new Date())
   const [disabledSwitch, setDisabledSwitch] = useState(false)
   const dispatch = useDispatch()
+
+  const size = UseWindowSize()
+  let isMobile = false
+  if (!!size) {
+    isMobile = size.width > 768 ? false : true
+  }
 
   const isAdmin = user.userId === user.company.owner
   useEffect(() => {
@@ -59,6 +66,7 @@ const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
           isAdmin={isAdmin}
           userWorkerActive={userWorkerActive}
           setUserWorkerActive={setUserWorkerActive}
+          isMobile={isMobile}
         />
       ) : (
         "Brak uprawnien"

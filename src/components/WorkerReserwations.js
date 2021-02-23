@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import BigCalendarWorkerReserwations from "./BigCalendarWorkerReserwations"
 import { fetchWorkerReserwationsAll } from "../state/actions"
+import UseWindowSize from "../common/UseWindowSize"
 
 const WorkerReserwations = ({ handleClose }) => {
   const user = useSelector(state => state.user)
@@ -17,6 +18,12 @@ const WorkerReserwations = ({ handleClose }) => {
   const dispatch = useDispatch()
 
   const isAdmin = user.userId === user.company.owner
+
+  const size = UseWindowSize()
+  let isMobile = false
+  if (!!size) {
+    isMobile = size.width > 768 ? false : true
+  }
 
   useEffect(() => {
     dispatch(
@@ -51,6 +58,7 @@ const WorkerReserwations = ({ handleClose }) => {
           userWorkerActive={userWorkerActive}
           setUserWorkerActive={setUserWorkerActive}
           workingHours={workingHours}
+          isMobile={isMobile}
         />
       ) : (
         "Brak uprawnien"
