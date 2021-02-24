@@ -705,6 +705,24 @@ export const SAVE_EDITED_COMPANY_SHOP_STORE = "SAVE_EDITED_COMPANY_SHOP_STORE"
 export const SAVE_COMPANY_STATS = "SAVE_COMPANY_STATS"
 export const ADD_RESERWATION_WORKER_DATA = "ADD_RESERWATION_WORKER_DATA"
 export const DELETE_RESERWATION_WORKER_DATA = "DELETE_RESERWATION_WORKER_DATA"
+export const UPDATE_RESERWATION_WORKER_DATA = "UPDATE_RESERWATION_WORKER_DATA"
+
+export const updateReserwationWorkerDate = (
+  reserwationId,
+  changed,
+  noFinished,
+  newTimeStart,
+  newTimeEnd
+) => {
+  return {
+    type: UPDATE_RESERWATION_WORKER_DATA,
+    reserwationId: reserwationId,
+    changed: changed,
+    noFinished: noFinished,
+    newTimeStart: newTimeStart,
+    newTimeEnd: newTimeEnd,
+  }
+}
 
 export const deleteReserwationWorkerDate = dataId => {
   return {
@@ -2294,18 +2312,18 @@ export const fetchUpdateWorkerReserwation = (
       .then(response => {
         if (!!canceled) {
           dispatch(deleteReserwationWorkerDate(reserwationId))
-          dispatch(changeSpinner(false))
         } else {
           dispatch(
-            fetchWorkerReserwationsAll(
-              token,
-              workerUserId,
-              yearPicker,
-              monthPicker,
-              companyId
+            updateReserwationWorkerDate(
+              reserwationId,
+              changed,
+              noFinished,
+              newTimeStart,
+              newTimeEnd
             )
           )
         }
+        dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
       })
       .catch(error => {

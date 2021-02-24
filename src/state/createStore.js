@@ -36,6 +36,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_RESERWATION_WORKER_DATA,
   DELETE_RESERWATION_WORKER_DATA,
   ADD_RESERWATION_WORKER_DATA,
   SAVE_COMPANY_STATS,
@@ -494,6 +495,41 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case UPDATE_RESERWATION_WORKER_DATA: {
+      const updateWorkerHistoryReserwations = !!state.workerHistoryReserwations
+        ? { ...state.workerHistoryReserwations }
+        : null
+      if (!!updateWorkerHistoryReserwations) {
+        const findIdItem = updateWorkerHistoryReserwations.reserwations.findIndex(
+          item => item._id === action.reserwationId
+        )
+        if (findIdItem >= 0) {
+          if (action.changed !== null) {
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].visitChanged = action.changed
+          }
+          if (action.noFinished !== null) {
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].visitNotFinished = action.noFinished
+          }
+          if (!!action.newTimeStart) {
+            updateWorkerHistoryReserwations.reserwations[findIdItem].dateStart =
+              action.newTimeStart
+          }
+          if (!!action.newTimeEnd) {
+            updateWorkerHistoryReserwations.reserwations[findIdItem].dateEnd =
+              action.newTimeEnd
+          }
+        }
+      }
+      return {
+        ...state,
+        workerHistoryReserwations: updateWorkerHistoryReserwations,
+      }
+    }
 
     case DELETE_RESERWATION_WORKER_DATA: {
       const deleteWorkerHistoryReserwations = !!state.workerHistoryReserwations
