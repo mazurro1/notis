@@ -785,6 +785,7 @@ const BigCalendarEmployeeWorkingHours = ({
             localizer={localizer}
             events={allEvents}
             defaultView={isMobile ? "day" : "week"}
+            onView={() => {}}
             date={dateCalendar}
             onNavigate={date => {
               setDateCalendar(date)

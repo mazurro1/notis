@@ -8,15 +8,38 @@ import {
   changeLoginVisible,
   changeCreateCompanyVisible,
 } from "../state/actions"
+import { HiEmojiHappy } from "react-icons/hi"
+import { Colors } from "../common/Colors"
 
 const MarginTop = styled.div`
   margin-top: 30px;
+`
+
+const TextWarning = styled.div`
+  margin-top: 60px;
+  font-size: 1.6rem;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins-Bold", sans-serif;
+
+  span {
+    color: ${props => Colors(props.siteProps).primaryColor};
+    font-size: 6rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 `
 
 const YourCompany = () => {
   const user = useSelector(state => state.user)
   const loginVisible = useSelector(state => state.loginVisible)
   const createCompanyVisible = useSelector(state => state.createCompanyVisible)
+  const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
 
@@ -40,7 +63,12 @@ const YourCompany = () => {
         onClick={handleCreateCompany}
       />
     ) : (
-      "Masz już konto"
+      <TextWarning siteProps={siteProps}>
+        Posiadasz już konto firmowe
+        <span>
+          <HiEmojiHappy />
+        </span>
+      </TextWarning>
     )
   ) : (
     <ButtonIcon

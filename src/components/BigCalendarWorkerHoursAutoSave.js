@@ -694,6 +694,7 @@ const BigCalendarWorkerHoursAutoSave = ({
             localizer={localizer}
             events={allEvents}
             defaultView={isMobile ? "day" : "week"}
+            onView={() => {}}
             view={isMobile ? "day" : "week"}
             date={dateCalendar}
             onNavigate={date => {

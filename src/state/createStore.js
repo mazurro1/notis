@@ -36,6 +36,8 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  DELETE_RESERWATION_WORKER_DATA,
+  ADD_RESERWATION_WORKER_DATA,
   SAVE_COMPANY_STATS,
   SAVE_EDITED_COMPANY_SHOP_STORE,
   EDIT_USER_COMPANY_AVAILABILITY,
@@ -492,6 +494,35 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case DELETE_RESERWATION_WORKER_DATA: {
+      const deleteWorkerHistoryReserwations = !!state.workerHistoryReserwations
+        ? { ...state.workerHistoryReserwations }
+        : null
+      if (!!action.dataId && !!deleteWorkerHistoryReserwations) {
+        const filteredReserwations = deleteWorkerHistoryReserwations.reserwations.filter(
+          item => item._id !== action.dataId
+        )
+        deleteWorkerHistoryReserwations.reserwations = filteredReserwations
+      }
+      return {
+        ...state,
+        workerHistoryReserwations: deleteWorkerHistoryReserwations,
+      }
+    }
+
+    case ADD_RESERWATION_WORKER_DATA: {
+      const newWorkerHistoryReserwations = !!state.workerHistoryReserwations
+        ? { ...state.workerHistoryReserwations }
+        : null
+      if (!!action.data && !!newWorkerHistoryReserwations) {
+        newWorkerHistoryReserwations.reserwations.push(action.data)
+      }
+      return {
+        ...state,
+        workerHistoryReserwations: newWorkerHistoryReserwations,
+      }
+    }
 
     case SAVE_COMPANY_STATS: {
       let dateCompanyStats = null

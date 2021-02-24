@@ -703,6 +703,22 @@ export const DELETE_USER_COMPANY_AVAILABILITY =
 export const EDIT_USER_COMPANY_AVAILABILITY = "EXIT_USER_COMPANY_AVAILABILITY"
 export const SAVE_EDITED_COMPANY_SHOP_STORE = "SAVE_EDITED_COMPANY_SHOP_STORE"
 export const SAVE_COMPANY_STATS = "SAVE_COMPANY_STATS"
+export const ADD_RESERWATION_WORKER_DATA = "ADD_RESERWATION_WORKER_DATA"
+export const DELETE_RESERWATION_WORKER_DATA = "DELETE_RESERWATION_WORKER_DATA"
+
+export const deleteReserwationWorkerDate = dataId => {
+  return {
+    type: DELETE_RESERWATION_WORKER_DATA,
+    dataId: dataId,
+  }
+}
+
+export const addReserwationWorkerDate = data => {
+  return {
+    type: ADD_RESERWATION_WORKER_DATA,
+    data: data,
+  }
+}
 
 export const saveCompanyStats = (stats, services) => {
   return {
@@ -1700,67 +1716,6 @@ export const fetchDoReserwation = (
   }
 }
 
-export const fetchDoReserwationWorker = (
-  token,
-  workerUserId,
-  companyId,
-  dateStart,
-  dateEnd,
-  dateFull,
-  reserwationMessage,
-  yearPicker,
-  monthPicker
-) => {
-  return dispatch => {
-    dispatch(changeSpinner(true))
-    return axios
-      .post(
-        `${Site.serverUrl}/add-reserwation-worker`,
-        {
-          workerUserId: workerUserId,
-          companyId: companyId,
-          dateStart: dateStart,
-          dateEnd: dateEnd,
-          dateFull: dateFull,
-          reserwationMessage: reserwationMessage,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then(response => {
-        dispatch(addAlertItem("Dokonano rezerwacje czasu.", "green"))
-        dispatch(
-          fetchWorkerReserwationsAll(
-            token,
-            workerUserId,
-            yearPicker,
-            monthPicker,
-            companyId
-          )
-        )
-      })
-      .catch(error => {
-        if (!!error) {
-          if (!!error.response) {
-            if (error.response.status === 401) {
-              dispatch(logout())
-            } else {
-              dispatch(
-                addAlertItem("Błąd podczas robienia rezerwacji czasu", "red")
-              )
-            }
-          } else {
-            dispatch(addAlertItem("Brak internetu.", "red"))
-          }
-        }
-        dispatch(changeSpinner(false))
-      })
-  }
-}
-
 export const fetchWorkerDisabledHours = (
   token,
   companyId,
@@ -2198,6 +2153,60 @@ export const fetchWorkerReserwationsAll = (
   }
 }
 
+export const fetchDoReserwationWorker = (
+  token,
+  workerUserId,
+  companyId,
+  dateStart,
+  dateEnd,
+  dateFull,
+  reserwationMessage,
+  yearPicker,
+  monthPicker
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-reserwation-worker`,
+        {
+          workerUserId: workerUserId,
+          companyId: companyId,
+          dateStart: dateStart,
+          dateEnd: dateEnd,
+          dateFull: dateFull,
+          reserwationMessage: reserwationMessage,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Dokonano rezerwacje czasu.", "green"))
+        dispatch(changeSpinner(false))
+        dispatch(addReserwationWorkerDate(response.data.reserwation))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas robienia rezerwacji czasu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
 export const fetchDeleteReserwation = (
   token,
   reserwationId,
@@ -2283,15 +2292,20 @@ export const fetchUpdateWorkerReserwation = (
         }
       )
       .then(response => {
-        dispatch(
-          fetchWorkerReserwationsAll(
-            token,
-            workerUserId,
-            yearPicker,
-            monthPicker,
-            companyId
+        if (!!canceled) {
+          dispatch(deleteReserwationWorkerDate(reserwationId))
+          dispatch(changeSpinner(false))
+        } else {
+          dispatch(
+            fetchWorkerReserwationsAll(
+              token,
+              workerUserId,
+              yearPicker,
+              monthPicker,
+              companyId
+            )
           )
-        )
+        }
         dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
       })
       .catch(error => {

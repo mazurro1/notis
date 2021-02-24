@@ -107,7 +107,7 @@ const AlertItemStyle = styled.div`
         ? Colors(props.siteProps).successColorLight
         : props.alertColor === "orange"
         ? Colors(props.siteProps).secondColorLight
-        : Colors(props.siteProps).darkColorDark
+        : Colors(props.siteProps).darkColorLight
       : Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
   overflow: hidden;

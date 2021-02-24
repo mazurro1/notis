@@ -13,6 +13,7 @@ const TimeStyle = styled.div`
   opacity: 0.5;
 
   span {
+    display: inline-block;
     color: ${props =>
       props.active
         ? `${Colors(props.siteProps).textNormalBlack} !important`
@@ -96,143 +97,180 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
   let userName = null
   let userSurname = null
 
-  if (!!alert.reserwationId) {
-    if (!!alert.reserwationId.fromUser) {
-      if (!!alert.reserwationId.fromUser.name) {
-        userName = Buffer.from(
-          alert.reserwationId.fromUser.name,
-          "base64"
-        ).toString("ascii")
-        userSurname = Buffer.from(
-          alert.reserwationId.fromUser.surname,
-          "base64"
-        ).toString("ascii")
+  if (
+    alert.type !== "rezerwation_worker" &&
+    alert.type !== "new_rezerwation_worker"
+  ) {
+    if (!!alert.reserwationId) {
+      if (!!alert.reserwationId.fromUser) {
+        if (!!alert.reserwationId.fromUser.name) {
+          userName = Buffer.from(
+            alert.reserwationId.fromUser.name,
+            "base64"
+          ).toString("ascii")
+          userSurname = Buffer.from(
+            alert.reserwationId.fromUser.surname,
+            "base64"
+          ).toString("ascii")
+        }
       }
     }
-  }
 
-  if (alert.type === "rezerwation_created") {
-    alertColor = "blue"
-    if (!isCompanyChangedReserwation) {
-      textBeginningAlert = isUserReserwation
-        ? "Rezerwacja została utworzona w firmie"
-        : "dokonał rezerwacji"
+    if (alert.type === "rezerwation_created") {
+      alertColor = "blue"
+      if (!isCompanyChangedReserwation) {
+        textBeginningAlert = isUserReserwation
+          ? "Rezerwacja została utworzona w firmie"
+          : "dokonał rezerwacji"
+      } else {
+        textBeginningAlert = isUserReserwation ? "" : ""
+      }
+    } else if (alert.type === "rezerwation_changed") {
+      alertColor = "orange"
+      if (!isCompanyChangedReserwation) {
+        textBeginningAlert = isUserReserwation
+          ? "Rezerwacja została zmieniona w firmie"
+          : "zmienił rezerwację"
+      } else {
+        textBeginningAlert = isUserReserwation
+          ? "Twoja rezerwacja została zmieniona przez firmę"
+          : "Dokonano zmianę w rezerwacji"
+      }
+    } else if (alert.type === "rezerwation_canceled") {
+      alertColor = "red"
+      if (!isCompanyChangedReserwation) {
+        textBeginningAlert = isUserReserwation
+          ? "Rezerwacja została odwołana w firmie"
+          : "odowłał rezerwację"
+      } else {
+        textBeginningAlert = isUserReserwation
+          ? "Rezerwacja została odwołana przez firmę"
+          : "Odwołano rezerwację"
+      }
+    } else if (alert.type === "reserwation_not_finished") {
+      alertColor = "red"
+      if (!isCompanyChangedReserwation) {
+        textBeginningAlert = isUserReserwation
+          ? "Rezerwacja nie została odbyta w firmie"
+          : "nie odbył wizyty"
+      } else {
+        textBeginningAlert = isUserReserwation
+          ? "Zmieniono status twojej rezerwacji na nie odbytą w firmie"
+          : "Zmieniono status rezerwacji na nie odbytą"
+      }
+    } else if (alert.type === "reserwation_finished") {
+      alertColor = "green"
+      if (!isCompanyChangedReserwation) {
+        textBeginningAlert = isUserReserwation
+          ? "Rezerwacja została odbyta w firmie"
+          : "odbył wizytę"
+      } else {
+        textBeginningAlert = isUserReserwation
+          ? "Zmieniono status twojej rezerwacji na odbytą"
+          : "Zmieniono status rezerwacji na odbytą"
+      }
     } else {
-      textBeginningAlert = isUserReserwation ? "" : ""
+      alertColor = "default"
     }
-  } else if (alert.type === "rezerwation_changed") {
-    alertColor = "orange"
-    if (!isCompanyChangedReserwation) {
-      textBeginningAlert = isUserReserwation
-        ? "Rezerwacja została zmieniona w firmie"
-        : "zmienił rezerwację"
-    } else {
-      textBeginningAlert = isUserReserwation
-        ? "Twoja rezerwacja została zmieniona przez firmę"
-        : "Dokonano zmianę w rezerwacji"
-    }
-  } else if (alert.type === "rezerwation_canceled") {
-    alertColor = "red"
-    if (!isCompanyChangedReserwation) {
-      textBeginningAlert = isUserReserwation
-        ? "Rezerwacja została odwołana w firmie"
-        : "odowłał rezerwację"
-    } else {
-      textBeginningAlert = isUserReserwation
-        ? "Rezerwacja została odwołana przez firmę"
-        : "Odwołano rezerwację"
-    }
-  } else if (alert.type === "reserwation_not_finished") {
-    alertColor = "red"
-    if (!isCompanyChangedReserwation) {
-      textBeginningAlert = isUserReserwation
-        ? "Rezerwacja nie została odbyta w firmie"
-        : "nie odbył wizyty"
-    } else {
-      textBeginningAlert = isUserReserwation
-        ? "Zmieniono status twojej rezerwacji na nie odbytą w firmie"
-        : "Zmieniono status rezerwacji na nie odbytą"
-    }
-  } else if (alert.type === "reserwation_finished") {
-    alertColor = "green"
-    if (!isCompanyChangedReserwation) {
-      textBeginningAlert = isUserReserwation
-        ? "Rezerwacja została odbyta w firmie"
-        : "odbył wizytę"
-    } else {
-      textBeginningAlert = isUserReserwation
-        ? "Zmieniono status twojej rezerwacji na odbytą"
-        : "Zmieniono status rezerwacji na odbytą"
-    }
-  } else {
-    alertColor = "default"
-  }
 
-  if (isUserReserwation) {
+    if (isUserReserwation) {
+      alertMessage = (
+        <>
+          <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
+          <LinkEffect
+            path={`company/${alert.reserwationId.company.linkPath}`}
+            text={
+              <ButtonAlertCompany
+                siteProps={siteProps}
+                active={alert.active}
+                alertColor={alertColor}
+              >
+                {alert.reserwationId.company.name.toUpperCase()}
+              </ButtonAlertCompany>
+            }
+          />
+          <DivInlineBlock>
+            dnia: <span>{reserwationDate}</span>,
+          </DivInlineBlock>{" "}
+          na godzine:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+          </DivInlineBlock>
+          , usługa: <span>{alert.reserwationId.serviceName}</span>
+        </>
+      )
+    } else {
+      alertMessage = isCompanyChangedReserwation ? (
+        <>
+          {textBeginningAlert} użytkowniowi{" "}
+          {!!userName && !!userSurname
+            ? `${userName} ${userSurname}`
+            : "Brak użytkownika"}{" "}
+          <DivInlineBlock>
+            dnia: <span>{reserwationDate}</span>,
+          </DivInlineBlock>{" "}
+          na godzine:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>{" "}
+          usługa: <span>{alert.reserwationId.serviceName}</span>
+        </>
+      ) : (
+        <>
+          Użytkownik{" "}
+          {!!userName && !!userSurname
+            ? `${userName} ${userSurname}`
+            : "Brak użytkownika"}{" "}
+          {textBeginningAlert}
+          <DivInlineBlock>
+            dnia: <span>{reserwationDate}</span>,
+          </DivInlineBlock>{" "}
+          na godzine:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,{" "}
+          </DivInlineBlock>{" "}
+          usługa: <span>{alert.reserwationId.serviceName}</span>
+        </>
+      )
+    }
+  } else if (alert.type === "rezerwation_worker") {
     alertMessage = (
       <>
-        <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
-        <LinkEffect
-          path={`company/${alert.reserwationId.company.linkPath}`}
-          text={
-            <ButtonAlertCompany
-              siteProps={siteProps}
-              active={alert.active}
-              alertColor={alertColor}
-            >
-              {alert.reserwationId.company.name.toUpperCase()}
-            </ButtonAlertCompany>
-          }
-        />
+        Rezerwacja czasu została odwołana dnia:{" "}
         <DivInlineBlock>
-          dnia: <span>{reserwationDate}</span>,
-        </DivInlineBlock>{" "}
-        na godzine:{" "}
-        <DivInlineBlock>
-          <span>
-            {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
-          </span>
+          <span>{reserwationDate}</span>
         </DivInlineBlock>
-        , usługa: <span>{alert.reserwationId.serviceName}</span>
-      </>
-    )
-  } else {
-    alertMessage = isCompanyChangedReserwation ? (
-      <>
-        {textBeginningAlert} użytkowniowi{" "}
-        {!!userName && !!userSurname
-          ? `${userName} ${userSurname}`
-          : "Brak użytkownika"}{" "}
-        <DivInlineBlock>
-          dnia: <span>{reserwationDate}</span>,
-        </DivInlineBlock>{" "}
-        na godzine:{" "}
+        , o godzinie:{" "}
         <DivInlineBlock>
           <span>
             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
           </span>
           ,
-        </DivInlineBlock>{" "}
-        usługa: <span>{alert.reserwationId.serviceName}</span>
+        </DivInlineBlock>
       </>
-    ) : (
+    )
+  } else if (alert.type === "new_rezerwation_worker") {
+    alertMessage = (
       <>
-        Użytkownik{" "}
-        {!!userName && !!userSurname
-          ? `${userName} ${userSurname}`
-          : "Brak użytkownika"}{" "}
-        {textBeginningAlert}
+        Rezerwacja czasu została dodana dnia:{" "}
         <DivInlineBlock>
-          dnia: <span>{reserwationDate}</span>,
-        </DivInlineBlock>{" "}
-        na godzine:{" "}
+          <span>{reserwationDate}</span>
+        </DivInlineBlock>
+        , na godzinę:{" "}
         <DivInlineBlock>
           <span>
             {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
           </span>
-          ,{" "}
-        </DivInlineBlock>{" "}
-        usługa: <span>{alert.reserwationId.serviceName}</span>
+          ,
+        </DivInlineBlock>
       </>
     )
   }

@@ -3,6 +3,7 @@ import "../../style.css"
 import { fetchPathCompany } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
+import CompanyPriv from "./CompanyPriv"
 
 const TakeCompanyData = ({ pathCompany = null }) => {
   const pathCompanyData = useSelector(state => state.pathCompanyData)
@@ -25,6 +26,6 @@ const TakeCompanyData = ({ pathCompany = null }) => {
       )
     }
   }
-  return <div>{renderContent}</div>
+  return <div>{!!renderContent ? renderContent : <CompanyPriv />}</div>
 }
 export default TakeCompanyData

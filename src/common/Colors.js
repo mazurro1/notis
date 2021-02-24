@@ -29,6 +29,7 @@ export const Colors = (
     secondColor: siteProps.blind ? sitePropsDarkHex : "#f7a52c",
     secondColorLight: siteProps.blind || siteProps.dark ? "#212121" : "#fff3e0",
     secondDarkColor: siteProps.blind ? sitePropsHex : "#ed6c0c",
+    darkColorLight: siteProps.blind || siteProps.dark ? "#212121" : "#bdbdbd",
     darkColor: siteProps.blind
       ? sitePropsHex
       : siteProps.dark
