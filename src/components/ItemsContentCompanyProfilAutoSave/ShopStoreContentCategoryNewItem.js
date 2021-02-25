@@ -96,8 +96,7 @@ const ShopStoreContentCategoryNewItem = ({
   }
 
   const disabledSaveEditedIitem =
-    productTitle.length === 0 ||
-    productText.length === 0 ||
+    productTitle.length <= 2 ||
     productPrice.length === 0 ||
     productCount.length === 0
 
@@ -158,6 +157,7 @@ const ShopStoreContentCategoryNewItem = ({
                 type="text"
                 onChange={e => handleChangeInput(e, setProductTitle)}
                 required
+                validText="Minimum 3 znaki"
               />
               <InputIcon
                 icon={<MdReorder />}
@@ -175,6 +175,7 @@ const ShopStoreContentCategoryNewItem = ({
                 type="number"
                 onChange={e => handleChangeInput(e, setProductPrice)}
                 required
+                validText="Wymagana wartość"
               />
               <InputIcon
                 icon={<MdWidgets />}
@@ -184,6 +185,7 @@ const ShopStoreContentCategoryNewItem = ({
                 type="number"
                 onChange={e => handleChangeInput(e, setProductCount)}
                 required
+                validText="Wymagana wartość"
               />
               <CheckboxStyle siteProps={siteProps}>
                 <Checkbox

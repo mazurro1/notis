@@ -217,7 +217,7 @@ const AllInputs = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px 0px;
+  padding: 10px 5px;
 `
 const PaddingRight = styled.div`
   padding-right: 10px;

@@ -14,7 +14,7 @@ const AddCategory = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-bottom: ${props => (props.clickAddCategory ? "150px" : "0px")};
+  padding-bottom: ${props => (props.clickAddCategory ? "250px" : "0px")};
   transition-property: background-color, padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -37,10 +37,14 @@ const IconAddCategory = styled.div`
 const BackgroundEditContent = styled.div`
   width: 90%;
   background-color: ${props => (props.transparent ? "transparent" : "white")};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
+  overflow: hidden;
   color: black;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const BackgroundEdit = styled.div`
@@ -65,6 +69,13 @@ const ButtonsAddPosition = styled.div`
 
 const ButtonMargin = styled.div`
   margin: 5px;
+`
+
+const TitleItemCategoryTitleAction = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const ShopStoreContentAddCategory = ({
@@ -98,42 +109,48 @@ const ShopStoreContentAddCategory = ({
         >
           <BackgroundEdit onClick={handleClickContent}>
             <BackgroundEditContent onClick={handleClickContent}>
-              <InputIcon
-                icon={<MdTitle />}
-                placeholder="Nazwa kategorii"
-                secondColor
-                value={newCategoryName}
-                type="text"
-                onChange={handleChangeNewCategory}
-                required
-              />
-              <ButtonsAddPosition>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="13"
-                    icon={<MdArrowBack />}
-                    onClick={handleResetAddCategory}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                  />
-                </ButtonMargin>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Dodaj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="13"
-                    icon={<MdAddBox />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={newCategoryName.length <= 2}
-                    onClick={handleAddNewCategory}
-                  />
-                </ButtonMargin>
-              </ButtonsAddPosition>
+              <TitleItemCategoryTitleAction>
+                Nowa kategoria
+              </TitleItemCategoryTitleAction>
+              <PaddingContent>
+                <InputIcon
+                  icon={<MdTitle />}
+                  placeholder="Nazwa kategorii"
+                  secondColor
+                  value={newCategoryName}
+                  type="text"
+                  onChange={handleChangeNewCategory}
+                  required
+                  validText="Minimum 3 znaki"
+                />
+                <ButtonsAddPosition>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Anuluj"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="13"
+                      icon={<MdArrowBack />}
+                      onClick={handleResetAddCategory}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                    />
+                  </ButtonMargin>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Dodaj"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="13"
+                      icon={<MdAddBox />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={newCategoryName.length <= 2}
+                      onClick={handleAddNewCategory}
+                    />
+                  </ButtonMargin>
+                </ButtonsAddPosition>
+              </PaddingContent>
             </BackgroundEditContent>
           </BackgroundEdit>
         </CSSTransition>

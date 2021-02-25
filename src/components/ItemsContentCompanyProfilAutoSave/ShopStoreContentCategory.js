@@ -24,7 +24,7 @@ const TitleCategory = styled.div`
   color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     props.isCompanyEditProfil
-      ? Colors(props.siteProps).secondDarkColor
+      ? Colors(props.siteProps).secondColor
       : Colors(props.siteProps).primaryColorDark};
   padding: 10px;
   border-radius: 5px;
@@ -35,7 +35,7 @@ const TitleCategory = styled.div`
       : props.clickAdd
       ? "550px"
       : props.clickEdit
-      ? "150px"
+      ? "250px"
       : "10px"};
   margin-top: 10px;
   overflow: hidden;
@@ -192,6 +192,7 @@ const TitleItemCategoryTitleAction = styled.div`
   padding: 5px 10px;
   background-color: ${props => Colors(props.siteProps).secondColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const ShopStoreContentCategory = ({
@@ -217,6 +218,8 @@ const ShopStoreContentCategory = ({
 
   useEffect(() => {
     setClickDelete(false)
+    setClickAdd(false)
+    setClickEdit(false)
   }, [allCompanyShopStore, editShopStore])
 
   const handleClickArrow = () => {
@@ -274,7 +277,8 @@ const ShopStoreContentCategory = ({
 
   const handleChangeCategoryTitle = e => {
     e.preventDefault()
-    if (!categoryTitle.length <= 2) {
+
+    if (!(categoryTitle.length <= 2 || categoryTitle === category.category)) {
       const newNewCategorys = [...newCategorys]
       const newEditedCategory = [...editedCategory]
       const findIndexInNew = newNewCategorys.findIndex(
@@ -425,6 +429,7 @@ const ShopStoreContentCategory = ({
         ButtonsAddPosition={ButtonsAddPosition}
         CheckboxStyle={CheckboxStyle}
         TitleItemCategoryTitleAction={TitleItemCategoryTitleAction}
+        clickDeleteCategory={clickDelete}
       />
     )
   })
@@ -517,6 +522,9 @@ const ShopStoreContentCategory = ({
             >
               <BackgroundEdit>
                 <BackgroundEditContent onClick={handleClickContent}>
+                  <TitleItemCategoryTitleAction>
+                    Edycja kategorii
+                  </TitleItemCategoryTitleAction>
                   <PaddingContent>
                     <form onSubmit={handleChangeCategoryTitle}>
                       <InputIcon
@@ -527,6 +535,7 @@ const ShopStoreContentCategory = ({
                         type="text"
                         onChange={handleChangeCategoryTitleInput}
                         required
+                        validText="Minimum 3 znaki"
                       />
                       <ButtonsAddPosition>
                         <ButtonMargin>
@@ -554,7 +563,10 @@ const ShopStoreContentCategory = ({
                               Colors(siteProps).successColorDark
                             }
                             customColorIcon={Colors(siteProps).successColor}
-                            disabled={categoryTitle.length <= 2}
+                            disabled={
+                              categoryTitle.length <= 2 ||
+                              categoryTitle === category.category
+                            }
                           />
                         </ButtonMarginSubmit>
                       </ButtonsAddPosition>

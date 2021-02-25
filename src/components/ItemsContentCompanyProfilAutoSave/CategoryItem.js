@@ -60,9 +60,9 @@ const TitleCategory = styled.div`
     props.clickDelete
       ? "50px"
       : props.clickAdd
-      ? "550px"
+      ? "650px"
       : props.clickEdit
-      ? "150px"
+      ? "250px"
       : "10px"};
   overflow: hidden;
   user-select: none;
@@ -160,10 +160,14 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   width: 90%;
   background-color: ${props => (props.transparent ? "transparent" : "white")};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
   color: black;
+  overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const ButtonsDeletePosition = styled.div`
@@ -193,6 +197,13 @@ const ButtonMarginSubmit = styled.button`
 const SelectStyle = styled.div`
   margin-top: 10px;
   margin-bottom: 20px;
+`
+
+const TitleItemCategoryTitleAction = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const CategoryItem = ({
@@ -288,37 +299,37 @@ const CategoryItem = ({
     setColorServiceComponent(value)
   }
 
+  const disabledAddItemCategory =
+    titleInput.length >= 3 && !!timeInput && !!priceInput
+
   const handleAddItem = e => {
     e.preventDefault()
-    if (
-      titleInput.length >= 3 &&
-      titleInput.length >= 3 &&
-      !!timeInput &&
-      !!priceInput
-    ) {
-      handleAddItemInCategory(
-        item.category,
-        titleInput,
-        contentInput,
-        timeInput,
-        extraTime,
-        priceInput,
-        extraPrice,
-        colorServiceComponent.value,
-        item.categoryId
-      )
-      setClickAdd(false)
-      setCollapseActive(true)
-      setExtraPrice(false)
-      setExtraTime(false)
-      setInputTitle("")
-      setContentInput("")
-      setTimeInput("")
-      setPriceInput("")
-      setColorServiceComponent({
-        value: 1,
-        label: "Domyślny (jasno niebieski)",
-      })
+    if (disabledAddItemCategory) {
+      if (titleInput.length >= 3 && !!timeInput && !!priceInput) {
+        handleAddItemInCategory(
+          item.category,
+          titleInput,
+          contentInput,
+          timeInput,
+          extraTime,
+          priceInput,
+          extraPrice,
+          colorServiceComponent.value,
+          item.categoryId
+        )
+        setClickAdd(false)
+        setCollapseActive(true)
+        setExtraPrice(false)
+        setExtraTime(false)
+        setInputTitle("")
+        setContentInput("")
+        setTimeInput("")
+        setPriceInput("")
+        setColorServiceComponent({
+          value: 1,
+          label: "Domyślny (jasno niebieski)",
+        })
+      }
     }
   }
 
@@ -361,6 +372,8 @@ const CategoryItem = ({
         activeWorkerUserId={activeWorkerUserId}
         isWorkerBlocked={isWorkerBlocked}
         userCannotMakeReservation={userCannotMakeReservation}
+        TitleItemCategoryTitleAction={TitleItemCategoryTitleAction}
+        PaddingContent={PaddingContent}
       />
     )
   })
@@ -451,43 +464,52 @@ const CategoryItem = ({
             >
               <BackgroundEdit>
                 <BackgroundEditContent onClick={handleClickContent}>
-                  <form onSubmit={handleChangeCategoryTitle}>
-                    <InputIcon
-                      icon={<MdTitle />}
-                      placeholder="Nazwa kategorii"
-                      secondColor
-                      value={categoryTitle}
-                      type="text"
-                      onChange={e => handleChangeInput(e, setCategoryTitle)}
-                      required
-                    />
-                    <ButtonsAddPosition>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Cofnij"
-                          uppercase
-                          fontIconSize="40"
-                          fontSize="13"
-                          icon={<MdArrowBack />}
-                          onClick={handleResetCategory}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
-                        />
-                      </ButtonMargin>
-                      <ButtonMarginSubmit type="submit">
-                        <ButtonIcon
-                          title="Zapisz"
-                          uppercase
-                          fontIconSize="20"
-                          fontSize="15"
-                          icon={<MdLibraryAdd />}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                          disabled={disabledCategorySave}
-                        />
-                      </ButtonMarginSubmit>
-                    </ButtonsAddPosition>
-                  </form>
+                  <TitleItemCategoryTitleAction siteProps={siteProps}>
+                    Edycja kategorii
+                  </TitleItemCategoryTitleAction>
+                  <PaddingContent>
+                    <form onSubmit={handleChangeCategoryTitle}>
+                      <InputIcon
+                        icon={<MdTitle />}
+                        placeholder="Nazwa kategorii"
+                        secondColor
+                        value={categoryTitle}
+                        type="text"
+                        onChange={e => handleChangeInput(e, setCategoryTitle)}
+                        required
+                      />
+                      <ButtonsAddPosition>
+                        <ButtonMargin>
+                          <ButtonIcon
+                            title="Cofnij"
+                            uppercase
+                            fontIconSize="40"
+                            fontSize="13"
+                            icon={<MdArrowBack />}
+                            onClick={handleResetCategory}
+                            customColorButton={
+                              Colors(siteProps).dangerColorDark
+                            }
+                            customColorIcon={Colors(siteProps).dangerColor}
+                          />
+                        </ButtonMargin>
+                        <ButtonMarginSubmit type="submit">
+                          <ButtonIcon
+                            title="Zapisz"
+                            uppercase
+                            fontIconSize="20"
+                            fontSize="15"
+                            icon={<MdLibraryAdd />}
+                            customColorButton={
+                              Colors(siteProps).successColorDark
+                            }
+                            customColorIcon={Colors(siteProps).successColor}
+                            disabled={disabledCategorySave}
+                          />
+                        </ButtonMarginSubmit>
+                      </ButtonsAddPosition>
+                    </form>
+                  </PaddingContent>
                 </BackgroundEditContent>
               </BackgroundEdit>
             </CSSTransition>
@@ -499,101 +521,113 @@ const CategoryItem = ({
             >
               <BackgroundEdit>
                 <BackgroundEditContent onClick={handleClickContent}>
-                  Nowa podkategoria
-                  <form onSubmit={handleAddItem}>
-                    <InputIcon
-                      icon={<MdTitle />}
-                      placeholder="Tytuł"
-                      secondColor
-                      value={titleInput}
-                      type="text"
-                      onChange={e => handleChangeInput(e, setInputTitle)}
-                      required
-                    />
-                    <InputIcon
-                      icon={<MdReorder />}
-                      placeholder="Treść"
-                      secondColor
-                      value={contentInput}
-                      type="text"
-                      onChange={e => handleChangeInput(e, setContentInput)}
-                    />
-                    <InputIcon
-                      icon={<MdAccessTime />}
-                      placeholder="Czas w minutach"
-                      secondColor
-                      value={timeInput}
-                      type="number"
-                      onChange={e => handleChangeInput(e, setTimeInput)}
-                      required
-                    />
-                    <CheckboxStyle siteProps={siteProps}>
-                      <Checkbox
-                        theme="material-checkbox"
-                        value={extraTime}
-                        onChange={() => handleOnChangeCheckbox(setExtraTime)}
-                      >
-                        <TextCheckbox>Niestały czas</TextCheckbox>
-                      </Checkbox>
-                    </CheckboxStyle>
-                    <InputIcon
-                      icon={<FaDollarSign />}
-                      placeholder="Cena w złotówkach"
-                      secondColor
-                      value={priceInput}
-                      type="number"
-                      onChange={e => handleChangeInput(e, setPriceInput)}
-                      required
-                    />
-                    <CheckboxStyle siteProps={siteProps}>
-                      <Checkbox
-                        theme="material-checkbox"
-                        value={extraPrice}
-                        onChange={() => handleOnChangeCheckbox(setExtraPrice)}
-                      >
-                        <TextCheckbox>Niestała cena</TextCheckbox>
-                      </Checkbox>
-                    </CheckboxStyle>
-                    <SelectStyle>
-                      <SelectCreated
-                        options={ServiceColors}
-                        value={colorServiceComponent}
-                        handleChange={handleChangeColorService}
-                        isLoading={false}
-                        defaultMenuIsOpen={false}
-                        placeholder="Wybierz kolor usługi..."
-                        marginAuto={false}
-                        darkSelect
-                        maxMenuHeight={100}
-                        deleteItem={false}
+                  <TitleItemCategoryTitleAction siteProps={siteProps}>
+                    Nowa usługa
+                  </TitleItemCategoryTitleAction>
+                  <PaddingContent>
+                    <form onSubmit={handleAddItem}>
+                      <InputIcon
+                        icon={<MdTitle />}
+                        placeholder="Tytuł"
+                        secondColor
+                        value={titleInput}
+                        type="text"
+                        onChange={e => handleChangeInput(e, setInputTitle)}
+                        required
+                        validText="Minimum 3 znaki"
                       />
-                    </SelectStyle>
-                    <ButtonsAddPosition>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Anuluj"
-                          uppercase
-                          fontIconSize="40"
-                          fontSize="13"
-                          icon={<MdArrowBack />}
-                          onClick={handleClickAdd}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
+                      <InputIcon
+                        icon={<MdReorder />}
+                        placeholder="Treść"
+                        secondColor
+                        value={contentInput}
+                        type="text"
+                        onChange={e => handleChangeInput(e, setContentInput)}
+                      />
+                      <InputIcon
+                        icon={<MdAccessTime />}
+                        placeholder="Czas w minutach"
+                        secondColor
+                        value={timeInput}
+                        type="number"
+                        onChange={e => handleChangeInput(e, setTimeInput)}
+                        required
+                        validText="Wymagana wartość"
+                      />
+                      <CheckboxStyle siteProps={siteProps}>
+                        <Checkbox
+                          theme="material-checkbox"
+                          value={extraTime}
+                          onChange={() => handleOnChangeCheckbox(setExtraTime)}
+                        >
+                          <TextCheckbox>Niestały czas</TextCheckbox>
+                        </Checkbox>
+                      </CheckboxStyle>
+                      <InputIcon
+                        icon={<FaDollarSign />}
+                        placeholder="Cena w złotówkach"
+                        secondColor
+                        value={priceInput}
+                        type="number"
+                        onChange={e => handleChangeInput(e, setPriceInput)}
+                        required
+                        validText="Wymagana wartość"
+                      />
+                      <CheckboxStyle siteProps={siteProps}>
+                        <Checkbox
+                          theme="material-checkbox"
+                          value={extraPrice}
+                          onChange={() => handleOnChangeCheckbox(setExtraPrice)}
+                        >
+                          <TextCheckbox>Niestała cena</TextCheckbox>
+                        </Checkbox>
+                      </CheckboxStyle>
+                      <SelectStyle>
+                        <SelectCreated
+                          options={ServiceColors}
+                          value={colorServiceComponent}
+                          handleChange={handleChangeColorService}
+                          isLoading={false}
+                          defaultMenuIsOpen={false}
+                          placeholder="Wybierz kolor usługi..."
+                          marginAuto={false}
+                          darkSelect
+                          maxMenuHeight={100}
+                          deleteItem={false}
                         />
-                      </ButtonMargin>
-                      <ButtonMarginSubmit type="submit">
-                        <ButtonIcon
-                          title="Dodaj"
-                          uppercase
-                          fontIconSize="20"
-                          fontSize="15"
-                          icon={<MdLibraryAdd />}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                        />
-                      </ButtonMarginSubmit>
-                    </ButtonsAddPosition>
-                  </form>
+                      </SelectStyle>
+                      <ButtonsAddPosition>
+                        <ButtonMargin>
+                          <ButtonIcon
+                            title="Anuluj"
+                            uppercase
+                            fontIconSize="40"
+                            fontSize="13"
+                            icon={<MdArrowBack />}
+                            onClick={handleClickAdd}
+                            customColorButton={
+                              Colors(siteProps).dangerColorDark
+                            }
+                            customColorIcon={Colors(siteProps).dangerColor}
+                          />
+                        </ButtonMargin>
+                        <ButtonMarginSubmit type="submit">
+                          <ButtonIcon
+                            title="Dodaj"
+                            uppercase
+                            fontIconSize="20"
+                            fontSize="13"
+                            icon={<MdLibraryAdd />}
+                            customColorButton={
+                              Colors(siteProps).successColorDark
+                            }
+                            customColorIcon={Colors(siteProps).successColor}
+                            disabled={!disabledAddItemCategory}
+                          />
+                        </ButtonMarginSubmit>
+                      </ButtonsAddPosition>
+                    </form>
+                  </PaddingContent>
                 </BackgroundEditContent>
               </BackgroundEdit>
             </CSSTransition>

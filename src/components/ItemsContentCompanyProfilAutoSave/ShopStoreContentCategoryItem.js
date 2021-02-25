@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit, MdArrowBack, MdDeleteForever } from "react-icons/md"
+import { MdEdit, MdArrowBack, MdDeleteForever, MdDelete } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
 import ShopStoreContentCategoryItemEdit from "./ShopStoreContentCategoryItemEdit"
 
@@ -134,9 +134,15 @@ const ShopStoreContentCategoryItem = ({
   ButtonsAddPosition,
   CheckboxStyle,
   TitleItemCategoryTitleAction,
+  clickDeleteCategory,
 }) => {
   const [clickDelete, setClickDelete] = useState(false)
   const [clickEdit, setClickEdit] = useState(false)
+
+  useEffect(() => {
+    setClickEdit(false)
+    setClickDelete(false)
+  }, [])
 
   const handleClickEdit = () => {
     setClickEdit(prevState => !prevState)
@@ -155,7 +161,7 @@ const ShopStoreContentCategoryItem = ({
   return (
     <ServiceItem
       index={index === 0}
-      clickDelete={clickDelete}
+      clickDelete={clickDelete || clickDeleteCategory}
       clickEdit={clickEdit}
       siteProps={siteProps}
     >
@@ -179,7 +185,7 @@ const ShopStoreContentCategoryItem = ({
               otherColor
               siteProps={siteProps}
             >
-              {`Sztuki: ${shopItem.count}`}
+              {`Ilość: ${shopItem.count}`}
             </PriceService>
           </WrapPrices>
         </TitleService>
@@ -205,7 +211,7 @@ const ShopStoreContentCategoryItem = ({
                 uppercase
                 fontIconSize="40"
                 fontSize="14"
-                icon={<MdEdit />}
+                icon={<MdDelete />}
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleClickDelete}

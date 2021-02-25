@@ -204,7 +204,7 @@ const ShopStoreContent = ({
             newCategoryName={newCategoryName}
           />
           <ReactTooltip id="addItem" effect="float" multiline={true}>
-            <span>Dodaj podkategorie</span>
+            <span>Dodaj przedmiot</span>
           </ReactTooltip>
           <ReactTooltip id="deleteCategory" effect="float" multiline={true}>
             <span>Usuń całą kategorię</span>

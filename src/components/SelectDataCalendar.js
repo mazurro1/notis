@@ -118,6 +118,7 @@ const SelectDataCalendar = ({
       setIsTimeActive(true)
     }, 500)
   }
+
   return (
     <StyleSimpleReactCalendar siteProps={siteProps}>
       <SimpleReactCalendar

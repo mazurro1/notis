@@ -53,10 +53,14 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   width: 90%;
   background-color: ${props => (props.transparent ? "transparent" : "white")};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
   color: black;
+  overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const IconAddCategory = styled.div`
@@ -136,6 +140,13 @@ const TitleRightColumnOpinion = styled.h2`
       : Colors(props.siteProps).textNormalBlack};
 `
 
+const TitleItemCategoryTitleAction = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
+`
+
 const AllCategoryOfServices = ({
   isCompanyEditProfil,
   services = [],
@@ -180,6 +191,8 @@ const AllCategoryOfServices = ({
       setNewCategoryItems([])
       setDeletedCategoryItems([])
       setEditedCategoryItems([])
+      setClickAddCategory(false)
+      setNewCategoryTitle("")
     }
   }, [services, setAllCategoriesWithItems, resetCompany, setAllCategoryEdit])
 
@@ -430,6 +443,8 @@ const AllCategoryOfServices = ({
     setNewCategoryItems([])
     setDeletedCategoryItems([])
     setEditedCategoryItems([])
+    setClickAddCategory(false)
+    setNewCategoryTitle("")
   }
 
   const handleSaveAllServices = () => {
@@ -466,7 +481,7 @@ const AllCategoryOfServices = ({
     item => item.category.toLowerCase() === newCategoryTitle.toLowerCase()
   )
 
-  const disabledAddCategoryButton = newCategoryTitle.length <= 3 || isInCategory
+  const disabledAddCategoryButton = newCategoryTitle.length <= 2 || isInCategory
 
   const isAnyChanges =
     newCategoryItems.length > 0 ||
@@ -518,42 +533,48 @@ const AllCategoryOfServices = ({
             >
               <BackgroundEdit onClick={handleClickContent}>
                 <BackgroundEditContent onClick={handleClickContent}>
-                  <InputIcon
-                    icon={<MdTitle />}
-                    placeholder="Nazwa kategorii"
-                    secondColor
-                    value={newCategoryTitle}
-                    type="text"
-                    onChange={handleChangeNewCategory}
-                    required
-                  />
-                  <ButtonsAddPosition>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Anuluj"
-                        uppercase
-                        fontIconSize="40"
-                        fontSize="13"
-                        icon={<MdArrowBack />}
-                        onClick={handleClickAddCategory}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                      />
-                    </ButtonMargin>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Dodaj"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="15"
-                        icon={<MdAddBox />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={disabledAddCategoryButton}
-                        onClick={handleAddCategory}
-                      />
-                    </ButtonMargin>
-                  </ButtonsAddPosition>
+                  <TitleItemCategoryTitleAction>
+                    Nowa kategoria
+                  </TitleItemCategoryTitleAction>
+                  <PaddingContent>
+                    <InputIcon
+                      icon={<MdTitle />}
+                      placeholder="Nazwa kategorii"
+                      secondColor
+                      value={newCategoryTitle}
+                      type="text"
+                      onChange={handleChangeNewCategory}
+                      required
+                      validText="Minimum 3 znaki, unikatowa nazwa"
+                    />
+                    <ButtonsAddPosition>
+                      <ButtonMargin>
+                        <ButtonIcon
+                          title="Anuluj"
+                          uppercase
+                          fontIconSize="40"
+                          fontSize="13"
+                          icon={<MdArrowBack />}
+                          onClick={handleClickAddCategory}
+                          customColorButton={Colors(siteProps).dangerColorDark}
+                          customColorIcon={Colors(siteProps).dangerColor}
+                        />
+                      </ButtonMargin>
+                      <ButtonMargin>
+                        <ButtonIcon
+                          title="Dodaj"
+                          uppercase
+                          fontIconSize="20"
+                          fontSize="13"
+                          icon={<MdAddBox />}
+                          customColorButton={Colors(siteProps).successColorDark}
+                          customColorIcon={Colors(siteProps).successColor}
+                          disabled={disabledAddCategoryButton}
+                          onClick={handleAddCategory}
+                        />
+                      </ButtonMargin>
+                    </ButtonsAddPosition>
+                  </PaddingContent>
                 </BackgroundEditContent>
               </BackgroundEdit>
             </CSSTransition>

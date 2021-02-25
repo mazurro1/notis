@@ -10,6 +10,7 @@ import {
   MdAccessTime,
   MdArrowBack,
   MdDeleteForever,
+  MdDelete,
 } from "react-icons/md"
 import { FaDollarSign, FaCalendarAlt } from "react-icons/fa"
 import { CSSTransition } from "react-transition-group"
@@ -40,7 +41,7 @@ const ServiceItem = styled.div`
   align-items: center;
   user-select: none;
   overflow: hidden;
-  padding-bottom: ${props => (props.clickEdit ? "500px" : "auto")};
+  padding-bottom: ${props => (props.clickEdit ? "650px" : "auto")};
   color: ${props => Colors(props.siteProps).textNormalBlack};
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
@@ -161,6 +162,8 @@ const ServicesItem = ({
   activeWorkerUserId,
   isWorkerBlocked,
   userCannotMakeReservation,
+  PaddingContent,
+  TitleItemCategoryTitleAction,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
@@ -188,15 +191,18 @@ const ServicesItem = ({
     ? itemServices.serviceColor
     : 1
 
-  const disabledSaveButton = !!colorServiceComponent
-    ? colorServiceComponent.value === indexValueColorService
-    : true &&
-      extraPrice === itemServices.extraCost &&
+  const disabledAddItemCategory =
+    titleInput.length >= 3 && !!timeInput && !!priceInput
+
+  const disabledSaveButton =
+    (extraPrice === itemServices.extraCost &&
       extraTime === itemServices.extraTime &&
       titleInput === itemServices.serviceName &&
       contentInput === itemServices.serviceText &&
-      timeInput === itemServices.time &&
-      priceInput === itemServices.serviceCost
+      timeInput == itemServices.time &&
+      priceInput == itemServices.serviceCost &&
+      colorServiceComponent.value === indexValueColorService) ||
+    !disabledAddItemCategory
 
   useEffect(() => {
     setExtraPrice(itemServices.extraCost)
@@ -224,6 +230,15 @@ const ServicesItem = ({
     setTimeInput(itemServices.time)
     setPriceInput(itemServices.serviceCost)
     setClickEdit(false)
+    const indexValueColorService = !!itemServices.serviceColor
+      ? itemServices.serviceColor
+      : 1
+    const selectedItemColor = ServiceColors.find(
+      col => col.value === indexValueColorService
+    )
+    if (!!selectedItemColor) {
+      setColorServiceComponent(selectedItemColor)
+    }
   }
 
   const handleClickDelete = () => {
@@ -361,7 +376,7 @@ const ServicesItem = ({
                 uppercase
                 fontIconSize="40"
                 fontSize="14"
-                icon={<MdEdit />}
+                icon={<MdDelete />}
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleClickDelete}
@@ -398,104 +413,110 @@ const ServicesItem = ({
       >
         <BackgroundEdit>
           <BackgroundEditContent onClick={handleClickContent}>
-            Edytuj podkategorie
-            <form onSubmit={handleSaveEdit}>
-              <InputIcon
-                icon={<MdTitle />}
-                placeholder="Tytuł"
-                secondColor
-                value={titleInput}
-                type="text"
-                onChange={e => handleChangeInput(e, setInputTitle)}
-                required
-              />
-              <InputIcon
-                icon={<MdReorder />}
-                placeholder="Treść"
-                secondColor
-                value={contentInput}
-                type="text"
-                onChange={e => handleChangeInput(e, setContentInput)}
-                required
-              />
-              <InputIcon
-                icon={<MdAccessTime />}
-                placeholder="Czas w minutach"
-                secondColor
-                value={timeInput}
-                type="number"
-                onChange={e => handleChangeInput(e, setTimeInput)}
-                required
-              />
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={extraTime}
-                  onChange={() => handleOnChangeCheckbox(setExtraTime)}
-                >
-                  <TextCheckbox>Niestały czas</TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              <InputIcon
-                icon={<FaDollarSign />}
-                placeholder="Cena w złotówkach"
-                secondColor
-                value={priceInput}
-                type="number"
-                onChange={e => handleChangeInput(e, setPriceInput)}
-                required
-              />
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={extraPrice}
-                  onChange={() => handleOnChangeCheckbox(setExtraPrice)}
-                >
-                  <TextCheckbox>Niestała cena</TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              <SelectStyle>
-                <SelectCreated
-                  options={ServiceColors}
-                  value={colorServiceComponent}
-                  handleChange={handleChangeColorService}
-                  isLoading={false}
-                  darkSelect
-                  defaultMenuIsOpen={false}
-                  placeholder="Wybierz kolor usługi..."
-                  marginAuto={false}
-                  closeMenuOnSelect
-                  maxMenuHeight={100}
-                  deleteItem={false}
+            <TitleItemCategoryTitleAction>
+              Edytuj usługę
+            </TitleItemCategoryTitleAction>
+            <PaddingContent>
+              <form onSubmit={handleSaveEdit}>
+                <InputIcon
+                  icon={<MdTitle />}
+                  placeholder="Tytuł"
+                  secondColor
+                  value={titleInput}
+                  type="text"
+                  onChange={e => handleChangeInput(e, setInputTitle)}
+                  required
+                  validText="Minimum 3 znaki"
                 />
-              </SelectStyle>
-              <ButtonsAddPosition>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="40"
-                    fontSize="13"
-                    icon={<MdArrowBack />}
-                    onClick={handleResetEdit}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
+                <InputIcon
+                  icon={<MdReorder />}
+                  placeholder="Treść"
+                  secondColor
+                  value={contentInput}
+                  type="text"
+                  onChange={e => handleChangeInput(e, setContentInput)}
+                />
+                <InputIcon
+                  icon={<MdAccessTime />}
+                  placeholder="Czas w minutach"
+                  secondColor
+                  value={timeInput}
+                  type="number"
+                  onChange={e => handleChangeInput(e, setTimeInput)}
+                  required
+                  validText="Wymagana wartość"
+                />
+                <CheckboxStyle siteProps={siteProps}>
+                  <Checkbox
+                    theme="material-checkbox"
+                    value={extraTime}
+                    onChange={() => handleOnChangeCheckbox(setExtraTime)}
+                  >
+                    <TextCheckbox>Niestały czas</TextCheckbox>
+                  </Checkbox>
+                </CheckboxStyle>
+                <InputIcon
+                  icon={<FaDollarSign />}
+                  placeholder="Cena w złotówkach"
+                  secondColor
+                  value={priceInput}
+                  type="number"
+                  onChange={e => handleChangeInput(e, setPriceInput)}
+                  required
+                  validText="Wymagana wartość"
+                />
+                <CheckboxStyle siteProps={siteProps}>
+                  <Checkbox
+                    theme="material-checkbox"
+                    value={extraPrice}
+                    onChange={() => handleOnChangeCheckbox(setExtraPrice)}
+                  >
+                    <TextCheckbox>Niestała cena</TextCheckbox>
+                  </Checkbox>
+                </CheckboxStyle>
+                <SelectStyle>
+                  <SelectCreated
+                    options={ServiceColors}
+                    value={colorServiceComponent}
+                    handleChange={handleChangeColorService}
+                    isLoading={false}
+                    darkSelect
+                    defaultMenuIsOpen={false}
+                    placeholder="Wybierz kolor usługi..."
+                    marginAuto={false}
+                    closeMenuOnSelect
+                    maxMenuHeight={100}
+                    deleteItem={false}
                   />
-                </ButtonMargin>
-                <ButtonMarginSubmit type="submit">
-                  <ButtonIcon
-                    title="Zapisz"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="15"
-                    icon={<MdLibraryAdd />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={disabledSaveButton}
-                  />
-                </ButtonMarginSubmit>
-              </ButtonsAddPosition>
-            </form>
+                </SelectStyle>
+                <ButtonsAddPosition>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Anuluj"
+                      uppercase
+                      fontIconSize="40"
+                      fontSize="13"
+                      icon={<MdArrowBack />}
+                      onClick={handleResetEdit}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                    />
+                  </ButtonMargin>
+                  <ButtonMarginSubmit type="submit">
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="13"
+                      icon={<MdLibraryAdd />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={disabledSaveButton}
+                    />
+                  </ButtonMarginSubmit>
+                </ButtonsAddPosition>
+              </form>
+            </PaddingContent>
           </BackgroundEditContent>
         </BackgroundEdit>
       </CSSTransition>
@@ -525,7 +546,7 @@ const ServicesItem = ({
                 <ButtonIcon
                   title="Usuń"
                   uppercase
-                  fontIconSize="40"
+                  fontIconSize="20"
                   fontSize="14"
                   icon={<MdDeleteForever />}
                   customColorButton={Colors(siteProps).dangerColorDark}

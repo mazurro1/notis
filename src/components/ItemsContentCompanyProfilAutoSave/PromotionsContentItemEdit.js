@@ -420,6 +420,7 @@ const PromotionsContentItemEdit = ({
               setActualCalendarDate={handleSelectTimeStart}
               setIsDataActive={handleCloseDateCalendarStart}
               minDateActive={true}
+              minDateDefault={selectedTimeStart}
               maxDate={userSelectedTime ? selectedTimeEnd : null}
               activeData={new Date(selectedTimeStart)}
             />

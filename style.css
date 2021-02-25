@@ -65,7 +65,8 @@ h6 {
   margin-bottom: 1.25rem;
   letter-spacing: var(--mainSpacing);
 }
-a {
+a,
+input {
   text-decoration: none;
   font-family: "Poppins-Regular", sans-serif;
   font-weight: 500;
