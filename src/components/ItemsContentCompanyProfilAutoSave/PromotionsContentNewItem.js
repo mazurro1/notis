@@ -34,10 +34,15 @@ const BackgroundEditContent = styled.div`
   position: relative;
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
+  overflow: hidden;
 `
+
+const PaddingContent = styled.div`
+  padding: 10px;
+`
+
 const ButtonTextPositionHappy = styled.div`
   display: flex;
   flex-direction: row;
@@ -82,6 +87,13 @@ const CheckboxStyle = styled.div`
     color: ${props => Colors(props.siteProps).textNormalBlack};
     border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const PromotionsContentNewItem = ({
@@ -245,104 +257,118 @@ const PromotionsContentNewItem = ({
       >
         <BackgroundEdit>
           <BackgroundEditContent siteProps={siteProps}>
-            <TitleRightColumn
+            <TitleRightColumnEdit
               isCompanyEditProfil={setEditPromotions}
               siteProps={siteProps}
             >
               Nowa promocja
-            </TitleRightColumn>
-            <SelectStyles>
-              <SelectCreated
-                options={mapServices}
-                value={selectedServicesIds}
-                handleChange={handleChangeServicesIds}
-                placeholder="Zaznaczone usługi"
-                defaultMenuIsOpen={false}
-                widthAuto
-                isClearable={false}
-                isMulti
-                closeMenuOnSelect={false}
-                darkSelect
-                onlyText
+            </TitleRightColumnEdit>
+            <PaddingContent>
+              <SelectStyles>
+                <SelectCreated
+                  options={mapServices}
+                  value={selectedServicesIds}
+                  handleChange={handleChangeServicesIds}
+                  placeholder="Zaznaczone usługi"
+                  defaultMenuIsOpen={false}
+                  widthAuto
+                  isClearable={false}
+                  isMulti
+                  closeMenuOnSelect={false}
+                  darkSelect
+                  onlyText
+                />
+              </SelectStyles>
+              <div>
+                <MarginButtonTime>
+                  <ButtonIcon
+                    title={
+                      !!datePromotionStart
+                        ? `Start: ${datePromotionStart}, 0:00`
+                        : "Data promocji"
+                    }
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaCalendarDay />}
+                    secondColors
+                    onClick={handleClickDatePickerStart}
+                  />
+                </MarginButtonTime>
+              </div>
+              <div>
+                <MarginButtonTime>
+                  <ButtonIcon
+                    title={
+                      !!datePromotionEnd
+                        ? `Koniec: ${datePromotionEnd}, 23:59`
+                        : "Data promocji"
+                    }
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaCalendarDay />}
+                    secondColors
+                    onClick={handleClickDatePickerEnd}
+                  />
+                </MarginButtonTime>
+              </div>
+              <InputIcon
+                icon={<FaPercentage />}
+                placeholder="Wysokość promocji"
+                value={promotionPercent}
+                type="number"
+                onChange={handleChangePercent}
+                required
+                secondColor
+                validText="Wymagana wartość"
               />
-            </SelectStyles>
-            <div>
-              <MarginButtonTime>
-                <ButtonIcon
-                  title={
-                    !!datePromotionStart
-                      ? `Start: ${datePromotionStart}, 0:00`
-                      : "Data promocji"
-                  }
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaCalendarDay />}
-                  secondColors
-                  onClick={handleClickDatePickerStart}
-                />
-              </MarginButtonTime>
-            </div>
-            <div>
-              <MarginButtonTime>
-                <ButtonIcon
-                  title={
-                    !!datePromotionEnd
-                      ? `Koniec: ${datePromotionEnd}, 23:59`
-                      : "Data promocji"
-                  }
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaCalendarDay />}
-                  secondColors
-                  onClick={handleClickDatePickerEnd}
-                />
-              </MarginButtonTime>
-            </div>
-            <InputIcon
-              icon={<FaPercentage />}
-              placeholder="Wysokość promocji"
-              value={promotionPercent}
-              type="number"
-              onChange={handleChangePercent}
-              required
-              secondColor
-            />
-            <CheckboxStyle siteProps={siteProps}>
-              <Checkbox
-                theme="material-checkbox"
-                value={disabledPromotion}
-                onChange={handleChangeDisabledPromotion}
-              >
-                <TextCheckbox siteProps={siteProps}>
-                  Wyłącz promocje
-                </TextCheckbox>
-              </Checkbox>
-            </CheckboxStyle>
-            <ButtonTextPositionHappy>
-              <MarginButton>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaArrowLeft />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleResetAdd}
-                />
-              </MarginButton>
-              <MarginButton>
-                <ReactTooltip
-                  id="disabledButtonSave"
-                  effect="float"
-                  multiline={true}
+              <CheckboxStyle siteProps={siteProps}>
+                <Checkbox
+                  theme="material-checkbox"
+                  value={disabledPromotion}
+                  onChange={handleChangeDisabledPromotion}
                 >
-                  <span>Uzupełnij wszystkie pola.</span>
-                </ReactTooltip>
-                {!disabledSave ? (
-                  <div data-tip data-for="disabledButtonSave">
+                  <TextCheckbox siteProps={siteProps}>
+                    Wyłącz promocje
+                  </TextCheckbox>
+                </Checkbox>
+              </CheckboxStyle>
+              <ButtonTextPositionHappy>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleResetAdd}
+                  />
+                </MarginButton>
+                <MarginButton>
+                  <ReactTooltip
+                    id="disabledButtonSave"
+                    effect="float"
+                    multiline={true}
+                  >
+                    <span>Uzupełnij wszystkie pola.</span>
+                  </ReactTooltip>
+                  {!disabledSave ? (
+                    <div data-tip data-for="disabledButtonSave">
+                      <ButtonIcon
+                        title="Dodaj"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaSave />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={!disabledSave}
+                      />
+                    </div>
+                  ) : (
                     <ButtonIcon
                       title="Dodaj"
                       uppercase
@@ -351,24 +377,13 @@ const PromotionsContentNewItem = ({
                       icon={<FaSave />}
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
+                      onClick={handleSaveHappyHour}
                       disabled={!disabledSave}
                     />
-                  </div>
-                ) : (
-                  <ButtonIcon
-                    title="Dodaj"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaSave />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleSaveHappyHour}
-                    disabled={!disabledSave}
-                  />
-                )}
-              </MarginButton>
-            </ButtonTextPositionHappy>
+                  )}
+                </MarginButton>
+              </ButtonTextPositionHappy>
+            </PaddingContent>
           </BackgroundEditContent>
         </BackgroundEdit>
       </CSSTransition>

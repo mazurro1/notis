@@ -70,7 +70,7 @@ const RightContent = styled.div`
   }
 `
 
-const PriceService = styled.span`
+const PriceService = styled.div`
   display: inline-block;
   background-color: red;
   font-size: 0.8rem;
@@ -103,6 +103,10 @@ const WrapPrices = styled.div`
   position: relative;
   display: inline-block;
   top: -2px;
+
+  @media all and (max-width: 990px) {
+    display: block;
+  }
 `
 
 const ProductEnable = styled.div`

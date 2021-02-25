@@ -7,6 +7,8 @@ import InputIcon from "../InputIcon"
 import { Colors } from "../../common/Colors"
 import { validURL, convertLinkToHttps } from "../../common/Functions"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
+import { addAlertItem } from "../../state/actions"
+import { useDispatch } from "react-redux"
 
 const ButtonPosition = styled.div`
   display: flex;
@@ -43,15 +45,18 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
   overflow-y: auto;
 `
 
+const PaddingContent = styled.div`
+  padding: 10px;
+`
+
 const HeightComponentLinks = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "190px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "350px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -84,6 +89,13 @@ const IconLinkToSite = styled.button`
   }
 `
 
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
+`
+
 const OurLinksContent = ({
   TitleRightColumn,
   isCompanyEditProfil = false,
@@ -101,6 +113,8 @@ const OurLinksContent = ({
   const [facebookInput, setFacebookInput] = useState(linkFacebook)
   const [instagramInput, setInstagramInput] = useState(linkInstagram)
   const [websiteInput, setWebsiteInput] = useState(linkiWebsite)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setFacebookInput(linkFacebook)
@@ -120,7 +134,7 @@ const OurLinksContent = ({
 
   const disabledButtonSave =
     (facebookInput !== linkFacebook ||
-      instagramInput !== linkFacebook ||
+      instagramInput !== linkInstagram ||
       websiteInput !== linkiWebsite) &&
     (isUrlFacebook || facebookInput.length === 0) &&
     (isUrlInstagram || instagramInput.length === 0) &&
@@ -128,7 +142,9 @@ const OurLinksContent = ({
 
   const handleSaveButton = e => {
     e.preventDefault()
-
+    if (!isUrlFacebook || !isUrlInstagram || !isUrlWebsite) {
+      dispatch(addAlertItem("Niepoprawny link", "red"))
+    }
     if (disabledButtonSave) {
       const facebookInputWithHttps = convertLinkToHttps(facebookInput)
       const instagramInputWithHttps = convertLinkToHttps(instagramInput)
@@ -245,62 +261,71 @@ const OurLinksContent = ({
                 onClick={handleClickContent}
                 siteProps={siteProps}
               >
-                <form onSubmit={handleSaveButton}>
-                  <InputIcon
-                    icon={<FaFacebook />}
-                    placeholder="Facebook"
-                    type="text"
-                    secondColor={isCompanyEditProfil}
-                    onChange={e => handleChangeInputs(e, setFacebookInput)}
-                    value={facebookInput}
-                  />
-                  <InputIcon
-                    icon={<FaInstagram />}
-                    placeholder="Instagram"
-                    type="text"
-                    secondColor={isCompanyEditProfil}
-                    onChange={e => handleChangeInputs(e, setInstagramInput)}
-                    value={instagramInput}
-                  />
-                  <InputIcon
-                    icon={<FaChrome />}
-                    placeholder="Strona www"
-                    type="text"
-                    secondColor={isCompanyEditProfil}
-                    onChange={e => handleChangeInputs(e, setWebsiteInput)}
-                    value={websiteInput}
-                  />
-                  <ButtonPosition>
-                    <>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Cofnij"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="12"
-                          icon={<FaArrowLeft />}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
-                          onClick={handleResetButton}
-                        />
-                      </ButtonMargin>
-                    </>
-                    <ButtonSubmit type="submit">
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Zapisz"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="14"
-                          icon={<FaSave />}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                          disabled={!disabledButtonSave}
-                        />
-                      </ButtonMargin>
-                    </ButtonSubmit>
-                  </ButtonPosition>
-                </form>
+                <TitleRightColumnEdit siteProps={siteProps}>
+                  Edycja linków
+                </TitleRightColumnEdit>
+                <PaddingContent>
+                  <form onSubmit={handleSaveButton}>
+                    <InputIcon
+                      icon={<FaFacebook />}
+                      placeholder="Facebook"
+                      type="text"
+                      secondColor={isCompanyEditProfil}
+                      onChange={e => handleChangeInputs(e, setFacebookInput)}
+                      value={facebookInput}
+                    />
+                    <InputIcon
+                      icon={<FaInstagram />}
+                      placeholder="Instagram"
+                      type="text"
+                      secondColor={isCompanyEditProfil}
+                      onChange={e => handleChangeInputs(e, setInstagramInput)}
+                      value={instagramInput}
+                    />
+                    <InputIcon
+                      icon={<FaChrome />}
+                      placeholder="Strona www"
+                      type="text"
+                      secondColor={isCompanyEditProfil}
+                      onChange={e => handleChangeInputs(e, setWebsiteInput)}
+                      value={websiteInput}
+                    />
+                    <ButtonPosition>
+                      <>
+                        <ButtonMargin>
+                          <ButtonIcon
+                            title="Cofnij"
+                            uppercase
+                            fontIconSize="16"
+                            fontSize="13"
+                            icon={<FaArrowLeft />}
+                            customColorButton={
+                              Colors(siteProps).dangerColorDark
+                            }
+                            customColorIcon={Colors(siteProps).dangerColor}
+                            onClick={handleResetButton}
+                          />
+                        </ButtonMargin>
+                      </>
+                      <ButtonSubmit type="submit">
+                        <ButtonMargin>
+                          <ButtonIcon
+                            title="Zapisz"
+                            uppercase
+                            fontIconSize="16"
+                            fontSize="13"
+                            icon={<FaSave />}
+                            customColorButton={
+                              Colors(siteProps).successColorDark
+                            }
+                            customColorIcon={Colors(siteProps).successColor}
+                            disabled={!disabledButtonSave}
+                          />
+                        </ButtonMargin>
+                      </ButtonSubmit>
+                    </ButtonPosition>
+                  </form>
+                </PaddingContent>
               </BackgroundEditContent>
             </BackgroundEdit>
           </CSSTransition>

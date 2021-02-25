@@ -8,6 +8,7 @@ import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { Colors } from "../../common/Colors"
 import { fetchSaveOpeningHoursCompany } from "../../state/actions"
 import { useDispatch } from "react-redux"
+import { arraysEqual } from "../../common/Functions"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -27,8 +28,9 @@ const OpeningHoursContent = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
 }) => {
-  const [openingHoursComponent, setOpeningHoursComponent] = useState(false)
+  const [openingHoursComponent, setOpeningHoursComponent] = useState(null)
   const [arrayHoursData, setArrayHoursData] = useState([])
+  const [defaultArray, setDefaultArray] = useState([])
 
   const dispatch = useDispatch()
 
@@ -44,6 +46,7 @@ const OpeningHoursContent = ({
         disabled: hoursDate[key].disabled,
       })
     }
+    setDefaultArray(transformedHoursData)
     setArrayHoursData(transformedHoursData)
     setEditableOpeningHours(false)
   }, [editMode, company]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -249,6 +252,11 @@ const OpeningHoursContent = ({
     setArrayHoursData(newArrToResetOneDay)
   }
 
+  const disabledSaveHours = arraysEqual(
+    !!arrayHoursData ? arrayHoursData : [],
+    !!defaultArray ? defaultArray : []
+  )
+
   const handleSaveAllComponent = () => {
     dispatch(
       fetchSaveOpeningHoursCompany(
@@ -315,6 +323,7 @@ const OpeningHoursContent = ({
                     customColorButton={Colors(siteProps).successColorDark}
                     customColorIcon={Colors(siteProps).successColor}
                     onClick={handleSaveAllComponent}
+                    disabled={disabledSaveHours}
                   />
                 </MarginButton>
               </ButtonEditPosition>

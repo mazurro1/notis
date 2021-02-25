@@ -49,10 +49,14 @@ const BackgroundEditContent = styled.div`
       ? "transparent"
       : Colors(props.siteProps).companyItemBackground};
   color: ${props => Colors(props.siteProps).textNormalBlack};
-  padding: 10px;
   padding-bottom: 5px;
   border-radius: 5px;
   max-height: 90%;
+  overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const ButtonsDeletePosition = styled.div`
@@ -66,13 +70,6 @@ const ButtonMargin = styled.div`
   margin: 5px;
 `
 
-const TextAddDayOff = styled.div`
-  font-size: 1.05rem;
-  display: inline-block;
-  color: ${props => Colors(props.siteProps).textNormalBlack};
-  border-bottom: 2px solid ${props => Colors(props.siteProps).secondColor};
-`
-
 const DaysOffContentAdd = ({
   handleClickContent,
   handleAddClose,
@@ -82,6 +79,7 @@ const DaysOffContentAdd = ({
   takeDateActive,
   setTakeDateActive,
   handleAddNewDayOff,
+  TitleRightColumnEdit,
 }) => {
   const [calendarDayOffDate, setCalendarDayOffDate] = useState(null)
 
@@ -128,46 +126,49 @@ const DaysOffContentAdd = ({
             onClick={handleClickContent}
             siteProps={siteProps}
           >
-            <TextAddDayOff siteProps={siteProps}>
+            <TitleRightColumnEdit siteProps={siteProps}>
               Dodawanie wolnego dnia
-            </TextAddDayOff>
-            <ButtonAddDayOff>
-              <ButtonIcon
-                title={!!calendarDayOffDate ? selectedDate : "Wybierz dzień"}
-                uppercase
-                fontIconSize="18"
-                fontSize="14"
-                icon={<FaCalendarDay />}
-                secondColors
-                onClick={handleClickAddNewDate}
-              />
-            </ButtonAddDayOff>
-            <ButtonsDeletePosition>
-              <ButtonMargin>
+            </TitleRightColumnEdit>
+            <PaddingContent>
+              <ButtonAddDayOff>
                 <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="14"
-                  icon={<MdArrowBack />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleClose}
-                />
-              </ButtonMargin>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Zapisz"
+                  title={!!calendarDayOffDate ? selectedDate : "Wybierz dzień"}
                   uppercase
                   fontIconSize="18"
                   fontSize="14"
-                  icon={<FaSave />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleAddDayOff}
+                  icon={<FaCalendarDay />}
+                  secondColors
+                  onClick={handleClickAddNewDate}
                 />
-              </ButtonMargin>
-            </ButtonsDeletePosition>
+              </ButtonAddDayOff>
+              <ButtonsDeletePosition>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="14"
+                    icon={<MdArrowBack />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleClose}
+                  />
+                </ButtonMargin>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Zapisz"
+                    uppercase
+                    fontIconSize="18"
+                    fontSize="14"
+                    icon={<FaSave />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleAddDayOff}
+                    disabled={!!!calendarDayOffDate}
+                  />
+                </ButtonMargin>
+              </ButtonsDeletePosition>
+            </PaddingContent>
           </BackgroundEditContent>
         </BackgroundEdit>
       </CSSTransition>

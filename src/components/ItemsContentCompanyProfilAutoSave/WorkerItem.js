@@ -64,7 +64,7 @@ const IconVeryfiedUser = styled.div`
 
 const InputStyles = styled.div`
   input {
-    padding: 5px 10px;
+    /* padding: 5px 10px; */
   }
 `
 
@@ -86,9 +86,9 @@ const DeleteIconPosition = styled.div`
 `
 
 const DeleteIconStyle = styled.div`
-  color: ${props => Colors(props.siteProps).textNormalBlack};
-  padding: 5px;
-  padding-bottom: 0;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  padding: 8px 8px;
+  padding-bottom: 2px;
   cursor: pointer;
   transition-property: background-color;
   transition-duration: 0.3s;
@@ -130,6 +130,8 @@ const WorkerItem = ({
   handleClickActiveWorker,
   activeWorkerUserId,
   BackGroundImageCustomUrl,
+  PaddingContent,
+  TitleRightColumnEdit,
 }) => {
   const [resetConstDays, setResetConstDays] = useState(false)
   const [constTimeWorker, setConstTimeWorker] = useState(false)
@@ -143,7 +145,6 @@ const WorkerItem = ({
   const [workerServicesCategory, setWorkerServicesCategory] = useState([])
   const [workerPermissionsCategory, setWorkerPermissionsCategory] = useState([])
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
-
   const resetWorkerProps = useSelector(state => state.resetWorkerProps)
 
   const selectRef = useRef(null)
@@ -247,7 +248,7 @@ const WorkerItem = ({
 
   useEffect(() => {
     ReactTooltip.rebuild()
-  })
+  }, [])
 
   useEffect(() => {
     setUserEditItem(false)
@@ -451,6 +452,30 @@ const WorkerItem = ({
     setEditConstTimeWorker(true)
   }
 
+  const oldItemWorker = {
+    servicesCategory: item.servicesCategory,
+    permissions: item.permissions,
+    specialization: item.specialization,
+  }
+
+  const mapWorkerPermissionsIdsToValid = workerPermissionsCategory.map(
+    item => item.value
+  )
+
+  const workerServicesCategoryToValid = workerServicesCategory.map(
+    itemValue => itemValue.value
+  )
+
+  const newItemWorker = {
+    servicesCategory: workerServicesCategoryToValid,
+    permissions: mapWorkerPermissionsIdsToValid,
+    specialization: inputSpecialization,
+  }
+
+  const isEq = JSON.stringify(oldItemWorker) == JSON.stringify(newItemWorker)
+
+  const disabledButtonSaveWorkerProps = isEq
+
   return (
     <WorkerItemStyle
       userEditItem={userEditItem}
@@ -516,7 +541,7 @@ const WorkerItem = ({
             <IconVeryfiedUser
               active={item.active}
               data-tip
-              data-for="alertActive"
+              data-for={`alertActive${item._id}`}
               siteProps={siteProps}
             >
               {item.active ? <MdVerifiedUser /> : <MdError />}
@@ -532,7 +557,11 @@ const WorkerItem = ({
                 <MdEmail />
               </IconVeryfiedUser>
             )}
-            <ReactTooltip id="alertActive" effect="float" multiline={true}>
+            <ReactTooltip
+              id={`alertActive${item._id}`}
+              effect="float"
+              multiline={true}
+            >
               {item.active ? (
                 <span>Użytkownik potwierdzony</span>
               ) : (
@@ -553,91 +582,93 @@ const WorkerItem = ({
                 onClick={handleClickContent}
                 siteProps={siteProps}
               >
-                Stanowisko
-                <InputStyles>
-                  <InputIcon
-                    placeholder="Stanowisko"
-                    value={inputSpecialization}
-                    secondColor
-                    onChange={handleInputOnChange}
-                  />
-                </InputStyles>
-                {allCategories.length > 0 && (
-                  <>
-                    <SelectStyle ref={selectRef}>
-                      Wykonywane usługi
+                <TitleRightColumnEdit>Edycja pracownika</TitleRightColumnEdit>
+                <PaddingContent>
+                  <InputStyles>
+                    <InputIcon
+                      placeholder="Stanowisko"
+                      value={inputSpecialization}
+                      secondColor
+                      onChange={handleInputOnChange}
+                    />
+                  </InputStyles>
+                  {allCategories.length > 0 && (
+                    <>
+                      <SelectStyle ref={selectRef}>
+                        Wykonywane usługi
+                        <SelectCreated
+                          widthAuto
+                          defaultMenuIsOpen={false}
+                          options={allCategories}
+                          handleChange={handleChangeSelect}
+                          value={workerServicesCategory}
+                          placeholder="Usługi"
+                          isMulti
+                          closeMenuOnSelect={false}
+                          menuIsOpen
+                          isClearable={false}
+                          darkSelect
+                          onlyText
+                          maxMenuHeight={250}
+                        />
+                      </SelectStyle>
+                    </>
+                  )}
+                  {isAdmin && (
+                    <SelectStyle>
+                      Uprawnienia do
                       <SelectCreated
                         widthAuto
                         defaultMenuIsOpen={false}
-                        options={allCategories}
-                        handleChange={handleChangeSelect}
-                        value={workerServicesCategory}
-                        placeholder="Usługi"
+                        options={Permissions}
+                        handleChange={handleChangeSelectPermissions}
+                        value={workerPermissionsCategory}
+                        placeholder="Uprawnienia"
                         isMulti
                         closeMenuOnSelect={false}
                         menuIsOpen
-                        isClearable={false}
-                        darkSelect
-                        onlyText
                         maxMenuHeight={250}
+                        onlyText
+                        darkSelect
                       />
                     </SelectStyle>
-                  </>
-                )}
-                {isAdmin && (
-                  <SelectStyle>
-                    Uprawnienia do
-                    <SelectCreated
-                      widthAuto
-                      defaultMenuIsOpen={false}
-                      options={Permissions}
-                      handleChange={handleChangeSelectPermissions}
-                      value={workerPermissionsCategory}
-                      placeholder="Uprawnienia"
-                      isMulti
-                      closeMenuOnSelect={false}
-                      menuIsOpen
-                      maxMenuHeight={250}
-                      onlyText
-                      darkSelect
-                    />
-                  </SelectStyle>
-                )}
-                <ButtonContentEdit>
-                  <ButtonStyles>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaArrowLeft />}
+                  )}
+                  <ButtonContentEdit>
+                    <ButtonStyles>
+                      <ButtonIcon
+                        title="Anuluj"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaArrowLeft />}
+                        onClick={handleEditSpecializationReset}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
+                      />
+                    </ButtonStyles>
+                    <ButtonStyles>
+                      <ButtonIcon
+                        title="Zapisz"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="14"
+                        icon={<MdDone />}
+                        onClick={handleSaveSpecialization}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={disabledButtonSaveWorkerProps}
+                      />
+                    </ButtonStyles>
+                  </ButtonContentEdit>
+                  <DeleteIconPosition>
+                    <DeleteIconStyle
                       onClick={handleEditSpecializationReset}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonStyles>
-                  <ButtonStyles>
-                    <ButtonIcon
-                      title="Zapisz"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="14"
-                      icon={<MdDone />}
-                      onClick={handleSaveSpecialization}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      // disabled={!disabledButtonAccept}
-                    />
-                  </ButtonStyles>
-                </ButtonContentEdit>
-                <DeleteIconPosition>
-                  <DeleteIconStyle
-                    onClick={handleEditSpecializationReset}
-                    siteProps={siteProps}
-                  >
-                    <MdClose />
-                  </DeleteIconStyle>
-                </DeleteIconPosition>
+                      siteProps={siteProps}
+                    >
+                      <MdClose />
+                    </DeleteIconStyle>
+                  </DeleteIconPosition>
+                </PaddingContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
@@ -696,50 +727,52 @@ const WorkerItem = ({
                 noBg
                 siteProps={siteProps}
               >
-                <ButtonContent>
-                  <ButtonDeleteStyle
-                    data-tip
-                    data-for="constTimeWork"
-                    data-place="top"
-                  >
-                    <ButtonIcon
-                      title="Stały czas pracy"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaCalendarWeek />}
-                      onClick={handleConstTimeWork}
-                      secondColors
-                    />
-                  </ButtonDeleteStyle>
-                  <ButtonDeleteStyle
-                    data-tip
-                    data-for="timeWork"
-                    data-place="top"
-                  >
-                    <ButtonIcon
-                      title="Zmienny czas pracy"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaCalendarAlt />}
-                      onClick={handleUserTimeWork}
-                      secondColors
-                    />
-                  </ButtonDeleteStyle>
-                  <ButtonDeleteStyle>
-                    <ButtonIcon
-                      title="Wróć"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaArrowLeft />}
-                      onClick={handleChooseTimeWorker}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonDeleteStyle>
-                </ButtonContent>
+                <PaddingContent>
+                  <ButtonContent>
+                    <ButtonDeleteStyle
+                      data-tip
+                      data-for="constTimeWork"
+                      data-place="top"
+                    >
+                      <ButtonIcon
+                        title="Stały czas pracy"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaCalendarWeek />}
+                        onClick={handleConstTimeWork}
+                        secondColors
+                      />
+                    </ButtonDeleteStyle>
+                    <ButtonDeleteStyle
+                      data-tip
+                      data-for="timeWork"
+                      data-place="top"
+                    >
+                      <ButtonIcon
+                        title="Zmienny czas pracy"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaCalendarAlt />}
+                        onClick={handleUserTimeWork}
+                        secondColors
+                      />
+                    </ButtonDeleteStyle>
+                    <ButtonDeleteStyle>
+                      <ButtonIcon
+                        title="Wróć"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaArrowLeft />}
+                        onClick={handleChooseTimeWorker}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
+                      />
+                    </ButtonDeleteStyle>
+                  </ButtonContent>
+                </PaddingContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
@@ -749,6 +782,7 @@ const WorkerItem = ({
             siteProps={siteProps}
             EditUserBackground={EditUserBackground}
             EditUserBackgroundContent={EditUserBackgroundContent}
+            PaddingContent={PaddingContent}
             ButtonContent={ButtonContent}
             ButtonDeleteStyle={ButtonDeleteStyle}
             handleCancelConstTimeWork={handleCancelConstTimeWork}
@@ -758,6 +792,8 @@ const WorkerItem = ({
             handleSaveConstTimeWork={handleSaveConstTimeWork}
             resetConstDays={resetConstDays}
             editedWorkers={editedWorkers}
+            TitleRightColumnEdit={TitleRightColumnEdit}
+            toSaveWorkerHours={toSaveWorkerHours}
           />
         </>
       )}

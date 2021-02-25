@@ -35,9 +35,13 @@ const BackgroundEditContent = styled.div`
   position: relative;
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
+  overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const PositionRelative = styled.div`
@@ -54,6 +58,13 @@ const ButtonTextPositionMap = styled.div`
   justify-content: flex-end;
   align-items: center;
   margin-top: 10px;
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const MapsEditComponent = ({
@@ -112,7 +123,10 @@ const MapsEditComponent = ({
     dispatch(fetchSaveMaps(user.token, user.company._id, maps))
   }
 
-  const disabledButtonSave = latText !== companyLat || longText !== companyLong
+  const disabledButtonSave =
+    (latText !== companyLat || longText !== companyLong) &&
+    !!latText &&
+    !!longText
 
   return (
     <PositionRelative editMap={editMap}>
@@ -152,65 +166,66 @@ const MapsEditComponent = ({
       >
         <BackgroundEdit>
           <BackgroundEditContent siteProps={siteProps}>
-            <TitleRightColumn
-              isCompanyEditProfil={editMap}
-              siteProps={siteProps}
-            >
+            <TitleRightColumnEdit siteProps={siteProps}>
               Edycja mapy
-            </TitleRightColumn>
-            <InputIcon
-              icon={<FaMapMarkerAlt />}
-              placeholder="Wpisz latitude"
-              value={latText}
-              type="number"
-              onChange={e => handleChange(e, setLatText)}
-            />
-            <InputIcon
-              icon={<FaMapMarkerAlt />}
-              placeholder="Wpisz longitude"
-              value={longText}
-              type="number"
-              onChange={e => handleChange(e, setLongText)}
-            />
-            <a
-              href="https://www.latlong.net/convert-address-to-lat-long.html"
-              target="__blank"
-            >
-              <ButtonIcon
-                title="Generator lokalizacji"
-                uppercase
-                fontIconSize="18"
-                fontSize="14"
+            </TitleRightColumnEdit>
+            <PaddingContent>
+              <InputIcon
                 icon={<FaMapMarkerAlt />}
+                placeholder="Latitude"
+                value={latText}
+                type="number"
+                onChange={e => handleChange(e, setLatText)}
+                validText="Wartość wymagana"
               />
-            </a>
-            <ButtonTextPositionMap>
-              <MarginButton>
+              <InputIcon
+                icon={<FaMapMarkerAlt />}
+                placeholder="Longitude"
+                value={longText}
+                type="number"
+                onChange={e => handleChange(e, setLongText)}
+                validText="Wartość wymagana"
+              />
+              <a
+                href="https://www.latlong.net/convert-address-to-lat-long.html"
+                target="__blank"
+              >
                 <ButtonIcon
-                  title="Cofnij"
+                  title="Generator lokalizacji"
                   uppercase
-                  fontIconSize="16"
+                  fontIconSize="18"
                   fontSize="14"
-                  icon={<FaArrowLeft />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleReset}
+                  icon={<FaMapMarkerAlt />}
                 />
-              </MarginButton>
-              <MarginButton>
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaSave />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleSaveMap}
-                  disabled={!disabledButtonSave}
-                />
-              </MarginButton>
-            </ButtonTextPositionMap>
+              </a>
+              <ButtonTextPositionMap>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Cofnij"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleReset}
+                  />
+                </MarginButton>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Zapisz"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaSave />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleSaveMap}
+                    disabled={!disabledButtonSave}
+                  />
+                </MarginButton>
+              </ButtonTextPositionMap>
+            </PaddingContent>
           </BackgroundEditContent>
         </BackgroundEdit>
       </CSSTransition>

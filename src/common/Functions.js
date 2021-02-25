@@ -296,6 +296,17 @@ export const sortItemsInArrayOnlyNumber = arrayToSort => {
   return arrayToSort
 }
 
+export const sortItemsInArrayDaysOff = arrayToSort => {
+  arrayToSort.sort((a, b) => {
+    const firstItemToSort = new Date(a.year, a.month - 1, a.day)
+    const secondItemToSort = new Date(b.year, b.month - 1, b.day)
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+  return arrayToSort
+}
+
 export const changeCategoryToInWorker = (
   arrayWorkers,
   arrayName,
@@ -594,4 +605,14 @@ export function useOutsideAlerter(ref) {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [ref]) // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+export const objectsEqual = (o1, o2) =>
+  Object.keys(o1).length === Object.keys(o2).length &&
+  Object.keys(o1).every(p => o1[p] === o2[p])
+
+export const arraysEqual = (a1, a2) => {
+  return (
+    a1.length === a2.length && a1.every((o, idx) => objectsEqual(o, a2[idx]))
+  )
 }

@@ -1,4 +1,4 @@
-export const chartErnings = (companyStats, companyName) => {
+export const chartErnings = (companyStats, companyName, isAdmin) => {
   const allStats = []
   const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
     const actualDate = new Date()
@@ -18,22 +18,24 @@ export const chartErnings = (companyStats, companyName) => {
   })
 
   filterCompanyStatsNoActiveAndDate.forEach(state => {
-    const findIndexAllCompany = allStats.findIndex(
-      item => item.userId === "company"
-    )
-    if (findIndexAllCompany >= 0) {
-      allStats[findIndexAllCompany].allCosts =
-        allStats[findIndexAllCompany].allCosts + state.costReserwation
-      allStats[findIndexAllCompany].countReserwations =
-        allStats[findIndexAllCompany].countReserwations + 1
-    } else {
-      const dateToChar = {
-        allCosts: state.costReserwation,
-        countReserwations: 1,
-        userId: "company",
-        user: companyName.toUpperCase(),
+    if (isAdmin) {
+      const findIndexAllCompany = allStats.findIndex(
+        item => item.userId === "company"
+      )
+      if (findIndexAllCompany >= 0) {
+        allStats[findIndexAllCompany].allCosts =
+          allStats[findIndexAllCompany].allCosts + state.costReserwation
+        allStats[findIndexAllCompany].countReserwations =
+          allStats[findIndexAllCompany].countReserwations + 1
+      } else {
+        const dateToChar = {
+          allCosts: state.costReserwation,
+          countReserwations: 1,
+          userId: "company",
+          user: companyName.toUpperCase(),
+        }
+        allStats.push(dateToChar)
       }
-      allStats.push(dateToChar)
     }
 
     const findIndexInAllStats = allStats.findIndex(
@@ -84,7 +86,7 @@ export const chartErnings = (companyStats, companyName) => {
   }
 }
 
-export const chartResState = (companyStats, companyName) => {
+export const chartResState = (companyStats, companyName, isAdmin) => {
   const allStats = []
   const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
     const actualDate = new Date()
@@ -107,37 +109,38 @@ export const chartResState = (companyStats, companyName) => {
     const validVisitFinished =
       state.visitCanceled || state.visitNotFinished ? false : true
 
-    const findIndexAllCompany = allStats.findIndex(
-      item => item.userId === "company"
-    )
-    if (findIndexAllCompany >= 0) {
-      if (state.visitCanceled) {
-        allStats[findIndexAllCompany].visitCanceled =
-          allStats[findIndexAllCompany].visitCanceled + 1
-      } else if (state.visitNotFinished) {
-        allStats[findIndexAllCompany].visitNotFinished =
-          allStats[findIndexAllCompany].visitNotFinished + 1
+    if (isAdmin) {
+      const findIndexAllCompany = allStats.findIndex(
+        item => item.userId === "company"
+      )
+      if (findIndexAllCompany >= 0) {
+        if (state.visitCanceled) {
+          allStats[findIndexAllCompany].visitCanceled =
+            allStats[findIndexAllCompany].visitCanceled + 1
+        } else if (state.visitNotFinished) {
+          allStats[findIndexAllCompany].visitNotFinished =
+            allStats[findIndexAllCompany].visitNotFinished + 1
+        } else {
+          allStats[findIndexAllCompany].visitFinished =
+            allStats[findIndexAllCompany].visitFinished + 1
+        }
+        allStats[findIndexAllCompany].countReserwations =
+          allStats[findIndexAllCompany].countReserwations + 1
       } else {
-        allStats[findIndexAllCompany].visitFinished =
-          allStats[findIndexAllCompany].visitFinished + 1
+        const dateToChar = {
+          countReserwations: 1,
+          visitCanceled: state.visitCanceled ? 1 : 0,
+          visitNotFinished: state.visitNotFinished ? 1 : 0,
+          visitFinished: validVisitFinished ? 1 : 0,
+          activeHappyHour: !!state.activeHappyHour ? 1 : 0,
+          activePromotion: !!state.activePromotion ? 1 : 0,
+          activeStamp: !!state.activeStamp ? 1 : 0,
+          userId: "company",
+          user: companyName.toUpperCase(),
+        }
+        allStats.push(dateToChar)
       }
-      allStats[findIndexAllCompany].countReserwations =
-        allStats[findIndexAllCompany].countReserwations + 1
-    } else {
-      const dateToChar = {
-        countReserwations: 1,
-        visitCanceled: state.visitCanceled ? 1 : 0,
-        visitNotFinished: state.visitNotFinished ? 1 : 0,
-        visitFinished: validVisitFinished ? 1 : 0,
-        activeHappyHour: !!state.activeHappyHour ? 1 : 0,
-        activePromotion: !!state.activePromotion ? 1 : 0,
-        activeStamp: !!state.activeStamp ? 1 : 0,
-        userId: "company",
-        user: companyName.toUpperCase(),
-      }
-      allStats.push(dateToChar)
     }
-
     const findIndexInAllStats = allStats.findIndex(
       item => item.userId === state.toWorkerUserId._id
     )
@@ -241,7 +244,7 @@ export const chartResState = (companyStats, companyName) => {
   }
 }
 
-export const chartServicesState = (companyStats, services) => {
+export const chartServicesState = (companyStats, services, isAdmin) => {
   const allStats = []
   const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
     const actualDate = new Date()
@@ -298,7 +301,7 @@ export const chartServicesState = (companyStats, services) => {
   }
 }
 
-export const chartMonthsState = (companyStats, allMonths) => {
+export const chartMonthsState = (companyStats, allMonths, isAdmin) => {
   const allStats = []
   const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
     const actualDate = new Date()

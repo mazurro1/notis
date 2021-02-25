@@ -83,26 +83,35 @@ const CompanyStatistics = ({ siteProps, user }) => {
 
   const dispatch = useDispatch()
 
+  const isAdmin = user.userId === user.company.owner
+
   useEffect(() => {
     if (!!companyStats && chartPicker) {
       let statsConvertedCharts = null
       if (chartPicker.value === 1) {
         statsConvertedCharts = chartErnings(
           companyStats.stats,
-          user.company.name
+          user.company.name,
+          isAdmin
         )
       } else if (chartPicker.value === 2) {
         statsConvertedCharts = chartResState(
           companyStats.stats,
-          user.company.name
+          user.company.name,
+          isAdmin
         )
       } else if (chartPicker.value === 3) {
         statsConvertedCharts = chartServicesState(
           companyStats.stats,
-          companyStats.services
+          companyStats.services,
+          isAdmin
         )
       } else if (chartPicker.value === 4) {
-        statsConvertedCharts = chartMonthsState(companyStats.stats, AllMonths)
+        statsConvertedCharts = chartMonthsState(
+          companyStats.stats,
+          AllMonths,
+          isAdmin
+        )
       }
 
       if (!!statsConvertedCharts) {

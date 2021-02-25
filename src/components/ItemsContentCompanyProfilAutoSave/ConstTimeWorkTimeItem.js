@@ -35,11 +35,14 @@ const EditUserBackgroundContentCosntHour = styled.div`
     props.noBg ? "transparent" : Colors(props.siteProps).companyItemBackground};
   z-index: 10;
   border-radius: 5px;
-  padding: 5px;
   font-size: 0.9rem;
   transition-property: height;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const EditUserBackgroundConstHour = styled.div`
@@ -98,13 +101,14 @@ const ConstTimeWorkTime = ({
   const [dayTimeEnd, setDayTimeEnd] = useState(false)
   const [disabledDay, setDisabledDay] = useState(true)
   useEffect(() => {
-    if ((!!finallSelectedDayOfTheMonth && resetDay) || !!resetConstDays) {
-      setDayStart(finallSelectedDayOfTheMonth.startWorking)
-      setDayEnd(finallSelectedDayOfTheMonth.endWorking)
-      setDisabledDay(finallSelectedDayOfTheMonth.disabled)
-      setResetDay(false)
+    if (!!finallSelectedDayOfTheMonth) {
+      if ((!!finallSelectedDayOfTheMonth && resetDay) || !!resetConstDays) {
+        setDayStart(finallSelectedDayOfTheMonth.startWorking)
+        setDayEnd(finallSelectedDayOfTheMonth.endWorking)
+        setDisabledDay(finallSelectedDayOfTheMonth.disabled)
+        setResetDay(false)
+      }
     }
-    // }
   }, [
     finallSelectedDayOfTheMonth,
     resetDay,
@@ -203,68 +207,70 @@ const ConstTimeWorkTime = ({
           >
             <div>
               <DayHoursStyle>{item.title}:</DayHoursStyle>
-              <ContentDateButtons>
-                <div>
-                  Początek pracy:
-                  <ButtonIcon
-                    title={dayStart.length > 0 ? dayStart : "0:00"}
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<MdEdit />}
-                    onClick={handleEditStartDay}
-                    secondColors
-                  />
-                </div>
-                <div>
-                  Koniec pracy:
-                  <ButtonIcon
-                    title={dayEnd.length > 0 ? dayEnd : "0:00"}
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<MdEdit />}
-                    onClick={handleEditEndDay}
-                    secondColors
-                  />
-                </div>
-              </ContentDateButtons>
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={disabledDay}
-                  onChange={handleChangeCheckbox}
-                >
-                  <TextCheckbox>Dzień wolony</TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              <ButtonContent>
-                <ButtonDeleteStyle>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    onClick={handleCloseDay}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                  />
-                </ButtonDeleteStyle>
-                <ButtonDeleteStyle>
-                  <ButtonIcon
-                    title="Zapisz"
-                    uppercase
-                    fontIconSize="18"
-                    fontSize="14"
-                    icon={<FaSave />}
-                    onClick={handleSave}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={disabledButtonSave}
-                  />
-                </ButtonDeleteStyle>
-              </ButtonContent>
+              <PaddingContent>
+                <ContentDateButtons>
+                  <div>
+                    Początek pracy:
+                    <ButtonIcon
+                      title={dayStart.length > 0 ? dayStart : "0:00"}
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<MdEdit />}
+                      onClick={handleEditStartDay}
+                      secondColors
+                    />
+                  </div>
+                  <div>
+                    Koniec pracy:
+                    <ButtonIcon
+                      title={dayEnd.length > 0 ? dayEnd : "0:00"}
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<MdEdit />}
+                      onClick={handleEditEndDay}
+                      secondColors
+                    />
+                  </div>
+                </ContentDateButtons>
+                <CheckboxStyle siteProps={siteProps}>
+                  <Checkbox
+                    theme="material-checkbox"
+                    value={disabledDay}
+                    onChange={handleChangeCheckbox}
+                  >
+                    <TextCheckbox>Dzień wolony</TextCheckbox>
+                  </Checkbox>
+                </CheckboxStyle>
+                <ButtonContent>
+                  <ButtonDeleteStyle>
+                    <ButtonIcon
+                      title="Anuluj"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<FaArrowLeft />}
+                      onClick={handleCloseDay}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                    />
+                  </ButtonDeleteStyle>
+                  <ButtonDeleteStyle>
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="18"
+                      fontSize="14"
+                      icon={<FaSave />}
+                      onClick={handleSave}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={disabledButtonSave}
+                    />
+                  </ButtonDeleteStyle>
+                </ButtonContent>
+              </PaddingContent>
             </div>
           </EditUserBackgroundContentCosntHour>
         </EditUserBackgroundConstHour>
@@ -285,6 +291,7 @@ const ConstTimeWorkTime = ({
               setSelectedTime={handleSetTimeStart}
               timeTimePicker={dayStart}
               secondColor
+              maxTime={dayEnd}
             />
           </EditUserBackgroundContentCosntHour>
         </EditUserBackgroundConstHour>
@@ -305,6 +312,7 @@ const ConstTimeWorkTime = ({
               setSelectedTime={handleSetTimeEnd}
               timeTimePicker={dayEnd}
               secondColor
+              minTime={dayStart}
             />
           </EditUserBackgroundContentCosntHour>
         </EditUserBackgroundConstHour>

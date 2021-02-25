@@ -28,6 +28,9 @@ const ConstTimeWorkTime = ({
   handleSaveConstTimeWorkItem,
   handleCloseConstTimeWorkItem,
   resetConstDays,
+  PaddingContent,
+  TitleRightColumnEdit,
+  toSaveWorkerHours = [],
 }) => {
   const mapDaysOfTheWeek = DaySOfTheWeek.map(item => {
     const selectedDayOfTheMonth = itemWorker.constantWorkingHours.find(
@@ -47,7 +50,7 @@ const ConstTimeWorkTime = ({
         handleClickContent={handleClickContent}
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
-        DayHoursStyle={DayHoursStyle}
+        DayHoursStyle={TitleRightColumnEdit}
         handleSaveConstTimeWorkItem={handleSaveConstTimeWorkItem}
         handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
         resetConstDays={resetConstDays}
@@ -67,34 +70,39 @@ const ConstTimeWorkTime = ({
           siteProps={siteProps}
           noRelative
         >
-          <DayHoursStyle siteProps={siteProps}>GODZINY PRACY</DayHoursStyle>
-          {mapDaysOfTheWeek}
-          <ButtonContent>
-            <ButtonDeleteStyle>
-              <ButtonIcon
-                title="Anuluj"
-                uppercase
-                fontIconSize="16"
-                fontSize="14"
-                icon={<FaArrowLeft />}
-                onClick={() => handleCancelConstTimeWork(itemWorker._id)}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-              />
-            </ButtonDeleteStyle>
-            <ButtonDeleteStyle>
-              <ButtonIcon
-                title="Zapisz"
-                uppercase
-                fontIconSize="18"
-                fontSize="14"
-                icon={<FaSave />}
-                onClick={() => handleSaveConstTimeWork(itemWorker._id)}
-                customColorButton={Colors(siteProps).successColorDark}
-                customColorIcon={Colors(siteProps).successColor}
-              />
-            </ButtonDeleteStyle>
-          </ButtonContent>
+          <TitleRightColumnEdit siteProps={siteProps}>
+            GODZINY PRACY
+          </TitleRightColumnEdit>
+          <PaddingContent>
+            {mapDaysOfTheWeek}
+            <ButtonContent>
+              <ButtonDeleteStyle>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  onClick={() => handleCancelConstTimeWork(itemWorker._id)}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonDeleteStyle>
+              <ButtonDeleteStyle>
+                <ButtonIcon
+                  title="Zapisz"
+                  uppercase
+                  fontIconSize="18"
+                  fontSize="14"
+                  icon={<FaSave />}
+                  onClick={() => handleSaveConstTimeWork(itemWorker._id)}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={toSaveWorkerHours.length === 0}
+                />
+              </ButtonDeleteStyle>
+            </ButtonContent>
+          </PaddingContent>
         </EditUserBackgroundContent>
       </EditUserBackground>
     </CSSTransition>

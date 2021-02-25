@@ -131,7 +131,7 @@ const TitleAddOpnion = styled.div`
   position: relative;
   padding: 5px 10px;
   color: ${props => Colors(props.siteProps).textNormalWhite};
-  background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  background-color: ${props => Colors(props.siteProps).secondColor};
   margin-bottom: 10px;
   transition-property: background-color, color;
   transition-duration: 0.3s;
@@ -250,6 +250,10 @@ const OpinionsComponentItem = ({
     ).toString("ascii")
   }
 
+  const disabledSaveOpinion = !!opinion.replayOpinionMessage
+    ? opinionText.length < 2 || opinionText === opinion.replayOpinionMessage
+    : opinionText.length < 2
+
   return (
     <div
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
@@ -332,6 +336,7 @@ const OpinionsComponentItem = ({
                   placeholder="Odpowiedz"
                   value={opinionText}
                   onChange={handleChangeTextOpinion}
+                  validText="Minimum 2 znaki"
                 />
                 <ButtonsAddPositionOpinion>
                   <ButtonMargin>
@@ -360,7 +365,7 @@ const OpinionsComponentItem = ({
                       onClick={handleAddReplayFetch}
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
-                      disabled={opinionText.length < 2}
+                      disabled={disabledSaveOpinion}
                     />
                   </ButtonMargin>
                 </ButtonsAddPositionOpinion>

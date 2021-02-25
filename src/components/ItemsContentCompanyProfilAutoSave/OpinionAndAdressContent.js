@@ -148,9 +148,13 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
+  overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const ButtonSubmit = styled.button`
@@ -227,6 +231,20 @@ const AllReserwationTime = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
+`
+
+const TextStyleInfo = styled.div`
+  font-size: 1rem;
+  font-family: "Poppins-Medium", sans-serif;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  margin-top: 10px;
 `
 
 const OpinionAndAdressContent = ({
@@ -595,112 +613,126 @@ const OpinionAndAdressContent = ({
                 onClick={handleClickContentAddWorkers}
                 siteProps={siteProps}
               >
-                <form onSubmit={handleOnSubmit}>
-                  <InputIcon
-                    icon={<MdWork />}
-                    placeholder="Nazwa firmy"
-                    type="text"
-                    secondColor
-                    onChange={e => handleChangeInputs(e, setCompanyNameInput)}
-                    value={companyNameInput}
-                    required
-                  />
-                  <InputIcon
-                    icon={<MdLocationCity />}
-                    placeholder="Miejscowość"
-                    type="text"
-                    secondColor
-                    onChange={e => handleChangeInputs(e, setCityInput)}
-                    value={cityInput}
-                    required
-                  />
-                  <InputIcon
-                    icon={<FaMapSigns />}
-                    placeholder="Dzielnica"
-                    type="text"
-                    secondColor
-                    onChange={e => handleChangeInputs(e, setDiscrictInput)}
-                    value={discrictInput}
-                    required
-                  />
-                  <InputIcon
-                    icon={<MdLocationOn />}
-                    placeholder="Adres firmy"
-                    type="text"
-                    secondColor
-                    onChange={e => handleChangeInputs(e, setAdressInput)}
-                    value={adressInput}
-                    required
-                  />
-                  <InputIcon
-                    icon={<MdPhoneAndroid />}
-                    placeholder="Numer telefonu"
-                    type="number"
-                    secondColor
-                    onChange={e => handleChangeInputs(e, setPhoneInput)}
-                    value={phoneInput}
-                    required
-                  />
-                  Rezerwacja co:
-                  <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
-                  Rezerwacja do:
-                  <AllReserwationTime>
-                    {mapReserwationDelayMonth}
-                  </AllReserwationTime>
-                  Typ działalności:
-                  <SelectCreated
-                    options={AllIndustries[siteProps.language]}
-                    value={industriesComponent}
-                    handleChange={handleChangeIndystries}
-                    placeholder="Typy działalności"
-                    defaultMenuIsOpen={false}
-                    widthAuto
-                    isMulti
-                    isClearable={false}
-                    darkSelect
-                    onlyText
-                    maxMenuHeight={200}
-                  />
-                  <CheckboxStyle siteProps={siteProps}>
-                    <Checkbox
-                      theme="material-checkbox"
-                      value={companyPausedItem}
-                      onChange={handleChangeCheckbox}
-                    >
-                      <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
-                    </Checkbox>
-                  </CheckboxStyle>
-                  <ButtonPosition>
-                    <ButtonMargin>
-                      <>
-                        <ButtonIcon
-                          title="Cofnij"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="12"
-                          icon={<FaArrowLeft />}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
-                          onClick={handleResetInputs}
-                        />
-                      </>
-                    </ButtonMargin>
-                    <ButtonSubmit type="submit">
+                <TitleRightColumnEdit siteProps={siteProps}>
+                  Edycja ustawień
+                </TitleRightColumnEdit>
+                <PaddingContent>
+                  <form onSubmit={handleOnSubmit}>
+                    <InputIcon
+                      icon={<MdWork />}
+                      placeholder="Nazwa firmy"
+                      type="text"
+                      secondColor
+                      onChange={e => handleChangeInputs(e, setCompanyNameInput)}
+                      value={companyNameInput}
+                      required
+                    />
+                    <InputIcon
+                      icon={<MdLocationCity />}
+                      placeholder="Miejscowość"
+                      type="text"
+                      secondColor
+                      onChange={e => handleChangeInputs(e, setCityInput)}
+                      value={cityInput}
+                      required
+                    />
+                    <InputIcon
+                      icon={<FaMapSigns />}
+                      placeholder="Dzielnica"
+                      type="text"
+                      secondColor
+                      onChange={e => handleChangeInputs(e, setDiscrictInput)}
+                      value={discrictInput}
+                      required
+                    />
+                    <InputIcon
+                      icon={<MdLocationOn />}
+                      placeholder="Adres firmy"
+                      type="text"
+                      secondColor
+                      onChange={e => handleChangeInputs(e, setAdressInput)}
+                      value={adressInput}
+                      required
+                    />
+                    <InputIcon
+                      icon={<MdPhoneAndroid />}
+                      placeholder="Numer telefonu"
+                      type="number"
+                      secondColor
+                      onChange={e => handleChangeInputs(e, setPhoneInput)}
+                      value={phoneInput}
+                      required
+                    />
+                    <TextStyleInfo siteProps={siteProps}>
+                      Rezerwacja co:
+                    </TextStyleInfo>
+                    <AllReserwationTime>
+                      {mapReserwationDelay}
+                    </AllReserwationTime>
+                    <TextStyleInfo siteProps={siteProps}>
+                      Rezerwacja do:
+                    </TextStyleInfo>
+                    <AllReserwationTime>
+                      {mapReserwationDelayMonth}
+                    </AllReserwationTime>
+                    <SelectCreated
+                      options={AllIndustries[siteProps.language]}
+                      value={industriesComponent}
+                      handleChange={handleChangeIndystries}
+                      placeholder="Typy działalności"
+                      defaultMenuIsOpen={false}
+                      widthAuto
+                      isMulti
+                      isClearable={false}
+                      darkSelect
+                      onlyText
+                      maxMenuHeight={200}
+                    />
+                    <CheckboxStyle siteProps={siteProps}>
+                      <Checkbox
+                        theme="material-checkbox"
+                        value={companyPausedItem}
+                        onChange={handleChangeCheckbox}
+                      >
+                        <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
+                      </Checkbox>
+                    </CheckboxStyle>
+                    <ButtonPosition>
                       <ButtonMargin>
-                        <ButtonIcon
-                          title="Zapisz"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="14"
-                          icon={<FaSave />}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                          disabled={!disabledButtonSubmit}
-                        />
+                        <>
+                          <ButtonIcon
+                            title="Cofnij"
+                            uppercase
+                            fontIconSize="16"
+                            fontSize="12"
+                            icon={<FaArrowLeft />}
+                            customColorButton={
+                              Colors(siteProps).dangerColorDark
+                            }
+                            customColorIcon={Colors(siteProps).dangerColor}
+                            onClick={handleResetInputs}
+                          />
+                        </>
                       </ButtonMargin>
-                    </ButtonSubmit>
-                  </ButtonPosition>
-                </form>
+                      <ButtonSubmit type="submit">
+                        <ButtonMargin>
+                          <ButtonIcon
+                            title="Zapisz"
+                            uppercase
+                            fontIconSize="16"
+                            fontSize="14"
+                            icon={<FaSave />}
+                            customColorButton={
+                              Colors(siteProps).successColorDark
+                            }
+                            customColorIcon={Colors(siteProps).successColor}
+                            disabled={!disabledButtonSubmit}
+                          />
+                        </ButtonMargin>
+                      </ButtonSubmit>
+                    </ButtonPosition>
+                  </form>
+                </PaddingContent>
               </BackgroundEditContent>
             </BackgroundEdit>
           </CSSTransition>

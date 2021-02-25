@@ -91,7 +91,7 @@ const StampsContent = ({
       <ItemsAddHappyHour>
         {isCompanyEditProfil && editStamps && (
           <ButtonIcon
-            title="Dodaj naklejke"
+            title="Dodaj pieczątke"
             uppercase
             fontIconSize="25"
             fontSize="14"

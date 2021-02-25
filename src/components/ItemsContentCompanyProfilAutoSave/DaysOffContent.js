@@ -10,7 +10,7 @@ import ButtonIcon from "../ButtonIcon"
 import DaysOffContentAdd from "./DaysOffContentAdd"
 import { useDispatch } from "react-redux"
 import { addAlertItem, fetchSaveOpeningHoursCompany } from "../../state/actions"
-import { sortItemsInArrayNumber } from "../../common/Functions"
+import { sortItemsInArrayDaysOff } from "../../common/Functions"
 
 const DayOffContent = styled.div`
   display: flex;
@@ -56,6 +56,13 @@ const PaddingBottomStyle = styled.div`
   transition-timing-function: ease;
 `
 
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
+`
+
 const DaysOffContent = ({
   isCompanyEditProfil = false,
   siteProps,
@@ -85,10 +92,8 @@ const DaysOffContent = ({
       return !isInServerData
     })
     const allDaysOff = [...filterArrayDayOff, ...createdDayOff]
-    const sortYear = sortItemsInArrayNumber(allDaysOff, "year")
-    const sortMonth = sortItemsInArrayNumber(sortYear, "month")
-    const sortDay = sortItemsInArrayNumber(sortMonth, "day")
-    setDayOffData(sortDay)
+    const sortedDaysOff = sortItemsInArrayDaysOff(allDaysOff)
+    setDayOffData(sortedDaysOff)
     setEditableDaysOff(false)
     setDeletedDayOff([])
     setCreatedDayOff([])
@@ -102,10 +107,8 @@ const DaysOffContent = ({
       return !isInServerData
     })
     const allDaysOff = [...filterArrayDayOff]
-    const sortYear = sortItemsInArrayNumber(allDaysOff, "year")
-    const sortMonth = sortItemsInArrayNumber(sortYear, "month")
-    const sortDay = sortItemsInArrayNumber(sortMonth, "day")
-    setDayOffData(sortDay)
+    const sortedDaysOff = sortItemsInArrayDaysOff(allDaysOff)
+    setDayOffData(sortedDaysOff)
     setDeletedDayOff([])
     setCreatedDayOff([])
     setTakeDateActive(false)
@@ -162,10 +165,8 @@ const DaysOffContent = ({
         year: Number(newDayOffSplit[2]),
       }
       const allDayOff = [...dayOffData, newDayOff]
-      const sortYear = sortItemsInArrayNumber(allDayOff, "year")
-      const sortMonth = sortItemsInArrayNumber(sortYear, "month")
-      const sortDay = sortItemsInArrayNumber(sortMonth, "day")
-      setDayOffData(sortDay)
+      const sortedDaysOff = sortItemsInArrayDaysOff(allDayOff)
+      setDayOffData(sortedDaysOff)
       const allCreatedDayOff = [...createdDayOff, newDayOff]
       setCreatedDayOff(allCreatedDayOff)
     } else {
@@ -282,6 +283,7 @@ const DaysOffContent = ({
         takeDateActive={takeDateActive}
         setTakeDateActive={setTakeDateActive}
         handleAddNewDayOff={handleAddNewDayOff}
+        TitleRightColumnEdit={TitleRightColumnEdit}
       />
     </PaddingBottomStyle>
   )

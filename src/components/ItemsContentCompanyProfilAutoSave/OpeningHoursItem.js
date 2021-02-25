@@ -2,7 +2,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import { MdEdit } from "react-icons/md"
+import { MdEdit, MdAccessTime, MdTimelapse } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
 import { CSSTransition } from "react-transition-group"
 import TimePickerContent from "../TimePicker"
@@ -57,7 +57,6 @@ const BackgroundEditContent = styled.div`
   position: relative;
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: ${props => (props.active ? "0px" : "10px")};
   border-radius: 5px;
   max-height: 90%;
   overflow-y: auto;
@@ -65,6 +64,10 @@ const BackgroundEditContent = styled.div`
   transition-property: padding-bottom, padding;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+`
+
+const PaddingContent = styled.div`
+  padding: ${props => (props.active ? "0px" : "10px")};
 `
 
 const OpenDate = styled.div`
@@ -106,6 +109,15 @@ const ButtonsTimePicker = styled.div`
 const ButtonTimePickerStyle = styled.div`
   width: 100%;
   padding: 10px;
+  font-size: 0.9rem;
+  font-family: "Poppins-Medium", sans-serif;
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const OpeningHoursItem = ({
@@ -177,24 +189,17 @@ const OpeningHoursItem = ({
     setCheckboxDisabledDay(prevState => !prevState)
   }
 
-  const disabledButtonSave =
-    checkboxDisabledDay !== defaultValue.disabled ||
-    checkboxDisabledDay === defaultValue.disabled ||
-    itemTimeEnd !== defaultValue.end ||
-    itemTimeStart !== defaultValue.start
+  const disabledButtonSave = true
+  // checkboxDisabledDay !== defaultValue.disabled ||
+  // itemTimeEnd !== defaultValue.end || itemTimeStart !== defaultValue.start
 
   const handleSaveChangesTimeDay = () => {
     if (disabledButtonSave) {
-      const timeStartValue =
-        itemTimeStart !== defaultValue.start ? itemTimeStart : null
-      const timeEndValue = itemTimeEnd !== defaultValue.end ? itemTimeEnd : null
+      // const timeStartValue =
+      //   itemTimeStart !== defaultValue.start ? itemTimeStart : null
+      // const timeEndValue = itemTimeEnd !== defaultValue.end ? itemTimeEnd : null
 
-      handleSaveTimeDay(
-        checkboxDisabledDay,
-        timeStartValue,
-        timeEndValue,
-        index
-      )
+      handleSaveTimeDay(checkboxDisabledDay, itemTimeStart, itemTimeEnd, index)
       setItemEditable(false)
     }
   }
@@ -247,69 +252,71 @@ const OpeningHoursItem = ({
             onClick={handleClickContent}
             siteProps={siteProps}
           >
-            <h3>{item.dayName}</h3>
-            <ButtonsTimePicker>
-              <ButtonTimePickerStyle>
-                Otwarcie:
-                <ButtonIcon
-                  title={itemTimeStart}
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                  onClick={handleOpenTimePicker}
-                />
-              </ButtonTimePickerStyle>
-              <ButtonTimePickerStyle>
-                Zamknięcie:
-                <ButtonIcon
-                  title={itemTimeEnd}
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                  onClick={handleCloseTimePicker}
-                />
-              </ButtonTimePickerStyle>
-            </ButtonsTimePicker>
-            <CheckboxStyle siteProps={siteProps}>
-              <Checkbox
-                theme="material-checkbox"
-                value={checkboxDisabledDay}
-                onChange={handleChangeCheckbox}
-              >
-                <TextCheckbox>Nieczynne</TextCheckbox>
-              </Checkbox>
-            </CheckboxStyle>
-            <ButtonEditPosition>
-              <MarginButton>
-                <ButtonIcon
-                  title="Cofnij"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaArrowLeft />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleResetButton}
-                />
-              </MarginButton>
-              <MarginButton>
-                <ButtonIcon
-                  title="Potwierdz"
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="14"
-                  icon={<MdEdit />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  disabled={!disabledButtonSave}
-                  onClick={handleSaveChangesTimeDay}
-                />
-              </MarginButton>
-            </ButtonEditPosition>
+            <TitleRightColumnEdit>{item.dayName}</TitleRightColumnEdit>
+            <PaddingContent>
+              <ButtonsTimePicker>
+                <ButtonTimePickerStyle>
+                  Otwarcie:
+                  <ButtonIcon
+                    title={itemTimeStart}
+                    uppercase
+                    fontIconSize="25"
+                    fontSize="14"
+                    icon={<MdAccessTime />}
+                    secondColors
+                    onClick={handleOpenTimePicker}
+                  />
+                </ButtonTimePickerStyle>
+                <ButtonTimePickerStyle>
+                  Zamknięcie:
+                  <ButtonIcon
+                    title={itemTimeEnd}
+                    uppercase
+                    fontIconSize="25"
+                    fontSize="14"
+                    icon={<MdTimelapse />}
+                    secondColors
+                    onClick={handleCloseTimePicker}
+                  />
+                </ButtonTimePickerStyle>
+              </ButtonsTimePicker>
+              <CheckboxStyle siteProps={siteProps}>
+                <Checkbox
+                  theme="material-checkbox"
+                  value={checkboxDisabledDay}
+                  onChange={handleChangeCheckbox}
+                >
+                  <TextCheckbox>Nieczynne</TextCheckbox>
+                </Checkbox>
+              </CheckboxStyle>
+              <ButtonEditPosition>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Cofnij"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleResetButton}
+                  />
+                </MarginButton>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Potwierdz"
+                    uppercase
+                    fontIconSize="25"
+                    fontSize="14"
+                    icon={<MdEdit />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    disabled={!disabledButtonSave}
+                    onClick={handleSaveChangesTimeDay}
+                  />
+                </MarginButton>
+              </ButtonEditPosition>
+            </PaddingContent>
           </BackgroundEditContent>
         </BackgroundEdit>
       </CSSTransition>
@@ -330,6 +337,7 @@ const OpeningHoursItem = ({
               setSelectedTime={handleSetTimeOpen}
               timeTimePicker={itemTimeStart}
               secondColor
+              maxTime={itemTimeEnd}
             />
           </BackgroundEditContent>
         </BackgroundEdit>
@@ -351,6 +359,7 @@ const OpeningHoursItem = ({
               setSelectedTime={handleSetTimeClose}
               timeTimePicker={itemTimeEnd}
               secondColor
+              minTime={itemTimeStart}
             />
           </BackgroundEditContent>
         </BackgroundEdit>

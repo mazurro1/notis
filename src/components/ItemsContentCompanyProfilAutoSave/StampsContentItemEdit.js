@@ -28,9 +28,13 @@ const BackgroundEditContent = styled.div`
   position: relative;
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
+  overflow: hidden;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const ButtonTextPositionHappy = styled.div`
@@ -67,6 +71,13 @@ const TextCheckbox = styled.span`
   color: ${props => Colors(props.siteProps).secondColor};
   padding-left: 10px;
   user-select: none;
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const StampsContentItemEdit = ({
@@ -156,8 +167,27 @@ const StampsContentItemEdit = ({
       label: item.serviceName,
     }
   })
+  const oldItemToCompare = {
+    countStampsToActive: Number(stamp.countStampsToActive),
+    disabled: stamp.disabled,
+    promotionPercent: Number(stamp.promotionPercent),
+    _id: stamp._id,
+    servicesId: stamp.servicesId,
+  }
 
-  const disabledSave = true
+  const mapOnlyServicesIds = selectedServicesIds.map(item => item.value)
+  const newItemToCompare = {
+    countStampsToActive: Number(stampCount),
+    disabled: disabledStamp,
+    promotionPercent: Number(promotionPercent),
+    _id: stamp._id,
+    servicesId: mapOnlyServicesIds,
+  }
+
+  const isEq =
+    JSON.stringify(oldItemToCompare) == JSON.stringify(newItemToCompare)
+
+  const disabledSave = !isEq
 
   return (
     <CSSTransition
@@ -168,71 +198,89 @@ const StampsContentItemEdit = ({
     >
       <BackgroundEdit>
         <BackgroundEditContent>
-          <SelectStyles>
-            <SelectCreated
-              options={mapServices}
-              value={selectedServicesIds}
-              handleChange={handleChangeServicesIds}
-              placeholder="Zaznaczone usługi"
-              defaultMenuIsOpen={false}
-              widthAuto
-              isClearable={false}
-              darkSelect
-              isMulti
-              closeMenuOnSelect={false}
-              onlyText
-            />
-          </SelectStyles>
-          <InputIcon
-            icon={<FaPercentage />}
-            placeholder="Wysokość promocji"
-            value={promotionPercent}
-            type="number"
-            onChange={handleChangePercent}
-            required
-            secondColor
-          />
-          <InputIcon
-            icon={<FaStamp />}
-            placeholder="Ilość naklejek"
-            value={stampCount}
-            type="number"
-            onChange={handleChangeStampCount}
-            required
-            secondColor
-          />
-          <CheckboxStyle siteProps={siteProps}>
-            <Checkbox
-              theme="material-checkbox"
-              value={disabledStamp}
-              onChange={handleChangeDisabledStamp}
-            >
-              <TextCheckbox siteProps={siteProps}>Wyłącz naklejki</TextCheckbox>
-            </Checkbox>
-          </CheckboxStyle>
-          <ButtonTextPositionHappy>
-            <MarginButton>
-              <ButtonIcon
-                title="Anuluj"
-                uppercase
-                fontIconSize="16"
-                fontSize="14"
-                icon={<FaArrowLeft />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleResetEdit}
+          <TitleRightColumnEdit>Edytuj pieczątke</TitleRightColumnEdit>
+          <PaddingContent>
+            <SelectStyles>
+              <SelectCreated
+                options={mapServices}
+                value={selectedServicesIds}
+                handleChange={handleChangeServicesIds}
+                placeholder="Zaznaczone usługi"
+                defaultMenuIsOpen={false}
+                widthAuto
+                isClearable={false}
+                darkSelect
+                isMulti
+                closeMenuOnSelect={false}
+                onlyText
               />
-            </MarginButton>
-            <MarginButton>
-              <ReactTooltip
-                id="disabledButtonSave"
-                effect="float"
-                multiline={true}
+            </SelectStyles>
+            <InputIcon
+              icon={<FaPercentage />}
+              placeholder="Wysokość promocji"
+              value={promotionPercent}
+              type="number"
+              onChange={handleChangePercent}
+              required
+              secondColor
+              validText="Wymagana wartość"
+            />
+            <InputIcon
+              icon={<FaStamp />}
+              placeholder="Ilość pieczątek"
+              value={stampCount}
+              type="number"
+              onChange={handleChangeStampCount}
+              required
+              secondColor
+              validText="Wymagana wartość"
+            />
+            <CheckboxStyle siteProps={siteProps}>
+              <Checkbox
+                theme="material-checkbox"
+                value={disabledStamp}
+                onChange={handleChangeDisabledStamp}
               >
-                <span>Uzupełnij wszystkie pola.</span>
-              </ReactTooltip>
-              {!disabledSave ? (
-                <div data-tip data-for="disabledButtonSave">
+                <TextCheckbox siteProps={siteProps}>
+                  Wyłącz pieczątki
+                </TextCheckbox>
+              </Checkbox>
+            </CheckboxStyle>
+            <ButtonTextPositionHappy>
+              <MarginButton>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleResetEdit}
+                />
+              </MarginButton>
+              <MarginButton>
+                <ReactTooltip
+                  id="disabledButtonSave"
+                  effect="float"
+                  multiline={true}
+                >
+                  <span>Uzupełnij wszystkie pola.</span>
+                </ReactTooltip>
+                {!disabledSave ? (
+                  <div data-tip data-for="disabledButtonSave">
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="14"
+                      icon={<FaSave />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={!disabledSave}
+                    />
+                  </div>
+                ) : (
                   <ButtonIcon
                     title="Zapisz"
                     uppercase
@@ -241,24 +289,13 @@ const StampsContentItemEdit = ({
                     icon={<FaSave />}
                     customColorButton={Colors(siteProps).successColorDark}
                     customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleSaveEditedStamp}
                     disabled={!disabledSave}
                   />
-                </div>
-              ) : (
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaSave />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleSaveEditedStamp}
-                  disabled={!disabledSave}
-                />
-              )}
-            </MarginButton>
-          </ButtonTextPositionHappy>
+                )}
+              </MarginButton>
+            </ButtonTextPositionHappy>
+          </PaddingContent>
         </BackgroundEditContent>
       </BackgroundEdit>
     </CSSTransition>

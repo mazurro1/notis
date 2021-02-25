@@ -45,9 +45,9 @@ const SelectStyle = styled.div`
 `
 
 const DeleteIconStyle = styled.div`
-  color: black;
-  padding: 5px;
-  padding-bottom: 0;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  padding: 8px 8px;
+  padding-bottom: 2px;
   cursor: pointer;
   transition-property: background-color;
   transition-duration: 0.3s;
@@ -58,7 +58,7 @@ const DeleteIconStyle = styled.div`
 `
 const InputStyles = styled.div`
   input {
-    padding: 5px 10px;
+    /* padding: 5px 10px; */
   }
 `
 
@@ -89,6 +89,8 @@ const OwnerWorker = ({
   handleClickActiveWorker,
   activeWorkerUserId,
   BackGroundImageCustomUrl,
+  PaddingContent,
+  TitleRightColumnEdit,
 }) => {
   const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
@@ -303,6 +305,24 @@ const OwnerWorker = ({
     _id: "owner",
   }
 
+  const oldItemWorker = {
+    servicesCategory: ownerData.servicesCategory,
+    specialization: ownerData.specialization,
+  }
+
+  const workerServicesCategoryToValid = ownerServicesCategory.map(
+    itemValue => itemValue.value
+  )
+
+  const newItemWorker = {
+    servicesCategory: workerServicesCategoryToValid,
+    specialization: inputSpecializationOwner,
+  }
+
+  const isEq = JSON.stringify(oldItemWorker) == JSON.stringify(newItemWorker)
+
+  const disabledButtonSaveWorkerProps = isEq
+
   return (
     <WorkerItemStyle
       userEditItem={ownerEdit}
@@ -361,71 +381,73 @@ const OwnerWorker = ({
                 onClick={handleClickContent}
                 siteProps={siteProps}
               >
-                Stanowisko
-                <InputStyles>
-                  <InputIcon
-                    placeholder="Stanowisko"
-                    value={inputSpecializationOwner}
-                    secondColor
-                    onChange={handleInputOnChange}
-                  />
-                </InputStyles>
-                {allCategories.length > 0 && (
-                  <>
-                    <SelectStyle>
-                      Wykonywane usługi
-                      <SelectCreated
-                        widthAuto
-                        defaultMenuIsOpen={false}
-                        options={allCategories}
-                        handleChange={handleChangeSelectOwner}
-                        value={ownerServicesCategory}
-                        placeholder="Usługi"
-                        isMulti
-                        closeMenuOnSelect={false}
-                        menuIsOpen
-                        isClearable={false}
-                        darkSelect
-                        onlyText
-                        maxMenuHeight={200}
+                <TitleRightColumnEdit>
+                  Edycja administratora
+                </TitleRightColumnEdit>
+                <PaddingContent>
+                  <InputStyles>
+                    <InputIcon
+                      placeholder="Stanowisko"
+                      value={inputSpecializationOwner}
+                      secondColor
+                      onChange={handleInputOnChange}
+                    />
+                  </InputStyles>
+                  {allCategories.length > 0 && (
+                    <>
+                      <SelectStyle>
+                        Wykonywane usługi
+                        <SelectCreated
+                          widthAuto
+                          defaultMenuIsOpen={false}
+                          options={allCategories}
+                          handleChange={handleChangeSelectOwner}
+                          value={ownerServicesCategory}
+                          placeholder="Usługi"
+                          isMulti
+                          closeMenuOnSelect={false}
+                          menuIsOpen
+                          isClearable={false}
+                          darkSelect
+                          onlyText
+                          maxMenuHeight={200}
+                        />
+                      </SelectStyle>
+                    </>
+                  )}
+                  <ButtonContentEdit>
+                    <ButtonStyles>
+                      <ButtonIcon
+                        title="Cofnij"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="14"
+                        icon={<FaArrowLeft />}
+                        onClick={handleResetOwnerSpecialization}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
                       />
-                    </SelectStyle>
-                  </>
-                )}
-                <ButtonContentEdit>
-                  <ButtonStyles>
-                    <ButtonIcon
-                      title="Cofnij"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaArrowLeft />}
-                      onClick={handleResetOwnerSpecialization}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonStyles>
-                  <ButtonStyles>
-                    <ButtonIcon
-                      title="Akceptuj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="14"
-                      icon={<MdDone />}
-                      onClick={handleSaveSpecialization}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      // disabled={
-                      //   inputSpecializationOwner === ownerSpecialization
-                      // }
-                    />
-                  </ButtonStyles>
-                </ButtonContentEdit>
-                <DeleteIconPosition>
-                  <DeleteIconStyle onClick={handleResetOwnerSpecialization}>
-                    <MdClose />
-                  </DeleteIconStyle>
-                </DeleteIconPosition>
+                    </ButtonStyles>
+                    <ButtonStyles>
+                      <ButtonIcon
+                        title="Zapisz"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="14"
+                        icon={<MdDone />}
+                        onClick={handleSaveSpecialization}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={disabledButtonSaveWorkerProps}
+                      />
+                    </ButtonStyles>
+                  </ButtonContentEdit>
+                  <DeleteIconPosition>
+                    <DeleteIconStyle onClick={handleResetOwnerSpecialization}>
+                      <MdClose />
+                    </DeleteIconStyle>
+                  </DeleteIconPosition>
+                </PaddingContent>
               </EditUserBackgroundContent>
             </EditUserBackground>
           </CSSTransition>
@@ -516,6 +538,9 @@ const OwnerWorker = ({
             handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
             handleSaveConstTimeWork={handleSaveConstTimeWork}
             handleResetDay={handleResetDay}
+            PaddingContent={PaddingContent}
+            TitleRightColumnEdit={TitleRightColumnEdit}
+            toSaveWorkerHours={toSaveWorkerHours}
           />
 
           <ReactTooltip

@@ -9,7 +9,7 @@ import { Colors } from "../../common/Colors"
 
 const HeightComponentLinks = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "80px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "150px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -50,10 +50,20 @@ const BackgroundEdit = styled.div`
 const BackgroundEditContent = styled.div`
   width: 90%;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  padding: 10px;
   border-radius: 5px;
   max-height: 90%;
   overflow-y: auto;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const ColumnItemTextarea = ({
@@ -134,52 +144,57 @@ const ColumnItemTextarea = ({
             classNames="popup"
             unmountOnExit
           >
-            <BackgroundEdit
-            // onClick={handleResetButton}
-            >
+            <BackgroundEdit>
               <BackgroundEditContent
                 onClick={handleClickContent}
                 siteProps={siteProps}
               >
-                <form onSubmit={handleSaveButton}>
-                  <TextareaCustom
-                    textareaActive={editable}
-                    value={textTitle}
-                    onChange={handleTextAboutOnChange}
-                    maxLength={1000}
-                    isErrorText={isErrorText}
-                  />
-                  <ButtonPosition>
-                    <ButtonMargin>
-                      <ButtonSubmit>
-                        <ButtonIcon
-                          title="Cofnij"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="14"
-                          icon={<FaArrowLeft />}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
-                          onClick={handleResetButton}
-                        />
-                      </ButtonSubmit>
-                    </ButtonMargin>
-                    <ButtonSubmit type="submit">
+                <TitleRightColumnEdit>Edytuj tekst</TitleRightColumnEdit>
+                <PaddingContent>
+                  <form onSubmit={handleSaveButton}>
+                    <TextareaCustom
+                      textareaActive={editable}
+                      value={textTitle}
+                      onChange={handleTextAboutOnChange}
+                      maxLength={1000}
+                      isErrorText={isErrorText}
+                    />
+                    <ButtonPosition>
                       <ButtonMargin>
-                        <ButtonIcon
-                          title="Zapisz"
-                          uppercase
-                          fontIconSize="16"
-                          fontSize="14"
-                          icon={<FaSave />}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                          disabled={disabledSave}
-                        />
+                        <ButtonSubmit>
+                          <ButtonIcon
+                            title="Cofnij"
+                            uppercase
+                            fontIconSize="16"
+                            fontSize="14"
+                            icon={<FaArrowLeft />}
+                            customColorButton={
+                              Colors(siteProps).dangerColorDark
+                            }
+                            customColorIcon={Colors(siteProps).dangerColor}
+                            onClick={handleResetButton}
+                          />
+                        </ButtonSubmit>
                       </ButtonMargin>
-                    </ButtonSubmit>
-                  </ButtonPosition>
-                </form>
+                      <ButtonSubmit type="submit">
+                        <ButtonMargin>
+                          <ButtonIcon
+                            title="Zapisz"
+                            uppercase
+                            fontIconSize="16"
+                            fontSize="14"
+                            icon={<FaSave />}
+                            customColorButton={
+                              Colors(siteProps).successColorDark
+                            }
+                            customColorIcon={Colors(siteProps).successColor}
+                            disabled={disabledSave}
+                          />
+                        </ButtonMargin>
+                      </ButtonSubmit>
+                    </ButtonPosition>
+                  </form>
+                </PaddingContent>
               </BackgroundEditContent>
             </BackgroundEdit>
           </CSSTransition>

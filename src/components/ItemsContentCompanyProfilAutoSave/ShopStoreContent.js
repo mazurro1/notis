@@ -28,7 +28,8 @@ const PositionRelative = styled.div`
     props.active
       ? Colors(props.siteProps).textNormalWhite
       : Colors(props.siteProps).textNormalBlack};
-  transition-property: background-color, color, border-color, padding;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
+  transition-property: background-color, color, border-color, padding, opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 `
@@ -177,7 +178,11 @@ const ShopStoreContent = ({
     deletedCategory.length > 0
 
   return (
-    <PositionRelative active={editShopStore} siteProps={siteProps}>
+    <PositionRelative
+      active={editShopStore}
+      siteProps={siteProps}
+      disabled={disabledEditButtons && !editShopStore}
+    >
       {(companyShopStore.length > 0 ||
         (isCompanyEditProfil && editMode && editShopStore)) && (
         <>

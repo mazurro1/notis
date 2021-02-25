@@ -82,11 +82,15 @@ const EditUserBackgroundContent = styled.div`
   background-color: ${props =>
     props.noBg ? "transparent" : Colors(props.siteProps).companyItemBackground};
   border-radius: 5px;
-  padding: 5px;
   font-size: 0.9rem;
+  cursor: default;
   transition-property: height;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+`
+
+const PaddingContent = styled.div`
+  padding: 10px;
 `
 
 const EditUserStyle = styled.div`
@@ -150,7 +154,10 @@ const WorkerCircle = styled.div`
   align-items: center;
   font-size: 1.8rem;
   border: 2px solid transparent;
-  border-color: ${props => Colors(props.siteProps).primaryColor};
+  border-color: ${props =>
+    props.isCompanyEditProfil
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
 `
 
 const WorkerName = styled.div`
@@ -177,7 +184,6 @@ const ContentAddWorkers = styled.div`
   position: relative;
   background-color: ${props => Colors(props.siteProps).companyItemBackground};
   width: 90%;
-  padding: 10px;
   border-radius: 5px;
 `
 
@@ -202,9 +208,10 @@ const CloseAddWorkers = styled.div`
   position: absolute;
   top: 0px;
   right: 0px;
-  padding: 0px 5px;
-  padding-top: 5px;
+  padding: 2px 8px;
+  padding-top: 8px;
   cursor: pointer;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -266,6 +273,15 @@ const BackGroundImageCustomUrl = styled.div`
   border-radius: 50%;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
   overflow: hidden;
+`
+
+const TitleRightColumnEdit = styled.div`
+  padding: 5px 10px;
+  background-color: ${props => Colors(props.siteProps).secondColor};
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  font-size: 1rem;
 `
 
 const OurWorkersContent = ({
@@ -401,12 +417,14 @@ const OurWorkersContent = ({
         EditUserBackground={EditUserBackground}
         DeleteUserIconStyle={DeleteUserIconStyle}
         EditUserBackgroundContent={EditUserBackgroundContent}
+        PaddingContent={PaddingContent}
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
         editedWorkers={editedWorkers}
         handleClickActiveWorker={handleClickActiveWorker}
         activeWorkerUserId={activeWorkerUserId}
         BackGroundImageCustomUrl={BackGroundImageCustomUrl}
+        TitleRightColumnEdit={TitleRightColumnEdit}
       />
     )
   })
@@ -439,6 +457,7 @@ const OurWorkersContent = ({
             EditIconStyle={EditIconStyle}
             EditUserBackground={EditUserBackground}
             EditUserBackgroundContent={EditUserBackgroundContent}
+            PaddingContent={PaddingContent}
             allCategories={allCategories}
             siteProps={siteProps}
             ButtonContent={ButtonContent}
@@ -457,6 +476,7 @@ const OurWorkersContent = ({
             handleClickActiveWorker={handleClickActiveWorker}
             activeWorkerUserId={activeWorkerUserId}
             BackGroundImageCustomUrl={BackGroundImageCustomUrl}
+            TitleRightColumnEdit={TitleRightColumnEdit}
           />
           {mapWorkers}
         </WorkerContent>
@@ -519,7 +539,7 @@ const OurWorkersContent = ({
             <ButtonIcon
               title="Anuluj"
               uppercase
-              fontIconSize="25"
+              fontIconSize="20"
               fontSize="14"
               icon={<FaArrowLeft />}
               customColorButton={Colors(siteProps).dangerColorDark}
@@ -542,46 +562,50 @@ const OurWorkersContent = ({
               onClick={handleClickContentAddWorkers}
               siteProps={siteProps}
             >
-              <form onSubmit={handleSentInvation}>
-                <InputIcon
-                  icon={<FaUserPlus />}
-                  placeholder="Wpisz adres email"
-                  value={emailInput}
-                  type="email"
-                  secondColor
-                  onChange={e => handleChange(e, setEmailInput)}
-                  required
-                />
-                <ButtonSentPosition>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleOnClickBg}
+              <TitleRightColumnEdit>Dodawanie pracownika</TitleRightColumnEdit>
+              <PaddingContent>
+                <form onSubmit={handleSentInvation}>
+                  <InputIcon
+                    icon={<FaUserPlus />}
+                    placeholder="Adres email"
+                    value={emailInput}
+                    type="email"
+                    secondColor
+                    onChange={e => handleChange(e, setEmailInput)}
+                    required
+                    validText="Wartość wymagana"
                   />
-                </ButtonSentPosition>
-                <ButtonSentPosition>
-                  <ButtonAddWorker type="submit">
+                  <ButtonSentPosition>
                     <ButtonIcon
-                      title="Wyślij zaproszenie"
+                      title="Anuluj"
                       uppercase
                       fontIconSize="20"
                       fontSize="14"
-                      icon={<MdEmail />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={!!!emailInput}
+                      icon={<FaArrowLeft />}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                      onClick={handleOnClickBg}
                     />
-                  </ButtonAddWorker>
-                </ButtonSentPosition>
-              </form>
-              <CloseAddWorkers onClick={handleOnClickBg}>
-                <MdClose />
-              </CloseAddWorkers>
+                  </ButtonSentPosition>
+                  <ButtonSentPosition>
+                    <ButtonAddWorker type="submit">
+                      <ButtonIcon
+                        title="Wyślij zaproszenie"
+                        uppercase
+                        fontIconSize="20"
+                        fontSize="14"
+                        icon={<MdEmail />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={!!!emailInput}
+                      />
+                    </ButtonAddWorker>
+                  </ButtonSentPosition>
+                </form>
+                <CloseAddWorkers onClick={handleOnClickBg}>
+                  <MdClose />
+                </CloseAddWorkers>
+              </PaddingContent>
             </ContentAddWorkers>
           </PositionAddWorkers>
         </CSSTransition>
