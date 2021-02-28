@@ -23,7 +23,7 @@ const TitlePagePopup = styled.div`
 `
 
 const PopupWindow = styled.div`
-  position: fixed;
+  position: ${props => props.position};
   top: 0;
   right: 0;
   left: 0;
@@ -101,6 +101,8 @@ const Popup = ({
   title = null,
   opacity = false,
   secondColors = false,
+  close = true,
+  position = "fixed",
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -109,6 +111,11 @@ const Popup = ({
 
   const handleOnClickContent = e => {
     e.stopPropagation()
+  }
+  const handleClickBackground = () => {
+    if (close) {
+      handleOnClick()
+    }
   }
 
   const isTitleOn = !!title
@@ -162,7 +169,11 @@ const Popup = ({
       classNames={opacity ? "opacitySpinner" : "popup"}
       unmountOnExit
     >
-      <PopupWindow onClick={handleOnClick} calendar={calendar}>
+      <PopupWindow
+        onClick={handleClickBackground}
+        calendar={calendar}
+        position={position}
+      >
         {contentComponent}
       </PopupWindow>
     </CSSTransition>

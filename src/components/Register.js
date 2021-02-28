@@ -1,14 +1,16 @@
 import React, { useState } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
-import { MdAccountBox, MdEmail, MdPhoneAndroid, MdLock } from "react-icons/md"
+import { MdAccountBox, MdEmail, MdLock } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import { FaUserPlus } from "react-icons/fa"
 import ButtonIcon from "./ButtonIcon"
-import { fetchRegisterUser } from "../state/actions"
+import { fetchRegisterUser, addAlertItem } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
+import { validEmail } from "../common/Functions"
+import InputPhone from "./InputPhone"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -49,26 +51,57 @@ const RegisterContent = () => {
     setValue(e.target.value)
   }
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    dispatch(
-      fetchRegisterUser(
-        emailInput,
-        nameInput,
-        surnameInput,
-        phoneInput,
-        repeatPasswordInput
-      )
-    )
-  }
-
   const validButtonRegistration =
     emailInput.length > 0 &&
-    passwordInput.length > 0 &&
-    nameInput.length > 0 &&
-    surnameInput.length > 0 &&
-    phoneInput.length > 0 &&
+    passwordInput.length > 5 &&
+    nameInput.length >= 3 &&
+    surnameInput.length >= 3 &&
+    phoneInput.length >= 9 &&
     repeatPasswordInput === passwordInput
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    const isEmailValid = validEmail(emailInput)
+    const testName = /^[a-z]+$/i.test(nameInput)
+    const testSurname = /^[a-z]+$/i.test(surnameInput)
+
+    if (!isEmailValid) {
+      dispatch(addAlertItem("Nieprawidłowy adres e-mail", "red"))
+    }
+
+    if (!testName || nameInput.length < 3) {
+      dispatch(addAlertItem("Nieprawidłowe imię", "red"))
+    }
+
+    if (!testSurname || surnameInput.length < 3) {
+      dispatch(addAlertItem("Nieprawidłowe nazwisko", "red"))
+    }
+
+    if (passwordInput !== repeatPasswordInput) {
+      dispatch(addAlertItem("Hasła nie są identyczne", "red"))
+    }
+
+    if (passwordInput.length < 5) {
+      dispatch(addAlertItem("Hasła musi być mieć minimum 5 znaków", "red"))
+    }
+
+    if (phoneInput.length < 9) {
+      dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
+    }
+    const validOtherParams = isEmailValid && testName && testSurname
+
+    if (validButtonRegistration && validOtherParams) {
+      dispatch(
+        fetchRegisterUser(
+          emailInput,
+          nameInput,
+          surnameInput,
+          phoneInput,
+          repeatPasswordInput
+        )
+      )
+    }
+  }
 
   const tooltipButtonRegister = !validButtonRegistration && (
     <ReactTooltip id="alertRegistration" effect="float" multiline={true}>
@@ -85,6 +118,7 @@ const RegisterContent = () => {
         type="email"
         onChange={e => handleChange(e, setEmailInput)}
         required
+        validText="Jeden adres e-mail na konto"
       />
       <InputIcon
         icon={<MdAccountBox />}
@@ -92,6 +126,7 @@ const RegisterContent = () => {
         value={nameInput}
         onChange={e => handleChange(e, setNameInput)}
         required
+        validText="Minimum 3 znaki"
       />
       <InputIcon
         icon={<MdAccountBox />}
@@ -99,31 +134,9 @@ const RegisterContent = () => {
         value={surnameInput}
         onChange={e => handleChange(e, setSurnameInput)}
         required
+        validText="Minimum 3 znaki"
       />
-      <InputIcon
-        icon={<MdPhoneAndroid />}
-        placeholder="Numer telefonu"
-        value={phoneInput}
-        type="number"
-        onChange={e => handleChange(e, setPhoneInput)}
-        required
-      />
-      {/* <InputIcon
-        icon={<FaCalendarDay />}
-        placeholder="Dzień urodzenia"
-        value={dateBirth}
-        type="number"
-        onChange={e => handleChange(e, setDateBirth)}
-        required
-      />
-      <InputIcon
-        icon={<FaCalendar />}
-        placeholder="Miesiąc urodzenia"
-        value={monthBirth}
-        type="number"
-        onChange={e => handleChange(e, setMonthBirth)}
-        required
-      /> */}
+      <InputPhone setPhoneNumber={setPhoneInput} />
       <InputIcon
         icon={<MdLock />}
         placeholder="Hasło"
@@ -131,6 +144,8 @@ const RegisterContent = () => {
         type="password"
         onChange={e => handleChange(e, setPasswordInput)}
         required
+        validText="Minimum 5 znaków"
+        showPassword
       />
       <InputIcon
         icon={<MdLock />}
@@ -139,12 +154,14 @@ const RegisterContent = () => {
         type="password"
         onChange={e => handleChange(e, setRepeatPasswordInput)}
         required
+        showPassword
+        validText="Takie samo jak hasło"
       />
       <RegulationsText siteProps={siteProps}>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
-      <ButtonLoginRegister disabled={!validButtonRegistration} type="submit">
+      <ButtonLoginRegister type="submit">
         <div data-tip data-for="alertRegistration">
           <ButtonIcon
             title="ZAREJESTRUJ KONTO"

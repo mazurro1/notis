@@ -1,13 +1,16 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import { useSelector } from "react-redux"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
+import ReactTooltip from "react-tooltip"
 
 const InputStyled = styled.input`
   padding: 15px 15px;
   padding-bottom: 10px;
   padding-top: 20px;
   padding-left: ${props => (props.icon ? "50px" : "10px")};
+  padding-right: ${props => (props.paddingEye ? "40px" : "15px")};
   margin-top: 5px;
   margin-bottom: ${props => (props.validText ? "0px" : "5px")};
   border: none;
@@ -115,6 +118,36 @@ const TextValue = styled.div`
   transition-timing-function: ease;
 `
 
+const ShowPassword = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  color: ${props =>
+    props.active
+      ? Colors(props.siteProps).primaryColorDark
+      : Colors(props.siteProps).darkColor};
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+`
+
+const IconEyeClick = styled.div`
+  cursor: pointer;
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  &:hover {
+    transform: scale(1.2);
+  }
+`
+
 const InputIcon = ({
   placeholder = "",
   icon = "",
@@ -126,9 +159,19 @@ const InputIcon = ({
   secondColor = false,
   required = false,
   validText = "",
+  showPassword = false,
 }) => {
   const [inputActive, setInputActive] = useState(false)
+  const [clickEye, setClickEye] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
+
+  useEffect(() => {
+    setClickEye(false)
+  }, [])
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [clickEye])
 
   const handleOnFocus = () => {
     setInputActive(true)
@@ -136,6 +179,13 @@ const InputIcon = ({
   const handleOnBlur = () => {
     setInputActive(false)
   }
+  const handleClickEye = () => {
+    setClickEye(prevState => !prevState)
+  }
+
+  const randomNumber =
+    Math.floor(Math.random() * (999999999 - 111111111 + 1)) + 111111111
+
   return (
     <AllInput>
       <PositionRelative>
@@ -155,13 +205,14 @@ const InputIcon = ({
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
           inputActive={inputActive}
-          type={type}
+          type={!clickEye ? type : "text"}
           maxLength={maxLength}
           max={max}
           secondColor={secondColor}
           required={required}
           siteProps={siteProps}
           validText={!!validText}
+          paddingEye={showPassword && type === "password"}
         />
         {!!icon && (
           <IconInput
@@ -181,6 +232,26 @@ const InputIcon = ({
         >
           {validText}
         </ValidTextInput>
+      )}
+      {showPassword && type === "password" && (
+        <>
+          <ReactTooltip
+            id={`showPassword${randomNumber}`}
+            effect="float"
+            multiline={true}
+          >
+            <span>{clickEye ? "Anuluj podgląd hasła" : "Podgląd hasła"}</span>
+          </ReactTooltip>
+          <ShowPassword active={clickEye} siteProps={siteProps}>
+            <IconEyeClick
+              onClick={handleClickEye}
+              data-tip
+              data-for={`showPassword${randomNumber}`}
+            >
+              {clickEye ? <FaEye /> : <FaEyeSlash />}
+            </IconEyeClick>
+          </ShowPassword>
+        </>
       )}
     </AllInput>
   )

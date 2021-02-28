@@ -1,18 +1,24 @@
 import React from "react"
-import { Router } from "@reach/router"
 import ActiveWorker from "../components/ActiveWorker"
 import CompanyPriv from "../components/CompanyPriv"
 
 const ComfirmAddedWorkerToCompany = props => {
+  let dataProps = []
+  if (!!props.location.search) {
+    dataProps = props.location.search.split("&")
+  }
   return (
-    <Router>
-      {!!props.params["*"] ? (
-        <ActiveWorker path="/confirm-added-worker-to-company/:companyId/:workerEmail/:codeToActive" />
+    <>
+      {dataProps.length >= 3 ? (
+        <ActiveWorker
+          companyId={dataProps[0].slice(1)}
+          workerEmail={dataProps[1]}
+          codeToActive={dataProps[2]}
+        />
       ) : (
         <CompanyPriv default />
       )}
-      <CompanyPriv default />
-    </Router>
+    </>
   )
 }
 export default ComfirmAddedWorkerToCompany

@@ -2,13 +2,14 @@ import React, { useRef, useState } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"
-import { MdDelete } from "react-icons/md"
+import { MdDelete, MdEmail, MdCheck } from "react-icons/md"
 import {
   fetchSentAgainActivedEmail,
   fetchActiveAccount,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
+import { Colors } from "../common/Colors"
 
 const BackgroundContent = styled.div`
   background-color: white;
@@ -24,6 +25,7 @@ const PanFieldStyle = styled(PinField)`
   outline: none;
   text-align: center;
   margin: 10px;
+  margin-left: 0;
   background-color: #eeeeee;
   font-size: 1.4rem;
   transition-property: color;
@@ -33,6 +35,10 @@ const PanFieldStyle = styled(PinField)`
   &:disabled {
     color: #bdbdbd;
   }
+`
+
+const TextToActivation = styled.div`
+  font-family: "Poppins-Medium", sans-serif;
 `
 
 const ButtonsUnder = styled.div`
@@ -49,6 +55,7 @@ const ActiveAccount = () => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
   const user = useSelector(state => state.user)
+  const siteProps = useSelector(state => state.siteProps)
   const fieldOneRef = useRef(null)
 
   const dispatch = useDispatch()
@@ -76,23 +83,30 @@ const ActiveAccount = () => {
   return (
     <BackgroundContent>
       {tooltipActive}
-      <PanFieldStyle
-        ref={fieldOneRef}
-        onComplete={code => {
-          setActiveCode(code)
-          setDemoCompleted(true)
-        }}
-        format={k => k.toUpperCase()}
-        disabled={demoCompleted}
-      />
+      <TextToActivation>
+        Kod do aktywacji, który został wysłany na adres e-mail:
+      </TextToActivation>
+      <div>
+        <PanFieldStyle
+          ref={fieldOneRef}
+          onComplete={code => {
+            setActiveCode(code)
+            setDemoCompleted(true)
+          }}
+          format={k => k.toUpperCase()}
+          disabled={demoCompleted}
+          validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+        />
+      </div>
       <ButtonsUnder>
         <ButtonIcon
-          title="Reset pola"
+          title="Resetuj pola"
           uppercase
           fontIconSize="20"
           fontSize="16"
           icon={<MdDelete />}
-          buttonBgDark
+          customColorButton={Colors(siteProps).dangerColorDark}
+          customColorIcon={Colors(siteProps).dangerColor}
           onClick={handleReset}
           disabled={!activeCode.length > 0}
         />
@@ -102,8 +116,7 @@ const ActiveAccount = () => {
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<MdDelete />}
-            buttonBgDark
+            icon={<MdEmail />}
             onClick={handleSentAgain}
           />
         </MarginBottom>
@@ -114,9 +127,11 @@ const ActiveAccount = () => {
               uppercase
               fontIconSize="20"
               fontSize="16"
-              icon={<MdDelete />}
+              icon={<MdCheck />}
               onClick={handleActiveAccount}
               disabled={activeCode.length === 0}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
             />
           </div>
         </MarginBottom>

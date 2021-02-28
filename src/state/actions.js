@@ -6,6 +6,7 @@ import { Site } from "../common/Site"
 // USER ACTIONS
 // USER ACTIONS
 // USER ACTIONS
+export const CHANGE_ACCTIVE_ACCOUNT = "CHANGE_ACCTIVE_ACCOUNT"
 export const CHANGE_BLIND_STYLE = "CHANGE_BLIND_STYLE"
 export const CHANGE_DARK_STYLE = "CHANGE_DARK_STYLE"
 export const CHANGE_SORT_VISIBLE = "CHANGE_SORT_VISIBLE"
@@ -32,6 +33,13 @@ export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
 export const CHANGE_LANGUAGE_STYLE = "CHANGE_LANGUAGE_STYLE"
 export const ADD_NEW_USER_ALERT = "ADD_NEW_USER_ALERT"
 export const CHANGE_ALERT_EXTRA = "CHANGE_ALERT_EXTRA"
+
+export const changeActiveAccount = data => {
+  return {
+    type: CHANGE_ACCTIVE_ACCOUNT,
+    data: data,
+  }
+}
 
 export const changeAlertExtra = (name, value) => {
   return {
@@ -241,7 +249,9 @@ export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
             if (error.response.status === 401) {
               dispatch(logout())
             } else {
-              dispatch(addAlertItem("Błąd podczas logowania się", "red"))
+              dispatch(
+                addAlertItem("Podany login i/lub hasło są nieprawidłowe", "red")
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))
@@ -274,6 +284,9 @@ export const fetchRegisterUser = (email, name, surname, phone, password) => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            }
+            if (error.response.status === 412) {
+              dispatch(addAlertItem("Podany e-mail jest zajęty", "red"))
             } else {
               dispatch(addAlertItem("Błąd podczas tworzenia konta", "red"))
             }
@@ -603,7 +616,7 @@ export const fetchResetPassword = (email, password, codeReset) => {
             if (error.response.status === 401) {
               dispatch(logout())
             } else {
-              dispatch(addAlertItem("Błąd podczas restartowania hasła", "red"))
+              dispatch(addAlertItem("Nieprawidłowy kod do resetowania hasła", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

@@ -1,15 +1,18 @@
 import React, { useState, useRef } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
-import { MdEmail, MdLock, MdClose, MdDone } from "react-icons/md"
+import { MdEmail, MdLock, MdDelete, MdDone } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import {
   fetchSentEmailResetPassword,
   fetchResetPassword,
+  addAlertItem,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ButtonIcon from "../components/ButtonIcon"
 import PinField from "react-pin-field"
+import { validEmail } from "../common/Functions"
+import { Colors } from "../common/Colors"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -36,6 +39,7 @@ const PanFieldStyle = styled(PinField)`
   outline: none;
   text-align: center;
   margin: 10px;
+  margin-left: 0;
   background-color: #eeeeee;
   font-size: 1.4rem;
   transition-property: color;
@@ -47,11 +51,16 @@ const PanFieldStyle = styled(PinField)`
   }
 `
 
+const TextToActivation = styled.div`
+  font-family: "Poppins-Medium", sans-serif;
+`
+
 const RemindPassword = () => {
   const [emailInput, setEmailInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
   const [activeCode, setActiveCode] = useState("")
   const [demoCompleted, setDemoCompleted] = useState(false)
+  const siteProps = useSelector(state => state.siteProps)
   const fieldOneRef = useRef(null)
 
   const remindPasswordEmailSent = useSelector(
@@ -79,7 +88,12 @@ const RemindPassword = () => {
   )
 
   const handleSentEmailReset = () => {
-    dispatch(fetchSentEmailResetPassword(emailInput))
+    const isValidEmail = validEmail(emailInput)
+    if (isValidEmail) {
+      dispatch(fetchSentEmailResetPassword(emailInput))
+    } else {
+      dispatch(addAlertItem("Nieprawidłowy adres e-mail", "red"))
+    }
   }
 
   const handleReset = () => {
@@ -89,13 +103,16 @@ const RemindPassword = () => {
   }
 
   const handleSentResetPassword = () => {
-    if (demoCompleted && passwordInput.length >= 6) {
+    if (demoCompleted && passwordInput.length >= 5) {
       dispatch(fetchResetPassword(emailInput, passwordInput, activeCode))
     }
   }
 
   const renderContent = remindPasswordEmailSent ? (
     <>
+      <TextToActivation>
+        Kod do resetu hasła, który został wysłany na adres e-mail:
+      </TextToActivation>
       <PanFieldStyle
         ref={fieldOneRef}
         onComplete={code => {
@@ -111,6 +128,8 @@ const RemindPassword = () => {
         value={passwordInput}
         type="password"
         onChange={e => handleChange(e, setPasswordInput)}
+        validText="Minimum 5 znaków"
+        showPassword
       />
       <ButtonResetCode>
         <ButtonIcon
@@ -118,8 +137,9 @@ const RemindPassword = () => {
           uppercase
           fontIconSize="20"
           fontSize="16"
-          icon={<MdClose />}
-          buttonBgDark
+          icon={<MdDelete />}
+          customColorButton={Colors(siteProps).dangerColorDark}
+          customColorIcon={Colors(siteProps).dangerColor}
           onClick={handleReset}
           disabled={!demoCompleted}
         />
@@ -127,7 +147,6 @@ const RemindPassword = () => {
       <ButtonIcon
         title="Wyślij ponownie emaila z resetującym kodem"
         uppercase
-        buttonBgDark
         fontIconSize="20"
         fontSize="16"
         icon={<MdEmail />}
@@ -141,8 +160,10 @@ const RemindPassword = () => {
             fontIconSize="20"
             fontSize="16"
             icon={<MdDone />}
-            disabled={!(demoCompleted && passwordInput.length >= 6)}
+            disabled={!(demoCompleted && passwordInput.length >= 5)}
             onClick={handleSentResetPassword}
+            customColorButton={Colors(siteProps).successColorDark}
+            customColorIcon={Colors(siteProps).successColor}
           />
         </div>
       </ButtonLoginRegister>

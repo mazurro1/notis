@@ -153,6 +153,7 @@ const AllCategoryOfServices = ({
   handleClickReserwation,
   companyId,
   userIsBlocked,
+  userAccountNotVeryfied,
   isWorkerBlocked,
   userCannotMakeReservation,
   user,
@@ -471,6 +472,7 @@ const AllCategoryOfServices = ({
         handleClickReserwation={handleClickReserwation}
         companyId={companyId}
         userIsBlocked={userIsBlocked}
+        userAccountNotVeryfied={userAccountNotVeryfied}
         userCannotMakeReservation={userCannotMakeReservation}
         isWorkerBlocked={isWorkerBlocked}
       />

@@ -3,6 +3,7 @@ import { applyMiddleware } from "redux"
 import thunk from "redux-thunk"
 
 import {
+  CHANGE_ACCTIVE_ACCOUNT,
   CHANGE_SORT_VISIBLE,
   CHANGE_FILTER_VISIBLE,
   CHANGE_SORT_VALUE,
@@ -145,6 +146,7 @@ const initialState = {
     name: null,
     active: false,
   },
+  activeAccountVisible: false,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -178,6 +180,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_ACCTIVE_ACCOUNT: {
+      return {
+        ...state,
+        activeAccountVisible: action.data,
+      }
+    }
     case CHANGE_ALERT_EXTRA: {
       return {
         ...state,
@@ -297,6 +305,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: action.user,
         userId: action.user.userId,
+        activeAccountVisible: !action.user.accountVerified,
       }
     case LOGOUT:
       return {

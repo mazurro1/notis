@@ -159,6 +159,7 @@ const ServicesItem = ({
   companyId,
   siteProps,
   userIsBlocked,
+  userAccountNotVeryfied,
   activeWorkerUserId,
   isWorkerBlocked,
   userCannotMakeReservation,
@@ -185,7 +186,12 @@ const ServicesItem = ({
 
   useEffect(() => {
     ReactTooltip.rebuild()
-  }, [userIsBlocked, userCannotMakeReservation, isWorkerBlocked])
+  }, [
+    userIsBlocked,
+    userCannotMakeReservation,
+    isWorkerBlocked,
+    userAccountNotVeryfied,
+  ])
 
   const indexValueColorService = !!itemServices.serviceColor
     ? itemServices.serviceColor
@@ -318,7 +324,10 @@ const ServicesItem = ({
       siteProps={siteProps}
       active={selectedServiceItem}
     >
-      {(userIsBlocked || !userCannotMakeReservation || isWorkerBlocked) && (
+      {(userIsBlocked ||
+        !userCannotMakeReservation ||
+        isWorkerBlocked ||
+        userAccountNotVeryfied) && (
         <ReactTooltip
           id={`userIsBlockedAlert${itemServices._id}`}
           effect="float"
@@ -328,6 +337,8 @@ const ServicesItem = ({
             <span>Pracownik nie może dokonać rezerwacji</span>
           ) : !userCannotMakeReservation ? (
             <span>Zaloguj się aby dokonać rezerwacji</span>
+          ) : userAccountNotVeryfied ? (
+            <span>Aktywuj konto aby dokonać rezerwacji</span>
           ) : (
             <span>Twoje konto zostało zablokowane na tej stronie</span>
           )}
@@ -398,7 +409,10 @@ const ServicesItem = ({
                 secondColors={isCompanyEditProfil}
                 onClick={() => handleClickReserwation(itemServices, companyId)}
                 disabled={
-                  userIsBlocked || !userCannotMakeReservation || isWorkerBlocked
+                  userIsBlocked ||
+                  !userCannotMakeReservation ||
+                  isWorkerBlocked ||
+                  userAccountNotVeryfied
                 }
               />
             </WidthButtonRezerv>

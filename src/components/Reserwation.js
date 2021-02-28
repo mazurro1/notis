@@ -630,8 +630,12 @@ const Reserwation = ({
     ? false
     : true
 
+  const accountNotVeryfied = !user.accountVerified
+
   const disabledReserwButton =
-    !!selectedHour & !!selectedWorkerUserId && !disabledPhoneNumber
+    !!selectedHour & !!selectedWorkerUserId &&
+    !disabledPhoneNumber &&
+    !accountNotVeryfied
   const priceInPromotion = selectedPromotion !== null
   const newPriceAfterPromotion = Math.floor(
     (Number(reserwationData.serviceCost) *

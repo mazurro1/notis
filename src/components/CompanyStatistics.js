@@ -121,6 +121,9 @@ const CompanyStatistics = ({ siteProps, user }) => {
         setDataToChar([])
         setLabelsToChar([])
       }
+    } else {
+      setDataToChar([])
+      setLabelsToChar([])
     }
   }, [companyStats, chartPicker]) // eslint-disable-line react-hooks/exhaustive-deps
 

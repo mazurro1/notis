@@ -53,6 +53,7 @@ import {
   fetchAllCompanysOfType,
   changeLanguageStyle,
   addNewUserAlert,
+  changeActiveAccount,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -426,6 +427,7 @@ const Navigation = ({ isMainPage }) => {
   const reserwationEnable = useSelector(state => state.reserwationEnable)
   const reserwationData = useSelector(state => state.reserwationData)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
+  const activeAccountVisible = useSelector(state => state.activeAccountVisible)
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
   )
@@ -499,6 +501,14 @@ const Navigation = ({ isMainPage }) => {
       )
     }
   }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleCloseActiveAccount = () => {
+    dispatch(changeActiveAccount(false))
+  }
+
+  const handleActiveAccount = () => {
+    dispatch(changeActiveAccount(true))
+  }
 
   const handleClickLogin = () => {
     dispatch(changeLoginVisible(!loginVisible))
@@ -783,6 +793,7 @@ const Navigation = ({ isMainPage }) => {
       handleClose={handleClickLogin}
       maxWidth="400"
       title="Logowanie"
+      close={false}
     >
       <LoginContent />
     </Popup>
@@ -794,6 +805,7 @@ const Navigation = ({ isMainPage }) => {
       handleClose={handleCloseRemindPassword}
       maxWidth="400"
       title="Przypomnij hasło"
+      close={false}
     >
       <RemindPassword />
     </Popup>
@@ -803,8 +815,9 @@ const Navigation = ({ isMainPage }) => {
     <Popup
       popupEnable={registrationVisible}
       handleClose={handleClickRegister}
-      maxWidth="400"
+      maxWidth="500"
       title="Rejestracja"
+      close={false}
     >
       <RegisterContent />
     </Popup>
@@ -815,6 +828,7 @@ const Navigation = ({ isMainPage }) => {
       popupEnable={createCompanyVisible}
       handleClose={handleCreateCompany}
       title="Stwórz konto firmowe"
+      close={false}
     >
       <CreateCompany />
     </Popup>
@@ -864,9 +878,11 @@ const Navigation = ({ isMainPage }) => {
 
   const PopupActiveAccount = (
     <Popup
-      popupEnable={!!user ? !user.accountVerified : false}
-      maxWidth="500"
-      noContent
+      popupEnable={activeAccountVisible}
+      maxWidth="400"
+      handleClose={handleCloseActiveAccount}
+      title="Aktywacja konta"
+      close={false}
     >
       <ActiveAccount />
     </Popup>
@@ -1121,14 +1137,26 @@ const Navigation = ({ isMainPage }) => {
         />
       </ButtonNavStyle>
       <ButtonNavStyle>
-        <ButtonIcon
-          title={`${user.userName}`}
-          uppercase
-          fontIconSize="20"
-          fontSize="16"
-          icon={<FaUser />}
-          onClick={handleUserProfil}
-        />
+        {!user.accountVerified ? (
+          <ButtonIcon
+            title={`Aktywuj konto`}
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaUser />}
+            onClick={handleActiveAccount}
+            secondColors
+          />
+        ) : (
+          <ButtonIcon
+            title={`${user.userName}`}
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaUser />}
+            onClick={handleUserProfil}
+          />
+        )}
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
@@ -1176,7 +1204,6 @@ const Navigation = ({ isMainPage }) => {
       {PopupWorkerEditHours}
       {PopupEmployeeWorkingHours}
       {PopupReserwation}
-      {PopupActiveAccount}
       {PopupRemindPassword}
       {PopupLogin}
       {PopupCreateCompany}
@@ -1190,6 +1217,7 @@ const Navigation = ({ isMainPage }) => {
       {PopupCompanyAvailability}
       {PopupHistoryReserwations}
       {PopupCompanyStatistics}
+      {PopupActiveAccount}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">

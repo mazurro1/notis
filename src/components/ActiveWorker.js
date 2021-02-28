@@ -7,6 +7,7 @@ import styled from "styled-components"
 import { HiEmojiHappy } from "react-icons/hi"
 import { Colors } from "../common/Colors"
 import { useSelector } from "react-redux"
+import { navigate } from "gatsby"
 
 const TextWarning = styled.div`
   margin-top: 60px;
@@ -35,9 +36,9 @@ const ActiveWorker = ({ companyId, workerEmail, codeToActive }) => {
     dispatch(
       fetchConfirmAddWorkerToCompany(companyId, workerEmail, codeToActive)
     )
+    navigate("/")
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const validParams = !!companyId && !!workerEmail && !!codeToActive
-  console.log(validParams)
   return (
     <div>
       {validParams ? (
