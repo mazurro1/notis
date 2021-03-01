@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
 import { FaFacebook, FaInstagram, FaChrome } from "react-icons/fa"
-import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import InputIcon from "../InputIcon"
 import { Colors } from "../../common/Colors"
@@ -9,6 +8,7 @@ import { validURL, convertLinkToHttps } from "../../common/Functions"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { addAlertItem } from "../../state/actions"
 import { useDispatch } from "react-redux"
+import Popup from "../Popup"
 
 const ButtonPosition = styled.div`
   display: flex;
@@ -26,32 +26,6 @@ const ButtonSubmit = styled.button`
   padding: 0;
   margin: 0;
   background-color: transparent;
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow-y: auto;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
 `
 
 const HeightComponentLinks = styled.div`
@@ -87,13 +61,6 @@ const IconLinkToSite = styled.button`
         ? Colors(props.siteProps).secondDarkColor
         : Colors(props.siteProps).primaryColorDark};
   }
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const OurLinksContent = ({
@@ -185,10 +152,6 @@ const OurLinksContent = ({
     setWebsiteInput(linkiWebsite)
   }
 
-  const handleClickContent = e => {
-    e.stopPropagation()
-  }
-
   const handleChangeInputs = (e, setChange) => {
     setChange(e.target.value)
   }
@@ -250,85 +213,72 @@ const OurLinksContent = ({
 
       {isCompanyEditProfil && (
         <>
-          <CSSTransition
-            in={editable}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={editable}
+            position="absolute"
+            title="Edycja linków"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+            secondColors
           >
-            <BackgroundEdit>
-              <BackgroundEditContent
-                onClick={handleClickContent}
-                siteProps={siteProps}
-              >
-                <TitleRightColumnEdit siteProps={siteProps}>
-                  Edycja linków
-                </TitleRightColumnEdit>
-                <PaddingContent>
-                  <form onSubmit={handleSaveButton}>
-                    <InputIcon
-                      icon={<FaFacebook />}
-                      placeholder="Facebook"
-                      type="text"
-                      secondColor={isCompanyEditProfil}
-                      onChange={e => handleChangeInputs(e, setFacebookInput)}
-                      value={facebookInput}
+            <form onSubmit={handleSaveButton}>
+              <InputIcon
+                icon={<FaFacebook />}
+                placeholder="Facebook"
+                type="text"
+                secondColor={isCompanyEditProfil}
+                onChange={e => handleChangeInputs(e, setFacebookInput)}
+                value={facebookInput}
+              />
+              <InputIcon
+                icon={<FaInstagram />}
+                placeholder="Instagram"
+                type="text"
+                secondColor={isCompanyEditProfil}
+                onChange={e => handleChangeInputs(e, setInstagramInput)}
+                value={instagramInput}
+              />
+              <InputIcon
+                icon={<FaChrome />}
+                placeholder="Strona www"
+                type="text"
+                secondColor={isCompanyEditProfil}
+                onChange={e => handleChangeInputs(e, setWebsiteInput)}
+                value={websiteInput}
+              />
+              <ButtonPosition>
+                <>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Cofnij"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaArrowLeft />}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                      onClick={handleResetButton}
                     />
-                    <InputIcon
-                      icon={<FaInstagram />}
-                      placeholder="Instagram"
-                      type="text"
-                      secondColor={isCompanyEditProfil}
-                      onChange={e => handleChangeInputs(e, setInstagramInput)}
-                      value={instagramInput}
+                  </ButtonMargin>
+                </>
+                <ButtonSubmit type="submit">
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaSave />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={!disabledButtonSave}
                     />
-                    <InputIcon
-                      icon={<FaChrome />}
-                      placeholder="Strona www"
-                      type="text"
-                      secondColor={isCompanyEditProfil}
-                      onChange={e => handleChangeInputs(e, setWebsiteInput)}
-                      value={websiteInput}
-                    />
-                    <ButtonPosition>
-                      <>
-                        <ButtonMargin>
-                          <ButtonIcon
-                            title="Cofnij"
-                            uppercase
-                            fontIconSize="16"
-                            fontSize="13"
-                            icon={<FaArrowLeft />}
-                            customColorButton={
-                              Colors(siteProps).dangerColorDark
-                            }
-                            customColorIcon={Colors(siteProps).dangerColor}
-                            onClick={handleResetButton}
-                          />
-                        </ButtonMargin>
-                      </>
-                      <ButtonSubmit type="submit">
-                        <ButtonMargin>
-                          <ButtonIcon
-                            title="Zapisz"
-                            uppercase
-                            fontIconSize="16"
-                            fontSize="13"
-                            icon={<FaSave />}
-                            customColorButton={
-                              Colors(siteProps).successColorDark
-                            }
-                            customColorIcon={Colors(siteProps).successColor}
-                            disabled={!disabledButtonSave}
-                          />
-                        </ButtonMargin>
-                      </ButtonSubmit>
-                    </ButtonPosition>
-                  </form>
-                </PaddingContent>
-              </BackgroundEditContent>
-            </BackgroundEdit>
-          </CSSTransition>
+                  </ButtonMargin>
+                </ButtonSubmit>
+              </ButtonPosition>
+            </form>
+          </Popup>
         </>
       )}
     </HeightComponentLinks>

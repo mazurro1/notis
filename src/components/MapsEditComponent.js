@@ -3,11 +3,11 @@ import ButtonIcon from "./ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import { FaMapMarkerAlt, FaSave, FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
-import { CSSTransition } from "react-transition-group"
 import { Colors } from "../common/Colors"
 import InputIcon from "./InputIcon"
 import { fetchSaveMaps } from "../state/actions"
 import { useDispatch } from "react-redux"
+import Popup from "./Popup"
 
 const ParagraphStyle = styled.div`
   overflow-wrap: normal;
@@ -16,32 +16,6 @@ const ParagraphStyle = styled.div`
 `
 const MarginButton = styled.div`
   margin-left: 5px;
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
 `
 
 const PositionRelative = styled.div`
@@ -158,77 +132,70 @@ const MapsEditComponent = ({
           </div>
         </ButtonEditPosition>
       )}
-      <CSSTransition
-        in={editMap}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={editMap}
+        position="absolute"
+        title="Edycja mapy"
+        borderRadius
+        closeTitle={false}
+        smallTitle
       >
-        <BackgroundEdit>
-          <BackgroundEditContent siteProps={siteProps}>
-            <TitleRightColumnEdit siteProps={siteProps}>
-              Edycja mapy
-            </TitleRightColumnEdit>
-            <PaddingContent>
-              <InputIcon
-                icon={<FaMapMarkerAlt />}
-                placeholder="Latitude"
-                value={latText}
-                type="number"
-                onChange={e => handleChange(e, setLatText)}
-                validText="Wartość wymagana"
-              />
-              <InputIcon
-                icon={<FaMapMarkerAlt />}
-                placeholder="Longitude"
-                value={longText}
-                type="number"
-                onChange={e => handleChange(e, setLongText)}
-                validText="Wartość wymagana"
-              />
-              <a
-                href="https://www.latlong.net/convert-address-to-lat-long.html"
-                target="__blank"
-              >
-                <ButtonIcon
-                  title="Generator lokalizacji"
-                  uppercase
-                  fontIconSize="18"
-                  fontSize="14"
-                  icon={<FaMapMarkerAlt />}
-                />
-              </a>
-              <ButtonTextPositionMap>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Cofnij"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleReset}
-                  />
-                </MarginButton>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Zapisz"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaSave />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleSaveMap}
-                    disabled={!disabledButtonSave}
-                  />
-                </MarginButton>
-              </ButtonTextPositionMap>
-            </PaddingContent>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
+        <InputIcon
+          icon={<FaMapMarkerAlt />}
+          placeholder="Latitude"
+          value={latText}
+          type="number"
+          onChange={e => handleChange(e, setLatText)}
+          validText="Wartość wymagana"
+        />
+        <InputIcon
+          icon={<FaMapMarkerAlt />}
+          placeholder="Longitude"
+          value={longText}
+          type="number"
+          onChange={e => handleChange(e, setLongText)}
+          validText="Wartość wymagana"
+        />
+        <a
+          href="https://www.latlong.net/convert-address-to-lat-long.html"
+          target="__blank"
+        >
+          <ButtonIcon
+            title="Generator lokalizacji"
+            uppercase
+            fontIconSize="18"
+            fontSize="14"
+            icon={<FaMapMarkerAlt />}
+          />
+        </a>
+        <ButtonTextPositionMap>
+          <MarginButton>
+            <ButtonIcon
+              title="Cofnij"
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaArrowLeft />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleReset}
+            />
+          </MarginButton>
+          <MarginButton>
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaSave />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              onClick={handleSaveMap}
+              disabled={!disabledButtonSave}
+            />
+          </MarginButton>
+        </ButtonTextPositionMap>
+      </Popup>
     </PositionRelative>
   )
 }

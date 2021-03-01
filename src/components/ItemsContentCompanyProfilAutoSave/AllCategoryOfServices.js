@@ -10,12 +10,12 @@ import { MdAddBox, MdTitle, MdArrowBack, MdEdit } from "react-icons/md"
 import CategoryItem from "./CategoryItem"
 import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
-import { CSSTransition } from "react-transition-group"
 import sal from "sal.js"
 import { Colors } from "../../common/Colors"
 import { fetchSaveCompanyServices } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
+import Popup from "../Popup"
 
 const AddCategory = styled.div`
   position: relative;
@@ -36,33 +36,6 @@ const AddCategory = styled.div`
     background-color: ${props => Colors(props.siteProps).successColorDark};
   }
 `
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => (props.transparent ? "transparent" : "white")};
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-  overflow: hidden;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
-
 const IconAddCategory = styled.div`
   padding: 10px;
   padding-bottom: 0px;
@@ -527,59 +500,53 @@ const AllCategoryOfServices = ({
               <MdAddBox />
             </IconAddCategory>
 
-            <CSSTransition
-              in={clickAddCategory}
-              timeout={400}
-              classNames="popup"
-              unmountOnExit
+            <Popup
+              popupEnable={clickAddCategory}
+              position="absolute"
+              title="Nowa kategoria"
+              borderRadius
+              closeTitle={false}
+              smallTitle
+              secondColors
             >
-              <BackgroundEdit onClick={handleClickContent}>
-                <BackgroundEditContent onClick={handleClickContent}>
-                  <TitleItemCategoryTitleAction>
-                    Nowa kategoria
-                  </TitleItemCategoryTitleAction>
-                  <PaddingContent>
-                    <InputIcon
-                      icon={<MdTitle />}
-                      placeholder="Nazwa kategorii"
-                      secondColor
-                      value={newCategoryTitle}
-                      type="text"
-                      onChange={handleChangeNewCategory}
-                      required
-                      validText="Minimum 3 znaki, unikatowa nazwa"
-                    />
-                    <ButtonsAddPosition>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Anuluj"
-                          uppercase
-                          fontIconSize="40"
-                          fontSize="13"
-                          icon={<MdArrowBack />}
-                          onClick={handleClickAddCategory}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
-                        />
-                      </ButtonMargin>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Dodaj"
-                          uppercase
-                          fontIconSize="20"
-                          fontSize="13"
-                          icon={<MdAddBox />}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                          disabled={disabledAddCategoryButton}
-                          onClick={handleAddCategory}
-                        />
-                      </ButtonMargin>
-                    </ButtonsAddPosition>
-                  </PaddingContent>
-                </BackgroundEditContent>
-              </BackgroundEdit>
-            </CSSTransition>
+              <InputIcon
+                icon={<MdTitle />}
+                placeholder="Nazwa kategorii"
+                secondColor
+                value={newCategoryTitle}
+                type="text"
+                onChange={handleChangeNewCategory}
+                required
+                validText="Minimum 3 znaki, unikatowa nazwa"
+              />
+              <ButtonsAddPosition>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="40"
+                    fontSize="13"
+                    icon={<MdArrowBack />}
+                    onClick={handleClickAddCategory}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                  />
+                </ButtonMargin>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Dodaj"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="13"
+                    icon={<MdAddBox />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    disabled={disabledAddCategoryButton}
+                    onClick={handleAddCategory}
+                  />
+                </ButtonMargin>
+              </ButtonsAddPosition>
+            </Popup>
             {!clickAddCategory && (
               <ReactTooltip id="addNewCategory" effect="float" multiline={true}>
                 <span>Dodaj nową kategorie</span>

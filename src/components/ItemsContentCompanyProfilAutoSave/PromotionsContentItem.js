@@ -5,13 +5,13 @@ import { MdEdit, MdDelete, MdExpandMore } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import { Collapse } from "react-collapse"
 import ButtonIcon from "../ButtonIcon"
-import { CSSTransition } from "react-transition-group"
 import {
   fetchDeletePromotion,
   updatePromotionsDispatch,
 } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import PromotionsContentItemEdit from "./PromotionsContentItemEdit"
+import Popup from "../Popup"
 
 const ItemPromotion = styled.div`
   position: relative;
@@ -175,19 +175,6 @@ const IconDelete = styled.div`
   }
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
 const BackgroundDeleteConfirm = styled.div`
   display: flex;
   flex-direction: row;
@@ -329,41 +316,39 @@ const PromotionsContentItem = ({
           )}
         </PaddingContent>
       </Collapse>
-      <CSSTransition
-        in={deleteItemEnable}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={deleteItemEnable}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <BackgroundDeleteConfirm>
-            <MarginButton>
-              <ButtonIcon
-                title="Anuluj"
-                uppercase
-                fontIconSize="20"
-                fontSize="16"
-                icon={<FaArrowLeft />}
-                onClick={handleDeleteItemEnable}
-                customColorButton={Colors(siteProps).successColorDark}
-                customColorIcon={Colors(siteProps).successColor}
-              />
-            </MarginButton>
-            <MarginButton>
-              <ButtonIcon
-                title="Usuń"
-                uppercase
-                fontIconSize="20"
-                fontSize="16"
-                icon={<MdDelete />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleDeleteItem}
-              />
-            </MarginButton>
-          </BackgroundDeleteConfirm>
-        </BackgroundEdit>
-      </CSSTransition>
+        <BackgroundDeleteConfirm>
+          <MarginButton>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="20"
+              fontSize="13"
+              icon={<FaArrowLeft />}
+              onClick={handleDeleteItemEnable}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+            />
+          </MarginButton>
+          <MarginButton>
+            <ButtonIcon
+              title="Usuń"
+              uppercase
+              fontIconSize="20"
+              fontSize="13"
+              icon={<MdDelete />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleDeleteItem}
+            />
+          </MarginButton>
+        </BackgroundDeleteConfirm>
+      </Popup>
       <PromotionsContentItemEdit
         TitleRightColumn={TitleRightColumn}
         newPromotion={editItemEnable}

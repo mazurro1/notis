@@ -14,7 +14,7 @@ import { sortItemsInArray } from "../common/Functions"
 
 const PositionRelative = styled.div`
   position: relative;
-  min-height: ${props => (props.active ? "300px" : "0px")};
+  min-height: ${props => (props.active ? "350px" : "0px")};
   transition-property: min-height;
   transition-duration: 0.3s;
   transition-timing-function: ease;

@@ -14,6 +14,7 @@ import {
   deleteCompanyFavourites,
   resetUserFavourites,
 } from "../state/actions"
+import Popup from "./Popup"
 
 const PlaceItem = styled.div`
   position: relative;
@@ -29,7 +30,6 @@ const PlaceItem = styled.div`
   margin-bottom: 50px;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
   color: ${props => Colors(props.siteProps).textNormalBlack};
-  /* border: 1px solid #b2ebf2; */
   overflow: hidden;
   @media all and (max-width: 920px) {
     max-width: 400px;
@@ -209,16 +209,6 @@ const ButtonReserv = styled.div`
   max-width: 49%;
 `
 
-const SerivesDiv = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  padding: 20px;
-`
-
 const NoServicesText = styled.div`
   color: ${props => Colors(props.siteProps).textNormalWhite};
 `
@@ -249,7 +239,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
 
   const allServices = item.services.map(item => {
     return (
-      <PaddingRight key={item._id}>
+      <PaddingRight key={item._id} onClick={handleServicesVisible}>
         <ButtonIcon title={item.serviceName} fontSize="13" />
       </PaddingRight>
     )
@@ -451,20 +441,24 @@ const PlacesItem = ({ item, filters, index, user }) => {
             </ButtonReserv>
           </ButtonReservContent>
         </PlaceContent>
-        <CSSTransition
-          in={servicesVisible}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={servicesVisible}
+          position="absolute"
+          borderRadius
+          handleClose={handleServicesVisible}
+          noContent
         >
-          <SerivesDiv onClick={handleServicesVisible}>
-            {allServices.length > 0 ? (
-              allServices
-            ) : (
-              <NoServicesText siteProps={siteProps}>Brak usług</NoServicesText>
-            )}
-          </SerivesDiv>
-        </CSSTransition>
+          {allServices.length > 0 ? (
+            allServices
+          ) : (
+            <NoServicesText
+              siteProps={siteProps}
+              onClick={handleServicesVisible}
+            >
+              Brak usług
+            </NoServicesText>
+          )}
+        </Popup>
       </PlaceItem>
     </div>
   )

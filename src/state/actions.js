@@ -492,8 +492,6 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
         }
       )
       .then(response => {
-        // dispatch(loginUser(response.data))
-
         dispatch(
           addUserPhone(
             response.data.userPhone,
@@ -510,7 +508,7 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
         if (!!error) {
           if (!!error.response) {
             if (error.response.status === 401) {
-              dispatch(logout())
+              dispatch(addAlertItem("Nie poprawne hasło", "red"))
             } else {
               dispatch(
                 addAlertItem(

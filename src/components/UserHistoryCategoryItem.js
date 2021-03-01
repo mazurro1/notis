@@ -9,56 +9,11 @@ import {
   MdEdit,
 } from "react-icons/md"
 import { Colors } from "../common/Colors"
-import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import InputIcon from "./InputIcon"
 import { useDispatch } from "react-redux"
 import { fetchAddOpinion, fetchUpdateEditedOpinion } from "../state/actions"
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: transparent;
-  padding: 10px;
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-`
-
-const BackgroundEditContentBg = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-`
-
-const PaddingBackground = styled.div`
-  padding: 10px;
-`
-
-const TitleAddOpnion = styled.div`
-  position: relative;
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  background-color: ${props => Colors(props.siteProps).primaryColorDark};
-  margin-bottom: 10px;
-  transition-property: background-color, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-`
+import Popup from "./Popup"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -593,43 +548,39 @@ const UserHistoryCategoryItem = ({
           >
             <MdDeleteForever />
           </ArrowDeleteReserwation>
-          <CSSTransition
-            in={confirmDelete}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={confirmDelete}
+            position="absolute"
+            borderRadius
+            noContent
           >
-            <BackgroundEdit>
-              <BackgroundEditContent>
-                <ButtonsAddPosition>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="15"
-                      icon={<MdArrowBack />}
-                      onClick={handleConfirmDeleteReserwation}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                    />
-                  </ButtonMargin>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Odwołaj wizytę"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="15"
-                      icon={<MdDeleteForever />}
-                      onClick={handleToDeleteReserwation}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonMargin>
-                </ButtonsAddPosition>
-              </BackgroundEditContent>
-            </BackgroundEdit>
-          </CSSTransition>
+            <ButtonsAddPosition>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdArrowBack />}
+                  onClick={handleConfirmDeleteReserwation}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                />
+              </ButtonMargin>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Odwołaj wizytę"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdDeleteForever />}
+                  onClick={handleToDeleteReserwation}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonMargin>
+            </ButtonsAddPosition>
+          </Popup>
         </>
       ) : !!!item.opinionId && !!!item.visitCanceled ? (
         <>
@@ -641,57 +592,52 @@ const UserHistoryCategoryItem = ({
           >
             <MdComment />
           </ArrowAddOpinionReserwation>
-          <CSSTransition
-            in={addOpinion}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={addOpinion}
+            position="absolute"
+            title="Nowa opinia"
+            borderRadius
+            closeTitle={false}
+            smallTitle
           >
-            <BackgroundEdit>
-              <BackgroundEditContentBg siteProps={siteProps}>
-                <TitleAddOpnion>Nowa opinia</TitleAddOpnion>
-                <PaddingBackground>
-                  <StarsPositions>
-                    <span>Ocena: </span>
-                    {renderStars}
-                  </StarsPositions>
-                  <InputIcon
-                    icon={<MdComment />}
-                    placeholder="Opinia"
-                    value={opinionText}
-                    onChange={handleChangeTextOpinion}
-                  />
-                  <ButtonsAddPositionOpinion>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Anuluj"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="15"
-                        icon={<MdArrowBack />}
-                        onClick={handleResetAddOpinion}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                      />
-                    </ButtonMargin>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Dodaj opinie"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="15"
-                        icon={<MdSave />}
-                        onClick={handleUpdateOpinion}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={opinionText.length < 2}
-                      />
-                    </ButtonMargin>
-                  </ButtonsAddPositionOpinion>
-                </PaddingBackground>
-              </BackgroundEditContentBg>
-            </BackgroundEdit>
-          </CSSTransition>
+            <StarsPositions>
+              <span>Ocena: </span>
+              {renderStars}
+            </StarsPositions>
+            <InputIcon
+              icon={<MdComment />}
+              placeholder="Opinia"
+              value={opinionText}
+              onChange={handleChangeTextOpinion}
+            />
+            <ButtonsAddPositionOpinion>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdArrowBack />}
+                  onClick={handleResetAddOpinion}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonMargin>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Dodaj opinie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdSave />}
+                  onClick={handleUpdateOpinion}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={opinionText.length < 2}
+                />
+              </ButtonMargin>
+            </ButtonsAddPositionOpinion>
+          </Popup>
         </>
       ) : (
         !!item.opinionId &&
@@ -706,60 +652,55 @@ const UserHistoryCategoryItem = ({
             >
               <MdEdit />
             </ArrowAddOpinionReserwation>
-            <CSSTransition
-              in={editedOpinion}
-              timeout={400}
-              classNames="popup"
-              unmountOnExit
+            <Popup
+              popupEnable={editedOpinion}
+              position="absolute"
+              title="Edytuj opinie"
+              borderRadius
+              closeTitle={false}
+              smallTitle
             >
-              <BackgroundEdit>
-                <BackgroundEditContentBg siteProps={siteProps}>
-                  <TitleAddOpnion>Edytowanie opinii</TitleAddOpnion>
-                  <PaddingBackground>
-                    <StarsPositions>
-                      <span>Ocena: </span>
-                      {renderStars}
-                    </StarsPositions>
-                    <InputIcon
-                      icon={<MdComment />}
-                      placeholder="Opinia"
-                      value={editedOpinionText}
-                      onChange={handleChangeTextEditedOpinion}
-                    />
-                    <ButtonsAddPositionOpinion>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Anuluj"
-                          uppercase
-                          fontIconSize="20"
-                          fontSize="15"
-                          icon={<MdArrowBack />}
-                          onClick={handleResetAddOpinion}
-                          customColorButton={Colors(siteProps).dangerColorDark}
-                          customColorIcon={Colors(siteProps).dangerColor}
-                        />
-                      </ButtonMargin>
-                      <ButtonMargin>
-                        <ButtonIcon
-                          title="Dodaj opinie"
-                          uppercase
-                          fontIconSize="20"
-                          fontSize="15"
-                          icon={<MdSave />}
-                          onClick={handleUpdateEditedOpinion}
-                          customColorButton={Colors(siteProps).successColorDark}
-                          customColorIcon={Colors(siteProps).successColor}
-                          disabled={
-                            editedOpinionText.length < 2 ||
-                            editedOpinionText === item.opinionId.opinionMessage
-                          }
-                        />
-                      </ButtonMargin>
-                    </ButtonsAddPositionOpinion>
-                  </PaddingBackground>
-                </BackgroundEditContentBg>
-              </BackgroundEdit>
-            </CSSTransition>
+              <StarsPositions>
+                <span>Ocena: </span>
+                {renderStars}
+              </StarsPositions>
+              <InputIcon
+                icon={<MdComment />}
+                placeholder="Opinia"
+                value={editedOpinionText}
+                onChange={handleChangeTextEditedOpinion}
+              />
+              <ButtonsAddPositionOpinion>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="15"
+                    icon={<MdArrowBack />}
+                    onClick={handleResetAddOpinion}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                  />
+                </ButtonMargin>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Dodaj opinie"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="15"
+                    icon={<MdSave />}
+                    onClick={handleUpdateEditedOpinion}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    disabled={
+                      editedOpinionText.length < 2 ||
+                      editedOpinionText === item.opinionId.opinionMessage
+                    }
+                  />
+                </ButtonMargin>
+              </ButtonsAddPositionOpinion>
+            </Popup>
           </>
         )
       )}

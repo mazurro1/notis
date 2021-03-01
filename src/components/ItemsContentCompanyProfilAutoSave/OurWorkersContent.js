@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import ButtonIcon from "../ButtonIcon"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import {
   fetchAddWorkerToCompany,
@@ -10,7 +9,7 @@ import {
 } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import WorkerItem from "./WorkerItem"
-import { MdEmail, MdClose, MdEdit } from "react-icons/md"
+import { MdEmail, MdEdit } from "react-icons/md"
 import { FaUserPlus, FaArrowLeft } from "react-icons/fa"
 import OwnerWorker from "./OwnerWorker"
 import ReactTooltip from "react-tooltip"
@@ -19,6 +18,7 @@ import {
   categoryItemsMenu,
   sortItemsInArray,
 } from "../../common/Functions"
+import Popup from "../Popup"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "block")};
@@ -60,37 +60,6 @@ const WorkerItemStyle = styled.div`
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-`
-
-const EditUserBackground = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  border-radius: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const EditUserBackgroundContent = styled.div`
-  position: ${props => (props.noRelative ? "" : "relative")};
-  width: 90%;
-  background-color: ${props =>
-    props.noBg ? "transparent" : Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  font-size: 0.9rem;
-  cursor: default;
-  transition-property: height;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
 `
 
 const EditUserStyle = styled.div`
@@ -167,26 +136,6 @@ const WorkerSpecjalization = styled.div`
   font-size: 0.8rem;
 `
 
-const PositionAddWorkers = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const ContentAddWorkers = styled.div`
-  position: relative;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  width: 90%;
-  border-radius: 5px;
-`
-
 const ButtonSentPosition = styled.div`
   display: flex;
   flex-direction: row;
@@ -201,22 +150,6 @@ const ButtonAddWorker = styled.button`
   &:active,
   &:focus {
     outline: none;
-  }
-`
-
-const CloseAddWorkers = styled.div`
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  padding: 2px 8px;
-  padding-top: 8px;
-  cursor: pointer;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
   }
 `
 
@@ -273,15 +206,6 @@ const BackGroundImageCustomUrl = styled.div`
   border-radius: 50%;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
   overflow: hidden;
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const OurWorkersContent = ({
@@ -414,17 +338,13 @@ const OurWorkersContent = ({
         WorkerSpecjalization={WorkerSpecjalization}
         EditUserStyle={EditUserStyle}
         EditIconStyle={EditIconStyle}
-        EditUserBackground={EditUserBackground}
         DeleteUserIconStyle={DeleteUserIconStyle}
-        EditUserBackgroundContent={EditUserBackgroundContent}
-        PaddingContent={PaddingContent}
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
         editedWorkers={editedWorkers}
         handleClickActiveWorker={handleClickActiveWorker}
         activeWorkerUserId={activeWorkerUserId}
         BackGroundImageCustomUrl={BackGroundImageCustomUrl}
-        TitleRightColumnEdit={TitleRightColumnEdit}
       />
     )
   })
@@ -455,9 +375,6 @@ const OurWorkersContent = ({
             WorkerSpecjalization={WorkerSpecjalization}
             EditUserStyle={EditUserStyle}
             EditIconStyle={EditIconStyle}
-            EditUserBackground={EditUserBackground}
-            EditUserBackgroundContent={EditUserBackgroundContent}
-            PaddingContent={PaddingContent}
             allCategories={allCategories}
             siteProps={siteProps}
             ButtonContent={ButtonContent}
@@ -476,7 +393,6 @@ const OurWorkersContent = ({
             handleClickActiveWorker={handleClickActiveWorker}
             activeWorkerUserId={activeWorkerUserId}
             BackGroundImageCustomUrl={BackGroundImageCustomUrl}
-            TitleRightColumnEdit={TitleRightColumnEdit}
           />
           {mapWorkers}
         </WorkerContent>
@@ -549,66 +465,54 @@ const OurWorkersContent = ({
           </ButtonEditPositionEdit>
         ))}
       {isAdmin && (
-        <CSSTransition
-          in={isaddUser}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={isaddUser}
+          position="absolute"
+          title="Dodawanie pracownika"
+          borderRadius
+          closeTitle={false}
+          smallTitle
+          secondColors
         >
-          <PositionAddWorkers
-          // onClick={handleOnClickBg}
-          >
-            <ContentAddWorkers
-              onClick={handleClickContentAddWorkers}
-              siteProps={siteProps}
-            >
-              <TitleRightColumnEdit>Dodawanie pracownika</TitleRightColumnEdit>
-              <PaddingContent>
-                <form onSubmit={handleSentInvation}>
-                  <InputIcon
-                    icon={<FaUserPlus />}
-                    placeholder="Adres email"
-                    value={emailInput}
-                    type="email"
-                    secondColor
-                    onChange={e => handleChange(e, setEmailInput)}
-                    required
-                    validText="Wartość wymagana"
-                  />
-                  <ButtonSentPosition>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="14"
-                      icon={<FaArrowLeft />}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                      onClick={handleOnClickBg}
-                    />
-                  </ButtonSentPosition>
-                  <ButtonSentPosition>
-                    <ButtonAddWorker type="submit">
-                      <ButtonIcon
-                        title="Wyślij zaproszenie"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="14"
-                        icon={<MdEmail />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={!!!emailInput}
-                      />
-                    </ButtonAddWorker>
-                  </ButtonSentPosition>
-                </form>
-                <CloseAddWorkers onClick={handleOnClickBg}>
-                  <MdClose />
-                </CloseAddWorkers>
-              </PaddingContent>
-            </ContentAddWorkers>
-          </PositionAddWorkers>
-        </CSSTransition>
+          <form onSubmit={handleSentInvation}>
+            <InputIcon
+              icon={<FaUserPlus />}
+              placeholder="Adres email"
+              value={emailInput}
+              type="email"
+              secondColor
+              onChange={e => handleChange(e, setEmailInput)}
+              required
+              validText="Wartość wymagana"
+            />
+            <ButtonSentPosition>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="14"
+                icon={<FaArrowLeft />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleOnClickBg}
+              />
+            </ButtonSentPosition>
+            <ButtonSentPosition>
+              <ButtonAddWorker type="submit">
+                <ButtonIcon
+                  title="Wyślij zaproszenie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<MdEmail />}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={!!!emailInput}
+                />
+              </ButtonAddWorker>
+            </ButtonSentPosition>
+          </form>
+        </Popup>
       )}
     </PositionRelative>
   )

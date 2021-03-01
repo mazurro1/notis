@@ -9,13 +9,13 @@ import {
   MdTitle,
   MdArrowBack,
 } from "react-icons/md"
-import { CSSTransition } from "react-transition-group"
 import { Collapse } from "react-collapse"
 import ButtonIcon from "../ButtonIcon"
 import ShopStoreContentCategoryNewItem from "./ShopStoreContentCategoryNewItem"
 import ShopStoreContentCategoryItem from "./ShopStoreContentCategoryItem"
 import InputIcon from "../InputIcon"
 import { sortItemsInArrayToString } from "../../common/Functions"
+import Popup from "../Popup"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -118,35 +118,6 @@ const IconDeletePosition = styled.div`
   }
 `
 
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => (props.transparent ? "transparent" : "white")};
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-  cursor: default;
-  overflow: hidden;
-`
-
-const PaddingContent = styled.div`
-  padding-left: 10px;
-  padding-right: 10px;
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  cursor: default;
-`
-
 const ButtonsAddPosition = styled.div`
   display: flex;
   flex-direction: row;
@@ -186,13 +157,6 @@ const ButtonMarginSubmit = styled.button`
   margin: 5px;
   border: none;
   background-color: transparent;
-`
-
-const TitleItemCategoryTitleAction = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const ShopStoreContentCategory = ({
@@ -418,17 +382,13 @@ const ShopStoreContentCategory = ({
         ButtonMargin={ButtonMargin}
         isCompanyEditProfil={isCompanyEditProfil}
         handleClickContent={handleClickContent}
-        BackgroundEdit={BackgroundEdit}
-        BackgroundEditContent={BackgroundEditContent}
         ButtonsDeletePosition={ButtonsDeletePosition}
         handleDeleteCategoryItem={handleDeleteCategoryItem}
         categoryId={category._id}
         handleSaveEditedProduct={handleSaveEditedProduct}
-        PaddingContent={PaddingContent}
         ButtonMarginSubmit={ButtonMarginSubmit}
         ButtonsAddPosition={ButtonsAddPosition}
         CheckboxStyle={CheckboxStyle}
-        TitleItemCategoryTitleAction={TitleItemCategoryTitleAction}
         clickDeleteCategory={clickDelete}
       />
     )
@@ -476,109 +436,93 @@ const ShopStoreContentCategory = ({
               <MdLibraryAdd />
             </IconAddPosition>
 
-            <CSSTransition
-              in={clickDelete}
-              timeout={400}
-              classNames="popup"
-              unmountOnExit
+            <Popup
+              popupEnable={clickDelete}
+              position="absolute"
+              borderRadius
+              noContent
             >
-              <BackgroundEdit>
-                <BackgroundEditContent onClick={handleClickContent} transparent>
-                  <ButtonsDeletePosition>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Anuluj"
-                        uppercase
-                        fontIconSize="40"
-                        fontSize="14"
-                        icon={<MdArrowBack />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        onClick={handleClickDelete}
-                      />
-                    </ButtonMargin>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Usuń"
-                        uppercase
-                        fontIconSize="40"
-                        fontSize="14"
-                        icon={<MdDeleteForever />}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                        onClick={handleDeleteCategory}
-                      />
-                    </ButtonMargin>
-                  </ButtonsDeletePosition>
-                </BackgroundEditContent>
-              </BackgroundEdit>
-            </CSSTransition>
+              <ButtonsDeletePosition>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="40"
+                    fontSize="14"
+                    icon={<MdArrowBack />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleClickDelete}
+                  />
+                </ButtonMargin>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Usuń"
+                    uppercase
+                    fontIconSize="40"
+                    fontSize="14"
+                    icon={<MdDeleteForever />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleDeleteCategory}
+                  />
+                </ButtonMargin>
+              </ButtonsDeletePosition>
+            </Popup>
 
-            <CSSTransition
-              in={clickEdit}
-              timeout={400}
-              classNames="popup"
-              unmountOnExit
+            <Popup
+              popupEnable={clickEdit}
+              position="absolute"
+              title="Edycja kategorii"
+              borderRadius
+              closeTitle={false}
+              smallTitle
+              secondColors
             >
-              <BackgroundEdit>
-                <BackgroundEditContent onClick={handleClickContent}>
-                  <TitleItemCategoryTitleAction>
-                    Edycja kategorii
-                  </TitleItemCategoryTitleAction>
-                  <PaddingContent>
-                    <form onSubmit={handleChangeCategoryTitle}>
-                      <InputIcon
-                        icon={<MdTitle />}
-                        placeholder="Nazwa kategorii"
-                        secondColor
-                        value={categoryTitle}
-                        type="text"
-                        onChange={handleChangeCategoryTitleInput}
-                        required
-                        validText="Minimum 3 znaki"
-                      />
-                      <ButtonsAddPosition>
-                        <ButtonMargin>
-                          <ButtonIcon
-                            title="Cofnij"
-                            uppercase
-                            fontIconSize="40"
-                            fontSize="13"
-                            icon={<MdArrowBack />}
-                            onClick={handleResetAddNewTitle}
-                            customColorButton={
-                              Colors(siteProps).dangerColorDark
-                            }
-                            customColorIcon={Colors(siteProps).dangerColor}
-                          />
-                        </ButtonMargin>
-                        <ButtonMarginSubmit type="submit">
-                          <ButtonIcon
-                            title="Zapisz"
-                            uppercase
-                            fontIconSize="20"
-                            fontSize="13"
-                            icon={<MdLibraryAdd />}
-                            customColorButton={
-                              Colors(siteProps).successColorDark
-                            }
-                            customColorIcon={Colors(siteProps).successColor}
-                            disabled={
-                              categoryTitle.length <= 2 ||
-                              categoryTitle === category.category
-                            }
-                          />
-                        </ButtonMarginSubmit>
-                      </ButtonsAddPosition>
-                    </form>
-                  </PaddingContent>
-                </BackgroundEditContent>
-              </BackgroundEdit>
-            </CSSTransition>
+              <form onSubmit={handleChangeCategoryTitle}>
+                <InputIcon
+                  icon={<MdTitle />}
+                  placeholder="Nazwa kategorii"
+                  secondColor
+                  value={categoryTitle}
+                  type="text"
+                  onChange={handleChangeCategoryTitleInput}
+                  required
+                  validText="Minimum 3 znaki"
+                />
+                <ButtonsAddPosition>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Cofnij"
+                      uppercase
+                      fontIconSize="40"
+                      fontSize="13"
+                      icon={<MdArrowBack />}
+                      onClick={handleResetAddNewTitle}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                    />
+                  </ButtonMargin>
+                  <ButtonMarginSubmit type="submit">
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="13"
+                      icon={<MdLibraryAdd />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={
+                        categoryTitle.length <= 2 ||
+                        categoryTitle === category.category
+                      }
+                    />
+                  </ButtonMarginSubmit>
+                </ButtonsAddPosition>
+              </form>
+            </Popup>
             <ShopStoreContentCategoryNewItem
-              BackgroundEdit={BackgroundEdit}
               clickAdd={clickAdd}
-              BackgroundEditContent={BackgroundEditContent}
               handleClickContent={handleClickContent}
               ButtonsAddPosition={ButtonsAddPosition}
               CheckboxStyle={CheckboxStyle}
@@ -586,8 +530,6 @@ const ShopStoreContentCategory = ({
               ButtonMargin={ButtonMargin}
               siteProps={siteProps}
               ButtonMarginSubmit={ButtonMarginSubmit}
-              TitleItemCategoryTitleAction={TitleItemCategoryTitleAction}
-              PaddingContent={PaddingContent}
               setClickAdd={setClickAdd}
               category={category}
               newCategorys={newCategorys}

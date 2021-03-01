@@ -5,11 +5,11 @@ import { FaChrome } from "react-icons/fa"
 import { MdDelete, MdArrowBack } from "react-icons/md"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import { deleteCompanyFavourites } from "../state/actions"
 import { useDispatch } from "react-redux"
 import { Site } from "../common/Site"
+import Popup from "./Popup"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -91,28 +91,6 @@ const PositionRelative = styled.div`
   position: relative;
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: transparent;
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-`
-
 const ButtonsAddPosition = styled.div`
   display: flex;
   flex-direction: row;
@@ -188,43 +166,39 @@ const UserFavouritesItem = ({
           <MdDelete />
         </PositionCompanyFavDelete>
       </TitleCategory>
-      <CSSTransition
-        in={confirmDelete}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={confirmDelete}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <BackgroundEditContent>
-            <ButtonsAddPosition>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="15"
-                  icon={<MdArrowBack />}
-                  onClick={handleClickConfirmDelete}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                />
-              </ButtonMargin>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Usuń z ulubionych"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="15"
-                  icon={<MdDelete />}
-                  onClick={handleDeleteFromFav}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                />
-              </ButtonMargin>
-            </ButtonsAddPosition>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
+        <ButtonsAddPosition>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="20"
+              fontSize="15"
+              icon={<MdArrowBack />}
+              onClick={handleClickConfirmDelete}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+            />
+          </ButtonMargin>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Usuń z ulubionych"
+              uppercase
+              fontIconSize="20"
+              fontSize="15"
+              icon={<MdDelete />}
+              onClick={handleDeleteFromFav}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+            />
+          </ButtonMargin>
+        </ButtonsAddPosition>
+      </Popup>
     </PositionRelative>
   )
 }

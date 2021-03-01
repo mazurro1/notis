@@ -3,11 +3,11 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import { MdEdit, MdDelete } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
-import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "../ButtonIcon"
 import { useDispatch } from "react-redux"
 import { fetchDeleteConstHappyHour } from "../../state/actions"
 import HappyHoursConstContentCategoryItemEdit from "./HappyHoursConstContentCategoryItemEdit"
+import Popup from "../Popup"
 
 const ItemCategoryItem = styled.div`
   position: relative;
@@ -107,19 +107,6 @@ const IconDelete = styled.div`
   &:hover {
     background-color: ${props => Colors(props.siteProps).dangerColorDark};
   }
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `
 
 const BackgroundDeleteConfirm = styled.div`
@@ -229,41 +216,39 @@ const HappyHoursConstContentCategoryItem = ({
           </IconEdit>
         </EditModeAndDeleteIcons>
       )}
-      <CSSTransition
-        in={deleteItemEnable}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={deleteItemEnable}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <BackgroundDeleteConfirm>
-            <MarginButton>
-              <ButtonIcon
-                title="Anuluj"
-                uppercase
-                fontIconSize="20"
-                fontSize="16"
-                icon={<FaArrowLeft />}
-                onClick={handleDeleteItemEnable}
-                customColorButton={Colors(siteProps).successColorDark}
-                customColorIcon={Colors(siteProps).successColor}
-              />
-            </MarginButton>
-            <MarginButton>
-              <ButtonIcon
-                title="Usuń"
-                uppercase
-                fontIconSize="20"
-                fontSize="16"
-                icon={<MdDelete />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleDeleteItem}
-              />
-            </MarginButton>
-          </BackgroundDeleteConfirm>
-        </BackgroundEdit>
-      </CSSTransition>
+        <BackgroundDeleteConfirm>
+          <MarginButton>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="20"
+              fontSize="13"
+              icon={<FaArrowLeft />}
+              onClick={handleDeleteItemEnable}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+            />
+          </MarginButton>
+          <MarginButton>
+            <ButtonIcon
+              title="Usuń"
+              uppercase
+              fontIconSize="20"
+              fontSize="13"
+              icon={<MdDelete />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleDeleteItem}
+            />
+          </MarginButton>
+        </BackgroundDeleteConfirm>
+      </Popup>
       <HappyHoursConstContentCategoryItemEdit
         siteProps={siteProps}
         TitleRightColumn={TitleRightColumn}

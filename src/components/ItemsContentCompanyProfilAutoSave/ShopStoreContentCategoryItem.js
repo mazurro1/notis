@@ -3,8 +3,8 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit, MdArrowBack, MdDeleteForever, MdDelete } from "react-icons/md"
-import { CSSTransition } from "react-transition-group"
 import ShopStoreContentCategoryItemEdit from "./ShopStoreContentCategoryItemEdit"
+import Popup from "../Popup"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -241,43 +241,39 @@ const ShopStoreContentCategoryItem = ({
         CheckboxStyle={CheckboxStyle}
         TitleItemCategoryTitleAction={TitleItemCategoryTitleAction}
       />
-      <CSSTransition
-        in={clickDelete}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={clickDelete}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <BackgroundEditContent onClick={handleClickContent} transparent>
-            <ButtonsDeletePosition>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="40"
-                  fontSize="14"
-                  icon={<MdArrowBack />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleClickDelete}
-                />
-              </ButtonMargin>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Usuń"
-                  uppercase
-                  fontIconSize="40"
-                  fontSize="14"
-                  icon={<MdDeleteForever />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleConfirmDeleteItem}
-                />
-              </ButtonMargin>
-            </ButtonsDeletePosition>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
+        <ButtonsDeletePosition>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              onClick={handleClickDelete}
+            />
+          </ButtonMargin>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Usuń"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdDeleteForever />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleConfirmDeleteItem}
+            />
+          </ButtonMargin>
+        </ButtonsDeletePosition>
+      </Popup>
     </ServiceItem>
   )
 }

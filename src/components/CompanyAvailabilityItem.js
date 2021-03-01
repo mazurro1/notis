@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import { MdDelete, MdEdit, MdArrowBack } from "react-icons/md"
-import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "./ButtonIcon"
 import { useDispatch } from "react-redux"
 import { deleteCompanyAvailability } from "../state/actions"
 import CompanyAvailabilityItemEdit from "./CompanyAvailabilityItemEdit"
+import Popup from "./Popup"
 
 const ItemAvailability = styled.div`
   position: relative;
@@ -16,7 +16,7 @@ const ItemAvailability = styled.div`
   border-radius: 5px;
   margin: 5px 0;
   padding-right: 50px;
-  padding-bottom: ${props => (props.active ? "200px" : "5px")};
+  padding-bottom: ${props => (props.active ? "350px" : "5px")};
   transition-property: background-color, color, padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -82,28 +82,6 @@ const ItemNames = styled.div`
   }
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: transparent;
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-`
-
 const ButtonsAddPosition = styled.div`
   display: flex;
   flex-direction: row;
@@ -163,43 +141,40 @@ const CompanyAvailabilityItem = ({
         </IconsPostitions>
       )}
       {userCompanyAvailabilityPermission && (
-        <CSSTransition
-          in={deleteVisible}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={deleteVisible}
+          position="absolute"
+          noContent
+          borderRadius
+          smallTitle
         >
-          <BackgroundEdit>
-            <BackgroundEditContent>
-              <ButtonsAddPosition>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="15"
-                    icon={<MdArrowBack />}
-                    onClick={handleDeleteVisible}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                  />
-                </ButtonMargin>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Usuń"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="15"
-                    icon={<MdDelete />}
-                    onClick={handleDeleteItem}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                  />
-                </ButtonMargin>
-              </ButtonsAddPosition>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
+          <ButtonsAddPosition>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="15"
+                icon={<MdArrowBack />}
+                onClick={handleDeleteVisible}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Usuń"
+                uppercase
+                fontIconSize="20"
+                fontSize="15"
+                icon={<MdDelete />}
+                onClick={handleDeleteItem}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+              />
+            </ButtonMargin>
+          </ButtonsAddPosition>
+        </Popup>
       )}
       {userCompanyAvailabilityPermission && (
         <CompanyAvailabilityItemEdit

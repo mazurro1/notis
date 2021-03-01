@@ -3,35 +3,13 @@ import { Colors } from "../../common/Colors"
 import styled from "styled-components"
 import { MdStar, MdComment, MdSave, MdArrowBack } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
-import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { useDispatch, useSelector } from "react-redux"
 import {
   fetchAddReplayOpinion,
   resetOpinionFunction,
 } from "../../state/actions"
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-`
-
-const BackgroundEditContentBg = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-`
+import Popup from "../Popup"
 
 const ButtonsAddPositionOpinion = styled.div`
   display: flex;
@@ -125,21 +103,6 @@ const OpinionWrap = styled.div`
 const ReplayStyle = styled.div`
   font-size: 0.9rem;
   color: ${props => Colors(props.siteProps).primaryColorDark};
-`
-
-const TitleAddOpnion = styled.div`
-  position: relative;
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  margin-bottom: 10px;
-  transition-property: background-color, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-`
-
-const PaddingBackground = styled.div`
-  padding: 10px;
 `
 
 const EditedMessage = styled.div`
@@ -317,62 +280,58 @@ const OpinionsComponentItem = ({
             />
           </ButtonMoreOpinion>
         )}
-        <CSSTransition
-          in={addReplay}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={addReplay}
+          position="absolute"
+          title={
+            !!opinion.replayOpinionMessage
+              ? "Edytuj opinie"
+              : "Odpowiedz na opinie"
+          }
+          borderRadius
+          closeTitle={false}
+          smallTitle
+          secondColors
         >
-          <BackgroundEdit>
-            <BackgroundEditContentBg siteProps={siteProps}>
-              <TitleAddOpnion>
-                {!!opinion.replayOpinionMessage
-                  ? "Edytuj opinie"
-                  : "Odpowiedz na opinie"}
-              </TitleAddOpnion>
-              <PaddingBackground>
-                <InputIcon
-                  icon={<MdComment />}
-                  placeholder="Odpowiedz"
-                  value={opinionText}
-                  onChange={handleChangeTextOpinion}
-                  validText="Minimum 2 znaki"
-                />
-                <ButtonsAddPositionOpinion>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="15"
-                      icon={<MdArrowBack />}
-                      onClick={handleResetReplay}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonMargin>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title={
-                        !!opinion.replayOpinionMessage
-                          ? "Aktualizuj opinie"
-                          : "Dodaj opinie"
-                      }
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="15"
-                      icon={<MdSave />}
-                      onClick={handleAddReplayFetch}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={disabledSaveOpinion}
-                    />
-                  </ButtonMargin>
-                </ButtonsAddPositionOpinion>
-              </PaddingBackground>
-            </BackgroundEditContentBg>
-          </BackgroundEdit>
-        </CSSTransition>
+          <InputIcon
+            icon={<MdComment />}
+            placeholder="Odpowiedz"
+            value={opinionText}
+            onChange={handleChangeTextOpinion}
+            validText="Minimum 2 znaki"
+          />
+          <ButtonsAddPositionOpinion>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="15"
+                icon={<MdArrowBack />}
+                onClick={handleResetReplay}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title={
+                  !!opinion.replayOpinionMessage
+                    ? "Aktualizuj opinie"
+                    : "Dodaj opinie"
+                }
+                uppercase
+                fontIconSize="20"
+                fontSize="15"
+                icon={<MdSave />}
+                onClick={handleAddReplayFetch}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                disabled={disabledSaveOpinion}
+              />
+            </ButtonMargin>
+          </ButtonsAddPositionOpinion>
+        </Popup>
       </OpinionStyle>
     </div>
   )

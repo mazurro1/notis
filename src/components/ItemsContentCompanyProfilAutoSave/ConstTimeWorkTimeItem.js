@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit } from "react-icons/md"
-import { CSSTransition } from "react-transition-group"
 import { Colors } from "../../common/Colors"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import TimePickerContent from "../TimePicker"
+import Popup from "../Popup"
 
 const PositionTitleAndButtons = styled.div`
   display: flex;
@@ -21,43 +21,11 @@ const ContentDateButtons = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `
 
 const DayOfTheWeekStyle = styled.div`
   font-size: 1rem;
-`
-
-const EditUserBackgroundContentCosntHour = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props =>
-    props.noBg ? "transparent" : Colors(props.siteProps).companyItemBackground};
-  z-index: 10;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  transition-property: height;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
-
-const EditUserBackgroundConstHour = styled.div`
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  border-radius: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `
 
 const TextCheckbox = styled.span`
@@ -87,7 +55,6 @@ const ConstTimeWorkTime = ({
   handleClickContent,
   ButtonContent,
   ButtonDeleteStyle,
-  DayHoursStyle,
   handleSaveConstTimeWorkItem,
   handleCloseConstTimeWorkItem,
   selectedDaySelectEditedWorkersHours,
@@ -194,129 +161,104 @@ const ConstTimeWorkTime = ({
           />
         </div>
       </PositionTitleAndButtons>
-      <CSSTransition
-        in={editDay}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={editDay}
+        position="absolute"
+        title={item.title}
+        borderRadius
+        closeTitle={false}
+        smallTitle
+        secondColors
       >
-        <EditUserBackgroundConstHour>
-          <EditUserBackgroundContentCosntHour
-            onClick={handleClickContent}
-            siteProps={siteProps}
-          >
-            <div>
-              <DayHoursStyle>{item.title}:</DayHoursStyle>
-              <PaddingContent>
-                <ContentDateButtons>
-                  <div>
-                    Początek pracy:
-                    <ButtonIcon
-                      title={dayStart.length > 0 ? dayStart : "0:00"}
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<MdEdit />}
-                      onClick={handleEditStartDay}
-                      secondColors
-                    />
-                  </div>
-                  <div>
-                    Koniec pracy:
-                    <ButtonIcon
-                      title={dayEnd.length > 0 ? dayEnd : "0:00"}
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<MdEdit />}
-                      onClick={handleEditEndDay}
-                      secondColors
-                    />
-                  </div>
-                </ContentDateButtons>
-                <CheckboxStyle siteProps={siteProps}>
-                  <Checkbox
-                    theme="material-checkbox"
-                    value={disabledDay}
-                    onChange={handleChangeCheckbox}
-                  >
-                    <TextCheckbox>Dzień wolony</TextCheckbox>
-                  </Checkbox>
-                </CheckboxStyle>
-                <ButtonContent>
-                  <ButtonDeleteStyle>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaArrowLeft />}
-                      onClick={handleCloseDay}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonDeleteStyle>
-                  <ButtonDeleteStyle>
-                    <ButtonIcon
-                      title="Zapisz"
-                      uppercase
-                      fontIconSize="18"
-                      fontSize="14"
-                      icon={<FaSave />}
-                      onClick={handleSave}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={disabledButtonSave}
-                    />
-                  </ButtonDeleteStyle>
-                </ButtonContent>
-              </PaddingContent>
-            </div>
-          </EditUserBackgroundContentCosntHour>
-        </EditUserBackgroundConstHour>
-      </CSSTransition>
-      <CSSTransition
-        in={dayTimeStart}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <EditUserBackgroundConstHour>
-          <EditUserBackgroundContentCosntHour
-            onClick={handleClickContent}
-            active={dayTimeStart}
-            siteProps={siteProps}
-          >
-            <TimePickerContent
-              setSelectedTime={handleSetTimeStart}
-              timeTimePicker={dayStart}
-              secondColor
-              maxTime={dayEnd}
+        <ContentDateButtons>
+          <div>
+            Początek pracy:
+            <ButtonIcon
+              title={dayStart.length > 0 ? dayStart : "0:00"}
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<MdEdit />}
+              onClick={handleEditStartDay}
+              secondColors
             />
-          </EditUserBackgroundContentCosntHour>
-        </EditUserBackgroundConstHour>
-      </CSSTransition>
-      <CSSTransition
-        in={dayTimeEnd}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <EditUserBackgroundConstHour>
-          <EditUserBackgroundContentCosntHour
-            onClick={handleClickContent}
-            active={dayTimeEnd}
-            siteProps={siteProps}
-          >
-            <TimePickerContent
-              setSelectedTime={handleSetTimeEnd}
-              timeTimePicker={dayEnd}
-              secondColor
-              minTime={dayStart}
+          </div>
+          <div>
+            Koniec pracy:
+            <ButtonIcon
+              title={dayEnd.length > 0 ? dayEnd : "0:00"}
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<MdEdit />}
+              onClick={handleEditEndDay}
+              secondColors
             />
-          </EditUserBackgroundContentCosntHour>
-        </EditUserBackgroundConstHour>
-      </CSSTransition>
+          </div>
+        </ContentDateButtons>
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={disabledDay}
+            onChange={handleChangeCheckbox}
+          >
+            <TextCheckbox>Dzień wolony</TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+        <ButtonContent>
+          <ButtonDeleteStyle>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaArrowLeft />}
+              onClick={handleCloseDay}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+            />
+          </ButtonDeleteStyle>
+          <ButtonDeleteStyle>
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="18"
+              fontSize="14"
+              icon={<FaSave />}
+              onClick={handleSave}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={disabledButtonSave}
+            />
+          </ButtonDeleteStyle>
+        </ButtonContent>
+      </Popup>
+      <Popup
+        popupEnable={dayTimeStart}
+        position="absolute"
+        borderRadius
+        noContent
+      >
+        <TimePickerContent
+          setSelectedTime={handleSetTimeStart}
+          timeTimePicker={dayStart}
+          secondColor
+          maxTime={dayEnd}
+        />
+      </Popup>
+      <Popup
+        popupEnable={dayTimeEnd}
+        position="absolute"
+        borderRadius
+        noContent
+      >
+        <TimePickerContent
+          setSelectedTime={handleSetTimeEnd}
+          timeTimePicker={dayEnd}
+          secondColor
+          minTime={dayStart}
+        />
+      </Popup>
     </>
   )
 }

@@ -12,7 +12,6 @@ import {
   MdBlock,
   MdPhone,
 } from "react-icons/md"
-import { CSSTransition } from "react-transition-group"
 import InputIcon from "./InputIcon"
 import ButtonIcon from "./ButtonIcon"
 import sal from "sal.js"
@@ -30,6 +29,7 @@ import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import WorkerUsersInformationItemMessage from "./WorkerUsersInformationItemMessage"
 import { Site } from "../common/Site"
+import Popup from "./Popup"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -189,33 +189,6 @@ const IconCollapse = styled.div`
   }
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-  cursor: default;
-  overflow: hidden;
-`
-
-const BackgroundEditContentPadding = styled.div`
-  padding: 10px;
-`
-
 const ButtonsAddPosition = styled.div`
   display: flex;
   flex-direction: row;
@@ -232,12 +205,6 @@ const ButtonMarginSubmit = styled.button`
   margin: 5px;
   border: none;
   background-color: transparent;
-`
-
-const TitleEditContent = styled.div`
-  background-color: ${props => Colors(props.siteProps).primaryColorDark};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding: 5px 10px;
 `
 
 const HeightContentHistory = styled.div`
@@ -300,6 +267,7 @@ const TimeReserwation = styled.div`
 const PhoneNumberContent = styled.div`
   position: relative;
   padding: 10px;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
 const ButtonStylePhone = styled.div`
@@ -684,7 +652,7 @@ const WorkerUsersInformationItem = ({
   return (
     <CategoryItemStyle>
       <TitleCategory
-        clickAdd={clickAdd || clickBlock || clickHistory || clickPhone}
+        clickAdd={clickAdd || clickHistory || clickPhone}
         siteProps={siteProps}
         onClick={handleClickCollapse}
         isBlocked={!!userInfo.isBlocked}
@@ -732,196 +700,154 @@ const WorkerUsersInformationItem = ({
         >
           <MdPhone />
         </IconPosition>
-        <CSSTransition
-          in={clickAdd}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={clickAdd}
+          position="absolute"
+          title="Nowa wiadomość o kliencie"
+          borderRadius
+          closeTitle={false}
+          smallTitle
         >
-          <BackgroundEdit onClick={handleCancelAdd}>
-            <BackgroundEditContent
-              onClick={handleClickContent}
-              siteProps={siteProps}
-            >
-              <TitleEditContent siteProps={siteProps}>
-                Nowa wiadomość o kliencie
-              </TitleEditContent>
-              <BackgroundEditContentPadding>
-                <form onSubmit={handleAddMessage}>
-                  <InputIcon
-                    icon={<MdMessage />}
-                    placeholder="Wiadomość"
-                    value={newMessage}
-                    type="text"
-                    onChange={handleChangeMessage}
-                    required
-                  />
-                  <ButtonsAddPosition>
-                    <ButtonMargin>
-                      <ButtonIcon
-                        title="Anuluj"
-                        uppercase
-                        fontIconSize="40"
-                        fontSize="13"
-                        icon={<MdArrowBack />}
-                        onClick={handleCancelAdd}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                      />
-                    </ButtonMargin>
-                    <ButtonMarginSubmit type="submit">
-                      <ButtonIcon
-                        title="Dodaj"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="15"
-                        icon={<MdAddBox />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                      />
-                    </ButtonMarginSubmit>
-                  </ButtonsAddPosition>
-                </form>
-              </BackgroundEditContentPadding>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
-        <CSSTransition
-          in={clickBlock}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+          <form onSubmit={handleAddMessage}>
+            <InputIcon
+              icon={<MdMessage />}
+              placeholder="Wiadomość"
+              value={newMessage}
+              type="text"
+              onChange={handleChangeMessage}
+              required
+            />
+            <ButtonsAddPosition>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="13"
+                  icon={<MdArrowBack />}
+                  onClick={handleCancelAdd}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonMargin>
+              <ButtonMarginSubmit type="submit">
+                <ButtonIcon
+                  title="Dodaj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="13"
+                  icon={<MdAddBox />}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                />
+              </ButtonMarginSubmit>
+            </ButtonsAddPosition>
+          </form>
+        </Popup>
+        <Popup
+          popupEnable={clickBlock}
+          position="absolute"
+          borderRadius
+          noContent
         >
-          <BackgroundEdit onClick={handleClickBlock}>
-            <BackgroundEditContent
-              onClick={handleClickContent}
-              siteProps={siteProps}
-            >
-              <TitleEditContent siteProps={siteProps}>
-                Blokuj użytkownika
-              </TitleEditContent>
-              <BackgroundEditContentPadding>
-                <ButtonsAddPosition>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="40"
-                      fontSize="15"
-                      icon={<MdArrowBack />}
-                      onClick={handleClickBlock}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                    />
-                  </ButtonMargin>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title={!!userInfo.isBlocked ? "Odblokuj" : "Blokuj"}
-                      uppercase
-                      fontIconSize="40"
-                      fontSize="15"
-                      icon={<MdAddBox />}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                      onClick={handleConfirmBlockUser}
-                    />
-                  </ButtonMargin>
-                </ButtonsAddPosition>
-              </BackgroundEditContentPadding>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
-        <CSSTransition
-          in={clickPhone}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+          <ButtonsAddPosition>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="40"
+                fontSize="15"
+                icon={<MdArrowBack />}
+                onClick={handleClickBlock}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title={!!userInfo.isBlocked ? "Odblokuj" : "Blokuj"}
+                uppercase
+                fontIconSize="40"
+                fontSize="15"
+                icon={<MdAddBox />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleConfirmBlockUser}
+              />
+            </ButtonMargin>
+          </ButtonsAddPosition>
+        </Popup>
+        <Popup
+          popupEnable={clickPhone}
+          position="absolute"
+          title="Numer klienta"
+          borderRadius
+          closeTitle={false}
+          smallTitle
         >
-          <BackgroundEdit onClick={handleClickPhone}>
-            <BackgroundEditContent
-              onClick={handleClickContent}
-              siteProps={siteProps}
-            >
-              <TitleEditContent siteProps={siteProps}>
-                Numer klienta
-              </TitleEditContent>
-              <PhoneNumberContent>
-                <PaddingTopPhone>Numer telefonu: </PaddingTopPhone>
-                {userInfo.numberPhone ? (
-                  userInfo.numberPhone
-                ) : (
-                  <ButtonStylePhone>
-                    <ButtonIcon
-                      title="Zobacz numer"
-                      uppercase
-                      fontIconSize="40"
-                      fontSize="15"
-                      icon={<MdPhone />}
-                      onClick={handleFetchPhoneNumber}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                    />
-                  </ButtonStylePhone>
-                )}
-              </PhoneNumberContent>
-              <BackgroundEditContentPadding>
-                <ButtonsAddPosition>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Wróc"
-                      uppercase
-                      fontIconSize="40"
-                      fontSize="15"
-                      icon={<MdArrowBack />}
-                      onClick={handleClickPhone}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonMargin>
-                </ButtonsAddPosition>
-              </BackgroundEditContentPadding>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
-        <CSSTransition
-          in={clickHistory}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+          <PhoneNumberContent siteProps={siteProps}>
+            <PaddingTopPhone>Numer telefonu: </PaddingTopPhone>
+            {userInfo.numberPhone ? (
+              userInfo.numberPhone
+            ) : (
+              <ButtonStylePhone>
+                <ButtonIcon
+                  title="Zobacz numer"
+                  uppercase
+                  fontIconSize="40"
+                  fontSize="15"
+                  icon={<MdPhone />}
+                  onClick={handleFetchPhoneNumber}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                />
+              </ButtonStylePhone>
+            )}
+          </PhoneNumberContent>
+          <ButtonsAddPosition>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Wróc"
+                uppercase
+                fontIconSize="40"
+                fontSize="15"
+                icon={<MdArrowBack />}
+                onClick={handleClickPhone}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+              />
+            </ButtonMargin>
+          </ButtonsAddPosition>
+        </Popup>
+        <Popup
+          popupEnable={clickHistory}
+          position="absolute"
+          title="Historia rezerwacji"
+          borderRadius
+          closeTitle={false}
+          smallTitle
         >
-          <BackgroundEdit onClick={handleClickHistory}>
-            <BackgroundEditContent
-              onClick={handleClickContent}
-              siteProps={siteProps}
-            >
-              <TitleEditContent siteProps={siteProps}>
-                Historia rezerwacji
-              </TitleEditContent>
-              <BackgroundEditContentPadding>
-                <HeightContentHistory
-                  ref={refAllHistory}
-                  onScroll={handleScrollContainer}
-                >
-                  {mapedUserReserwations}
-                </HeightContentHistory>
-                <ButtonsAddPosition>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Wróć"
-                      uppercase
-                      fontIconSize="40"
-                      fontSize="15"
-                      icon={<MdArrowBack />}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                      onClick={handleClickHistory}
-                    />
-                  </ButtonMargin>
-                </ButtonsAddPosition>
-              </BackgroundEditContentPadding>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
+          <HeightContentHistory
+            ref={refAllHistory}
+            onScroll={handleScrollContainer}
+          >
+            {mapedUserReserwations}
+          </HeightContentHistory>
+          <ButtonsAddPosition>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Wróć"
+                uppercase
+                fontIconSize="40"
+                fontSize="15"
+                icon={<MdArrowBack />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleClickHistory}
+              />
+            </ButtonMargin>
+          </ButtonsAddPosition>
+        </Popup>
       </TitleCategory>
       <Collapse isOpened={userCollapseActive}>
         {mapInformations.length > 0 ? (

@@ -11,7 +11,6 @@ import {
   MdWork,
 } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
-import { CSSTransition } from "react-transition-group"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { ReserwationDelay } from "../../common/ReserwationDelay"
@@ -20,6 +19,7 @@ import SelectCreated from "../SelectCreated"
 import { AllIndustries } from "../../common/AllIndustries"
 import { fetchSaveCompanySettings } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
+import Popup from "../Popup"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -132,31 +132,6 @@ const CirclePhone = styled.div`
   margin-right: 20px;
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
-
 const ButtonSubmit = styled.button`
   border: none;
   padding: 0;
@@ -231,13 +206,6 @@ const AllReserwationTime = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const TextStyleInfo = styled.div`
@@ -601,141 +569,127 @@ const OpinionAndAdressContent = ({
               />
             </div>
           </ButtonEditPosition>
-
-          <CSSTransition
-            in={editable}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={editable}
+            position="absolute"
+            title="Edycja ustawień"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+            maxHeight={false}
+            secondColors
           >
-            <BackgroundEdit>
-              <BackgroundEditContent
-                onClick={handleClickContentAddWorkers}
-                siteProps={siteProps}
-              >
-                <TitleRightColumnEdit siteProps={siteProps}>
-                  Edycja ustawień
-                </TitleRightColumnEdit>
-                <PaddingContent>
-                  <form onSubmit={handleOnSubmit}>
-                    <InputIcon
-                      icon={<MdWork />}
-                      placeholder="Nazwa firmy"
-                      type="text"
-                      secondColor
-                      onChange={e => handleChangeInputs(e, setCompanyNameInput)}
-                      value={companyNameInput}
-                      required
+            <form onSubmit={handleOnSubmit}>
+              <InputIcon
+                icon={<MdWork />}
+                placeholder="Nazwa firmy"
+                type="text"
+                secondColor
+                onChange={e => handleChangeInputs(e, setCompanyNameInput)}
+                value={companyNameInput}
+                required
+              />
+              <InputIcon
+                icon={<MdLocationCity />}
+                placeholder="Miejscowość"
+                type="text"
+                secondColor
+                onChange={e => handleChangeInputs(e, setCityInput)}
+                value={cityInput}
+                required
+              />
+              <InputIcon
+                icon={<FaMapSigns />}
+                placeholder="Dzielnica"
+                type="text"
+                secondColor
+                onChange={e => handleChangeInputs(e, setDiscrictInput)}
+                value={discrictInput}
+                required
+              />
+              <InputIcon
+                icon={<MdLocationOn />}
+                placeholder="Adres firmy"
+                type="text"
+                secondColor
+                onChange={e => handleChangeInputs(e, setAdressInput)}
+                value={adressInput}
+                required
+              />
+              <InputIcon
+                icon={<MdPhoneAndroid />}
+                placeholder="Numer telefonu"
+                type="number"
+                secondColor
+                onChange={e => handleChangeInputs(e, setPhoneInput)}
+                value={phoneInput}
+                required
+              />
+              <TextStyleInfo siteProps={siteProps}>
+                Rezerwacja co:
+              </TextStyleInfo>
+              <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
+              <TextStyleInfo siteProps={siteProps}>
+                Rezerwacja do:
+              </TextStyleInfo>
+              <AllReserwationTime>
+                {mapReserwationDelayMonth}
+              </AllReserwationTime>
+              <SelectCreated
+                options={AllIndustries[siteProps.language]}
+                value={industriesComponent}
+                handleChange={handleChangeIndystries}
+                placeholder="Typy działalności"
+                defaultMenuIsOpen={false}
+                widthAuto
+                isMulti
+                isClearable={false}
+                darkSelect
+                onlyText
+                maxMenuHeight={200}
+                top
+              />
+              <CheckboxStyle siteProps={siteProps}>
+                <Checkbox
+                  theme="material-checkbox"
+                  value={companyPausedItem}
+                  onChange={handleChangeCheckbox}
+                >
+                  <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
+                </Checkbox>
+              </CheckboxStyle>
+              <ButtonPosition>
+                <ButtonMargin>
+                  <>
+                    <ButtonIcon
+                      title="Cofnij"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaArrowLeft />}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                      onClick={handleResetInputs}
                     />
-                    <InputIcon
-                      icon={<MdLocationCity />}
-                      placeholder="Miejscowość"
-                      type="text"
-                      secondColor
-                      onChange={e => handleChangeInputs(e, setCityInput)}
-                      value={cityInput}
-                      required
+                  </>
+                </ButtonMargin>
+                <ButtonSubmit type="submit">
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaSave />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={!disabledButtonSubmit}
                     />
-                    <InputIcon
-                      icon={<FaMapSigns />}
-                      placeholder="Dzielnica"
-                      type="text"
-                      secondColor
-                      onChange={e => handleChangeInputs(e, setDiscrictInput)}
-                      value={discrictInput}
-                      required
-                    />
-                    <InputIcon
-                      icon={<MdLocationOn />}
-                      placeholder="Adres firmy"
-                      type="text"
-                      secondColor
-                      onChange={e => handleChangeInputs(e, setAdressInput)}
-                      value={adressInput}
-                      required
-                    />
-                    <InputIcon
-                      icon={<MdPhoneAndroid />}
-                      placeholder="Numer telefonu"
-                      type="number"
-                      secondColor
-                      onChange={e => handleChangeInputs(e, setPhoneInput)}
-                      value={phoneInput}
-                      required
-                    />
-                    <TextStyleInfo siteProps={siteProps}>
-                      Rezerwacja co:
-                    </TextStyleInfo>
-                    <AllReserwationTime>
-                      {mapReserwationDelay}
-                    </AllReserwationTime>
-                    <TextStyleInfo siteProps={siteProps}>
-                      Rezerwacja do:
-                    </TextStyleInfo>
-                    <AllReserwationTime>
-                      {mapReserwationDelayMonth}
-                    </AllReserwationTime>
-                    <SelectCreated
-                      options={AllIndustries[siteProps.language]}
-                      value={industriesComponent}
-                      handleChange={handleChangeIndystries}
-                      placeholder="Typy działalności"
-                      defaultMenuIsOpen={false}
-                      widthAuto
-                      isMulti
-                      isClearable={false}
-                      darkSelect
-                      onlyText
-                      maxMenuHeight={200}
-                    />
-                    <CheckboxStyle siteProps={siteProps}>
-                      <Checkbox
-                        theme="material-checkbox"
-                        value={companyPausedItem}
-                        onChange={handleChangeCheckbox}
-                      >
-                        <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
-                      </Checkbox>
-                    </CheckboxStyle>
-                    <ButtonPosition>
-                      <ButtonMargin>
-                        <>
-                          <ButtonIcon
-                            title="Cofnij"
-                            uppercase
-                            fontIconSize="16"
-                            fontSize="12"
-                            icon={<FaArrowLeft />}
-                            customColorButton={
-                              Colors(siteProps).dangerColorDark
-                            }
-                            customColorIcon={Colors(siteProps).dangerColor}
-                            onClick={handleResetInputs}
-                          />
-                        </>
-                      </ButtonMargin>
-                      <ButtonSubmit type="submit">
-                        <ButtonMargin>
-                          <ButtonIcon
-                            title="Zapisz"
-                            uppercase
-                            fontIconSize="16"
-                            fontSize="14"
-                            icon={<FaSave />}
-                            customColorButton={
-                              Colors(siteProps).successColorDark
-                            }
-                            customColorIcon={Colors(siteProps).successColor}
-                            disabled={!disabledButtonSubmit}
-                          />
-                        </ButtonMargin>
-                      </ButtonSubmit>
-                    </ButtonPosition>
-                  </form>
-                </PaddingContent>
-              </BackgroundEditContent>
-            </BackgroundEdit>
-          </CSSTransition>
+                  </ButtonMargin>
+                </ButtonSubmit>
+              </ButtonPosition>
+            </form>
+          </Popup>
         </>
       )}
     </HeightComponent>

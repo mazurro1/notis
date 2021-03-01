@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import { MdDelete, MdArrowBack, MdDeleteForever } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
-import { CSSTransition } from "react-transition-group"
+import Popup from "../Popup"
 
 const DayOffStyle = styled.div`
   position: relative;
@@ -66,28 +66,6 @@ const DayOffDelete = styled.div`
   }
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => (props.transparent ? "transparent" : "white")};
-  /* padding: 10px; */
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-`
-
 const ButtonsDeletePosition = styled.div`
   display: block;
   flex-direction: row;
@@ -147,43 +125,39 @@ const DayOffItem = ({
       </MonthNameStyle>
       <DayOffPadding>{item.day}</DayOffPadding>
       {isCompanyEditProfil && editable && (
-        <CSSTransition
-          in={checkDelete}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={checkDelete}
+          position="absolute"
+          borderRadius
+          noContent
         >
-          <BackgroundEdit>
-            <BackgroundEditContent onClick={handleClickContent} transparent>
-              <ButtonsDeletePosition>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="14"
-                    icon={<MdArrowBack />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleCheckDelete}
-                  />
-                </ButtonMargin>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Usuń"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="14"
-                    icon={<MdDeleteForever />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleConfirmDeleteDay}
-                  />
-                </ButtonMargin>
-              </ButtonsDeletePosition>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
+          <ButtonsDeletePosition>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="14"
+                icon={<MdArrowBack />}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                onClick={handleCheckDelete}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Usuń"
+                uppercase
+                fontIconSize="20"
+                fontSize="14"
+                icon={<MdDeleteForever />}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleConfirmDeleteDay}
+              />
+            </ButtonMargin>
+          </ButtonsDeletePosition>
+        </Popup>
       )}
     </DayOffStyle>
   )

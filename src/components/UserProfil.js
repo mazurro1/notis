@@ -3,7 +3,7 @@ import "../../style.css"
 import styled from "styled-components"
 import ButtonIcon from "../components/ButtonIcon"
 import InputIcon from "../components/InputIcon"
-import { FaPhoneAlt, FaLock, FaUserAlt } from "react-icons/fa"
+import { FaLock, FaUserAlt } from "react-icons/fa"
 import {
   MdEdit,
   MdSave,
@@ -28,6 +28,8 @@ import ReactTooltip from "react-tooltip"
 import { fetchEditUser } from "../state/actions"
 import UserProfilImage from "./UserProfilImage"
 import { Site } from "../common/Site"
+import InputPhone from "./InputPhone"
+import Popup from "./Popup"
 
 const AddImage = styled.div`
   position: relative;
@@ -98,12 +100,17 @@ const TextToUser = styled.div`
 `
 
 const MarginComponents = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `
 
 const InputWidht = styled.div`
   max-width: 100%;
   width: 400px;
+`
+
+const InputWidhtPhone = styled.div`
+  margin-left: 10px;
+  margin-top: 10px;
 `
 
 const ButtonIconStyle = styled.div`
@@ -172,28 +179,6 @@ const EditUserImage = styled.div`
   }
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
-  border-radius: 5px;
-  max-height: 90%;
-  color: black;
-  cursor: default;
-  overflow: hidden;
-`
 const TextGallery = styled.div`
   margin-bottom: 20px;
   margin-left: 20px;
@@ -204,17 +189,6 @@ const TextGallery = styled.div`
     color: ${props => Colors(props.siteProps).primaryColorDark};
     padding-right: 10px;
   }
-`
-
-const TitleAddOpnion = styled.div`
-  position: relative;
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  background-color: ${props => Colors(props.siteProps).primaryColorDark};
-  margin-bottom: 10px;
-  transition-property: background-color, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
 `
 
 const MarginButtons = styled.div`
@@ -245,17 +219,19 @@ const UserProfil = ({ userProfilVisible }) => {
   }, [user, userPhone, dispatch])
 
   useEffect(() => {
-    if (!!user.imageUrl) {
-      setAddedImages([
-        {
-          src: `${Site.awsUrl}/${user.imageUrl}`,
-          originalPath: user.imageUrl,
-          isNew: false,
-        },
-      ])
-      setEditImage(false)
-    } else {
-      setAddedImages([])
+    if (!!user) {
+      if (!!user.imageUrl) {
+        setAddedImages([
+          {
+            src: `${Site.awsUrl}/${user.imageUrl}`,
+            originalPath: user.imageUrl,
+            isNew: false,
+          },
+        ])
+        setEditImage(false)
+      } else {
+        setAddedImages([])
+      }
     }
     dispatch(resetUserProfil())
   }, [userProfilVisible, user, userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -430,15 +406,12 @@ const UserProfil = ({ userProfilVisible }) => {
               classNames="popup"
               unmountOnExit
             >
-              <InputWidht>
-                <InputIcon
-                  icon={<FaPhoneAlt />}
-                  placeholder="Numer telefonu"
-                  value={newPhone}
-                  type="number"
-                  onChange={e => handleChangeInput(e, setNewPhone)}
+              <InputWidhtPhone>
+                <InputPhone
+                  setPhoneNumber={setNewPhone}
+                  defaultValues={userPhone}
                 />
-              </InputWidht>
+              </InputWidhtPhone>
             </CSSTransition>
           </MarginComponents>
           <Checkbox
@@ -461,6 +434,7 @@ const UserProfil = ({ userProfilVisible }) => {
                 value={newPassword}
                 type="password"
                 onChange={e => handleChangeInput(e, setNewPassword)}
+                validText="Minimum 5 znaków"
               />
             </InputWidht>
           </CSSTransition>
@@ -478,6 +452,7 @@ const UserProfil = ({ userProfilVisible }) => {
                   value={password}
                   type="password"
                   onChange={e => handleChangeInput(e, setPassword)}
+                  validText="Minimum 5 znaków"
                 />
               </InputWidht>
             </>
@@ -504,74 +479,71 @@ const UserProfil = ({ userProfilVisible }) => {
           </div>
         </ButtonIconStyle>
       </CSSTransition>
-      <CSSTransition
-        in={editImage}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={editImage}
+        position="absolute"
+        title="Edytuj zdjęcie profilowe"
+        borderRadius
+        closeTitle={false}
+        smallTitle
       >
-        <BackgroundEdit>
-          <BackgroundEditContent siteProps={siteProps}>
-            <TitleAddOpnion>Edytuj zdjęcie profilowe</TitleAddOpnion>
-            <TextGallery siteProps={siteProps}>
-              <div>
-                <span>
-                  <MdPhotoSizeSelectLarge />
-                </span>
-                Optymalny rozmiar zdjęcia: 200x200px.
-              </div>
-              <div>
-                <span>
-                  <MdMoveToInbox />
-                </span>
-                Maksymalny rozmiar zdjęcia: 2mpx.
-              </div>
-            </TextGallery>
-            {addedImages.length === 0 ? (
-              <AddImage>
-                <input
-                  type="file"
-                  id="file"
-                  accept="image/*"
-                  onChange={handleAddImage}
-                />
-                <label htmlFor="file">
-                  <MdAddAPhoto />
-                </label>
-              </AddImage>
-            ) : (
-              mapUserImages
-            )}
-            <ButtonsImagePosition>
-              <MarginButtons>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="30"
-                  fontSize="14"
-                  icon={<MdArrowBack />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleEditImage}
-                />
-              </MarginButtons>
-              <MarginButtons>
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="30"
-                  fontSize="14"
-                  icon={<MdSave />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleUploadImage}
-                  disabled={disabledButtonSaveImage}
-                />
-              </MarginButtons>
-            </ButtonsImagePosition>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
+        <TextGallery siteProps={siteProps}>
+          <div>
+            <span>
+              <MdPhotoSizeSelectLarge />
+            </span>
+            Optymalny rozmiar zdjęcia: 200x200px.
+          </div>
+          <div>
+            <span>
+              <MdMoveToInbox />
+            </span>
+            Maksymalny rozmiar zdjęcia: 2mpx.
+          </div>
+        </TextGallery>
+        {addedImages.length === 0 ? (
+          <AddImage>
+            <input
+              type="file"
+              id="file"
+              accept="image/*"
+              onChange={handleAddImage}
+            />
+            <label htmlFor="file">
+              <MdAddAPhoto />
+            </label>
+          </AddImage>
+        ) : (
+          mapUserImages
+        )}
+        <ButtonsImagePosition>
+          <MarginButtons>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleEditImage}
+            />
+          </MarginButtons>
+          <MarginButtons>
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdSave />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              onClick={handleUploadImage}
+              disabled={disabledButtonSaveImage}
+            />
+          </MarginButtons>
+        </ButtonsImagePosition>
+      </Popup>
     </>
   )
 }

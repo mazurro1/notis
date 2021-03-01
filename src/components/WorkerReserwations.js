@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import BigCalendarWorkerReserwations from "./BigCalendarWorkerReserwations"
 import { fetchWorkerReserwationsAll } from "../state/actions"
 import UseWindowSize from "../common/UseWindowSize"
+import CompanyNoAccess from "./CompanyNoAccess"
 
 const WorkerReserwations = ({ handleClose }) => {
   const user = useSelector(state => state.user)
@@ -60,7 +61,7 @@ const WorkerReserwations = ({ handleClose }) => {
           isMobile={isMobile}
         />
       ) : (
-        "Brak uprawnien"
+        <CompanyNoAccess />
       )}
     </>
   )

@@ -1,25 +1,15 @@
 import React from "react"
-import { CSSTransition } from "react-transition-group"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import ButtonIcon from "../ButtonIcon"
 import { Colors } from "../../common/Colors"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
 import ConstTimeWorkTimeItem from "./ConstTimeWorkTimeItem"
-import styled from "styled-components"
-
-const DayHoursStyle = styled.h2`
-  font-size: 1.25rem;
-  display: inline-block;
-  font-family: "Poppins-Regular", sans-serif;
-  border-bottom: 2px solid ${props => Colors(props.siteProps).secondColor};
-`
+import Popup from "../Popup"
 
 const ConstTimeWorkTime = ({
   constTimeWorker,
   handleClickContent,
   siteProps,
-  EditUserBackground,
-  EditUserBackgroundContent,
   ButtonContent,
   ButtonDeleteStyle,
   handleCancelConstTimeWork,
@@ -28,8 +18,6 @@ const ConstTimeWorkTime = ({
   handleSaveConstTimeWorkItem,
   handleCloseConstTimeWorkItem,
   resetConstDays,
-  PaddingContent,
-  TitleRightColumnEdit,
   toSaveWorkerHours = [],
 }) => {
   const mapDaysOfTheWeek = DaySOfTheWeek.map(item => {
@@ -50,7 +38,6 @@ const ConstTimeWorkTime = ({
         handleClickContent={handleClickContent}
         ButtonContent={ButtonContent}
         ButtonDeleteStyle={ButtonDeleteStyle}
-        DayHoursStyle={TitleRightColumnEdit}
         handleSaveConstTimeWorkItem={handleSaveConstTimeWorkItem}
         handleCloseConstTimeWorkItem={handleCloseConstTimeWorkItem}
         resetConstDays={resetConstDays}
@@ -58,54 +45,44 @@ const ConstTimeWorkTime = ({
     )
   })
   return (
-    <CSSTransition
-      in={constTimeWorker}
-      timeout={400}
-      classNames="popup"
-      unmountOnExit
+    <Popup
+      popupEnable={constTimeWorker}
+      position="absolute"
+      title="Godziny pracy"
+      borderRadius
+      closeTitle={false}
+      smallTitle
+      secondColors
     >
-      <EditUserBackground>
-        <EditUserBackgroundContent
-          onClick={handleClickContent}
-          siteProps={siteProps}
-          noRelative
-        >
-          <TitleRightColumnEdit siteProps={siteProps}>
-            GODZINY PRACY
-          </TitleRightColumnEdit>
-          <PaddingContent>
-            {mapDaysOfTheWeek}
-            <ButtonContent>
-              <ButtonDeleteStyle>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaArrowLeft />}
-                  onClick={() => handleCancelConstTimeWork(itemWorker._id)}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                />
-              </ButtonDeleteStyle>
-              <ButtonDeleteStyle>
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="18"
-                  fontSize="14"
-                  icon={<FaSave />}
-                  onClick={() => handleSaveConstTimeWork(itemWorker._id)}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  disabled={toSaveWorkerHours.length === 0}
-                />
-              </ButtonDeleteStyle>
-            </ButtonContent>
-          </PaddingContent>
-        </EditUserBackgroundContent>
-      </EditUserBackground>
-    </CSSTransition>
+      {mapDaysOfTheWeek}
+      <ButtonContent>
+        <ButtonDeleteStyle>
+          <ButtonIcon
+            title="Anuluj"
+            uppercase
+            fontIconSize="16"
+            fontSize="14"
+            icon={<FaArrowLeft />}
+            onClick={() => handleCancelConstTimeWork(itemWorker._id)}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
+          />
+        </ButtonDeleteStyle>
+        <ButtonDeleteStyle>
+          <ButtonIcon
+            title="Zapisz"
+            uppercase
+            fontIconSize="18"
+            fontSize="14"
+            icon={<FaSave />}
+            onClick={() => handleSaveConstTimeWork(itemWorker._id)}
+            customColorButton={Colors(siteProps).successColorDark}
+            customColorIcon={Colors(siteProps).successColor}
+            disabled={toSaveWorkerHours.length === 0}
+          />
+        </ButtonDeleteStyle>
+      </ButtonContent>
+    </Popup>
   )
 }
 export default ConstTimeWorkTime

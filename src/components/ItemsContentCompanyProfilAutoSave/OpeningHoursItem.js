@@ -4,11 +4,11 @@ import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import { MdEdit, MdAccessTime, MdTimelapse } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
-import { CSSTransition } from "react-transition-group"
 import TimePickerContent from "../TimePicker"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft } from "react-icons/fa"
 import { useSelector } from "react-redux"
+import Popup from "../Popup"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -37,37 +37,6 @@ const HeightComponent = styled.div`
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  z-index: 50;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow-y: auto;
-  padding-bottom: ${props => (props.active ? "0px" : "45px")};
-  transition-property: padding-bottom, padding;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-`
-
-const PaddingContent = styled.div`
-  padding: ${props => (props.active ? "0px" : "10px")};
 `
 
 const OpenDate = styled.div`
@@ -111,13 +80,6 @@ const ButtonTimePickerStyle = styled.div`
   padding: 10px;
   font-size: 0.9rem;
   font-family: "Poppins-Medium", sans-serif;
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const OpeningHoursItem = ({
@@ -241,129 +203,106 @@ const OpeningHoursItem = ({
           )}
         </DayDate>
       </OpenDate>
-      <CSSTransition
-        in={itemEditable}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={itemEditable}
+        position="absolute"
+        title={item.dayName}
+        borderRadius
+        closeTitle={false}
+        smallTitle
+        secondColors
       >
-        <BackgroundEdit>
-          <BackgroundEditContent
-            onClick={handleClickContent}
-            siteProps={siteProps}
-          >
-            <TitleRightColumnEdit>{item.dayName}</TitleRightColumnEdit>
-            <PaddingContent>
-              <ButtonsTimePicker>
-                <ButtonTimePickerStyle>
-                  Otwarcie:
-                  <ButtonIcon
-                    title={itemTimeStart}
-                    uppercase
-                    fontIconSize="25"
-                    fontSize="14"
-                    icon={<MdAccessTime />}
-                    secondColors
-                    onClick={handleOpenTimePicker}
-                  />
-                </ButtonTimePickerStyle>
-                <ButtonTimePickerStyle>
-                  Zamknięcie:
-                  <ButtonIcon
-                    title={itemTimeEnd}
-                    uppercase
-                    fontIconSize="25"
-                    fontSize="14"
-                    icon={<MdTimelapse />}
-                    secondColors
-                    onClick={handleCloseTimePicker}
-                  />
-                </ButtonTimePickerStyle>
-              </ButtonsTimePicker>
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={checkboxDisabledDay}
-                  onChange={handleChangeCheckbox}
-                >
-                  <TextCheckbox>Nieczynne</TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              <ButtonEditPosition>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Cofnij"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleResetButton}
-                  />
-                </MarginButton>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Potwierdz"
-                    uppercase
-                    fontIconSize="25"
-                    fontSize="14"
-                    icon={<MdEdit />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={!disabledButtonSave}
-                    onClick={handleSaveChangesTimeDay}
-                  />
-                </MarginButton>
-              </ButtonEditPosition>
-            </PaddingContent>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
-      <CSSTransition
-        in={activeTimePickerOpen}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <BackgroundEdit>
-          <BackgroundEditContent
-            onClick={handleClickContent}
-            active={activeTimePickerOpen}
-            siteProps={siteProps}
-          >
-            <TimePickerContent
-              handleResetTakeData={handleResetOpenTimePicker}
-              setSelectedTime={handleSetTimeOpen}
-              timeTimePicker={itemTimeStart}
-              secondColor
-              maxTime={itemTimeEnd}
+        <ButtonsTimePicker>
+          <ButtonTimePickerStyle>
+            Otwarcie:
+            <ButtonIcon
+              title={itemTimeStart}
+              uppercase
+              fontIconSize="25"
+              fontSize="14"
+              icon={<MdAccessTime />}
+              secondColors
+              onClick={handleOpenTimePicker}
             />
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
-      <CSSTransition
-        in={activeTimePickerClose}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <BackgroundEdit>
-          <BackgroundEditContent
-            onClick={handleClickContent}
-            active={activeTimePickerClose}
-            siteProps={siteProps}
-          >
-            <TimePickerContent
-              handleResetTakeData={handleResetCloseTimePicker}
-              setSelectedTime={handleSetTimeClose}
-              timeTimePicker={itemTimeEnd}
-              secondColor
-              minTime={itemTimeStart}
+          </ButtonTimePickerStyle>
+          <ButtonTimePickerStyle>
+            Zamknięcie:
+            <ButtonIcon
+              title={itemTimeEnd}
+              uppercase
+              fontIconSize="25"
+              fontSize="14"
+              icon={<MdTimelapse />}
+              secondColors
+              onClick={handleCloseTimePicker}
             />
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
+          </ButtonTimePickerStyle>
+        </ButtonsTimePicker>
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={checkboxDisabledDay}
+            onChange={handleChangeCheckbox}
+          >
+            <TextCheckbox>Nieczynne</TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+        <ButtonEditPosition>
+          <MarginButton>
+            <ButtonIcon
+              title="Cofnij"
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaArrowLeft />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleResetButton}
+            />
+          </MarginButton>
+          <MarginButton>
+            <ButtonIcon
+              title="Potwierdz"
+              uppercase
+              fontIconSize="25"
+              fontSize="14"
+              icon={<MdEdit />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={!disabledButtonSave}
+              onClick={handleSaveChangesTimeDay}
+            />
+          </MarginButton>
+        </ButtonEditPosition>
+      </Popup>
+      <Popup
+        popupEnable={activeTimePickerOpen}
+        position="absolute"
+        borderRadius
+        noContent
+      >
+        <TimePickerContent
+          handleResetTakeData={handleResetOpenTimePicker}
+          setSelectedTime={handleSetTimeOpen}
+          timeTimePicker={itemTimeStart}
+          secondColor
+          maxTime={itemTimeEnd}
+        />
+      </Popup>
+      <Popup
+        popupEnable={activeTimePickerClose}
+        position="absolute"
+        borderRadius
+        noContent
+      >
+        <TimePickerContent
+          handleResetTakeData={handleResetCloseTimePicker}
+          setSelectedTime={handleSetTimeClose}
+          timeTimePicker={itemTimeEnd}
+          secondColor
+          minTime={itemTimeStart}
+        />
+      </Popup>
     </HeightComponent>
   )
 }

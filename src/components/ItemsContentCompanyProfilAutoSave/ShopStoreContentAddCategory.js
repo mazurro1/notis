@@ -1,10 +1,10 @@
 import React from "react"
 import styled from "styled-components"
 import InputIcon from "../InputIcon"
-import { CSSTransition } from "react-transition-group"
 import { MdAddBox, MdTitle, MdArrowBack } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
 import { Colors } from "../../common/Colors"
+import Popup from "../Popup"
 
 const AddCategory = styled.div`
   position: relative;
@@ -34,32 +34,6 @@ const IconAddCategory = styled.div`
   color: ${props => Colors(props.siteProps).textNormalWhite};
 `
 
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => (props.transparent ? "transparent" : "white")};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-  color: black;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
 const ButtonsAddPosition = styled.div`
   display: flex;
   flex-direction: row;
@@ -71,15 +45,7 @@ const ButtonMargin = styled.div`
   margin: 5px;
 `
 
-const TitleItemCategoryTitleAction = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
-`
-
 const ShopStoreContentAddCategory = ({
-  handleClickContent,
   handleChangeNewCategory,
   handleAddNewCategory,
   handleResetAddCategory,
@@ -101,59 +67,53 @@ const ShopStoreContentAddCategory = ({
           <MdAddBox />
         </IconAddCategory>
 
-        <CSSTransition
-          in={clickAddCategory}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
+        <Popup
+          popupEnable={clickAddCategory}
+          position="absolute"
+          title="Nowa kategoria"
+          borderRadius
+          closeTitle={false}
+          smallTitle
+          secondColors
         >
-          <BackgroundEdit onClick={handleClickContent}>
-            <BackgroundEditContent onClick={handleClickContent}>
-              <TitleItemCategoryTitleAction>
-                Nowa kategoria
-              </TitleItemCategoryTitleAction>
-              <PaddingContent>
-                <InputIcon
-                  icon={<MdTitle />}
-                  placeholder="Nazwa kategorii"
-                  secondColor
-                  value={newCategoryName}
-                  type="text"
-                  onChange={handleChangeNewCategory}
-                  required
-                  validText="Minimum 3 znaki"
-                />
-                <ButtonsAddPosition>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Anuluj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="13"
-                      icon={<MdArrowBack />}
-                      onClick={handleResetAddCategory}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                    />
-                  </ButtonMargin>
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Dodaj"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="13"
-                      icon={<MdAddBox />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={newCategoryName.length <= 2}
-                      onClick={handleAddNewCategory}
-                    />
-                  </ButtonMargin>
-                </ButtonsAddPosition>
-              </PaddingContent>
-            </BackgroundEditContent>
-          </BackgroundEdit>
-        </CSSTransition>
+          <InputIcon
+            icon={<MdTitle />}
+            placeholder="Nazwa kategorii"
+            secondColor
+            value={newCategoryName}
+            type="text"
+            onChange={handleChangeNewCategory}
+            required
+            validText="Minimum 3 znaki"
+          />
+          <ButtonsAddPosition>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Anuluj"
+                uppercase
+                fontIconSize="20"
+                fontSize="13"
+                icon={<MdArrowBack />}
+                onClick={handleResetAddCategory}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title="Dodaj"
+                uppercase
+                fontIconSize="20"
+                fontSize="13"
+                icon={<MdAddBox />}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                disabled={newCategoryName.length <= 2}
+                onClick={handleAddNewCategory}
+              />
+            </ButtonMargin>
+          </ButtonsAddPosition>
+        </Popup>
       </AddCategory>
     </>
   )

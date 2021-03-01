@@ -5,6 +5,7 @@ import Popup from "./Popup"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCompanyData } from "../state/actions"
 import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
+import CompanyNoAccess from "./CompanyNoAccess"
 
 const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
@@ -71,7 +72,7 @@ const CompanyEditProfil = () => {
           selectedWorker={selectedWorker}
         />
       ) : (
-        "Brak uprawnień"
+        <CompanyNoAccess />
       )}
       {PopupActiveCompany}
     </>

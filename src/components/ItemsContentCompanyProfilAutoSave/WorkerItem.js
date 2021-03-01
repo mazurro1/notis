@@ -5,7 +5,6 @@ import {
   MdVerifiedUser,
   MdError,
   MdEmail,
-  MdClose,
   MdDone,
   MdTimelapse,
 } from "react-icons/md"
@@ -17,7 +16,6 @@ import {
   FaCalendarAlt,
   FaCalendarWeek,
 } from "react-icons/fa"
-import { CSSTransition } from "react-transition-group"
 import {
   fetchDeleteUserFromCompany,
   fetchAddAgainWorkerToCompany,
@@ -33,6 +31,7 @@ import ButtonIcon from "../ButtonIcon"
 import ReactTooltip from "react-tooltip"
 import { Permissions } from "../../common/Permissions"
 import { Site } from "../../common/Site"
+import Popup from "../Popup"
 
 const ActiveWorkerStyle = styled.div`
   position: absolute;
@@ -115,23 +114,18 @@ const WorkerItem = ({
   siteProps,
   isAdmin,
   editedWorkers = false,
-
   WorkerItemStyle,
   WorkerCircle,
   WorkerName,
   WorkerSpecjalization,
   EditUserStyle,
   EditIconStyle,
-  EditUserBackground,
   DeleteUserIconStyle,
-  EditUserBackgroundContent,
   ButtonDeleteStyle,
   ButtonContent,
   handleClickActiveWorker,
   activeWorkerUserId,
   BackGroundImageCustomUrl,
-  PaddingContent,
-  TitleRightColumnEdit,
 }) => {
   const [resetConstDays, setResetConstDays] = useState(false)
   const [constTimeWorker, setConstTimeWorker] = useState(false)
@@ -569,220 +563,179 @@ const WorkerItem = ({
               )}
             </ReactTooltip>
           </ActiveWorkerStyle>
-          <CSSTransition
-            in={userEditItem}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={userEditItem}
+            position="absolute"
+            title="Edycja pracownika"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+            secondColors
           >
-            <EditUserBackground
-            // onClick={handleEditSpecializationReset}
-            >
-              <EditUserBackgroundContent
-                onClick={handleClickContent}
-                siteProps={siteProps}
-              >
-                <TitleRightColumnEdit>Edycja pracownika</TitleRightColumnEdit>
-                <PaddingContent>
-                  <InputStyles>
-                    <InputIcon
-                      placeholder="Stanowisko"
-                      value={inputSpecialization}
-                      secondColor
-                      onChange={handleInputOnChange}
-                    />
-                  </InputStyles>
-                  {allCategories.length > 0 && (
-                    <>
-                      <SelectStyle ref={selectRef}>
-                        Wykonywane usługi
-                        <SelectCreated
-                          widthAuto
-                          defaultMenuIsOpen={false}
-                          options={allCategories}
-                          handleChange={handleChangeSelect}
-                          value={workerServicesCategory}
-                          placeholder="Usługi"
-                          isMulti
-                          closeMenuOnSelect={false}
-                          menuIsOpen
-                          isClearable={false}
-                          darkSelect
-                          onlyText
-                          maxMenuHeight={250}
-                        />
-                      </SelectStyle>
-                    </>
-                  )}
-                  {isAdmin && (
-                    <SelectStyle>
-                      Uprawnienia do
-                      <SelectCreated
-                        widthAuto
-                        defaultMenuIsOpen={false}
-                        options={Permissions}
-                        handleChange={handleChangeSelectPermissions}
-                        value={workerPermissionsCategory}
-                        placeholder="Uprawnienia"
-                        isMulti
-                        closeMenuOnSelect={false}
-                        menuIsOpen
-                        maxMenuHeight={250}
-                        onlyText
-                        darkSelect
-                      />
-                    </SelectStyle>
-                  )}
-                  <ButtonContentEdit>
-                    <ButtonStyles>
-                      <ButtonIcon
-                        title="Anuluj"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaArrowLeft />}
-                        onClick={handleEditSpecializationReset}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                      />
-                    </ButtonStyles>
-                    <ButtonStyles>
-                      <ButtonIcon
-                        title="Zapisz"
-                        uppercase
-                        fontIconSize="20"
-                        fontSize="14"
-                        icon={<MdDone />}
-                        onClick={handleSaveSpecialization}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={disabledButtonSaveWorkerProps}
-                      />
-                    </ButtonStyles>
-                  </ButtonContentEdit>
-                  <DeleteIconPosition>
-                    <DeleteIconStyle
-                      onClick={handleEditSpecializationReset}
-                      siteProps={siteProps}
-                    >
-                      <MdClose />
-                    </DeleteIconStyle>
-                  </DeleteIconPosition>
-                </PaddingContent>
-              </EditUserBackgroundContent>
-            </EditUserBackground>
-          </CSSTransition>
+            <InputStyles>
+              <InputIcon
+                placeholder="Stanowisko"
+                value={inputSpecialization}
+                secondColor
+                onChange={handleInputOnChange}
+              />
+            </InputStyles>
+            {allCategories.length > 0 && (
+              <>
+                <SelectStyle ref={selectRef}>
+                  Wykonywane usługi
+                  <SelectCreated
+                    widthAuto
+                    defaultMenuIsOpen={false}
+                    options={allCategories}
+                    handleChange={handleChangeSelect}
+                    value={workerServicesCategory}
+                    placeholder="Usługi"
+                    isMulti
+                    closeMenuOnSelect={false}
+                    menuIsOpen
+                    isClearable={false}
+                    darkSelect
+                    onlyText
+                    maxMenuHeight={120}
+                  />
+                </SelectStyle>
+              </>
+            )}
+            {isAdmin && (
+              <SelectStyle>
+                Uprawnienia do
+                <SelectCreated
+                  widthAuto
+                  defaultMenuIsOpen={false}
+                  options={Permissions}
+                  handleChange={handleChangeSelectPermissions}
+                  value={workerPermissionsCategory}
+                  placeholder="Uprawnienia"
+                  isMulti
+                  closeMenuOnSelect={false}
+                  menuIsOpen
+                  maxMenuHeight={200}
+                  onlyText
+                  darkSelect
+                  top
+                />
+              </SelectStyle>
+            )}
+            <ButtonContentEdit>
+              <ButtonStyles>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  onClick={handleEditSpecializationReset}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonStyles>
+              <ButtonStyles>
+                <ButtonIcon
+                  title="Zapisz"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<MdDone />}
+                  onClick={handleSaveSpecialization}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={disabledButtonSaveWorkerProps}
+                />
+              </ButtonStyles>
+            </ButtonContentEdit>
+          </Popup>
           {isAdmin && (
-            <CSSTransition
-              in={userConfirmDelete}
-              timeout={400}
-              classNames="popup"
-              unmountOnExit
+            <Popup
+              popupEnable={userConfirmDelete}
+              position="absolute"
+              borderRadius
+              noContent
             >
-              <EditUserBackground>
-                <EditUserBackgroundContent
-                  onClick={handleClickContent}
-                  noBg
-                  siteProps={siteProps}
-                >
-                  <ButtonContent>
-                    <ButtonDeleteStyle>
-                      <ButtonIcon
-                        title="Anuluj"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaArrowLeft />}
-                        onClick={handleUserConfirmDelete}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                      />
-                    </ButtonDeleteStyle>
-                    <ButtonDeleteStyle>
-                      <ButtonIcon
-                        title="Usuń"
-                        uppercase
-                        fontIconSize="18"
-                        fontSize="14"
-                        icon={<MdDelete />}
-                        onClick={handleDeleteUser}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                      />
-                    </ButtonDeleteStyle>
-                  </ButtonContent>
-                </EditUserBackgroundContent>
-              </EditUserBackground>
-            </CSSTransition>
+              <ButtonContent>
+                <ButtonDeleteStyle>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    onClick={handleUserConfirmDelete}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                  />
+                </ButtonDeleteStyle>
+                <ButtonDeleteStyle>
+                  <ButtonIcon
+                    title="Usuń"
+                    uppercase
+                    fontIconSize="18"
+                    fontSize="14"
+                    icon={<MdDelete />}
+                    onClick={handleDeleteUser}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                  />
+                </ButtonDeleteStyle>
+              </ButtonContent>
+            </Popup>
           )}
-          <CSSTransition
-            in={chooseTimeWorker}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={chooseTimeWorker}
+            position="absolute"
+            borderRadius
+            noContent
           >
-            <EditUserBackground>
-              <EditUserBackgroundContent
-                onClick={handleClickContent}
-                noBg
-                siteProps={siteProps}
+            <ButtonContent>
+              <ButtonDeleteStyle
+                data-tip
+                data-for="constTimeWork"
+                data-place="top"
               >
-                <PaddingContent>
-                  <ButtonContent>
-                    <ButtonDeleteStyle
-                      data-tip
-                      data-for="constTimeWork"
-                      data-place="top"
-                    >
-                      <ButtonIcon
-                        title="Stały czas pracy"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaCalendarWeek />}
-                        onClick={handleConstTimeWork}
-                        secondColors
-                      />
-                    </ButtonDeleteStyle>
-                    <ButtonDeleteStyle
-                      data-tip
-                      data-for="timeWork"
-                      data-place="top"
-                    >
-                      <ButtonIcon
-                        title="Zmienny czas pracy"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaCalendarAlt />}
-                        onClick={handleUserTimeWork}
-                        secondColors
-                      />
-                    </ButtonDeleteStyle>
-                    <ButtonDeleteStyle>
-                      <ButtonIcon
-                        title="Wróć"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaArrowLeft />}
-                        onClick={handleChooseTimeWorker}
-                        customColorButton={Colors(siteProps).dangerColorDark}
-                        customColorIcon={Colors(siteProps).dangerColor}
-                      />
-                    </ButtonDeleteStyle>
-                  </ButtonContent>
-                </PaddingContent>
-              </EditUserBackgroundContent>
-            </EditUserBackground>
-          </CSSTransition>
+                <ButtonIcon
+                  title="Stały czas pracy"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaCalendarWeek />}
+                  onClick={handleConstTimeWork}
+                  secondColors
+                />
+              </ButtonDeleteStyle>
+              <ButtonDeleteStyle data-tip data-for="timeWork" data-place="top">
+                <ButtonIcon
+                  title="Zmienny czas pracy"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaCalendarAlt />}
+                  onClick={handleUserTimeWork}
+                  secondColors
+                />
+              </ButtonDeleteStyle>
+              <ButtonDeleteStyle>
+                <ButtonIcon
+                  title="Wróć"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  onClick={handleChooseTimeWorker}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonDeleteStyle>
+            </ButtonContent>
+          </Popup>
           <ConstTimeWorkTime
             constTimeWorker={constTimeWorker}
             handleClickContent={handleClickContent}
             siteProps={siteProps}
-            EditUserBackground={EditUserBackground}
-            EditUserBackgroundContent={EditUserBackgroundContent}
-            PaddingContent={PaddingContent}
             ButtonContent={ButtonContent}
             ButtonDeleteStyle={ButtonDeleteStyle}
             handleCancelConstTimeWork={handleCancelConstTimeWork}
@@ -792,7 +745,6 @@ const WorkerItem = ({
             handleSaveConstTimeWork={handleSaveConstTimeWork}
             resetConstDays={resetConstDays}
             editedWorkers={editedWorkers}
-            TitleRightColumnEdit={TitleRightColumnEdit}
             toSaveWorkerHours={toSaveWorkerHours}
           />
         </>

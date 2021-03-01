@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { CSSTransition } from "react-transition-group"
 import { FaArrowLeft, FaSave, FaPercentage } from "react-icons/fa"
 import { MdTimelapse } from "react-icons/md"
 import styled from "styled-components"
@@ -13,6 +12,7 @@ import TimePickerContent from "../TimePicker"
 import ReactTooltip from "react-tooltip"
 import { fetchAddConstDateHappyHour } from "../../state/actions"
 import { useDispatch } from "react-redux"
+import Popup from "../Popup"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -52,31 +52,6 @@ const WidthTimePicker = styled.div`
   max-width: 90%;
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
-
 const ButtonTextPositionHappy = styled.div`
   display: flex;
   flex-direction: row;
@@ -112,16 +87,8 @@ const ItemDayToSelect = styled.button`
   }
 `
 
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
-`
-
 const HappyHoursConstContentNewItem = ({
   siteProps,
-  TitleRightColumn,
   editConstHappyHours,
   newHappyHour,
   setNewHappyHour,
@@ -264,177 +231,156 @@ const HappyHoursConstContentNewItem = ({
 
   return (
     <>
-      <CSSTransition
-        in={newHappyHour}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={newHappyHour}
+        position="absolute"
+        title="Nowe happy hours"
+        borderRadius
+        closeTitle={false}
+        smallTitle
+        secondColors
       >
-        <BackgroundEdit>
-          <BackgroundEditContent siteProps={siteProps}>
-            <TitleRightColumnEdit siteProps={siteProps}>
-              Nowe happy hours
-            </TitleRightColumnEdit>
-            <PaddingContent>
-              <SelectStyles>{mapDaysToSelect}</SelectStyles>
-              <SelectStyles>
-                <SelectCreated
-                  options={mapServices}
-                  value={selectedServicesIds}
-                  handleChange={handleChangeServicesIds}
-                  placeholder="Zaznaczone usługi"
-                  defaultMenuIsOpen={false}
-                  widthAuto
-                  isClearable={false}
-                  darkSelect
-                  onlyText
-                  isMulti
-                  closeMenuOnSelect={false}
+        <SelectStyles>{mapDaysToSelect}</SelectStyles>
+        <SelectStyles>
+          <SelectCreated
+            options={mapServices}
+            value={selectedServicesIds}
+            handleChange={handleChangeServicesIds}
+            placeholder="Zaznaczone usługi"
+            defaultMenuIsOpen={false}
+            widthAuto
+            isClearable={false}
+            darkSelect
+            onlyText
+            isMulti
+            closeMenuOnSelect={false}
+          />
+        </SelectStyles>
+        <div>
+          <MarginButtonTime>
+            <ButtonIcon
+              title={
+                !!timeStart ? `Start: ${timeStart}` : "Godzina startu promocji"
+              }
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<MdTimelapse />}
+              secondColors
+              onClick={handleClickTimeStart}
+            />
+          </MarginButtonTime>
+        </div>
+        <div>
+          <MarginButtonTime>
+            <ButtonIcon
+              title={
+                !!timeEnd ? `Koniec: ${timeEnd}` : "Godzina końca promocji"
+              }
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<MdTimelapse />}
+              secondColors
+              onClick={handleClickTimeEnd}
+            />
+          </MarginButtonTime>
+        </div>
+        <InputIcon
+          icon={<FaPercentage />}
+          placeholder="Wysokość promocji"
+          value={promotionPercent}
+          type="number"
+          onChange={handleChangePercent}
+          maxLength={2}
+          required
+          secondColor
+          validText="Wymagana wartość"
+        />
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={disabledPromotion}
+            onChange={handleChangeDisabledPromotion}
+          >
+            <TextCheckbox siteProps={siteProps}>Wyłącz happy hour</TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+        <ButtonTextPositionHappy>
+          <MarginButton>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaArrowLeft />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleResetAdd}
+            />
+          </MarginButton>
+          <MarginButton>
+            <ReactTooltip
+              id="disabledButtonSave"
+              effect="float"
+              multiline={true}
+            >
+              <span>Uzupełnij wszystkie pola.</span>
+            </ReactTooltip>
+            {!disabledSave ? (
+              <div data-tip data-for="disabledButtonSave">
+                <ButtonIcon
+                  title="Dodaj"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaSave />}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={!disabledSave}
                 />
-              </SelectStyles>
-              <div>
-                <MarginButtonTime>
-                  <ButtonIcon
-                    title={
-                      !!timeStart
-                        ? `Start: ${timeStart}`
-                        : "Godzina startu promocji"
-                    }
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<MdTimelapse />}
-                    secondColors
-                    onClick={handleClickTimeStart}
-                  />
-                </MarginButtonTime>
               </div>
-              <div>
-                <MarginButtonTime>
-                  <ButtonIcon
-                    title={
-                      !!timeEnd
-                        ? `Koniec: ${timeEnd}`
-                        : "Godzina końca promocji"
-                    }
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<MdTimelapse />}
-                    secondColors
-                    onClick={handleClickTimeEnd}
-                  />
-                </MarginButtonTime>
-              </div>
-              <InputIcon
-                icon={<FaPercentage />}
-                placeholder="Wysokość promocji"
-                value={promotionPercent}
-                type="number"
-                onChange={handleChangePercent}
-                maxLength={2}
-                required
-                secondColor
-                validText="Wymagana wartość"
+            ) : (
+              <ButtonIcon
+                title="Dodaj"
+                uppercase
+                fontIconSize="16"
+                fontSize="14"
+                icon={<FaSave />}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                onClick={handleSaveHappyHour}
+                disabled={!disabledSave}
               />
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={disabledPromotion}
-                  onChange={handleChangeDisabledPromotion}
-                >
-                  <TextCheckbox siteProps={siteProps}>
-                    Wyłącz happy hour
-                  </TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              <ButtonTextPositionHappy>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleResetAdd}
-                  />
-                </MarginButton>
-                <MarginButton>
-                  <ReactTooltip
-                    id="disabledButtonSave"
-                    effect="float"
-                    multiline={true}
-                  >
-                    <span>Uzupełnij wszystkie pola.</span>
-                  </ReactTooltip>
-                  {!disabledSave ? (
-                    <div data-tip data-for="disabledButtonSave">
-                      <ButtonIcon
-                        title="Dodaj"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaSave />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={!disabledSave}
-                      />
-                    </div>
-                  ) : (
-                    <ButtonIcon
-                      title="Dodaj"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaSave />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      onClick={handleSaveHappyHour}
-                      disabled={!disabledSave}
-                    />
-                  )}
-                </MarginButton>
-              </ButtonTextPositionHappy>
-            </PaddingContent>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
-      <CSSTransition
-        in={enableTimeStart}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+            )}
+          </MarginButton>
+        </ButtonTextPositionHappy>
+      </Popup>
+      <Popup
+        popupEnable={enableTimeStart}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <WidthTimePicker>
-            <TimePickerContent
-              setSelectedTime={handleUpdateTimeStart}
-              timeTimePicker={timeStart}
-              secondColor
-              maxTime={timeEnd}
-            />
-          </WidthTimePicker>
-        </BackgroundEdit>
-      </CSSTransition>
-      <CSSTransition
-        in={enableTimeEnd}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <BackgroundEdit>
-          <WidthTimePicker>
-            <TimePickerContent
-              setSelectedTime={handleUpdateTimeEnd}
-              timeTimePicker={timeEnd}
-              secondColor
-              minTime={timeStart}
-            />
-          </WidthTimePicker>
-        </BackgroundEdit>
-      </CSSTransition>
+        <WidthTimePicker>
+          <TimePickerContent
+            setSelectedTime={handleUpdateTimeStart}
+            timeTimePicker={timeStart}
+            secondColor
+            maxTime={timeEnd}
+          />
+        </WidthTimePicker>
+      </Popup>
+      <Popup popupEnable={enableTimeEnd} position="absolute" borderRadius>
+        <WidthTimePicker>
+          <TimePickerContent
+            setSelectedTime={handleUpdateTimeEnd}
+            timeTimePicker={timeEnd}
+            secondColor
+            minTime={timeStart}
+          />
+        </WidthTimePicker>
+      </Popup>
     </>
   )
 }

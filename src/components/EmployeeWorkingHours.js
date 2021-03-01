@@ -6,6 +6,7 @@ import {
 } from "../state/actions"
 import BigCalendarEmployeeWorkingHours from "./BigCalendarEmployeeWorkingHours"
 import UseWindowSize from "../common/UseWindowSize"
+import CompanyNoAccess from "./CompanyNoAccess"
 
 const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
   const user = useSelector(state => state.user)
@@ -69,7 +70,7 @@ const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
           isMobile={isMobile}
         />
       ) : (
-        "Brak uprawnien"
+        <CompanyNoAccess />
       )}
     </>
   )

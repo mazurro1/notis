@@ -3,9 +3,9 @@ import ButtonIcon from "../ButtonIcon"
 import TextareaCustom from "../TextareaCustom"
 import styled from "styled-components"
 import { checkIfBadValue } from "../../common/Functions"
-import { CSSTransition } from "react-transition-group"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { Colors } from "../../common/Colors"
+import Popup from "../Popup"
 
 const HeightComponentLinks = styled.div`
   padding-bottom: ${props =>
@@ -33,44 +33,10 @@ const ButtonSubmit = styled.button`
   background-color: transparent;
 `
 
-const BackgroundEdit = styled.div`
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow-y: auto;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
-`
-
 const ColumnItemTextarea = ({
   titleColumnItem = "",
   TitleRightColumn,
   ParagraphRightColumn,
-  ButtonEditPosition,
   isCompanyEditProfil = false,
   title = "",
   editable = false,
@@ -117,10 +83,6 @@ const ColumnItemTextarea = ({
     setIsErrorText(false)
   }
 
-  const handleClickContent = e => {
-    e.stopPropagation()
-  }
-
   const disabledSave = textTitle === title || isErrorText
 
   return (
@@ -138,66 +100,55 @@ const ColumnItemTextarea = ({
 
       {isCompanyEditProfil && (
         <>
-          <CSSTransition
-            in={editable}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
+          <Popup
+            popupEnable={editable}
+            position="absolute"
+            title="Edytuj tekst"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+            secondColors
           >
-            <BackgroundEdit>
-              <BackgroundEditContent
-                onClick={handleClickContent}
-                siteProps={siteProps}
-              >
-                <TitleRightColumnEdit>Edytuj tekst</TitleRightColumnEdit>
-                <PaddingContent>
-                  <form onSubmit={handleSaveButton}>
-                    <TextareaCustom
-                      textareaActive={editable}
-                      value={textTitle}
-                      onChange={handleTextAboutOnChange}
-                      maxLength={1000}
-                      isErrorText={isErrorText}
+            <form onSubmit={handleSaveButton}>
+              <TextareaCustom
+                textareaActive={editable}
+                value={textTitle}
+                onChange={handleTextAboutOnChange}
+                maxLength={1000}
+                isErrorText={isErrorText}
+              />
+              <ButtonPosition>
+                <ButtonMargin>
+                  <ButtonSubmit>
+                    <ButtonIcon
+                      title="Cofnij"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaArrowLeft />}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                      onClick={handleResetButton}
                     />
-                    <ButtonPosition>
-                      <ButtonMargin>
-                        <ButtonSubmit>
-                          <ButtonIcon
-                            title="Cofnij"
-                            uppercase
-                            fontIconSize="16"
-                            fontSize="14"
-                            icon={<FaArrowLeft />}
-                            customColorButton={
-                              Colors(siteProps).dangerColorDark
-                            }
-                            customColorIcon={Colors(siteProps).dangerColor}
-                            onClick={handleResetButton}
-                          />
-                        </ButtonSubmit>
-                      </ButtonMargin>
-                      <ButtonSubmit type="submit">
-                        <ButtonMargin>
-                          <ButtonIcon
-                            title="Zapisz"
-                            uppercase
-                            fontIconSize="16"
-                            fontSize="14"
-                            icon={<FaSave />}
-                            customColorButton={
-                              Colors(siteProps).successColorDark
-                            }
-                            customColorIcon={Colors(siteProps).successColor}
-                            disabled={disabledSave}
-                          />
-                        </ButtonMargin>
-                      </ButtonSubmit>
-                    </ButtonPosition>
-                  </form>
-                </PaddingContent>
-              </BackgroundEditContent>
-            </BackgroundEdit>
-          </CSSTransition>
+                  </ButtonSubmit>
+                </ButtonMargin>
+                <ButtonSubmit type="submit">
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Zapisz"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaSave />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={disabledSave}
+                    />
+                  </ButtonMargin>
+                </ButtonSubmit>
+              </ButtonPosition>
+            </form>
+          </Popup>
         </>
       )}
     </HeightComponentLinks>

@@ -12,7 +12,8 @@ const PanFieldStyle = styled(PinField)`
   outline: none;
   text-align: center;
   margin: 1px;
-  background-color: #eeeeee;
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
   font-size: 1.1rem;
   transition-property: color;
   transition-duration: 0.3s;
@@ -59,15 +60,21 @@ const StyleInputs = styled.div`
   }
 `
 
-const InputPhone = ({ setPhoneNumber = () => {} }) => {
+const InputPhone = ({ setPhoneNumber = () => {}, defaultValues = null }) => {
   const [inputActive, setInputActive] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
   const fieldOneRef = useRef(null)
 
   useEffect(() => {
     if (!!fieldOneRef) {
+      console.log(fieldOneRef)
       if (!!fieldOneRef.current) {
-        fieldOneRef.current.forEach(item => {
+        fieldOneRef.current.forEach((item, index) => {
+          if (!!defaultValues) {
+            if (!!defaultValues[index]) {
+              item.value = defaultValues[index]
+            }
+          }
           item.type = "number"
         })
       }
@@ -96,6 +103,7 @@ const InputPhone = ({ setPhoneNumber = () => {} }) => {
           format={k => k.toUpperCase()}
           length={9}
           validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+          siteProps={siteProps}
         />
       </div>
     </StyleInputs>

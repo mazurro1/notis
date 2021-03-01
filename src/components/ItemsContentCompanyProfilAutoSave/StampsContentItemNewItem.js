@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
@@ -10,32 +9,7 @@ import SelectCreated from "../SelectCreated"
 import { Checkbox } from "react-input-checkbox"
 import { useDispatch } from "react-redux"
 import { companyAddStamp } from "../../state/actions"
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
+import Popup from "../Popup"
 
 const ButtonTextPositionHappy = styled.div`
   display: flex;
@@ -51,13 +25,6 @@ const MarginButton = styled.div`
 
 const SelectStyles = styled.div`
   margin-bottom: 10px;
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const CheckboxStyle = styled.div`
@@ -161,117 +128,105 @@ const StampsContentItemEdit = ({
     selectedServicesIds.length > 0
 
   return (
-    <CSSTransition
-      in={editedItemEnable}
-      timeout={400}
-      classNames="popup"
-      unmountOnExit
+    <Popup
+      popupEnable={editedItemEnable}
+      position="absolute"
+      title="NNowa pieczątka"
+      borderRadius
+      closeTitle={false}
+      smallTitle
+      secondColors
     >
-      <BackgroundEdit>
-        <BackgroundEditContent>
-          <TitleRightColumnEdit siteProps={siteProps}>
-            Nowa pieczątka
-          </TitleRightColumnEdit>
-          <PaddingContent>
-            <SelectStyles>
-              <SelectCreated
-                options={mapServices}
-                value={selectedServicesIds}
-                handleChange={handleChangeServicesIds}
-                placeholder="Zaznaczone usługi"
-                defaultMenuIsOpen={false}
-                widthAuto
-                isClearable={false}
-                darkSelect
-                isMulti
-                closeMenuOnSelect={false}
-                onlyText
+      <SelectStyles>
+        <SelectCreated
+          options={mapServices}
+          value={selectedServicesIds}
+          handleChange={handleChangeServicesIds}
+          placeholder="Zaznaczone usługi"
+          defaultMenuIsOpen={false}
+          widthAuto
+          isClearable={false}
+          darkSelect
+          isMulti
+          closeMenuOnSelect={false}
+          onlyText
+        />
+      </SelectStyles>
+      <InputIcon
+        icon={<FaPercentage />}
+        placeholder="Wysokość promocji"
+        value={promotionPercent}
+        type="number"
+        onChange={handleChangePercent}
+        required
+        secondColor
+        validText="Wymagana wartość"
+      />
+      <InputIcon
+        icon={<FaStamp />}
+        placeholder="Ilość pieczątek"
+        value={stampCount}
+        type="number"
+        onChange={handleChangeStampCount}
+        required
+        secondColor
+        validText="Wymagana wartość"
+      />
+      <CheckboxStyle siteProps={siteProps}>
+        <Checkbox
+          theme="material-checkbox"
+          value={disabledStamp}
+          onChange={handleChangeDisabledStamp}
+        >
+          <TextCheckbox siteProps={siteProps}>Wyłącz pieczątki</TextCheckbox>
+        </Checkbox>
+      </CheckboxStyle>
+      <ButtonTextPositionHappy>
+        <MarginButton>
+          <ButtonIcon
+            title="Anuluj"
+            uppercase
+            fontIconSize="16"
+            fontSize="13"
+            icon={<FaArrowLeft />}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
+            onClick={handleResetEdit}
+          />
+        </MarginButton>
+        <MarginButton>
+          <ReactTooltip id="disabledButtonSave" effect="float" multiline={true}>
+            <span>Uzupełnij wszystkie pola.</span>
+          </ReactTooltip>
+          {!disabledSave ? (
+            <div data-tip data-for="disabledButtonSave">
+              <ButtonIcon
+                title="Zapisz"
+                uppercase
+                fontIconSize="16"
+                fontSize="13"
+                icon={<FaSave />}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                disabled={!disabledSave}
               />
-            </SelectStyles>
-            <InputIcon
-              icon={<FaPercentage />}
-              placeholder="Wysokość promocji"
-              value={promotionPercent}
-              type="number"
-              onChange={handleChangePercent}
-              required
-              secondColor
-              validText="Wymagana wartość"
+            </div>
+          ) : (
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="16"
+              fontSize="13"
+              icon={<FaSave />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              onClick={handleSaveStamp}
+              disabled={!disabledSave}
             />
-            <InputIcon
-              icon={<FaStamp />}
-              placeholder="Ilość pieczątek"
-              value={stampCount}
-              type="number"
-              onChange={handleChangeStampCount}
-              required
-              secondColor
-              validText="Wymagana wartość"
-            />
-            <CheckboxStyle siteProps={siteProps}>
-              <Checkbox
-                theme="material-checkbox"
-                value={disabledStamp}
-                onChange={handleChangeDisabledStamp}
-              >
-                <TextCheckbox siteProps={siteProps}>
-                  Wyłącz pieczątki
-                </TextCheckbox>
-              </Checkbox>
-            </CheckboxStyle>
-            <ButtonTextPositionHappy>
-              <MarginButton>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaArrowLeft />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleResetEdit}
-                />
-              </MarginButton>
-              <MarginButton>
-                <ReactTooltip
-                  id="disabledButtonSave"
-                  effect="float"
-                  multiline={true}
-                >
-                  <span>Uzupełnij wszystkie pola.</span>
-                </ReactTooltip>
-                {!disabledSave ? (
-                  <div data-tip data-for="disabledButtonSave">
-                    <ButtonIcon
-                      title="Zapisz"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaSave />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={!disabledSave}
-                    />
-                  </div>
-                ) : (
-                  <ButtonIcon
-                    title="Zapisz"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaSave />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleSaveStamp}
-                    disabled={!disabledSave}
-                  />
-                )}
-              </MarginButton>
-            </ButtonTextPositionHappy>
-          </PaddingContent>
-        </BackgroundEditContent>
-      </BackgroundEdit>
-    </CSSTransition>
+          )}
+        </MarginButton>
+      </ButtonTextPositionHappy>
+    </Popup>
   )
 }
 export default StampsContentItemEdit

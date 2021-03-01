@@ -15,7 +15,7 @@ const TitlePagePopup = styled.div`
       ? Colors(props.siteProps).secondColor
       : Colors(props.siteProps).primaryColorDark};
   color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1.4rem;
+  font-size: ${props => (props.smallTitle ? "1rem" : "1.4rem")};
   padding: 5px 10px;
   padding-right: 35px;
   overflow: hidden;
@@ -28,12 +28,14 @@ const PopupWindow = styled.div`
   right: 0;
   left: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.85);
   z-index: 500;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: ${props => (props.calendar ? "auto" : "")};
+  border-radius: ${props => (props.borderRadius ? "5px" : "0px")};
+  cursor: default;
   @media all and (max-width: 830px) {
     display: ${props => (props.calendar ? "inline-block" : "flex")};
   }
@@ -47,17 +49,17 @@ const PopupContent = styled.div`
   height: ${props => (props.fullScreen ? "100vh" : "auto")};
   margin: 0 auto;
   border-radius: 5px;
-  max-height: 80vh;
+  max-height: ${props => (props.maxHeight ? "80vh" : "auto")};
   background-color: ${props => Colors(props.siteProps).backgroundColorPage};
-  overflow: hidden;
+  overflow: ${props => (props.overflow ? "hidden" : "auto")};
 `
 
 const PaddingContnent = styled.div`
   padding: 10px 15px;
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: calc(100% - 41px);
-  max-height: calc(80vh - 41px);
+  min-height: ${props => (props.maxHeight ? "calc(100% - 41px)" : "auto")};
+  max-height: ${props => (props.maxHeight ? "calc(80vh - 41px)" : "auto")};
 `
 
 const ClosePopup = styled.div`
@@ -103,6 +105,11 @@ const Popup = ({
   secondColors = false,
   close = true,
   position = "fixed",
+  closeTitle = true,
+  borderRadius = false,
+  smallTitle = false,
+  overflow = true,
+  maxHeight = true,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -111,8 +118,11 @@ const Popup = ({
 
   const handleOnClickContent = e => {
     e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
   }
-  const handleClickBackground = () => {
+  const handleClickBackground = e => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     if (close) {
       handleOnClick()
     }
@@ -135,21 +145,29 @@ const Popup = ({
       onClick={handleOnClickContent}
       fullScreen={fullScreen}
       siteProps={siteProps}
+      overflow={overflow}
+      maxHeight={maxHeight}
     >
       {isTitleOn && (
-        <TitlePagePopup siteProps={siteProps} secondColors={secondColors}>
+        <TitlePagePopup
+          siteProps={siteProps}
+          secondColors={secondColors}
+          smallTitle={smallTitle}
+        >
           {title}
-          <ClosePopup
-            onClick={handleOnClick}
-            siteProps={siteProps}
-            titleOn={isTitleOn}
-            secondColors={secondColors}
-          >
-            <MdClose />
-          </ClosePopup>
+          {closeTitle && (
+            <ClosePopup
+              onClick={handleOnClick}
+              siteProps={siteProps}
+              titleOn={isTitleOn}
+              secondColors={secondColors}
+            >
+              <MdClose />
+            </ClosePopup>
+          )}
         </TitlePagePopup>
       )}
-      <PaddingContnent>{children}</PaddingContnent>
+      <PaddingContnent maxHeight={maxHeight}>{children}</PaddingContnent>
       {!isTitleOn && (
         <ClosePopup
           onClick={handleOnClick}
@@ -173,6 +191,7 @@ const Popup = ({
         onClick={handleClickBackground}
         calendar={calendar}
         position={position}
+        borderRadius={borderRadius}
       >
         {contentComponent}
       </PopupWindow>

@@ -12,20 +12,16 @@ import {
   MdArrowBack,
   MdWidgets,
 } from "react-icons/md"
+import Popup from "../Popup"
 
 const ShopStoreContentCategoryNewItem = ({
   clickAdd,
-  BackgroundEdit,
-  BackgroundEditContent,
-  handleClickContent,
   ButtonsAddPosition,
   CheckboxStyle,
   TextCheckbox,
   ButtonMargin,
   siteProps,
   ButtonMarginSubmit,
-  TitleItemCategoryTitleAction,
-  PaddingContent,
   setClickAdd,
   category,
   newCategorys,
@@ -141,93 +137,92 @@ const ShopStoreContentCategoryNewItem = ({
   }
 
   return (
-    <CSSTransition in={clickAdd} timeout={400} classNames="popup" unmountOnExit>
-      <BackgroundEdit>
-        <BackgroundEditContent onClick={handleClickContent}>
-          <TitleItemCategoryTitleAction>
-            Nowy przedmiot
-          </TitleItemCategoryTitleAction>
-          <PaddingContent>
-            <form onSubmit={handleAddItem}>
-              <InputIcon
-                icon={<MdTitle />}
-                placeholder="Nazwa"
-                secondColor
-                value={productTitle}
-                type="text"
-                onChange={e => handleChangeInput(e, setProductTitle)}
-                required
-                validText="Minimum 3 znaki"
-              />
-              <InputIcon
-                icon={<MdReorder />}
-                placeholder="Opis"
-                secondColor
-                value={productText}
-                type="text"
-                onChange={e => handleChangeInput(e, setProductText)}
-              />
-              <InputIcon
-                icon={<FaDollarSign />}
-                placeholder="Cena"
-                secondColor
-                value={productPrice}
-                type="number"
-                onChange={e => handleChangeInput(e, setProductPrice)}
-                required
-                validText="Wymagana wartość"
-              />
-              <InputIcon
-                icon={<MdWidgets />}
-                placeholder="Ilość sztuk"
-                secondColor
-                value={productCount}
-                type="number"
-                onChange={e => handleChangeInput(e, setProductCount)}
-                required
-                validText="Wymagana wartość"
-              />
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={productDisabled}
-                  onChange={handleClickDisabled}
-                >
-                  <TextCheckbox>Produkt niedostępny</TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
+    <Popup
+      popupEnable={clickAdd}
+      position="absolute"
+      title="Nowy przedmiot"
+      borderRadius
+      closeTitle={false}
+      smallTitle
+      secondColors
+    >
+      <form onSubmit={handleAddItem}>
+        <InputIcon
+          icon={<MdTitle />}
+          placeholder="Nazwa"
+          secondColor
+          value={productTitle}
+          type="text"
+          onChange={e => handleChangeInput(e, setProductTitle)}
+          required
+          validText="Minimum 3 znaki"
+        />
+        <InputIcon
+          icon={<MdReorder />}
+          placeholder="Opis"
+          secondColor
+          value={productText}
+          type="text"
+          onChange={e => handleChangeInput(e, setProductText)}
+        />
+        <InputIcon
+          icon={<FaDollarSign />}
+          placeholder="Cena"
+          secondColor
+          value={productPrice}
+          type="number"
+          onChange={e => handleChangeInput(e, setProductPrice)}
+          required
+          validText="Wymagana wartość"
+        />
+        <InputIcon
+          icon={<MdWidgets />}
+          placeholder="Ilość sztuk"
+          secondColor
+          value={productCount}
+          type="number"
+          onChange={e => handleChangeInput(e, setProductCount)}
+          required
+          validText="Wymagana wartość"
+        />
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={productDisabled}
+            onChange={handleClickDisabled}
+          >
+            <TextCheckbox>Produkt niedostępny</TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
 
-              <ButtonsAddPosition>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="40"
-                    fontSize="15"
-                    icon={<MdArrowBack />}
-                    onClick={handleReset}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                  />
-                </ButtonMargin>
-                <ButtonMarginSubmit type="submit">
-                  <ButtonIcon
-                    title="Dodaj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="15"
-                    icon={<MdLibraryAdd />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={disabledSaveEditedIitem}
-                  />
-                </ButtonMarginSubmit>
-              </ButtonsAddPosition>
-            </form>
-          </PaddingContent>
-        </BackgroundEditContent>
-      </BackgroundEdit>
-    </CSSTransition>
+        <ButtonsAddPosition>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="40"
+              fontSize="13"
+              icon={<MdArrowBack />}
+              onClick={handleReset}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+            />
+          </ButtonMargin>
+          <ButtonMarginSubmit type="submit">
+            <ButtonIcon
+              title="Dodaj"
+              uppercase
+              fontIconSize="20"
+              fontSize="13"
+              icon={<MdLibraryAdd />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={disabledSaveEditedIitem}
+            />
+          </ButtonMarginSubmit>
+        </ButtonsAddPosition>
+      </form>
+    </Popup>
   )
 }
 export default ShopStoreContentCategoryNewItem

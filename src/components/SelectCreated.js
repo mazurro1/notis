@@ -26,7 +26,8 @@ const SizeSelect = styled.div`
 
 const PositionValues = styled.div`
   position: absolute;
-  top: calc(100% + 5px);
+  ${props =>
+    !props.top ? "top: calc(100% + 5px)" : "bottom: calc(100% + 5px)"};
   width: ${props => (props.isClearable ? "calc(100% - 30px)" : "100%")};
   z-index: 20;
   border-radius: 5px;
@@ -195,6 +196,7 @@ const SelectCreated = ({
   onlyText = false,
   deleteItem = true,
   textUp = false,
+  top = false,
 }) => {
   const [selectActive, setSelectActive] = useState(
     isDisabled ? false : defaultMenuIsOpen
@@ -421,6 +423,7 @@ const SelectCreated = ({
           height={maxMenuHeight}
           isClearable={isClearable}
           secondColor={secondColor}
+          top={top}
         >
           {mapOptions}
         </PositionValues>

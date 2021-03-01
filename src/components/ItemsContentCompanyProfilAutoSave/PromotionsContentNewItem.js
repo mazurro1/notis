@@ -16,32 +16,7 @@ import { Checkbox } from "react-input-checkbox"
 import SelectDataCalendar from "../SelectDataCalendar"
 import { useDispatch } from "react-redux"
 import { fetchAddPromotion } from "../../state/actions"
-
-const BackgroundEdit = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const BackgroundEditContent = styled.div`
-  position: relative;
-  width: 90%;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  border-radius: 5px;
-  max-height: 90%;
-  overflow: hidden;
-`
-
-const PaddingContent = styled.div`
-  padding: 10px;
-`
+import Popup from "../Popup"
 
 const ButtonTextPositionHappy = styled.div`
   display: flex;
@@ -60,8 +35,15 @@ const MarginButton = styled.div`
 `
 
 const WidthTimePicker = styled.div`
+  position: relative;
   background-color: transparent;
-  min-width: 280px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const WidthCalendar = styled.div`
   max-width: 90%;
 `
 
@@ -97,7 +79,6 @@ const TitleRightColumnEdit = styled.div`
 `
 
 const PromotionsContentNewItem = ({
-  TitleRightColumn,
   newPromotion,
   siteProps,
   setEditPromotions,
@@ -249,152 +230,141 @@ const PromotionsContentNewItem = ({
 
   return (
     <>
-      <CSSTransition
-        in={newPromotion}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+      <Popup
+        popupEnable={newPromotion}
+        position="absolute"
+        title="Nowa promocja"
+        borderRadius
+        closeTitle={false}
+        smallTitle
+        secondColors
       >
-        <BackgroundEdit>
-          <BackgroundEditContent siteProps={siteProps}>
-            <TitleRightColumnEdit
-              isCompanyEditProfil={setEditPromotions}
-              siteProps={siteProps}
+        <SelectStyles>
+          <SelectCreated
+            options={mapServices}
+            value={selectedServicesIds}
+            handleChange={handleChangeServicesIds}
+            placeholder="Zaznaczone usługi"
+            defaultMenuIsOpen={false}
+            widthAuto
+            isClearable={false}
+            isMulti
+            closeMenuOnSelect={false}
+            darkSelect
+            onlyText
+          />
+        </SelectStyles>
+        <div>
+          <MarginButtonTime>
+            <ButtonIcon
+              title={
+                !!datePromotionStart
+                  ? `Start: ${datePromotionStart}, 0:00`
+                  : "Data promocji"
+              }
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaCalendarDay />}
+              secondColors
+              onClick={handleClickDatePickerStart}
+            />
+          </MarginButtonTime>
+        </div>
+        <div>
+          <MarginButtonTime>
+            <ButtonIcon
+              title={
+                !!datePromotionEnd
+                  ? `Koniec: ${datePromotionEnd}, 23:59`
+                  : "Data promocji"
+              }
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaCalendarDay />}
+              secondColors
+              onClick={handleClickDatePickerEnd}
+            />
+          </MarginButtonTime>
+        </div>
+        <InputIcon
+          icon={<FaPercentage />}
+          placeholder="Wysokość promocji"
+          value={promotionPercent}
+          type="number"
+          onChange={handleChangePercent}
+          required
+          secondColor
+          validText="Wymagana wartość"
+        />
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={disabledPromotion}
+            onChange={handleChangeDisabledPromotion}
+          >
+            <TextCheckbox siteProps={siteProps}>Wyłącz promocje</TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+        <ButtonTextPositionHappy>
+          <MarginButton>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="16"
+              fontSize="14"
+              icon={<FaArrowLeft />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleResetAdd}
+            />
+          </MarginButton>
+          <MarginButton>
+            <ReactTooltip
+              id="disabledButtonSave"
+              effect="float"
+              multiline={true}
             >
-              Nowa promocja
-            </TitleRightColumnEdit>
-            <PaddingContent>
-              <SelectStyles>
-                <SelectCreated
-                  options={mapServices}
-                  value={selectedServicesIds}
-                  handleChange={handleChangeServicesIds}
-                  placeholder="Zaznaczone usługi"
-                  defaultMenuIsOpen={false}
-                  widthAuto
-                  isClearable={false}
-                  isMulti
-                  closeMenuOnSelect={false}
-                  darkSelect
-                  onlyText
+              <span>Uzupełnij wszystkie pola.</span>
+            </ReactTooltip>
+            {!disabledSave ? (
+              <div data-tip data-for="disabledButtonSave">
+                <ButtonIcon
+                  title="Dodaj"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaSave />}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={!disabledSave}
                 />
-              </SelectStyles>
-              <div>
-                <MarginButtonTime>
-                  <ButtonIcon
-                    title={
-                      !!datePromotionStart
-                        ? `Start: ${datePromotionStart}, 0:00`
-                        : "Data promocji"
-                    }
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaCalendarDay />}
-                    secondColors
-                    onClick={handleClickDatePickerStart}
-                  />
-                </MarginButtonTime>
               </div>
-              <div>
-                <MarginButtonTime>
-                  <ButtonIcon
-                    title={
-                      !!datePromotionEnd
-                        ? `Koniec: ${datePromotionEnd}, 23:59`
-                        : "Data promocji"
-                    }
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaCalendarDay />}
-                    secondColors
-                    onClick={handleClickDatePickerEnd}
-                  />
-                </MarginButtonTime>
-              </div>
-              <InputIcon
-                icon={<FaPercentage />}
-                placeholder="Wysokość promocji"
-                value={promotionPercent}
-                type="number"
-                onChange={handleChangePercent}
-                required
-                secondColor
-                validText="Wymagana wartość"
+            ) : (
+              <ButtonIcon
+                title="Dodaj"
+                uppercase
+                fontIconSize="16"
+                fontSize="14"
+                icon={<FaSave />}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                onClick={handleSaveHappyHour}
+                disabled={!disabledSave}
               />
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={disabledPromotion}
-                  onChange={handleChangeDisabledPromotion}
-                >
-                  <TextCheckbox siteProps={siteProps}>
-                    Wyłącz promocje
-                  </TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              <ButtonTextPositionHappy>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleResetAdd}
-                  />
-                </MarginButton>
-                <MarginButton>
-                  <ReactTooltip
-                    id="disabledButtonSave"
-                    effect="float"
-                    multiline={true}
-                  >
-                    <span>Uzupełnij wszystkie pola.</span>
-                  </ReactTooltip>
-                  {!disabledSave ? (
-                    <div data-tip data-for="disabledButtonSave">
-                      <ButtonIcon
-                        title="Dodaj"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="14"
-                        icon={<FaSave />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={!disabledSave}
-                      />
-                    </div>
-                  ) : (
-                    <ButtonIcon
-                      title="Dodaj"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="14"
-                      icon={<FaSave />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      onClick={handleSaveHappyHour}
-                      disabled={!disabledSave}
-                    />
-                  )}
-                </MarginButton>
-              </ButtonTextPositionHappy>
-            </PaddingContent>
-          </BackgroundEditContent>
-        </BackgroundEdit>
-      </CSSTransition>
-      <CSSTransition
-        in={enableDatePickerStart}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+            )}
+          </MarginButton>
+        </ButtonTextPositionHappy>
+      </Popup>
+      <Popup
+        popupEnable={enableDatePickerStart}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <WidthTimePicker>
+        <WidthTimePicker>
+          <WidthCalendar>
             <SelectDataCalendar
               setActualCalendarDate={handleSelectTimeStart}
               setIsDataActive={handleCloseDateCalendarStart}
@@ -402,17 +372,17 @@ const PromotionsContentNewItem = ({
               maxDate={userSelectedTime ? selectedTimeEnd : null}
               activeData={new Date(selectedTimeStart)}
             />
-          </WidthTimePicker>
-        </BackgroundEdit>
-      </CSSTransition>
-      <CSSTransition
-        in={enableDatePickerEnd}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
+          </WidthCalendar>
+        </WidthTimePicker>
+      </Popup>
+      <Popup
+        popupEnable={enableDatePickerEnd}
+        position="absolute"
+        borderRadius
+        noContent
       >
-        <BackgroundEdit>
-          <WidthTimePicker>
+        <WidthTimePicker>
+          <WidthCalendar>
             <SelectDataCalendar
               setActualCalendarDate={handleSelectTimeEnd}
               setIsDataActive={handleCloseDateCalendarEnd}
@@ -423,9 +393,9 @@ const PromotionsContentNewItem = ({
                 userSelectedTime ? selectedTimeStart : selectedTimeEnd
               }
             />
-          </WidthTimePicker>
-        </BackgroundEdit>
-      </CSSTransition>
+          </WidthCalendar>
+        </WidthTimePicker>
+      </Popup>
     </>
   )
 }
