@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import InputIcon from "../components/InputIcon"
 import styled from "styled-components"
 import ButtonIcon from "./ButtonIcon"
@@ -51,12 +51,21 @@ const AllLocalizations = styled.div`
 const Localization = ({ handleClose, siteProps }) => {
   const [localizationText, setLocalizationText] = useState("")
   const localization = useSelector(state => state.localization)
+  const inputSearchCompany = useRef(null)
 
   useEffect(() => {
     if (!!localization) {
       setLocalizationText(localization.value)
     }
   }, [localization])
+
+  useEffect(() => {
+    if (!!inputSearchCompany) {
+      if (!!inputSearchCompany.current) {
+        inputSearchCompany.current.focus()
+      }
+    }
+  }, [inputSearchCompany])
 
   const dispatch = useDispatch()
 
@@ -103,6 +112,7 @@ const Localization = ({ handleClose, siteProps }) => {
         icon={<MdLocationOn />}
         onChange={handleChangeSearch}
         value={localizationText}
+        refInput={inputSearchCompany}
       />
       <ButtonsPosition>
         <ButtonsMargin>

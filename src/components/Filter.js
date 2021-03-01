@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import InputIcon from "../components/InputIcon"
 import { MdShoppingBasket, MdSearch, MdClose } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
@@ -24,6 +24,16 @@ const Filter = ({ handleClose, siteProps }) => {
   const [filterText, setFilterText] = useState("")
   const filters = useSelector(state => state.filters)
   const dispatch = useDispatch()
+
+  const inputSearchCompany = useRef(null)
+
+  useEffect(() => {
+    if (!!inputSearchCompany) {
+      if (!!inputSearchCompany.current) {
+        inputSearchCompany.current.focus()
+      }
+    }
+  }, [inputSearchCompany])
 
   useEffect(() => {
     if (!!filters) {
@@ -59,6 +69,7 @@ const Filter = ({ handleClose, siteProps }) => {
         placeholder="Usługa"
         onChange={handleChangeFilterText}
         value={filterText}
+        refInput={inputSearchCompany}
       />
       <ButtonsPosition>
         <ButtonsMargin>

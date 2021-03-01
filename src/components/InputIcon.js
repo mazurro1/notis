@@ -160,6 +160,7 @@ const InputIcon = ({
   required = false,
   validText = "",
   showPassword = false,
+  refInput = null,
 }) => {
   const [inputActive, setInputActive] = useState(false)
   const [clickEye, setClickEye] = useState(false)
@@ -213,6 +214,7 @@ const InputIcon = ({
           siteProps={siteProps}
           validText={!!validText}
           paddingEye={showPassword && type === "password"}
+          ref={refInput}
         />
         {!!icon && (
           <IconInput

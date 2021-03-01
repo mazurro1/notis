@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdEmail, MdLock, MdDelete, MdDone } from "react-icons/md"
@@ -55,6 +55,16 @@ const TextToActivation = styled.div`
   font-family: "Poppins-Medium", sans-serif;
 `
 
+const StyleInputCode = styled.div`
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+`
+
 const RemindPassword = () => {
   const [emailInput, setEmailInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
@@ -66,6 +76,16 @@ const RemindPassword = () => {
   const remindPasswordEmailSent = useSelector(
     state => state.remindPasswordEmailSent
   )
+
+  useEffect(() => {
+    if (!!fieldOneRef) {
+      if (!!fieldOneRef.current) {
+        fieldOneRef.current.forEach(item => {
+          item.type = "number"
+        })
+      }
+    }
+  }, [fieldOneRef])
 
   const dispatch = useDispatch()
 
@@ -113,15 +133,18 @@ const RemindPassword = () => {
       <TextToActivation>
         Kod do resetu hasła, który został wysłany na adres e-mail:
       </TextToActivation>
-      <PanFieldStyle
-        ref={fieldOneRef}
-        onComplete={code => {
-          setActiveCode(code)
-          setDemoCompleted(true)
-        }}
-        format={k => k.toUpperCase()}
-        disabled={demoCompleted}
-      />
+      <StyleInputCode>
+        <PanFieldStyle
+          ref={fieldOneRef}
+          onComplete={code => {
+            setActiveCode(code)
+            setDemoCompleted(true)
+          }}
+          format={k => k.toUpperCase()}
+          disabled={demoCompleted}
+        />
+      </StyleInputCode>
+      <TextToActivation>UWAGA: Kod jest ważny przez 10 minut!</TextToActivation>
       <InputIcon
         icon={<MdLock />}
         placeholder="Nowe hasło"

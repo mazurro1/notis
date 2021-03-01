@@ -130,7 +130,7 @@ const Home = () => {
   useEffect(() => {
     sal({
       threshold: 0.1,
-      once: false,
+      once: true,
     })
   }, [loadingPlaces, placesData])
 

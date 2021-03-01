@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import ButtonIcon from "./ButtonIcon"
@@ -25,6 +25,15 @@ const FindPlaceContent = ({
   siteProps,
 }) => {
   const [nameInput, setNameInput] = useState(selectedName)
+  const inputSearchCompany = useRef(null)
+
+  useEffect(() => {
+    if (!!inputSearchCompany) {
+      if (!!inputSearchCompany.current) {
+        inputSearchCompany.current.focus()
+      }
+    }
+  }, [inputSearchCompany])
 
   const handleChange = e => {
     setNameInput(e.target.value)
@@ -48,6 +57,7 @@ const FindPlaceContent = ({
         value={nameInput}
         type="text"
         onChange={handleChange}
+        refInput={inputSearchCompany}
       />
       <ButtonsPosition>
         <ButtonsMargin>

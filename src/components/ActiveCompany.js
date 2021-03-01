@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"
@@ -14,6 +14,14 @@ const BackgroundContent = styled.div`
   background-color: white;
   padding: 10px;
   border-radius: 5px;
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
 `
 
 const PanFieldStyle = styled(PinField)`
@@ -52,6 +60,16 @@ const ActiveCompany = () => {
   const fieldOneRef = useRef(null)
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!!fieldOneRef) {
+      if (!!fieldOneRef.current) {
+        fieldOneRef.current.forEach(item => {
+          item.type = "number"
+        })
+      }
+    }
+  }, [fieldOneRef])
 
   const handleReset = () => {
     fieldOneRef.current.forEach(input => (input.value = ""))

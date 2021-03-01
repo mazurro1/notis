@@ -347,6 +347,9 @@ export const fetchAutoLogin = (
                 }
                 if (error.response.status === 401) {
                   dispatch(logout())
+                } else if (error.response.status === 422) {
+                  localStorage.removeItem("USERID")
+                  localStorage.removeItem("TOKEN")
                 }
                 if (!noSpinner) {
                   dispatch(changeSpinner(false))
@@ -616,7 +619,9 @@ export const fetchResetPassword = (email, password, codeReset) => {
             if (error.response.status === 401) {
               dispatch(logout())
             } else {
-              dispatch(addAlertItem("Nieprawidłowy kod do resetowania hasła", "red"))
+              dispatch(
+                addAlertItem("Nieprawidłowy kod do resetowania hasła", "red")
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

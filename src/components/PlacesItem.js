@@ -114,6 +114,11 @@ const MarginBottomTitle = styled.div`
   margin-bottom: 15px;
 `
 
+const MarginSelectedService = styled.div`
+  margin-right: 2px;
+  margin-bottom: 2px;
+`
+
 const BackGroundImageCustomUrl = styled.div`
   height: 300px;
   width: 100%;
@@ -252,17 +257,38 @@ const PlacesItem = ({ item, filters, index, user }) => {
 
   const isInServicesFilter = item.services.filter(item => {
     if (filters) {
-      return item.serviceName.toLowerCase() === filters.value.toLowerCase()
+      return item.serviceName
+        .toLowerCase()
+        .includes(filters.value.toLowerCase())
     }
     return false
   })
 
   const isInServicesFilterSome = item.services.some(item => {
     if (filters) {
-      return item.serviceName.toLowerCase() === filters.value.toLowerCase()
+      return item.serviceName
+        .toLowerCase()
+        .includes(filters.value.toLowerCase())
     }
     return false
   })
+
+  const mapFilteredServices = isInServicesFilter.map(
+    (filterService, indexService) => {
+      return (
+        <MarginSelectedService key={indexService}>
+          <ButtonIcon
+            title={
+              isInServicesFilterSome
+                ? `W usługach znajduje się: ${filterService.serviceName}`
+                : "Brak w usługach"
+            }
+            fontSize="13"
+          />
+        </MarginSelectedService>
+      )
+    }
+  )
 
   const renderSelectedFilter = (
     <CSSTransition
@@ -271,16 +297,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
       classNames="popup"
       unmountOnExit
     >
-      <UnderMenuServices>
-        <ButtonIcon
-          title={
-            isInServicesFilterSome
-              ? `W usługach znajduje się: ${isInServicesFilter[0].serviceName}`
-              : "Brak w usługach"
-          }
-          fontSize="13"
-        />
-      </UnderMenuServices>
+      <UnderMenuServices>{mapFilteredServices}</UnderMenuServices>
     </CSSTransition>
   )
 
@@ -352,6 +369,20 @@ const PlacesItem = ({ item, filters, index, user }) => {
             </span>
           </ReactTooltip>
         )}
+        <ReactTooltip
+          id={`countRating${index}`}
+          effect="float"
+          multiline={true}
+        >
+          <span>Średnia ocen ze wszytskich ocenionych wizyt</span>
+        </ReactTooltip>
+        <ReactTooltip
+          id={`countSummary${index}`}
+          effect="float"
+          multiline={true}
+        >
+          <span>Liczba wszystkich wystawionych ocen</span>
+        </ReactTooltip>
         <PlaceContent siteProps={siteProps} active={isCompanyInFavourites}>
           <h1>
             {item.name}{" "}
@@ -375,13 +406,22 @@ const PlacesItem = ({ item, filters, index, user }) => {
           {renderSelectedFilter}
 
           <OpinionMainDiv siteProps={siteProps}>
-            <PaddingOpinion>
+            <PaddingOpinion
+              data-tip
+              data-for={`countRating${index}`}
+              data-place="left"
+            >
               {item.opinionsValue > 0 && item.opinionsCount > 0
                 ? Math.round((item.opinionsValue / item.opinionsCount) * 10) /
                   10
                 : 0}
             </PaddingOpinion>
-            <OpinionBottom siteProps={siteProps}>
+            <OpinionBottom
+              siteProps={siteProps}
+              data-tip
+              data-for={`countSummary${index}`}
+              data-place="left"
+            >
               Opinie: {item.opinionsCount}
             </OpinionBottom>
           </OpinionMainDiv>
