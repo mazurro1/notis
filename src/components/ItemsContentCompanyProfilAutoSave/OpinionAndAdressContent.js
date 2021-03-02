@@ -17,9 +17,10 @@ import { ReserwationDelay } from "../../common/ReserwationDelay"
 import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
 import SelectCreated from "../SelectCreated"
 import { AllIndustries } from "../../common/AllIndustries"
-import { fetchSaveCompanySettings } from "../../state/actions"
+import { fetchSaveCompanySettings, addAlertItem } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import Popup from "../Popup"
+import InputPhone from "../InputPhone"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -307,17 +308,25 @@ const OpinionAndAdressContent = ({
     }
   }, [editable, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const validButtonRegisterCompany =
+    companyNameInput.length >= 3 &&
+    phoneInput.length >= 7 &&
+    cityInput.length >= 3 &&
+    discrictInput.length >= 3 &&
+    adressInput.length >= 3
+
   const disabledButtonSubmit =
-    deletedIndustriesComponent.length > 0 ||
-    newIndustriesComponent.length > 0 ||
-    reserwationMonth !== reservationMonthServer ||
-    reserwationEver !== reservationEveryTimeServer ||
-    companyNameInput !== companyName ||
-    cityInput !== city ||
-    discrictInput !== district ||
-    adressInput !== adress ||
-    phoneInput !== phone ||
-    companyPausedItem !== pauseCompany
+    (deletedIndustriesComponent.length > 0 ||
+      newIndustriesComponent.length > 0 ||
+      reserwationMonth !== reservationMonthServer ||
+      reserwationEver !== reservationEveryTimeServer ||
+      companyNameInput !== companyName ||
+      cityInput !== city ||
+      discrictInput !== district ||
+      adressInput !== adress ||
+      phoneInput !== phone ||
+      companyPausedItem !== pauseCompany) &&
+    validButtonRegisterCompany
 
   const handleOnSubmit = e => {
     e.preventDefault()
@@ -361,6 +370,22 @@ const OpinionAndAdressContent = ({
       dispatch(
         fetchSaveCompanySettings(user.token, user.company._id, dataSettings)
       )
+    } else {
+      if (companyNameInput.length < 3) {
+        dispatch(addAlertItem("Nazwa firmy jest za krótka", "red"))
+      }
+      if (phoneInput.length < 7) {
+        dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
+      }
+      if (cityInput.length < 3) {
+        dispatch(addAlertItem("Nieprawidłowa miejscowość", "red"))
+      }
+      if (discrictInput.length < 3) {
+        dispatch(addAlertItem("Nieprawidłowa dzielnica", "red"))
+      }
+      if (adressInput.length < 3) {
+        dispatch(addAlertItem("Nieprawidłowy aders", "red"))
+      }
     }
   }
 
@@ -588,6 +613,7 @@ const OpinionAndAdressContent = ({
                 onChange={e => handleChangeInputs(e, setCompanyNameInput)}
                 value={companyNameInput}
                 required
+                validText="Minimum 3 znaki, unikalna nazwa firmy"
               />
               <InputIcon
                 icon={<MdLocationCity />}
@@ -597,6 +623,7 @@ const OpinionAndAdressContent = ({
                 onChange={e => handleChangeInputs(e, setCityInput)}
                 value={cityInput}
                 required
+                validText="Minimum 3 znaki"
               />
               <InputIcon
                 icon={<FaMapSigns />}
@@ -606,6 +633,7 @@ const OpinionAndAdressContent = ({
                 onChange={e => handleChangeInputs(e, setDiscrictInput)}
                 value={discrictInput}
                 required
+                validText="Minimum 3 znaki"
               />
               <InputIcon
                 icon={<MdLocationOn />}
@@ -615,15 +643,13 @@ const OpinionAndAdressContent = ({
                 onChange={e => handleChangeInputs(e, setAdressInput)}
                 value={adressInput}
                 required
+                validText="Minimum 3 znaki"
               />
-              <InputIcon
-                icon={<MdPhoneAndroid />}
-                placeholder="Numer telefonu"
-                type="number"
-                secondColor
-                onChange={e => handleChangeInputs(e, setPhoneInput)}
-                value={phoneInput}
-                required
+              <InputPhone
+                defaultValues={phoneInput}
+                setPhoneNumber={setPhoneInput}
+                width={25}
+                marginElements={5}
               />
               <TextStyleInfo siteProps={siteProps}>
                 Rezerwacja co:

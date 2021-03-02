@@ -424,6 +424,9 @@ const PromotionsContentItemEdit = ({
               minDateDefault={selectedTimeStart}
               maxDate={userSelectedTime ? selectedTimeEnd : null}
               activeData={new Date(selectedTimeStart)}
+              activeMonth={
+                userSelectedTime ? selectedTimeStart : selectedTimeEnd
+              }
             />
           </WidthCalendar>
         </WidthTimePicker>

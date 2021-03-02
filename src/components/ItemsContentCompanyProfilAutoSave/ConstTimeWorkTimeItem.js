@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit } from "react-icons/md"
+import { MdEdit, MdTimelapse, MdAccessTime } from "react-icons/md"
 import { Colors } from "../../common/Colors"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
@@ -16,16 +16,16 @@ const PositionTitleAndButtons = styled.div`
   margin-bottom: 10px;
 `
 
+const ButtonsSave = styled.div`
+  display: block;
+`
+
 const ContentDateButtons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
   margin-bottom: 20px;
 `
 
 const DayOfTheWeekStyle = styled.div`
-  font-size: 1rem;
+  font-size: 0.9rem;
 `
 
 const TextCheckbox = styled.span`
@@ -45,6 +45,15 @@ const CheckboxStyle = styled.div`
     color: ${props => Colors(props.siteProps).textNormalBlack};
     border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
+`
+
+const PaddingItemTime = styled.div`
+  display: inline-block;
+  width: 100%;
+`
+
+const ScaleItem = styled.div`
+  transform: scale(0.9);
 `
 
 const ConstTimeWorkTime = ({
@@ -171,30 +180,30 @@ const ConstTimeWorkTime = ({
         secondColors
       >
         <ContentDateButtons>
-          <div>
+          <PaddingItemTime>
             Początek pracy:
             <ButtonIcon
               title={dayStart.length > 0 ? dayStart : "0:00"}
               uppercase
-              fontIconSize="16"
+              fontIconSize="20"
               fontSize="14"
-              icon={<MdEdit />}
+              icon={<MdAccessTime />}
               onClick={handleEditStartDay}
               secondColors
             />
-          </div>
-          <div>
+          </PaddingItemTime>
+          <PaddingItemTime>
             Koniec pracy:
             <ButtonIcon
               title={dayEnd.length > 0 ? dayEnd : "0:00"}
               uppercase
-              fontIconSize="16"
+              fontIconSize="20"
               fontSize="14"
-              icon={<MdEdit />}
+              icon={<MdTimelapse />}
               onClick={handleEditEndDay}
               secondColors
             />
-          </div>
+          </PaddingItemTime>
         </ContentDateButtons>
         <CheckboxStyle siteProps={siteProps}>
           <Checkbox
@@ -205,7 +214,7 @@ const ConstTimeWorkTime = ({
             <TextCheckbox>Dzień wolony</TextCheckbox>
           </Checkbox>
         </CheckboxStyle>
-        <ButtonContent>
+        <ButtonsSave>
           <ButtonDeleteStyle>
             <ButtonIcon
               title="Anuluj"
@@ -231,7 +240,7 @@ const ConstTimeWorkTime = ({
               disabled={disabledButtonSave}
             />
           </ButtonDeleteStyle>
-        </ButtonContent>
+        </ButtonsSave>
       </Popup>
       <Popup
         popupEnable={dayTimeStart}
@@ -239,12 +248,14 @@ const ConstTimeWorkTime = ({
         borderRadius
         noContent
       >
-        <TimePickerContent
-          setSelectedTime={handleSetTimeStart}
-          timeTimePicker={dayStart}
-          secondColor
-          maxTime={dayEnd}
-        />
+        <ScaleItem>
+          <TimePickerContent
+            setSelectedTime={handleSetTimeStart}
+            timeTimePicker={dayStart}
+            secondColor
+            maxTime={dayEnd}
+          />
+        </ScaleItem>
       </Popup>
       <Popup
         popupEnable={dayTimeEnd}
@@ -252,12 +263,14 @@ const ConstTimeWorkTime = ({
         borderRadius
         noContent
       >
-        <TimePickerContent
-          setSelectedTime={handleSetTimeEnd}
-          timeTimePicker={dayEnd}
-          secondColor
-          minTime={dayStart}
-        />
+        <ScaleItem>
+          <TimePickerContent
+            setSelectedTime={handleSetTimeEnd}
+            timeTimePicker={dayEnd}
+            secondColor
+            minTime={dayStart}
+          />
+        </ScaleItem>
       </Popup>
     </>
   )

@@ -344,7 +344,7 @@ const GalleryContent = ({
               <ButtonIcon
                 title="Edytuj galerie"
                 uppercase
-                fontIconSize="16"
+                fontIconSize="40"
                 fontSize="14"
                 icon={<MdEdit />}
                 secondColors

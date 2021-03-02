@@ -17,6 +17,7 @@ import { getMonthAndReturn } from "../common/Functions"
 import { CgSpinner } from "react-icons/cg"
 import HoursItemReserwation from "./HoursItemReserwation"
 import InputIcon from "./InputIcon"
+import InputPhone from "./InputPhone"
 import { Site } from "../common/Site"
 import ReactTooltip from "react-tooltip"
 import { Checkbox } from "react-input-checkbox"
@@ -462,10 +463,6 @@ const Reserwation = ({
     setReserwationMessage(e.target.value)
   }
 
-  const handleChangeNumberPhone = e => {
-    setNumberPhone(e.target.value)
-  }
-
   const handleChangeCheckbox = companyStampPromotionPercent => {
     if (!isStampActive) {
       setSelectedPromotion(companyStampPromotionPercent)
@@ -872,13 +869,7 @@ const Reserwation = ({
                   avaibleHoursReserwation.length > 0 &&
                   !user.hasPhone && (
                     <>
-                      <InputIcon
-                        placeholder="Numer telefonu"
-                        inputActive={true}
-                        type="number"
-                        value={numberPhone}
-                        onChange={handleChangeNumberPhone}
-                      />
+                      <InputPhone setPhoneNumber={setNumberPhone} />
                     </>
                   )}
                 {!!stempValidUserCanTakeStempRabat

@@ -5,6 +5,11 @@ import { Colors } from "../../common/Colors"
 import { DaySOfTheWeek } from "../../common/DaySOfTheWeek"
 import ConstTimeWorkTimeItem from "./ConstTimeWorkTimeItem"
 import Popup from "../Popup"
+import styled from "styled-components"
+
+const MarginBottomItems = styled.div`
+  margin-bottom: 40px;
+`
 
 const ConstTimeWorkTime = ({
   constTimeWorker,
@@ -54,7 +59,7 @@ const ConstTimeWorkTime = ({
       smallTitle
       secondColors
     >
-      {mapDaysOfTheWeek}
+      <MarginBottomItems>{mapDaysOfTheWeek}</MarginBottomItems>
       <ButtonContent>
         <ButtonDeleteStyle>
           <ButtonIcon

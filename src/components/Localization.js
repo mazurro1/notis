@@ -30,7 +30,8 @@ const CityStyle = styled.div`
   color: ${props => Colors(props.siteProps).textNormalWhite};
   padding: 2px 5px;
   font-size: 1rem;
-  margin: 4px;
+  margin-right: 4px;
+  margin-bottom: 4px;
   display: inline-block;
   border-radius: 5px;
   cursor: pointer;

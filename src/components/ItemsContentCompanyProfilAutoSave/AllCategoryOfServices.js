@@ -452,11 +452,12 @@ const AllCategoryOfServices = ({
     )
   })
 
-  const isInCategory = allCategoriesWithItems.some(
-    item => item.category.toLowerCase() === newCategoryTitle.toLowerCase()
-  )
+  // const isInCategory = allCategoriesWithItems.some(
+  //   item => item.category.toLowerCase() === newCategoryTitle.toLowerCase()
+  // )
 
-  const disabledAddCategoryButton = newCategoryTitle.length <= 2 || isInCategory
+  const disabledAddCategoryButton = newCategoryTitle.length <= 2
+  // || isInCategory
 
   const isAnyChanges =
     newCategoryItems.length > 0 ||
@@ -517,7 +518,7 @@ const AllCategoryOfServices = ({
                 type="text"
                 onChange={handleChangeNewCategory}
                 required
-                validText="Minimum 3 znaki, unikatowa nazwa"
+                validText="Minimum 3 znaki"
               />
               <ButtonsAddPosition>
                 <ButtonMargin>

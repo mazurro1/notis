@@ -85,6 +85,7 @@ const CompanyAvailabilityNewItem = ({
           value={itemName}
           type="text"
           onChange={handleChangeItemName}
+          validText="Wartość wymagana"
         />
         <InputIcon
           icon={<MdWidgets />}
@@ -92,6 +93,7 @@ const CompanyAvailabilityNewItem = ({
           value={itemCount}
           type="number"
           onChange={handleChangeCount}
+          validText="Wartość wymagana"
         />
         <ButtonsAddPosition>
           <ButtonMargin>

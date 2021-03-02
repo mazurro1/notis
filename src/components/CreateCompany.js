@@ -4,7 +4,6 @@ import styled from "styled-components"
 import {
   MdAccountBox,
   MdEmail,
-  MdPhoneAndroid,
   MdLocationOn,
   MdWork,
   MdLocationCity,
@@ -15,9 +14,11 @@ import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import ButtonIcon from "./ButtonIcon"
-import { FetchCompanyRegistration } from "../state/actions"
+import { FetchCompanyRegistration, addAlertItem } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { AllIndustries } from "../common/AllIndustries"
+import InputPhone from "./InputPhone"
+import { validEmail } from "../common/Functions"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -66,16 +67,17 @@ const CreateCompany = () => {
 
   const validButtonRegisterCompany =
     emailInput.length > 0 &&
-    nameInput.length > 0 &&
-    phoneInput.length > 0 &&
-    cityInput.length > 0 &&
-    discrictInput.length > 0 &&
-    adressInput.length > 0 &&
+    nameInput.length >= 3 &&
+    phoneInput.length >= 7 &&
+    cityInput.length >= 3 &&
+    discrictInput.length >= 3 &&
+    adressInput.length >= 3 &&
     industries.length > 0
 
   const handleSubmit = e => {
     e.preventDefault()
-    if (validButtonRegisterCompany) {
+    const isEmailValid = validEmail(emailInput)
+    if (validButtonRegisterCompany && isEmailValid) {
       const mapedIndustries = industries.map(item => item.value)
       dispatch(
         FetchCompanyRegistration(
@@ -90,6 +92,28 @@ const CreateCompany = () => {
           mapedIndustries
         )
       )
+    } else {
+      if (!isEmailValid) {
+        dispatch(addAlertItem("Nieprawidłowy adres e-mail", "red"))
+      }
+      if (nameInput.length < 3) {
+        dispatch(addAlertItem("Nazwa firmy jest za krótka", "red"))
+      }
+      if (phoneInput.length < 7) {
+        dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
+      }
+      if (cityInput.length < 3) {
+        dispatch(addAlertItem("Nieprawidłowa miejscowość", "red"))
+      }
+      if (discrictInput.length < 3) {
+        dispatch(addAlertItem("Nieprawidłowa dzielnica", "red"))
+      }
+      if (adressInput.length < 3) {
+        dispatch(addAlertItem("Nieprawidłowy aders", "red"))
+      }
+      if (industries.length === 0) {
+        dispatch(addAlertItem("Nie zaznaczono typu działalności", "red"))
+      }
     }
   }
 
@@ -126,6 +150,7 @@ const CreateCompany = () => {
         type="email"
         onChange={e => handleChange(e, setEmailInput)}
         required
+        validText="Jeden adres e-mail na konto firmowe"
       />
       <InputIcon
         icon={<MdAccountBox />}
@@ -134,6 +159,7 @@ const CreateCompany = () => {
         value={nameInput}
         onChange={e => handleChange(e, setNameInput)}
         required
+        validText="Minimum 3 znaki"
       />
 
       <InputIcon
@@ -143,6 +169,7 @@ const CreateCompany = () => {
         type="text"
         onChange={e => handleChange(e, setCityInput)}
         required
+        validText="Minimum 3 znaki"
       />
       <InputIcon
         icon={<FaMapSigns />}
@@ -151,6 +178,7 @@ const CreateCompany = () => {
         type="text"
         onChange={e => handleChange(e, setDiscrictInput)}
         required
+        validText="Minimum 3 znaki"
       />
       <InputIcon
         icon={<MdLocationOn />}
@@ -159,20 +187,14 @@ const CreateCompany = () => {
         type="text"
         onChange={e => handleChange(e, setAdressInput)}
         required
+        validText="Minimum 3 znaki"
       />
-      <InputIcon
-        icon={<MdPhoneAndroid />}
-        placeholder="Numer telefonu"
-        value={phoneInput}
-        type="number"
-        onChange={e => handleChange(e, setPhoneInput)}
-        required
-      />
+      <InputPhone setPhoneNumber={setPhoneInput} />
       <RegulationsText siteProps={siteProps}>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />
       </RegulationsText>
-      <ButtonLoginRegister disabled={!validButtonRegisterCompany} type="submit">
+      <ButtonLoginRegister type="submit">
         <div data-tip data-for="alertRegistration">
           <ButtonIcon
             title="ZAREJESTRUJ FIRMĘ"

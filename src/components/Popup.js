@@ -51,7 +51,7 @@ const PopupContent = styled.div`
   border-radius: 5px;
   max-height: ${props => (props.maxHeight ? "80vh" : "auto")};
   background-color: ${props => Colors(props.siteProps).backgroundColorPage};
-  overflow: ${props => (props.overflow ? "hidden" : "auto")};
+  overflow: ${props => (props.overflowComponent ? "hidden" : "auto")};
 `
 
 const PaddingContnent = styled.div`
@@ -108,7 +108,7 @@ const Popup = ({
   closeTitle = true,
   borderRadius = false,
   smallTitle = false,
-  overflow = true,
+  overflowComponent = true,
   maxHeight = true,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
@@ -145,7 +145,7 @@ const Popup = ({
       onClick={handleOnClickContent}
       fullScreen={fullScreen}
       siteProps={siteProps}
-      overflow={overflow}
+      overflowComponent={overflowComponent}
       maxHeight={maxHeight}
     >
       {isTitleOn && (

@@ -17,10 +17,11 @@ import { Collapse } from "react-collapse"
 import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import SelectCreated from "../SelectCreated"
 import { ServiceColors } from "../../common/ServiceColors"
 import Popup from "../Popup"
+import { addAlertItem } from "../../state/actions"
 
 const TextCheckbox = styled.span`
   position: relative;
@@ -207,6 +208,7 @@ const CategoryItem = ({
   const resetCompany = useSelector(state => state.resetCompany)
   const siteProps = useSelector(state => state.siteProps)
   const activeWorkerUserId = useSelector(state => state.activeWorkerUserId)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setClickDelete(false)
@@ -243,10 +245,6 @@ const CategoryItem = ({
   const handleEditCategory = e => {
     e.stopPropagation()
     setClickEdit(prevState => !prevState)
-  }
-
-  const handleClickContent = e => {
-    e.stopPropagation()
   }
 
   const handleChangeInput = (e, setChange) => {
@@ -298,6 +296,16 @@ const CategoryItem = ({
           label: "Domyślny (jasno niebieski)",
         })
       }
+    } else {
+      if (titleInput.length < 3) {
+        dispatch(addAlertItem("Nazwa kategori jest za krótka", "red"))
+      }
+      if (!!!timeInput) {
+        dispatch(addAlertItem("Nie dodano czasu usługi", "red"))
+      }
+      if (!!!priceInput) {
+        dispatch(addAlertItem("Nie dodano ceny usługi", "red"))
+      }
     }
   }
 
@@ -308,9 +316,15 @@ const CategoryItem = ({
 
   const handleChangeCategoryTitle = e => {
     e.preventDefault()
-    if (!disabledCategorySave) {
-      setClickEdit(false)
-      handleChangeNameCategory(categoryTitle, item.categoryId)
+    if (categoryTitle.length >= 3) {
+      if (!disabledCategorySave) {
+        setClickEdit(false)
+        handleChangeNameCategory(categoryTitle, item.categoryId)
+      } else {
+        dispatch(addAlertItem("Nazwa kategori musi być inna", "red"))
+      }
+    } else {
+      dispatch(addAlertItem("Nazwa kategori jest za krótka", "red"))
     }
   }
 
@@ -434,6 +448,7 @@ const CategoryItem = ({
                   type="text"
                   onChange={e => handleChangeInput(e, setCategoryTitle)}
                   required
+                  validText="Minimum 3 znaki"
                 />
                 <ButtonsAddPosition>
                   <ButtonMargin>
@@ -457,7 +472,9 @@ const CategoryItem = ({
                       icon={<MdLibraryAdd />}
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
-                      disabled={disabledCategorySave}
+                      disabled={
+                        disabledCategorySave || categoryTitle.length < 3
+                      }
                     />
                   </ButtonMarginSubmit>
                 </ButtonsAddPosition>

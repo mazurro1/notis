@@ -14,8 +14,9 @@ const ButtonConfirmDate = styled.div`
   background-color: ${props => Colors(props.siteProps).timePickerTopBackground};
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 `
 
 const MarginButtons = styled.div`

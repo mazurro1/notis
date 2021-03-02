@@ -4,7 +4,11 @@ import styled from "styled-components"
 import { MdEmail, MdLock } from "react-icons/md"
 import { FaFacebookF } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
-import { fetchLoginUser, changeRemindPasswordVisible } from "../state/actions"
+import {
+  fetchLoginUser,
+  changeRemindPasswordVisible,
+  addAlertItem,
+} from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ButtonIcon from "../components/ButtonIcon"
 import { FaUser, FaQuestion, FaGoogle } from "react-icons/fa"
@@ -69,7 +73,11 @@ const LoginContent = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    dispatch(fetchLoginUser(emailInput, passwordInput, checkboxAutoLogin))
+    if (passwordInput.length >= 5) {
+      dispatch(fetchLoginUser(emailInput, passwordInput, checkboxAutoLogin))
+    } else {
+      dispatch(addAlertItem("Hasło jest za krótkie", "red"))
+    }
   }
 
   const validButtonLogin = emailInput.length > 0 && passwordInput.length > 0

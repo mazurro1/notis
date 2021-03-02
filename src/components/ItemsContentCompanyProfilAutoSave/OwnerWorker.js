@@ -337,7 +337,10 @@ const OwnerWorker = ({
       }
     >
       {!!owner.imageUrl ? (
-        <BackGroundImageCustomUrl url={`${Site.awsUrl}/${owner.imageUrl}`} />
+        <BackGroundImageCustomUrl
+          url={`${Site.awsUrl}/${owner.imageUrl}`}
+          editedWorkers={editedWorkers}
+        />
       ) : (
         <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>
           <FaUser />

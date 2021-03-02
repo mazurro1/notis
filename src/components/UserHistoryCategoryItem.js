@@ -609,6 +609,7 @@ const UserHistoryCategoryItem = ({
               placeholder="Opinia"
               value={opinionText}
               onChange={handleChangeTextOpinion}
+              validText="Minimum 2 znaki"
             />
             <ButtonsAddPositionOpinion>
               <ButtonMargin>
@@ -660,15 +661,12 @@ const UserHistoryCategoryItem = ({
               closeTitle={false}
               smallTitle
             >
-              <StarsPositions>
-                <span>Ocena: </span>
-                {renderStars}
-              </StarsPositions>
               <InputIcon
                 icon={<MdComment />}
                 placeholder="Opinia"
                 value={editedOpinionText}
                 onChange={handleChangeTextEditedOpinion}
+                validText="Minimum 2 znaki"
               />
               <ButtonsAddPositionOpinion>
                 <ButtonMargin>

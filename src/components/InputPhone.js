@@ -4,28 +4,33 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import { useSelector } from "react-redux"
 
+const ColorsInput = styled.div`
+  input {
+    background-color: ${props => Colors(props.siteProps).companyItemBackground};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    width: ${props => props.width + "px"};
+    height: ${props => props.width + "px"};
+
+    &:nth-child(3n) {
+      margin-right: ${props => props.marginElements + "px"};
+
+      @media all and (max-width: 490px) {
+        margin-right: 5px;
+      }
+    }
+  }
+`
+
 const PanFieldStyle = styled(PinField)`
-  width: 35px;
-  height: 35px;
   border-radius: 2px;
   border: none;
   outline: none;
   text-align: center;
   margin: 1px;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
-  color: ${props => Colors(props.siteProps).textNormalBlack};
   font-size: 1.1rem;
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-
-  &:nth-child(3n) {
-    margin-right: 20px;
-
-    @media all and (max-width: 490px) {
-      margin-right: 5px;
-    }
-  }
 
   &:disabled {
     color: #bdbdbd;
@@ -60,14 +65,18 @@ const StyleInputs = styled.div`
   }
 `
 
-const InputPhone = ({ setPhoneNumber = () => {}, defaultValues = null }) => {
+const InputPhone = ({
+  setPhoneNumber = () => {},
+  defaultValues = null,
+  width = 35,
+  marginElements = 20,
+}) => {
   const [inputActive, setInputActive] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
   const fieldOneRef = useRef(null)
 
   useEffect(() => {
     if (!!fieldOneRef) {
-      console.log(fieldOneRef)
       if (!!fieldOneRef.current) {
         fieldOneRef.current.forEach((item, index) => {
           if (!!defaultValues) {
@@ -94,7 +103,11 @@ const InputPhone = ({ setPhoneNumber = () => {}, defaultValues = null }) => {
           Numer telefonu:
         </TextValue>
       </div>
-      <div>
+      <ColorsInput
+        siteProps={siteProps}
+        width={width}
+        marginElements={marginElements}
+      >
         <PanFieldStyle
           ref={fieldOneRef}
           onChange={code => {
@@ -103,9 +116,8 @@ const InputPhone = ({ setPhoneNumber = () => {}, defaultValues = null }) => {
           format={k => k.toUpperCase()}
           length={9}
           validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
-          siteProps={siteProps}
         />
-      </div>
+      </ColorsInput>
     </StyleInputs>
   )
 }

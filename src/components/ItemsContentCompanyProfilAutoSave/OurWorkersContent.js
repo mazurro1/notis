@@ -199,7 +199,10 @@ const BackGroundImageCustomUrl = styled.div`
   height: 50px;
   width: 50px;
   border: 2px solid transparent;
-  border-color: ${props => Colors(props.siteProps).primaryColor};
+  border-color: ${props =>
+    props.editedWorkers
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).primaryColor};
   background: url(${props => props.url}) 50% 0 no-repeat;
   background-position: center;
   background-size: cover;

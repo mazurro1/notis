@@ -79,7 +79,7 @@ const CompanyAvailabilityItemEdit = ({
     )
   }
 
-  let disabledButtonSave = true
+  let disabledButtonSave = false
 
   if (!!itemCount && !!editedItemCount) {
     disabledButtonSave =
@@ -104,6 +104,7 @@ const CompanyAvailabilityItemEdit = ({
         value={editedItemName}
         type="text"
         onChange={handleChangeItemName}
+        validText="Wartość wymagana"
       />
       <InputIcon
         icon={<MdWidgets />}
@@ -111,6 +112,7 @@ const CompanyAvailabilityItemEdit = ({
         value={editedItemCount}
         type="number"
         onChange={handleChangeCount}
+        validText="Wartość wymagana"
       />
       <ButtonsAdd>
         <ButtonMargin>

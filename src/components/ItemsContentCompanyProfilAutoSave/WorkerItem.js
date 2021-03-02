@@ -489,6 +489,7 @@ const WorkerItem = ({
       {!!item.user.imageUrl ? (
         <BackGroundImageCustomUrl
           url={`${Site.awsUrl}/${item.user.imageUrl}`}
+          editedWorkers={editedWorkers}
         />
       ) : (
         <WorkerCircle isCompanyEditProfil={editedWorkers} siteProps={siteProps}>

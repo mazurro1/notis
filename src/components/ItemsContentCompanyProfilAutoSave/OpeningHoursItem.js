@@ -2,7 +2,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
-import { MdEdit, MdAccessTime, MdTimelapse } from "react-icons/md"
+import { MdEdit, MdAccessTime, MdTimelapse, MdSave } from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
 import TimePickerContent from "../TimePicker"
 import { Checkbox } from "react-input-checkbox"
@@ -57,6 +57,10 @@ const DayMonth = styled.div`
       : ""};
 `
 
+const MarginTop = styled.div`
+  margin-bottom: 20px;
+`
+
 const DayDate = styled.div`
   text-align: right;
   color: ${props =>
@@ -80,6 +84,15 @@ const ButtonTimePickerStyle = styled.div`
   padding: 10px;
   font-size: 0.9rem;
   font-family: "Poppins-Medium", sans-serif;
+`
+
+const ButtonEditPositionRelative = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 30px;
 `
 
 const OpeningHoursItem = ({
@@ -238,16 +251,18 @@ const OpeningHoursItem = ({
             />
           </ButtonTimePickerStyle>
         </ButtonsTimePicker>
-        <CheckboxStyle siteProps={siteProps}>
-          <Checkbox
-            theme="material-checkbox"
-            value={checkboxDisabledDay}
-            onChange={handleChangeCheckbox}
-          >
-            <TextCheckbox>Nieczynne</TextCheckbox>
-          </Checkbox>
-        </CheckboxStyle>
-        <ButtonEditPosition>
+        <MarginTop>
+          <CheckboxStyle siteProps={siteProps}>
+            <Checkbox
+              theme="material-checkbox"
+              value={checkboxDisabledDay}
+              onChange={handleChangeCheckbox}
+            >
+              <TextCheckbox>Nieczynne</TextCheckbox>
+            </Checkbox>
+          </CheckboxStyle>
+        </MarginTop>
+        <ButtonEditPositionRelative>
           <MarginButton>
             <ButtonIcon
               title="Cofnij"
@@ -266,14 +281,14 @@ const OpeningHoursItem = ({
               uppercase
               fontIconSize="25"
               fontSize="14"
-              icon={<MdEdit />}
+              icon={<MdSave />}
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={!disabledButtonSave}
               onClick={handleSaveChangesTimeDay}
             />
           </MarginButton>
-        </ButtonEditPosition>
+        </ButtonEditPositionRelative>
       </Popup>
       <Popup
         popupEnable={activeTimePickerOpen}

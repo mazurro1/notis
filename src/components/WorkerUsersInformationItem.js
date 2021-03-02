@@ -12,6 +12,7 @@ import {
   MdBlock,
   MdPhone,
 } from "react-icons/md"
+import { FaLock, FaLockOpen } from "react-icons/fa"
 import InputIcon from "./InputIcon"
 import ButtonIcon from "./ButtonIcon"
 import sal from "sal.js"
@@ -24,6 +25,7 @@ import {
   fetchworkerUsersMoreInformationsMessage,
   fetchUserInformations,
   fetchSelectedUserReserwations,
+  addAlertItem,
 } from "../state/actions"
 import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
@@ -457,16 +459,20 @@ const WorkerUsersInformationItem = ({
 
   const handleAddMessage = e => {
     e.preventDefault()
-    dispatch(
-      fetchCompanyUsersInformationsMessage(
-        user.token,
-        user.company._id,
-        userInfo.userId._id,
-        newMessage
+    if (newMessage.length >= 2) {
+      dispatch(
+        fetchCompanyUsersInformationsMessage(
+          user.token,
+          user.company._id,
+          userInfo.userId._id,
+          newMessage
+        )
       )
-    )
-    setClickAdd(false)
-    setNewMessage("")
+      setClickAdd(false)
+      setNewMessage("")
+    } else {
+      dispatch(addAlertItem("Za krótka wiadomość o użytkowniku", "red"))
+    }
   }
 
   const handleDeleteMessageFetch = messageId => {
@@ -716,6 +722,7 @@ const WorkerUsersInformationItem = ({
               type="text"
               onChange={handleChangeMessage}
               required
+              validText="Minimum 2 znaki"
             />
             <ButtonsAddPosition>
               <ButtonMargin>
@@ -739,6 +746,7 @@ const WorkerUsersInformationItem = ({
                   icon={<MdAddBox />}
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
+                  disabled={newMessage.length < 2}
                 />
               </ButtonMarginSubmit>
             </ButtonsAddPosition>
@@ -755,8 +763,8 @@ const WorkerUsersInformationItem = ({
               <ButtonIcon
                 title="Anuluj"
                 uppercase
-                fontIconSize="40"
-                fontSize="15"
+                fontIconSize="20"
+                fontSize="13"
                 icon={<MdArrowBack />}
                 onClick={handleClickBlock}
                 customColorButton={Colors(siteProps).successColorDark}
@@ -767,9 +775,9 @@ const WorkerUsersInformationItem = ({
               <ButtonIcon
                 title={!!userInfo.isBlocked ? "Odblokuj" : "Blokuj"}
                 uppercase
-                fontIconSize="40"
-                fontSize="15"
-                icon={<MdAddBox />}
+                fontIconSize="20"
+                fontSize="13"
+                icon={!!userInfo.isBlocked ? <FaLockOpen /> : <FaLock />}
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleConfirmBlockUser}

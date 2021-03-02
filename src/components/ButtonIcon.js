@@ -168,7 +168,7 @@ const ButtonIcon = ({
 
   return (
     <ButtonStyle
-      fontSize={fontSize}
+      fontSize={Number(fontSize) <= 18 ? 14 : fontSize}
       uppercase={uppercase}
       onMouseEnter={handleOnMouseOn}
       onMouseLeave={handleOnMouseLeave}
