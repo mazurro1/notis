@@ -8,12 +8,15 @@ import {
   fetchLoginUser,
   changeRemindPasswordVisible,
   addAlertItem,
+  changeSpinner,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ButtonIcon from "../components/ButtonIcon"
 import { FaUser, FaQuestion, FaGoogle } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { Colors } from "../common/Colors"
+import { Site } from "../common/Site"
+import FacebookLogin from "react-facebook-login"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -96,6 +99,10 @@ const LoginContent = () => {
     dispatch(changeRemindPasswordVisible(!remindPasswordVisible))
   }
 
+  const handleClickLogin = () => {
+    dispatch(changeSpinner(true))
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -148,29 +155,35 @@ const LoginContent = () => {
         </ButtonLoginRegister>
 
         {tooltipButtonLogin}
+        <a href={`${Site.serverUrl}/auth/facebook`}>
+          <ButtonFacebook>
+            <ButtonIcon
+              title="ZALOGUJ SIĘ PRZEZ FACEBOOKA"
+              uppercase
+              customColorButton="#1565c0"
+              customColorIcon="#1e88e5"
+              fontIconSize="16"
+              fontSize="16"
+              icon={<FaFacebookF />}
+              onClick={handleClickLogin}
+            />
+          </ButtonFacebook>
+        </a>
 
-        <ButtonFacebook>
-          <ButtonIcon
-            title="ZALOGUJ SIĘ PRZEZ FACEBOOKA"
-            uppercase
-            customColorButton="#1565c0"
-            customColorIcon="#1e88e5"
-            fontIconSize="16"
-            fontSize="16"
-            icon={<FaFacebookF />}
-          />
-        </ButtonFacebook>
-        <ButtonFacebook>
-          <ButtonIcon
-            title="ZALOGUJ SIĘ PRZEZ GOOGLE"
-            uppercase
-            customColorButton="#c62828"
-            customColorIcon="#e53935"
-            fontIconSize="16"
-            fontSize="16"
-            icon={<FaGoogle />}
-          />
-        </ButtonFacebook>
+        <a href={`${Site.serverUrl}/auth/google`}>
+          <ButtonFacebook>
+            <ButtonIcon
+              title="ZALOGUJ SIĘ PRZEZ GOOGLE"
+              uppercase
+              customColorButton="#c62828"
+              customColorIcon="#e53935"
+              fontIconSize="16"
+              fontSize="16"
+              icon={<FaGoogle />}
+              onClick={handleClickLogin}
+            />
+          </ButtonFacebook>
+        </a>
       </form>
     </>
   )

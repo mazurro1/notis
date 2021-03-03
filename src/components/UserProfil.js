@@ -223,7 +223,9 @@ const UserProfil = ({ userProfilVisible }) => {
       if (!!user.imageUrl) {
         setAddedImages([
           {
-            src: `${Site.awsUrl}/${user.imageUrl}`,
+            src: user.imageUrl.includes("https://")
+              ? user.imageUrl
+              : `${Site.awsUrl}/${user.imageUrl}`,
             originalPath: user.imageUrl,
             isNew: false,
           },
@@ -247,7 +249,9 @@ const UserProfil = ({ userProfilVisible }) => {
     if (!!user.imageUrl) {
       setAddedImages([
         {
-          src: `${Site.awsUrl}/${user.imageUrl}`,
+          src: user.imageUrl.includes("https://")
+            ? user.imageUrl
+            : `${Site.awsUrl}/${user.imageUrl}`,
           originalPath: user.imageUrl,
           isNew: false,
         },

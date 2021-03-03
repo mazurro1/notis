@@ -1,8 +1,8 @@
 import React from "react"
-import LoginFacebookComponent from "../components/LoginFacebookComponent"
+import LoginGoogleComponent from "../components/LoginGoogleComponent"
 import CompanyPriv from "../components/CompanyPriv"
 
-const LoginFacebook = props => {
+const LoginGoogle = props => {
   let dataProps = []
   if (!!props.location.search) {
     dataProps = props.location.search.split("&")
@@ -10,7 +10,7 @@ const LoginFacebook = props => {
   return (
     <>
       {dataProps.length >= 3 ? (
-        <LoginFacebookComponent
+        <LoginGoogleComponent
           message={dataProps[0].slice(1)}
           id={dataProps[1]}
           newAccount={dataProps[2]}
@@ -21,4 +21,4 @@ const LoginFacebook = props => {
     </>
   )
 }
-export default LoginFacebook
+export default LoginGoogle

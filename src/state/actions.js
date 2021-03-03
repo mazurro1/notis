@@ -412,6 +412,44 @@ export const fetchLoginFacebookUser = (token, id) => {
   }
 }
 
+export const fetchLoginGoogleUser = (token, id) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+
+    axios
+      .post(`${Site.serverUrl}/auto-login`, {
+        userId: id,
+        token: token,
+      })
+      .then(response => {
+        dispatch(
+          addAlertItem("Logowanie za pomocą google powiodło się", "green")
+        )
+        dispatch(loginUser(response.data))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Logowanie za pomocą facebooka nie powiodło się",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
 export const fetchSentAgainActivedEmail = token => {
   return dispatch => {
     return axios

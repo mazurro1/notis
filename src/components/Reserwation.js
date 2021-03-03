@@ -508,7 +508,11 @@ const Reserwation = ({
       >
         {!!reserwationData.ownerData.ownerImageUrl ? (
           <BackGroundImageCustomUrl
-            url={`${Site.awsUrl}/${reserwationData.ownerData.ownerImageUrl}`}
+            url={
+              reserwationData.ownerData.ownerImageUrl.includes("https://")
+                ? reserwationData.ownerData.ownerImageUrl
+                : `${Site.awsUrl}/${reserwationData.ownerData.ownerImageUrl}`
+            }
           />
         ) : (
           <div>
@@ -547,7 +551,12 @@ const Reserwation = ({
       >
         {!!worker.user.imageUrl ? (
           <BackGroundImageCustomUrl
-            url={`${Site.awsUrl}/${worker.user.imageUrl}`}
+            url={
+              worker.user.imageUrl.includes("https://")
+                ? worker.user.imageUrl
+                : `${Site.awsUrl}/${worker.user.imageUrl}`
+            }
+            // url={`${Site.awsUrl}/${worker.user.imageUrl}`}
           />
         ) : (
           <div>

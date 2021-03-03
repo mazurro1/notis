@@ -136,7 +136,8 @@ const WrapperNavigationUnder = styled.div`
     props.active ? `${props.heightPadding + 80}px` : "10px"};
   height: 137px;
   overflow: hidden;
-  transition-property: background-color, color, padding-bottom;
+  /* opacity: ${props => (props.topNavVisibleMenu ? "1" : "0")}; */
+  transition-property: background-color, color, padding-bottom, opacity;
   transition-timing-function: ease-out;
   transition-duration: 0.3s;
 `
@@ -645,62 +646,61 @@ const Navigation = ({ isMainPage }) => {
   const isMobileSize = Site.mobileSize >= size.width
 
   const renderExtraPropsInMainMenu = topNavVisible && (
-    <CSSTransition
-      in={topNavVisibleMenu}
-      timeout={400}
-      classNames="popup3"
-      unmountOnExit
+    // <CSSTransition
+    //   in={topNavVisibleMenu}
+    //   timeout={400}
+    //   classNames="popup3"
+    //   unmountOnExit
+    // >
+    <WrapperNavigationUnder
+      siteProps={siteProps}
+      active={visibleMenuIndustries}
+      heightPadding={heightMenuIndustries}
+      topNavVisibleMenu={topNavVisibleMenu}
     >
-      <WrapperNavigationUnder
-        siteProps={siteProps}
-        active={visibleMenuIndustries}
-        heightPadding={heightMenuIndustries}
-      >
-        <NavigationDiv>
-          <AllInputs>
-            <ButtonTakeData
-              setResetText={() => {
-                setSelectedName("")
-              }}
-              resetTextEnable={!!selectedName}
-              icon={<FaSearch />}
-              text={
-                !!selectedName ? selectedName : "Znajdz ulubione miejsce..."
+      <NavigationDiv>
+        <AllInputs>
+          <ButtonTakeData
+            setResetText={() => {
+              setSelectedName("")
+            }}
+            resetTextEnable={!!selectedName}
+            icon={<FaSearch />}
+            text={!!selectedName ? selectedName : "Znajdz ulubione miejsce..."}
+            onClick={handleClickTakePlace}
+          />
+        </AllInputs>
+        <UnderMenuIndustries ref={refUnderMenuIndustries}>
+          <PaddingRight>
+            <ButtonIconStyles
+              active={industries === null}
+              siteProps={siteProps}
+              onClick={() => handleChangeIndustries(null)}
+            >
+              {Translates[siteProps.language].buttons.all}
+            </ButtonIconStyles>
+          </PaddingRight>
+          {mapIndustries}
+          <ButtonShowMore>
+            <ButtonIcon
+              title={
+                isMobileSize
+                  ? "Wybierz specializacje"
+                  : visibleMenuIndustries
+                  ? "Pokaż mniej"
+                  : "Pokaż więcej"
               }
-              onClick={handleClickTakePlace}
+              uppercase
+              fontIconSize="20"
+              fontSize="15"
+              icon={<MdExpandMore />}
+              onClick={handleClickMenuIndustries}
             />
-          </AllInputs>
-          <UnderMenuIndustries ref={refUnderMenuIndustries}>
-            <PaddingRight>
-              <ButtonIconStyles
-                active={industries === null}
-                siteProps={siteProps}
-                onClick={() => handleChangeIndustries(null)}
-              >
-                {Translates[siteProps.language].buttons.all}
-              </ButtonIconStyles>
-            </PaddingRight>
-            {mapIndustries}
-            <ButtonShowMore>
-              <ButtonIcon
-                title={
-                  isMobileSize
-                    ? "Wybierz specializacje"
-                    : visibleMenuIndustries
-                    ? "Pokaż mniej"
-                    : "Pokaż więcej"
-                }
-                uppercase
-                fontIconSize="20"
-                fontSize="15"
-                icon={<MdExpandMore />}
-                onClick={handleClickMenuIndustries}
-              />
-            </ButtonShowMore>
-          </UnderMenuIndustries>
-        </NavigationDiv>
-      </WrapperNavigationUnder>
-    </CSSTransition>
+          </ButtonShowMore>
+        </UnderMenuIndustries>
+      </NavigationDiv>
+    </WrapperNavigationUnder>
+    // </CSSTransition>
   )
 
   const PopupWorkersReserwations = (

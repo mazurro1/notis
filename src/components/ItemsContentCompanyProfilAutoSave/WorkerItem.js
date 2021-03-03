@@ -488,7 +488,11 @@ const WorkerItem = ({
     >
       {!!item.user.imageUrl ? (
         <BackGroundImageCustomUrl
-          url={`${Site.awsUrl}/${item.user.imageUrl}`}
+          url={
+            item.user.imageUrl.includes("https://")
+              ? item.user.imageUrl
+              : `${Site.awsUrl}/${item.user.imageUrl}`
+          }
           editedWorkers={editedWorkers}
         />
       ) : (

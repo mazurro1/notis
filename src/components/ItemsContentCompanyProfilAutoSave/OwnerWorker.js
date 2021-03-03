@@ -338,7 +338,11 @@ const OwnerWorker = ({
     >
       {!!owner.imageUrl ? (
         <BackGroundImageCustomUrl
-          url={`${Site.awsUrl}/${owner.imageUrl}`}
+          url={
+            owner.imageUrl.includes("https://")
+              ? owner.imageUrl
+              : `${Site.awsUrl}/${owner.imageUrl}`
+          }
           editedWorkers={editedWorkers}
         />
       ) : (
