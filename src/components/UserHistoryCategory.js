@@ -129,17 +129,19 @@ const UserHistoryCategory = ({
     <CategoryItemStyle>
       <TitleCategory siteProps={siteProps} onClick={handleClickArrow}>
         {title}
-        <PositionCompanyLink
-          onClick={handleClickContentNoClicked}
-          siteProps={siteProps}
-          data-tip
-          data-for="goToWebsite"
-        >
-          <LinkEffect
-            path={`/company/${company.company.linkPath}`}
-            text={<FaChrome />}
-          />
-        </PositionCompanyLink>
+        {!!company && (
+          <PositionCompanyLink
+            onClick={handleClickContentNoClicked}
+            siteProps={siteProps}
+            data-tip
+            data-for="goToWebsite"
+          >
+            <LinkEffect
+              path={`/company/${company.company.linkPath}`}
+              text={<FaChrome />}
+            />
+          </PositionCompanyLink>
+        )}
         <IconArrowPosition collapseActive={collapseActive}>
           <MdExpandMore />
         </IconArrowPosition>

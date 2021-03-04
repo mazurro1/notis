@@ -529,7 +529,9 @@ const UserHistoryCategoryItem = ({
 
             {!!item.opinionId.replayOpinionMessage && (
               <div className="replayCompany">
-                <div className="replayCompanyName">{company.company.name}</div>
+                <div className="replayCompanyName">
+                  {!!company ? company.company.name : "Firma usunięta"}
+                </div>
                 {item.opinionId.replayOpinionMessage}
               </div>
             )}

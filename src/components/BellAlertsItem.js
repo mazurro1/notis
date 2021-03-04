@@ -177,18 +177,22 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
       alertMessage = (
         <>
           <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
-          <LinkEffect
-            path={`company/${alert.reserwationId.company.linkPath}`}
-            text={
-              <ButtonAlertCompany
-                siteProps={siteProps}
-                active={alert.active}
-                alertColor={alertColor}
-              >
-                {alert.reserwationId.company.name.toUpperCase()}
-              </ButtonAlertCompany>
-            }
-          />
+          {!!alert.reserwationId.company ? (
+            <LinkEffect
+              path={`company/${alert.reserwationId.company.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.reserwationId.company.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
           <DivInlineBlock>
             dnia: <span>{reserwationDate}</span>,
           </DivInlineBlock>{" "}

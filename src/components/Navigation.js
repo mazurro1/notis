@@ -26,7 +26,6 @@ import {
   MdExpandMore,
 } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
-import { CSSTransition } from "react-transition-group"
 import Popup from "./Popup"
 import LoginContent from "./Login"
 import RegisterContent from "./Register"
@@ -54,6 +53,7 @@ import {
   changeLanguageStyle,
   addNewUserAlert,
   changeActiveAccount,
+  confirmDeleteCompany,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -79,6 +79,7 @@ import UserFavourites from "./UserFavourites"
 import CompanyAvailability from "./CompanyAvailability"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyStatistics from "./CompanyStatistics"
+import DeleteCompanyContent from "./DeleteCompany"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -429,6 +430,9 @@ const Navigation = ({ isMainPage }) => {
   const reserwationData = useSelector(state => state.reserwationData)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
   const activeAccountVisible = useSelector(state => state.activeAccountVisible)
+  const confirmDeleteCompanyVisible = useSelector(
+    state => state.confirmDeleteCompanyVisible
+  )
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
   )
@@ -485,12 +489,13 @@ const Navigation = ({ isMainPage }) => {
   }, [isMainPage])
 
   useEffect(() => {
+    const sortsValue = !!sorts ? sorts.value : null
     if (!!industries || industries === 0) {
       dispatch(
         fetchAllCompanysOfType(
           page,
           industries,
-          sorts,
+          sortsValue,
           filters,
           localization,
           selectedName
@@ -498,7 +503,7 @@ const Navigation = ({ isMainPage }) => {
       )
     } else {
       dispatch(
-        fetchAllCompanys(page, sorts, filters, localization, selectedName)
+        fetchAllCompanys(page, sortsValue, filters, localization, selectedName)
       )
     }
   }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -628,6 +633,10 @@ const Navigation = ({ isMainPage }) => {
     setWorkPropsVisible(prevState => !prevState)
   }
 
+  const handleCloseDeleteCompany = () => {
+    dispatch(confirmDeleteCompany(false))
+  }
+
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
     const isIndustriesActive = industries === item.value
     return (
@@ -726,6 +735,18 @@ const Navigation = ({ isMainPage }) => {
         user={user}
         siteProps={siteProps}
       />
+    </Popup>
+  )
+
+  const PopupConfirmDeleteCompany = !!user && (
+    <Popup
+      popupEnable={confirmDeleteCompanyVisible}
+      handleClose={handleCloseDeleteCompany}
+      title="Usuwanie działalności"
+      close={false}
+      width="600"
+    >
+      <DeleteCompanyContent siteProps={siteProps} user={user} />
     </Popup>
   )
 
@@ -1218,6 +1239,7 @@ const Navigation = ({ isMainPage }) => {
       {PopupHistoryReserwations}
       {PopupCompanyStatistics}
       {PopupActiveAccount}
+      {PopupConfirmDeleteCompany}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">

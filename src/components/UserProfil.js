@@ -18,6 +18,7 @@ import {
   fetchUserUploadImage,
   fetchUserDeleteImage,
   resetUserProfil,
+  fetchUserDeleteImageOther,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
@@ -305,7 +306,13 @@ const UserProfil = ({ userProfilVisible }) => {
   }
 
   const handleClickDeleteImage = () => {
-    dispatch(fetchUserDeleteImage(user.token, addedImages[0].originalPath))
+    if (addedImages[0].originalPath.includes("https://")) {
+      dispatch(
+        fetchUserDeleteImageOther(user.token, addedImages[0].originalPath)
+      )
+    } else {
+      dispatch(fetchUserDeleteImage(user.token, addedImages[0].originalPath))
+    }
   }
 
   let disabledButtonSaveImage = true

@@ -4,12 +4,7 @@ import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit, MdPhone } from "react-icons/md"
 import InputIcon from "../InputIcon"
-import {
-  MdPhoneAndroid,
-  MdLocationOn,
-  MdLocationCity,
-  MdWork,
-} from "react-icons/md"
+import { MdDelete, MdLocationOn, MdLocationCity, MdWork } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
@@ -17,10 +12,15 @@ import { ReserwationDelay } from "../../common/ReserwationDelay"
 import { ReserwationDelayMonth } from "../../common/ReserwationDelayMonth"
 import SelectCreated from "../SelectCreated"
 import { AllIndustries } from "../../common/AllIndustries"
-import { fetchSaveCompanySettings, addAlertItem } from "../../state/actions"
+import {
+  fetchSaveCompanySettings,
+  addAlertItem,
+  confirmDeleteCompany,
+} from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import Popup from "../Popup"
 import InputPhone from "../InputPhone"
+import ReactTooltip from "react-tooltip"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -28,8 +28,12 @@ const TextCheckbox = styled.span`
   user-select: none;
 `
 
-const CheckboxStyle = styled.div`
+const DeleteCompanyStyle = styled.div`
   margin-bottom: 30px;
+`
+
+const CheckboxStyle = styled.div`
+  margin-bottom: 10px;
   margin-top: 10px;
   .material-checkbox__input:checked + .material-checkbox__image {
     background-color: ${props => Colors(props.siteProps).dangerColorDark};
@@ -245,6 +249,7 @@ const OpinionAndAdressContent = ({
   const [deletedIndustriesComponent, setDeletedIndustriesComponent] = useState(
     []
   )
+  const [deleteCompany, setDeleteCompany] = useState(false)
   const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
   const [discrictInput, setDiscrictInput] = useState(district)
@@ -405,6 +410,7 @@ const OpinionAndAdressContent = ({
     setCompanyPausedItem(pauseCompany)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
+    setDeleteCompany(false)
 
     if (!!companyIndustries) {
       const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
@@ -422,8 +428,8 @@ const OpinionAndAdressContent = ({
     onClickEdit()
   }
 
-  const handleClickContentAddWorkers = e => {
-    e.stopPropagation()
+  const handleDeleteCompany = () => {
+    setDeleteCompany(prevState => !prevState)
   }
 
   const handleChangeCheckbox = () => {
@@ -436,6 +442,11 @@ const OpinionAndAdressContent = ({
 
   const handleClickReserwationMonth = item => {
     setReserwationMonth(item)
+  }
+
+  const handleConfirmDeleteCompany = () => {
+    handleResetInputs()
+    dispatch(confirmDeleteCompany(true))
   }
 
   const handleChangeIndystries = value => {
@@ -684,6 +695,31 @@ const OpinionAndAdressContent = ({
                   <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
                 </Checkbox>
               </CheckboxStyle>
+              {editMode && (
+                <ReactTooltip
+                  id="deleteCompany"
+                  effect="float"
+                  multiline={true}
+                >
+                  <span>
+                    Usunięcie działalności spowoduje odwołanie wszystkich
+                    aktywnych wizyt, usunięcie wszystkich pracowników oraz
+                    wszystkich danych na temat Twojej firmy.
+                  </span>
+                </ReactTooltip>
+              )}
+              <DeleteCompanyStyle data-tip data-for="deleteCompany">
+                <ButtonIcon
+                  title="Usuń działalność"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="13"
+                  icon={<MdDelete />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleDeleteCompany}
+                />
+              </DeleteCompanyStyle>
               <ButtonPosition>
                 <ButtonMargin>
                   <>
@@ -715,6 +751,39 @@ const OpinionAndAdressContent = ({
                 </ButtonSubmit>
               </ButtonPosition>
             </form>
+            <Popup
+              popupEnable={deleteCompany}
+              position="absolute"
+              borderRadius
+              noContent
+            >
+              <ButtonPosition>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="13"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleDeleteCompany}
+                  />
+                </ButtonMargin>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Usuń"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="13"
+                    icon={<MdDelete />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleConfirmDeleteCompany}
+                  />
+                </ButtonMargin>
+              </ButtonPosition>
+            </Popup>
           </Popup>
         </>
       )}

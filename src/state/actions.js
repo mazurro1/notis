@@ -760,6 +760,14 @@ export const SAVE_COMPANY_STATS = "SAVE_COMPANY_STATS"
 export const ADD_RESERWATION_WORKER_DATA = "ADD_RESERWATION_WORKER_DATA"
 export const DELETE_RESERWATION_WORKER_DATA = "DELETE_RESERWATION_WORKER_DATA"
 export const UPDATE_RESERWATION_WORKER_DATA = "UPDATE_RESERWATION_WORKER_DATA"
+export const CONFIRM_DELETE_COMPANY = "CONFIRM_DELETE_COMPANY"
+
+export const confirmDeleteCompany = value => {
+  return {
+    type: CONFIRM_DELETE_COMPANY,
+    value: value,
+  }
+}
 
 export const updateReserwationWorkerDate = (
   reserwationId,
@@ -3955,6 +3963,43 @@ export const fetchUserDeleteImage = (token, imagePath) => {
   }
 }
 
+export const fetchUserDeleteImageOther = (token, imagePath) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-delete-image-other`,
+        {
+          imagePath: imagePath,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateUserImage(""))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania zdjęcia", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
 export const companyAddStamp = (token, companyId, stampData) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -4403,6 +4448,98 @@ export const fetchCompanyStaticts = (token, companyId, months, year) => {
               dispatch(logout())
             } else {
               dispatch(addAlertItem("Błąd podczas pobierania statystyk", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSentCodeConfirmDelete = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-sent-code-delete-company`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem(
+            "Wysłano na e-maila kod do usunięcia działalności.",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania na adres e-mail kodu do usunięcia działalności",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchConfirmDelete = (token, companyId, code) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-delete-company`,
+        {
+          companyId: companyId,
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto działalność.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 422) {
+              dispatch(
+                addAlertItem(
+                  "Nieprawidłowy kod do usunięcia działalności",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas usuwania działalności", "red")
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

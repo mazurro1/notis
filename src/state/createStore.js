@@ -37,6 +37,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  CONFIRM_DELETE_COMPANY,
   UPDATE_RESERWATION_WORKER_DATA,
   DELETE_RESERWATION_WORKER_DATA,
   ADD_RESERWATION_WORKER_DATA,
@@ -152,6 +153,7 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  confirmDeleteCompanyVisible: false,
   userCompanyAvailability: [],
   userCompanyAvailabilityPermission: false,
   resetUserCompanyAvailability: false,
@@ -504,6 +506,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CONFIRM_DELETE_COMPANY: {
+      return {
+        ...state,
+        confirmDeleteCompanyVisible: action.value,
+      }
+    }
 
     case UPDATE_RESERWATION_WORKER_DATA: {
       const updateWorkerHistoryReserwations = !!state.workerHistoryReserwations
