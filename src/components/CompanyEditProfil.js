@@ -19,7 +19,7 @@ const CompanyEditProfil = () => {
         dispatch(fetchCompanyData(user.company._id, user.token))
       }
     }
-  }, [userId, dispatch]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, dispatch, user.company.accountVerified]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const PopupActiveCompany = (
     <Popup
@@ -31,7 +31,9 @@ const CompanyEditProfil = () => {
           : false
       }
       maxWidth="500"
-      noContent
+      title="Weryfikacja kodu"
+      close={false}
+      closeTitle={false}
     >
       <ActiveCompany />
     </Popup>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  fetchSentCodeConfirmDelete,
   confirmDeleteCompany,
-  fetchConfirmDelete,
+  fetchDeleteAccount,
   changeDeleteCompanyConfirm,
+  fetchSentCodeConfirmDeleteAccount,
 } from "../state/actions"
 import ButtonIcon from "../components/ButtonIcon"
 import { MdEmail, MdDelete, MdClose } from "react-icons/md"
@@ -50,7 +50,7 @@ const TextCodeToDelete = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
-const DeleteCompanyContent = ({ siteProps, user }) => {
+const DeleteAccount = ({ siteProps, user }) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
   const deleteCompanyConfirm = useSelector(state => state.deleteCompanyConfirm)
@@ -58,7 +58,7 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchSentCodeConfirmDelete(user.token, user.company._id))
+    dispatch(fetchSentCodeConfirmDeleteAccount(user.token))
   }, [])
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
   }, [deleteCompanyConfirm])
 
   const handleSentAgain = () => {
-    dispatch(fetchSentCodeConfirmDelete(user.token, user.company._id))
+    dispatch(fetchSentCodeConfirmDeleteAccount(user.token))
   }
   const handleGoBack = () => {
     dispatch(confirmDeleteCompany(false))
@@ -79,23 +79,21 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
     setDemoCompleted(false)
   }
 
-  const handleDeleteCompany = () => {
-    dispatch(fetchConfirmDelete(user.token, user.company._id, activeCode))
+  const handleDeleteACcount = () => {
+    dispatch(fetchDeleteAccount(user.token, activeCode))
   }
 
   return (
     <>
       <TextCodeToDelete siteProps={siteProps}>
-        Wpisz kod do usunięcia działalności, który został wysłany na e-maila
-        firmowego.
+        Wpisz kod do usunięcia konta, który został wysłany na e-maila.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
         Kod jest ważny przez 10minut.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
-        Usunięcie działalności spowoduje odwołanie wszystkich aktywnych wizyt,
-        usunięcie wszystkich pracowników oraz wszystkich danych na temat Twojej
-        firmy.
+        Usunięcie konta spowoduje odwołanie wszystkich aktywnych wizyt oraz
+        wszystkich Twoich danych.
       </TextCodeToDelete>
       <PanFieldStyle
         ref={fieldOneRef}
@@ -143,7 +141,7 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
         </MarginButtons>
         <MarginButtons>
           <ButtonIcon
-            title="Usuń firmę"
+            title="Usuń konto"
             uppercase
             fontIconSize="20"
             fontSize="16"
@@ -151,11 +149,11 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
             disabled={!demoCompleted}
-            onClick={handleDeleteCompany}
+            onClick={handleDeleteACcount}
           />
         </MarginButtons>
       </ButtonsPosition>
     </>
   )
 }
-export default DeleteCompanyContent
+export default DeleteAccount

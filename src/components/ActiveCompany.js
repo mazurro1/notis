@@ -2,19 +2,16 @@ import React, { useRef, useState, useEffect } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"
-import { MdDelete } from "react-icons/md"
+import { MdClose, MdCheck, MdEmail } from "react-icons/md"
 import {
   fetchActiveCompanyAccount,
   fetchSentAgainCompanyActivedEmail,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
+import { Colors } from "../common/Colors"
 
 const BackgroundContent = styled.div`
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
-
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -53,10 +50,15 @@ const MarginBottom = styled.div`
   margin-top: 5px;
 `
 
+const TextToActivation = styled.div`
+  font-family: "Poppins-Medium", sans-serif;
+`
+
 const ActiveCompany = () => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
   const user = useSelector(state => state.user)
+  const siteProps = useSelector(state => state.siteProps)
   const fieldOneRef = useRef(null)
 
   const dispatch = useDispatch()
@@ -101,6 +103,9 @@ const ActiveCompany = () => {
   return (
     <BackgroundContent>
       {tooltipActive}
+      <TextToActivation>
+        Kod do aktywacji, który został wysłany na adres e-mail:
+      </TextToActivation>
       <PanFieldStyle
         ref={fieldOneRef}
         onComplete={code => {
@@ -116,8 +121,9 @@ const ActiveCompany = () => {
           uppercase
           fontIconSize="20"
           fontSize="16"
-          icon={<MdDelete />}
-          buttonBgDark
+          icon={<MdClose />}
+          customColorButton={Colors(siteProps).dangerColorDark}
+          customColorIcon={Colors(siteProps).dangerColor}
           onClick={handleReset}
           disabled={!activeCode.length > 0}
         />
@@ -127,8 +133,7 @@ const ActiveCompany = () => {
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<MdDelete />}
-            buttonBgDark
+            icon={<MdEmail />}
             onClick={handleSentAgain}
           />
         </MarginBottom>
@@ -139,9 +144,11 @@ const ActiveCompany = () => {
               uppercase
               fontIconSize="20"
               fontSize="16"
-              icon={<MdDelete />}
+              icon={<MdCheck />}
               onClick={handleActiveAccount}
               disabled={activeCode.length === 0}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
             />
           </div>
         </MarginBottom>

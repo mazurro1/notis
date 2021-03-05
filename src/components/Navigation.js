@@ -723,7 +723,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupWorkersUsersInformations = (
+  const PopupWorkersUsersInformations = !!user && (
     <Popup
       popupEnable={workerUsersInformationVisible}
       handleClose={handleCloseWorkerUsersInformation}
@@ -855,7 +855,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupHistoryReserwations = (
+  const PopupHistoryReserwations = !!user && (
     <Popup
       popupEnable={historyReserwations}
       handleClose={handleHistoryReserwations}
@@ -897,7 +897,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupActiveAccount = (
+  const PopupActiveAccount = !!user && (
     <Popup
       popupEnable={activeAccountVisible}
       maxWidth="400"
@@ -909,7 +909,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupUserProfil = (
+  const PopupUserProfil = !!user && (
     <Popup
       popupEnable={userProfilVisible}
       handleClose={handleUserProfil}
@@ -974,8 +974,12 @@ const Navigation = ({ isMainPage }) => {
   let workerHasAccessAvailability = false
   let hasCompany = false
   let hasPermission = false
+  let companyConfirmed = false
   if (!!user) {
     if (user.hasCompany) {
+      if (!!user.company.accountVerified) {
+        companyConfirmed = true
+      }
       const selectWorker = user.company.workers.find(
         worker => worker.user === user.userId
       )
@@ -1040,29 +1044,33 @@ const Navigation = ({ isMainPage }) => {
                 }
               />
             </div>
-            <MarginButtonsWork>
-              <ButtonIcon
-                title="Statystyki"
-                uppercase
-                fontIconSize="20"
-                fontSize="16"
-                icon={<FaChartBar />}
-                onClick={handleClickCompanyStatistics}
-              />
-            </MarginButtonsWork>
+            {companyConfirmed && (
+              <MarginButtonsWork>
+                <ButtonIcon
+                  title="Statystyki"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaChartBar />}
+                  onClick={handleClickCompanyStatistics}
+                />
+              </MarginButtonsWork>
+            )}
           </>
         )}
-        <MarginButtonsWork>
-          <ButtonIcon
-            title="Grafik pracy"
-            uppercase
-            fontIconSize="25"
-            fontSize="16"
-            icon={<MdTimelapse />}
-            onClick={handleEmplyeeWorkingHoursVisible}
-          />
-        </MarginButtonsWork>
-        {workerHasAccessClientsOpinions && (
+        {companyConfirmed && (
+          <MarginButtonsWork>
+            <ButtonIcon
+              title="Grafik pracy"
+              uppercase
+              fontIconSize="25"
+              fontSize="16"
+              icon={<MdTimelapse />}
+              onClick={handleEmplyeeWorkingHoursVisible}
+            />
+          </MarginButtonsWork>
+        )}
+        {companyConfirmed && workerHasAccessClientsOpinions && (
           <MarginButtonsWork>
             <ButtonIcon
               title="Klienci"
@@ -1074,17 +1082,19 @@ const Navigation = ({ isMainPage }) => {
             />
           </MarginButtonsWork>
         )}
-        <MarginButtonsWork>
-          <ButtonIcon
-            title="Rezerwacje"
-            uppercase
-            fontIconSize="20"
-            fontSize="16"
-            icon={<FaCalendarAlt />}
-            onClick={handleWorkerReserwations}
-          />
-        </MarginButtonsWork>
-        {workerHasAccessAvailability && (
+        {companyConfirmed && (
+          <MarginButtonsWork>
+            <ButtonIcon
+              title="Rezerwacje"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarAlt />}
+              onClick={handleWorkerReserwations}
+            />
+          </MarginButtonsWork>
+        )}
+        {companyConfirmed && workerHasAccessAvailability && (
           <MarginButtonsWork>
             <ButtonIcon
               title="Stan magazynowy"

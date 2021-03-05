@@ -37,6 +37,8 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  DELETE_COMPANY_CONFIRM,
+  DELETE_COMPANY_USER,
   CONFIRM_DELETE_COMPANY,
   UPDATE_RESERWATION_WORKER_DATA,
   DELETE_RESERWATION_WORKER_DATA,
@@ -153,6 +155,7 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  deleteCompanyConfirm: false,
   confirmDeleteCompanyVisible: false,
   userCompanyAvailability: [],
   userCompanyAvailabilityPermission: false,
@@ -506,6 +509,25 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+    case DELETE_COMPANY_CONFIRM: {
+      return {
+        ...state,
+        deleteCompanyConfirm: false,
+      }
+    }
+
+    case DELETE_COMPANY_USER: {
+      const editedUser = !!state.user ? { ...state.user } : null
+      if (!!editedUser) {
+        editedUser.hasCompany = false
+        editedUser.company = null
+      }
+      return {
+        ...state,
+        user: editedUser,
+        deleteCompanyConfirm: true,
+      }
+    }
 
     case CONFIRM_DELETE_COMPANY: {
       return {

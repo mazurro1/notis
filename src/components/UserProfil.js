@@ -11,6 +11,7 @@ import {
   MdAddAPhoto,
   MdPhotoSizeSelectLarge,
   MdMoveToInbox,
+  MdDelete,
 } from "react-icons/md"
 import {
   fetchUserPhone,
@@ -31,6 +32,7 @@ import UserProfilImage from "./UserProfilImage"
 import { Site } from "../common/Site"
 import InputPhone from "./InputPhone"
 import Popup from "./Popup"
+import DeleteAccount from "./DeleteAccount"
 
 const AddImage = styled.div`
   position: relative;
@@ -90,7 +92,7 @@ const ProfilStyle = styled.div`
 
 const TextToUser = styled.div`
   h1 {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   span {
     color: ${props => Colors(props.siteProps).primaryColor};
@@ -156,6 +158,11 @@ const DefaultImage = styled.div`
   font-size: 3rem;
 `
 
+const PositionDeleteButton = styled.div`
+  display: inline-block;
+  margin-bottom: 20px;
+`
+
 const EditUserImage = styled.div`
   position: absolute;
   bottom: 0;
@@ -203,6 +210,8 @@ const UserProfil = ({ userProfilVisible }) => {
   const [checkboxPhone, setCheckboxPhone] = useState(false)
   const [checkboxPassword, setCheckboxPassword] = useState(false)
   const [editImage, setEditImage] = useState(false)
+  const [deleteAccountToConfirm, setDeleteAccountToConfirm] = useState(false)
+  const [showComponentDelete, setShowComponentDelete] = useState(false)
   const user = useSelector(state => state.user)
   const [addedImages, setAddedImages] = useState([])
   const userPhone = useSelector(state => state.userPhone)
@@ -218,6 +227,10 @@ const UserProfil = ({ userProfilVisible }) => {
       }
     }
   }, [user, userPhone, dispatch])
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [user])
 
   useEffect(() => {
     if (!!user) {
@@ -326,6 +339,19 @@ const UserProfil = ({ userProfilVisible }) => {
     }
   }
 
+  const handleDeleteAccount = () => {
+    setDeleteAccountToConfirm(prevState => !prevState)
+  }
+
+  const handleShowComponentDelete = () => {
+    setShowComponentDelete(true)
+    setDeleteAccountToConfirm(false)
+  }
+
+  const hadndleClickShowDeleteComponent = () => {
+    setShowComponentDelete(prevState => !prevState)
+  }
+
   const disabledButtonSave =
     ((checkboxPhone && newPhone !== userPhone) ||
       (checkboxPassword &&
@@ -367,6 +393,17 @@ const UserProfil = ({ userProfilVisible }) => {
     )
   })
 
+  const disabledButtonDeleteAccount = !!user.hasCompany || !!user.company
+  const tooltipDisabledDeleteAccount = disabledButtonDeleteAccount && (
+    <ReactTooltip id="alerDeleteAccount" effect="float" multiline={true}>
+      <div>
+        Nie możesz usunąć konta, jeżeli masz aktywną prace/firme. Aby usunąć
+        konto pracodawca firmy musi najpierw usunąć firmę / pracownika, a
+        następnie można dokonać usunięcia konta.
+      </div>
+    </ReactTooltip>
+  )
+
   return (
     <>
       <ProfilStyle siteProps={siteProps}>
@@ -393,6 +430,26 @@ const UserProfil = ({ userProfilVisible }) => {
               </span>
             </div>
           </UserNameImage>
+          <div>
+            {tooltipDisabledDeleteAccount}
+            <PositionDeleteButton
+              data-tip
+              data-for="alerDeleteAccount"
+              data-place="right"
+            >
+              <ButtonIcon
+                title="Usuń konto"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdDelete />}
+                disabled={disabledButtonDeleteAccount}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+                onClick={handleDeleteAccount}
+              />
+            </PositionDeleteButton>
+          </div>
           <div>
             <h1>
               Twój numer telefonu: <span>{userPhone}</span>
@@ -555,6 +612,52 @@ const UserProfil = ({ userProfilVisible }) => {
           </MarginButtons>
         </ButtonsImagePosition>
       </Popup>
+      <Popup
+        popupEnable={deleteAccountToConfirm}
+        position="absolute"
+        borderRadius
+        noContent
+      >
+        <ButtonsImagePosition>
+          <MarginButtons>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              onClick={handleDeleteAccount}
+            />
+          </MarginButtons>
+          <MarginButtons>
+            <ButtonIcon
+              title="Usuń konto"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdDelete />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleShowComponentDelete}
+            />
+          </MarginButtons>
+        </ButtonsImagePosition>
+      </Popup>
+      {!disabledButtonDeleteAccount && (
+        <Popup
+          popupEnable={showComponentDelete}
+          position="absolute"
+          borderRadius
+          title="Usuwanie konta"
+          borderRadius
+          handleClose={hadndleClickShowDeleteComponent}
+          smallTitle
+        >
+          <DeleteAccount siteProps={siteProps} user={user} />
+        </Popup>
+      )}
     </>
   )
 }

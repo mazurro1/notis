@@ -761,6 +761,20 @@ export const ADD_RESERWATION_WORKER_DATA = "ADD_RESERWATION_WORKER_DATA"
 export const DELETE_RESERWATION_WORKER_DATA = "DELETE_RESERWATION_WORKER_DATA"
 export const UPDATE_RESERWATION_WORKER_DATA = "UPDATE_RESERWATION_WORKER_DATA"
 export const CONFIRM_DELETE_COMPANY = "CONFIRM_DELETE_COMPANY"
+export const DELETE_COMPANY_USER = "DELETE_COMPANY_USER"
+export const DELETE_COMPANY_CONFIRM = "DELETE_COMPANY_CONFIRM"
+
+export const changeDeleteCompanyConfirm = () => {
+  return {
+    type: DELETE_COMPANY_CONFIRM,
+  }
+}
+
+export const deleteCompanyUser = () => {
+  return {
+    type: DELETE_COMPANY_USER,
+  }
+}
 
 export const confirmDeleteCompany = value => {
   return {
@@ -1347,7 +1361,7 @@ export const replaceCompanyData = data => {
   }
 }
 
-export const FetchAddCompanyToUser = (companyId, userToken, userId) => {
+export const fetchAddCompanyToUser = (companyId, userToken, userId) => {
   return dispatch => {
     return axios
       .post(
@@ -1384,7 +1398,7 @@ export const FetchAddCompanyToUser = (companyId, userToken, userId) => {
   }
 }
 
-export const FetchCompanyRegistration = (
+export const fetchCompanyRegistration = (
   companyEmail,
   companyName,
   companyNumber,
@@ -1417,9 +1431,12 @@ export const FetchCompanyRegistration = (
       )
 
       .then(response => {
-        dispatch(
-          FetchAddCompanyToUser(response.data.companyId, userToken, userId)
-        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Stworzono konto firmowe.", "green"))
+        dispatch(fetchAutoLogin(true, true, userToken, userId, true))
+        // dispatch(
+        //   fetchAddCompanyToUser(response.data.companyId, userToken, userId)
+        // )
       })
       .catch(error => {
         if (!!error) {
@@ -4522,6 +4539,8 @@ export const fetchConfirmDelete = (token, companyId, code) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
+        dispatch(confirmDeleteCompany(false))
+        dispatch(deleteCompanyUser())
         dispatch(addAlertItem("Usunięto działalność.", "green"))
       })
       .catch(error => {
@@ -4540,6 +4559,89 @@ export const fetchConfirmDelete = (token, companyId, code) => {
               dispatch(
                 addAlertItem("Błąd podczas usuwania działalności", "red")
               )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSentCodeConfirmDeleteAccount = token => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-sent-code-delete-account`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Wysłano na e-maila kod do usunięcia konta.", "green")
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania na adres e-mail kodu do usunięcia konta",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchDeleteAccount = (token, code) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/delete-user-account`,
+        {
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        changeUserProfilVisible(false)
+        dispatch(changeSpinner(false))
+        localStorage.removeItem("USERID")
+        localStorage.removeItem("TOKEN")
+        dispatch(changeLogout())
+        dispatch(addAlertItem("Usunięto konto.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 422) {
+              dispatch(addAlertItem("Błędny kod do usunięcia konta", "red"))
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania konta", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

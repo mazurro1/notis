@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"
-import { MdDelete, MdEmail, MdCheck } from "react-icons/md"
+import { MdClose, MdEmail, MdCheck } from "react-icons/md"
 import {
   fetchSentAgainActivedEmail,
   fetchActiveAccount,
@@ -122,7 +122,7 @@ const ActiveAccount = () => {
           uppercase
           fontIconSize="20"
           fontSize="16"
-          icon={<MdDelete />}
+          icon={<MdClose />}
           customColorButton={Colors(siteProps).dangerColorDark}
           customColorIcon={Colors(siteProps).dangerColor}
           onClick={handleReset}

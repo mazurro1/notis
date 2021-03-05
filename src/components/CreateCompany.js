@@ -14,7 +14,7 @@ import { LinkEffect } from "../common/LinkEffect"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import ButtonIcon from "./ButtonIcon"
-import { FetchCompanyRegistration, addAlertItem } from "../state/actions"
+import { fetchCompanyRegistration, addAlertItem } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { AllIndustries } from "../common/AllIndustries"
 import InputPhone from "./InputPhone"
@@ -80,7 +80,7 @@ const CreateCompany = () => {
     if (validButtonRegisterCompany && isEmailValid) {
       const mapedIndustries = industries.map(item => item.value)
       dispatch(
-        FetchCompanyRegistration(
+        fetchCompanyRegistration(
           emailInput,
           nameInput,
           phoneInput,
@@ -135,12 +135,14 @@ const CreateCompany = () => {
           options={AllIndustries[siteProps.language]}
           value={industries}
           handleChange={handleChangeIndustries}
-          placeholder="Zaznacz typ działalności..."
+          placeholder="Typ działalności"
           defaultMenuIsOpen={false}
           widthAuto
           isMulti
           isClearable={false}
           darkSelect
+          onlyText
+          width="350px"
         />
       </SelectStyles>
       <InputIcon
@@ -150,7 +152,7 @@ const CreateCompany = () => {
         type="email"
         onChange={e => handleChange(e, setEmailInput)}
         required
-        validText="Jeden adres e-mail na konto firmowe"
+        validText="Jeden adres e-mail na konto firmowe, może być taki sam jak e-mail użytkownika"
       />
       <InputIcon
         icon={<MdAccountBox />}
