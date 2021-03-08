@@ -7,6 +7,7 @@ import {
 } from "../../common/Functions"
 import styled from "styled-components"
 import { MdAddBox, MdTitle, MdArrowBack, MdEdit } from "react-icons/md"
+import { FaSave } from "react-icons/fa"
 import CategoryItem from "./CategoryItem"
 import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
@@ -127,6 +128,7 @@ const AllCategoryOfServices = ({
   companyId,
   userIsBlocked,
   userAccountNotVeryfied,
+  userPhoneVeryfied,
   isWorkerBlocked,
   userCannotMakeReservation,
   user,
@@ -446,6 +448,7 @@ const AllCategoryOfServices = ({
         companyId={companyId}
         userIsBlocked={userIsBlocked}
         userAccountNotVeryfied={userAccountNotVeryfied}
+        userPhoneVeryfied={userPhoneVeryfied}
         userCannotMakeReservation={userCannotMakeReservation}
         isWorkerBlocked={isWorkerBlocked}
       />
@@ -599,9 +602,9 @@ const AllCategoryOfServices = ({
               <ButtonIcon
                 title="Zapisz"
                 uppercase
-                fontIconSize="40"
+                fontIconSize="20"
                 fontSize="14"
-                icon={<MdArrowBack />}
+                icon={<FaSave />}
                 onClick={handleSaveAllServices}
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}

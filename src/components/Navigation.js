@@ -316,11 +316,6 @@ const IconCloseStyle = styled.div`
   }
 `
 
-const MinHeightContent = styled.div`
-  min-height: ${props =>
-    props.isMainPage ? "calc(100vh - 70px - 137px)" : "calc(100vh - 70px)"};
-`
-
 const CloseMenuLeft = styled.div`
   position: absolute;
   top: 10px;
@@ -871,7 +866,7 @@ const Navigation = ({ isMainPage }) => {
     <Popup
       popupEnable={reserwationEnable}
       handleClose={handleCloseReserwation}
-      noContent
+      title="Rezerwacja"
     >
       <Reserwation
         reserwationData={reserwationData}
@@ -914,7 +909,6 @@ const Navigation = ({ isMainPage }) => {
       popupEnable={userProfilVisible}
       handleClose={handleUserProfil}
       title="Dane użytkownika"
-      fullScreen
     >
       <UserProfil userProfilVisible={userProfilVisible} />
     </Popup>

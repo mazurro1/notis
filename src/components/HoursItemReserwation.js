@@ -28,10 +28,10 @@ const TextNoDate = styled.div`
 
 const DateReserwStyle = styled.div`
   position: relative;
-  width: 60px;
+  width: 55px;
   height: 40px;
+  margin: 1px;
   text-align: center;
-  margin: 2.5px 5px;
   border-radius: 5px;
   display: flex;
   flex-direction: row;
@@ -39,19 +39,22 @@ const DateReserwStyle = styled.div`
   align-items: center;
   flex-wrap: wrap;
   cursor: pointer;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
+  color: ${props =>
+    props.active
+      ? Colors(props.siteProps).textNormalWhite
+      : Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
     props.active
-      ? Colors(props.siteProps).primaryColorDark
-      : Colors(props.siteProps).primaryColor};
+      ? Colors(props.siteProps).primaryColor
+      : Colors(props.siteProps).primaryColorDark};
   transition-property: background-color, color, transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-  margin-bottom: 10px;
   user-select: none;
   @media all and (min-width: 767px) and (max-width: 992px) {
     width: 45px;
   }
+  transform: ${props => (props.active ? "scale(1)" : "scale(0.9)")};
 
   span {
     position: relative;
@@ -75,8 +78,8 @@ const DateReserwStyle = styled.div`
   }
 
   &:hover {
-    transform: scale(0.95);
-    background-color: ${props => Colors(props.siteProps).primaryColorDark};
+    transform: scale(1);
+    background-color: ${props => Colors(props.siteProps).primaryColor};
 
     .promotionPosition {
       background-color: ${props => Colors(props.siteProps).dangerColorDark};

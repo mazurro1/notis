@@ -302,9 +302,13 @@ const ContentCompanyProfilAutoSave = ({
   let userCannotMakeReservation = !!user
   let isWorkerBlocked = false
   let userAccountNotVeryfied = false
+  let userPhoneVeryfied = false
 
   if (!!user) {
     isWorkerBlocked = company.owner._id === user.userId
+    if (!!user.phoneVerified) {
+      userPhoneVeryfied = true
+    }
     if (!user.accountVerified) {
       userAccountNotVeryfied = true
     }
@@ -385,6 +389,7 @@ const ContentCompanyProfilAutoSave = ({
               companyId={company._id}
               userIsBlocked={userIsBlocked}
               userAccountNotVeryfied={userAccountNotVeryfied}
+              userPhoneVeryfied={userPhoneVeryfied}
               isWorkerBlocked={isWorkerBlocked}
               userCannotMakeReservation={userCannotMakeReservation}
               user={user}

@@ -103,12 +103,14 @@ export const changeUserProfilVisible = value => {
   }
 }
 
-export const addUserPhone = (phone, email, token) => {
+export const addUserPhone = (phone, email, token, phoneVerified, hasPhone) => {
   return {
     type: ADD_USER_PHONE,
     phone: phone,
     email: email,
     token: token,
+    phoneVerified: phoneVerified,
+    hasPhone: hasPhone,
   }
 }
 
@@ -534,13 +536,14 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
           addUserPhone(
             response.data.userPhone,
             response.data.email,
-            response.data.token
+            response.data.token,
+            response.data.phoneVerified,
+            response.data.hasPhone
           )
         )
         dispatch(
           addAlertItem("Pomyślnie zaktualizowano dane użytkownika", "green")
         )
-        dispatch(changeUserProfilVisible(false))
       })
       .catch(error => {
         if (!!error) {
@@ -763,6 +766,13 @@ export const UPDATE_RESERWATION_WORKER_DATA = "UPDATE_RESERWATION_WORKER_DATA"
 export const CONFIRM_DELETE_COMPANY = "CONFIRM_DELETE_COMPANY"
 export const DELETE_COMPANY_USER = "DELETE_COMPANY_USER"
 export const DELETE_COMPANY_CONFIRM = "DELETE_COMPANY_CONFIRM"
+export const VERYFIED_USER_PHONE = "VERYFIED_USER_PHONE"
+
+export const veryfiedUserPhone = () => {
+  return {
+    type: VERYFIED_USER_PHONE,
+  }
+}
 
 export const changeDeleteCompanyConfirm = () => {
   return {
@@ -4610,6 +4620,50 @@ export const fetchSentCodeConfirmDeleteAccount = token => {
   }
 }
 
+export const fetchSentCodeConfirmVerifiedPhone = token => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-sent-code-verified-phone`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem(
+            "Wysłano na telefon / e-maila kod potwierdzenia numeru telefonu.",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania na adres telefon / e-mail kodu do potwierdzenia numeru telefonu",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
 export const fetchDeleteAccount = (token, code) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -4642,6 +4696,52 @@ export const fetchDeleteAccount = (token, code) => {
               dispatch(addAlertItem("Błędny kod do usunięcia konta", "red"))
             } else {
               dispatch(addAlertItem("Błąd podczas usuwania konta", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchVerifiedPhone = (token, code) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/verified-user-phone`,
+        {
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(veryfiedUserPhone())
+        dispatch(addAlertItem("Zweryfikowano numer telefonu.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 422) {
+              dispatch(
+                addAlertItem(
+                  "Błędny kod do zweryfikowania numeru telefonu",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas weryfikacji numeru telefonu", "red")
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

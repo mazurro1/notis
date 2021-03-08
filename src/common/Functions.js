@@ -596,22 +596,6 @@ export const checkAndReturnMinAndMaxValueFromDaysHours = openingDays => {
   }
 }
 
-export function useOutsideAlerter(ref) {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        dispatch(resetBellAlerts(false))
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [ref]) // eslint-disable-line react-hooks/exhaustive-deps
-}
-
 export const objectsEqual = (o1, o2) =>
   Object.keys(o1).length === Object.keys(o2).length &&
   Object.keys(o1).every(p => o1[p] === o2[p])

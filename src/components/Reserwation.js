@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { Colors } from "../common/Colors"
 import styled from "styled-components"
 import SelectDataCalendar from "./SelectDataCalendar"
-import { MdClose } from "react-icons/md"
 import {
   fetchDoReserwation,
   fetchWorkerDisabledHours,
@@ -10,17 +9,16 @@ import {
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { FaUser, FaStamp } from "react-icons/fa"
-import { CSSTransition } from "react-transition-group"
 import ButtonIcon from "../components/ButtonIcon"
 import { FaCalendarDay, FaCalendarCheck } from "react-icons/fa"
 import { getMonthAndReturn } from "../common/Functions"
 import { CgSpinner } from "react-icons/cg"
 import HoursItemReserwation from "./HoursItemReserwation"
 import InputIcon from "./InputIcon"
-import InputPhone from "./InputPhone"
 import { Site } from "../common/Site"
 import ReactTooltip from "react-tooltip"
 import { Checkbox } from "react-input-checkbox"
+import Popup from "./Popup"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -61,6 +59,7 @@ const ServiceItem = styled.div`
   transition-property: background-color, padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+  width: calc(100% - 55px);
 `
 
 const TitleService = styled.div`
@@ -81,6 +80,7 @@ const LeftContent = styled.div`
 const PriceService = styled.span`
   position: relative;
   background-color: red;
+  display: inline-block;
   font-size: 0.8rem;
   padding: 2px 5px;
   font-family: "Poppins-Regular", sans-serif;
@@ -104,56 +104,20 @@ const PriceService = styled.span`
   transition-timing-function: ease;
 `
 
-const ItemSummary = styled.div`
-  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
-  position: relative;
-  border-radius: 5px;
-  max-width: 90vw;
-  width: 800px;
-  padding-top: 40px;
-  overflow-x: hidden;
-  max-height: 90vh;
-  overflow-y: auto;
-`
+const PositionPrice = styled.div`
+  display: inline-block;
 
-const PaddingContent = styled.div`
-  padding: 10px;
+  @media all and (max-width: 990px) {
+    display: block;
+  }
 `
 
 const TextReserwation = styled.div`
   font-size: 1.2rem;
   margin-bottom: 5px;
+  margin-top: 20px;
   color: ${props => Colors(props.siteProps).textNormalBlack};
   span {
-    color: ${props => Colors(props.siteProps).primaryColor};
-  }
-`
-
-const SummaryReserwationText = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  font-size: 1.4rem;
-  margin-bottom: 10px;
-  background-color: ${props => Colors(props.siteProps).primaryColorDark};
-  padding: 5px 10px;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding-right: 30px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2) inset;
-`
-
-const ClosePopup = styled.div`
-  position: absolute;
-  top: 7px;
-  right: 5px;
-  cursor: pointer;
-  font-size: 1.5rem;
-  transition-property: color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  &:hover {
     color: ${props => Colors(props.siteProps).primaryColor};
   }
 `
@@ -239,7 +203,7 @@ const NoAvaibleHourStyle = styled.div`
 `
 
 const AllAvaibleHours = styled.div`
-  max-height: 300px;
+  max-height: 250px;
   width: 100%;
   overflow-y: auto;
   margin-bottom: 10px;
@@ -292,6 +256,24 @@ const BackGroundImageCustomUrl = styled.div`
   overflow: hidden;
 `
 
+const PositionStampsAndItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const PositionWorkerDate = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+`
+
+const MarginWorerDate = styled.div`
+  margin-right: 20px;
+`
+
 const IconStamp = styled.div`
   display: flex;
   flex-direction: column;
@@ -322,6 +304,14 @@ const IconStamp = styled.div`
   }
 `
 
+const MarginTextPhone = styled.div`
+  margin: 10px 0;
+`
+
+const PositionRelative = styled.div`
+  position: relative;
+`
+
 const Reserwation = ({
   handleCloseReserwation,
   reserwationEnable,
@@ -338,13 +328,11 @@ const Reserwation = ({
   },
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
-  const [numberPhone, setNumberPhone] = useState("")
   const [selectedHour, setSelectedHour] = useState(null)
   const [selectedPromotion, setSelectedPromotion] = useState(null)
   const [selectedWorkerUserId, setSelectedWorkerUserId] = useState(null)
   const [selectedWorkerId, setSelectedWorkerId] = useState(null)
   const [isDataActive, setIsDataActive] = useState(false)
-  const [isOtherActive, setIsOtherActive] = useState(true)
   const [selectedDate, setSelectedDate] = useState(null)
   const [isStampActive, setIsStampActive] = useState(false)
   const [
@@ -362,7 +350,7 @@ const Reserwation = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!!selectedDate && !!selectedWorkerUserId) {
+    if (!!selectedDate && !!selectedWorkerUserId && !!user.phoneVerified) {
       const selectedDay = selectedDate.getDate()
       const selectedMonth = selectedDate.getMonth() + 1
       const selectedYear = selectedDate.getFullYear()
@@ -390,7 +378,6 @@ const Reserwation = ({
         setSelectedWorkerUserId(null)
         setSelectedWorkerId(null)
         setIsDataActive(null)
-        setIsOtherActive(true)
         setSelectedDate(null)
         dispatch(avaibleDateToReserwation([]))
         setIsStampActive(false)
@@ -402,14 +389,11 @@ const Reserwation = ({
 
   const handleSelectDay = () => {
     setIsStampActive(false)
-    setIsOtherActive(false)
     setSelectedHour(null)
     setIsStampActive(false)
     setSelectedHappyHourOrPromotion(false)
     setSelectedPromotion(null)
-    setTimeout(() => {
-      setIsDataActive(true)
-    }, 500)
+    setIsDataActive(true)
   }
 
   const handleSelectWorker = (workerUserId, workerId) => {
@@ -556,7 +540,6 @@ const Reserwation = ({
                 ? worker.user.imageUrl
                 : `${Site.awsUrl}/${worker.user.imageUrl}`
             }
-            // url={`${Site.awsUrl}/${worker.user.imageUrl}`}
           />
         ) : (
           <div>
@@ -630,11 +613,7 @@ const Reserwation = ({
     selectedDateFullMonth = selectedDate.getMonth() + 1
   }
 
-  const disabledPhoneNumber = user.hasPhone
-    ? false
-    : numberPhone.length === 9
-    ? false
-    : true
+  const disabledPhoneNumber = !!user.hasPhone ? false : true
 
   const accountNotVeryfied = !user.accountVerified
 
@@ -730,7 +709,6 @@ const Reserwation = ({
   useEffect(() => {
     ReactTooltip.rebuild()
   }, [
-    numberPhone,
     selectedHour,
     selectedWorkerUserId,
     selectedDate,
@@ -744,12 +722,12 @@ const Reserwation = ({
   ])
 
   const handleDoReserwation = () => {
-    if (!!selectedDate && !!selectedWorkerUserId) {
+    if (!!selectedDate && !!selectedWorkerUserId && !!user.phoneVerified) {
       const selectedDay = selectedDate.getDate()
       const selectedMonth = selectedDate.getMonth() + 1
       const selectedYear = selectedDate.getFullYear()
       const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
-      const validNumberUser = !!numberPhone ? numberPhone : null
+      const validNumberUser = null
 
       dispatch(
         fetchDoReserwation(
@@ -768,170 +746,147 @@ const Reserwation = ({
       )
     }
   }
-
   return (
-    <>
-      <CSSTransition
-        in={isOtherActive}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <ItemSummary siteProps={siteProps}>
-          <ReactTooltip id="stampTooltip" effect="float" multiline={true}>
-            <span>
-              {stampColorValid
-                ? "Podczas tej rezerwacji zostanie dodana pieczatka"
-                : "Pieczątka niedostępna w tej rezerwacji"}
-            </span>
-          </ReactTooltip>
-          <PaddingContent>
-            <SummaryReserwationText siteProps={siteProps}>
-              Rezerwacja
-            </SummaryReserwationText>
-            <IconStamp siteProps={siteProps} active={stampColorValid}>
-              <div className="bgStamp" data-tip data-for="stampTooltip">
-                <FaStamp />
-              </div>
-            </IconStamp>
-
-            <ServiceItem siteProps={siteProps}>
-              <LeftContent>
-                <TitleService>
-                  {reserwationData.serviceName}
-                  <PriceService siteProps={siteProps} active={priceInPromotion}>
-                    {`${reserwationData.serviceCost}zł ${
+    <PositionRelative>
+      <ReactTooltip id="stampTooltip" effect="float" multiline={true}>
+        <span>
+          {stampColorValid
+            ? "Podczas tej rezerwacji zostanie dodana pieczatka"
+            : "Pieczątka niedostępna w tej rezerwacji"}
+        </span>
+      </ReactTooltip>
+      <PositionStampsAndItem>
+        <ServiceItem siteProps={siteProps}>
+          <LeftContent>
+            <TitleService>
+              {reserwationData.serviceName}
+              <PositionPrice>
+                <PriceService siteProps={siteProps} active={priceInPromotion}>
+                  {`${reserwationData.serviceCost}zł ${
+                    reserwationData.extraCost ? "+" : ""
+                  }`}
+                  <CrossPricePosition active={priceInPromotion}>
+                    <CrossPrice />
+                  </CrossPricePosition>
+                </PriceService>
+                {priceInPromotion && (
+                  <PriceService siteProps={siteProps}>
+                    {`${newPriceAfterPromotion}zł ${
                       reserwationData.extraCost ? "+" : ""
                     }`}
-                    <CrossPricePosition active={priceInPromotion}>
-                      <CrossPrice />
-                    </CrossPricePosition>
                   </PriceService>
-                  {priceInPromotion && (
-                    <PriceService siteProps={siteProps}>
-                      {`${newPriceAfterPromotion}zł ${
-                        reserwationData.extraCost ? "+" : ""
-                      }`}
-                    </PriceService>
-                  )}
-                  <PriceService otherColor siteProps={siteProps}>
-                    {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
-                  </PriceService>
-                </TitleService>
-                <ServiceParagraph>
-                  {reserwationData.serviceText}
-                </ServiceParagraph>
-              </LeftContent>
-            </ServiceItem>
-            {!!!ownerHasServiceCategory && filterWorkers.length === 0 ? (
-              <NoWorkersText>Brak dostępnych pracowników</NoWorkersText>
-            ) : (
-              <>
-                <TextReserwation siteProps={siteProps}>
-                  Wybierz pracownika:
-                </TextReserwation>
-                <ContentWorkers>
-                  {ownerWorkerToSelect}
-                  {mapWorkersToSelect}
-                </ContentWorkers>
-                <TextReserwation siteProps={siteProps}>
-                  Wybierz dzień:
-                </TextReserwation>
-                <ButtonIconStyle>
-                  <ButtonIcon
-                    title={
-                      selectedDate
-                        ? `${selectedDateMonth} ${
-                            selectedDateDay < 10
-                              ? `0${selectedDateDay}`
-                              : selectedDateDay
-                          }-${
-                            selectedDateFullMonth < 10
-                              ? `0${selectedDateFullMonth}`
-                              : selectedDateFullMonth
-                          }-${selectedDateYear}`
-                        : "Wybierz dzień"
-                    }
-                    fontIconSize="20"
-                    fontSize="16"
-                    icon={<FaCalendarDay />}
-                    onClick={handleSelectDay}
-                    uppercase
-                    disabled={!!!selectedWorkerUserId}
-                  />
-                </ButtonIconStyle>
-                <TextReserwation siteProps={siteProps}>
-                  Wybierz godzinę:
-                </TextReserwation>
-                {renderAvaibleHours}
-                {!!selectedDate && avaibleHoursReserwation.length > 0 && (
-                  <>
-                    <InputIcon
-                      placeholder="Wiadomość do rezerwacji (domyślnie)"
-                      inputActive={true}
-                      value={reserwationMessage}
-                      onChange={handleReserwationMessage}
-                    />
-                  </>
                 )}
-                {!!selectedDate &&
-                  avaibleHoursReserwation.length > 0 &&
-                  !user.hasPhone && (
-                    <>
-                      <InputPhone setPhoneNumber={setNumberPhone} />
-                    </>
-                  )}
-                {!!stempValidUserCanTakeStempRabat
-                  ? !!renderStampCheckbox
-                    ? renderStampCheckbox
-                    : null
-                  : null}
-                <div data-tip data-for="reserwationAlert">
-                  <ButtonIcon
-                    title="Rezerwuj"
-                    fontIconSize="20"
-                    fontSize="25"
-                    icon={<FaCalendarCheck />}
-                    onClick={handleDoReserwation}
-                    uppercase
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={!disabledReserwButton}
-                  />
-                </div>
-              </>
+                <PriceService otherColor siteProps={siteProps}>
+                  {`${timeService} ${reserwationData.extraTime ? "+" : ""}`}
+                </PriceService>
+              </PositionPrice>
+            </TitleService>
+            <ServiceParagraph>{reserwationData.serviceText}</ServiceParagraph>
+          </LeftContent>
+        </ServiceItem>
+        <IconStamp siteProps={siteProps} active={stampColorValid}>
+          <div className="bgStamp" data-tip data-for="stampTooltip">
+            <FaStamp />
+          </div>
+        </IconStamp>
+      </PositionStampsAndItem>
+      {!!!ownerHasServiceCategory && filterWorkers.length === 0 ? (
+        <NoWorkersText>Brak dostępnych pracowników</NoWorkersText>
+      ) : (
+        <>
+          <TextReserwation siteProps={siteProps}>
+            Wybierz pracownika:
+          </TextReserwation>
+          <ContentWorkers>
+            {ownerWorkerToSelect}
+            {mapWorkersToSelect}
+          </ContentWorkers>
+          <TextReserwation siteProps={siteProps}>
+            Wybierz dzień:
+          </TextReserwation>
+          <ButtonIconStyle>
+            <ButtonIcon
+              title={
+                selectedDate
+                  ? `${selectedDateMonth} ${
+                      selectedDateDay < 10
+                        ? `0${selectedDateDay}`
+                        : selectedDateDay
+                    }-${
+                      selectedDateFullMonth < 10
+                        ? `0${selectedDateFullMonth}`
+                        : selectedDateFullMonth
+                    }-${selectedDateYear}`
+                  : "Wybierz dzień"
+              }
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarDay />}
+              onClick={handleSelectDay}
+              uppercase
+              disabled={!!!selectedWorkerUserId}
+            />
+          </ButtonIconStyle>
+          <TextReserwation siteProps={siteProps}>
+            {!!!selectedHour
+              ? "Wybierz godzinę:"
+              : `Wybrano godzine: ${selectedHour}`}
+          </TextReserwation>
+          {renderAvaibleHours}
+          {!!selectedDate && avaibleHoursReserwation.length > 0 && (
+            <>
+              <InputIcon
+                placeholder="Wiadomość do rezerwacji (domyślnie)"
+                inputActive={true}
+                value={reserwationMessage}
+                onChange={handleReserwationMessage}
+              />
+            </>
+          )}
+          {!!selectedDate &&
+            avaibleHoursReserwation.length > 0 &&
+            !user.hasPhone && (
+              <MarginTextPhone>
+                Uzupełnij numer telefonu aby dokonać rezerwacji
+              </MarginTextPhone>
             )}
-            <ClosePopup onClick={handleCloseReserwation} siteProps={siteProps}>
-              <MdClose />
-            </ClosePopup>
-          </PaddingContent>
-        </ItemSummary>
-      </CSSTransition>
-      <CSSTransition
-        in={isDataActive}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <div>
-          <SelectDataCalendar
-            setActualCalendarDate={setSelectedDate}
-            setIsDataActive={setIsDataActive}
-            setIsTimeActive={setIsOtherActive}
-            maxDate={reserwationData.maxDate}
-          />
-        </div>
-      </CSSTransition>
+          {!!stempValidUserCanTakeStempRabat
+            ? !!renderStampCheckbox
+              ? renderStampCheckbox
+              : null
+            : null}
+          <div data-tip data-for="reserwationAlert">
+            <ButtonIcon
+              title="Rezerwuj"
+              fontIconSize="20"
+              fontSize="25"
+              icon={<FaCalendarCheck />}
+              onClick={handleDoReserwation}
+              uppercase
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={!disabledReserwButton}
+            />
+          </div>
+        </>
+      )}
+      <Popup popupEnable={isDataActive} noContent>
+        <SelectDataCalendar
+          setActualCalendarDate={setSelectedDate}
+          setIsDataActive={setIsDataActive}
+          maxDate={reserwationData.maxDate}
+        />
+      </Popup>
       {!disabledReserwButton && (
         <ReactTooltip id="reserwationAlert" effect="float" multiline={true}>
           <span>
             {disabledPhoneNumber
-              ? "Wybierz pracownika, zaznacz godzine oraz wpisz numer telefonu."
-              : "Wybierz pracownika oraz zaznacz godzine"}
+              ? "Wybierz pracownika oraz zaznacz godzine."
+              : "Wybierz pracownika oraz zaznacz godzine."}
           </span>
         </ReactTooltip>
       )}
-    </>
+    </PositionRelative>
   )
 }
 export default Reserwation

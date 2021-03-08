@@ -12,7 +12,7 @@ import {
   resetBellAlerts,
 } from "../state/actions"
 import sal from "sal.js"
-import { useOutsideAlerter } from "../common/Functions"
+import UseOuterClick from "../common/UseOuterClick"
 
 const BellAlertsStyle = styled.div`
   position: relative;
@@ -91,6 +91,14 @@ const ContentAllAlerts = styled.div`
   max-height: 300px;
 `
 
+const NoContentAlerts = styled.div`
+  padding: 5px 10px;
+  font-family: "Poppins-Medium", sans-serif;
+  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  border-radius: 5px;
+`
+
 const AlertItemStyle = styled.div`
   position: relative;
   padding: 5px 10px;
@@ -132,11 +140,13 @@ const BellAlerts = ({ siteProps, user }) => {
   const [allAlerts, setAllAlerts] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0)
   const [pageUpdate, setPageUpdate] = useState(1)
-  const refBell = useRef(null)
   const bellAlertsActive = useSelector(state => state.bellAlertsActive)
 
-  useOutsideAlerter(refBell)
   const dispatch = useDispatch()
+
+  const refBell = UseOuterClick(e => {
+    dispatch(resetBellAlerts(false))
+  })
 
   const refAllAllerts = useRef(null)
   useEffect(() => {
@@ -213,12 +223,8 @@ const BellAlerts = ({ siteProps, user }) => {
   })
 
   return (
-    <PositionRelative>
-      <BellAlertsStyle
-        siteProps={siteProps}
-        onClick={handleClickAlertVisible}
-        ref={refBell}
-      >
+    <PositionRelative ref={refBell}>
+      <BellAlertsStyle siteProps={siteProps} onClick={handleClickAlertVisible}>
         <IconStyle className="bell-action">
           <FaBell />
         </IconStyle>
@@ -247,7 +253,7 @@ const BellAlerts = ({ siteProps, user }) => {
             {mapAlerts.length > 0 ? (
               <div ref={refAllAllerts}>{mapAlerts}</div>
             ) : (
-              <AlertItemStyle noTime>Brak alertów</AlertItemStyle>
+              <NoContentAlerts noTime>Brak alertów</NoContentAlerts>
             )}
           </ContentAllAlerts>
         </AllAlerts>

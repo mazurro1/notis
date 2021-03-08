@@ -12,6 +12,8 @@ import {
   MdPhotoSizeSelectLarge,
   MdMoveToInbox,
   MdDelete,
+  MdLocalPhone,
+  MdInfo,
 } from "react-icons/md"
 import {
   fetchUserPhone,
@@ -23,9 +25,6 @@ import {
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
-import { Checkbox } from "react-input-checkbox"
-import { CSSTransition } from "react-transition-group"
-import { MdDone } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
 import { fetchEditUser } from "../state/actions"
 import UserProfilImage from "./UserProfilImage"
@@ -33,6 +32,7 @@ import { Site } from "../common/Site"
 import InputPhone from "./InputPhone"
 import Popup from "./Popup"
 import DeleteAccount from "./DeleteAccount"
+import VeryfiedPhone from "./VeryfiedPhone"
 
 const AddImage = styled.div`
   position: relative;
@@ -100,27 +100,6 @@ const TextToUser = styled.div`
     font-family: "Poppins-Bold", sans-serif;
     user-select: none;
   }
-`
-
-const MarginComponents = styled.div`
-  margin-bottom: 40px;
-`
-
-const InputWidht = styled.div`
-  max-width: 100%;
-  width: 400px;
-`
-
-const InputWidhtPhone = styled.div`
-  margin-left: 10px;
-  margin-top: 10px;
-`
-
-const ButtonIconStyle = styled.div`
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
 `
 
 const UserNameImage = styled.div`
@@ -203,26 +182,31 @@ const MarginButtons = styled.div`
   margin: 5px;
 `
 
+const MarginButtonPhone = styled.div`
+  margin-bottom: 10px;
+  display: inline-block;
+`
+
 const UserProfil = ({ userProfilVisible }) => {
   const [newPhone, setNewPhone] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [password, setPassword] = useState("")
-  const [checkboxPhone, setCheckboxPhone] = useState(false)
-  const [checkboxPassword, setCheckboxPassword] = useState(false)
   const [editImage, setEditImage] = useState(false)
   const [deleteAccountToConfirm, setDeleteAccountToConfirm] = useState(false)
   const [showComponentDelete, setShowComponentDelete] = useState(false)
+  const [newPhoneVisible, setNewPhoneVisible] = useState(false)
+  const [newPasswordVisible, setNewPasswordVisible] = useState(false)
+  const [veryfiedPhoneVisible, setVeryfiedPhoneVisible] = useState(false)
   const user = useSelector(state => state.user)
   const [addedImages, setAddedImages] = useState([])
   const userPhone = useSelector(state => state.userPhone)
   const siteProps = useSelector(state => state.siteProps)
   const userProfilReset = useSelector(state => state.userProfilReset)
-
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (!!user && !userPhone) {
-      if (user.hasPhone) {
+      if (!!user.hasPhone) {
         dispatch(fetchUserPhone(user.token))
       }
     }
@@ -249,8 +233,14 @@ const UserProfil = ({ userProfilVisible }) => {
         setAddedImages([])
       }
     }
+    setDeleteAccountToConfirm(false)
+    setShowComponentDelete(false)
+    setNewPhoneVisible(false)
+    setNewPasswordVisible(false)
+    setEditImage(false)
+    setVeryfiedPhoneVisible(false)
     dispatch(resetUserProfil())
-  }, [userProfilVisible, user, userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userProfilVisible, userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!userPhone) {
@@ -277,10 +267,6 @@ const UserProfil = ({ userProfilVisible }) => {
 
   const handleChangeInput = (e, setChange) => {
     setChange(e.target.value)
-  }
-
-  const handleChangeCheckbox = setChange => {
-    setChange(prevState => !prevState)
   }
 
   const handleAddImage = event => {
@@ -352,32 +338,45 @@ const UserProfil = ({ userProfilVisible }) => {
     setShowComponentDelete(prevState => !prevState)
   }
 
-  const disabledButtonSave =
-    ((checkboxPhone && newPhone !== userPhone) ||
-      (checkboxPassword &&
-        newPassword.length >= 6 &&
-        newPassword !== password)) &&
-    password.length >= 6
+  const handleNewPasswordVisible = () => {
+    setNewPasswordVisible(prevState => !prevState)
+    setPassword("")
+    setNewPassword("")
+  }
 
-  const handleSaveUserProfile = () => {
-    if (disabledButtonSave) {
-      const newPhoneUser =
-        checkboxPhone && newPhone.length > 0 ? newPhone : null
-      const newPasswordUser =
-        checkboxPassword && newPassword.length > 0 ? newPassword : null
-      dispatch(
-        fetchEditUser(newPhoneUser, newPasswordUser, password, user.token)
-      )
+  const handleNewPhoneVisible = () => {
+    setNewPhoneVisible(prevState => !prevState)
+    setPassword("")
+    setNewPhone("")
+  }
+
+  const hadndleClickShowVeryfiedPhone = () => {
+    setVeryfiedPhoneVisible(prevState => !prevState)
+  }
+
+  const disabledNewPassword =
+    newPassword.length >= 5 && newPassword !== password && password.length >= 5
+
+  const disabledNewPhone =
+    newPhone.length === 9 && password.length >= 5 && userPhone !== newPhone
+
+  const handleSaveNewPassword = () => {
+    if (disabledNewPassword) {
+      dispatch(fetchEditUser(null, newPassword, password, user.token))
+    } else {
+      if (newPassword.length >= 5 || password.length >= 5) {
+        dispatch(addAlertItem("Hasła są za krótkie", "red"))
+      } else if (newPassword === password) {
+        dispatch(addAlertItem("Hasła są takie same", "red"))
+      }
     }
   }
 
-  const tooltipButton =
-    checkboxPassword ||
-    (checkboxPhone && !disabledButtonSave && (
-      <ReactTooltip id="alertButtonSave" effect="float" multiline={true}>
-        <span>Uzupełnij wszystkie dane</span>
-      </ReactTooltip>
-    ))
+  const handleSaveNewPhone = () => {
+    if (disabledNewPhone) {
+      dispatch(fetchEditUser(newPhone, null, password, user.token))
+    }
+  }
 
   const mapUserImages = addedImages.map((item, index) => {
     return (
@@ -407,7 +406,6 @@ const UserProfil = ({ userProfilVisible }) => {
   return (
     <>
       <ProfilStyle siteProps={siteProps}>
-        {tooltipButton}
         <TextToUser siteProps={siteProps}>
           <UserNameImage>
             {addedImages.length === 0 ? (
@@ -431,6 +429,53 @@ const UserProfil = ({ userProfilVisible }) => {
             </div>
           </UserNameImage>
           <div>
+            <h1>
+              Twój adres email: <span>{!!user ? user.email : ""}</span>
+            </h1>
+          </div>
+
+          <div>
+            <MarginButtonPhone>
+              <ButtonIcon
+                title={
+                  !!user.hasPhone
+                    ? "Edytuj numer telefonu"
+                    : "Dodaj numer telefonu"
+                }
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdLocalPhone />}
+                onClick={handleNewPhoneVisible}
+              />
+            </MarginButtonPhone>
+          </div>
+          {!!user.hasPhone && !!!user.phoneVerified && (
+            <div>
+              <MarginButtonPhone>
+                <ButtonIcon
+                  title="Weryfikuj numer telefonu"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<MdInfo />}
+                  secondColors
+                  onClick={hadndleClickShowVeryfiedPhone}
+                />
+              </MarginButtonPhone>
+            </div>
+          )}
+          <MarginButtonPhone>
+            <ButtonIcon
+              title="Edytuj hasło"
+              uppercase
+              fontIconSize="16"
+              fontSize="16"
+              icon={<FaLock />}
+              onClick={handleNewPasswordVisible}
+            />
+          </MarginButtonPhone>
+          <div>
             {tooltipDisabledDeleteAccount}
             <PositionDeleteButton
               data-tip
@@ -450,103 +495,8 @@ const UserProfil = ({ userProfilVisible }) => {
               />
             </PositionDeleteButton>
           </div>
-          <div>
-            <h1>
-              Twój numer telefonu: <span>{userPhone}</span>
-            </h1>
-          </div>
-          <div>
-            <h1>
-              Twój adres email: <span>{!!user ? user.email : ""}</span>
-            </h1>
-          </div>
-          <MarginComponents>
-            <Checkbox
-              theme="material-checkbox"
-              value={checkboxPhone}
-              onChange={() => handleChangeCheckbox(setCheckboxPhone)}
-            >
-              Edytuj numer telefonu
-            </Checkbox>
-            <CSSTransition
-              in={checkboxPhone}
-              timeout={400}
-              classNames="popup"
-              unmountOnExit
-            >
-              <InputWidhtPhone>
-                <InputPhone
-                  setPhoneNumber={setNewPhone}
-                  defaultValues={userPhone}
-                />
-              </InputWidhtPhone>
-            </CSSTransition>
-          </MarginComponents>
-          <Checkbox
-            theme="material-checkbox"
-            value={checkboxPassword}
-            onChange={() => handleChangeCheckbox(setCheckboxPassword)}
-          >
-            Edytuj hasło
-          </Checkbox>
-          <CSSTransition
-            in={checkboxPassword}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
-          >
-            <InputWidht>
-              <InputIcon
-                icon={<FaLock />}
-                placeholder="Nowe hasło"
-                value={newPassword}
-                type="password"
-                onChange={e => handleChangeInput(e, setNewPassword)}
-                validText="Minimum 5 znaków"
-              />
-            </InputWidht>
-          </CSSTransition>
-          <CSSTransition
-            in={checkboxPassword || checkboxPhone}
-            timeout={400}
-            classNames="popup"
-            unmountOnExit
-          >
-            <>
-              <InputWidht>
-                <InputIcon
-                  icon={<FaLock />}
-                  placeholder="Aktualne hasło"
-                  value={password}
-                  type="password"
-                  onChange={e => handleChangeInput(e, setPassword)}
-                  validText="Minimum 5 znaków"
-                />
-              </InputWidht>
-            </>
-          </CSSTransition>
         </TextToUser>
       </ProfilStyle>
-      <CSSTransition
-        in={checkboxPassword || checkboxPhone}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-      >
-        <ButtonIconStyle>
-          <div data-tip data-for="alertButtonSave">
-            <ButtonIcon
-              title="Zapisz"
-              uppercase
-              fontIconSize="30"
-              fontSize="20"
-              icon={<MdDone />}
-              onClick={handleSaveUserProfile}
-              disabled={!disabledButtonSave}
-            />
-          </div>
-        </ButtonIconStyle>
-      </CSSTransition>
       <Popup
         popupEnable={editImage}
         position="absolute"
@@ -655,9 +605,131 @@ const UserProfil = ({ userProfilVisible }) => {
           handleClose={hadndleClickShowDeleteComponent}
           smallTitle
         >
-          <DeleteAccount siteProps={siteProps} user={user} />
+          <DeleteAccount
+            siteProps={siteProps}
+            user={user}
+            hadndleClickShowDeleteComponent={hadndleClickShowDeleteComponent}
+          />
         </Popup>
       )}
+      <Popup
+        popupEnable={veryfiedPhoneVisible}
+        position="absolute"
+        borderRadius
+        title="Weryfikuj numeru telefonu"
+        borderRadius
+        smallTitle
+        closeTitle={false}
+      >
+        <VeryfiedPhone
+          siteProps={siteProps}
+          user={user}
+          hadndleClickShowVeryfiedPhone={hadndleClickShowVeryfiedPhone}
+        />
+      </Popup>
+      <Popup
+        popupEnable={newPhoneVisible}
+        position="absolute"
+        borderRadius
+        title="Dodaj numeru telefonu"
+        borderRadius
+        smallTitle
+        closeTitle={false}
+      >
+        <InputPhone setPhoneNumber={setNewPhone} defaultValues={userPhone} />
+        <InputIcon
+          icon={<FaLock />}
+          placeholder="Aktualne hasło"
+          value={password}
+          type="password"
+          onChange={e => handleChangeInput(e, setPassword)}
+          validText="Minimum 5 znaków"
+          showPassword
+        />
+        <ButtonsImagePosition>
+          <MarginButtons>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleNewPhoneVisible}
+            />
+          </MarginButtons>
+          <MarginButtons>
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdSave />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={!disabledNewPhone}
+              onClick={handleSaveNewPhone}
+            />
+          </MarginButtons>
+        </ButtonsImagePosition>
+      </Popup>
+      <Popup
+        popupEnable={newPasswordVisible}
+        position="absolute"
+        borderRadius
+        title="Edytuj hasło"
+        borderRadius
+        closeTitle={false}
+        smallTitle
+      >
+        <InputIcon
+          icon={<FaLock />}
+          placeholder="Aktualne hasło"
+          value={password}
+          type="password"
+          onChange={e => handleChangeInput(e, setPassword)}
+          validText="Minimum 5 znaków"
+          showPassword
+        />
+        <InputIcon
+          icon={<FaLock />}
+          placeholder="Nowe hasło"
+          value={newPassword}
+          type="password"
+          onChange={e => handleChangeInput(e, setNewPassword)}
+          validText="Minimum 5 znaków"
+          showPassword
+        />
+
+        <ButtonsImagePosition>
+          <MarginButtons>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleNewPasswordVisible}
+            />
+          </MarginButtons>
+          <MarginButtons>
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdSave />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={!disabledNewPassword}
+              onClick={handleSaveNewPassword}
+            />
+          </MarginButtons>
+        </ButtonsImagePosition>
+      </Popup>
     </>
   )
 }

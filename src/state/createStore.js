@@ -32,6 +32,7 @@ import {
   ADD_FAVOURITES_COMPANY,
   DELETE_FAVOURITES_COMPANY,
   RESET_USER_FAVOURITES,
+  VERYFIED_USER_PHONE,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -185,6 +186,18 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case VERYFIED_USER_PHONE: {
+      const newUserVerifiedPhone = !!state.user ? { ...state.user } : null
+      if (!!newUserVerifiedPhone) {
+        newUserVerifiedPhone.phoneVerified = true
+      }
+      return {
+        ...state,
+        user: newUserVerifiedPhone,
+        userProfilReset: true,
+      }
+    }
+
     case CHANGE_ACCTIVE_ACCOUNT: {
       return {
         ...state,
@@ -261,11 +274,14 @@ const reducer = (state = initialState, action) => {
       if (!!action.email || action.token) {
         newUserEdited.token = action.token
         newUserEdited.email = action.email
+        newUserEdited.phoneVerified = action.phoneVerified
+        newUserEdited.hasPhone = action.hasPhone
       }
       return {
         ...state,
         userPhone: action.phone,
         user: newUserEdited,
+        userProfilReset: true,
       }
 
     case ADD_ALERT_ITEM: {
@@ -1717,11 +1733,13 @@ const reducer = (state = initialState, action) => {
       }
     }
     case ADD_NEW_USER_ALERT: {
-      const newUserWithAlerts = { ...state.user }
-      const alertsUserValid = !!state.user.alerts ? state.user.alerts : []
+      const newUserWithAlerts = !!state.user ? { ...state.user } : null
       if (!!newUserWithAlerts) {
-        newUserWithAlerts.alerts = [action.data, ...alertsUserValid]
-        newUserWithAlerts.alertActiveCount = state.user.alertActiveCount + 1
+        const alertsUserValid = !!state.user.alerts ? state.user.alerts : []
+        if (!!newUserWithAlerts) {
+          newUserWithAlerts.alerts = [action.data, ...alertsUserValid]
+          newUserWithAlerts.alertActiveCount = state.user.alertActiveCount + 1
+        }
       }
       return {
         ...state,

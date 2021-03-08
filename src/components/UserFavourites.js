@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { resetUserFavourites } from "../state/actions"
 import UserFavouritesItem from "./UserFavouritesItem"
+import styled from "styled-components"
+
+const TextNoContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins-Medium", sans-serif;
+`
 
 const UserFavourites = ({ siteProps, favouritesCompanys, user }) => {
   const [selectedCompanyFavourites, setSelectedCompanyFavourites] = useState([])
@@ -26,6 +35,14 @@ const UserFavourites = ({ siteProps, favouritesCompanys, user }) => {
     )
   })
 
-  return <div>{mapFavourites}</div>
+  return (
+    <div>
+      {selectedCompanyFavourites.length > 0 ? (
+        mapFavourites
+      ) : (
+        <TextNoContent>Brak ulubionych firm</TextNoContent>
+      )}
+    </div>
+  )
 }
 export default UserFavourites

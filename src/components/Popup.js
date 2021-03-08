@@ -49,7 +49,7 @@ const PopupContent = styled.div`
   height: ${props => (props.fullScreen ? "100vh" : "auto")};
   margin: 0 auto;
   border-radius: 5px;
-  max-height: ${props => (props.maxHeight ? "80vh" : "auto")};
+  max-height: ${props => (props.maxHeight ? "90vh" : "auto")};
   background-color: ${props => Colors(props.siteProps).backgroundColorPage};
   overflow: ${props => (props.overflowComponent ? "hidden" : "auto")};
 `
@@ -59,14 +59,14 @@ const PaddingContnent = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   min-height: ${props => (props.maxHeight ? "calc(100% - 41px)" : "auto")};
-  max-height: ${props => (props.maxHeight ? "calc(80vh - 41px)" : "auto")};
+  max-height: ${props => (props.maxHeight ? "calc(90vh - 41px)" : "auto")};
 `
 
 const ClosePopup = styled.div`
   position: absolute;
   top: 0px;
   right: 0px;
-  padding: 7px;
+  padding: ${props => (props.smallTitle ? "4px" : "7px")};
   cursor: pointer;
   font-size: 1.5rem;
   color: ${props =>
@@ -161,6 +161,7 @@ const Popup = ({
               siteProps={siteProps}
               titleOn={isTitleOn}
               secondColors={secondColors}
+              smallTitle={smallTitle}
             >
               <MdClose />
             </ClosePopup>
@@ -173,6 +174,7 @@ const Popup = ({
           onClick={handleOnClick}
           siteProps={siteProps}
           title={isTitleOn}
+          smallTitle={smallTitle}
         >
           <MdClose />
         </ClosePopup>
@@ -188,7 +190,7 @@ const Popup = ({
       unmountOnExit
     >
       <PopupWindow
-        onClick={handleClickBackground}
+        // onClick={handleClickBackground}
         calendar={calendar}
         position={position}
         borderRadius={borderRadius}

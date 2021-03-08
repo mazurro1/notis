@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  fetchDeleteAccount,
+  fetchVerifiedPhone,
   changeDeleteCompanyConfirm,
-  fetchSentCodeConfirmDeleteAccount,
+  fetchSentCodeConfirmVerifiedPhone,
 } from "../state/actions"
 import ButtonIcon from "../components/ButtonIcon"
-import { MdEmail, MdDelete, MdClose } from "react-icons/md"
+import { MdEmail, MdSave, MdClose } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
@@ -49,11 +49,7 @@ const TextCodeToDelete = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
-const DeleteAccount = ({
-  siteProps,
-  user,
-  hadndleClickShowDeleteComponent,
-}) => {
+const VeryfiedPhone = ({ siteProps, user, hadndleClickShowVeryfiedPhone }) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
   const deleteCompanyConfirm = useSelector(state => state.deleteCompanyConfirm)
@@ -61,19 +57,18 @@ const DeleteAccount = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchSentCodeConfirmDeleteAccount(user.token))
+    dispatch(fetchSentCodeConfirmVerifiedPhone(user.token))
   }, [])
 
   useEffect(() => {
     dispatch(changeDeleteCompanyConfirm())
-    navigate("/")
   }, [deleteCompanyConfirm])
 
   const handleSentAgain = () => {
-    dispatch(fetchSentCodeConfirmDeleteAccount(user.token))
+    dispatch(fetchSentCodeConfirmVerifiedPhone(user.token))
   }
   const handleGoBack = () => {
-    hadndleClickShowDeleteComponent()
+    hadndleClickShowVeryfiedPhone()
   }
 
   const handleReset = () => {
@@ -82,21 +77,18 @@ const DeleteAccount = ({
     setDemoCompleted(false)
   }
 
-  const handleDeleteACcount = () => {
-    dispatch(fetchDeleteAccount(user.token, activeCode))
+  const handleVeryfiedPhone = () => {
+    dispatch(fetchVerifiedPhone(user.token, activeCode))
   }
 
   return (
     <>
       <TextCodeToDelete siteProps={siteProps}>
-        Wpisz kod do usunięcia konta, który został wysłany na adres e-mail.
+        Wpisz kod do weryfikacji telefonu, który został wysłany na e-maila /
+        numer telefonu.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
         Kod jest ważny przez 10minut.
-      </TextCodeToDelete>
-      <TextCodeToDelete siteProps={siteProps}>
-        Usunięcie konta spowoduje odwołanie wszystkich aktywnych wizyt oraz
-        wszystkich Twoich danych.
       </TextCodeToDelete>
       <PanFieldStyle
         ref={fieldOneRef}
@@ -106,7 +98,7 @@ const DeleteAccount = ({
         }}
         format={k => k.toUpperCase()}
         disabled={demoCompleted}
-        length={10}
+        length={6}
       />
 
       <ButtonsPosition>
@@ -137,26 +129,26 @@ const DeleteAccount = ({
             fontIconSize="20"
             fontSize="16"
             icon={<FaArrowLeft />}
-            customColorButton={Colors(siteProps).successColorDark}
-            customColorIcon={Colors(siteProps).successColor}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleGoBack}
           />
         </MarginButtons>
         <MarginButtons>
           <ButtonIcon
-            title="Usuń konto"
+            title="Weryfikuj numer telefonu"
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<MdDelete />}
-            customColorButton={Colors(siteProps).dangerColorDark}
-            customColorIcon={Colors(siteProps).dangerColor}
+            icon={<MdSave />}
+            customColorButton={Colors(siteProps).successColorDark}
+            customColorIcon={Colors(siteProps).successColor}
             disabled={!demoCompleted}
-            onClick={handleDeleteACcount}
+            onClick={handleVeryfiedPhone}
           />
         </MarginButtons>
       </ButtonsPosition>
     </>
   )
 }
-export default DeleteAccount
+export default VeryfiedPhone
