@@ -11,12 +11,12 @@ const CompanyProfil = () => {
     <Router>
       {!!user ? (
         !!!user.company ? (
-          <CompanyPriv default />
+          <CompanyPriv default active />
         ) : (
           <CompanyEditProfil default />
         )
       ) : (
-        <CompanyNoPriv default />
+        <CompanyNoPriv default active />
       )}
     </Router>
   )

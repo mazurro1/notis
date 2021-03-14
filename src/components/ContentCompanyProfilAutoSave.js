@@ -22,6 +22,7 @@ import OpinionsComponent from "./ItemsContentCompanyProfilAutoSave/OpinionsCompo
 import GalleryContent from "./ItemsContentCompanyProfilAutoSave/GalleryContent"
 import StampsContent from "./ItemsContentCompanyProfilAutoSave/StampsContent"
 import ShopStoreContent from "./ItemsContentCompanyProfilAutoSave/ShopStoreContent"
+import sal from "sal.js"
 
 const TextH1 = styled.div`
   position: relative;
@@ -189,6 +190,13 @@ const ContentCompanyProfilAutoSave = ({
     setEditShopStore(false)
   }, [company.shopStore])
 
+  useEffect(() => {
+    sal({
+      threshold: 0.1,
+      once: true,
+    })
+  }, [company, isAdmin, isCompanyEditProfil, userHasAccess, selectedWorker])
+
   const disabledEditButtons =
     allCategoryEdit ||
     editOpinionAndAdress ||
@@ -349,7 +357,11 @@ const ContentCompanyProfilAutoSave = ({
   }
 
   return (
-    <div>
+    <div
+      data-sal="fade"
+      data-sal-duration="800"
+      data-sal-easing="ease-out-bounce"
+    >
       <TextH1 {...companyEditProfilProps} siteProps={siteProps}>
         {company.name}
         {(isAdmin || userHasAccess) && isCompanyEditProfil && (

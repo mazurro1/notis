@@ -166,7 +166,7 @@ const StampItemTitle = styled.div`
   }
 `
 
-const UserStampsCompany = ({ company, siteProps }) => {
+const UserStampsCompany = ({ company, siteProps, handleClose }) => {
   const [collapseActive, setCollapseActive] = useState(false)
 
   const handleClickArrow = e => {
@@ -178,6 +178,7 @@ const UserStampsCompany = ({ company, siteProps }) => {
   const handleStopPropagation = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
+    handleClose()
   }
 
   const numberFilterUserCompanyReserwations = company.reserwations.filter(

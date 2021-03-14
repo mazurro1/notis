@@ -18,7 +18,9 @@ import Popup from "./Popup"
 const ServiceItem = styled.div`
   position: relative;
   background-color: ${props =>
-    props.visitNotFinished
+    props.inToDo
+      ? Colors(props.siteProps).secondColorLight
+      : props.visitNotFinished
       ? Colors(props.siteProps).dangerLightColor
       : !props.isReserwationEnd
       ? Colors(props.siteProps).successColorLight
@@ -117,7 +119,6 @@ const PriceService = styled.span`
       : props.active
       ? Colors(props.siteProps).disabled
       : Colors(props.siteProps).primaryColorDark};
-
   color: ${props => Colors(props.siteProps).textNormalWhite};
   transition-property: color, background-color;
   transition-duration: 0.3s;
@@ -130,7 +131,9 @@ const StatusReserwation = styled.span`
   margin-top: 5px;
   color: ${props => Colors(props.siteProps).textNormalWhite};
   background-color: ${props =>
-    !!props.canceled
+    !!props.inToDo
+      ? Colors(props.siteProps).secondColor
+      : !!props.canceled
       ? Colors(props.siteProps).dangerColor
       : !!props.changed
       ? Colors(props.siteProps).secondColor
@@ -376,6 +379,7 @@ const UserHistoryCategoryItem = ({
   }
 
   const splitDateReserwation = item.dateStart.split(":")
+  const splitDateReserwationEnd = item.dateEnd.split(":")
   const dateReserwation = new Date(
     item.dateYear,
     item.dateMonth - 1,
@@ -384,8 +388,17 @@ const UserHistoryCategoryItem = ({
     Number(splitDateReserwation[1]),
     0
   )
+  const dateReserwationEnd = new Date(
+    item.dateYear,
+    item.dateMonth - 1,
+    item.dateDay,
+    Number(splitDateReserwationEnd[0]),
+    Number(splitDateReserwationEnd[1])
+  )
   const actualDate = new Date()
   const isReserwationEnd = actualDate < dateReserwation
+  const isDateInToDo =
+    dateReserwation <= new Date() && dateReserwationEnd >= new Date()
 
   let workerName = " Konto nieaktywne"
   if (!!item.toWorkerUserId) {
@@ -425,6 +438,7 @@ const UserHistoryCategoryItem = ({
       visitCanceled={item.visitCanceled}
       visitNotFinished={item.visitNotFinished}
       visitChanged={item.visitChanged}
+      inToDo={isDateInToDo}
       active={addOpinion}
     >
       <TitleService>
@@ -488,11 +502,15 @@ const UserHistoryCategoryItem = ({
         Status:{" "}
         {item.visitNotFinished ? (
           <StatusReserwation canceled siteProps={siteProps}>
-            Wizyta nieodbyta
+            Wizyta nie zakończona
+          </StatusReserwation>
+        ) : isDateInToDo ? (
+          <StatusReserwation inToDo siteProps={siteProps}>
+            Wizyta w trakcie
           </StatusReserwation>
         ) : !isReserwationEnd ? (
           <StatusReserwation finished siteProps={siteProps}>
-            Wizyta odbyta
+            Wizyta zakończona
           </StatusReserwation>
         ) : item.visitCanceled ? (
           <StatusReserwation canceled siteProps={siteProps}>

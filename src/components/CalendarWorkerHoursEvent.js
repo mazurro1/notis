@@ -423,10 +423,10 @@ const CalendarWorkerReserwatinEvent = ({
         !isOldDate ? (
           <span>Wizyta potwierdzona</span>
         ) : (
-          <span>Wizyta odbyta</span>
+          <span>Wizyta zakończona</span>
         )
       ) : (
-        <span>Wizyta nieodbyta</span>
+        <span>Wizyta nie zakończona</span>
       )
 
     selectButtonsToEvents = !!selectedEvent.action ? (
@@ -449,7 +449,7 @@ const CalendarWorkerReserwatinEvent = ({
             !isWorkerReserwation ? (
               <ButtonItemStyle>
                 <ButtonIcon
-                  title="Wizyta nieodbyta"
+                  title="Wizyta nie zakończona"
                   uppercase
                   fontIconSize="20"
                   fontSize="16"
@@ -486,7 +486,7 @@ const CalendarWorkerReserwatinEvent = ({
           ) : (
             <ButtonItemStyle>
               <ButtonIcon
-                title="Wizyta odbyta"
+                title="Wizyta zakończona"
                 uppercase
                 fontIconSize="20"
                 fontSize="16"

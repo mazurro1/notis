@@ -87,6 +87,7 @@ const UserHistoryCategory = ({
   reserwations,
   userToken,
   company,
+  handleClose,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
   const dispatch = useDispatch()
@@ -110,6 +111,8 @@ const UserHistoryCategory = ({
 
   const handleClickContentNoClicked = e => {
     e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    handleClose()
   }
 
   const allReserwations = [...reserwations]

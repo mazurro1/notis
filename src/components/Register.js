@@ -64,6 +64,12 @@ const RegisterContent = () => {
     const isEmailValid = validEmail(emailInput)
     const testName = /^[a-z]+$/i.test(nameInput)
     const testSurname = /^[a-z]+$/i.test(surnameInput)
+    let isPolishNumber = false
+    if (phoneInput.length === 9) {
+      if (Number(phoneInput.slice(0, 2)) >= 45) {
+        isPolishNumber = true
+      }
+    }
 
     if (!isEmailValid) {
       dispatch(addAlertItem("Nieprawidłowy adres e-mail", "red"))
@@ -85,10 +91,12 @@ const RegisterContent = () => {
       dispatch(addAlertItem("Hasła musi być mieć minimum 5 znaków", "red"))
     }
 
-    if (phoneInput.length < 9) {
+    if (phoneInput.length < 9 || !isPolishNumber) {
       dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
     }
-    const validOtherParams = isEmailValid && testName && testSurname
+
+    const validOtherParams =
+      isEmailValid && testName && testSurname && isPolishNumber
 
     if (validButtonRegistration && validOtherParams) {
       dispatch(

@@ -151,7 +151,7 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
       alertColor = "red"
       if (!isCompanyChangedReserwation) {
         textBeginningAlert = isUserReserwation
-          ? "Rezerwacja nie została odbyta w firmie"
+          ? "Rezerwacja nie została zakończona w firmie"
           : "nie odbył wizyty"
       } else {
         textBeginningAlert = isUserReserwation
@@ -162,7 +162,7 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
       alertColor = "green"
       if (!isCompanyChangedReserwation) {
         textBeginningAlert = isUserReserwation
-          ? "Rezerwacja została odbyta w firmie"
+          ? "Rezerwacja została zakończona w firmie"
           : "odbył wizytę"
       } else {
         textBeginningAlert = isUserReserwation

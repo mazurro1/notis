@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import "../../style.css"
 import styled from "styled-components"
 import ButtonIcon from "../components/ButtonIcon"
@@ -10,6 +10,7 @@ import {
 } from "../state/actions"
 import { HiEmojiHappy } from "react-icons/hi"
 import { Colors } from "../common/Colors"
+import sal from "sal.js"
 
 const MarginTop = styled.div`
   margin-top: 30px;
@@ -42,6 +43,13 @@ const YourCompany = () => {
   const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    sal({
+      threshold: 0.1,
+      once: true,
+    })
+  }, [])
 
   const handleToLogin = () => {
     dispatch(changeLoginVisible(!loginVisible))
@@ -82,6 +90,14 @@ const YourCompany = () => {
     />
   )
 
-  return <MarginTop>{selectButton}</MarginTop>
+  return (
+    <MarginTop
+      data-sal="fade"
+      data-sal-duration="800"
+      data-sal-easing="ease-out-bounce"
+    >
+      {selectButton}
+    </MarginTop>
+  )
 }
 export default YourCompany

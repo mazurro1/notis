@@ -80,6 +80,7 @@ const CompanyAvailability = ({ user, siteProps }) => {
           siteProps={siteProps}
           resetUserCompanyAvailability={resetUserCompanyAvailability}
           userCompanyAvailabilityPermission={userCompanyAvailabilityPermission}
+          isAdmin={isAdmin}
         />
       )
     }
@@ -97,7 +98,7 @@ const CompanyAvailability = ({ user, siteProps }) => {
       {userCompanyAvailability.length === 0
         ? "Brak przedmiotów"
         : mapCompanyItemsAvailability}
-      {isAdmin && userCompanyAvailabilityPermission && (
+      {(isAdmin || userCompanyAvailabilityPermission) && (
         <ButtonIcon
           title="Dodaj przedmiot"
           uppercase
@@ -107,7 +108,7 @@ const CompanyAvailability = ({ user, siteProps }) => {
           onClick={handleAddItemVisible}
         />
       )}
-      {userCompanyAvailabilityPermission && (
+      {(isAdmin || userCompanyAvailabilityPermission) && (
         <CompanyAvailabilityNewItem
           siteProps={siteProps}
           addItemVisible={addItemVisible}

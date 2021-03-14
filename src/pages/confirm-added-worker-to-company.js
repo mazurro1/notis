@@ -8,7 +8,7 @@ const ComfirmAddedWorkerToCompany = props => {
     dataProps = props.location.search.split("&")
   }
   return (
-    <>
+    <div>
       {dataProps.length >= 3 ? (
         <ActiveWorker
           companyId={dataProps[0].slice(1)}
@@ -16,9 +16,9 @@ const ComfirmAddedWorkerToCompany = props => {
           codeToActive={dataProps[2]}
         />
       ) : (
-        <CompanyPriv default />
+        <CompanyPriv default active />
       )}
-    </>
+    </div>
   )
 }
 export default ComfirmAddedWorkerToCompany

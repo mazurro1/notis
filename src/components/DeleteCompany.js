@@ -90,7 +90,7 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
         firmowego.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
-        Kod jest ważny przez 10minut.
+        Kod jest ważny przez 30minut.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
         Usunięcie działalności spowoduje odwołanie wszystkich aktywnych wizyt,

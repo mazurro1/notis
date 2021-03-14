@@ -20,13 +20,12 @@ const PaddingContent = styled.div`
   padding-top: ${props =>
     props.topNavVisibleMenu
       ? props.active
-        ? `${props.heightPadding + 170}px`
+        ? `${props.heightMenuIndustries + 170}px`
         : "207px"
       : "70px"};
   transition-property: padding-top;
   transition-duration: 0.3s;
-  transition-timing-function: linear;
-  transition-delay: 0;
+  transition-timing-function: ease;
 `
 const MinHeightContent = styled.div`
   min-height: ${props =>
@@ -60,6 +59,10 @@ const ScrollUp = styled.div`
 
 const ElementsPages = ({ isMainPage, children }) => {
   const siteProps = useSelector(state => state.siteProps)
+  const heightMenuIndustries = useSelector(state => state.heightMenuIndustries)
+  const visibleMenuIndustries = useSelector(
+    state => state.visibleMenuIndustries
+  )
 
   const handleClickScroll = () => {
     window.scrollTo(0, 0)
@@ -67,7 +70,11 @@ const ElementsPages = ({ isMainPage, children }) => {
 
   return (
     <BackgroundColorPage siteProps={siteProps}>
-      <PaddingContent topNavVisibleMenu={false} heightPadding={0} active={true}>
+      <PaddingContent
+        topNavVisibleMenu={isMainPage}
+        heightMenuIndustries={heightMenuIndustries}
+        active={visibleMenuIndustries}
+      >
         <MinHeightContent isMainPage={isMainPage}>{children}</MinHeightContent>
       </PaddingContent>
       <ScrollUp siteProps={siteProps} onClick={handleClickScroll}>

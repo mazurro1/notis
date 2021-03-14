@@ -77,16 +77,6 @@ const RemindPassword = () => {
     state => state.remindPasswordEmailSent
   )
 
-  useEffect(() => {
-    if (!!fieldOneRef) {
-      if (!!fieldOneRef.current) {
-        fieldOneRef.current.forEach(item => {
-          item.type = "number"
-        })
-      }
-    }
-  }, [fieldOneRef])
-
   const dispatch = useDispatch()
 
   const handleChange = (e, setValue) => {
@@ -123,7 +113,7 @@ const RemindPassword = () => {
   }
 
   const handleSentResetPassword = () => {
-    if (demoCompleted && passwordInput.length >= 5) {
+    if (demoCompleted && passwordInput.length >= 6) {
       dispatch(fetchResetPassword(emailInput, passwordInput, activeCode))
     }
   }
@@ -142,9 +132,10 @@ const RemindPassword = () => {
           }}
           format={k => k.toUpperCase()}
           disabled={demoCompleted}
+          length={6}
         />
       </StyleInputCode>
-      <TextToActivation>UWAGA: Kod jest ważny przez 10 minut!</TextToActivation>
+      <TextToActivation>UWAGA: Kod jest ważny przez 30minut</TextToActivation>
       <InputIcon
         icon={<MdLock />}
         placeholder="Nowe hasło"

@@ -139,6 +139,7 @@ const MapsEditComponent = ({
         borderRadius
         closeTitle={false}
         smallTitle
+        secondColors
       >
         <InputIcon
           icon={<FaMapMarkerAlt />}

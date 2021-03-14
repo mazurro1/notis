@@ -51,7 +51,7 @@ const WidthSelect = styled.div`
   margin-right: 20px;
 `
 
-const UserHistory = ({ siteProps, user }) => {
+const UserHistory = ({ siteProps, user, handleClose }) => {
   const allYears = [
     {
       value: new Date().getFullYear() - 2,
@@ -185,6 +185,7 @@ const UserHistory = ({ siteProps, user }) => {
         setHiddenCanceledReserwation={setHiddenCanceledReserwation}
         hiddenCanceledReserwation={hiddenCanceledReserwation}
         company={item.company}
+        handleClose={handleClose}
       />
     )
   })

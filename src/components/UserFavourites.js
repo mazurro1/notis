@@ -12,7 +12,12 @@ const TextNoContent = styled.div`
   font-family: "Poppins-Medium", sans-serif;
 `
 
-const UserFavourites = ({ siteProps, favouritesCompanys, user }) => {
+const UserFavourites = ({
+  siteProps,
+  favouritesCompanys,
+  user,
+  handleClose,
+}) => {
   const [selectedCompanyFavourites, setSelectedCompanyFavourites] = useState([])
   const userResetFavourites = useSelector(state => state.userResetFavourites)
   const dispatch = useDispatch()
@@ -31,6 +36,7 @@ const UserFavourites = ({ siteProps, favouritesCompanys, user }) => {
         index={index}
         user={user}
         userResetFavourites={userResetFavourites}
+        handleClose={handleClose}
       />
     )
   })

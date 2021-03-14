@@ -6,6 +6,8 @@ import { Site } from "../common/Site"
 // USER ACTIONS
 // USER ACTIONS
 // USER ACTIONS
+export const VISIBLE_NAV_INDUSTRIES = "VISIBLE_NAV_INDUSTRIES"
+export const HEIGHT_NAV_INDUSTRIES = "HEIGHT_NAV_INDUSTRIES"
 export const CHANGE_ACCTIVE_ACCOUNT = "CHANGE_ACCTIVE_ACCOUNT"
 export const CHANGE_BLIND_STYLE = "CHANGE_BLIND_STYLE"
 export const CHANGE_DARK_STYLE = "CHANGE_DARK_STYLE"
@@ -33,6 +35,36 @@ export const CHANGE_CREATE_COMPANY_VISIBLE = "CHANGE_CREATE_COMPANY_VISIBLE"
 export const CHANGE_LANGUAGE_STYLE = "CHANGE_LANGUAGE_STYLE"
 export const ADD_NEW_USER_ALERT = "ADD_NEW_USER_ALERT"
 export const CHANGE_ALERT_EXTRA = "CHANGE_ALERT_EXTRA"
+export const ADD_TOKEN_AUTO_LOGIN_VISIBLE = "ADD_TOKEN_AUTO_LOGIN_VISIBLE"
+export const VERIFIED_PHONE_COMPONENT = "VERIFIED_PHONE_COMPONENT"
+
+export const verifiedPhoneComponent = value => {
+  return {
+    type: VERIFIED_PHONE_COMPONENT,
+    value: value,
+  }
+}
+
+export const saveUserTokenToAutoLogin = value => {
+  return {
+    type: ADD_TOKEN_AUTO_LOGIN_VISIBLE,
+    value: value,
+  }
+}
+
+export const setVisibleMenuIndustries = value => {
+  return {
+    type: VISIBLE_NAV_INDUSTRIES,
+    value: value,
+  }
+}
+
+export const setHeightMenuIndustries = value => {
+  return {
+    type: HEIGHT_NAV_INDUSTRIES,
+    value: value,
+  }
+}
 
 export const changeActiveAccount = data => {
   return {
@@ -103,7 +135,15 @@ export const changeUserProfilVisible = value => {
   }
 }
 
-export const addUserPhone = (phone, email, token, phoneVerified, hasPhone) => {
+export const addUserPhone = (
+  phone,
+  email,
+  token,
+  phoneVerified,
+  hasPhone,
+  blockUserChangePhoneNumber,
+  blockUserSendVerifiedPhoneSms
+) => {
   return {
     type: ADD_USER_PHONE,
     phone: phone,
@@ -111,6 +151,8 @@ export const addUserPhone = (phone, email, token, phoneVerified, hasPhone) => {
     token: token,
     phoneVerified: phoneVerified,
     hasPhone: hasPhone,
+    blockUserChangePhoneNumber: blockUserChangePhoneNumber,
+    blockUserSendVerifiedPhoneSms: blockUserSendVerifiedPhoneSms,
   }
 }
 
@@ -224,6 +266,16 @@ export const logout = () => {
     dispatch(addAlertItem("Zostałeś wylogowany", "red"))
     dispatch(changeSpinner(false))
     dispatch(changeLogout())
+  }
+}
+
+export const saveUserTokenToLocal = (userId, token) => {
+  return dispatch => {
+    localStorage.removeItem("USERID")
+    localStorage.removeItem("TOKEN")
+    localStorage.setItem("USERID", userId)
+    localStorage.setItem("TOKEN", token)
+    dispatch(addAlertItem("Zapamiętano użytkownika", "green"))
   }
 }
 
@@ -390,6 +442,7 @@ export const fetchLoginFacebookUser = (token, id) => {
           addAlertItem("Logowanie za pomocą facebooka powiodło się", "green")
         )
         dispatch(loginUser(response.data))
+        dispatch(saveUserTokenToAutoLogin(true))
         dispatch(changeSpinner(false))
       })
       .catch(error => {
@@ -429,6 +482,7 @@ export const fetchLoginGoogleUser = (token, id) => {
         )
         dispatch(loginUser(response.data))
         dispatch(changeSpinner(false))
+        dispatch(saveUserTokenToAutoLogin(true))
       })
       .catch(error => {
         if (!!error) {
@@ -515,7 +569,13 @@ export const fetchUserPhone = token => {
   }
 }
 
-export const fetchEditUser = (newPhone, newPassword, password, token) => {
+export const fetchEditUser = (
+  newPhone,
+  newPassword,
+  password,
+  token,
+  editPhone = false
+) => {
   return dispatch => {
     return axios
       .patch(
@@ -538,9 +598,14 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
             response.data.email,
             response.data.token,
             response.data.phoneVerified,
-            response.data.hasPhone
+            response.data.hasPhone,
+            response.data.blockUserChangePhoneNumber,
+            response.data.blockUserSendVerifiedPhoneSms
           )
         )
+        if (!!editPhone && !!!response.data.phoneVerified) {
+          dispatch(verifiedPhoneComponent(true))
+        }
         dispatch(
           addAlertItem("Pomyślnie zaktualizowano dane użytkownika", "green")
         )
@@ -550,6 +615,13 @@ export const fetchEditUser = (newPhone, newPassword, password, token) => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(addAlertItem("Nie poprawne hasło", "red"))
+            } else if (error.response.status === 423) {
+              dispatch(
+                addAlertItem(
+                  "Nie można teraz zaktualizować numer telefonu",
+                  "red"
+                )
+              )
             } else {
               dispatch(
                 addAlertItem(
@@ -767,6 +839,22 @@ export const CONFIRM_DELETE_COMPANY = "CONFIRM_DELETE_COMPANY"
 export const DELETE_COMPANY_USER = "DELETE_COMPANY_USER"
 export const DELETE_COMPANY_CONFIRM = "DELETE_COMPANY_CONFIRM"
 export const VERYFIED_USER_PHONE = "VERYFIED_USER_PHONE"
+export const ERROR_LOADING_PAGE = "ERROR_LOADING_PAGE"
+export const CHANGE_USER_BLOCK_SMS_SEND = "CHANGE_USER_BLOCK_SMS_SEND"
+
+export const changeUserBlockSmsSend = date => {
+  return {
+    type: CHANGE_USER_BLOCK_SMS_SEND,
+    date: date,
+  }
+}
+
+export const errorLoadingPage = value => {
+  return {
+    type: ERROR_LOADING_PAGE,
+    value: value,
+  }
+}
 
 export const veryfiedUserPhone = () => {
   return {
@@ -1574,6 +1662,7 @@ export const fetchCompanyData = (companyId, token) => {
         dispatch(replaceCompanyData(response.data.companyProfil))
         dispatch(changeSpinner(false))
         dispatch(resetEditCompany(true))
+        dispatch(errorLoadingPage(false))
       })
       .catch(error => {
         if (!!error) {
@@ -1591,6 +1680,7 @@ export const fetchCompanyData = (companyId, token) => {
         }
         dispatch(changeSpinner(false))
         dispatch(resetEditCompany(false))
+        dispatch(errorLoadingPage(true))
       })
   }
 }
@@ -1892,6 +1982,7 @@ export const fetchPathCompany = companyPath => {
       .then(response => {
         dispatch(updatePatchCompanyData(response.data.companyDoc))
         dispatch(changeAlertExtra(null, false))
+        dispatch(errorLoadingPage(false))
       })
       .catch(error => {
         if (!!error) {
@@ -1908,6 +1999,7 @@ export const fetchPathCompany = companyPath => {
           }
         }
         dispatch(changeAlertExtra(null, false))
+        dispatch(errorLoadingPage(true))
       })
   }
 }
@@ -4579,6 +4671,45 @@ export const fetchConfirmDelete = (token, companyId, code) => {
   }
 }
 
+export const fetchConfirmDeleteCreatedCompany = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-delete-created-company`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(deleteCompanyUser())
+        dispatch(addAlertItem("Usunięto działalność.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas usuwania działalności", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
 export const fetchSentCodeConfirmDeleteAccount = token => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -4636,6 +4767,9 @@ export const fetchSentCodeConfirmVerifiedPhone = token => {
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(
+          changeUserBlockSmsSend(response.data.blockUserSendVerifiedPhoneSms)
+        )
+        dispatch(
           addAlertItem(
             "Wysłano na telefon / e-maila kod potwierdzenia numeru telefonu.",
             "green"
@@ -4647,6 +4781,13 @@ export const fetchSentCodeConfirmVerifiedPhone = token => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 423) {
+              dispatch(
+                addAlertItem(
+                  "Nie można teraz wysłać kodu do aktywacji numeru telefonu",
+                  "red"
+                )
+              )
             } else {
               dispatch(
                 addAlertItem(

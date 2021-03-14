@@ -16,6 +16,10 @@ const TextWarning = styled.div`
   justify-content: center;
   align-items: center;
   font-family: "Poppins-Bold", sans-serif;
+  opacity: ${props => (props.active ? "1" : "0")};
+  transition-property: opacity;
+  transition-timing-function: ease-out;
+  transition-duration: 0.3s;
 
   span {
     color: ${props => Colors(props.siteProps).primaryColor};
@@ -29,9 +33,11 @@ const TextWarning = styled.div`
 
 const CompanyNoAccess = () => {
   const siteProps = useSelector(state => state.siteProps)
+  const errorLoadingPage = useSelector(state => state.errorLoadingPage)
+  const user = useSelector(state => state.user)
   return (
     <BodyDiv>
-      <TextWarning siteProps={siteProps}>
+      <TextWarning siteProps={siteProps} active={errorLoadingPage || !!!user}>
         Brak uprawnień
         <span>
           <HiEmojiSad />

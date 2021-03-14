@@ -33,11 +33,17 @@ import {
   DELETE_FAVOURITES_COMPANY,
   RESET_USER_FAVOURITES,
   VERYFIED_USER_PHONE,
+  HEIGHT_NAV_INDUSTRIES,
+  VISIBLE_NAV_INDUSTRIES,
+  ADD_TOKEN_AUTO_LOGIN_VISIBLE,
+  VERIFIED_PHONE_COMPONENT,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  CHANGE_USER_BLOCK_SMS_SEND,
+  ERROR_LOADING_PAGE,
   DELETE_COMPANY_CONFIRM,
   DELETE_COMPANY_USER,
   CONFIRM_DELETE_COMPANY,
@@ -151,11 +157,16 @@ const initialState = {
     active: false,
   },
   activeAccountVisible: false,
+  heightMenuIndustries: 0,
+  visibleMenuIndustries: false,
+  visibleTokenToAutoLogin: false,
+  verifiedPhoneComponentVisible: false,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  errorLoadingPage: false,
   deleteCompanyConfirm: false,
   confirmDeleteCompanyVisible: false,
   userCompanyAvailability: [],
@@ -186,6 +197,30 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case VERIFIED_PHONE_COMPONENT: {
+      return {
+        ...state,
+        verifiedPhoneComponentVisible: action.value,
+      }
+    }
+    case ADD_TOKEN_AUTO_LOGIN_VISIBLE: {
+      return {
+        ...state,
+        visibleTokenToAutoLogin: action.value,
+      }
+    }
+    case VISIBLE_NAV_INDUSTRIES: {
+      return {
+        ...state,
+        visibleMenuIndustries: action.value,
+      }
+    }
+    case HEIGHT_NAV_INDUSTRIES: {
+      return {
+        ...state,
+        heightMenuIndustries: action.value,
+      }
+    }
     case VERYFIED_USER_PHONE: {
       const newUserVerifiedPhone = !!state.user ? { ...state.user } : null
       if (!!newUserVerifiedPhone) {
@@ -195,6 +230,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: newUserVerifiedPhone,
         userProfilReset: true,
+        verifiedPhoneComponentVisible: false,
       }
     }
 
@@ -269,6 +305,17 @@ const reducer = (state = initialState, action) => {
         userProfilVisible: action.value,
       }
 
+    case CHANGE_USER_BLOCK_SMS_SEND: {
+      const newUserEditedSms = !!state.user ? { ...state.user } : null
+      if (newUserEditedSms) {
+        newUserEditedSms.blockUserSendVerifiedPhoneSms = action.date
+      }
+      return {
+        ...state,
+        user: newUserEditedSms,
+      }
+    }
+
     case ADD_USER_PHONE:
       const newUserEdited = !!state.user ? { ...state.user } : null
       if (!!action.email || action.token) {
@@ -276,6 +323,10 @@ const reducer = (state = initialState, action) => {
         newUserEdited.email = action.email
         newUserEdited.phoneVerified = action.phoneVerified
         newUserEdited.hasPhone = action.hasPhone
+        newUserEdited.blockUserChangePhoneNumber =
+          action.blockUserChangePhoneNumber
+        newUserEdited.blockUserSendVerifiedPhoneSms =
+          action.blockUserSendVerifiedPhoneSms
       }
       return {
         ...state,
@@ -525,6 +576,14 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case ERROR_LOADING_PAGE: {
+      return {
+        ...state,
+        errorLoadingPage: action.value,
+      }
+    }
+
     case DELETE_COMPANY_CONFIRM: {
       return {
         ...state,

@@ -92,7 +92,7 @@ const DeleteAccount = ({
         Wpisz kod do usunięcia konta, który został wysłany na adres e-mail.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
-        Kod jest ważny przez 10minut.
+        Kod jest ważny przez 30minut.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
         Usunięcie konta spowoduje odwołanie wszystkich aktywnych wizyt oraz

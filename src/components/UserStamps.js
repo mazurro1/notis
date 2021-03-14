@@ -11,10 +11,15 @@ const TextNoContent = styled.div`
   font-family: "Poppins-Medium", sans-serif;
 `
 
-const UserStamps = ({ userStamps = [], siteProps }) => {
+const UserStamps = ({ userStamps = [], siteProps, handleClose }) => {
   const mapCompanyStamps = userStamps.map((company, index) => {
     return (
-      <UserStampsCompany company={company} key={index} siteProps={siteProps} />
+      <UserStampsCompany
+        company={company}
+        key={index}
+        siteProps={siteProps}
+        handleClose={handleClose}
+      />
     )
   })
   return (

@@ -20,7 +20,7 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
     if (!!userId) {
       dispatch(fetchworkerUsersInformations(user.token, user.company._id))
     }
-  }, [user.alerts, userId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user.token, userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     sal({

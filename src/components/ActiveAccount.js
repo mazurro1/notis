@@ -26,13 +26,13 @@ const BackgroundContent = styled.div`
 `
 
 const PanFieldStyle = styled(PinField)`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 5px;
   border: none;
   outline: none;
   text-align: center;
-  margin: 10px;
+  margin: 5px;
   margin-left: 0;
   background-color: #eeeeee;
   font-size: 1.4rem;
@@ -67,16 +67,6 @@ const ActiveAccount = () => {
   const fieldOneRef = useRef(null)
 
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (!!fieldOneRef) {
-      if (!!fieldOneRef.current) {
-        fieldOneRef.current.forEach(item => {
-          item.type = "number"
-        })
-      }
-    }
-  }, [fieldOneRef])
 
   const handleReset = () => {
     fieldOneRef.current.forEach(input => (input.value = ""))
@@ -113,7 +103,7 @@ const ActiveAccount = () => {
           }}
           format={k => k.toUpperCase()}
           disabled={demoCompleted}
-          validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+          length={6}
         />
       </div>
       <ButtonsUnder>

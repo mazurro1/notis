@@ -16,7 +16,7 @@ const LoginGoogle = props => {
           newAccount={dataProps[2]}
         />
       ) : (
-        <CompanyPriv default />
+        <CompanyPriv default active />
       )}
     </>
   )

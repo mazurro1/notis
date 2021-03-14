@@ -87,7 +87,9 @@ const ServiceItemHistory = styled.div`
   position: relative;
   font-size: 1rem;
   background-color: ${props =>
-    props.color === "green"
+    props.color === "orange"
+      ? Colors(props.siteProps).secondColorLight
+      : props.color === "green"
       ? Colors(props.siteProps).successColorLight
       : props.color === "red"
       ? Colors(props.siteProps).dangerLightColor
@@ -252,7 +254,9 @@ const TimeReserwation = styled.div`
     display: inline-block;
     font-family: "Poppins-Bold", sans-serif;
     color: ${props =>
-      props.color === "green"
+      props.color === "orange"
+        ? Colors(props.siteProps).secondDarkColor
+        : props.color === "green"
         ? Colors(props.siteProps).successColorDark
         : props.color === "red"
         ? Colors(props.siteProps).dangerColorDark
@@ -599,7 +603,9 @@ const WorkerUsersInformationItem = ({
         reserwation.toWorkerUserId.surname,
         "base64"
       ).toString("ascii")
+      console.log(reserwation)
       const splitReserwationDate = reserwation.dateStart.split(":")
+      const splitReserwationDateEnd = reserwation.dateEnd.split(":")
       const isActualReserwation = new Date(
         reserwation.dateYear,
         reserwation.dateMonth - 1,
@@ -607,8 +613,21 @@ const WorkerUsersInformationItem = ({
         Number(splitReserwationDate[0]),
         Number(splitReserwationDate[1])
       )
+      const isActualReserwationDateEnd = new Date(
+        reserwation.dateYear,
+        reserwation.dateMonth - 1,
+        reserwation.dateDay,
+        Number(splitReserwationDateEnd[0]),
+        Number(splitReserwationDateEnd[1])
+      )
       const isFinishedDate = isActualReserwation <= new Date()
-      const reserwationColor = reserwation.visitCanceled
+      const isDateInToDo =
+        isActualReserwation <= new Date() &&
+        isActualReserwationDateEnd >= new Date()
+
+      const reserwationColor = isDateInToDo
+        ? "orange"
+        : !!reserwation.visitCanceled
         ? "red"
         : reserwation.visitNotFinished
         ? "red"
@@ -630,12 +649,14 @@ const WorkerUsersInformationItem = ({
             <TimeReserwation siteProps={siteProps} color={reserwationColor}>
               {dateReserwation}
               <div className="statusReserwation">
-                {reserwation.visitCanceled
+                {isDateInToDo
+                  ? "Wizyta w trakcie"
+                  : reserwation.visitCanceled
                   ? "Wizyta odwołana"
                   : reserwation.visitNotFinished
-                  ? "Wizyta nie odbyta"
+                  ? "Wizyta nie zakończona"
                   : isFinishedDate
-                  ? "Wizyta odbyta"
+                  ? "Wizyta zakończona"
                   : "Wizyta oczekująca"}
               </div>
             </TimeReserwation>

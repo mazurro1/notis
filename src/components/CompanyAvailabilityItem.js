@@ -99,6 +99,7 @@ const CompanyAvailabilityItem = ({
   item,
   resetUserCompanyAvailability,
   userCompanyAvailabilityPermission,
+  isAdmin,
 }) => {
   const [deleteVisible, setDeleteVisible] = useState(false)
   const [editVisible, setEditVisible] = useState(false)
@@ -130,7 +131,7 @@ const CompanyAvailabilityItem = ({
       <ItemNames siteProps={siteProps}>
         Ilość: <span>{item.itemCount}</span>
       </ItemNames>
-      {userCompanyAvailabilityPermission && (
+      {(isAdmin || userCompanyAvailabilityPermission) && (
         <IconsPostitions>
           <IconStyleEdit onClick={handleEditVisible}>
             <MdEdit />
@@ -140,7 +141,7 @@ const CompanyAvailabilityItem = ({
           </IconStyleDelete>
         </IconsPostitions>
       )}
-      {userCompanyAvailabilityPermission && (
+      {(isAdmin || userCompanyAvailabilityPermission) && (
         <Popup
           popupEnable={deleteVisible}
           position="absolute"
@@ -176,7 +177,7 @@ const CompanyAvailabilityItem = ({
           </ButtonsAddPosition>
         </Popup>
       )}
-      {userCompanyAvailabilityPermission && (
+      {(isAdmin || userCompanyAvailabilityPermission) && (
         <CompanyAvailabilityItemEdit
           siteProps={siteProps}
           editVisible={editVisible}

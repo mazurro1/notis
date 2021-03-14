@@ -24,6 +24,7 @@ import {
   MdTimelapse,
   MdClose,
   MdExpandMore,
+  MdVerifiedUser,
 } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import Popup from "./Popup"
@@ -54,6 +55,10 @@ import {
   addNewUserAlert,
   changeActiveAccount,
   confirmDeleteCompany,
+  setHeightMenuIndustries,
+  setVisibleMenuIndustries,
+  saveUserTokenToAutoLogin,
+  saveUserTokenToLocal,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -80,6 +85,7 @@ import CompanyAvailability from "./CompanyAvailability"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyStatistics from "./CompanyStatistics"
 import DeleteCompanyContent from "./DeleteCompany"
+import { CSSTransition } from "react-transition-group"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -126,7 +132,7 @@ const WrapperNavigation = styled.div`
 `
 
 const WrapperNavigationUnder = styled.div`
-  position: relative;
+  position: absolute;
   z-index: 90;
   top: 70px;
   left: 0;
@@ -137,9 +143,9 @@ const WrapperNavigationUnder = styled.div`
     props.active ? `${props.heightPadding + 80}px` : "10px"};
   height: 137px;
   overflow: hidden;
-  /* opacity: ${props => (props.topNavVisibleMenu ? "1" : "0")}; */
-  transition-property: background-color, color, padding-bottom, opacity;
-  transition-timing-function: ease-out;
+  /* opacity: ${props => (props.isMainPage ? "1" : "0")}; */
+  transition-property: background-color, color, padding, opacity;
+  transition-timing-function: ease;
   transition-duration: 0.3s;
 `
 
@@ -382,6 +388,17 @@ const NootisLogo = styled.div`
   border-radius: 50%;
 `
 
+const SaveUserButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const MarginButtonSaveToken = styled.div`
+  margin: 5px;
+`
+
 const Navigation = ({ isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
@@ -425,14 +442,20 @@ const Navigation = ({ isMainPage }) => {
   const reserwationData = useSelector(state => state.reserwationData)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
   const activeAccountVisible = useSelector(state => state.activeAccountVisible)
+  const heightMenuIndustries = useSelector(state => state.heightMenuIndustries)
+  const visibleTokenToAutoLogin = useSelector(
+    state => state.visibleTokenToAutoLogin
+  )
+  const visibleMenuIndustries = useSelector(
+    state => state.visibleMenuIndustries
+  )
+
   const confirmDeleteCompanyVisible = useSelector(
     state => state.confirmDeleteCompanyVisible
   )
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
   )
-  const [visibleMenuIndustries, setVisibleMenuIndustries] = useState(false)
-  const [heightMenuIndustries, setHeightMenuIndustries] = useState(0)
 
   const refUnderMenuIndustries = useRef(null)
 
@@ -443,7 +466,9 @@ const Navigation = ({ isMainPage }) => {
   useEffect(() => {
     if (!!refUnderMenuIndustries) {
       if (!!refUnderMenuIndustries.current) {
-        setHeightMenuIndustries(refUnderMenuIndustries.current.offsetHeight)
+        dispatch(
+          setHeightMenuIndustries(refUnderMenuIndustries.current.offsetHeight)
+        )
       }
     }
   }, [refUnderMenuIndustries, userId, visibleMenuIndustries])
@@ -467,19 +492,11 @@ const Navigation = ({ isMainPage }) => {
 
   useEffect(() => {
     if (isMainPage) {
-      setTimeout(() => {
-        setTopNavVisible(true)
-        setTimeout(() => {
-          setTopNavVisibleMenu(true)
-        }, 100)
-      }, 200)
+      setTopNavVisible(true)
+      setTopNavVisibleMenu(true)
     } else {
-      setTimeout(() => {
-        setTopNavVisible(false)
-        setTimeout(() => {
-          setTopNavVisibleMenu(false)
-        }, 200)
-      }, 200)
+      setTopNavVisible(false)
+      setTopNavVisibleMenu(false)
     }
   }, [isMainPage])
 
@@ -620,7 +637,7 @@ const Navigation = ({ isMainPage }) => {
   }
 
   const handleClickMenuIndustries = () => {
-    setVisibleMenuIndustries(prevState => !prevState)
+    dispatch(setVisibleMenuIndustries(!visibleMenuIndustries))
   }
 
   const handleClickCompanyStatistics = () => {
@@ -630,6 +647,15 @@ const Navigation = ({ isMainPage }) => {
 
   const handleCloseDeleteCompany = () => {
     dispatch(confirmDeleteCompany(false))
+  }
+
+  const handleSaveTokenAutoLogin = () => {
+    dispatch(saveUserTokenToAutoLogin(false))
+  }
+
+  const handleSaveUserToken = () => {
+    dispatch(saveUserTokenToLocal(user.userId, user.token))
+    dispatch(saveUserTokenToAutoLogin(false))
   }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
@@ -649,62 +675,66 @@ const Navigation = ({ isMainPage }) => {
 
   const isMobileSize = Site.mobileSize >= size.width
 
-  const renderExtraPropsInMainMenu = topNavVisible && (
-    // <CSSTransition
-    //   in={topNavVisibleMenu}
-    //   timeout={400}
-    //   classNames="popup3"
-    //   unmountOnExit
-    // >
-    <WrapperNavigationUnder
-      siteProps={siteProps}
-      active={visibleMenuIndustries}
-      heightPadding={heightMenuIndustries}
-      topNavVisibleMenu={topNavVisibleMenu}
+  const renderExtraPropsInMainMenu = (
+    // <Popup popupEnable={topNavVisibleMenu} noContent position="absolute">
+    <CSSTransition
+      in={isMainPage}
+      timeout={400}
+      classNames="opacitySpinner"
+      unmountOnExit
     >
-      <NavigationDiv>
-        <AllInputs>
-          <ButtonTakeData
-            setResetText={() => {
-              setSelectedName("")
-            }}
-            resetTextEnable={!!selectedName}
-            icon={<FaSearch />}
-            text={!!selectedName ? selectedName : "Znajdz ulubione miejsce..."}
-            onClick={handleClickTakePlace}
-          />
-        </AllInputs>
-        <UnderMenuIndustries ref={refUnderMenuIndustries}>
-          <PaddingRight>
-            <ButtonIconStyles
-              active={industries === null}
-              siteProps={siteProps}
-              onClick={() => handleChangeIndustries(null)}
-            >
-              {Translates[siteProps.language].buttons.all}
-            </ButtonIconStyles>
-          </PaddingRight>
-          {mapIndustries}
-          <ButtonShowMore>
-            <ButtonIcon
-              title={
-                isMobileSize
-                  ? "Wybierz specializacje"
-                  : visibleMenuIndustries
-                  ? "Pokaż mniej"
-                  : "Pokaż więcej"
+      <WrapperNavigationUnder
+        siteProps={siteProps}
+        active={visibleMenuIndustries}
+        isMainPage={isMainPage}
+        heightPadding={heightMenuIndustries}
+        topNavVisibleMenu={topNavVisibleMenu}
+      >
+        <NavigationDiv>
+          <AllInputs>
+            <ButtonTakeData
+              setResetText={() => {
+                setSelectedName("")
+              }}
+              resetTextEnable={!!selectedName}
+              icon={<FaSearch />}
+              text={
+                !!selectedName ? selectedName : "Znajdz ulubione miejsce..."
               }
-              uppercase
-              fontIconSize="20"
-              fontSize="15"
-              icon={<MdExpandMore />}
-              onClick={handleClickMenuIndustries}
+              onClick={handleClickTakePlace}
             />
-          </ButtonShowMore>
-        </UnderMenuIndustries>
-      </NavigationDiv>
-    </WrapperNavigationUnder>
-    // </CSSTransition>
+          </AllInputs>
+          <UnderMenuIndustries ref={refUnderMenuIndustries}>
+            <PaddingRight>
+              <ButtonIconStyles
+                active={industries === null}
+                siteProps={siteProps}
+                onClick={() => handleChangeIndustries(null)}
+              >
+                {Translates[siteProps.language].buttons.all}
+              </ButtonIconStyles>
+            </PaddingRight>
+            {mapIndustries}
+            <ButtonShowMore>
+              <ButtonIcon
+                title={
+                  isMobileSize
+                    ? "Wybierz specializacje"
+                    : visibleMenuIndustries
+                    ? "Pokaż mniej"
+                    : "Pokaż więcej"
+                }
+                uppercase
+                fontIconSize="20"
+                fontSize="15"
+                icon={<MdExpandMore />}
+                onClick={handleClickMenuIndustries}
+              />
+            </ButtonShowMore>
+          </UnderMenuIndustries>
+        </NavigationDiv>
+      </WrapperNavigationUnder>
+    </CSSTransition>
   )
 
   const PopupWorkersReserwations = (
@@ -858,7 +888,11 @@ const Navigation = ({ isMainPage }) => {
       fullScreen
       maxWidth="800"
     >
-      <UserHistory siteProps={siteProps} user={user} />
+      <UserHistory
+        siteProps={siteProps}
+        user={user}
+        handleClose={handleHistoryReserwations}
+      />
     </Popup>
   )
 
@@ -921,7 +955,11 @@ const Navigation = ({ isMainPage }) => {
       title="Pieczątki"
       fullScreen
     >
-      <UserStamps userStamps={user.stamps} siteProps={siteProps} />
+      <UserStamps
+        userStamps={user.stamps}
+        siteProps={siteProps}
+        handleClose={handleUserStamps}
+      />
     </Popup>
   )
 
@@ -935,6 +973,7 @@ const Navigation = ({ isMainPage }) => {
       <UserFavourites
         siteProps={siteProps}
         favouritesCompanys={user.favouritesCompanys}
+        handleClose={handleUserFavourites}
         user={user}
       />
     </Popup>
@@ -959,6 +998,42 @@ const Navigation = ({ isMainPage }) => {
       fullScreen
     >
       <CompanyStatistics siteProps={siteProps} user={user} />
+    </Popup>
+  )
+
+  const PopupSaveTokenAutoLogin = user && (
+    <Popup
+      popupEnable={visibleTokenToAutoLogin}
+      handleClose={handleSaveTokenAutoLogin}
+      title="Zapamiętaj użytkownika"
+      maxWidth={400}
+    >
+      <SaveUserButtons>
+        <MarginButtonSaveToken>
+          <ButtonIcon
+            title="Anuluj"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<MdClose />}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
+            onClick={handleSaveTokenAutoLogin}
+          />
+        </MarginButtonSaveToken>
+        <MarginButtonSaveToken>
+          <ButtonIcon
+            title="Zapamiętaj użytkownika"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<MdVerifiedUser />}
+            customColorButton={Colors(siteProps).successColorDark}
+            customColorIcon={Colors(siteProps).successColor}
+            onClick={handleSaveUserToken}
+          />
+        </MarginButtonSaveToken>
+      </SaveUserButtons>
     </Popup>
   )
 
@@ -1244,6 +1319,7 @@ const Navigation = ({ isMainPage }) => {
       {PopupCompanyStatistics}
       {PopupActiveAccount}
       {PopupConfirmDeleteCompany}
+      {PopupSaveTokenAutoLogin}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">

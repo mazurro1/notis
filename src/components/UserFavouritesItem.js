@@ -108,6 +108,7 @@ const UserFavouritesItem = ({
   index,
   user,
   userResetFavourites,
+  handleClose,
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false)
 
@@ -119,6 +120,8 @@ const UserFavouritesItem = ({
 
   const handleClickContentNoClicked = e => {
     e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    handleClose()
   }
 
   const handleClickConfirmDelete = () => {

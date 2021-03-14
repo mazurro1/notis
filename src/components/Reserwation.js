@@ -663,7 +663,7 @@ const Reserwation = ({
 
       if (!!selectedUserStamp) {
         selectedUserStamp.reserwations.forEach(stampReserwation => {
-          const splitDateEnd = stampReserwation.dateEnd.split("")
+          const splitDateEnd = stampReserwation.dateEnd.split(":")
           const reserwationStampDateEnd = new Date(
             stampReserwation.dateYear,
             stampReserwation.dateMonth - 1,
@@ -671,7 +671,6 @@ const Reserwation = ({
             Number(splitDateEnd[0]),
             Number(splitDateEnd[1])
           )
-
           if (
             !!!stampReserwation.visitCanceled &&
             reserwationStampDateEnd < new Date()

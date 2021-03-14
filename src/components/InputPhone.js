@@ -55,6 +55,13 @@ const TextValue = styled.div`
   transition-timing-function: ease;
 `
 
+const NumberToCountry = styled.div`
+  display: inline-block;
+  color: ${props => Colors(props.siteProps).primaryColorDark};
+  margin-right: 10px;
+  font-family: "Poppins-Medium", sans-serif;
+`
+
 const StyleInputs = styled.div`
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
@@ -63,6 +70,10 @@ const StyleInputs = styled.div`
     appearance: none;
     margin: 0;
   }
+`
+
+const PhoneInline = styled.div`
+  display: inline-block;
 `
 
 const InputPhone = ({
@@ -103,20 +114,24 @@ const InputPhone = ({
           Numer telefonu:
         </TextValue>
       </div>
+
       <ColorsInput
         siteProps={siteProps}
         width={width}
         marginElements={marginElements}
       >
-        <PanFieldStyle
-          ref={fieldOneRef}
-          onChange={code => {
-            setPhoneNumber(code)
-          }}
-          format={k => k.toUpperCase()}
-          length={9}
-          validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
-        />
+        <NumberToCountry>+48</NumberToCountry>
+        <PhoneInline>
+          <PanFieldStyle
+            ref={fieldOneRef}
+            onChange={code => {
+              setPhoneNumber(code)
+            }}
+            format={k => k.toUpperCase()}
+            length={9}
+            validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+          />
+        </PhoneInline>
       </ColorsInput>
     </StyleInputs>
   )

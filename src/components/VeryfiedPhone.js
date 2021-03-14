@@ -12,6 +12,7 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import PinField from "react-pin-field"
 import { navigate } from "gatsby"
+import ReactTooltip from "react-tooltip"
 
 const ButtonsPosition = styled.div`
   display: flex;
@@ -49,16 +50,18 @@ const TextCodeToDelete = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
-const VeryfiedPhone = ({ siteProps, user, hadndleClickShowVeryfiedPhone }) => {
+const VeryfiedPhone = ({
+  siteProps,
+  user,
+  hadndleClickShowVeryfiedPhone,
+  isBlockUserSendVerifiedPhoneSms,
+  dateBlockUserSendVerifiedPhoneSms,
+}) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
   const deleteCompanyConfirm = useSelector(state => state.deleteCompanyConfirm)
   const fieldOneRef = useRef(null)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(fetchSentCodeConfirmVerifiedPhone(user.token))
-  }, [])
 
   useEffect(() => {
     dispatch(changeDeleteCompanyConfirm())
@@ -81,6 +84,30 @@ const VeryfiedPhone = ({ siteProps, user, hadndleClickShowVeryfiedPhone }) => {
     dispatch(fetchVerifiedPhone(user.token, activeCode))
   }
 
+  const tooltipSendAgainPhoneSms = isBlockUserSendVerifiedPhoneSms && (
+    <ReactTooltip id="alertChangePhoneSendSms" effect="float" multiline={true}>
+      <div>
+        Kod aktywacyjny można ponownie wysłać:{" "}
+        {dateBlockUserSendVerifiedPhoneSms.getDate() < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getDate()}`
+          : dateBlockUserSendVerifiedPhoneSms.getDate()}
+        .
+        {dateBlockUserSendVerifiedPhoneSms.getMonth() + 1 < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getMonth() + 1}`
+          : dateBlockUserSendVerifiedPhoneSms.getMonth() + 1}
+        .{dateBlockUserSendVerifiedPhoneSms.getFullYear()}
+        {" o godzinie: "}
+        {dateBlockUserSendVerifiedPhoneSms.getHours() < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getHours()}`
+          : dateBlockUserSendVerifiedPhoneSms.getHours()}
+        :
+        {dateBlockUserSendVerifiedPhoneSms.getMinutes() < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getMinutes()}`
+          : dateBlockUserSendVerifiedPhoneSms.getMinutes()}
+      </div>
+    </ReactTooltip>
+  )
+
   return (
     <>
       <TextCodeToDelete siteProps={siteProps}>
@@ -88,7 +115,7 @@ const VeryfiedPhone = ({ siteProps, user, hadndleClickShowVeryfiedPhone }) => {
         numer telefonu.
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
-        Kod jest ważny przez 10minut.
+        Kod jest ważny przez 1 godzine.
       </TextCodeToDelete>
       <PanFieldStyle
         ref={fieldOneRef}
@@ -112,7 +139,8 @@ const VeryfiedPhone = ({ siteProps, user, hadndleClickShowVeryfiedPhone }) => {
             onClick={handleReset}
           />
         </MarginButtons>
-        <MarginButtons>
+        {tooltipSendAgainPhoneSms}
+        <MarginButtons data-tip data-for="alertChangePhoneSendSms">
           <ButtonIcon
             title="Wyślij kod jeszcze raz"
             uppercase
@@ -120,6 +148,7 @@ const VeryfiedPhone = ({ siteProps, user, hadndleClickShowVeryfiedPhone }) => {
             fontSize="16"
             icon={<MdEmail />}
             onClick={handleSentAgain}
+            disabled={isBlockUserSendVerifiedPhoneSms}
           />
         </MarginButtons>
         <MarginButtons>
