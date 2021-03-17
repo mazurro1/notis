@@ -25,6 +25,8 @@ import {
   MdClose,
   MdExpandMore,
   MdVerifiedUser,
+  MdAttachMoney,
+  MdHistory,
 } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import Popup from "./Popup"
@@ -86,6 +88,8 @@ import UseWindowSize from "../common/UseWindowSize"
 import CompanyStatistics from "./CompanyStatistics"
 import DeleteCompanyContent from "./DeleteCompany"
 import { CSSTransition } from "react-transition-group"
+import CoinsOffers from "./CoinsOffers"
+import TransactionHistory from "./TransactionHistory"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -399,6 +403,16 @@ const MarginButtonSaveToken = styled.div`
   margin: 5px;
 `
 
+const MonetsStyle = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-family: "Poppins-Medium", sans-serif;
+  margin-bottom: 5px;
+  span {
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+    font-family: "Poppins-Bold", sans-serif;
+  }
+`
+
 const Navigation = ({ isMainPage }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
@@ -421,6 +435,10 @@ const Navigation = ({ isMainPage }) => {
   const [favouritesVisible, setFavouritesVisible] = useState(false)
   const [availabilityVisible, setAvailabilityVisible] = useState(false)
   const [companyStatistics, setCompanyStatistics] = useState(false)
+  const [addMonetsVisible, setAddMonetsVisible] = useState(false)
+  const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
+    false
+  )
 
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
@@ -656,6 +674,16 @@ const Navigation = ({ isMainPage }) => {
   const handleSaveUserToken = () => {
     dispatch(saveUserTokenToLocal(user.userId, user.token))
     dispatch(saveUserTokenToAutoLogin(false))
+  }
+
+  const handleClickMonets = () => {
+    setAddMonetsVisible(prevState => !prevState)
+    setWorkPropsVisible(prevState => !prevState)
+  }
+
+  const handleClickTransactionHistory = () => {
+    setWorkPropsVisible(prevState => !prevState)
+    setTransactionHistoryVisible(prevState => !prevState)
   }
 
   const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
@@ -1001,6 +1029,35 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
+  const PopupCompanyAddMonets = user && (
+    <Popup
+      popupEnable={addMonetsVisible}
+      handleClose={handleClickMonets}
+      title="Doładuj monety"
+    >
+      <CoinsOffers
+        siteProps={siteProps}
+        user={user}
+        handleClose={handleClickMonets}
+      />
+    </Popup>
+  )
+
+  const PopupCompanyTransactionHistory = user && (
+    <Popup
+      popupEnable={transactionHistoryVisible}
+      handleClose={handleClickTransactionHistory}
+      title="Historia tranzakcji"
+      maxWidth="500"
+    >
+      <TransactionHistory
+        siteProps={siteProps}
+        user={user}
+        handleClose={handleClickTransactionHistory}
+      />
+    </Popup>
+  )
+
   const PopupSaveTokenAutoLogin = user && (
     <Popup
       popupEnable={visibleTokenToAutoLogin}
@@ -1044,6 +1101,9 @@ const Navigation = ({ isMainPage }) => {
   let hasCompany = false
   let hasPermission = false
   let companyConfirmed = false
+  let isAdmin = false
+  let companyMonets = 0
+
   if (!!user) {
     if (user.hasCompany) {
       if (!!user.company.accountVerified) {
@@ -1056,6 +1116,12 @@ const Navigation = ({ isMainPage }) => {
       workerHasAccessAvailability = user.company.owner === user.userId
       hasCompany = true
       hasPermission = user.company.owner === user.userId
+      isAdmin = user.company.owner === user.userId
+      if (!!user.company.monets) {
+        companyMonets = Buffer.from(user.company.monets, "base64").toString(
+          "ascii"
+        )
+      }
       if (!!selectWorker) {
         if (!!!hasPermission) {
           hasPermission = selectWorker.permissions.some(
@@ -1098,6 +1164,11 @@ const Navigation = ({ isMainPage }) => {
       <div>
         {hasCompany && hasPermission && (
           <>
+            {isAdmin && companyConfirmed && (
+              <MonetsStyle siteProps={siteProps}>
+                Monety: <span>{companyMonets}</span>
+              </MonetsStyle>
+            )}
             <div onClick={handleClickAdminPanel} aria-hidden="true">
               <LinkEffect
                 path="/company-profil"
@@ -1113,6 +1184,34 @@ const Navigation = ({ isMainPage }) => {
                 }
               />
             </div>
+            {isAdmin && companyConfirmed && (
+              <>
+                <MarginButtonsWork>
+                  <ButtonIcon
+                    title="Doładuj monety"
+                    uppercase
+                    fontIconSize="22"
+                    fontSize="16"
+                    icon={<MdAttachMoney />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleClickMonets}
+                  />
+                </MarginButtonsWork>
+                <MarginButtonsWork>
+                  <ButtonIcon
+                    title="Historia tranzakcji"
+                    uppercase
+                    fontIconSize="22"
+                    fontSize="16"
+                    icon={<MdHistory />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleClickTransactionHistory}
+                  />
+                </MarginButtonsWork>
+              </>
+            )}
             {companyConfirmed && (
               <MarginButtonsWork>
                 <ButtonIcon
@@ -1320,6 +1419,8 @@ const Navigation = ({ isMainPage }) => {
       {PopupActiveAccount}
       {PopupConfirmDeleteCompany}
       {PopupSaveTokenAutoLogin}
+      {PopupCompanyAddMonets}
+      {PopupCompanyTransactionHistory}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">

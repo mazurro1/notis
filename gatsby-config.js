@@ -38,6 +38,16 @@ module.exports = {
       resolve: `gatsby-plugin-create-client-paths`,
       options: { prefixes: [`/app/*`] },
     },
+    {
+      resolve: `gatsby-source-stripe`,
+      options: {
+        objects: ["Sku", "Product", "Price"],
+        secretKey:
+          "sk_test_51IVJ3xJdVBka0wzfMu79jGftD4HZj5hU5WsujypvG3Z2n5LgKrk2fj6kYyyv0kiiv1UxgJBUNB9QECXjls1VZgKX008JFBZZmQ",
+        downloadFiles: true,
+      },
+    },
+
     "gatsby-plugin-transition-link",
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,

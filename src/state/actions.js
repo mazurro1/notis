@@ -841,6 +841,30 @@ export const DELETE_COMPANY_CONFIRM = "DELETE_COMPANY_CONFIRM"
 export const VERYFIED_USER_PHONE = "VERYFIED_USER_PHONE"
 export const ERROR_LOADING_PAGE = "ERROR_LOADING_PAGE"
 export const CHANGE_USER_BLOCK_SMS_SEND = "CHANGE_USER_BLOCK_SMS_SEND"
+export const ADD_CHECKOUT_ID = "ADD_CHECKOUT_ID"
+export const ADD_COMPANY_TRANSACTION_HISTORY = "ADD_COMPANY_TRANSACTION_HISTORY"
+export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
+
+export const addCoinsOffer = data => {
+  return {
+    type: ADD_COINS_OFFER,
+    data: data,
+  }
+}
+
+export const addCompanyTransactionHistory = data => {
+  return {
+    type: ADD_COMPANY_TRANSACTION_HISTORY,
+    data: data,
+  }
+}
+
+export const addCheckoutId = paymentItem => {
+  return {
+    type: ADD_CHECKOUT_ID,
+    paymentItem: paymentItem,
+  }
+}
 
 export const changeUserBlockSmsSend = date => {
   return {
@@ -4888,6 +4912,117 @@ export const fetchVerifiedPhone = (token, code) => {
             dispatch(addAlertItem("Brak internetu.", "red"))
           }
         }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchNewOrder = (token, companyId, coinsId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/payment-session`,
+        {
+          companyId: companyId,
+          coinsId: coinsId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addCheckoutId(response.data.paymentItem))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas dokonywania płatności", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeAlertExtra(null, false))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const getCompanyTransactionHistory = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-history-transaction`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addCompanyTransactionHistory(response.data.companyPayments))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania histori tranzakcji",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeAlertExtra(null, false))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const getCoinsOffer = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .get(`${Site.serverUrl}/get-coins-offer`)
+      .then(response => {
+        dispatch(addCoinsOffer(response.data.coinsOffer))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania ofert ze sklepu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeAlertExtra(null, false))
         dispatch(changeSpinner(false))
       })
   }

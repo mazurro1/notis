@@ -37,11 +37,14 @@ import {
   VISIBLE_NAV_INDUSTRIES,
   ADD_TOKEN_AUTO_LOGIN_VISIBLE,
   VERIFIED_PHONE_COMPONENT,
+  ADD_CHECKOUT_ID,
+  ADD_COINS_OFFER,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  ADD_COMPANY_TRANSACTION_HISTORY,
   CHANGE_USER_BLOCK_SMS_SEND,
   ERROR_LOADING_PAGE,
   DELETE_COMPANY_CONFIRM,
@@ -161,11 +164,14 @@ const initialState = {
   visibleMenuIndustries: false,
   visibleTokenToAutoLogin: false,
   verifiedPhoneComponentVisible: false,
+  checkoutPaymentItem: null,
+  coinsOffer: [],
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  companyTransactionHistory: [],
   errorLoadingPage: false,
   deleteCompanyConfirm: false,
   confirmDeleteCompanyVisible: false,
@@ -197,6 +203,18 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_COINS_OFFER: {
+      return {
+        ...state,
+        coinsOffer: !!action.data ? action.data : null,
+      }
+    }
+    case ADD_CHECKOUT_ID: {
+      return {
+        ...state,
+        checkoutPaymentItem: !!action.paymentItem ? action.paymentItem : null,
+      }
+    }
     case VERIFIED_PHONE_COMPONENT: {
       return {
         ...state,
@@ -576,6 +594,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case ADD_COMPANY_TRANSACTION_HISTORY: {
+      return {
+        ...state,
+        companyTransactionHistory: !!action.data ? action.data : null,
+      }
+    }
 
     case ERROR_LOADING_PAGE: {
       return {
