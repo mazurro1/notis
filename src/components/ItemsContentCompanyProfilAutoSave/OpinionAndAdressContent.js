@@ -46,7 +46,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "700px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "900px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -220,6 +220,20 @@ const TextStyleInfo = styled.div`
   margin-top: 10px;
 `
 
+const DisabledTextToEdit = styled.div`
+  border-radius: 5px;
+  background-color: ${props => Colors(props.siteProps).disabled};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  padding: 5px 10px;
+  margin-bottom: 20px;
+  span {
+    display: block;
+    font-size: 1rem;
+    font-family: "Poppins-Medium", sans-serif;
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+  }
+`
+
 const OpinionAndAdressContent = ({
   city = "",
   district = "",
@@ -243,6 +257,7 @@ const OpinionAndAdressContent = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
+  code = "00-000",
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
   const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
@@ -252,6 +267,7 @@ const OpinionAndAdressContent = ({
   const [deleteCompany, setDeleteCompany] = useState(false)
   const [companyNameInput, setCompanyNameInput] = useState(companyName)
   const [cityInput, setCityInput] = useState(city)
+  const [codeInput, setCodeInput] = useState(city)
   const [discrictInput, setDiscrictInput] = useState(district)
   const [adressInput, setAdressInput] = useState(adress)
   const [phoneInput, setPhoneInput] = useState(phone)
@@ -272,6 +288,7 @@ const OpinionAndAdressContent = ({
     setEditOpinionAndAdress(false)
     setCompanyNameInput(companyName)
     setCityInput(city)
+    setCodeInput(!!code ? code : "00-000")
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
@@ -295,6 +312,7 @@ const OpinionAndAdressContent = ({
     setDeletedIndustriesComponent([])
     setCompanyNameInput(companyName)
     setCityInput(city)
+    setCodeInput(!!code ? code : "00-000")
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
@@ -317,6 +335,7 @@ const OpinionAndAdressContent = ({
     companyNameInput.length >= 3 &&
     phoneInput.length >= 7 &&
     cityInput.length >= 3 &&
+    codeInput.length >= 5 &&
     discrictInput.length >= 3 &&
     adressInput.length >= 3
 
@@ -327,6 +346,7 @@ const OpinionAndAdressContent = ({
       reserwationEver !== reservationEveryTimeServer ||
       companyNameInput !== companyName ||
       cityInput !== city ||
+      codeInput !== code ||
       discrictInput !== district ||
       adressInput !== adress ||
       phoneInput !== phone ||
@@ -337,6 +357,7 @@ const OpinionAndAdressContent = ({
     e.preventDefault()
     if (disabledButtonSubmit) {
       const updateCityInput = cityInput !== city ? cityInput : null
+      const updateCodeInput = codeInput !== city ? codeInput : null
       const updateDiscrictInput =
         discrictInput !== district ? discrictInput : null
       const updateAdressInput = adressInput !== adress ? adressInput : null
@@ -363,6 +384,7 @@ const OpinionAndAdressContent = ({
 
       const dataSettings = {
         updateCityInput: updateCityInput,
+        updateCodeInput: updateCodeInput,
         updateDiscrictInput: updateDiscrictInput,
         updateAdressInput: updateAdressInput,
         updatePhoneInput: updatePhoneInput,
@@ -385,6 +407,9 @@ const OpinionAndAdressContent = ({
       if (cityInput.length < 3) {
         dispatch(addAlertItem("Nieprawidłowa miejscowość", "red"))
       }
+      if (codeInput.length < 5) {
+        dispatch(addAlertItem("Nieprawidłowy kod miasta", "red"))
+      }
       if (discrictInput.length < 3) {
         dispatch(addAlertItem("Nieprawidłowa dzielnica", "red"))
       }
@@ -404,6 +429,8 @@ const OpinionAndAdressContent = ({
     onClickEdit()
     setCompanyNameInput(companyName)
     setCityInput(city)
+    setCodeInput(!!code ? code : "00-000")
+    setCodeInput(city)
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
@@ -563,6 +590,7 @@ const OpinionAndAdressContent = ({
       <OpinionsAndAdress>
         <AdressContent>
           <TitleRightColumn adress siteProps={siteProps}>
+            <DivInlineBlock> {`${codeInput},`}</DivInlineBlock>
             <DivInlineBlock> {`${cityInput},`}</DivInlineBlock>
             <DivInlineBlock>{`${discrictInput},`}</DivInlineBlock>
             <DivInlineBlock> {`${adressInput}`}</DivInlineBlock>
@@ -616,6 +644,16 @@ const OpinionAndAdressContent = ({
             secondColors
           >
             <form onSubmit={handleOnSubmit}>
+              <DisabledTextToEdit siteProps={siteProps}>
+                <span>Email firmowy</span>
+                {!!company.email
+                  ? company.email
+                  : "Błąd podczas pobierania adresu e-mail"}
+              </DisabledTextToEdit>
+              <DisabledTextToEdit siteProps={siteProps}>
+                <span>Nip</span>
+                {!!company.nip ? company.nip : "000 000 00 00"}
+              </DisabledTextToEdit>
               <InputIcon
                 icon={<MdWork />}
                 placeholder="Nazwa firmy"
@@ -635,6 +673,16 @@ const OpinionAndAdressContent = ({
                 value={cityInput}
                 required
                 validText="Minimum 3 znaki"
+              />
+              <InputIcon
+                icon={<MdLocationCity />}
+                placeholder="Kod pocztowy"
+                type="text"
+                secondColor
+                onChange={e => handleChangeInputs(e, setCodeInput)}
+                value={codeInput}
+                required
+                validText="Minimum 5 znaków"
               />
               <InputIcon
                 icon={<FaMapSigns />}
@@ -659,7 +707,7 @@ const OpinionAndAdressContent = ({
               <InputPhone
                 defaultValues={phoneInput}
                 setPhoneNumber={setPhoneInput}
-                width={25}
+                width={20}
                 marginElements={5}
               />
               <TextStyleInfo siteProps={siteProps}>

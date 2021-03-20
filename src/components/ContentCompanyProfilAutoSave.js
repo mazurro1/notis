@@ -474,6 +474,7 @@ const ContentCompanyProfilAutoSave = ({
               <OpinionAndAdressContent
                 {...companyEditProfilProps}
                 city={company.city}
+                code={company.code}
                 companyName={company.name}
                 district={company.district}
                 adress={company.adress}

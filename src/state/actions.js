@@ -1529,7 +1529,9 @@ export const fetchCompanyRegistration = (
   companyAdress,
   userToken,
   userId,
-  industries
+  industries,
+  companyNip,
+  companyAdressCode
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -1544,6 +1546,8 @@ export const fetchCompanyRegistration = (
           companyDiscrict: companyDiscrict,
           companyAdress: companyAdress,
           companyIndustries: industries,
+          companyNip: companyNip,
+          companyAdressCode: companyAdressCode,
         },
         {
           headers: {
@@ -4951,7 +4955,6 @@ export const fetchNewOrder = (token, companyId, coinsId) => {
             dispatch(addAlertItem("Brak internetu.", "red"))
           }
         }
-        dispatch(changeAlertExtra(null, false))
         dispatch(changeSpinner(false))
       })
   }
@@ -4993,7 +4996,6 @@ export const getCompanyTransactionHistory = (token, companyId) => {
             dispatch(addAlertItem("Brak internetu.", "red"))
           }
         }
-        dispatch(changeAlertExtra(null, false))
         dispatch(changeSpinner(false))
       })
   }
@@ -5022,7 +5024,47 @@ export const getCoinsOffer = (token, companyId) => {
             dispatch(addAlertItem("Brak internetu.", "red"))
           }
         }
-        dispatch(changeAlertExtra(null, false))
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const sendInvoiceToCompanyEmail = (token, companyId, invoiceId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/send-invoice-to-company`,
+        {
+          companyId: companyId,
+          invoiceId: invoiceId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania faktury vat na adres e-mail firmy",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
         dispatch(changeSpinner(false))
       })
   }

@@ -160,7 +160,7 @@ const initialState = {
     active: false,
   },
   activeAccountVisible: false,
-  heightMenuIndustries: 0,
+  heightMenuIndustries: 137,
   visibleMenuIndustries: false,
   visibleTokenToAutoLogin: false,
   verifiedPhoneComponentVisible: false,
@@ -1566,6 +1566,9 @@ const reducer = (state = initialState, action) => {
         }
         if (!!action.data.updateCityInput) {
           newWorkCompanyDataSettings.city = action.data.updateCityInput
+        }
+        if (!!action.data.updateCodeInput) {
+          newWorkCompanyDataSettings.code = action.data.updateCodeInput
         }
         return {
           ...state,

@@ -33,7 +33,7 @@ const DivInlineBlock = styled.div`
 
 const ButtonAlertCompany = styled.button`
   margin-right: 5px;
-  padding: 5px 10px;
+  padding: 2px 5px;
   background-color: ${props =>
     props.alertColor === "blue"
       ? Colors(props.siteProps).primaryColorDark
@@ -49,6 +49,7 @@ const ButtonAlertCompany = styled.button`
   border: none;
   border-radius: 5px;
   font-family: "Poppins-Medium", sans-serif;
+  font-size: 0.8rem;
   transition-property: background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -99,7 +100,10 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
 
   if (
     alert.type !== "rezerwation_worker" &&
-    alert.type !== "new_rezerwation_worker"
+    alert.type !== "new_rezerwation_worker" &&
+    alert.type !== "opinion_client" &&
+    alert.type !== "opinion_client_edit" &&
+    alert.type !== "opinion_from_company"
   ) {
     if (!!alert.reserwationId) {
       if (!!alert.reserwationId.fromUser) {
@@ -277,6 +281,165 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
         </DivInlineBlock>
       </>
     )
+  } else if (alert.type === "opinion_client") {
+    if (isUserReserwation) {
+      alertMessage = (
+        <>
+          Dodano opinie w firmie:{" "}
+          {!!alert.reserwationId.company ? (
+            <LinkEffect
+              path={`company/${alert.reserwationId.company.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.reserwationId.company.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          do usługi: <span>{alert.reserwationId.serviceName}</span>, która
+          odbyła się dnia:{" "}
+          <DivInlineBlock>
+            <span>{reserwationDate}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Klient dodał opinie do usługi: {alert.reserwationId.serviceName},
+          która odbyła się dnia:{" "}
+          <DivInlineBlock>
+            <span>{reserwationDate}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "opinion_client_edit") {
+    if (isUserReserwation) {
+      alertMessage = (
+        <>
+          Edytowano opinie w firmie:{" "}
+          {!!alert.reserwationId.company ? (
+            <LinkEffect
+              path={`company/${alert.reserwationId.company.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.reserwationId.company.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          do usługi: <span>{alert.reserwationId.serviceName}</span>, która
+          odbyła się dnia:{" "}
+          <DivInlineBlock>
+            <span>{reserwationDate}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Klient edytował opinie do usługi: {alert.reserwationId.serviceName},
+          która odbyła się dnia:{" "}
+          <DivInlineBlock>
+            <span>{reserwationDate}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "opinion_from_company") {
+    if (isUserReserwation) {
+      alertMessage = (
+        <>
+          Firma:{" "}
+          {!!alert.reserwationId.company ? (
+            <LinkEffect
+              path={`company/${alert.reserwationId.company.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.reserwationId.company.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          odpowiedziała na opinie do usługi:{" "}
+          <span>{alert.reserwationId.serviceName}</span>, która odbyła się dnia:{" "}
+          <DivInlineBlock>
+            <span>{reserwationDate}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Odpowiedziano na opinie do usługi: {alert.reserwationId.serviceName},
+          która odbyła się dnia:{" "}
+          <DivInlineBlock>
+            <span>{reserwationDate}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.reserwationId.dateStart}-{alert.reserwationId.dateEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    }
   }
 
   return (

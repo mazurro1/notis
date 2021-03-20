@@ -263,17 +263,6 @@ const PositionStampsAndItem = styled.div`
   align-items: center;
 `
 
-const PositionWorkerDate = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-`
-
-const MarginWorerDate = styled.div`
-  margin-right: 20px;
-`
-
 const IconStamp = styled.div`
   display: flex;
   flex-direction: column;
@@ -685,17 +674,25 @@ const Reserwation = ({
   const renderStampCheckbox = !!stampValid &&
     !selectedHappyHourOrPromotion &&
     disabledReserwButton && (
-      <CheckboxStyle siteProps={siteProps}>
-        <Checkbox
-          theme="material-checkbox"
-          value={isStampActive}
-          onChange={() => handleChangeCheckbox(companyStampPromotionPercent)}
-        >
-          <TextCheckbox>
-            Aktywuj rabat z pieczątek {companyStampPromotionPercent}%
-          </TextCheckbox>
-        </Checkbox>
-      </CheckboxStyle>
+      <>
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={isStampActive}
+            onChange={() => handleChangeCheckbox(companyStampPromotionPercent)}
+          >
+            <TextCheckbox>
+              Aktywuj rabat z pieczątek {companyStampPromotionPercent}%
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+        {isStampActive && (
+          <NoAvaibleHourStyle siteProps={siteProps}>
+            Prosimy o rozważną rezerwacje, ponieważ odwołanie rezerwacji z
+            promocyjnych pieczątek nie zwroci pieczątek na konto.
+          </NoAvaibleHourStyle>
+        )}
+      </>
     )
 
   const stampColorValid = stampValid && !!!selectedPromotion && !isStampActive

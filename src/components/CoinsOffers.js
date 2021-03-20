@@ -7,7 +7,6 @@ import ButtonIcon from "./ButtonIcon"
 import { MdAttachMoney } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import getStripe from "../common/stripejs"
-import { useStaticQuery, graphql } from "gatsby"
 
 const ItemCoins = styled.div`
   padding: 5px 10px;
@@ -73,26 +72,6 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
   const [selectedCoins, setSelectedCoins] = useState(null)
   const checkoutPaymentItem = useSelector(state => state.checkoutPaymentItem)
   const coinsOffer = useSelector(state => state.coinsOffer)
-
-  const {
-    allStripePrice: { nodes: allProducts },
-  } = useStaticQuery(graphql`
-    query AllProducts {
-      allStripePrice {
-        nodes {
-          id
-          currency
-          unit_amount
-          unit_amount_decimal
-          product {
-            id
-            name
-            description
-          }
-        }
-      }
-    }
-  `)
 
   const dispatch = useDispatch()
 

@@ -351,27 +351,7 @@ const BigCalendarWorkerHoursAutoSave = ({
     }
   }, [item])
 
-  const selectedDayString = checkAndReturnMinAndMaxValueFromDaysHours(
-    item.company.openingDays
-  )
-
   const localizer = momentLocalizer(moment)
-  const arrMaxHours = selectedDayString.maxHours.split(":")
-  const arrMinHours = selectedDayString.minHours.split(":")
-  const minHoursInCalendar = new Date(
-    2020,
-    0,
-    1,
-    Number(arrMinHours[0]) - 1,
-    Number(arrMinHours[1])
-  )
-  const maxHoursInCalendar = new Date(
-    2020,
-    0,
-    1,
-    Number(arrMaxHours[0]) + 1,
-    Number(arrMaxHours[1])
-  )
 
   const handleChangeYear = value => {
     if (dateCalendar.getFullYear() !== value.value) {
@@ -705,8 +685,8 @@ const BigCalendarWorkerHoursAutoSave = ({
             timeslots={slotsValue}
             step={item.company.reservationEveryTime}
             toolbar={false}
-            min={minHoursInCalendar} // 8.00 AM
-            max={maxHoursInCalendar} // Max will be 6.00 PM!
+            min={new Date(new Date().setHours(6, 0))}
+            max={new Date(new Date().setHours(23, 30))}
             onSelectSlot={handleOnSelectSlot} // zdarzenie po zaznaczeniu okresu
             onSelecting={handleOnSelecting} // wyłaczanie i włączanie klikalności
             // slotPropGetter={handleSlotPropGetter} // nadanie szarego koloru

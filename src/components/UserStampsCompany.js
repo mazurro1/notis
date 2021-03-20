@@ -18,12 +18,11 @@ const TitleCategory = styled.div`
   background-color: ${props => Colors(props.siteProps).primaryColor};
   padding: 10px;
   border-radius: 5px;
-  padding-right: 50px;
   overflow: hidden;
   user-select: none;
   text-transform: uppercase;
   cursor: pointer;
-  padding-right: 100px;
+  padding-right: 130px;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -36,12 +35,12 @@ const TitleCategory = styled.div`
 
 const PositionCompanyLink = styled.div`
   position: absolute;
-  right: 50px;
+  right: 66px;
   top: 0px;
   border-radius: 5px;
   font-size: 1.8rem;
-  padding: 8px;
-  padding-bottom: 5px;
+  padding: 17px;
+  padding-bottom: 10px;
   transition-property: transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -68,8 +67,8 @@ const IconArrowPosition = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  padding: 7px;
-  padding-bottom: 0;
+  padding: 17px;
+  padding-bottom: 10px;
   font-size: 2rem;
   cursor: pointer;
   transition-property: background-color;
@@ -166,6 +165,11 @@ const StampItemTitle = styled.div`
   }
 `
 
+const YourStampsText = styled.div`
+  font-size: 0.9rem;
+  text-transform: capitalize;
+`
+
 const UserStampsCompany = ({ company, siteProps, handleClose }) => {
   const [collapseActive, setCollapseActive] = useState(false)
 
@@ -191,7 +195,8 @@ const UserStampsCompany = ({ company, siteProps, handleClose }) => {
         Number(splitDateEnd[0]),
         Number(splitDateEnd[1])
       )
-      return reserwationDate < new Date()
+
+      return reserwationDate < new Date() && !!!item.visitCanceled
     }
   ).length
 
@@ -251,10 +256,10 @@ const UserStampsCompany = ({ company, siteProps, handleClose }) => {
           <StampItemTitle siteProps={siteProps}>
             Wymagana ilość naklejek: <span>{stamp.countStampsToActive}</span>
           </StampItemTitle>
-          <StampItemTitle siteProps={siteProps}>
+          {/* <StampItemTitle siteProps={siteProps}>
             Twoja ilość naklejek:{" "}
             <span>{numberFilterUserCompanyReserwations}</span>
-          </StampItemTitle>
+          </StampItemTitle> */}
           <AllStampsPositions index={stampIndex % 2} siteProps={siteProps}>
             {renderStars}
           </AllStampsPositions>
@@ -266,7 +271,11 @@ const UserStampsCompany = ({ company, siteProps, handleClose }) => {
   return (
     <CategoryItemStyle>
       <TitleCategory siteProps={siteProps} onClick={handleClickArrow}>
-        {company.companyId.name}
+        <div>{company.companyId.name}</div>
+        <YourStampsText>
+          Twoje pieczątki: {numberFilterUserCompanyReserwations}
+        </YourStampsText>
+
         <PositionCompanyLink
           siteProps={siteProps}
           data-tip

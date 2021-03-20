@@ -17,6 +17,7 @@ import {
   FaStamp,
   FaHeart,
   FaChartBar,
+  FaCrown,
 } from "react-icons/fa"
 import {
   MdWork,
@@ -90,6 +91,8 @@ import DeleteCompanyContent from "./DeleteCompany"
 import { CSSTransition } from "react-transition-group"
 import CoinsOffers from "./CoinsOffers"
 import TransactionHistory from "./TransactionHistory"
+import ReactTooltip from "react-tooltip"
+import AddPremium from "./AddPremium"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -408,6 +411,7 @@ const MonetsStyle = styled.div`
   font-family: "Poppins-Medium", sans-serif;
   margin-bottom: 5px;
   span {
+    display: inline-block;
     color: ${props => Colors(props.siteProps).primaryColorDark};
     font-family: "Poppins-Bold", sans-serif;
   }
@@ -436,6 +440,7 @@ const Navigation = ({ isMainPage }) => {
   const [availabilityVisible, setAvailabilityVisible] = useState(false)
   const [companyStatistics, setCompanyStatistics] = useState(false)
   const [addMonetsVisible, setAddMonetsVisible] = useState(false)
+  const [addPremiumVisible, setAddPremiumVisible] = useState(false)
   const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
     false
   )
@@ -506,6 +511,7 @@ const Navigation = ({ isMainPage }) => {
     if (!!!user) {
       dispatch(fetchAutoLogin())
     }
+    ReactTooltip.rebuild()
   }, [dispatch, user])
 
   useEffect(() => {
@@ -679,6 +685,11 @@ const Navigation = ({ isMainPage }) => {
   const handleClickMonets = () => {
     setAddMonetsVisible(prevState => !prevState)
     setWorkPropsVisible(prevState => !prevState)
+  }
+
+  const handleClickPremium = () => {
+    setWorkPropsVisible(prevState => !prevState)
+    setAddPremiumVisible(prevState => !prevState)
   }
 
   const handleClickTransactionHistory = () => {
@@ -1048,7 +1059,7 @@ const Navigation = ({ isMainPage }) => {
       popupEnable={transactionHistoryVisible}
       handleClose={handleClickTransactionHistory}
       title="Historia tranzakcji"
-      maxWidth="500"
+      maxWidth="600"
     >
       <TransactionHistory
         siteProps={siteProps}
@@ -1103,11 +1114,36 @@ const Navigation = ({ isMainPage }) => {
   let companyConfirmed = false
   let isAdmin = false
   let companyMonets = 0
+  let premiumActive = false
+  let datePremium = null
 
   if (!!user) {
-    if (user.hasCompany) {
+    if (!!user.hasCompany) {
       if (!!user.company.accountVerified) {
         companyConfirmed = true
+      }
+      if (!!user.company.premium) {
+        const toDatePremium = new Date(user.company.premium)
+        if (toDatePremium >= new Date()) {
+          premiumActive = true
+          datePremium = `${
+            toDatePremium.getHours() < 10
+              ? `0${toDatePremium.getHours()}`
+              : toDatePremium.getHours()
+          }:${
+            toDatePremium.getMinutes() < 10
+              ? `0${toDatePremium.getMinutes()}`
+              : toDatePremium.getMinutes()
+          }, ${
+            toDatePremium.getDate() < 10
+              ? `0${toDatePremium.getDate()}`
+              : toDatePremium.getDate()
+          }-${
+            toDatePremium.getMonth() + 1 < 10
+              ? `0${toDatePremium.getMonth() + 1}`
+              : toDatePremium.getMonth() + 1
+          }-${toDatePremium.getFullYear()}`
+        }
       }
       const selectWorker = user.company.workers.find(
         worker => worker.user === user.userId
@@ -1154,20 +1190,49 @@ const Navigation = ({ isMainPage }) => {
     }
   }
 
+  const PopupCompanyAddPremium = user && (
+    <Popup
+      popupEnable={addPremiumVisible}
+      handleClose={handleClickPremium}
+      title={
+        !!premiumActive ? `Doładuj konto premium` : "Aktywuj konto premium"
+      }
+    >
+      <AddPremium
+        siteProps={siteProps}
+        user={user}
+        handleClose={handleClickPremium}
+      />
+    </Popup>
+  )
+
   const PopupWorkerPropsVisible = (
     <Popup
       popupEnable={workPropsVisible}
       handleClose={handleClickWork}
       title={Translates[siteProps.language].buttons.work}
-      maxWidth="300"
+      maxWidth="350"
     >
       <div>
         {hasCompany && hasPermission && (
           <>
             {isAdmin && companyConfirmed && (
-              <MonetsStyle siteProps={siteProps}>
-                Monety: <span>{companyMonets}</span>
-              </MonetsStyle>
+              <>
+                <MonetsStyle siteProps={siteProps}>
+                  Monety: <span>{companyMonets}</span>
+                </MonetsStyle>
+                <MonetsStyle siteProps={siteProps}>
+                  {premiumActive ? (
+                    <>
+                      Konto premium aktywne do: <span>{datePremium}</span>
+                    </>
+                  ) : (
+                    <>
+                      Konto premium <span>Nie aktywne</span>
+                    </>
+                  )}
+                </MonetsStyle>
+              </>
             )}
             <div onClick={handleClickAdminPanel} aria-hidden="true">
               <LinkEffect
@@ -1196,6 +1261,22 @@ const Navigation = ({ isMainPage }) => {
                     customColorButton={Colors(siteProps).successColorDark}
                     customColorIcon={Colors(siteProps).successColor}
                     onClick={handleClickMonets}
+                  />
+                </MarginButtonsWork>
+                <MarginButtonsWork>
+                  <ButtonIcon
+                    title={
+                      !!premiumActive
+                        ? `Doładuj konto premium`
+                        : "Aktywuj konto premium"
+                    }
+                    uppercase
+                    fontIconSize="22"
+                    fontSize="16"
+                    icon={<FaCrown />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleClickPremium}
                   />
                 </MarginButtonsWork>
                 <MarginButtonsWork>
@@ -1420,6 +1501,7 @@ const Navigation = ({ isMainPage }) => {
       {PopupConfirmDeleteCompany}
       {PopupSaveTokenAutoLogin}
       {PopupCompanyAddMonets}
+      {PopupCompanyAddPremium}
       {PopupCompanyTransactionHistory}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
@@ -1522,24 +1604,48 @@ const Navigation = ({ isMainPage }) => {
                   {renderButtonsUp}
                 </ButtonsNav>
                 {!!user && (
-                  <BellAlertsStyle
-                    siteProps={siteProps}
-                    onClick={handleUserFavourites}
-                  >
-                    <IconStyle className="bell-action">
-                      <FaHeart />
-                    </IconStyle>
-                  </BellAlertsStyle>
+                  <>
+                    <ReactTooltip
+                      id="showFavourites"
+                      effect="float"
+                      multiline={true}
+                    >
+                      <span>Ulubione firmy</span>
+                    </ReactTooltip>
+                    <BellAlertsStyle
+                      siteProps={siteProps}
+                      onClick={handleUserFavourites}
+                      data-tip
+                      data-for="showFavourites"
+                      data-place="bottom"
+                    >
+                      <IconStyle className="bell-action">
+                        <FaHeart />
+                      </IconStyle>
+                    </BellAlertsStyle>
+                  </>
                 )}
                 {!!user && (
-                  <BellAlertsStyle
-                    siteProps={siteProps}
-                    onClick={handleUserStamps}
-                  >
-                    <IconStyle className="bell-action">
-                      <FaStamp />
-                    </IconStyle>
-                  </BellAlertsStyle>
+                  <>
+                    <ReactTooltip
+                      id="showStamps"
+                      effect="float"
+                      multiline={true}
+                    >
+                      <span>Zebrane pieczątki</span>
+                    </ReactTooltip>
+                    <BellAlertsStyle
+                      siteProps={siteProps}
+                      onClick={handleUserStamps}
+                      data-tip
+                      data-for="showStamps"
+                      data-place="bottom"
+                    >
+                      <IconStyle className="bell-action">
+                        <FaStamp />
+                      </IconStyle>
+                    </BellAlertsStyle>
+                  </>
                 )}
                 {!!user && <BellAlerts siteProps={siteProps} user={user} />}
 

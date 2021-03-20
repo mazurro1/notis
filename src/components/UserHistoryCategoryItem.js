@@ -256,6 +256,10 @@ const EditedMessage = styled.div`
   }
 `
 
+const TextInDelete = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+`
+
 const NoEditedMessage = styled.div`
   .editedSmallText {
     font-size: 0.85rem;
@@ -398,7 +402,9 @@ const UserHistoryCategoryItem = ({
   const actualDate = new Date()
   const isReserwationEnd = actualDate < dateReserwation
   const isDateInToDo =
-    dateReserwation <= new Date() && dateReserwationEnd >= new Date()
+    dateReserwation <= new Date() &&
+    dateReserwationEnd >= new Date() &&
+    !!!item.item.visitCanceled
 
   let workerName = " Konto nieaktywne"
   if (!!item.toWorkerUserId) {
@@ -574,32 +580,40 @@ const UserHistoryCategoryItem = ({
             borderRadius
             noContent
           >
-            <ButtonsAddPosition>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Anuluj"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="15"
-                  icon={<MdArrowBack />}
-                  onClick={handleConfirmDeleteReserwation}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                />
-              </ButtonMargin>
-              <ButtonMargin>
-                <ButtonIcon
-                  title="Odwołaj wizytę"
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="15"
-                  icon={<MdDeleteForever />}
-                  onClick={handleToDeleteReserwation}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                />
-              </ButtonMargin>
-            </ButtonsAddPosition>
+            <>
+              {!!item.activeStamp && (
+                <TextInDelete siteProps={siteProps}>
+                  Odwołanie tej rezerwacji z promocyjnych pieczątek nie zwroci
+                  pieczątek na konto.
+                </TextInDelete>
+              )}
+              <ButtonsAddPosition>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Anuluj"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="15"
+                    icon={<MdArrowBack />}
+                    onClick={handleConfirmDeleteReserwation}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                  />
+                </ButtonMargin>
+                <ButtonMargin>
+                  <ButtonIcon
+                    title="Odwołaj wizytę"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="15"
+                    icon={<MdDeleteForever />}
+                    onClick={handleToDeleteReserwation}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                  />
+                </ButtonMargin>
+              </ButtonsAddPosition>
+            </>
           </Popup>
         </>
       ) : !!!item.opinionId && !!!item.visitCanceled ? (

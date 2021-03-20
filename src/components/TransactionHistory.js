@@ -1,11 +1,14 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getCompanyTransactionHistory } from "../state/actions"
+import {
+  getCompanyTransactionHistory,
+  sendInvoiceToCompanyEmail,
+} from "../state/actions"
 import getStripe from "../common/stripejs"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
-import { MdAttachMoney } from "react-icons/md"
+import { MdAttachMoney, MdPictureAsPdf } from "react-icons/md"
 
 const ItemHistory = styled.div`
   border-radius: 5px;
@@ -29,6 +32,10 @@ const TitleHistory = styled.div`
   font-size: 1.1rem;
   background-color: ${props => Colors(props.siteProps).primaryColorDark};
   color: ${props => Colors(props.siteProps).textNormalWhite};
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `
 
 const ItemData = styled.div`
@@ -63,6 +70,13 @@ const ButtonPayPosition = styled.div`
   margin-top: 5px;
 `
 
+const NoHistory = styled.div`
+  margin: 20px 0;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  text-align: center;
+  font-family: "Poppins-Medium", sans-serif;
+`
+
 const TransactionHistory = ({ siteProps, user, handleClose }) => {
   const companyTransactionHistory = useSelector(
     state => state.companyTransactionHistory
@@ -84,6 +98,10 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
         throw e
       }
     }
+  }
+
+  const handleSendInvoiceToEmail = invoiceId => {
+    dispatch(sendInvoiceToCompanyEmail(user.token, user.company._id, invoiceId))
   }
 
   const mapedHistory = companyTransactionHistory.map((item, index) => {
@@ -110,10 +128,31 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
         ? `0${datePayment.getMonth() + 1}`
         : datePayment.getMonth() + 1
     }-${datePayment.getFullYear()}`
+
+    const renderDateDay = `${
+      datePayment.getDate() < 10
+        ? `0${datePayment.getDate()}`
+        : datePayment.getDate()
+    }-${
+      datePayment.getMonth() + 1 < 10
+        ? `0${datePayment.getMonth() + 1}`
+        : datePayment.getMonth() + 1
+    }-${datePayment.getFullYear()}`
+
+    let invoiceLink = null
+    let invoiceId = null
+    if (!!item.invoiceId) {
+      invoiceId = item.invoiceId._id
+      if (!!item.invoiceId.link) {
+        invoiceLink = item.invoiceId.link
+      }
+    }
+
     return (
       <ItemHistory key={index} success={itemPaid} siteProps={siteProps}>
         <TitleHistory siteProps={siteProps} success={itemPaid}>
-          {item.productName}
+          <div>{item.productName}</div>
+          <div>{renderDateDay}</div>
         </TitleHistory>
         <PaddingContent>
           <ItemData siteProps={siteProps} success={itemPaid}>
@@ -137,6 +176,22 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
                 fontSize="16"
                 icon={<MdAttachMoney />}
                 onClick={() => handleCheckout(item.sessionId)}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
+              />
+            </ButtonPayPosition>
+          )}
+          {!!invoiceLink && (
+            <ButtonPayPosition>
+              <ButtonIcon
+                title="Pobierz fakture VAT na adres e-mail"
+                uppercase
+                fontIconSize="25"
+                fontSize="16"
+                icon={<MdPictureAsPdf />}
+                onClick={() => handleSendInvoiceToEmail(invoiceId)}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
               />
             </ButtonPayPosition>
           )}
@@ -145,6 +200,14 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
     )
   })
 
-  return <div>{mapedHistory}</div>
+  return (
+    <div>
+      {companyTransactionHistory.length > 0 ? (
+        mapedHistory
+      ) : (
+        <NoHistory siteProps={siteProps}>Brak histori</NoHistory>
+      )}
+    </div>
+  )
 }
 export default TransactionHistory

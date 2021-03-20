@@ -52,8 +52,10 @@ const CreateCompany = () => {
   const [industries, setIndustries] = useState([])
   const [emailInput, setEmailInput] = useState("")
   const [nameInput, setNameInput] = useState("")
+  const [nipInput, setNipInput] = useState("")
   const [phoneInput, setPhoneInput] = useState("")
   const [cityInput, setCityInput] = useState("")
+  const [codeInput, setCodeInput] = useState("")
   const [discrictInput, setDiscrictInput] = useState("")
   const [adressInput, setAdressInput] = useState("")
   const user = useSelector(state => state.user)
@@ -68,8 +70,10 @@ const CreateCompany = () => {
   const validButtonRegisterCompany =
     emailInput.length > 0 &&
     nameInput.length >= 3 &&
+    nipInput.length === 10 &&
     phoneInput.length >= 7 &&
     cityInput.length >= 3 &&
+    codeInput.length >= 5 &&
     discrictInput.length >= 3 &&
     adressInput.length >= 3 &&
     industries.length > 0
@@ -89,7 +93,9 @@ const CreateCompany = () => {
           adressInput,
           user.token,
           user.userId,
-          mapedIndustries
+          mapedIndustries,
+          nipInput,
+          codeInput
         )
       )
     } else {
@@ -99,11 +105,17 @@ const CreateCompany = () => {
       if (nameInput.length < 3) {
         dispatch(addAlertItem("Nazwa firmy jest za krótka", "red"))
       }
+      if (nipInput.length < 10) {
+        dispatch(addAlertItem("Nieprawidłowy numer nip", "red"))
+      }
       if (phoneInput.length < 7) {
         dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
       }
       if (cityInput.length < 3) {
         dispatch(addAlertItem("Nieprawidłowa miejscowość", "red"))
+      }
+      if (codeInput.length < 5) {
+        dispatch(addAlertItem("Nieprawidłowy kod pocztowy", "red"))
       }
       if (discrictInput.length < 3) {
         dispatch(addAlertItem("Nieprawidłowa dzielnica", "red"))
@@ -163,7 +175,15 @@ const CreateCompany = () => {
         required
         validText="Minimum 3 znaki"
       />
-
+      <InputIcon
+        icon={<MdAccountBox />}
+        placeholder="Nip firmy"
+        type="number"
+        value={nipInput}
+        onChange={e => handleChange(e, setNipInput)}
+        required
+        validText="10 znaków"
+      />
       <InputIcon
         icon={<MdLocationCity />}
         placeholder="Miejscowość"
@@ -172,6 +192,15 @@ const CreateCompany = () => {
         onChange={e => handleChange(e, setCityInput)}
         required
         validText="Minimum 3 znaki"
+      />
+      <InputIcon
+        icon={<MdLocationCity />}
+        placeholder="Kod pocztowy"
+        value={codeInput}
+        type="text"
+        onChange={e => handleChange(e, setCodeInput)}
+        required
+        validText="Minimum 5 znaków"
       />
       <InputIcon
         icon={<FaMapSigns />}

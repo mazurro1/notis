@@ -8,11 +8,10 @@ import { MdClose, MdInfo } from "react-icons/md"
 
 const PositionAlerts = styled.div`
   position: fixed;
-  top: 70px;
+  top: 72.5px;
   left: 0;
   right: 0;
   z-index: 3000;
-  padding-top: 2.5px;
 `
 
 const OneAlert = styled.div`

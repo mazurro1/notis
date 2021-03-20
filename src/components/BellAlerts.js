@@ -13,6 +13,7 @@ import {
 } from "../state/actions"
 import sal from "sal.js"
 import UseOuterClick from "../common/UseOuterClick"
+import ReactTooltip from "react-tooltip"
 
 const BellAlertsStyle = styled.div`
   position: relative;
@@ -224,7 +225,16 @@ const BellAlerts = ({ siteProps, user }) => {
 
   return (
     <PositionRelative ref={refBell}>
-      <BellAlertsStyle siteProps={siteProps} onClick={handleClickAlertVisible}>
+      <ReactTooltip id="showAlerts" effect="float" multiline={true}>
+        <span>Powiadomienia</span>
+      </ReactTooltip>
+      <BellAlertsStyle
+        siteProps={siteProps}
+        onClick={handleClickAlertVisible}
+        data-tip
+        data-for="showAlerts"
+        data-place="bottom"
+      >
         <IconStyle className="bell-action">
           <FaBell />
         </IconStyle>
