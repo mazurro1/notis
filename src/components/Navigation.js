@@ -92,7 +92,6 @@ import { CSSTransition } from "react-transition-group"
 import CoinsOffers from "./CoinsOffers"
 import TransactionHistory from "./TransactionHistory"
 import ReactTooltip from "react-tooltip"
-import AddPremium from "./AddPremium"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -406,7 +405,7 @@ const MarginButtonSaveToken = styled.div`
   margin: 5px;
 `
 
-const MonetsStyle = styled.div`
+const SMSStyle = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
   font-family: "Poppins-Medium", sans-serif;
   margin-bottom: 5px;
@@ -439,12 +438,10 @@ const Navigation = ({ isMainPage }) => {
   const [favouritesVisible, setFavouritesVisible] = useState(false)
   const [availabilityVisible, setAvailabilityVisible] = useState(false)
   const [companyStatistics, setCompanyStatistics] = useState(false)
-  const [addMonetsVisible, setAddMonetsVisible] = useState(false)
-  const [addPremiumVisible, setAddPremiumVisible] = useState(false)
+  const [addSMSVisible, setAddSMSVisible] = useState(false)
   const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
     false
   )
-
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
   const editWorkerHoursData = useSelector(state => state.editWorkerHoursData)
@@ -682,14 +679,9 @@ const Navigation = ({ isMainPage }) => {
     dispatch(saveUserTokenToAutoLogin(false))
   }
 
-  const handleClickMonets = () => {
-    setAddMonetsVisible(prevState => !prevState)
+  const handleClickSMS = () => {
+    setAddSMSVisible(prevState => !prevState)
     setWorkPropsVisible(prevState => !prevState)
-  }
-
-  const handleClickPremium = () => {
-    setWorkPropsVisible(prevState => !prevState)
-    setAddPremiumVisible(prevState => !prevState)
   }
 
   const handleClickTransactionHistory = () => {
@@ -1040,16 +1032,16 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupCompanyAddMonets = user && (
+  const PopupCompanyAddSMS = user && (
     <Popup
-      popupEnable={addMonetsVisible}
-      handleClose={handleClickMonets}
-      title="Doładuj monety"
+      popupEnable={addSMSVisible}
+      handleClose={handleClickSMS}
+      title="Doładuj konto"
     >
       <CoinsOffers
         siteProps={siteProps}
         user={user}
-        handleClose={handleClickMonets}
+        handleClose={handleClickSMS}
       />
     </Popup>
   )
@@ -1060,6 +1052,7 @@ const Navigation = ({ isMainPage }) => {
       handleClose={handleClickTransactionHistory}
       title="Historia tranzakcji"
       maxWidth="600"
+      heightFull
     >
       <TransactionHistory
         siteProps={siteProps}
@@ -1113,7 +1106,7 @@ const Navigation = ({ isMainPage }) => {
   let hasPermission = false
   let companyConfirmed = false
   let isAdmin = false
-  let companyMonets = 0
+  let companySMS = 0
   let premiumActive = false
   let datePremium = null
 
@@ -1153,10 +1146,8 @@ const Navigation = ({ isMainPage }) => {
       hasCompany = true
       hasPermission = user.company.owner === user.userId
       isAdmin = user.company.owner === user.userId
-      if (!!user.company.monets) {
-        companyMonets = Buffer.from(user.company.monets, "base64").toString(
-          "ascii"
-        )
+      if (!!user.company.sms) {
+        companySMS = Buffer.from(user.company.sms, "base64").toString("ascii")
       }
       if (!!selectWorker) {
         if (!!!hasPermission) {
@@ -1190,22 +1181,6 @@ const Navigation = ({ isMainPage }) => {
     }
   }
 
-  const PopupCompanyAddPremium = user && (
-    <Popup
-      popupEnable={addPremiumVisible}
-      handleClose={handleClickPremium}
-      title={
-        !!premiumActive ? `Doładuj konto premium` : "Aktywuj konto premium"
-      }
-    >
-      <AddPremium
-        siteProps={siteProps}
-        user={user}
-        handleClose={handleClickPremium}
-      />
-    </Popup>
-  )
-
   const PopupWorkerPropsVisible = (
     <Popup
       popupEnable={workPropsVisible}
@@ -1218,10 +1193,10 @@ const Navigation = ({ isMainPage }) => {
           <>
             {isAdmin && companyConfirmed && (
               <>
-                <MonetsStyle siteProps={siteProps}>
-                  Monety: <span>{companyMonets}</span>
-                </MonetsStyle>
-                <MonetsStyle siteProps={siteProps}>
+                <SMSStyle siteProps={siteProps}>
+                  Dostępne SMS-y: <span>{companySMS}</span>
+                </SMSStyle>
+                <SMSStyle siteProps={siteProps}>
                   {premiumActive ? (
                     <>
                       Konto premium aktywne do: <span>{datePremium}</span>
@@ -1231,7 +1206,7 @@ const Navigation = ({ isMainPage }) => {
                       Konto premium <span>Nie aktywne</span>
                     </>
                   )}
-                </MonetsStyle>
+                </SMSStyle>
               </>
             )}
             <div onClick={handleClickAdminPanel} aria-hidden="true">
@@ -1253,30 +1228,14 @@ const Navigation = ({ isMainPage }) => {
               <>
                 <MarginButtonsWork>
                   <ButtonIcon
-                    title="Doładuj monety"
+                    title="Doładuj konto"
                     uppercase
                     fontIconSize="22"
                     fontSize="16"
                     icon={<MdAttachMoney />}
                     customColorButton={Colors(siteProps).successColorDark}
                     customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleClickMonets}
-                  />
-                </MarginButtonsWork>
-                <MarginButtonsWork>
-                  <ButtonIcon
-                    title={
-                      !!premiumActive
-                        ? `Doładuj konto premium`
-                        : "Aktywuj konto premium"
-                    }
-                    uppercase
-                    fontIconSize="22"
-                    fontSize="16"
-                    icon={<FaCrown />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleClickPremium}
+                    onClick={handleClickSMS}
                   />
                 </MarginButtonsWork>
                 <MarginButtonsWork>
@@ -1500,8 +1459,7 @@ const Navigation = ({ isMainPage }) => {
       {PopupActiveAccount}
       {PopupConfirmDeleteCompany}
       {PopupSaveTokenAutoLogin}
-      {PopupCompanyAddMonets}
-      {PopupCompanyAddPremium}
+      {PopupCompanyAddSMS}
       {PopupCompanyTransactionHistory}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
@@ -1578,6 +1536,7 @@ const Navigation = ({ isMainPage }) => {
         popupEnable={menuOpen}
         handleClose={handleCloseMenu}
         noContent
+        clickedBackground
       />
       <ContentMenu active={menuOpen}>
         <BackgroundColorPage siteProps={siteProps}>

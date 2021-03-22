@@ -1,14 +1,20 @@
 import React from "react"
-import { Router } from "@reach/router"
 import TakeCompanyData from "../components/TakeCompanyData"
 import CompanyPriv from "../components/CompanyPriv"
 
 const Companys = props => {
+  let dataProps = []
+  if (!!props.location.search) {
+    dataProps = props.location.search.split("&")
+  }
   return (
-    <Router>
-      <TakeCompanyData path="/company/:pathCompany" />
-      <CompanyPriv default />
-    </Router>
+    <>
+      {dataProps.length === 1 ? (
+        <TakeCompanyData pathCompany={dataProps[0].slice(1)} />
+      ) : (
+        <CompanyPriv active />
+      )}
+    </>
   )
 }
 export default Companys

@@ -1930,7 +1930,12 @@ export const fetchDoReserwation = (
             if (error.response.status === 401) {
               dispatch(logout())
             } else {
-              dispatch(addAlertItem("Błąd podczas robienia rezerwacji", "red"))
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas robienia rezerwacji lub konto firmowe jest nieaktywne",
+                  "red"
+                )
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))
@@ -2422,7 +2427,10 @@ export const fetchDoReserwationWorker = (
               dispatch(logout())
             } else {
               dispatch(
-                addAlertItem("Błąd podczas robienia rezerwacji czasu", "red")
+                addAlertItem(
+                  "Błąd podczas robienia rezerwacji czasu lub konto firmowe jest nieaktywne",
+                  "red"
+                )
               )
             }
           } else {
@@ -4921,7 +4929,7 @@ export const fetchVerifiedPhone = (token, code) => {
   }
 }
 
-export const fetchNewOrder = (token, companyId, coinsId) => {
+export const fetchNewOrder = (token, companyId, coinsIds) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -4929,7 +4937,7 @@ export const fetchNewOrder = (token, companyId, coinsId) => {
         `${Site.serverUrl}/payment-session`,
         {
           companyId: companyId,
-          coinsId: coinsId,
+          coinsIds: coinsIds,
         },
         {
           headers: {

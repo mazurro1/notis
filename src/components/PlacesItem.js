@@ -320,7 +320,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
         <PlaceImage>
           {!!item.mainImageUrl || item.imagesUrl.length > 0 ? (
             <LinkEffect
-              path={`/company/${item.linkPath}`}
+              path={`/company?${item.linkPath}`}
               text={
                 <BackGroundImageCustomUrl
                   url={
@@ -447,6 +447,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
           borderRadius
           handleClose={handleServicesVisible}
           noContent
+          clickedBackground
         >
           {allServices.length > 0 ? (
             allServices

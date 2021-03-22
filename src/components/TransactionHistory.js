@@ -70,11 +70,29 @@ const ButtonPayPosition = styled.div`
   margin-top: 5px;
 `
 
+const WrapHistoryNames = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 70%;
+`
+
 const NoHistory = styled.div`
   margin: 20px 0;
   color: ${props => Colors(props.siteProps).textNormalBlack};
   text-align: center;
   font-family: "Poppins-Medium", sans-serif;
+`
+
+const NameHistoryItem = styled.div`
+  font-size: 0.9rem;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  background-color: ${props => Colors(props.siteProps).primaryColor};
+  margin: 2px;
 `
 
 const TransactionHistory = ({ siteProps, user, handleClose }) => {
@@ -105,7 +123,22 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
   }
 
   const mapedHistory = companyTransactionHistory.map((item, index) => {
-    console.log(item)
+    let summaryPrice = 0
+    let summarySMS = 0
+    let summaryPremium = 0
+    if (!!item.productsInfo) {
+      item.productsInfo.forEach(productInfo => {
+        if (!!productInfo.price) {
+          summaryPrice = summaryPrice + productInfo.price
+        }
+        if (!!productInfo.sms) {
+          summarySMS = summarySMS + productInfo.sms
+        }
+        if (!!productInfo.premium) {
+          summaryPremium = summaryPremium + productInfo.premium
+        }
+      })
+    }
     const itemPaid = item.status === "paid"
     let datePayment = new Date()
     if (!!item.datePayment) {
@@ -119,7 +152,7 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
       datePayment.getMinutes() < 10
         ? `0${datePayment.getMinutes()}`
         : datePayment.getMinutes()
-    } ${
+    }, ${
       datePayment.getDate() < 10
         ? `0${datePayment.getDate()}`
         : datePayment.getDate()
@@ -147,19 +180,32 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
         invoiceLink = item.invoiceId.link
       }
     }
-
+    const mapNameHistoryItem = item.productsInfo.map((itemName, indexName) => {
+      return (
+        <NameHistoryItem siteProps={siteProps} key={indexName}>
+          {itemName.name}
+        </NameHistoryItem>
+      )
+    })
     return (
       <ItemHistory key={index} success={itemPaid} siteProps={siteProps}>
         <TitleHistory siteProps={siteProps} success={itemPaid}>
-          <div>{item.productName}</div>
+          <WrapHistoryNames>{mapNameHistoryItem}</WrapHistoryNames>
           <div>{renderDateDay}</div>
         </TitleHistory>
         <PaddingContent>
+          {!!summarySMS && (
+            <ItemData siteProps={siteProps} success={itemPaid}>
+              SMS-y: <span>{summarySMS}</span>
+            </ItemData>
+          )}
+          {!!summaryPremium && (
+            <ItemData siteProps={siteProps} success={itemPaid}>
+              Dni konta premium: <span>{summaryPremium}</span>
+            </ItemData>
+          )}
           <ItemData siteProps={siteProps} success={itemPaid}>
-            Monety: <span>{item.productMonets}</span>
-          </ItemData>
-          <ItemData siteProps={siteProps} success={itemPaid}>
-            Koszt: <span>{item.productPrice}</span>
+            Koszt: <span>{summaryPrice}zł</span>
           </ItemData>
           <ItemData siteProps={siteProps} success={itemPaid}>
             Data: <span>{renderDate}</span>

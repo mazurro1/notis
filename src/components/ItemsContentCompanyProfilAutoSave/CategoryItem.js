@@ -190,6 +190,7 @@ const CategoryItem = ({
   isWorkerBlocked,
   userAccountNotVeryfied,
   userPhoneVeryfied,
+  premiumActive,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
@@ -353,6 +354,7 @@ const CategoryItem = ({
         userPhoneVeryfied={userPhoneVeryfied}
         activeWorkerUserId={activeWorkerUserId}
         isWorkerBlocked={isWorkerBlocked}
+        premiumActive={premiumActive}
         userCannotMakeReservation={userCannotMakeReservation}
       />
     )

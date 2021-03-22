@@ -159,6 +159,7 @@ const ServicesItem = ({
   userAccountNotVeryfied,
   activeWorkerUserId,
   isWorkerBlocked,
+  premiumActive,
   userCannotMakeReservation,
   userPhoneVeryfied,
 }) => {
@@ -188,6 +189,7 @@ const ServicesItem = ({
     isWorkerBlocked,
     userAccountNotVeryfied,
     userPhoneVeryfied,
+    premiumActive,
   ])
 
   const indexValueColorService = !!itemServices.serviceColor
@@ -288,7 +290,7 @@ const ServicesItem = ({
       setClickEdit(false)
     }
   }
-
+  console.log(premiumActive)
   let timeService = ""
   if (Number(itemServices.time) <= 60) {
     timeService = `${itemServices.time}min`
@@ -323,6 +325,7 @@ const ServicesItem = ({
     >
       {(userIsBlocked ||
         !userCannotMakeReservation ||
+        !premiumActive ||
         isWorkerBlocked ||
         userAccountNotVeryfied ||
         !userPhoneVeryfied) && (
@@ -339,6 +342,8 @@ const ServicesItem = ({
             <span>Aktywuj konto aby dokonać rezerwacji</span>
           ) : !userPhoneVeryfied ? (
             <span>Zweryfikuj numer telefonu, aby dokonać rezerwacji</span>
+          ) : !premiumActive ? (
+            <span>Nie można dokonać rezerwacji</span>
           ) : (
             <span>Twoje konto zostało zablokowane na tej stronie</span>
           )}
@@ -412,6 +417,7 @@ const ServicesItem = ({
                   userIsBlocked ||
                   !userCannotMakeReservation ||
                   isWorkerBlocked ||
+                  !premiumActive ||
                   userAccountNotVeryfied ||
                   !userPhoneVeryfied
                 }

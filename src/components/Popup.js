@@ -46,7 +46,8 @@ const PopupContent = styled.div`
   background-color: white;
   max-width: ${props => props.maxWidth + "px"};
   width: 90%;
-  height: ${props => (props.fullScreen ? "100vh" : "auto")};
+  height: ${props =>
+    props.fullScreen ? "100vh" : props.heightFull ? "100vh" : "auto"};
   margin: 0 auto;
   border-radius: 5px;
   max-height: ${props => (props.maxHeight ? "90vh" : "auto")};
@@ -110,6 +111,8 @@ const Popup = ({
   smallTitle = false,
   overflowComponent = true,
   maxHeight = true,
+  clickedBackground = false,
+  heightFull = false,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -123,7 +126,7 @@ const Popup = ({
   const handleClickBackground = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
-    if (close) {
+    if (clickedBackground) {
       handleOnClick()
     }
   }
@@ -147,6 +150,7 @@ const Popup = ({
       siteProps={siteProps}
       overflowComponent={overflowComponent}
       maxHeight={maxHeight}
+      heightFull={heightFull}
     >
       {isTitleOn && (
         <TitlePagePopup
@@ -190,7 +194,7 @@ const Popup = ({
       unmountOnExit
     >
       <PopupWindow
-        // onClick={handleClickBackground}
+        onClick={handleClickBackground}
         calendar={calendar}
         position={position}
         borderRadius={borderRadius}

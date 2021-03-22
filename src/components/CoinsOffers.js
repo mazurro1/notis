@@ -5,19 +5,18 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import { MdAttachMoney } from "react-icons/md"
-import { FaArrowLeft } from "react-icons/fa"
+import { FaArrowLeft, FaCrown, FaSms } from "react-icons/fa"
 import getStripe from "../common/stripejs"
+import { Site } from "../common/Site"
 
 const ItemCoins = styled.div`
-  padding: 5px 10px;
   border-radius: 5px;
   background-color: ${props =>
     props.active
       ? Colors(props.siteProps).primaryColor
       : Colors(props.siteProps).primaryColorDark};
   color: ${props => Colors(props.siteProps).textNormalWhite};
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin: 10px;
   min-height: 120px;
   display: flex;
   flex-direction: row;
@@ -26,11 +25,56 @@ const ItemCoins = styled.div`
   flex-wrap: wrap;
   cursor: pointer;
   user-select: none;
+  width: 400px;
+  max-width: 100%;
   transition-property: transform, background-color, color;
   transition-timing-function: ease;
   transition-duration: 0.3s;
+
+  fieldset {
+    border: none;
+    width: 100%;
+
+    legend {
+      width: 100%;
+      font-family: "Poppins-Medium";
+      font-size: 1.2rem;
+      text-align: center;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      padding: 5px 10px;
+      background-color: ${props => Colors(props.siteProps).primaryColor};
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+  }
+  .contentOffer {
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    width: 80%;
+    @media all and (max-width: ${Site.mobileSize + "px"}) {
+      width: 100%;
+    }
+    .itemInfo {
+      font-size: 0.9rem;
+
+      span {
+        font-size: 1rem;
+        font-family: "Poppins-Medium";
+      }
+    }
+  }
+  .contentIcon {
+    width: 20%;
+    font-size: 3rem;
+    @media all and (max-width: ${Site.mobileSize + "px"}) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 `
 
@@ -40,7 +84,6 @@ const AllItemsCoins = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  margin-top: 20px;
 `
 
 const ContentOffers = styled.div``
@@ -64,12 +107,47 @@ const ButtonsPosition = styled.div`
   flex-wrap: wrap;
 `
 
+const AllContentOffers = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+`
+
 const InfoText = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
+  span {
+    font-family: "Poppins-Bold";
+  }
+`
+
+const InfoTextSummary = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  margin-top: 20px;
+  font-family: "Poppins-Medium";
+`
+
+const TitleOffer = styled.div`
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-family: "Poppins-Bold";
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  margin-top: 20px;
+`
+
+const SummaryInfoText = styled.div`
+  font-size: 1rem;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+
+  span {
+    font-size: 1.2rem;
+    font-family: "Poppins-Medium";
+  }
 `
 
 const CoinsOffers = ({ siteProps, user, handleClose }) => {
-  const [selectedCoins, setSelectedCoins] = useState(null)
+  const [selectedCoins, setSelectedCoins] = useState([])
   const checkoutPaymentItem = useSelector(state => state.checkoutPaymentItem)
   const coinsOffer = useSelector(state => state.coinsOffer)
 
@@ -97,41 +175,125 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
   }, [checkoutPaymentItem])
 
   const handleClickCoins = coinId => {
-    if (selectedCoins === coinId) {
-      setSelectedCoins(null)
+    const isInSelected = selectedCoins.some(coins => coins === coinId)
+    if (isInSelected) {
+      const filterItems = selectedCoins.filter(item => item !== coinId)
+      setSelectedCoins(filterItems)
     } else {
-      setSelectedCoins(coinId)
+      const selectedItems = [...selectedCoins, coinId]
+      setSelectedCoins(selectedItems)
     }
   }
 
   const handleSubmit = e => {
     e.preventDefault()
-    const selectedCoinItem = coinsOffer.find(item => item._id === selectedCoins)
-    if (!!selectedCoinItem) {
-      dispatch(
-        fetchNewOrder(user.token, user.company._id, selectedCoinItem._id)
+    const allItems = []
+    selectedCoins.forEach(selectedItem => {
+      const selectedCoinItem = coinsOffer.find(
+        item => item._id === selectedItem
       )
+      if (!!selectedCoinItem) {
+        allItems.push(selectedCoinItem._id)
+      }
+    })
+    if (allItems.length > 0) {
+      dispatch(fetchNewOrder(user.token, user.company._id, allItems))
     } else {
       dispatch(addAlertItem("Nie wybrano oferty", "red"))
     }
   }
 
-  const mapCoinsOffers = coinsOffer.map((item, index) => {
+  const filterOffersSMS = coinsOffer.filter(item => !!item.countSMS)
+  const filterOffersPremium = coinsOffer.filter(item => !!item.countPremium)
+
+  let summaryPrice = 0
+  let summarySMS = 0
+  let summaryPremium = 0
+
+  selectedCoins.forEach(itemCoins => {
+    const selectedCoinItem = coinsOffer.find(item => item._id === itemCoins)
+    if (!!selectedCoinItem) {
+      if (!!selectedCoinItem.countPremium) {
+        summaryPremium = summaryPremium + selectedCoinItem.countPremium
+      }
+      if (!!selectedCoinItem.countSMS) {
+        summarySMS = summarySMS + selectedCoinItem.countSMS
+      }
+      if (!!selectedCoinItem.price) {
+        summaryPrice = summaryPrice + selectedCoinItem.price
+      }
+    }
+  })
+
+  const mapCoinsOffersSMS = filterOffersSMS.map((item, index) => {
     return (
       <ItemCoins
         key={index}
-        active={item._id === selectedCoins}
+        active={selectedCoins.some(coins => coins === item._id)}
         onClick={() => handleClickCoins(item._id)}
       >
-        <fieldset style={{ border: "none" }}>
-          <legend>
-            <h4>{item.name}</h4>
-          </legend>
-          <label>
-            <div>Monety: {item.countCoins}</div>
-            <div>Cena: {item.price}zł</div>
-            <div>Opis: {item.description}</div>
-          </label>
+        <fieldset>
+          <legend>{item.name}</legend>
+          <AllContentOffers>
+            <div className="contentOffer">
+              {!!item.countSMS && (
+                <div className="itemInfo">
+                  SMS-y: <span>{item.countSMS}</span>
+                </div>
+              )}
+              {!!item.countPremium && (
+                <div className="itemInfo">
+                  Miesiące konta premium: <span>{item.countPremium}</span>
+                </div>
+              )}
+              <div className="itemInfo">
+                Cena: <span>{item.price}zł</span>
+              </div>
+              <div className="itemInfo">
+                Opis: <span>{item.description}</span>
+              </div>
+            </div>
+            <div className="contentIcon">
+              <FaSms />
+            </div>
+          </AllContentOffers>
+        </fieldset>
+      </ItemCoins>
+    )
+  })
+
+  const mapCoinsOffersPremium = filterOffersPremium.map((item, index) => {
+    return (
+      <ItemCoins
+        key={index}
+        active={selectedCoins.some(coins => coins === item._id)}
+        onClick={() => handleClickCoins(item._id)}
+      >
+        <fieldset>
+          <legend>{item.name}</legend>
+          <AllContentOffers>
+            <div className="contentOffer">
+              {!!item.countSMS && (
+                <div className="itemInfo">
+                  SMS-y: <span>{item.countSMS}</span>
+                </div>
+              )}
+              {!!item.countPremium && (
+                <div className="itemInfo">
+                  Miesiące konta premium: <span>{item.countPremium}</span>
+                </div>
+              )}
+              <div className="itemInfo">
+                Cena: <span>{item.price}zł</span>
+              </div>
+              <div className="itemInfo">
+                Opis: <span>{item.description}</span>
+              </div>
+            </div>
+            <div className="contentIcon">
+              <FaCrown />
+            </div>
+          </AllContentOffers>
         </fieldset>
       </ItemCoins>
     )
@@ -141,14 +303,32 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
     <ContentOffers>
       <form onSubmit={handleSubmit}>
         <InfoText siteProps={siteProps}>
-          Co dają monety? Monety dają możliwość aktywowania konta premium na
-          platformie oraz możliwość wysyłania wiadomości SMS do klientów, aby
-          powiadomić ich o zarezerwowanej/zbliżającej się wizycie
+          <span>Konto premium</span> umożliwia dokonywanie rezerwacji przez
+          klientów oraz dokonywanie rezerwacji czasu przez wszystkich
+          pracowników w firmie. Bez niego firma nie będzie wyświetlana w
+          wyszukiwarce firm.
         </InfoText>
-        <AllItemsCoins>{mapCoinsOffers}</AllItemsCoins>
         <InfoText siteProps={siteProps}>
-          Klikając przycisk zamów zrzekasz się prawa do zwrotu
+          <span>SMS-y</span> dają możliwość wysyłania wiadomości do klientów,
+          aby powiadomić ich o zarezerwowanej/zbliżającej się wizycie
         </InfoText>
+        <TitleOffer siteProps={siteProps}>Konta premium:</TitleOffer>
+        <AllItemsCoins>{mapCoinsOffersPremium}</AllItemsCoins>
+        <TitleOffer siteProps={siteProps}>Pakiety SMS:</TitleOffer>
+        <AllItemsCoins>{mapCoinsOffersSMS}</AllItemsCoins>
+        <TitleOffer siteProps={siteProps}>Podsumowanie:</TitleOffer>
+        <SummaryInfoText siteProps={siteProps}>
+          Miesiące konta premium: <span>{summaryPremium}</span>
+        </SummaryInfoText>
+        <SummaryInfoText siteProps={siteProps}>
+          SMS-y: <span>{summarySMS}</span>
+        </SummaryInfoText>
+        <SummaryInfoText siteProps={siteProps}>
+          Cena: <span>{summaryPrice}zł</span>
+        </SummaryInfoText>
+        <InfoTextSummary siteProps={siteProps}>
+          Klikając przycisk zamów zrzekasz się prawa do zwrotu
+        </InfoTextSummary>
         <ButtonsPosition>
           <MarginButton>
             <ButtonIcon
@@ -171,7 +351,7 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
               icon={<MdAttachMoney />}
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
-              disabled={!!!selectedCoins}
+              disabled={selectedCoins.length === 0}
             />
           </MarginButtonSubmit>
         </ButtonsPosition>

@@ -72,7 +72,13 @@ const ElementsPages = ({ isMainPage, children }) => {
     <BackgroundColorPage siteProps={siteProps}>
       <PaddingContent
         topNavVisibleMenu={isMainPage}
-        heightMenuIndustries={heightMenuIndustries}
+        heightMenuIndustries={
+          !!heightMenuIndustries
+            ? heightMenuIndustries < 100
+              ? 170
+              : heightMenuIndustries
+            : 170
+        }
         active={visibleMenuIndustries}
       >
         <MinHeightContent isMainPage={isMainPage}>{children}</MinHeightContent>

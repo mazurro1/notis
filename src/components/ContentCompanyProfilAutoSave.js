@@ -311,6 +311,7 @@ const ContentCompanyProfilAutoSave = ({
   let isWorkerBlocked = false
   let userAccountNotVeryfied = false
   let userPhoneVeryfied = false
+  let premiumActive = false
 
   if (!!user) {
     isWorkerBlocked = company.owner._id === user.userId
@@ -326,6 +327,13 @@ const ContentCompanyProfilAutoSave = ({
       )
       if (userIsInWorkers) {
         isWorkerBlocked = true
+      }
+    }
+
+    if (!!company.premium) {
+      const toDatePremium = new Date(company.premium)
+      if (toDatePremium >= new Date()) {
+        premiumActive = true
       }
     }
   }
@@ -403,6 +411,7 @@ const ContentCompanyProfilAutoSave = ({
               userAccountNotVeryfied={userAccountNotVeryfied}
               userPhoneVeryfied={userPhoneVeryfied}
               isWorkerBlocked={isWorkerBlocked}
+              premiumActive={premiumActive}
               userCannotMakeReservation={userCannotMakeReservation}
               user={user}
               allCategoryEdit={allCategoryEdit}
