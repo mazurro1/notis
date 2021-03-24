@@ -44,6 +44,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_SMS_SETTINGS,
   ADD_COMPANY_TRANSACTION_HISTORY,
   CHANGE_USER_BLOCK_SMS_SEND,
   ERROR_LOADING_PAGE,
@@ -594,6 +595,22 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case UPDATE_COMPANY_SMS_SETTINGS: {
+      const newWorkCompanyDataSMS = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+      if (!!newWorkCompanyDataSMS) {
+        newWorkCompanyDataSMS.smsReserwationAvaible =
+          action.smsReserwationAvaible
+        newWorkCompanyDataSMS.smsNotifactionAvaible =
+          action.smsNotifactionAvaible
+      }
+      return {
+        ...state,
+        workCompanyData: newWorkCompanyDataSMS,
+      }
+    }
 
     case ADD_COMPANY_TRANSACTION_HISTORY: {
       return {
@@ -1922,16 +1939,18 @@ const reducer = (state = initialState, action) => {
         placesData: allPlacesData,
         avaibleUpdatePage: true,
       }
-    case AVAIBLE_DATE_TO_RESERWATION_UPDATE:
+    case AVAIBLE_DATE_TO_RESERWATION_UPDATE: {
       return {
         ...state,
         avaibleHoursReserwationUpdate: action.value,
       }
-    case AVAIBLE_DATE_TO_RESERWATION:
+    }
+    case AVAIBLE_DATE_TO_RESERWATION: {
       return {
         ...state,
         avaibleHoursReserwation: action.date,
       }
+    }
     // case CHANGE_EDITED_WORKER_HOURS:
     //   return {
     //     ...state,

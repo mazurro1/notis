@@ -257,7 +257,7 @@ const StampsContentItem = ({
             Promocja: <span>{stamp.promotionPercent}%</span>
           </ContentText>
           <ContentText siteProps={siteProps} active={!stamp.disabled}>
-            Wymagana ilość naklejek: <span>{stamp.countStampsToActive}</span>
+            Wymagana ilość pieczątek: <span>{stamp.countStampsToActive}</span>
           </ContentText>
           <ContentTextDisabled siteProps={siteProps} active={!stamp.disabled}>
             {stamp.disabled ? (

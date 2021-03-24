@@ -290,7 +290,7 @@ const ServicesItem = ({
       setClickEdit(false)
     }
   }
-  console.log(premiumActive)
+
   let timeService = ""
   if (Number(itemServices.time) <= 60) {
     timeService = `${itemServices.time}min`

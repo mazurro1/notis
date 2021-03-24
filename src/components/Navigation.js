@@ -932,6 +932,7 @@ const Navigation = ({ isMainPage }) => {
       popupEnable={reserwationEnable}
       handleClose={handleCloseReserwation}
       title="Rezerwacja"
+      fullScreen
     >
       <Reserwation
         reserwationData={reserwationData}

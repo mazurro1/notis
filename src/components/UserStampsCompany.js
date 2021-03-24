@@ -254,10 +254,10 @@ const UserStampsCompany = ({ company, siteProps, handleClose }) => {
             Promocja: <span>{stamp.promotionPercent}%</span>
           </StampItemTitle>
           <StampItemTitle siteProps={siteProps}>
-            Wymagana ilość naklejek: <span>{stamp.countStampsToActive}</span>
+            Wymagana ilość pieczątek: <span>{stamp.countStampsToActive}</span>
           </StampItemTitle>
           {/* <StampItemTitle siteProps={siteProps}>
-            Twoja ilość naklejek:{" "}
+            Twoja ilość pieczątek:{" "}
             <span>{numberFilterUserCompanyReserwations}</span>
           </StampItemTitle> */}
           <AllStampsPositions index={stampIndex % 2} siteProps={siteProps}>

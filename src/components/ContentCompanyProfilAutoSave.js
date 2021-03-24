@@ -22,6 +22,7 @@ import OpinionsComponent from "./ItemsContentCompanyProfilAutoSave/OpinionsCompo
 import GalleryContent from "./ItemsContentCompanyProfilAutoSave/GalleryContent"
 import StampsContent from "./ItemsContentCompanyProfilAutoSave/StampsContent"
 import ShopStoreContent from "./ItemsContentCompanyProfilAutoSave/ShopStoreContent"
+import SMSSettings from "./ItemsContentCompanyProfilAutoSave/SMSSettings"
 import sal from "sal.js"
 
 const TextH1 = styled.div`
@@ -159,6 +160,21 @@ const EditModeToChange = styled.div`
   }
 `
 
+const CompanyPremiumInformation = styled.div`
+  padding: 5px 10px;
+  font-family: "Poppins-Medium";
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+
+  span {
+    font-family: "Poppins-Bold";
+    font-size: 1.1rem;
+    display: inline-block;
+    color: ${props => Colors(props.siteProps).secondDarkColor};
+  }
+`
+
 const ContentCompanyProfilAutoSave = ({
   company = null,
   isAdmin = false,
@@ -169,6 +185,7 @@ const ContentCompanyProfilAutoSave = ({
   const [editMode, setEditMode] = useState(true)
   const [allCategoryEdit, setAllCategoryEdit] = useState(false)
   const [editOpinionAndAdress, setEditOpinionAndAdress] = useState(false)
+  const [editSMSSettngs, setEditSMSSettngs] = useState(false)
   const [editAboutUs, setEditAboutUs] = useState(false)
   const [editableOpeningHours, setEditableOpeningHours] = useState(false)
   const [editableDaysOff, setEditableDaysOff] = useState(false)
@@ -200,6 +217,7 @@ const ContentCompanyProfilAutoSave = ({
   const disabledEditButtons =
     allCategoryEdit ||
     editOpinionAndAdress ||
+    editSMSSettngs ||
     editAboutUs ||
     editableOpeningHours ||
     editableDaysOff ||
@@ -216,6 +234,7 @@ const ContentCompanyProfilAutoSave = ({
   const handleResetAllEditedComponents = () => {
     setAllCategoryEdit(false)
     setEditOpinionAndAdress(false)
+    setEditSMSSettngs(false)
     setEditAboutUs(false)
     setEditableOpeningHours(false)
     setEditableDaysOff(false)
@@ -312,6 +331,8 @@ const ContentCompanyProfilAutoSave = ({
   let userAccountNotVeryfied = false
   let userPhoneVeryfied = false
   let premiumActive = false
+  let premiumDate = null
+  let companySMS = 0
 
   if (!!user) {
     isWorkerBlocked = company.owner._id === user.userId
@@ -330,8 +351,29 @@ const ContentCompanyProfilAutoSave = ({
       }
     }
 
+    if (!!company.sms) {
+      companySMS = company.sms
+    }
+
     if (!!company.premium) {
       const toDatePremium = new Date(company.premium)
+      premiumDate = `${
+        toDatePremium.getHours() < 10
+          ? `0${toDatePremium.getHours()}`
+          : toDatePremium.getHours()
+      }:${
+        toDatePremium.getMinutes() < 10
+          ? `0${toDatePremium.getMinutes()}`
+          : toDatePremium.getMinutes()
+      }, ${
+        toDatePremium.getDate() < 10
+          ? `0${toDatePremium.getDate()}`
+          : toDatePremium.getDate()
+      }-${
+        toDatePremium.getMonth() + 1 < 10
+          ? `0${toDatePremium.getMonth() + 1}`
+          : toDatePremium.getMonth() + 1
+      }-${toDatePremium.getFullYear()}`
       if (toDatePremium >= new Date()) {
         premiumActive = true
       }
@@ -437,6 +479,42 @@ const ContentCompanyProfilAutoSave = ({
           )}
         </LeftColumn>
         <RightColumn>
+          {companyEditProfilProps.isCompanyEditProfil && (
+            <>
+              <CompanyPremiumInformation siteProps={siteProps}>
+                <div>
+                  Konto ważne do: <span>{premiumDate}</span>
+                </div>
+                <div>
+                  Pozostała ilość SMS: <span>{companySMS}</span>
+                </div>
+              </CompanyPremiumInformation>
+              <RightColumnItem
+                {...companyEditProfilProps}
+                siteProps={siteProps}
+                active={editSMSSettngs}
+                disabledEditButtons={disabledEditButtons}
+              >
+                <SMSSettings
+                  TitleRightColumn={TitleRightColumn}
+                  ButtonEditPosition={ButtonEditPosition}
+                  {...companyEditProfilProps}
+                  company={company}
+                  editMode={editMode}
+                  siteProps={siteProps}
+                  user={user}
+                  editSMSSettngs={editSMSSettngs}
+                  setEditSMSSettngs={setEditSMSSettngs}
+                  handleResetAllEditedComponents={
+                    handleResetAllEditedComponents
+                  }
+                  disabledEditButtons={disabledEditButtons}
+                  smsReserwationAvaible={company.smsReserwationAvaible}
+                  smsNotifactionAvaible={company.smsNotifactionAvaible}
+                />
+              </RightColumnItem>
+            </>
+          )}
           {editMode && isCompanyEditProfil && isAdmin ? (
             <RightColumnItem
               {...companyEditProfilProps}
@@ -549,33 +627,31 @@ const ContentCompanyProfilAutoSave = ({
               />
             </RightColumnItem>
           )}
+          {userHasPermisionToOther && (
+            <RightColumnItem
+              {...companyEditProfilProps}
+              siteProps={siteProps}
+              active={editableDaysOff}
+              disabledEditButtons={disabledEditButtons}
+            >
+              <DaysOffContent
+                {...companyEditProfilProps}
+                companyEditProfilProps={companyEditProfilProps}
+                TitleRightColumn={TitleRightColumn}
+                siteProps={siteProps}
+                ButtonEditPosition={ButtonEditPosition}
+                companyDaysOff={company.daysOff}
+                user={user}
+                editableDaysOff={editableDaysOff}
+                setEditableDaysOff={setEditableDaysOff}
+                handleResetAllEditedComponents={handleResetAllEditedComponents}
+                disabledEditButtons={disabledEditButtons}
+                editMode={editMode}
+              />
+            </RightColumnItem>
+          )}
           {isCompanyEditProfil && (
             <>
-              {isAdmin && (
-                <RightColumnItem
-                  {...companyEditProfilProps}
-                  siteProps={siteProps}
-                  active={editableDaysOff}
-                  disabledEditButtons={disabledEditButtons}
-                >
-                  <DaysOffContent
-                    {...companyEditProfilProps}
-                    companyEditProfilProps={companyEditProfilProps}
-                    TitleRightColumn={TitleRightColumn}
-                    siteProps={siteProps}
-                    ButtonEditPosition={ButtonEditPosition}
-                    companyDaysOff={company.daysOff}
-                    user={user}
-                    editableDaysOff={editableDaysOff}
-                    setEditableDaysOff={setEditableDaysOff}
-                    handleResetAllEditedComponents={
-                      handleResetAllEditedComponents
-                    }
-                    disabledEditButtons={disabledEditButtons}
-                    editMode={editMode}
-                  />
-                </RightColumnItem>
-              )}
               {userHasPermToHappyHours && (
                 <>
                   <RightColumnItem

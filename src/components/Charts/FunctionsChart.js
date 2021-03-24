@@ -23,8 +23,10 @@ export const chartErnings = (companyStats, companyName, isAdmin) => {
         item => item.userId === "company"
       )
       if (findIndexAllCompany >= 0) {
-        allStats[findIndexAllCompany].allCosts =
-          allStats[findIndexAllCompany].allCosts + state.costReserwation
+        if (!!state.costReserwation) {
+          allStats[findIndexAllCompany].allCosts =
+            allStats[findIndexAllCompany].allCosts + state.costReserwation
+        }
         allStats[findIndexAllCompany].countReserwations =
           allStats[findIndexAllCompany].countReserwations + 1
       } else {
@@ -42,8 +44,10 @@ export const chartErnings = (companyStats, companyName, isAdmin) => {
       item => item.userId === state.toWorkerUserId._id
     )
     if (findIndexInAllStats >= 0) {
-      allStats[findIndexInAllStats].allCosts =
-        allStats[findIndexInAllStats].allCosts + state.costReserwation
+      if (!!state.costReserwation) {
+        allStats[findIndexInAllStats].allCosts =
+          allStats[findIndexInAllStats].allCosts + state.costReserwation
+      }
       allStats[findIndexInAllStats].countReserwations =
         allStats[findIndexInAllStats].countReserwations + 1
     } else {
@@ -56,7 +60,6 @@ export const chartErnings = (companyStats, companyName, isAdmin) => {
         state.toWorkerUserId.name,
         "base64"
       ).toString("ascii")
-
       const dateToChar = {
         allCosts: state.costReserwation,
         countReserwations: 1,
@@ -233,7 +236,7 @@ export const chartResState = (companyStats, companyName, isAdmin) => {
     },
     {
       dataKey: "activeStamp",
-      label: "Wizyty z naklejek",
+      label: "Wizyty z pieczątek",
       extraValueLabel: "",
       color: "dangerColorDark",
     },
@@ -328,8 +331,10 @@ export const chartMonthsState = (companyStats, allMonths, isAdmin) => {
       allStats[findIndexInAllStats].countReserwations =
         allStats[findIndexInAllStats].countReserwations + 1
 
-      allStats[findIndexInAllStats].allCosts =
-        allStats[findIndexInAllStats].allCosts + state.costReserwation
+      if (!!state.costReserwation) {
+        allStats[findIndexInAllStats].allCosts =
+          allStats[findIndexInAllStats].allCosts + state.costReserwation
+      }
     } else {
       const findMonthName = allMonths.find(
         item => item.value === state.dateMonth

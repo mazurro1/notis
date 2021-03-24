@@ -127,6 +127,7 @@ const ContentWorkers = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  flex-wrap: wrap;
 `
 
 const WorkerItem = styled.div`
@@ -200,6 +201,7 @@ const SpinnerToLoadAvaibleHours = styled.div`
 const NoAvaibleHourStyle = styled.div`
   margin-bottom: 10px;
   color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-family: "Poppins-Bold";
 `
 
 const AllAvaibleHours = styled.div`
@@ -293,11 +295,41 @@ const IconStamp = styled.div`
   }
 `
 
+const PositionWorkerDay = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+`
+
+const MarginSelectWorker = styled.div`
+  margin-right: 100px;
+
+  @media all and (max-width: 767px) {
+    margin-right: 10px;
+  }
+`
+
 const MarginTextPhone = styled.div`
   margin: 10px 0;
 `
 
 const PositionRelative = styled.div`
+  padding-bottom: 60px;
+`
+
+const PositionButtonRezerwation = styled.div`
+  position: absolute;
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
+  padding: 10px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
+`
+
+const CheckBoxPositionRelative = styled.div`
   position: relative;
 `
 
@@ -335,6 +367,8 @@ const Reserwation = ({
   const avaibleHoursReserwationUpdate = useSelector(
     state => state.avaibleHoursReserwationUpdate
   )
+  // console.log(avaibleHoursReserwation)
+  // console.log(avaibleHoursReserwationUpdate)
   const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
 
@@ -389,13 +423,13 @@ const Reserwation = ({
     setIsStampActive(false)
     setSelectedPromotion(null)
     setSelectedHappyHourOrPromotion(false)
+    dispatch(avaibleDateToReserwation([]))
+    // setSelectedDate(null)
+    setSelectedHour(null)
     if (!!selectedWorkerUserId) {
       if (selectedWorkerUserId === workerUserId) {
         setSelectedWorkerUserId(null)
         setSelectedWorkerId(null)
-        setSelectedDate(null)
-        setSelectedHour(null)
-        dispatch(avaibleDateToReserwation([]))
       } else {
         setSelectedWorkerUserId(workerUserId)
         setSelectedWorkerId(workerId)
@@ -675,17 +709,21 @@ const Reserwation = ({
     !selectedHappyHourOrPromotion &&
     disabledReserwButton && (
       <>
-        <CheckboxStyle siteProps={siteProps}>
-          <Checkbox
-            theme="material-checkbox"
-            value={isStampActive}
-            onChange={() => handleChangeCheckbox(companyStampPromotionPercent)}
-          >
-            <TextCheckbox>
-              Aktywuj rabat z pieczątek {companyStampPromotionPercent}%
-            </TextCheckbox>
-          </Checkbox>
-        </CheckboxStyle>
+        <CheckBoxPositionRelative>
+          <CheckboxStyle siteProps={siteProps}>
+            <Checkbox
+              theme="material-checkbox"
+              value={isStampActive}
+              onChange={() =>
+                handleChangeCheckbox(companyStampPromotionPercent)
+              }
+            >
+              <TextCheckbox>
+                Aktywuj rabat z pieczątek {companyStampPromotionPercent}%
+              </TextCheckbox>
+            </Checkbox>
+          </CheckboxStyle>
+        </CheckBoxPositionRelative>
         {isStampActive && (
           <NoAvaibleHourStyle siteProps={siteProps}>
             Prosimy o rozważną rezerwacje, ponieważ odwołanie rezerwacji z
@@ -790,39 +828,44 @@ const Reserwation = ({
         <NoWorkersText>Brak dostępnych pracowników</NoWorkersText>
       ) : (
         <>
-          <TextReserwation siteProps={siteProps}>
-            Wybierz pracownika:
-          </TextReserwation>
-          <ContentWorkers>
-            {ownerWorkerToSelect}
-            {mapWorkersToSelect}
-          </ContentWorkers>
-          <TextReserwation siteProps={siteProps}>
-            Wybierz dzień:
-          </TextReserwation>
-          <ButtonIconStyle>
-            <ButtonIcon
-              title={
-                selectedDate
-                  ? `${selectedDateMonth} ${
-                      selectedDateDay < 10
-                        ? `0${selectedDateDay}`
-                        : selectedDateDay
-                    }-${
-                      selectedDateFullMonth < 10
-                        ? `0${selectedDateFullMonth}`
-                        : selectedDateFullMonth
-                    }-${selectedDateYear}`
-                  : "Wybierz dzień"
-              }
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarDay />}
-              onClick={handleSelectDay}
-              uppercase
-              disabled={!!!selectedWorkerUserId}
-            />
-          </ButtonIconStyle>
+          <PositionWorkerDay>
+            <MarginSelectWorker>
+              <TextReserwation siteProps={siteProps}>
+                Wybierz pracownika:
+              </TextReserwation>
+              <ContentWorkers>
+                {ownerWorkerToSelect}
+                {mapWorkersToSelect}
+              </ContentWorkers>
+            </MarginSelectWorker>
+            <div>
+              <TextReserwation siteProps={siteProps}>
+                Wybierz dzień:
+              </TextReserwation>
+              <ButtonIconStyle>
+                <ButtonIcon
+                  title={
+                    selectedDate
+                      ? `${selectedDateMonth} ${
+                          selectedDateDay < 10
+                            ? `0${selectedDateDay}`
+                            : selectedDateDay
+                        }-${
+                          selectedDateFullMonth < 10
+                            ? `0${selectedDateFullMonth}`
+                            : selectedDateFullMonth
+                        }-${selectedDateYear}`
+                      : "Wybierz dzień"
+                  }
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaCalendarDay />}
+                  onClick={handleSelectDay}
+                  uppercase
+                />
+              </ButtonIconStyle>
+            </div>
+          </PositionWorkerDay>
           <TextReserwation siteProps={siteProps}>
             {!!!selectedHour
               ? "Wybierz godzinę:"
@@ -851,7 +894,11 @@ const Reserwation = ({
               ? renderStampCheckbox
               : null
             : null}
-          <div data-tip data-for="reserwationAlert">
+          <PositionButtonRezerwation
+            siteProps={siteProps}
+            data-tip
+            data-for="reserwationAlert"
+          >
             <ButtonIcon
               title="Rezerwuj"
               fontIconSize="20"
@@ -863,7 +910,7 @@ const Reserwation = ({
               customColorIcon={Colors(siteProps).successColor}
               disabled={!disabledReserwButton}
             />
-          </div>
+          </PositionButtonRezerwation>
         </>
       )}
       <Popup popupEnable={isDataActive} noContent>

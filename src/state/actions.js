@@ -844,6 +844,18 @@ export const CHANGE_USER_BLOCK_SMS_SEND = "CHANGE_USER_BLOCK_SMS_SEND"
 export const ADD_CHECKOUT_ID = "ADD_CHECKOUT_ID"
 export const ADD_COMPANY_TRANSACTION_HISTORY = "ADD_COMPANY_TRANSACTION_HISTORY"
 export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
+export const UPDATE_COMPANY_SMS_SETTINGS = "UPDATE_COMPANY_SMS_SETTINGS"
+
+export const updateCompanySMSSettings = (
+  smsReserwationAvaible,
+  smsNotifactionAvaible
+) => {
+  return {
+    type: UPDATE_COMPANY_SMS_SETTINGS,
+    smsReserwationAvaible: smsReserwationAvaible,
+    smsNotifactionAvaible: smsNotifactionAvaible,
+  }
+}
 
 export const addCoinsOffer = data => {
   return {
@@ -1929,13 +1941,10 @@ export const fetchDoReserwation = (
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 419) {
+              dispatch(addAlertItem("Konto firmowe jest nieaktywne", "red"))
             } else {
-              dispatch(
-                addAlertItem(
-                  "Błąd podczas robienia rezerwacji lub konto firmowe jest nieaktywne",
-                  "red"
-                )
-              )
+              dispatch(addAlertItem("Podany termin jest już zajęty", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))
@@ -5067,6 +5076,54 @@ export const sendInvoiceToCompanyEmail = (token, companyId, invoiceId) => {
                   "Błąd podczas wysyłania faktury vat na adres e-mail firmy",
                   "red"
                 )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSaveCompanySMS = (
+  token,
+  companyId,
+  smsReserwationAvaible,
+  smsNotifactionAvaible
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-sms-update`,
+        {
+          companyId: companyId,
+          smsReserwationAvaible: smsReserwationAvaible,
+          smsNotifactionAvaible: smsNotifactionAvaible,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateCompanySMSSettings(smsReserwationAvaible, smsNotifactionAvaible)
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano ustawienia sms.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji ustawień sms", "red")
               )
             }
           } else {

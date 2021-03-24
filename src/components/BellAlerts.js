@@ -64,6 +64,8 @@ const CountAlerts = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  overflow-wrap: normal;
+  word-break: normal;
 `
 
 const PositionRelative = styled.div`

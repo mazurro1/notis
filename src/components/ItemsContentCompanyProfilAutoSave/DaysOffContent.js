@@ -85,18 +85,22 @@ const DaysOffContent = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const filterArrayDayOff = companyDaysOff.filter(item => {
-      const isInServerData = deletedDayOff.some(
-        itemDeleted => itemDeleted._id === item._id
-      )
-      return !isInServerData
-    })
-    const allDaysOff = [...filterArrayDayOff, ...createdDayOff]
-    const sortedDaysOff = sortItemsInArrayDaysOff(allDaysOff)
-    setDayOffData(sortedDaysOff)
-    setEditableDaysOff(false)
-    setDeletedDayOff([])
-    setCreatedDayOff([])
+    if (companyDaysOff.length > 0) {
+      const filterArrayDayOff = [...companyDaysOff].filter(item => {
+        const isInServerData = deletedDayOff.some(
+          itemDeleted => itemDeleted._id === item._id
+        )
+        return !isInServerData
+      })
+      const allDaysOff = [...filterArrayDayOff, ...createdDayOff]
+      const sortedDaysOff = sortItemsInArrayDaysOff(allDaysOff)
+      setDayOffData(sortedDaysOff)
+      setDeletedDayOff([])
+      setCreatedDayOff([])
+      if (!!editableDaysOff) {
+        setEditableDaysOff(false)
+      }
+    }
   }, [companyDaysOff]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

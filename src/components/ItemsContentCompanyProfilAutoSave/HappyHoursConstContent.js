@@ -43,7 +43,9 @@ const HappyHoursConstContent = ({
   companyServices = [],
   user,
 }) => {
-  const [categoriesWithItems, setCategoriesWithItems] = useState([])
+  const [categoriesWithItems, setCategoriesWithItems] = useState(
+    happyHoursConst
+  )
   const [newHappyHour, setNewHappyHour] = useState(false)
   const [enableTimeStart, setEnableTimeStart] = useState(false)
   const [enableTimeEnd, setEnableTimeEnd] = useState(false)
@@ -54,11 +56,13 @@ const HappyHoursConstContent = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    setCategoriesWithItems(happyHoursConst)
+    // setCategoriesWithItems(happyHoursConst)
     setNewHappyHour(false)
     setEnableTimeStart(false)
     setEnableTimeEnd(false)
-    dispatch(updateConstHappyHoursFunction())
+    if (!!updateConstHappyHours) {
+      dispatch(updateConstHappyHoursFunction())
+    }
   }, [happyHoursConst, editMode, updateConstHappyHours]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 import ButtonIcon from "./ButtonIcon"
 import { MdKeyboardArrowDown, MdClose } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
 import { useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
-import UseOuterClick from "../common/UseOuterClick"
 
 const WrapSelectedElements = styled.div`
   width: 100%;
@@ -204,10 +203,19 @@ const SelectCreated = ({
   const [selectedItems, setSelectedItems] = useState([])
   const [hoverActive, setHoverActive] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
+  const refSelect = useRef(null)
 
-  const refSelect = UseOuterClick(e => {
-    setSelectActive(false)
-  })
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (refSelect.current && !refSelect.current.contains(event.target)) {
+        setSelectActive(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [refSelect])
 
   useEffect(() => {
     setSelectActive(false)
@@ -373,7 +381,7 @@ const SelectCreated = ({
       </SelectedItemValue>
     )
   })
-
+  console.log(refSelect)
   return (
     <SizeSelect width={width} isClearable={isClearable} ref={refSelect}>
       <div
