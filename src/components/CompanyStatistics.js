@@ -5,7 +5,7 @@ import { Colors } from "../common/Colors"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import ButtonIcon from "./ButtonIcon"
-import { fetchCompanyStaticts } from "../state/actions"
+import { fetchCompanyStaticts, resetCompanyStats } from "../state/actions"
 import ChartReserwationsStats from "./Charts/ChartReserwationsStats"
 import { ChartsAdmin } from "../common/Charts"
 import {
@@ -13,6 +13,7 @@ import {
   chartResState,
   chartServicesState,
   chartMonthsState,
+  chartSMSState,
 } from "./Charts/FunctionsChart"
 
 import { FaSearch } from "react-icons/fa"
@@ -80,10 +81,13 @@ const CompanyStatistics = ({ siteProps, user }) => {
   const [statsWidth, setStatsWidth] = useState(300)
   const refChart = useRef(null)
   const companyStats = useSelector(state => state.companyStats)
-
   const dispatch = useDispatch()
 
   const isAdmin = user.userId === user.company.owner
+
+  useEffect(() => {
+    dispatch(resetCompanyStats())
+  }, [])
 
   useEffect(() => {
     if (!!companyStats && chartPicker) {
@@ -112,8 +116,14 @@ const CompanyStatistics = ({ siteProps, user }) => {
           AllMonths,
           isAdmin
         )
+      } else if (chartPicker.value === 5) {
+        statsConvertedCharts = chartSMSState(
+          companyStats.stats,
+          user.company.name,
+          isAdmin
+        )
       }
-
+      console.log(companyStats.stats)
       if (!!statsConvertedCharts) {
         setDataToChar(statsConvertedCharts.allStats)
         setLabelsToChar(statsConvertedCharts.allLabels)

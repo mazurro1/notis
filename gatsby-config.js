@@ -9,7 +9,7 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `Nootis rezerwations`,
+    title: `Meetsy rezerwations`,
     author: `Hubert Mazur`,
     description: `Rezerwacje online`,
   },
@@ -64,7 +64,7 @@ module.exports.plugins.push({
   resolve: `gatsby-plugin-manifest`,
   options: {
     name: siteMetadata.title,
-    short_name: `Nootis`,
+    short_name: `Meetsy`,
     start_url: `/`,
     background_color: `#FF453C`,
     theme_color: `#070707`,

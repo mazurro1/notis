@@ -15,4 +15,8 @@ export const ChartsAdmin = [
     value: 4,
     label: "Porównanie miesięcy",
   },
+  {
+    value: 5,
+    label: "Statystyki SMS",
+  },
 ]

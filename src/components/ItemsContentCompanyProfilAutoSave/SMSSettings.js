@@ -63,6 +63,7 @@ const SMSSettings = ({
   disabledEditButtons,
   smsReserwationAvaible = false,
   smsNotifactionAvaible = false,
+  smsCanceledAvaible = false,
 }) => {
   const [
     companySMSReserwationAvaible,
@@ -73,12 +74,17 @@ const SMSSettings = ({
     setCompanySMSNotifactionAvaible,
   ] = useState(false)
 
+  const [companySMSCanceledAvaible, setCompanySMSCanceledAvaible] = useState(
+    false
+  )
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     setEditSMSSettngs(false)
     setCompanySMSReserwationAvaible(smsReserwationAvaible)
     setCompanySMSNotifactionAvaible(smsNotifactionAvaible)
+    setCompanySMSCanceledAvaible(smsCanceledAvaible)
   }, [editMode, company]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {
@@ -89,6 +95,7 @@ const SMSSettings = ({
   const handleResetValues = () => {
     setCompanySMSReserwationAvaible(smsReserwationAvaible)
     setCompanySMSNotifactionAvaible(smsNotifactionAvaible)
+    setCompanySMSCanceledAvaible(smsCanceledAvaible)
     setEditSMSSettngs(false)
   }
 
@@ -100,13 +107,18 @@ const SMSSettings = ({
     setCompanySMSNotifactionAvaible(prevState => !prevState)
   }
 
+  const handleChangeCheckboxCanceled = () => {
+    setCompanySMSCanceledAvaible(prevState => !prevState)
+  }
+
   const handleSaveCompanySMSSettings = () => {
     dispatch(
       fetchSaveCompanySMS(
         user.token,
         user.company._id,
         companySMSReserwationAvaible,
-        companySMSNotifactionAvaible
+        companySMSNotifactionAvaible,
+        companySMSCanceledAvaible
       )
     )
   }
@@ -182,6 +194,42 @@ const SMSSettings = ({
             </Checkbox>
           </CheckboxStyle>
         )}
+
+        <TextInfoCheckbox
+          siteProps={siteProps}
+          edited={editSMSSettngs}
+          active={companySMSCanceledAvaible}
+        >
+          Wiadomość sms{" "}
+          <span>
+            zostanie wysłana podczas anulowania rezerwacji przez
+            pracownika/pracodawce
+          </span>
+          {editSMSSettngs && (
+            <>
+              {" "}
+              Jeżeli wizyta zostanie anulowana przez pracownika lub pracodawce
+              firmy, to użytkownik otrzyma wiadomość SMS o anulowaniu
+              rezerwacji.
+            </>
+          )}
+        </TextInfoCheckbox>
+        {editSMSSettngs && (
+          <CheckboxStyle siteProps={siteProps}>
+            <Checkbox
+              theme="material-checkbox"
+              value={companySMSCanceledAvaible}
+              onChange={handleChangeCheckboxCanceled}
+            >
+              <TextCheckbox>
+                {!companySMSCanceledAvaible
+                  ? "Usługa wyłączona"
+                  : "Usługa włączona"}
+              </TextCheckbox>
+            </Checkbox>
+          </CheckboxStyle>
+        )}
+
         {isCompanyEditProfil ? (
           editSMSSettngs ? (
             <>
@@ -210,7 +258,8 @@ const SMSSettings = ({
                     onClick={handleSaveCompanySMSSettings}
                     disabled={
                       smsReserwationAvaible === companySMSReserwationAvaible &&
-                      smsNotifactionAvaible === companySMSNotifactionAvaible
+                      smsNotifactionAvaible === companySMSNotifactionAvaible &&
+                      smsCanceledAvaible === companySMSCanceledAvaible
                     }
                   />
                 </MarginButton>

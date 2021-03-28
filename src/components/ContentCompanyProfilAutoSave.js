@@ -511,6 +511,7 @@ const ContentCompanyProfilAutoSave = ({
                   disabledEditButtons={disabledEditButtons}
                   smsReserwationAvaible={company.smsReserwationAvaible}
                   smsNotifactionAvaible={company.smsNotifactionAvaible}
+                  smsCanceledAvaible={company.smsCanceledAvaible}
                 />
               </RightColumnItem>
             </>

@@ -312,6 +312,11 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
           <span>SMS-y</span> dają możliwość wysyłania wiadomości do klientów,
           aby powiadomić ich o zarezerwowanej/zbliżającej się wizycie
         </InfoText>
+        <InfoText siteProps={siteProps}>
+          <span>Faktura</span> wszystkie dane do faktury vat zostaną pobrane z
+          konta firmowego. Gdy proces płatności będzie pozytywny, to zostanie
+          wysłana faktura na firmowy adres e-mail.
+        </InfoText>
         <TitleOffer siteProps={siteProps}>Konta premium:</TitleOffer>
         <AllItemsCoins>{mapCoinsOffersPremium}</AllItemsCoins>
         <TitleOffer siteProps={siteProps}>Pakiety SMS:</TitleOffer>

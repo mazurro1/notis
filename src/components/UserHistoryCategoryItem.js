@@ -401,10 +401,13 @@ const UserHistoryCategoryItem = ({
   )
   const actualDate = new Date()
   const isReserwationEnd = actualDate < dateReserwation
-  const isDateInToDo =
-    dateReserwation <= new Date() &&
-    dateReserwationEnd >= new Date() &&
-    !!!item.item.visitCanceled
+  let isDateInToDo = false
+  if (!!item.item) {
+    isDateInToDo =
+      dateReserwation <= new Date() &&
+      dateReserwationEnd >= new Date() &&
+      !!!item.item.visitCanceled
+  }
 
   let workerName = " Konto nieaktywne"
   if (!!item.toWorkerUserId) {

@@ -372,3 +372,86 @@ export const chartMonthsState = (companyStats, allMonths, isAdmin) => {
     allLabels: allLabels,
   }
 }
+
+export const chartSMSState = (companyStats, companyName, isAdmin) => {
+  const allStats = []
+  // const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
+  //   const actualDate = new Date()
+  //   const splitDateEnd = item.dateEnd.split(":")
+  //   const dateItem = new Date(
+  //     item.dateYear,
+  //     item.dateMonth - 1,
+  //     item.dateDay,
+  //     Number(splitDateEnd[0]),
+  //     Number(splitDateEnd[1])
+  //   )
+  //   if (actualDate < dateItem) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // })
+
+  companyStats.forEach(state => {
+    if (isAdmin) {
+      const findIndexAllCompany = allStats.findIndex(
+        item => item.userId === "company"
+      )
+      if (findIndexAllCompany >= 0) {
+        if (!!state.sendSMSReserwation) {
+          allStats[findIndexAllCompany].sendSMSReserwation =
+            allStats[findIndexAllCompany].sendSMSReserwation + 1
+        } else if (!!state.sendSMSNotifaction) {
+          allStats[findIndexAllCompany].sendSMSNotifaction =
+            allStats[findIndexAllCompany].sendSMSNotifaction + 1
+        } else if (!!state.sendSMSCanceled) {
+          allStats[findIndexAllCompany].sendSMSCanceled =
+            allStats[findIndexAllCompany].sendSMSCanceled + 1
+        }
+        allStats[findIndexAllCompany].countReserwations =
+          allStats[findIndexAllCompany].countReserwations + 1
+      } else {
+        const dateToChar = {
+          countReserwations: 1,
+          sendSMSReserwation: !!state.sendSMSReserwation ? 1 : 0,
+          sendSMSNotifaction: !!state.sendSMSNotifaction ? 1 : 0,
+          sendSMSCanceled: !!state.sendSMSCanceled ? 1 : 0,
+          userId: "company",
+          user: companyName.toUpperCase(),
+        }
+        allStats.push(dateToChar)
+      }
+    }
+  })
+  const allLabels = [
+    {
+      dataKey: "countReserwations",
+      label: "Liczba rezerwacj",
+      extraValueLabel: "",
+      color: "primaryColorDark",
+    },
+    {
+      dataKey: "sendSMSReserwation",
+      label: "Powiadomienie SMS podczas rezerwacji",
+      extraValueLabel: "",
+      color: "successColor",
+    },
+    {
+      dataKey: "sendSMSNotifaction",
+      label: "Powiadomienie SMS przed wizytą",
+      extraValueLabel: "",
+      color: "secondColor",
+    },
+    {
+      dataKey: "sendSMSCanceled",
+      label:
+        "Powiadomienie SMS podczas anulowania rezerwacji przez pracodawce/pracownika",
+      extraValueLabel: "",
+      color: "dangerColor",
+    },
+  ]
+  return {
+    allStats: allStats,
+    allLabels: allLabels,
+  }
+}

@@ -381,7 +381,7 @@ const IconStyle = styled.div`
   user-select: none;
 `
 
-const NootisLogo = styled.div`
+const MeetsyLogo = styled.div`
   font-size: 1.8rem;
   background-color: ${props => Colors(props.siteProps).primaryColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
@@ -768,7 +768,7 @@ const Navigation = ({ isMainPage }) => {
     </CSSTransition>
   )
 
-  const PopupWorkersReserwations = (
+  const PopupWorkersReserwations = !!user && (
     <Popup
       popupEnable={workerReserwationsVisible}
       handleClose={handleCloseWorkerReserwations}
@@ -806,7 +806,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupWorkerEditHours = (
+  const PopupWorkerEditHours = !!user && (
     <Popup
       popupEnable={editWorkerHours}
       handleClose={() => dispatch(changeEditWorkerHours(false, null))}
@@ -821,7 +821,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupEmployeeWorkingHours = (
+  const PopupEmployeeWorkingHours = !!user && (
     <Popup
       popupEnable={emplyeeWorkingHoursVisible}
       handleClose={handleEmplyeeWorkingHoursVisible}
@@ -900,7 +900,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupCreateCompany = (
+  const PopupCreateCompany = !!user && (
     <Popup
       popupEnable={createCompanyVisible}
       handleClose={handleCreateCompany}
@@ -1551,9 +1551,9 @@ const Navigation = ({ isMainPage }) => {
                   <LinkEffect
                     text={
                       isMobileSize ? (
-                        <NootisLogo siteProps={siteProps}>N</NootisLogo>
+                        <MeetsyLogo siteProps={siteProps}>M</MeetsyLogo>
                       ) : (
-                        "NOOTIS"
+                        "Meetsy"
                       )
                     }
                     path="/"

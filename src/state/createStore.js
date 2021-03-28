@@ -44,6 +44,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  RESET_COMPANY_STATS,
   UPDATE_COMPANY_SMS_SETTINGS,
   ADD_COMPANY_TRANSACTION_HISTORY,
   CHANGE_USER_BLOCK_SMS_SEND,
@@ -605,6 +606,7 @@ const reducer = (state = initialState, action) => {
           action.smsReserwationAvaible
         newWorkCompanyDataSMS.smsNotifactionAvaible =
           action.smsNotifactionAvaible
+        newWorkCompanyDataSMS.smsCanceledAvaible = action.smsCanceledAvaible
       }
       return {
         ...state,
@@ -728,6 +730,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         companyStats: dateCompanyStats,
+      }
+    }
+
+    case RESET_COMPANY_STATS: {
+      return {
+        ...state,
+        companyStats: null,
       }
     }
 

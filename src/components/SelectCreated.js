@@ -381,7 +381,7 @@ const SelectCreated = ({
       </SelectedItemValue>
     )
   })
-  console.log(refSelect)
+
   return (
     <SizeSelect width={width} isClearable={isClearable} ref={refSelect}>
       <div

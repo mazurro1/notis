@@ -337,7 +337,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
             />
           ) : (
             <LinkEffect
-              path={`/company/${item.linkPath}`}
+              path={`/company?${item.linkPath}`}
               text={
                 <BackGroundImageDefault siteProps={siteProps}>
                   <MdImage />
@@ -428,7 +428,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
             </ButtonReserv>
             <ButtonReserv>
               <LinkEffect
-                path={`/company/${item.linkPath}`}
+                path={`/company?${item.linkPath}`}
                 text={
                   <ButtonIcon
                     title="REZERWUJ"

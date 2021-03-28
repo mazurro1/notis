@@ -286,7 +286,8 @@ const WorkerItem = ({
   }
 
   const handleDeleteUser = () => {
-    dispatch(fetchDeleteUserFromCompany(companyId, item.user.email, user.token))
+    console.log(item.user)
+    dispatch(fetchDeleteUserFromCompany(companyId, item.user._id, user.token))
   }
 
   const handleSentAgainEmailVeryfication = () => {

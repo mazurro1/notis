@@ -845,15 +845,24 @@ export const ADD_CHECKOUT_ID = "ADD_CHECKOUT_ID"
 export const ADD_COMPANY_TRANSACTION_HISTORY = "ADD_COMPANY_TRANSACTION_HISTORY"
 export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
 export const UPDATE_COMPANY_SMS_SETTINGS = "UPDATE_COMPANY_SMS_SETTINGS"
+export const RESET_COMPANY_STATS = "RESET_COMPANY_STATS"
+
+export const resetCompanyStats = () => {
+  return {
+    type: RESET_COMPANY_STATS,
+  }
+}
 
 export const updateCompanySMSSettings = (
   smsReserwationAvaible,
-  smsNotifactionAvaible
+  smsNotifactionAvaible,
+  smsCanceledAvaible
 ) => {
   return {
     type: UPDATE_COMPANY_SMS_SETTINGS,
     smsReserwationAvaible: smsReserwationAvaible,
     smsNotifactionAvaible: smsNotifactionAvaible,
+    smsCanceledAvaible: smsCanceledAvaible,
   }
 }
 
@@ -1850,7 +1859,7 @@ export const fetchConfirmAddWorkerToCompany = (
   }
 }
 
-export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
+export const fetchDeleteUserFromCompany = (companyId, workerUserId, token) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -1858,7 +1867,7 @@ export const fetchDeleteUserFromCompany = (companyId, workerId, token) => {
         `${Site.serverUrl}/delete-worker-from-company`,
         {
           companyId: companyId,
-          workerEmail: workerId,
+          workerUserId: workerUserId,
         },
         {
           headers: {
@@ -5091,7 +5100,8 @@ export const fetchSaveCompanySMS = (
   token,
   companyId,
   smsReserwationAvaible,
-  smsNotifactionAvaible
+  smsNotifactionAvaible,
+  smsCanceledAvaible
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -5102,6 +5112,7 @@ export const fetchSaveCompanySMS = (
           companyId: companyId,
           smsReserwationAvaible: smsReserwationAvaible,
           smsNotifactionAvaible: smsNotifactionAvaible,
+          smsCanceledAvaible: smsCanceledAvaible,
         },
         {
           headers: {
@@ -5111,7 +5122,11 @@ export const fetchSaveCompanySMS = (
       )
       .then(response => {
         dispatch(
-          updateCompanySMSSettings(smsReserwationAvaible, smsNotifactionAvaible)
+          updateCompanySMSSettings(
+            smsReserwationAvaible,
+            smsNotifactionAvaible,
+            smsCanceledAvaible
+          )
         )
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano ustawienia sms.", "green"))
