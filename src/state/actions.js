@@ -821,6 +821,8 @@ export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
 export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE"
 export const RESET_USER_PROFIL = "RESET_USER_PROFIL"
 export const ADD_NEW_COMPANY_STAMPS = "ADD_NEW_COMPANY_STAMPS"
+export const UPDATE_COMPANY_STAMPS = "UPDATE_COMPANY_STAMPS"
+export const DELETE_COMPANY_STAMPS = "DELETE_COMPANY_STAMPS"
 export const UPDATE_USER_RESERWATIONS_COUNT = "UPDATE_USER_RESERWATIONS_COUNT"
 export const DELETE_FAVOURITES_COMPANY = "DELETE_FAVOURITES_COMPANY"
 export const ADD_FAVOURITES_COMPANY = "ADD_FAVOURITES_COMPANY"
@@ -1032,6 +1034,22 @@ export const updateUserReserwationsCount = (
     companyId: companyId,
     isStampActive: isStampActive,
     countStampsToActive: countStampsToActive,
+  }
+}
+
+export const daleteCompanyStamps = (companyId, stampId) => {
+  return {
+    type: DELETE_COMPANY_STAMPS,
+    companyId: companyId,
+    stampId: stampId,
+  }
+}
+
+export const updateCompanyStamps = (companyId, stampData) => {
+  return {
+    type: UPDATE_COMPANY_STAMPS,
+    companyId: companyId,
+    stampData: stampData,
   }
 }
 
@@ -4228,7 +4246,7 @@ export const companyDeleteStamp = (token, companyId, stampId) => {
         }
       )
       .then(response => {
-        dispatch(addNewCompanyStamps(companyId, response.data.newCompanyStamps))
+        dispatch(daleteCompanyStamps(companyId, stampId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto pieczątke.", "green"))
       })
@@ -4266,7 +4284,7 @@ export const companyUpdateStamp = (token, companyId, stampData) => {
         }
       )
       .then(response => {
-        dispatch(addNewCompanyStamps(companyId, response.data.newCompanyStamps))
+        dispatch(updateCompanyStamps(companyId, stampData))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano pieczątke.", "green"))
       })

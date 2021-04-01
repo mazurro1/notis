@@ -1148,7 +1148,7 @@ const Navigation = ({ isMainPage }) => {
       hasPermission = user.company.owner === user.userId
       isAdmin = user.company.owner === user.userId
       if (!!user.company.sms) {
-        companySMS = Buffer.from(user.company.sms, "base64").toString("ascii")
+        companySMS = user.company.sms
       }
       if (!!selectWorker) {
         if (!!!hasPermission) {

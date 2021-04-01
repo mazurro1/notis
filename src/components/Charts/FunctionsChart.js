@@ -445,7 +445,7 @@ export const chartSMSState = (companyStats, companyName, isAdmin) => {
     {
       dataKey: "sendSMSCanceled",
       label:
-        "Powiadomienie SMS podczas anulowania rezerwacji przez pracodawce/pracownika",
+        "Powiadomienie SMS podczas anulowania/zmiany rezerwacji przez pracodawce/pracownika",
       extraValueLabel: "",
       color: "dangerColor",
     },

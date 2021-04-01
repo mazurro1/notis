@@ -63,6 +63,8 @@ import {
   ADD_USER_COMPANY_AVAILABILITY,
   UPDATE_USER_RESERWATIONS_COUNT,
   ADD_NEW_COMPANY_STAMPS,
+  UPDATE_COMPANY_STAMPS,
+  DELETE_COMPANY_STAMPS,
   UPDATE_USER_IMAGE,
   CHANGE_ACTIVE_WORKER,
   CHANGE_WORKING_HOURS,
@@ -827,6 +829,60 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case UPDATE_COMPANY_STAMPS: {
+      const patchWorkCompanyNewStamp = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if (!!patchWorkCompanyNewStamp) {
+        if (patchWorkCompanyNewStamp._id === action.companyId) {
+          const findIndexCompanyStamps = patchWorkCompanyNewStamp.companyStamps.findIndex(
+            item => item._id === action.stampData.stampId
+          )
+          if (findIndexCompanyStamps >= 0) {
+            patchWorkCompanyNewStamp.companyStamps[
+              findIndexCompanyStamps
+            ].disabled = action.stampData.disabledStamp
+
+            patchWorkCompanyNewStamp.companyStamps[
+              findIndexCompanyStamps
+            ].promotionPercent = action.stampData.promotionPercent
+
+            patchWorkCompanyNewStamp.companyStamps[
+              findIndexCompanyStamps
+            ].countStampsToActive = action.stampData.stampCount
+
+            patchWorkCompanyNewStamp.companyStamps[
+              findIndexCompanyStamps
+            ].servicesId = action.stampData.selectedServicesIds
+          }
+        }
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyNewStamp,
+      }
+    }
+
+    case DELETE_COMPANY_STAMPS: {
+      const patchWorkCompanyNewStamp = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      if (!!patchWorkCompanyNewStamp) {
+        if (patchWorkCompanyNewStamp._id === action.companyId) {
+          const filteredCompanyStamps = patchWorkCompanyNewStamp.companyStamps.filter(
+            item => item._id !== action.stampId
+          )
+          patchWorkCompanyNewStamp.companyStamps = filteredCompanyStamps
+        }
+      }
+      return {
+        ...state,
+        workCompanyData: patchWorkCompanyNewStamp,
+      }
+    }
+
     case CHANGE_ACTIVE_WORKER: {
       const valueToActiveWorker = !!state.activeWorkerUserId
         ? state.activeWorkerUserId.user === action.value.user
@@ -1238,6 +1294,7 @@ const reducer = (state = initialState, action) => {
       const newWorkCompanyDataHappyHoursConst = !!state.workCompanyData
         ? { ...state.workCompanyData }
         : null
+
       if (!!newWorkCompanyDataHappyHoursConst) {
         if (!!action.constHappyHours) {
           newWorkCompanyDataHappyHoursConst.happyHoursConst =

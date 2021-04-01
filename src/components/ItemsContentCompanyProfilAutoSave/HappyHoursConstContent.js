@@ -56,7 +56,7 @@ const HappyHoursConstContent = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // setCategoriesWithItems(happyHoursConst)
+    setCategoriesWithItems(happyHoursConst)
     setNewHappyHour(false)
     setEnableTimeStart(false)
     setEnableTimeEnd(false)

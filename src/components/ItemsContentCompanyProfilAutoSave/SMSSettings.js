@@ -202,7 +202,7 @@ const SMSSettings = ({
         >
           Wiadomość sms{" "}
           <span>
-            zostanie wysłana podczas anulowania rezerwacji przez
+            zostanie wysłana podczas anulowania/zmiany rezerwacji przez
             pracownika/pracodawce
           </span>
           {editSMSSettngs && (
