@@ -512,6 +512,7 @@ const ContentCompanyProfilAutoSave = ({
                   smsReserwationAvaible={company.smsReserwationAvaible}
                   smsNotifactionAvaible={company.smsNotifactionAvaible}
                   smsCanceledAvaible={company.smsCanceledAvaible}
+                  smsChangedAvaible={company.smsChangedAvaible}
                 />
               </RightColumnItem>
             </>

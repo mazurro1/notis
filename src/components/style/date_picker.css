@@ -83,7 +83,6 @@
   margin-bottom: 0;
 }
 .date_picker-week-day {
-  height: 34px;
   width: 34px;
   vertical-align: middle;
   font-size: 15px;
@@ -95,8 +94,8 @@
   background: #fff;
   position: relative;
   border-radius: 50%;
-  margin: 0;
-  padding: 0;
+  margin: 2px;
+  padding: 2px;
   border: none;
   outline: 0;
 }

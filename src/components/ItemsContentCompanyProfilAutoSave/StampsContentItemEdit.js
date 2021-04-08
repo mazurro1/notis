@@ -7,8 +7,8 @@ import ReactTooltip from "react-tooltip"
 import InputIcon from "../InputIcon"
 import SelectCreated from "../SelectCreated"
 import { Checkbox } from "react-input-checkbox"
-import { useDispatch } from "react-redux"
-import { companyUpdateStamp } from "../../state/actions"
+import { useDispatch, useSelector } from "react-redux"
+import { companyUpdateStamp, resetUpdateStamps } from "../../state/actions"
 import Popup from "../Popup"
 
 const ButtonTextPositionHappy = styled.div`
@@ -61,6 +61,7 @@ const StampsContentItemEdit = ({
   const [reset, setReset] = useState(false)
   const [selectedServicesIds, setSelectedServicesIds] = useState([])
   const [disabledStamp, setDisabledStamp] = useState(false)
+  const stampsUpdate = useSelector(state => state.stampsUpdate)
 
   const dispatch = useDispatch()
 
@@ -84,7 +85,9 @@ const StampsContentItemEdit = ({
       }
     })
     setSelectedServicesIds(mapServicesInPromotion)
-  }, [reset, companyStamps]) // eslint-disable-line react-hooks/exhaustive-deps
+    setEditedItemEnable(false)
+    dispatch(resetUpdateStamps())
+  }, [reset, companyStamps, stampsUpdate]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangePercent = e => {
     if (Number(e.target.value) >= 0) {
@@ -154,7 +157,7 @@ const StampsContentItemEdit = ({
   const isEq =
     JSON.stringify(oldItemToCompare) == JSON.stringify(newItemToCompare)
 
-  const disabledSave = !isEq
+  const disabledSave = !isEq && selectedServicesIds.length > 0
 
   return (
     <Popup

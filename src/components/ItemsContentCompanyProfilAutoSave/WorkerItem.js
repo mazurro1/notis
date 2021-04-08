@@ -32,6 +32,7 @@ import ReactTooltip from "react-tooltip"
 import { Permissions } from "../../common/Permissions"
 import { Site } from "../../common/Site"
 import Popup from "../Popup"
+import WorkerItemDelete from "./WorkerItemDelete"
 
 const ActiveWorkerStyle = styled.div`
   position: absolute;
@@ -82,6 +83,12 @@ const DeleteIconPosition = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+`
+
+const TextToDeleteWorker = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-size: 0.9rem;
+  margin-bottom: 20px;
 `
 
 const DeleteIconStyle = styled.div`
@@ -285,9 +292,10 @@ const WorkerItem = ({
     e.stopPropagation()
   }
 
-  const handleDeleteUser = () => {
-    console.log(item.user)
-    dispatch(fetchDeleteUserFromCompany(companyId, item.user._id, user.token))
+  const handleDeleteUser = password => {
+    dispatch(
+      fetchDeleteUserFromCompany(companyId, item.user._id, user.token, password)
+    )
   }
 
   const handleSentAgainEmailVeryfication = () => {
@@ -473,7 +481,7 @@ const WorkerItem = ({
 
   return (
     <WorkerItemStyle
-      userEditItem={userEditItem}
+      userEditItem={userConfirmDelete || userEditItem}
       selectHeight={300}
       siteProps={siteProps}
       editConstTimeWorker={editConstTimeWorker}
@@ -661,34 +669,18 @@ const WorkerItem = ({
               popupEnable={userConfirmDelete}
               position="absolute"
               borderRadius
-              noContent
+              title="Usuń pracownika"
+              smallTitle
+              secondColors
             >
-              <ButtonContent>
-                <ButtonDeleteStyle>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    onClick={handleUserConfirmDelete}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                  />
-                </ButtonDeleteStyle>
-                <ButtonDeleteStyle>
-                  <ButtonIcon
-                    title="Usuń"
-                    uppercase
-                    fontIconSize="18"
-                    fontSize="14"
-                    icon={<MdDelete />}
-                    onClick={handleDeleteUser}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                  />
-                </ButtonDeleteStyle>
-              </ButtonContent>
+              <WorkerItemDelete
+                TextToDeleteWorker={TextToDeleteWorker}
+                siteProps={siteProps}
+                ButtonContent={ButtonContent}
+                ButtonDeleteStyle={ButtonDeleteStyle}
+                handleUserConfirmDelete={handleUserConfirmDelete}
+                handleDeleteUser={handleDeleteUser}
+              />
             </Popup>
           )}
           <Popup

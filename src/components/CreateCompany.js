@@ -134,9 +134,20 @@ const CreateCompany = () => {
     setIndustries(allValues)
   }
 
+  let userVeryfiedPhone = false
+  if (!!user) {
+    if (!!user.phoneVerified) {
+      userVeryfiedPhone = user.phoneVerified
+    }
+  }
+
   const tooltipButtonRegister = !validButtonRegisterCompany && (
     <ReactTooltip id="alertRegistration" effect="float" multiline={true}>
-      <span>Uzupełnij wszystkie dane</span>
+      {!userVeryfiedPhone ? (
+        <span>Zweryfikuj numer telefonu aby stworzyć konto firmowe</span>
+      ) : (
+        <span>Uzupełnij wszystkie dane</span>
+      )}
     </ReactTooltip>
   )
 
@@ -232,7 +243,7 @@ const CreateCompany = () => {
             uppercase
             fontIconSize="20"
             icon={<MdWork />}
-            disabled={!validButtonRegisterCompany}
+            disabled={!validButtonRegisterCompany || !userVeryfiedPhone}
             fontSize="16"
           />
         </div>

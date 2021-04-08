@@ -174,6 +174,11 @@ const SelectStyle = styled.div`
   margin-bottom: 20px;
 `
 
+const TextSelectStyle = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-size: 0.9rem;
+`
+
 const CategoryItem = ({
   item,
   isCompanyEditProfil,
@@ -550,6 +555,9 @@ const CategoryItem = ({
                     <TextCheckbox>Niestała cena</TextCheckbox>
                   </Checkbox>
                 </CheckboxStyle>
+                <TextSelectStyle siteProps={siteProps}>
+                  Nadawany kolor w podglądzie rezerwacji
+                </TextSelectStyle>
                 <SelectStyle>
                   <SelectCreated
                     options={ServiceColors}

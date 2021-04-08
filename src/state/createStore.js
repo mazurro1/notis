@@ -63,6 +63,7 @@ import {
   ADD_USER_COMPANY_AVAILABILITY,
   UPDATE_USER_RESERWATIONS_COUNT,
   ADD_NEW_COMPANY_STAMPS,
+  RESET_UPDATE_STAMPS,
   UPDATE_COMPANY_STAMPS,
   DELETE_COMPANY_STAMPS,
   UPDATE_USER_IMAGE,
@@ -124,6 +125,7 @@ import {
   DELETE_MESSAGE_WORKER_USER_INFORMATION,
   ADD_TO_USER_INFORMATIONS,
   COMPANY_PATCH_SETTINGS,
+  DELETE_WORKER_FROM_COMPANY,
 } from "./actions"
 
 const initialState = {
@@ -203,6 +205,7 @@ const initialState = {
   workingHours: null,
   activeWorkerUserId: null,
   companyStats: null,
+  stampsUpdate: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -609,6 +612,7 @@ const reducer = (state = initialState, action) => {
         newWorkCompanyDataSMS.smsNotifactionAvaible =
           action.smsNotifactionAvaible
         newWorkCompanyDataSMS.smsCanceledAvaible = action.smsCanceledAvaible
+        newWorkCompanyDataSMS.smsChangedAvaible = action.smsChangedAvaible
       }
       return {
         ...state,
@@ -683,6 +687,40 @@ const reducer = (state = initialState, action) => {
           if (!!action.newTimeEnd) {
             updateWorkerHistoryReserwations.reserwations[findIdItem].dateEnd =
               action.newTimeEnd
+          }
+          if (!!action.workerSelectedUserId) {
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].toWorkerUserId = action.workerSelectedUserId
+          }
+          if (!!action.dateReserwation) {
+            const validDateStartReserwation = !!action.newTimeStart
+              ? action.newTimeStart
+              : updateWorkerHistoryReserwations.reserwations[findIdItem]
+                  .dateStart
+            const splitDateStartReserwation = validDateStartReserwation.split(
+              ":"
+            )
+            const splitNewDateReserwation = action.dateReserwation.split("-")
+            const newDateReserwationToSave = new Date(
+              Number(splitNewDateReserwation[2]),
+              Number(splitNewDateReserwation[1]) - 1,
+              Number(splitNewDateReserwation[0]),
+              Number(splitDateStartReserwation[0]),
+              Number(splitDateStartReserwation[1])
+            )
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].fullDate = newDateReserwationToSave
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].dateYear = Number(splitNewDateReserwation[2])
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].dateMonth = Number(splitNewDateReserwation[1])
+            updateWorkerHistoryReserwations.reserwations[
+              findIdItem
+            ].dateDay = Number(splitNewDateReserwation[0])
           }
         }
       }
@@ -829,6 +867,13 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case RESET_UPDATE_STAMPS: {
+      return {
+        ...state,
+        stampsUpdate: false,
+      }
+    }
+
     case UPDATE_COMPANY_STAMPS: {
       const patchWorkCompanyNewStamp = !!state.workCompanyData
         ? { ...state.workCompanyData }
@@ -861,6 +906,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         workCompanyData: patchWorkCompanyNewStamp,
+        stampsUpdate: true,
       }
     }
 
@@ -2060,11 +2106,28 @@ const reducer = (state = initialState, action) => {
         user: userHasPhone,
       }
 
+    case DELETE_WORKER_FROM_COMPANY: {
+      const dateToDeleteWorker = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+      if (!!dateToDeleteWorker) {
+        const filterWorkers = dateToDeleteWorker.workers.filter(
+          item => item.user._id !== action.workerUserId
+        )
+        dateToDeleteWorker.workers = filterWorkers
+      }
+      return {
+        ...state,
+        workCompanyData: dateToDeleteWorker,
+      }
+    }
+
     case REPLACE_COMPANY_DATA:
       return {
         ...state,
         workCompanyData: action.data,
       }
+
     case RESET_EDIT_COMPANY:
       return {
         ...state,

@@ -822,6 +822,7 @@ export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE"
 export const RESET_USER_PROFIL = "RESET_USER_PROFIL"
 export const ADD_NEW_COMPANY_STAMPS = "ADD_NEW_COMPANY_STAMPS"
 export const UPDATE_COMPANY_STAMPS = "UPDATE_COMPANY_STAMPS"
+export const RESET_UPDATE_STAMPS = "RESET_UPDATE_STAMPS"
 export const DELETE_COMPANY_STAMPS = "DELETE_COMPANY_STAMPS"
 export const UPDATE_USER_RESERWATIONS_COUNT = "UPDATE_USER_RESERWATIONS_COUNT"
 export const DELETE_FAVOURITES_COMPANY = "DELETE_FAVOURITES_COMPANY"
@@ -848,6 +849,15 @@ export const ADD_COMPANY_TRANSACTION_HISTORY = "ADD_COMPANY_TRANSACTION_HISTORY"
 export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
 export const UPDATE_COMPANY_SMS_SETTINGS = "UPDATE_COMPANY_SMS_SETTINGS"
 export const RESET_COMPANY_STATS = "RESET_COMPANY_STATS"
+export const DELETE_WORKER_FROM_COMPANY = "DELETE_WORKER_FROM_COMPANY"
+
+export const deleteWorkerFromCompany = (companyId, workerUserId) => {
+  return {
+    type: DELETE_WORKER_FROM_COMPANY,
+    companyId: companyId,
+    workerUserId: workerUserId,
+  }
+}
 
 export const resetCompanyStats = () => {
   return {
@@ -858,13 +868,15 @@ export const resetCompanyStats = () => {
 export const updateCompanySMSSettings = (
   smsReserwationAvaible,
   smsNotifactionAvaible,
-  smsCanceledAvaible
+  smsCanceledAvaible,
+  smsChangedAvaible
 ) => {
   return {
     type: UPDATE_COMPANY_SMS_SETTINGS,
     smsReserwationAvaible: smsReserwationAvaible,
     smsNotifactionAvaible: smsNotifactionAvaible,
     smsCanceledAvaible: smsCanceledAvaible,
+    smsChangedAvaible: smsChangedAvaible,
   }
 }
 
@@ -933,7 +945,9 @@ export const updateReserwationWorkerDate = (
   changed,
   noFinished,
   newTimeStart,
-  newTimeEnd
+  newTimeEnd,
+  workerSelectedUserId,
+  dateReserwation
 ) => {
   return {
     type: UPDATE_RESERWATION_WORKER_DATA,
@@ -942,6 +956,8 @@ export const updateReserwationWorkerDate = (
     noFinished: noFinished,
     newTimeStart: newTimeStart,
     newTimeEnd: newTimeEnd,
+    workerSelectedUserId: workerSelectedUserId,
+    dateReserwation: dateReserwation,
   }
 }
 
@@ -1042,6 +1058,12 @@ export const daleteCompanyStamps = (companyId, stampId) => {
     type: DELETE_COMPANY_STAMPS,
     companyId: companyId,
     stampId: stampId,
+  }
+}
+
+export const resetUpdateStamps = () => {
+  return {
+    type: RESET_UPDATE_STAMPS,
   }
 }
 
@@ -1779,6 +1801,13 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 441) {
+              dispatch(
+                addAlertItem(
+                  "Podany użytkownik znajduje się w bazie pracowników.",
+                  "red"
+                )
+              )
             } else {
               dispatch(addAlertItem("Błąd podczas dodawania pracownika", "red"))
             }
@@ -1877,7 +1906,12 @@ export const fetchConfirmAddWorkerToCompany = (
   }
 }
 
-export const fetchDeleteUserFromCompany = (companyId, workerUserId, token) => {
+export const fetchDeleteUserFromCompany = (
+  companyId,
+  workerUserId,
+  token,
+  password
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -1886,6 +1920,7 @@ export const fetchDeleteUserFromCompany = (companyId, workerUserId, token) => {
         {
           companyId: companyId,
           workerUserId: workerUserId,
+          password: password,
         },
         {
           headers: {
@@ -1895,13 +1930,16 @@ export const fetchDeleteUserFromCompany = (companyId, workerUserId, token) => {
       )
       .then(response => {
         dispatch(addAlertItem("Usunięto pracownika.", "green"))
-        dispatch(fetchCompanyData(companyId, token))
+        dispatch(deleteWorkerFromCompany(companyId, workerUserId))
+        dispatch(changeSpinner(false))
       })
       .catch(error => {
         if (!!error) {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 441) {
+              dispatch(addAlertItem("Błędne hasło", "red"))
             } else {
               dispatch(addAlertItem("Błąd podczas usuwania pracownika", "red"))
             }
@@ -2540,7 +2578,9 @@ export const fetchUpdateWorkerReserwation = (
   monthPicker,
   companyId,
   newTimeStart,
-  newTimeEnd
+  newTimeEnd,
+  workerSelectedUserId,
+  dateReserwation = null
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -2555,6 +2595,8 @@ export const fetchUpdateWorkerReserwation = (
           noFinished: noFinished,
           newTimeStart: newTimeStart,
           newTimeEnd: newTimeEnd,
+          workerSelectedUserId: workerSelectedUserId,
+          dateReserwation: dateReserwation,
         },
         {
           headers: {
@@ -2563,7 +2605,11 @@ export const fetchUpdateWorkerReserwation = (
         }
       )
       .then(response => {
-        if (!!canceled) {
+        if (
+          !!canceled ||
+          workerUserId !==
+            (!!workerSelectedUserId ? workerSelectedUserId : workerUserId)
+        ) {
           dispatch(deleteReserwationWorkerDate(reserwationId))
         } else {
           dispatch(
@@ -2572,7 +2618,9 @@ export const fetchUpdateWorkerReserwation = (
               changed,
               noFinished,
               newTimeStart,
-              newTimeEnd
+              newTimeEnd,
+              workerSelectedUserId,
+              dateReserwation
             )
           )
         }
@@ -5119,7 +5167,8 @@ export const fetchSaveCompanySMS = (
   companyId,
   smsReserwationAvaible,
   smsNotifactionAvaible,
-  smsCanceledAvaible
+  smsCanceledAvaible,
+  smsChangedAvaible
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -5131,6 +5180,7 @@ export const fetchSaveCompanySMS = (
           smsReserwationAvaible: smsReserwationAvaible,
           smsNotifactionAvaible: smsNotifactionAvaible,
           smsCanceledAvaible: smsCanceledAvaible,
+          smsChangedAvaible: smsChangedAvaible,
         },
         {
           headers: {
@@ -5143,7 +5193,8 @@ export const fetchSaveCompanySMS = (
           updateCompanySMSSettings(
             smsReserwationAvaible,
             smsNotifactionAvaible,
-            smsCanceledAvaible
+            smsCanceledAvaible,
+            smsChangedAvaible
           )
         )
         dispatch(changeSpinner(false))

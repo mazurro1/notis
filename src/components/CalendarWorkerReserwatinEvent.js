@@ -3,7 +3,7 @@ import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
-import { FaSave } from "react-icons/fa"
+import { FaSave, FaCalendarDay } from "react-icons/fa"
 import {
   MdClose,
   MdInfo,
@@ -11,6 +11,7 @@ import {
   MdCancel,
   MdAssignmentLate,
   MdTimelapse,
+  MdArrowBack,
 } from "react-icons/md"
 import {
   getMonthNamePl,
@@ -20,6 +21,8 @@ import {
 import { Checkbox } from "react-input-checkbox"
 import Popup from "./Popup"
 import TimePickerContent from "./TimePicker"
+import SelectCreated from "./SelectCreated"
+import SelectDataCalendar from "./SelectDataCalendar"
 
 const EventItemPosition = styled.div`
   position: absolute;
@@ -193,6 +196,8 @@ const CalendarWorkerReserwatinEvent = ({
   screenOpen,
   handleChangeReserwationStatus,
   itemCompanyHours,
+  isAdmin,
+  itemCompany,
 }) => {
   const [confirmCancelReserwation, setConfirmCancelReserwation] = useState(
     false
@@ -204,8 +209,19 @@ const CalendarWorkerReserwatinEvent = ({
   const [dateStart, setDateStart] = useState(null)
   const [dateEnd, setDateEnd] = useState(null)
   const [isHolidays, setIsHolidays] = useState(false)
+  const [selectedWorker, setSelectedWorker] = useState(null)
+  const [isSelectDate, setIsSelectDate] = useState(false)
+  const [selectedDateReserwation, setSelectedDateReserwation] = useState(null)
+  const [
+    selectedDateReserwationDate,
+    setSelectedDateReserwationDate,
+  ] = useState(null)
 
   useEffect(() => {
+    setNewTimeEnd(null)
+    setNewTimeStart(null)
+    setSelectedDateReserwation(null)
+    setSelectedDateReserwationDate(null)
     if (!!selectedEvent) {
       const dateStartName = `${
         selectedEvent.start.getHours() < 10
@@ -227,6 +243,18 @@ const CalendarWorkerReserwatinEvent = ({
       }`
       setDateStart(dateStartName)
       setDateEnd(dateEndName)
+      setSelectedDateReserwation(new Date(selectedEvent.start))
+      const dateReserwationDate = `${
+        selectedEvent.start.getDate() < 10
+          ? `0${selectedEvent.start.getDate()}`
+          : selectedEvent.start.getDate()
+      }-${
+        selectedEvent.start.getMonth() + 1 < 10
+          ? `0${selectedEvent.start.getMonth() + 1}`
+          : selectedEvent.start.getMonth() + 1
+      }-${selectedEvent.start.getFullYear()}`
+
+      setSelectedDateReserwationDate(dateReserwationDate)
       if (!!selectedEvent.holidays) {
         setIsHolidays(selectedEvent.holidays)
       } else {
@@ -234,6 +262,48 @@ const CalendarWorkerReserwatinEvent = ({
       }
     }
   }, [dateStart, dateEnd, selectedEvent])
+
+  useEffect(() => {
+    setSelectedWorker(null)
+    if (!!itemCompany && !!selectedEvent) {
+      if (!!itemCompany.owner._id) {
+        if (itemCompany.owner._id === selectedEvent.toWorkerUserId) {
+          const userOwnerName = Buffer.from(
+            itemCompany.owner.name,
+            "base64"
+          ).toString("ascii")
+          const userOwnerSurname = Buffer.from(
+            itemCompany.owner.surname,
+            "base64"
+          ).toString("ascii")
+          setSelectedWorker({
+            label: `${userOwnerName} ${userOwnerSurname}`,
+            value: itemCompany.owner._id,
+          })
+        }
+      }
+      if (!!itemCompany.workers) {
+        itemCompany.workers.forEach(workerCompany => {
+          if (!!workerCompany.user._id) {
+            if (workerCompany.user._id === selectedEvent.toWorkerUserId) {
+              const userOwnerName = Buffer.from(
+                workerCompany.user.name,
+                "base64"
+              ).toString("ascii")
+              const userOwnerSurname = Buffer.from(
+                workerCompany.user.surname,
+                "base64"
+              ).toString("ascii")
+              setSelectedWorker({
+                label: `${userOwnerName} ${userOwnerSurname}`,
+                value: workerCompany.user._id,
+              })
+            }
+          }
+        })
+      }
+    }
+  }, [selectedEvent])
 
   const handleChangeCheckbox = setChange => {
     setIsHolidays(prevState => !prevState)
@@ -257,14 +327,46 @@ const CalendarWorkerReserwatinEvent = ({
     setNewTimeEnd(time)
   }
 
+  const handleSelectDatePicker = () => {
+    setIsSelectDate(prevState => !prevState)
+  }
+
   const handleResetChanges = () => {
     handleClosePopupEventItem()
     setNewTimeStart(null)
     setNewTimeEnd(null)
+    setSelectedWorker(null)
+    setSelectedDateReserwation(new Date(selectedEvent.start))
+    const dateReserwationDate = `${
+      selectedEvent.start.getDate() < 10
+        ? `0${selectedEvent.start.getDate()}`
+        : selectedEvent.start.getDate()
+    }-${
+      selectedEvent.start.getMonth() + 1 < 10
+        ? `0${selectedEvent.start.getMonth() + 1}`
+        : selectedEvent.start.getMonth() + 1
+    }-${selectedEvent.start.getFullYear()}`
+
+    setSelectedDateReserwationDate(dateReserwationDate)
   }
 
   const handleConfirmCancelReserwation = () => {
     setConfirmCancelReserwation(prevState => !prevState)
+  }
+
+  const handleChangeWorkerSelect = value => {
+    setSelectedWorker(value)
+  }
+
+  const handleChangeDateReserwation = date => {
+    setSelectedDateReserwation(date)
+    const dateReserwationDate = `${
+      date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+    }-${
+      date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+    }-${date.getFullYear()}`
+
+    setSelectedDateReserwationDate(dateReserwationDate)
   }
 
   let statusReserwation = ""
@@ -282,15 +384,72 @@ const CalendarWorkerReserwatinEvent = ({
   let companyOpenHours = null
   let renderDateStart = ""
   let renderDateEnd = ""
+  let renderDateReserwation = ""
   let diabledUpdateButtonStart = true
   let diabledUpdateButtonEnd = true
+  let disabledChangeWorker = true
   let client = ""
   let reserwationMessage = " Brak"
   let isWorkerReserwation = false
   let activePromotion = false
   let promotionName = ""
+  const workersToSelect = []
+  let oldDateToSelectWorker = false
 
   if (!!selectedEvent) {
+    if (!!itemCompany) {
+      oldDateToSelectWorker = new Date() > selectedEvent.end
+      const adminHasService = itemCompany.ownerData.servicesCategory.some(
+        itemService => itemService === selectedEvent.serviceId
+      )
+      if (
+        adminHasService &&
+        !!itemCompany.owner.name &&
+        !!itemCompany.owner.surname
+      ) {
+        const userOwnerName = Buffer.from(
+          itemCompany.owner.name,
+          "base64"
+        ).toString("ascii")
+        const userOwnerSurname = Buffer.from(
+          itemCompany.owner.surname,
+          "base64"
+        ).toString("ascii")
+        workersToSelect.push({
+          label: `${userOwnerName} ${userOwnerSurname}`,
+          value: itemCompany.owner._id,
+        })
+      }
+
+      if (!!itemCompany.workers) {
+        itemCompany.workers.forEach(workerDoc => {
+          const workerHasService = workerDoc.servicesCategory.some(
+            itemService => itemService === selectedEvent.serviceId
+          )
+          console.log(workerDoc)
+          if (
+            workerHasService &&
+            !!workerDoc.user.name &&
+            !!workerDoc.user.surname &&
+            !!workerDoc.active
+          ) {
+            const userWorkerName = Buffer.from(
+              workerDoc.user.name,
+              "base64"
+            ).toString("ascii")
+            const userWorkerSurname = Buffer.from(
+              workerDoc.user.surname,
+              "base64"
+            ).toString("ascii")
+            workersToSelect.push({
+              label: `${userWorkerName} ${userWorkerSurname}`,
+              value: workerDoc.user._id,
+            })
+          }
+        })
+      }
+    }
+
     if (
       !!selectedEvent.activePromotion ||
       !!selectedEvent.activeHappyHour ||
@@ -385,23 +544,34 @@ const CalendarWorkerReserwatinEvent = ({
     const selectedDayWeek = selectedEvent.start.getDay()
     selectedDayWeekName = getMonthAndReturnFull(selectedDayWeek)
 
-    titleEvent = !!selectedEvent.action ? "Tworzenie czasu pracy" : "Czas pracy"
+    titleEvent = !!selectedEvent.action
+      ? selectedEvent.workerReserwation
+        ? "Tworzenie rezerwację czasu pracy"
+        : "Tworzenie rezerwacji"
+      : selectedEvent.workerReserwation
+      ? "Edycja rezerwacji czasu pracy"
+      : "Edycja rezerwacji"
 
-    selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
-      ? "Uwaga rezerwacja jest edytowana w dzień w którym firma jest nieczynna"
-      : null
+    if (!!companyOpenHours.disabled) {
+      selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
+        ? "Uwaga rezerwacja jest edytowana w dzień w którym firma jest nieczynna"
+        : null
+    }
 
-    switchButtonHolidays = !!selectedEvent.action && !companyOpenHours.disabled && (
-      <CheckboxStyle siteProps={siteProps}>
-        <Checkbox
-          theme="material-checkbox"
-          value={isHolidays}
-          onChange={handleChangeCheckbox}
-        >
-          <TextCheckbox>Dzień wolony</TextCheckbox>
-        </Checkbox>
-      </CheckboxStyle>
-    )
+    if (!!!companyOpenHours.disabled) {
+      switchButtonHolidays = !!selectedEvent.action &&
+        !companyOpenHours.disabled && (
+          <CheckboxStyle siteProps={siteProps}>
+            <Checkbox
+              theme="material-checkbox"
+              value={isHolidays}
+              onChange={handleChangeCheckbox}
+            >
+              <TextCheckbox>Dzień wolony</TextCheckbox>
+            </Checkbox>
+          </CheckboxStyle>
+        )
+    }
 
     const isOldDate = new Date() > selectedEvent.end
 
@@ -409,6 +579,11 @@ const CalendarWorkerReserwatinEvent = ({
       ? newTimeStart === dateStart
       : true
     diabledUpdateButtonEnd = !!newTimeEnd ? newTimeEnd === dateEnd : true
+
+    if (!!selectedWorker) {
+      disabledChangeWorker =
+        selectedEvent.toWorkerUserId === selectedWorker.value
+    }
 
     renderDateStart = isOldDate ? (
       <span>{dateStart}</span>
@@ -436,6 +611,21 @@ const CalendarWorkerReserwatinEvent = ({
           fontSize="12"
           icon={<MdTimelapse />}
           onClick={handleOpenDateEndTimePicker}
+        />
+      </ButtonItemStyleTime>
+    )
+
+    renderDateReserwation = isOldDate ? (
+      <span>{selectedDateReserwationDate}</span>
+    ) : (
+      <ButtonItemStyleTime>
+        <ButtonIcon
+          onClick={handleSelectDatePicker}
+          title={selectedDateReserwationDate}
+          uppercase
+          fontIconSize="20"
+          fontSize="16"
+          icon={<FaCalendarDay />}
         />
       </ButtonItemStyleTime>
     )
@@ -546,9 +736,14 @@ const CalendarWorkerReserwatinEvent = ({
                 uppercase
                 fontIconSize="20"
                 fontSize="16"
-                icon={<FaSave />}
+                icon={<MdArrowBack />}
                 onClick={handleResetChanges}
-                disabled={diabledUpdateButtonStart && diabledUpdateButtonEnd}
+                disabled={
+                  diabledUpdateButtonStart &&
+                  diabledUpdateButtonEnd &&
+                  disabledChangeWorker &&
+                  selectedDate === selectedDateReserwationDate
+                }
               />
             </ButtonItemStyle>
             <ButtonItemStyle>
@@ -558,17 +753,29 @@ const CalendarWorkerReserwatinEvent = ({
                 fontIconSize="20"
                 fontSize="16"
                 icon={<FaSave />}
-                disabled={diabledUpdateButtonStart && diabledUpdateButtonEnd}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
+                disabled={
+                  diabledUpdateButtonStart &&
+                  diabledUpdateButtonEnd &&
+                  disabledChangeWorker &&
+                  selectedDate === selectedDateReserwationDate
+                }
                 onClick={() => {
                   handleClosePopupEventItem()
                   handleChangeReserwationStatus(
                     selectedEvent._id,
                     "update",
                     newTimeStart === dateStart ? null : newTimeStart,
-                    newTimeEnd === dateEnd ? null : newTimeEnd
+                    newTimeEnd === dateEnd ? null : newTimeEnd,
+                    !!selectedWorker ? selectedWorker.value : null,
+                    selectedDate === selectedDateReserwationDate
+                      ? null
+                      : selectedDateReserwationDate
                   )
                   setNewTimeStart(null)
                   setNewTimeEnd(null)
+                  setSelectedWorker(null)
                 }}
               />
             </ButtonItemStyle>
@@ -616,7 +823,7 @@ const CalendarWorkerReserwatinEvent = ({
               </ItemTitle>
               <ItemTitle siteProps={siteProps}>
                 Data:
-                <span>{selectedDate}</span>
+                <span>{renderDateReserwation}</span>
               </ItemTitle>
               <ItemTitle siteProps={siteProps}>
                 {isWorkerReserwation ? "Pracownik:" : "Klient:"}
@@ -673,6 +880,26 @@ const CalendarWorkerReserwatinEvent = ({
                   Status:
                   {statusReserwation}
                 </ItemTitle>
+              )}
+              {!!isAdmin && !isWorkerReserwation && (
+                <>
+                  <ItemTitle siteProps={siteProps}>
+                    Pracownik wykonujący usługę:
+                  </ItemTitle>
+                  <SelectCreated
+                    options={workersToSelect}
+                    value={selectedWorker}
+                    handleChange={handleChangeWorkerSelect}
+                    placeholder="Pracownik..."
+                    defaultMenuIsOpen={false}
+                    isClearable={false}
+                    widthAuto
+                    deleteItem={false}
+                    top
+                    closeMenuOnSelect
+                    isDisabled={oldDateToSelectWorker}
+                  />
+                </>
               )}
               {switchButtonHolidays}
               <ButtonsItemEvent>{selectButtonsToEvents}</ButtonsItemEvent>
@@ -732,12 +959,12 @@ const CalendarWorkerReserwatinEvent = ({
             popupEnable={openDateStart}
             handleClose={handleOpenDateStartTimePicker}
             noContent
-            // calendar
           >
             <WidthTimePicker>
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeStart}
                 timeTimePicker={dateStart}
+                maxTime={dateEnd}
               />
             </WidthTimePicker>
           </Popup>
@@ -745,12 +972,27 @@ const CalendarWorkerReserwatinEvent = ({
             popupEnable={openDateEnd}
             handleClose={handleOpenDateEndTimePicker}
             noContent
-            // calendar
           >
             <WidthTimePicker>
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeEnd}
                 timeTimePicker={dateEnd}
+                minTime={dateStart}
+              />
+            </WidthTimePicker>
+          </Popup>
+          <Popup
+            popupEnable={isSelectDate}
+            handleClose={handleSelectDatePicker}
+            noContent
+          >
+            <WidthTimePicker>
+              <SelectDataCalendar
+                setActualCalendarDate={handleChangeDateReserwation}
+                setIsDataActive={handleSelectDatePicker}
+                activeMonth={selectedDateReserwation}
+                minDateActive={new Date()}
+                activeData={selectedDateReserwation}
               />
             </WidthTimePicker>
           </Popup>

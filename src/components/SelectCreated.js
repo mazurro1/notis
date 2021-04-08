@@ -323,7 +323,9 @@ const SelectCreated = ({
   const handleStopPropagination = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
-    setSelectActive(prevState => !prevState)
+    if (!isDisabled) {
+      setSelectActive(prevState => !prevState)
+    }
   }
 
   const handleOnMouseOn = () => {

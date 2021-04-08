@@ -417,7 +417,7 @@ const OwnerWorker = ({
             <ButtonContentEdit>
               <ButtonStyles>
                 <ButtonIcon
-                  title="Cofnij"
+                  title="Anuluj"
                   uppercase
                   fontIconSize="16"
                   fontSize="14"

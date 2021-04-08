@@ -166,7 +166,7 @@ const ActiveCompany = () => {
         <MarginBottom>
           <div data-tip data-for="alertActive">
             <ButtonIcon
-              title="Aktywuj konto"
+              title="Aktywuj konto firmowe"
               uppercase
               fontIconSize="20"
               fontSize="16"

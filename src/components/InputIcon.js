@@ -131,7 +131,9 @@ const ShowPassword = styled.div`
   font-size: 1.3rem;
   color: ${props =>
     props.active
-      ? Colors(props.siteProps).primaryColorDark
+      ? props.secondColor
+        ? Colors(props.siteProps).secondDarkColor
+        : Colors(props.siteProps).primaryColorDark
       : Colors(props.siteProps).darkColor};
   transition-property: color;
   transition-duration: 0.3s;
@@ -244,7 +246,11 @@ const InputIcon = ({
           >
             <span>{clickEye ? "Anuluj podgląd hasła" : "Podgląd hasła"}</span>
           </ReactTooltip>
-          <ShowPassword active={clickEye} siteProps={siteProps}>
+          <ShowPassword
+            active={clickEye}
+            siteProps={siteProps}
+            secondColor={secondColor}
+          >
             <IconEyeClick
               onClick={handleClickEye}
               data-tip

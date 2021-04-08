@@ -364,7 +364,6 @@ const CalendarWorkerReserwatinEvent = ({
     selectedDayWeekName = getMonthAndReturnFull(selectedDayWeek)
 
     titleEvent = !!selectedEvent.action ? "Tworzenie czasu pracy" : "Czas pracy"
-
     selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
       ? "Uwaga rezerwacja jest edytowana w dzień w którym firma jest nieczynna"
       : null
@@ -537,6 +536,8 @@ const CalendarWorkerReserwatinEvent = ({
                 fontSize="16"
                 icon={<FaSave />}
                 disabled={diabledUpdateButtonStart && diabledUpdateButtonEnd}
+                customColorButton={Colors(siteProps).successColorDark}
+                customColorIcon={Colors(siteProps).successColor}
                 onClick={() => {
                   handleClosePopupEventItem()
                   handleChangeReserwationStatus(
@@ -699,6 +700,7 @@ const CalendarWorkerReserwatinEvent = ({
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeStart}
                 timeTimePicker={dateStart}
+                maxTime={dateEnd}
               />
             </WidthTimePicker>
           </Popup>
@@ -712,6 +714,7 @@ const CalendarWorkerReserwatinEvent = ({
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeEnd}
                 timeTimePicker={dateEnd}
+                minTime={dateStart}
               />
             </WidthTimePicker>
           </Popup>

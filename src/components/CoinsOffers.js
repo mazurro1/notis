@@ -243,7 +243,8 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
               )}
               {!!item.countPremium && (
                 <div className="itemInfo">
-                  Miesiące konta premium: <span>{item.countPremium}</span>
+                  Miesiące konta premium: <span>{item.countPremium}</span> (
+                  {item.countPremium * 30} dni)
                 </div>
               )}
               <div className="itemInfo">
@@ -280,7 +281,8 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
               )}
               {!!item.countPremium && (
                 <div className="itemInfo">
-                  Miesiące konta premium: <span>{item.countPremium}</span>
+                  Miesiące konta premium: <span>{item.countPremium}</span> (
+                  {item.countPremium * 30} dni)
                 </div>
               )}
               <div className="itemInfo">
@@ -323,7 +325,8 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
         <AllItemsCoins>{mapCoinsOffersSMS}</AllItemsCoins>
         <TitleOffer siteProps={siteProps}>Podsumowanie:</TitleOffer>
         <SummaryInfoText siteProps={siteProps}>
-          Miesiące konta premium: <span>{summaryPremium}</span>
+          Miesiące konta premium: <span>{summaryPremium}</span>(
+          {summaryPremium * 30} dni)
         </SummaryInfoText>
         <SummaryInfoText siteProps={siteProps}>
           SMS-y: <span>{summarySMS}</span>

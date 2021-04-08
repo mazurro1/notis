@@ -372,6 +372,7 @@ const CalendarWorkerReserwatinNewEvent = ({
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeStart}
                 timeTimePicker={dateStart}
+                maxTime={dateEnd}
               />
             </WidthTimePicker>
           </Popup>
@@ -385,6 +386,7 @@ const CalendarWorkerReserwatinNewEvent = ({
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeEnd}
                 timeTimePicker={dateEnd}
+                minTime={dateStart}
               />
             </WidthTimePicker>
           </Popup>

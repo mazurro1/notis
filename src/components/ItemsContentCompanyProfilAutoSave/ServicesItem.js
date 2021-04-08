@@ -139,6 +139,10 @@ const WidthButtonRezerv = styled.div`
     max-width: 100%;
   }
 `
+const TextSelectStyle = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-size: 0.9rem;
+`
 
 const ServicesItem = ({
   itemServices,
@@ -492,6 +496,10 @@ const ServicesItem = ({
               <TextCheckbox>Niestała cena</TextCheckbox>
             </Checkbox>
           </CheckboxStyle>
+
+          <TextSelectStyle siteProps={siteProps}>
+            Nadawany kolor w podglądzie rezerwacji
+          </TextSelectStyle>
           <SelectStyle>
             <SelectCreated
               options={ServiceColors}

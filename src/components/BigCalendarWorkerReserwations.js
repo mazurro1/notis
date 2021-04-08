@@ -850,7 +850,9 @@ const BigCalendarWorkerReserwations = ({
     selectedEventId,
     status,
     newDateStart = null,
-    newDateEnd = null
+    newDateEnd = null,
+    workerSelected = null,
+    dateReserwation = null
   ) => {
     if (status === "canceled") {
       dispatch(
@@ -864,6 +866,7 @@ const BigCalendarWorkerReserwations = ({
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
           user.company._id,
+          null,
           null,
           null
         )
@@ -881,6 +884,7 @@ const BigCalendarWorkerReserwations = ({
           dateCalendar.getMonth() + 1,
           user.company._id,
           null,
+          null,
           null
         )
       )
@@ -896,6 +900,7 @@ const BigCalendarWorkerReserwations = ({
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
           user.company._id,
+          null,
           null,
           null
         )
@@ -913,7 +918,9 @@ const BigCalendarWorkerReserwations = ({
           dateCalendar.getMonth() + 1,
           user.company._id,
           newDateStart,
-          newDateEnd
+          newDateEnd,
+          workerSelected,
+          dateReserwation
         )
       )
     }
@@ -1127,6 +1134,8 @@ const BigCalendarWorkerReserwations = ({
           allEvents={allEvents}
           handleChangeReserwationStatus={handleChangeReserwationStatus}
           itemCompanyHours={item.company.openingDays}
+          itemCompany={item.company}
+          isAdmin={isAdmin}
         />
         <CalendarWorkerReserwatinNewEvent
           siteProps={siteProps}

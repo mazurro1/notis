@@ -51,7 +51,6 @@ const WorkerHoursAutoSave = ({ handleClose, item, editWorkerHours }) => {
     isAdmin,
     userWorkerActive,
     user,
-    editWorkerHours,
   ]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>

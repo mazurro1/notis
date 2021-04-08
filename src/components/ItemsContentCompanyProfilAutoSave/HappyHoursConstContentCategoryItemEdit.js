@@ -407,6 +407,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
             setSelectedTime={handleUpdateTimeStart}
             timeTimePicker={timeStart}
             secondColor
+            maxTime={timeEnd}
           />
         </WidthTimePicker>
       </Popup>
@@ -421,6 +422,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
             setSelectedTime={handleUpdateTimeEnd}
             timeTimePicker={timeEnd}
             secondColor
+            minTime={timeStart}
           />
         </WidthTimePicker>
       </Popup>

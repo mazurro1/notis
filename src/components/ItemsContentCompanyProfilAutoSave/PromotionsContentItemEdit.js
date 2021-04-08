@@ -348,17 +348,15 @@ const PromotionsContentItemEdit = ({
           secondColor
           validText="Wymagana wartość"
         />
-        {!isOld && (
-          <CheckboxStyle siteProps={siteProps}>
-            <Checkbox
-              theme="material-checkbox"
-              value={disabledPromotion}
-              onChange={handleChangeDisabledPromotion}
-            >
-              <TextCheckbox siteProps={siteProps}>Wyłącz promocje</TextCheckbox>
-            </Checkbox>
-          </CheckboxStyle>
-        )}
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={disabledPromotion}
+            onChange={handleChangeDisabledPromotion}
+          >
+            <TextCheckbox siteProps={siteProps}>Wyłącz promocje</TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
         <ButtonTextPositionHappy>
           <MarginButton>
             <ButtonIcon

@@ -177,7 +177,8 @@ const TransactionHistoryItem = ({
             )}
             {!!summaryPremium && (
               <ItemData siteProps={siteProps} success={itemPaid}>
-                Dni konta premium: <span>{summaryPremium}</span>
+                Dni konta premium: <span>{summaryPremium}</span> (
+                {summaryPremium * 30} dni)
               </ItemData>
             )}
             <ItemData siteProps={siteProps} success={itemPaid}>

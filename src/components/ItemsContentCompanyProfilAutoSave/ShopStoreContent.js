@@ -183,8 +183,7 @@ const ShopStoreContent = ({
       siteProps={siteProps}
       disabled={disabledEditButtons && !editShopStore}
     >
-      {(companyShopStore.length > 0 ||
-        (isCompanyEditProfil && editMode && editShopStore)) && (
+      {(companyShopStore.length > 0 || (isCompanyEditProfil && editMode)) && (
         <>
           <div>
             <TitleRightColumnOpinion

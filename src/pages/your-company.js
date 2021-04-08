@@ -11,6 +11,7 @@ import {
 import { HiEmojiHappy } from "react-icons/hi"
 import { Colors } from "../common/Colors"
 import sal from "sal.js"
+import ReactTooltip from "react-tooltip"
 
 const MarginTop = styled.div`
   margin-top: 30px;
@@ -51,6 +52,10 @@ const YourCompany = () => {
     })
   }, [])
 
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [user])
+
   const handleToLogin = () => {
     dispatch(changeLoginVisible(!loginVisible))
   }
@@ -58,18 +63,28 @@ const YourCompany = () => {
   const handleCreateCompany = () => {
     dispatch(changeCreateCompanyVisible(!createCompanyVisible))
   }
-
+  console.log(user)
   const selectButton = !!user ? (
     !!!user.company ? (
-      <ButtonIcon
-        title="Stwórz konto firmowe"
-        uppercase
-        fontIconSize="25"
-        fontSize="20"
-        icon={<MdWork />}
-        secondColors
-        onClick={handleCreateCompany}
-      />
+      <>
+        {!!!user.phoneVerified && (
+          <ReactTooltip id="blockCreateCompany" effect="float" multiline={true}>
+            <span>Zweryfikuj numer telefonu aby stworzyć konto firmowe.</span>
+          </ReactTooltip>
+        )}
+        <div data-tip data-for="blockCreateCompany" data-place="bottom">
+          <ButtonIcon
+            title="Stwórz konto firmowe"
+            uppercase
+            fontIconSize="25"
+            fontSize="20"
+            icon={<MdWork />}
+            secondColors
+            onClick={handleCreateCompany}
+            disabled={!!user.phoneVerified}
+          />
+        </div>
+      </>
     ) : (
       <TextWarning siteProps={siteProps}>
         Posiadasz już konto firmowe
