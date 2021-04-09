@@ -44,6 +44,8 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  RESTART_COMPANY_SMS,
+  ACUTLIZATION_SMS_COMPANY_CLIENTS,
   RESET_COMPANY_STATS,
   UPDATE_COMPANY_SMS_SETTINGS,
   ADD_COMPANY_TRANSACTION_HISTORY,
@@ -206,6 +208,7 @@ const initialState = {
   activeWorkerUserId: null,
   companyStats: null,
   stampsUpdate: false,
+  restartSMSCompany: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -601,6 +604,28 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case RESTART_COMPANY_SMS: {
+      return {
+        ...state,
+        restartSMSCompany: false,
+      }
+    }
+
+    case ACUTLIZATION_SMS_COMPANY_CLIENTS: {
+      const incUserCompanySMS = !!state.user ? { ...state.user } : null
+      if (!!incUserCompanySMS) {
+        if (!!incUserCompanySMS.company) {
+          incUserCompanySMS.company.sms =
+            incUserCompanySMS.company.sms - Number(action.countMessages)
+        }
+      }
+      return {
+        ...state,
+        user: incUserCompanySMS,
+        restartSMSCompany: true,
+      }
+    }
 
     case UPDATE_COMPANY_SMS_SETTINGS: {
       const newWorkCompanyDataSMS = !!state.workCompanyData

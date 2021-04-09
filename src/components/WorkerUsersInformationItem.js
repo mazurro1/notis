@@ -276,6 +276,11 @@ const PhoneNumberContent = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
+const TextNoreserwations = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-size: 1rem;
+`
+
 const ButtonStylePhone = styled.div`
   position: relative;
   top: 7px;
@@ -577,94 +582,108 @@ const WorkerUsersInformationItem = ({
       )
     })
   }
-  let mapedUserReserwations = "Trwa ładowanie rezerwacji"
+  let mapedUserReserwations = (
+    <TextNoreserwations siteProps={siteProps}>
+      Trwa ładowanie rezerwacji
+    </TextNoreserwations>
+  )
   if (!!userInfo.reserwations) {
-    mapedUserReserwations = userInfo.reserwations.map((reserwation, index) => {
-      const dateReserwation = (
-        <>
-          <span>{`${reserwation.dateStart}-${reserwation.dateEnd}`} </span>
-          {`${
-            reserwation.dateDay < 10
-              ? `0${reserwation.dateDay}`
-              : reserwation.dateDay
-          }-${
-            reserwation.dateMonth < 10
-              ? `0${reserwation.dateMonth}`
-              : reserwation.dateMonth
-          }-${reserwation.dateYear}`}
-        </>
-      )
+    if (userInfo.reserwations.length > 0) {
+      mapedUserReserwations = userInfo.reserwations.map(
+        (reserwation, index) => {
+          const dateReserwation = (
+            <>
+              <span>{`${reserwation.dateStart}-${reserwation.dateEnd}`} </span>
+              {`${
+                reserwation.dateDay < 10
+                  ? `0${reserwation.dateDay}`
+                  : reserwation.dateDay
+              }-${
+                reserwation.dateMonth < 10
+                  ? `0${reserwation.dateMonth}`
+                  : reserwation.dateMonth
+              }-${reserwation.dateYear}`}
+            </>
+          )
 
-      const workerName = Buffer.from(
-        reserwation.toWorkerUserId.name,
-        "base64"
-      ).toString("ascii")
-      const workerSurname = Buffer.from(
-        reserwation.toWorkerUserId.surname,
-        "base64"
-      ).toString("ascii")
-      console.log(reserwation)
-      const splitReserwationDate = reserwation.dateStart.split(":")
-      const splitReserwationDateEnd = reserwation.dateEnd.split(":")
-      const isActualReserwation = new Date(
-        reserwation.dateYear,
-        reserwation.dateMonth - 1,
-        reserwation.dateDay,
-        Number(splitReserwationDate[0]),
-        Number(splitReserwationDate[1])
-      )
-      const isActualReserwationDateEnd = new Date(
-        reserwation.dateYear,
-        reserwation.dateMonth - 1,
-        reserwation.dateDay,
-        Number(splitReserwationDateEnd[0]),
-        Number(splitReserwationDateEnd[1])
-      )
-      const isFinishedDate = isActualReserwation <= new Date()
-      const isDateInToDo =
-        isActualReserwation <= new Date() &&
-        isActualReserwationDateEnd >= new Date()
+          const workerName = Buffer.from(
+            reserwation.toWorkerUserId.name,
+            "base64"
+          ).toString("ascii")
+          const workerSurname = Buffer.from(
+            reserwation.toWorkerUserId.surname,
+            "base64"
+          ).toString("ascii")
+          console.log(reserwation)
+          const splitReserwationDate = reserwation.dateStart.split(":")
+          const splitReserwationDateEnd = reserwation.dateEnd.split(":")
+          const isActualReserwation = new Date(
+            reserwation.dateYear,
+            reserwation.dateMonth - 1,
+            reserwation.dateDay,
+            Number(splitReserwationDate[0]),
+            Number(splitReserwationDate[1])
+          )
+          const isActualReserwationDateEnd = new Date(
+            reserwation.dateYear,
+            reserwation.dateMonth - 1,
+            reserwation.dateDay,
+            Number(splitReserwationDateEnd[0]),
+            Number(splitReserwationDateEnd[1])
+          )
+          const isFinishedDate = isActualReserwation <= new Date()
+          const isDateInToDo =
+            isActualReserwation <= new Date() &&
+            isActualReserwationDateEnd >= new Date()
 
-      const reserwationColor = isDateInToDo
-        ? "orange"
-        : !!reserwation.visitCanceled
-        ? "red"
-        : reserwation.visitNotFinished
-        ? "red"
-        : isFinishedDate
-        ? "green"
-        : "blue"
-      return (
-        <div
-          data-sal="zoom-in"
-          data-sal-duration="300"
-          data-sal-easing="ease-out-bounce"
-          key={index}
-        >
-          <ServiceItemHistory
-            index={index === 0}
-            siteProps={siteProps}
-            color={reserwationColor}
-          >
-            <TimeReserwation siteProps={siteProps} color={reserwationColor}>
-              {dateReserwation}
-              <div className="statusReserwation">
-                {isDateInToDo
-                  ? "Wizyta w trakcie"
-                  : reserwation.visitCanceled
-                  ? "Wizyta odwołana"
-                  : reserwation.visitNotFinished
-                  ? "Wizyta nie zakończona"
-                  : isFinishedDate
-                  ? "Wizyta zakończona"
-                  : "Wizyta oczekująca"}
-              </div>
-            </TimeReserwation>
-            {reserwation.serviceName} - {`${workerName} ${workerSurname}`}
-          </ServiceItemHistory>
-        </div>
+          const reserwationColor = isDateInToDo
+            ? "orange"
+            : !!reserwation.visitCanceled
+            ? "red"
+            : reserwation.visitNotFinished
+            ? "red"
+            : isFinishedDate
+            ? "green"
+            : "blue"
+          return (
+            <div
+              data-sal="zoom-in"
+              data-sal-duration="300"
+              data-sal-easing="ease-out-bounce"
+              key={index}
+            >
+              <ServiceItemHistory
+                index={index === 0}
+                siteProps={siteProps}
+                color={reserwationColor}
+              >
+                <TimeReserwation siteProps={siteProps} color={reserwationColor}>
+                  {dateReserwation}
+                  <div className="statusReserwation">
+                    {isDateInToDo
+                      ? "Wizyta w trakcie"
+                      : reserwation.visitCanceled
+                      ? "Wizyta odwołana"
+                      : reserwation.visitNotFinished
+                      ? "Wizyta nie zakończona"
+                      : isFinishedDate
+                      ? "Wizyta zakończona"
+                      : "Wizyta oczekująca"}
+                  </div>
+                </TimeReserwation>
+                {reserwation.serviceName} - {`${workerName} ${workerSurname}`}
+              </ServiceItemHistory>
+            </div>
+          )
+        }
       )
-    })
+    } else {
+      mapedUserReserwations = (
+        <TextNoreserwations siteProps={siteProps}>
+          Brak rezerwacji
+        </TextNoreserwations>
+      )
+    }
   }
 
   let userName = "Brak użytkownika"

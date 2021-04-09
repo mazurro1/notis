@@ -79,29 +79,11 @@ const ButtonContentEdit = styled.div`
 const ButtonStyles = styled.div`
   display: inline-block;
 `
-const DeleteIconPosition = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`
 
 const TextToDeleteWorker = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
   font-size: 0.9rem;
   margin-bottom: 20px;
-`
-
-const DeleteIconStyle = styled.div`
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding: 8px 8px;
-  padding-bottom: 2px;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
 `
 
 const SelectStyle = styled.div`
@@ -672,6 +654,7 @@ const WorkerItem = ({
               title="Usuń pracownika"
               smallTitle
               secondColors
+              closeTitle={false}
             >
               <WorkerItemDelete
                 TextToDeleteWorker={TextToDeleteWorker}

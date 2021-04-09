@@ -850,6 +850,22 @@ export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
 export const UPDATE_COMPANY_SMS_SETTINGS = "UPDATE_COMPANY_SMS_SETTINGS"
 export const RESET_COMPANY_STATS = "RESET_COMPANY_STATS"
 export const DELETE_WORKER_FROM_COMPANY = "DELETE_WORKER_FROM_COMPANY"
+export const ACUTLIZATION_SMS_COMPANY_CLIENTS =
+  "ACUTLIZATION_SMS_COMPANY_CLIENTS"
+export const RESTART_COMPANY_SMS = "RESTART_COMPANY_SMS"
+
+export const restartCompanySMS = () => {
+  return {
+    type: RESTART_COMPANY_SMS,
+  }
+}
+
+export const actualizationSMSCompanyClients = countMessages => {
+  return {
+    type: ACUTLIZATION_SMS_COMPANY_CLIENTS,
+    countMessages: countMessages,
+  }
+}
 
 export const deleteWorkerFromCompany = (companyId, workerUserId) => {
   return {
@@ -5208,6 +5224,56 @@ export const fetchSaveCompanySMS = (
             } else {
               dispatch(
                 addAlertItem("Błąd podczas aktualizacji ustawień sms", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSendSMSCompanyClients = (
+  token,
+  companyId,
+  allClients = false,
+  selectedClients = [],
+  textMessage = ""
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-sms-send-clients`,
+        {
+          companyId: companyId,
+          allClients: allClients,
+          selectedClients: selectedClients,
+          textMessage: textMessage,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Wysłano wiadomości SMS.", "green"))
+        dispatch(actualizationSMSCompanyClients(response.data.countMessages))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 441) {
+              dispatch(addAlertItem("Niewystarczająca ilość SMS", "red"))
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas wysyłania wiadomości SMS", "red")
               )
             }
           } else {

@@ -769,21 +769,42 @@ const BigCalendarWorkerReserwations = ({
   const handleChangeDate = value => {
     let newDate = new Date()
     const plusDaysValid = isMobile ? 1 : 7
+    const afterAddedDays = new Date(
+      takeDateYear,
+      takeDateDayToday,
+      dateCalendar.getDate() + plusDaysValid
+    )
+
+    const prevDateCalendar = new Date(
+      takeDateYear,
+      takeDateDayToday,
+      dateCalendar.getDate()
+    )
+    const maxDaysInPrevDate = new Date(
+      takeDateYear,
+      takeDateDayToday,
+      0
+    ).getDate()
+    const countWeeksMonth = Math.floor(maxDaysInPrevDate / 7)
+    const prevDateCountWeeksMonth = Math.floor(prevDateCalendar.getDate() / 7)
     if (value === "plus") {
-      const afterAddedDays = new Date(
-        takeDateYear,
-        takeDateDayToday,
-        dateCalendar.getDate() + plusDaysValid
-      )
+      const isValidNextMonth = prevDateCountWeeksMonth + 1 === countWeeksMonth
 
       const disabledNextWeek =
         afterAddedDays.getMonth() === takeDateDayToday &&
         afterAddedDays.getFullYear() === takeDateYear
-      if (disabledNextWeek) {
+
+      if (disabledNextWeek && !isValidNextMonth) {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth(),
           dateCalendar.getDate() + plusDaysValid
+        )
+      } else if (isValidNextMonth) {
+        newDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth() + 1,
+          0
         )
       } else {
         newDate = new Date(
@@ -798,11 +819,23 @@ const BigCalendarWorkerReserwations = ({
     } else if (value === "minus") {
       const disabledPrevWeek =
         Math.ceil(dateCalendar.getDate() / plusDaysValid) === 1
-      if (!disabledPrevWeek) {
+
+      const validIsFirstWeek =
+        dateCalendar.getDate() <
+          (maxDaysInPrevDate % countWeeksMonth) + plusDaysValid &&
+        dateCalendar.getDate() > maxDaysInPrevDate % countWeeksMonth
+
+      if (!disabledPrevWeek && !validIsFirstWeek) {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth(),
           dateCalendar.getDate() - plusDaysValid
+        )
+      } else if (validIsFirstWeek) {
+        newDate = new Date(
+          dateCalendar.getFullYear(),
+          dateCalendar.getMonth(),
+          1
         )
       } else {
         newDate = new Date(

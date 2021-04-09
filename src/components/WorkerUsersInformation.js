@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchworkerUsersInformations } from "../state/actions"
+import {
+  fetchworkerUsersInformations,
+  restartCompanySMS,
+} from "../state/actions"
 import WorkerUsersInformationItem from "./WorkerUsersInformationItem"
 import ReactTooltip from "react-tooltip"
 import sal from "sal.js"
 import InputIcon from "./InputIcon"
-import { FaUserFriends } from "react-icons/fa"
+import { FaUserFriends, FaSms } from "react-icons/fa"
+import ButtonIcon from "./ButtonIcon"
+import Popup from "./Popup"
+import SendSMSClientsContent from "./SendSMSClientsContent"
 
 const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
   const [filterUsers, setFilterUsers] = useState("")
+  const [sendSMSClients, setSendSMSClients] = useState(false)
   const [filterUsersInformations, setFilterUsersInformations] = useState([])
   const companyUsersInformations = useSelector(
     state => state.companyUsersInformations
   )
   const userId = useSelector(state => state.userId)
+  const restartSMSCompany = useSelector(state => state.restartSMSCompany)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -21,6 +29,13 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
       dispatch(fetchworkerUsersInformations(user.token, user.company._id))
     }
   }, [user.token, userId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!!restartSMSCompany) {
+      dispatch(restartCompanySMS())
+    }
+    setSendSMSClients(false)
+  }, [restartSMSCompany])
 
   useEffect(() => {
     sal({
@@ -58,6 +73,10 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
     setFilterUsers(e.target.value)
   }
 
+  const handleSendSMSClients = () => {
+    setSendSMSClients(prevState => !prevState)
+  }
+
   const mapedUsersInformations = filterUsersInformations.map((item, index) => {
     return (
       <WorkerUsersInformationItem
@@ -74,6 +93,14 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
     <div>
       {companyUsersInformations.length > 0 ? (
         <>
+          <ButtonIcon
+            title="Wyślij SMS do klientów"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaSms />}
+            onClick={handleSendSMSClients}
+          />
           <InputIcon
             icon={<FaUserFriends />}
             placeholder="Wyszukaj użytkownika"
@@ -97,6 +124,20 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
           <ReactTooltip id="phoneItemUserInfo" effect="float" multiline={true}>
             <span>Pokaż numer telefonu klienta</span>
           </ReactTooltip>
+          <Popup
+            popupEnable={sendSMSClients}
+            position="absolute"
+            title="Wyślij SMS do klientów"
+            borderRadius
+            smallTitle
+            handleClose={handleSendSMSClients}
+          >
+            <SendSMSClientsContent
+              clients={filterUsersInformations}
+              siteProps={siteProps}
+              user={user}
+            />
+          </Popup>
         </>
       ) : (
         "Brak klientów"

@@ -633,7 +633,7 @@ const CalendarWorkerReserwatinEvent = ({
     statusReserwation =
       !!!selectedEvent.visitCanceled && !!!selectedEvent.visitNotFinished ? (
         !isOldDate ? (
-          <span>Wizyta potwierdzona</span>
+          <span>Wizyta oczekująca</span>
         ) : (
           <span>Wizyta zakończona</span>
         )
