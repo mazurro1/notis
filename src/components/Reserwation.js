@@ -918,6 +918,7 @@ const Reserwation = ({
           setActualCalendarDate={setSelectedDate}
           setIsDataActive={setIsDataActive}
           maxDate={reserwationData.maxDate}
+          activeData={selectedDate}
         />
       </Popup>
       {!disabledReserwButton && (

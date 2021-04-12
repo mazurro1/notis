@@ -14,6 +14,7 @@ import {
   chartServicesState,
   chartMonthsState,
   chartSMSState,
+  chartSMSStateAll,
 } from "./Charts/FunctionsChart"
 
 import { FaSearch } from "react-icons/fa"
@@ -122,8 +123,14 @@ const CompanyStatistics = ({ siteProps, user }) => {
           user.company.name,
           isAdmin
         )
+      } else if (chartPicker.value === 6) {
+        statsConvertedCharts = chartSMSStateAll(
+          companyStats.raportSMS,
+          user.company.name,
+          isAdmin
+        )
       }
-      console.log(companyStats.stats)
+
       if (!!statsConvertedCharts) {
         setDataToChar(statsConvertedCharts.allStats)
         setLabelsToChar(statsConvertedCharts.allLabels)

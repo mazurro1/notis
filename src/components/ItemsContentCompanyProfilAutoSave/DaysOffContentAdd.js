@@ -130,6 +130,7 @@ const DaysOffContentAdd = ({
           setActualCalendarDate={setCalendarDayOffDate}
           setIsDataActive={setTakeDateActive}
           setIsTimeActive={setCreateDayOff}
+          activeData={calendarDayOffDate}
         />
       </Popup>
     </>

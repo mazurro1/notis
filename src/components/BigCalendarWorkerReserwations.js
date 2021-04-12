@@ -1190,6 +1190,7 @@ const BigCalendarWorkerReserwations = ({
           setIsDataActive={setDatePickerActive}
           activeMonth={dateCalendar}
           minDateActive={false}
+          activeData={dateCalendar}
         />
       </Popup>
     </>

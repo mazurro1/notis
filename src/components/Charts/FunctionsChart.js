@@ -455,3 +455,40 @@ export const chartSMSState = (companyStats, companyName, isAdmin) => {
     allLabels: allLabels,
   }
 }
+
+export const chartSMSStateAll = (companyStats, companyName, isAdmin) => {
+  const allStats = []
+
+  companyStats.forEach(state => {
+    if (isAdmin) {
+      const findIndexAllCompany = allStats.findIndex(
+        item => item.isAdd === state.isAdd
+      )
+      if (findIndexAllCompany >= 0) {
+        if (!!state.count) {
+          allStats[findIndexAllCompany].countSMS =
+            allStats[findIndexAllCompany].countSMS + state.count
+        }
+      } else {
+        const dateToChar = {
+          countSMS: state.count,
+          isAdd: !!state.isAdd,
+          user: !!state.isAdd ? "Dodano" : "Wykorzystano",
+        }
+        allStats.push(dateToChar)
+      }
+    }
+  })
+  const allLabels = [
+    {
+      dataKey: "countSMS",
+      label: "Liczba SMS",
+      extraValueLabel: "",
+      color: "primaryColorDark",
+    },
+  ]
+  return {
+    allStats: allStats,
+    allLabels: allLabels,
+  }
+}

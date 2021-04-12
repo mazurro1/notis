@@ -19,6 +19,7 @@ import { useScrollPosition } from "@n8tb1t/use-scroll-position"
 import { AllIndustries } from "../common/AllIndustries"
 import { Translates } from "../common/Translates"
 import Sort from "../components/Sort"
+import GoogleMapsMainSearch from "../components/GoogleMapsMainSearch"
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -95,6 +96,8 @@ const Home = () => {
   const loadingPlaces = useSelector(state => state.loadingPlaces)
   const siteProps = useSelector(state => state.siteProps)
   const avaibleUpdatePage = useSelector(state => state.avaibleUpdatePage)
+  const mapGeolocation = useSelector(state => state.mapGeolocation)
+  const mapMarks = useSelector(state => state.mapMarks)
   const user = useSelector(state => state.user)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
@@ -230,6 +233,15 @@ const Home = () => {
           />
         </ButtonMargin>
       </ButtonsFilters>
+      {!!mapGeolocation && (
+        <GoogleMapsMainSearch
+          siteProps={siteProps}
+          mapGeolocation={mapGeolocation}
+          localization={localization}
+          mapMarks={mapMarks}
+          user={user}
+        />
+      )}
       <CSSTransition
         in={!loadingPlaces}
         timeout={400}

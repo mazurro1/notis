@@ -853,6 +853,23 @@ export const DELETE_WORKER_FROM_COMPANY = "DELETE_WORKER_FROM_COMPANY"
 export const ACUTLIZATION_SMS_COMPANY_CLIENTS =
   "ACUTLIZATION_SMS_COMPANY_CLIENTS"
 export const RESTART_COMPANY_SMS = "RESTART_COMPANY_SMS"
+export const UPDATE_GEOLOCATION_MARKS = "UPDATE_GEOLOCATION_MARKS"
+export const UPDATE_COMPANY_MARKER = "UPDATE_COMPANY_MARKER"
+
+export const changeCompanyMarker = data => {
+  return {
+    type: UPDATE_COMPANY_MARKER,
+    data: data,
+  }
+}
+
+export const updateGeolocationMarks = (geolocation, marks) => {
+  return {
+    type: UPDATE_GEOLOCATION_MARKS,
+    geolocation: geolocation,
+    marks: marks,
+  }
+}
 
 export const restartCompanySMS = () => {
   return {
@@ -991,11 +1008,12 @@ export const addReserwationWorkerDate = data => {
   }
 }
 
-export const saveCompanyStats = (stats, services) => {
+export const saveCompanyStats = (stats, services, raportSMS) => {
   return {
     type: SAVE_COMPANY_STATS,
     stats: stats,
     services: services,
+    raportSMS: raportSMS,
   }
 }
 
@@ -2150,8 +2168,18 @@ export const fetchAllCompanys = (
       })
       .then(response => {
         if (page === 1) {
-          dispatch(updatePlacesData(response.data.companysDoc))
+          dispatch(
+            updatePlacesData(
+              response.data.companysDoc,
+              response.data.geolocation
+            )
+          )
           dispatch(changeLoadingPlaces(false))
+          if (response.data.companysDoc.length === 0) {
+            dispatch(
+              addAlertItem("Brak więcej firm w danej kategorii.", "blue")
+            )
+          }
         } else if (page > 1 && response.data.companysDoc.length > 0) {
           dispatch(updateNewPlacesData(response.data.companysDoc))
           dispatch(changeAlertExtra(null, false))
@@ -2205,7 +2233,17 @@ export const fetchAllCompanysOfType = (
       .then(response => {
         if (page === 1) {
           dispatch(changeLoadingPlaces(false))
-          dispatch(updatePlacesData(response.data.companysDoc))
+          dispatch(
+            updatePlacesData(
+              response.data.companysDoc,
+              response.data.geolocation
+            )
+          )
+          if (response.data.companysDoc.length === 0) {
+            dispatch(
+              addAlertItem("Brak więcej firm w danej kategorii.", "blue")
+            )
+          }
         } else if (page > 1 && response.data.companysDoc.length > 0) {
           dispatch(updateNewPlacesData(response.data.companysDoc))
           dispatch(changeAlertExtra(null, false))
@@ -2229,6 +2267,42 @@ export const fetchAllCompanysOfType = (
         } else {
           dispatch(changeAlertExtra(null, false))
         }
+      })
+  }
+}
+
+export const fetchAllMapsMarks = (
+  type = 1,
+  sorts,
+  filters,
+  localization,
+  selectedName
+) => {
+  return dispatch => {
+    dispatch(changeAlertExtra("Ładowanie znaczników na mapę", true))
+
+    return axios
+      .post(`${Site.serverUrl}/all-map-marks`, {
+        type: !!type ? type : 1,
+        sorts: sorts,
+        filters: filters,
+        localization: localization,
+        selectedName: selectedName,
+      })
+      .then(response => {
+        dispatch(
+          updateGeolocationMarks(
+            response.data.geolocation,
+            response.data.mapMarks
+          )
+        )
+        dispatch(changeAlertExtra(null, false))
+      })
+      .catch(error => {
+        if (!!error.response) {
+          dispatch(addAlertItem("Błąd podczas znaczników na mapie.", "red"))
+        }
+        dispatch(changeAlertExtra(null, false))
       })
   }
 }
@@ -4693,7 +4767,13 @@ export const fetchCompanyStaticts = (token, companyId, months, year) => {
         }
       )
       .then(response => {
-        dispatch(saveCompanyStats(response.data.stats, response.data.services))
+        dispatch(
+          saveCompanyStats(
+            response.data.stats,
+            response.data.services,
+            response.data.raportSMS
+          )
+        )
         dispatch(changeSpinner(false))
       })
       .catch(error => {
@@ -5281,6 +5361,31 @@ export const fetchSendSMSCompanyClients = (
           }
         }
         dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCompanyMarker = companyId => {
+  return dispatch => {
+    dispatch(changeAlertExtra("Ładowanie danych firmy", true))
+    dispatch(changeCompanyMarker(null))
+    return axios
+      .post(`${Site.serverUrl}/company-marker`, {
+        companyId: companyId,
+      })
+      .then(response => {
+        dispatch(changeCompanyMarker(response.data.companyMarker))
+        dispatch(changeAlertExtra(null, false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            dispatch(addAlertItem("Błąd podczas ładowania danych firmy", "red"))
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeAlertExtra(null, false))
       })
   }
 }

@@ -81,7 +81,7 @@ const YourCompany = () => {
             icon={<MdWork />}
             secondColors
             onClick={handleCreateCompany}
-            disabled={!!user.phoneVerified}
+            disabled={!!!user.phoneVerified}
           />
         </div>
       </>

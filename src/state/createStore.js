@@ -44,6 +44,8 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_MARKER,
+  UPDATE_GEOLOCATION_MARKS,
   RESTART_COMPANY_SMS,
   ACUTLIZATION_SMS_COMPANY_CLIENTS,
   RESET_COMPANY_STATS,
@@ -209,6 +211,9 @@ const initialState = {
   companyStats: null,
   stampsUpdate: false,
   restartSMSCompany: false,
+  mapGeolocation: null,
+  mapMarks: [],
+  companyMarker: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -605,6 +610,21 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case UPDATE_COMPANY_MARKER: {
+      return {
+        ...state,
+        companyMarker: action.data,
+      }
+    }
+
+    case UPDATE_GEOLOCATION_MARKS: {
+      return {
+        ...state,
+        mapMarks: action.marks,
+        mapGeolocation: action.geolocation,
+      }
+    }
+
     case RESTART_COMPANY_SMS: {
       return {
         ...state,
@@ -790,6 +810,7 @@ const reducer = (state = initialState, action) => {
         dateCompanyStats = {
           services: action.services,
           stats: action.stats,
+          raportSMS: action.raportSMS,
         }
       }
       return {

@@ -518,28 +518,29 @@ const ContentCompanyProfilAutoSave = ({
             </>
           )}
           {editMode && isCompanyEditProfil && isAdmin ? (
-            <RightColumnItem
-              {...companyEditProfilProps}
-              siteProps={siteProps}
-              active={editMap}
-              disabledEditButtons={disabledEditButtons}
-              marginTop={10}
-            >
-              <MapsEditComponent
-                editMap={editMap}
-                setEditMap={setEditMap}
-                disabledEditButtons={disabledEditButtons}
-                handleResetAllEditedComponents={handleResetAllEditedComponents}
-                user={user}
-                companyLat={company.maps.lat}
-                companyLong={company.maps.long}
-                TitleRightColumn={TitleRightColumn}
-                siteProps={siteProps}
-                {...companyEditProfilProps}
-                ButtonEditPosition={ButtonEditPosition}
-              />
-            </RightColumnItem>
+            <></>
           ) : (
+            // <RightColumnItem
+            //   {...companyEditProfilProps}
+            //   siteProps={siteProps}
+            //   active={editMap}
+            //   disabledEditButtons={disabledEditButtons}
+            //   marginTop={10}
+            // >
+            //   <MapsEditComponent
+            //     editMap={editMap}
+            //     setEditMap={setEditMap}
+            //     disabledEditButtons={disabledEditButtons}
+            //     handleResetAllEditedComponents={handleResetAllEditedComponents}
+            //     user={user}
+            //     companyLat={company.maps.lat}
+            //     companyLong={company.maps.long}
+            //     TitleRightColumn={TitleRightColumn}
+            //     siteProps={siteProps}
+            //     {...companyEditProfilProps}
+            //     ButtonEditPosition={ButtonEditPosition}
+            //   />
+            // </RightColumnItem>
             (isAdmin || !isCompanyEditProfil) &&
             !!company.maps.lat &&
             !!company.maps.long && (

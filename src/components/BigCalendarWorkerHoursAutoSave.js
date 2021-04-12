@@ -777,6 +777,7 @@ const BigCalendarWorkerHoursAutoSave = ({
           setIsDataActive={setDatePickerActive}
           activeMonth={dateCalendar}
           minDateActive={false}
+          activeData={dateCalendar}
         />
       </Popup>
     </>

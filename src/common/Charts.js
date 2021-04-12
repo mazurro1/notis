@@ -17,6 +17,10 @@ export const ChartsAdmin = [
   },
   {
     value: 5,
+    label: "Statystyki SMS w rezerwacjach",
+  },
+  {
+    value: 6,
     label: "Statystyki SMS",
   },
 ]

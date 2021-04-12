@@ -24,10 +24,10 @@ const TitlePagePopup = styled.div`
 
 const PopupWindow = styled.div`
   position: ${props => props.position};
-  top: 0;
+  top: ${props => props.top};
   right: 0;
   left: 0;
-  bottom: 0;
+  bottom: ${props => props.bottom};
   background-color: rgba(0, 0, 0, 0.85);
   z-index: 500;
   display: flex;
@@ -113,6 +113,8 @@ const Popup = ({
   maxHeight = true,
   clickedBackground = false,
   heightFull = false,
+  top = 0,
+  bottom = 0,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -198,6 +200,8 @@ const Popup = ({
         calendar={calendar}
         position={position}
         borderRadius={borderRadius}
+        top={top}
+        bottom={bottom}
       >
         {contentComponent}
       </PopupWindow>

@@ -62,6 +62,7 @@ import {
   setVisibleMenuIndustries,
   saveUserTokenToAutoLogin,
   saveUserTokenToLocal,
+  fetchAllMapsMarks,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -540,6 +541,19 @@ const Navigation = ({ isMainPage }) => {
       )
     }
   }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const sortsValue = !!sorts ? sorts.value : null
+    dispatch(
+      fetchAllMapsMarks(
+        !!industries ? industries : null,
+        sortsValue,
+        filters,
+        localization,
+        selectedName
+      )
+    )
+  }, [selectedName, sorts, filters, localization, industries])
 
   const handleCloseActiveAccount = () => {
     dispatch(changeActiveAccount(false))

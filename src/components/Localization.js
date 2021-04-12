@@ -114,6 +114,7 @@ const Localization = ({ handleClose, siteProps }) => {
         onChange={handleChangeSearch}
         value={localizationText}
         refInput={inputSearchCompany}
+        validText="Minimum 3 znaki"
       />
       <ButtonsPosition>
         <ButtonsMargin>
@@ -150,6 +151,7 @@ const Localization = ({ handleClose, siteProps }) => {
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleChangeSearchLocalization}
+            disabled={localizationText.length < 3}
           />
         </ButtonsMargin>
       </ButtonsPosition>
