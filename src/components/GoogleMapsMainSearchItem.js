@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
-import { OverlayView } from "@react-google-maps/api"
+import { OverlayView, useGoogleMap } from "@react-google-maps/api"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
@@ -26,6 +26,8 @@ const UnderMenuServices = styled.div`
   padding-top: 10px;
   padding-bottom: 5px;
   margin-bottom: 10px;
+  max-height: 75px;
+  overflow-y: auto;
 `
 
 const PlaceItem = styled.div`
@@ -62,6 +64,7 @@ const PlaceContent = styled.div`
   width: 60%;
   padding: 10px 15px;
   padding-bottom: 47px;
+  padding-right: 70px;
   @media all and (max-width: 920px) {
     width: 100%;
   }
@@ -69,7 +72,6 @@ const PlaceContent = styled.div`
   h1 {
     font-size: 1.4rem;
     margin-bottom: 0;
-    padding-right: 60px;
     text-transform: uppercase;
     font-family: "Poppins-Bold", sans-serif;
     @media all and (max-width: 920px) {
@@ -99,10 +101,7 @@ const PlaceContent = styled.div`
 
   h6 {
     display: inline;
-    border-bottom: 2px solid ${props => Colors(props.siteProps).primaryColor};
-    padding-bottom: 5px;
     font-size: 0.8rem;
-    line-height: 30px;
     font-family: "Poppins-Medium", sans-serif;
   }
 
@@ -117,7 +116,7 @@ const PlaceContent = styled.div`
 `
 
 const MarginBottomTitle = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 0px;
 `
 
 const BackGroundImageCustomUrl = styled.div`
@@ -235,17 +234,17 @@ const getPixelPositionOffset = (width, height) => ({
 const GoogleMapsMainSearchItem = ({
   itemLocation,
   siteProps,
-  handleFetchCompanyMarker,
-  companyMarker,
   user,
+  fetchCompanyMarker,
 }) => {
   const [markerActive, setMarkerActive] = useState(false)
   const [isCompanyInFavourites, setIsCompanyInFavourites] = useState(false)
   const [servicesVisible, setServicesVisible] = useState(false)
   const filters = useSelector(state => state.filters)
   const userResetFavourites = useSelector(state => state.userResetFavourites)
+  const companyMarker = useSelector(state => state.companyMarker)
   const refSelect = useRef(null)
-  console.log(companyMarker)
+  const map = useGoogleMap()
 
   const dispatch = useDispatch()
 
@@ -256,9 +255,8 @@ const GoogleMapsMainSearchItem = ({
           itemCompany => itemCompany._id === companyMarker._id
         )
         setIsCompanyInFavourites(isCompanyInFav)
-      } else {
-        dispatch(resetUserFavourites())
       }
+      dispatch(resetUserFavourites())
     }
   }, [user, userResetFavourites]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -276,16 +274,6 @@ const GoogleMapsMainSearchItem = ({
 
   const handleEnterMarker = () => {
     ReactTooltip.rebuild()
-  }
-  const handleClickMarker = () => {
-    if (!markerActive) {
-      setMarkerActive(true)
-      handleFetchCompanyMarker(
-        itemLocation._id,
-        itemLocation.maps.lat,
-        itemLocation.maps.long
-      )
-    }
   }
 
   const handleServicesVisible = () => {
@@ -330,7 +318,7 @@ const GoogleMapsMainSearchItem = ({
           <ButtonIcon
             title={
               isInServicesFilterSome
-                ? `W usługach znajduje się: ${filterService.serviceName}`
+                ? `${filterService.serviceName}`
                 : "Brak w usługach"
             }
             fontSize="13"
@@ -369,8 +357,30 @@ const GoogleMapsMainSearchItem = ({
   useEffect(() => {
     ReactTooltip.rebuild()
   }, [user, isCompanyInFavourites])
-  console.log(markerActive && !!companyMarker)
-  console.log(markerActive, !!companyMarker)
+
+  const handleClickMarker = () => {
+    if (!!companyMarker) {
+      if (companyMarker._id !== itemLocation._id) {
+        dispatch(fetchCompanyMarker(itemLocation._id))
+      }
+    } else {
+      dispatch(fetchCompanyMarker(itemLocation._id))
+    }
+
+    if (!markerActive) {
+      setMarkerActive(true)
+      if (map) {
+        if (map.zoom < 13) {
+          map.zoom = 13
+        }
+        map.panTo({
+          lat: Number(itemLocation.maps.lat),
+          lng: Number(itemLocation.maps.long),
+        })
+      }
+    }
+  }
+
   return (
     <>
       {!markerActive && (
@@ -398,15 +408,14 @@ const GoogleMapsMainSearchItem = ({
           onClick={handleClickMarker}
           ref={refSelect}
         >
-          {/* {!!companyMarker && ( */}
           <Popup
-            popupEnable={markerActive && !!companyMarker}
+            popupEnable={markerActive}
             noContent
             position="absolute"
             top="-220px"
             bottom="auto"
           >
-            <ContentPopupMarker onClick={handleClickMarker}>
+            <ContentPopupMarker>
               <PlaceItem siteProps={siteProps}>
                 {!!companyMarker && (
                   <PlaceImage>
@@ -567,7 +576,6 @@ const GoogleMapsMainSearchItem = ({
               </PlaceItem>
             </ContentPopupMarker>
           </Popup>
-          {/* )} */}
         </MarkerStyle>
       </OverlayView>
     </>

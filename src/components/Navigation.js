@@ -523,36 +523,46 @@ const Navigation = ({ isMainPage }) => {
   }, [isMainPage])
 
   useEffect(() => {
-    const sortsValue = !!sorts ? sorts.value : null
-    if (!!industries || industries === 0) {
+    if (!!sorts) {
+      const sortsValue = !!sorts ? sorts.value : null
+      if (!!industries || industries === 0) {
+        dispatch(
+          fetchAllCompanysOfType(
+            page,
+            industries,
+            sortsValue,
+            filters,
+            localization,
+            selectedName
+          )
+        )
+      } else {
+        dispatch(
+          fetchAllCompanys(
+            page,
+            sortsValue,
+            filters,
+            localization,
+            selectedName
+          )
+        )
+      }
+    }
+  }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!!sorts) {
+      const sortsValue = !!sorts ? sorts.value : null
       dispatch(
-        fetchAllCompanysOfType(
-          page,
-          industries,
+        fetchAllMapsMarks(
+          !!industries ? industries : null,
           sortsValue,
           filters,
           localization,
           selectedName
         )
       )
-    } else {
-      dispatch(
-        fetchAllCompanys(page, sortsValue, filters, localization, selectedName)
-      )
     }
-  }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const sortsValue = !!sorts ? sorts.value : null
-    dispatch(
-      fetchAllMapsMarks(
-        !!industries ? industries : null,
-        sortsValue,
-        filters,
-        localization,
-        selectedName
-      )
-    )
   }, [selectedName, sorts, filters, localization, industries])
 
   const handleCloseActiveAccount = () => {

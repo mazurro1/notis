@@ -2297,6 +2297,14 @@ export const fetchAllMapsMarks = (
           )
         )
         dispatch(changeAlertExtra(null, false))
+        if (!(response.data.mapMarks.length > 500)) {
+          dispatch(
+            addAlertItem(
+              "Uwaga pobrano 500 wyników na mapę. Użyj filtrów aby znależć najbardziej odpowiadające wyniki.",
+              "blue"
+            )
+          )
+        }
       })
       .catch(error => {
         if (!!error.response) {

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { changeSortValue } from "../state/actions"
 import { SortsNames } from "../common/SortsNames"
 
-const Sort = () => {
+const Sort = ({ enableMaps }) => {
   const sortDataLoading = useSelector(state => state.sortDataLoading)
   const sorts = useSelector(state => state.sorts)
   const dispatch = useDispatch()
@@ -31,6 +31,7 @@ const Sort = () => {
       closeMenuOnSelect
       width="250px"
       deleteItem={false}
+      isDisabled={enableMaps}
     />
   )
 }

@@ -20,6 +20,12 @@ import { AllIndustries } from "../common/AllIndustries"
 import { Translates } from "../common/Translates"
 import Sort from "../components/Sort"
 import GoogleMapsMainSearch from "../components/GoogleMapsMainSearch"
+import SelectCreated from "../components/SelectCreated"
+
+const GoogleMapsStyle = styled.div`
+  margin-top: 20px;
+  margin-bottom: 50px;
+`
 
 const ButtonsFilters = styled.div`
   display: flex;
@@ -89,6 +95,11 @@ const ResetFilter = styled.div`
 
 const Home = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [selectedView, setSelectedView] = useState({
+    value: 1,
+    label: "Lista ofert",
+  })
+  const [enableMaps, setEnableMaps] = useState(false)
   const placesData = useSelector(state => state.placesData)
   const filters = useSelector(state => state.filters)
   const localization = useSelector(state => state.localization)
@@ -99,6 +110,7 @@ const Home = () => {
   const mapGeolocation = useSelector(state => state.mapGeolocation)
   const mapMarks = useSelector(state => state.mapMarks)
   const user = useSelector(state => state.user)
+  const sorts = useSelector(state => state.sorts)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
 
@@ -135,7 +147,7 @@ const Home = () => {
       threshold: 0.1,
       once: true,
     })
-  }, [loadingPlaces, placesData])
+  }, [loadingPlaces, placesData, selectedView])
 
   const handleResetFilter = e => {
     e.stopPropagation()
@@ -147,6 +159,19 @@ const Home = () => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     dispatch(changeLocalizationValue(null))
+  }
+
+  const handleChangeView = view => {
+    setSelectedView(view)
+    if (!!view) {
+      if (view.value === 1) {
+        setEnableMaps(false)
+      }
+    }
+  }
+
+  const handleEnableMaps = () => {
+    setEnableMaps(true)
   }
 
   const mapPlacesData = placesData.map((item, index) => {
@@ -180,7 +205,7 @@ const Home = () => {
       {industriesText}
       <ButtonsFilters>
         <ButtonMargin>
-          <Sort />
+          <Sort enableMaps={enableMaps} />
         </ButtonMargin>
         <ButtonMargin>
           <ButtonIcon
@@ -232,21 +257,51 @@ const Home = () => {
             onClick={() => dispatch(changeLocaliaztionVisible())}
           />
         </ButtonMargin>
+        <ButtonMargin>
+          <SelectCreated
+            options={[
+              {
+                value: 1,
+                label: "Lista ofert",
+              },
+              { value: 2, label: "Mapa ofert" },
+            ]}
+            value={selectedView}
+            handleChange={handleChangeView}
+            placeholder="Widok..."
+            defaultMenuIsOpen={false}
+            isClearable={false}
+            deleteItem={false}
+            closeMenuOnSelect
+            width="150px"
+          />
+        </ButtonMargin>
       </ButtonsFilters>
-      {!!mapGeolocation && (
-        <GoogleMapsMainSearch
-          siteProps={siteProps}
-          mapGeolocation={mapGeolocation}
-          localization={localization}
-          mapMarks={mapMarks}
-          user={user}
-        />
-      )}
       <CSSTransition
-        in={!loadingPlaces}
+        in={enableMaps && !!mapGeolocation}
+        timeout={400}
+        classNames="map"
+        unmountOnExit
+      >
+        <GoogleMapsStyle>
+          <GoogleMapsMainSearch
+            siteProps={siteProps}
+            mapGeolocation={mapGeolocation}
+            localization={localization}
+            mapMarks={mapMarks}
+            user={user}
+            industries={industries}
+            filters={filters}
+            sorts={sorts}
+          />
+        </GoogleMapsStyle>
+      </CSSTransition>
+      <CSSTransition
+        in={!loadingPlaces && selectedView.value === 1}
         timeout={400}
         classNames="popup"
         unmountOnExit
+        onExited={handleEnableMaps}
       >
         <MarginBottomPlaces ref={refAllPlaces}>
           {mapPlacesData}

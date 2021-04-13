@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
-import { GoogleMap, LoadScript } from "@react-google-maps/api"
+import { GoogleMap, LoadScript, useGoogleMap } from "@react-google-maps/api"
 import GoogleMapsMainSearchItem from "./GoogleMapsMainSearchItem"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCompanyMarker } from "../state/actions"
@@ -8,6 +8,221 @@ const containerStyle = {
   width: "100%",
   height: "600px",
 }
+
+const mapsOptionsDarkMode = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#212121",
+      },
+    ],
+  },
+  {
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#212121",
+      },
+    ],
+  },
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#757575",
+      },
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.country",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#bdbdbd",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#181818",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#616161",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1b1b1b",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#2c2c2c",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#8a8a8a",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#373737",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#3c3c3c",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway.controlled_access",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#4e4e4e",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#616161",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#000000",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#3d3d3d",
+      },
+    ],
+  },
+]
 
 const mapsOptions = [
   {
@@ -52,14 +267,15 @@ const GoogleMapsMainSearch = ({
   localization,
   mapMarks = [],
   user,
+  industries,
+  filters,
+  sorts,
 }) => {
   const [latMap, setLatMap] = useState("")
   const [longMap, setLongMap] = useState("")
   const [zoomMap, setZoomMap] = useState(6)
-  const companyMarker = useSelector(state => state.companyMarker)
   const mapRef = useRef(null)
-  const dispatch = useDispatch()
-
+  console.log(siteProps)
   useEffect(() => {
     if (!!mapGeolocation) {
       setLatMap(mapGeolocation.lat)
@@ -80,35 +296,16 @@ const GoogleMapsMainSearch = ({
         }
       }
     }
-  }, [mapGeolocation, localization])
+  }, [mapGeolocation, localization, industries, filters, sorts])
 
-  const handleFetchCompanyMarker = (companyId, lat, long) => {
-    dispatch(fetchCompanyMarker(companyId))
-    if (!!mapRef) {
-      if (!!mapRef.current) {
-        mapRef.current.state.map.zoom = 13
-        //     console.log(mapRef.current)
-        //     // const latLng = mapRef.current.LatLng(lat, long)
-        //     // console.log(latLng)
-        //     mapRef.current.panTo(Number(lat), Number(long))
-      }
-    }
-    setLatMap(Number(lat))
-    setLongMap(Number(long))
-    if (zoomMap < 10) {
-      setZoomMap(13)
-    }
-  }
-  console.log(companyMarker)
   const mapListLocations = mapMarks.map((itemLocation, index) => {
     return (
       <GoogleMapsMainSearchItem
         itemLocation={itemLocation}
         key={index}
         siteProps={siteProps}
-        handleFetchCompanyMarker={handleFetchCompanyMarker}
-        companyMarker={companyMarker}
         user={user}
+        fetchCompanyMarker={fetchCompanyMarker}
       />
     )
   })
@@ -121,9 +318,14 @@ const GoogleMapsMainSearch = ({
           lng: longMap,
         }}
         zoom={zoomMap}
-        options={{ styles: mapsOptions, streetViewControl: false }}
+        options={{
+          styles:
+            !!siteProps.blind || !!siteProps.dark
+              ? mapsOptionsDarkMode
+              : mapsOptions,
+          streetViewControl: false,
+        }}
         ref={mapRef}
-        yesIWantToUseGoogleMapApiInternals
         disableDefaultUI
       >
         {mapListLocations}
@@ -131,4 +333,4 @@ const GoogleMapsMainSearch = ({
     </LoadScript>
   )
 }
-export default GoogleMapsMainSearch
+export default React.memo(GoogleMapsMainSearch)
