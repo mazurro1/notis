@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { Colors } from "../../common/Colors"
 import styled from "styled-components"
-import { MdStar, MdComment, MdSave, MdArrowBack } from "react-icons/md"
+import {
+  MdStar,
+  MdComment,
+  MdSave,
+  MdArrowBack,
+  MdReport,
+} from "react-icons/md"
 import ButtonIcon from "../ButtonIcon"
 import InputIcon from "../InputIcon"
 import { useDispatch, useSelector } from "react-redux"
@@ -10,6 +16,7 @@ import {
   resetOpinionFunction,
 } from "../../state/actions"
 import Popup from "../Popup"
+import ReactTooltip from "react-tooltip"
 
 const ButtonsAddPositionOpinion = styled.div`
   display: flex;
@@ -73,12 +80,26 @@ const UserStyle = styled.div`
 `
 
 const TimeCreateStyle = styled.div`
+  position: relative;
   text-align: right;
   font-size: 0.9rem;
+  padding-right: ${props => (props.disabledReport ? "0" : "30px")};
   color: ${props =>
     props.siteProps.dark || props.siteProps.blind
       ? "rgba(255, 255, 255, 0.3)"
       : "rgba(0, 0, 0, 0.3)"};
+
+  span {
+    position: absolute;
+    right: 0;
+    color: ${props =>
+      props.disabledReport
+        ? Colors(props.siteProps).disabled
+        : Colors(props.siteProps).dangerColor};
+    font-size: 1.2rem;
+    cursor: ${props => (props.disabledReport ? "default" : "pointer")};
+    display: ${props => (props.disabledReport ? "none" : "inline-block")};
+  }
 `
 
 const ReplayMessage = styled.div`
@@ -132,6 +153,7 @@ const OpinionsComponentItem = ({
   ButtonMoreOpinion,
   user,
   companyId,
+  handleClickReport,
 }) => {
   const [addReplay, setAddReplay] = useState(false)
   const [opinionText, setOpinionText] = useState("")
@@ -260,8 +282,28 @@ const OpinionsComponentItem = ({
             </ReplayMessage>
           )}
         </BackgroundOpinion>
-        <TimeCreateStyle siteProps={siteProps}>
+        {!!user && (
+          <ReactTooltip
+            id={`reportMessage${index}`}
+            effect="float"
+            multiline={true}
+          >
+            <span>Zgłoś opinie</span>
+          </ReactTooltip>
+        )}
+        <TimeCreateStyle siteProps={siteProps} disabledReport={!!!user}>
           {timeCreateRender}
+          <span
+            data-tip
+            data-for={`reportMessage${index}`}
+            onClick={() => {
+              if (!!user) {
+                handleClickReport(opinion._id)
+              }
+            }}
+          >
+            <MdReport />
+          </span>
         </TimeCreateStyle>
         {isAdmin && isCompanyEditProfil && (
           <ButtonMoreOpinion>

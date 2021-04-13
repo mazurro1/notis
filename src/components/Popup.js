@@ -29,7 +29,7 @@ const PopupWindow = styled.div`
   left: 0;
   bottom: ${props => props.bottom};
   background-color: rgba(0, 0, 0, 0.85);
-  z-index: 500;
+  z-index: 600;
   display: flex;
   justify-content: center;
   align-items: center;

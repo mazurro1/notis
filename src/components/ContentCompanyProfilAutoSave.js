@@ -24,6 +24,7 @@ import StampsContent from "./ItemsContentCompanyProfilAutoSave/StampsContent"
 import ShopStoreContent from "./ItemsContentCompanyProfilAutoSave/ShopStoreContent"
 import SMSSettings from "./ItemsContentCompanyProfilAutoSave/SMSSettings"
 import sal from "sal.js"
+import ReportCompany from "./ItemsContentCompanyProfilAutoSave/ReportCompany"
 
 const TextH1 = styled.div`
   position: relative;
@@ -756,7 +757,7 @@ const ContentCompanyProfilAutoSave = ({
               disabledEditButtons={disabledEditButtons}
             />
           )}
-
+          <ReportCompany siteProps={siteProps} user={user} company={company} />
           {(company.reserationText || isCompanyEditProfil) &&
             userHasPermisionToOther && (
               <ReserwationTextComponent

@@ -208,7 +208,7 @@ const SelectCreated = ({
   useEffect(() => {
     function handleClickOutside(event) {
       if (refSelect.current && !refSelect.current.contains(event.target)) {
-        setSelectActive(false)
+        setSelectActive(defaultMenuIsOpen)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -218,7 +218,7 @@ const SelectCreated = ({
   }, [refSelect])
 
   useEffect(() => {
-    setSelectActive(false)
+    setSelectActive(defaultMenuIsOpen)
   }, [isDisabled])
 
   useEffect(() => {
@@ -323,7 +323,7 @@ const SelectCreated = ({
   const handleStopPropagination = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
-    if (!isDisabled) {
+    if (!isDisabled && closeMenuOnSelect) {
       setSelectActive(prevState => !prevState)
     }
   }

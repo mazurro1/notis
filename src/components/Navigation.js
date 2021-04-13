@@ -455,6 +455,7 @@ const Navigation = ({ isMainPage }) => {
   const sorts = useSelector(state => state.sorts)
   const filters = useSelector(state => state.filters)
   const localization = useSelector(state => state.localization)
+  const district = useSelector(state => state.district)
   const industries = useSelector(state => state.industries)
   const page = useSelector(state => state.page)
   const user = useSelector(state => state.user)
@@ -464,6 +465,7 @@ const Navigation = ({ isMainPage }) => {
   const userProfilVisible = useSelector(state => state.userProfilVisible)
   const activeAccountVisible = useSelector(state => state.activeAccountVisible)
   const heightMenuIndustries = useSelector(state => state.heightMenuIndustries)
+  const mapActive = useSelector(state => state.mapActive)
   const visibleTokenToAutoLogin = useSelector(
     state => state.visibleTokenToAutoLogin
   )
@@ -523,7 +525,7 @@ const Navigation = ({ isMainPage }) => {
   }, [isMainPage])
 
   useEffect(() => {
-    if (!!sorts) {
+    if (!!sorts && !mapActive) {
       const sortsValue = !!sorts ? sorts.value : null
       if (!!industries || industries === 0) {
         dispatch(
@@ -533,7 +535,12 @@ const Navigation = ({ isMainPage }) => {
             sortsValue,
             filters,
             localization,
-            selectedName
+            selectedName,
+            !!district && !!localization
+              ? !!localization.value
+                ? district
+                : null
+              : null
           )
         )
       } else {
@@ -543,15 +550,29 @@ const Navigation = ({ isMainPage }) => {
             sortsValue,
             filters,
             localization,
-            selectedName
+            selectedName,
+            !!district && !!localization
+              ? !!localization.value
+                ? district
+                : null
+              : null
           )
         )
       }
     }
-  }, [selectedName, sorts, filters, localization, page, industries]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    selectedName,
+    sorts,
+    filters,
+    localization,
+    page,
+    industries,
+    district,
+    mapActive,
+  ]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!!sorts) {
+    if (!!sorts && mapActive) {
       const sortsValue = !!sorts ? sorts.value : null
       dispatch(
         fetchAllMapsMarks(
@@ -559,11 +580,24 @@ const Navigation = ({ isMainPage }) => {
           sortsValue,
           filters,
           localization,
-          selectedName
+          selectedName,
+          !!district && !!localization
+            ? !!localization.value
+              ? district
+              : null
+            : null
         )
       )
     }
-  }, [selectedName, sorts, filters, localization, industries])
+  }, [
+    selectedName,
+    sorts,
+    filters,
+    localization,
+    industries,
+    mapActive,
+    district,
+  ])
 
   const handleCloseActiveAccount = () => {
     dispatch(changeActiveAccount(false))

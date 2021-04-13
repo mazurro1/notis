@@ -3,7 +3,7 @@ import InputIcon from "../components/InputIcon"
 import styled from "styled-components"
 import ButtonIcon from "./ButtonIcon"
 import { MdSearch, MdClose, MdLocationOn } from "react-icons/md"
-import { FaArrowLeft } from "react-icons/fa"
+import { FaArrowLeft, FaMapSigns } from "react-icons/fa"
 import { Colors } from "../common/Colors"
 import { useDispatch, useSelector } from "react-redux"
 import { changeLocalizationValue } from "../state/actions"
@@ -51,14 +51,19 @@ const AllLocalizations = styled.div`
 
 const Localization = ({ handleClose, siteProps }) => {
   const [localizationText, setLocalizationText] = useState("")
+  const [districtText, setDistrictText] = useState("")
   const localization = useSelector(state => state.localization)
+  const district = useSelector(state => state.district)
   const inputSearchCompany = useRef(null)
 
   useEffect(() => {
     if (!!localization) {
       setLocalizationText(localization.value)
     }
-  }, [localization])
+    if (!!district) {
+      setDistrictText(district)
+    }
+  }, [localization, district])
 
   useEffect(() => {
     if (!!inputSearchCompany) {
@@ -78,12 +83,19 @@ const Localization = ({ handleClose, siteProps }) => {
     setLocalizationText(e.target.value)
   }
 
+  const handleChangeDistrict = e => {
+    setDistrictText(e.target.value)
+  }
+
   const handleChangeSearchLocalization = value => {
     dispatch(
-      changeLocalizationValue({
-        value: localizationText,
-        label: localizationText,
-      })
+      changeLocalizationValue(
+        {
+          value: localizationText,
+          label: localizationText,
+        },
+        districtText
+      )
     )
   }
 
@@ -114,6 +126,13 @@ const Localization = ({ handleClose, siteProps }) => {
         onChange={handleChangeSearch}
         value={localizationText}
         refInput={inputSearchCompany}
+        validText="Minimum 3 znaki - pole wymagane"
+      />
+      <InputIcon
+        placeholder="Dzielnica"
+        icon={<FaMapSigns />}
+        onChange={handleChangeDistrict}
+        value={districtText}
         validText="Minimum 3 znaki"
       />
       <ButtonsPosition>

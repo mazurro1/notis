@@ -1,8 +1,21 @@
 import React, { useEffect, useState, useRef } from "react"
 import { GoogleMap, LoadScript, useGoogleMap } from "@react-google-maps/api"
-import GoogleMapsMainSearchItem from "./GoogleMapsMainSearchItem"
+import GoogleMapsMainSearchItem from "./LeafletMapsMainSearchItem"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCompanyMarker } from "../state/actions"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import "leaflet/dist/leaflet.css"
+import L from "leaflet"
+
+if (typeof window !== "undefined") {
+  delete L.Icon.Default.prototype._getIconUrl
+
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+    iconUrl: require("leaflet/dist/images/marker-icon.png"),
+    shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+  })
+}
 
 const containerStyle = {
   width: "100%",
@@ -286,15 +299,15 @@ const GoogleMapsMainSearch = ({
         setZoomMap(6)
       }
 
-      if (!!mapRef) {
-        if (!!mapRef.current) {
-          if (!!localization) {
-            mapRef.current.state.map.zoom = 13
-          } else {
-            mapRef.current.state.map.zoom = 6
-          }
-        }
-      }
+      // if (!!mapRef) {
+      //   if (!!mapRef.current) {
+      //     if (!!localization) {
+      //       mapRef.current.state.map.zoom = 13
+      //     } else {
+      //       mapRef.current.state.map.zoom = 6
+      //     }
+      //   }
+      // }
     }
   }, [mapGeolocation, localization, industries, filters, sorts])
 
@@ -309,28 +322,48 @@ const GoogleMapsMainSearch = ({
       />
     )
   })
+  console.log([Number(latMap), Number(longMap)])
+  console.log([51.505, -0.09])
   return (
-    <LoadScript googleMapsApiKey="AIzaSyBCdsxiQpKdPUp8FG4z9dEUfAn9R5eroSc">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={{
-          lat: latMap,
-          lng: longMap,
-        }}
+    <div id="map" ref={mapRef}>
+      <MapContainer
+        center={[51.919438, 19.145136]}
         zoom={zoomMap}
-        options={{
-          styles:
-            !!siteProps.blind || !!siteProps.dark
-              ? mapsOptionsDarkMode
-              : mapsOptions,
-          streetViewControl: false,
-        }}
-        ref={mapRef}
-        disableDefaultUI
+        style={{ height: "600px", width: "100%" }}
       >
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
         {mapListLocations}
-      </GoogleMap>
-    </LoadScript>
+        {/* <Marker position={position}>
+        <Popup>{`${company.name.toUpperCase()} - ${company.city}, ${
+          company.district
+        }, ul. ${company.adress}`}</Popup>
+      </Marker> */}
+      </MapContainer>
+    </div>
+    // <LoadScript googleMapsApiKey="AIzaSyBCdsxiQpKdPUp8FG4z9dEUfAn9R5eroSc">
+    //   <GoogleMap
+    //     mapContainerStyle={containerStyle}
+    //     center={{
+    //       lat: latMap,
+    //       lng: longMap,
+    //     }}
+    //     zoom={zoomMap}
+    //     options={{
+    //       styles:
+    //         !!siteProps.blind || !!siteProps.dark
+    //           ? mapsOptionsDarkMode
+    //           : mapsOptions,
+    //       streetViewControl: false,
+    //     }}
+    //     ref={mapRef}
+    //     disableDefaultUI
+    //   >
+    //     {mapListLocations}
+    //   </GoogleMap>
+    // </LoadScript>
   )
 }
 export default React.memo(GoogleMapsMainSearch)

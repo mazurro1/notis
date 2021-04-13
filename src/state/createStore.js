@@ -44,6 +44,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  CHANGE_MAP_ACTIVE,
   UPDATE_COMPANY_MARKER,
   UPDATE_GEOLOCATION_MARKS,
   RESTART_COMPANY_SMS,
@@ -155,6 +156,7 @@ const initialState = {
   registrationVisible: false,
   localizationVisible: false,
   localization: false,
+  district: null,
   localizationDataLoading: false,
   filterVisible: false,
   filters: null,
@@ -214,6 +216,7 @@ const initialState = {
   mapGeolocation: null,
   mapMarks: [],
   companyMarker: null,
+  mapActive: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -469,13 +472,14 @@ const reducer = (state = initialState, action) => {
         filterVisible: false,
       }
 
-    case CHANGE_LOCALIZATION_VALUE:
+    case CHANGE_LOCALIZATION_VALUE: {
       return {
         ...state,
         localization: action.value,
         localizationVisible: false,
+        district: action.district,
       }
-
+    }
     case UPDATE_USER_IMAGE: {
       const userImage = !!state.user ? state.user : null
       if (userImage) {
@@ -609,6 +613,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_MAP_ACTIVE: {
+      return {
+        ...state,
+        mapActive: action.value,
+      }
+    }
 
     case UPDATE_COMPANY_MARKER: {
       return {

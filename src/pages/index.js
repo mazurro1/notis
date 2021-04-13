@@ -11,6 +11,7 @@ import {
   updatePage,
   changeFilterValue,
   changeLocalizationValue,
+  changeMapsActive,
 } from "../state/actions"
 import { Colors } from "../common/Colors"
 import sal from "sal.js"
@@ -20,11 +21,15 @@ import { AllIndustries } from "../common/AllIndustries"
 import { Translates } from "../common/Translates"
 import Sort from "../components/Sort"
 import GoogleMapsMainSearch from "../components/GoogleMapsMainSearch"
+// import GoogleMapsMainSearch from "../components/LeafletMapsMainSearch"
 import SelectCreated from "../components/SelectCreated"
 
 const GoogleMapsStyle = styled.div`
   margin-top: 20px;
   margin-bottom: 50px;
+  div {
+    outline: none;
+  }
 `
 
 const ButtonsFilters = styled.div`
@@ -99,10 +104,10 @@ const Home = () => {
     value: 1,
     label: "Lista ofert",
   })
-  const [enableMaps, setEnableMaps] = useState(false)
   const placesData = useSelector(state => state.placesData)
   const filters = useSelector(state => state.filters)
   const localization = useSelector(state => state.localization)
+  const district = useSelector(state => state.district)
   const industries = useSelector(state => state.industries)
   const loadingPlaces = useSelector(state => state.loadingPlaces)
   const siteProps = useSelector(state => state.siteProps)
@@ -111,8 +116,13 @@ const Home = () => {
   const mapMarks = useSelector(state => state.mapMarks)
   const user = useSelector(state => state.user)
   const sorts = useSelector(state => state.sorts)
+  const mapActive = useSelector(state => state.mapActive)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(changeMapsActive(false))
+  }, [])
 
   useEffect(() => {
     if (!!refAllPlaces) {
@@ -158,20 +168,20 @@ const Home = () => {
   const handleResetLocalization = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
-    dispatch(changeLocalizationValue(null))
+    dispatch(changeLocalizationValue(null, null))
   }
 
   const handleChangeView = view => {
     setSelectedView(view)
     if (!!view) {
       if (view.value === 1) {
-        setEnableMaps(false)
+        dispatch(changeMapsActive(false))
       }
     }
   }
 
   const handleEnableMaps = () => {
-    setEnableMaps(true)
+    dispatch(changeMapsActive(true))
   }
 
   const mapPlacesData = placesData.map((item, index) => {
@@ -205,7 +215,7 @@ const Home = () => {
       {industriesText}
       <ButtonsFilters>
         <ButtonMargin>
-          <Sort enableMaps={enableMaps} />
+          <Sort enableMaps={mapActive} />
         </ButtonMargin>
         <ButtonMargin>
           <ButtonIcon
@@ -236,16 +246,21 @@ const Home = () => {
         <ButtonMargin>
           <ButtonIcon
             title={
-              !!localization ? (
-                <TextButtonsSearch>
-                  lokalizacja: {localization.label}
-                  <ResetFilter
-                    siteProps={siteProps}
-                    onClick={handleResetLocalization}
-                  >
-                    <MdClose />
-                  </ResetFilter>
-                </TextButtonsSearch>
+              !!localization || !!district ? (
+                !!localization.value ? (
+                  <TextButtonsSearch>
+                    lokalizacja: {localization.label}
+                    {!!district ? `, ${district}` : ""}
+                    <ResetFilter
+                      siteProps={siteProps}
+                      onClick={handleResetLocalization}
+                    >
+                      <MdClose />
+                    </ResetFilter>
+                  </TextButtonsSearch>
+                ) : (
+                  <TextButtonsSearch>lokalizacja</TextButtonsSearch>
+                )
               ) : (
                 <TextButtonsSearch>lokalizacja</TextButtonsSearch>
               )
@@ -278,7 +293,7 @@ const Home = () => {
         </ButtonMargin>
       </ButtonsFilters>
       <CSSTransition
-        in={enableMaps && !!mapGeolocation}
+        in={mapActive && !!mapGeolocation}
         timeout={400}
         classNames="map"
         unmountOnExit

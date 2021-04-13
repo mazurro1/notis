@@ -2,11 +2,28 @@ import React, { useEffect, useState } from "react"
 import { Colors } from "../../common/Colors"
 import styled from "styled-components"
 import OpinionsComponentItem from "./OpinionsComponentItem"
-import { MdStar, MdStarHalf, MdComment } from "react-icons/md"
+import { MdStar, MdStarHalf, MdComment, MdReport } from "react-icons/md"
 import sal from "sal.js"
 import ButtonIcon from "../ButtonIcon"
 import { useDispatch } from "react-redux"
-import { fetchLoadMoreOpinions } from "../../state/actions"
+import { fetchLoadMoreOpinions, fetchAddReport } from "../../state/actions"
+import { ReportsInfo } from "../../common/Reports"
+import Popup from "../Popup"
+import SelectCreated from "../SelectCreated"
+
+const TextSelect = styled.div`
+  font-size: 1rem;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  margin-bottom: 10px;
+
+  span {
+    font-family: "Poppins-Bold", sans-serif;
+  }
+`
+
+const StyledSelect = styled.div`
+  margin-bottom: 150px;
+`
 
 const OpinionsComponentStyle = styled.div`
   position: relative;
@@ -105,6 +122,9 @@ const OpinionsComponent = ({
   user,
 }) => {
   const [pageOpinions, setPAgeOpinions] = useState(1)
+  const [reportActive, setReportActive] = useState(false)
+  const [selectedReport, setSelectedReport] = useState(null)
+  const [selectedOpinionId, setSelectedOpinionId] = useState(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -117,6 +137,30 @@ const OpinionsComponent = ({
   const handleLoadMoreOpinions = () => {
     dispatch(fetchLoadMoreOpinions(pageOpinions, companyId))
     setPAgeOpinions(prevState => prevState + 1)
+  }
+
+  const handleClickReport = messageId => {
+    setReportActive(prevState => !prevState)
+    if (!!messageId) {
+      setSelectedOpinionId(messageId)
+    }
+  }
+
+  const handleChangeSelect = value => {
+    setSelectedReport(value)
+  }
+
+  const handleConfirmReport = () => {
+    setReportActive(false)
+    setSelectedReport(null)
+    dispatch(
+      fetchAddReport(
+        user.token,
+        companyId,
+        selectedReport.value,
+        selectedOpinionId
+      )
+    )
   }
 
   const mapOpinions = companyOpinions.map((item, index) => {
@@ -133,6 +177,7 @@ const OpinionsComponent = ({
         ButtonMoreOpinion={ButtonMoreOpinion}
         user={user}
         companyId={companyId}
+        handleClickReport={handleClickReport}
       />
     )
   })
@@ -159,36 +204,78 @@ const OpinionsComponent = ({
 
   return (
     companyOpinions.length > 0 && (
-      <OpinionsComponentStyle siteProps={siteProps}>
-        <div>
-          <TitleRightColumnOpinion siteProps={siteProps}>
-            Opinie
-          </TitleRightColumnOpinion>
-        </div>
-        <OpinionsSummary siteProps={siteProps}>
-          <CountOpinionContent>
-            {opinionSummary}
-            <span>/5</span>
-          </CountOpinionContent>
-          <StarsContent>{renderStars}</StarsContent>
-          <AllOpinionsSummary siteProps={siteProps}>
-            Opinie: {opinionsCount}
-          </AllOpinionsSummary>
-        </OpinionsSummary>
-        {mapOpinions}
-        {!(opinionsCount <= companyOpinions.length) && (
-          <ButtonMoreOpinion>
+      <>
+        <OpinionsComponentStyle siteProps={siteProps}>
+          <div>
+            <TitleRightColumnOpinion siteProps={siteProps}>
+              Opinie
+            </TitleRightColumnOpinion>
+          </div>
+          <OpinionsSummary siteProps={siteProps}>
+            <CountOpinionContent>
+              {opinionSummary}
+              <span>/5</span>
+            </CountOpinionContent>
+            <StarsContent>{renderStars}</StarsContent>
+            <AllOpinionsSummary siteProps={siteProps}>
+              Opinie: {opinionsCount}
+            </AllOpinionsSummary>
+          </OpinionsSummary>
+          {mapOpinions}
+          {!(opinionsCount <= companyOpinions.length) && (
+            <ButtonMoreOpinion>
+              <ButtonIcon
+                title="Pokaż więcej opinii"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdComment />}
+                onClick={handleLoadMoreOpinions}
+              />
+            </ButtonMoreOpinion>
+          )}
+        </OpinionsComponentStyle>
+        <Popup
+          popupEnable={reportActive && !!user}
+          position="fixed"
+          title="Zgłoś opinie"
+          borderRadius
+          closeTitle={true}
+          handleClose={handleClickReport}
+          maxWidth={400}
+        >
+          <div>
+            <TextSelect siteProps={siteProps}>Wybierz powód skargi:</TextSelect>
+            <StyledSelect>
+              <SelectCreated
+                options={ReportsInfo}
+                value={selectedReport}
+                handleChange={handleChangeSelect}
+                placeholder="Wybierz odpowiadającą opcję..."
+                defaultMenuIsOpen={true}
+                isClearable={false}
+                closeMenuOnSelect={false}
+                width="100%"
+              />
+            </StyledSelect>
+            <TextSelect>
+              <span>Uwaga</span>: Można dokonać raport tylko{" "}
+              <span>3 razy dziennie!</span>
+            </TextSelect>
             <ButtonIcon
-              title="Pokaż więcej opinii"
+              title="Zgłoś opinie"
               uppercase
               fontIconSize="20"
               fontSize="16"
-              icon={<MdComment />}
-              onClick={handleLoadMoreOpinions}
+              icon={<MdReport />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleConfirmReport}
+              disabled={!!!selectedReport}
             />
-          </ButtonMoreOpinion>
-        )}
-      </OpinionsComponentStyle>
+          </div>
+        </Popup>
+      </>
     )
   )
 }

@@ -37,6 +37,14 @@ export const ADD_NEW_USER_ALERT = "ADD_NEW_USER_ALERT"
 export const CHANGE_ALERT_EXTRA = "CHANGE_ALERT_EXTRA"
 export const ADD_TOKEN_AUTO_LOGIN_VISIBLE = "ADD_TOKEN_AUTO_LOGIN_VISIBLE"
 export const VERIFIED_PHONE_COMPONENT = "VERIFIED_PHONE_COMPONENT"
+export const CHANGE_MAP_ACTIVE = "CHANGE_MAP_ACTIVE"
+
+export const changeMapsActive = value => {
+  return {
+    type: CHANGE_MAP_ACTIVE,
+    value: value,
+  }
+}
 
 export const verifiedPhoneComponent = value => {
   return {
@@ -206,10 +214,11 @@ export const changeIndustries = value => {
   }
 }
 
-export const changeLocalizationValue = value => {
+export const changeLocalizationValue = (value, district) => {
   return {
     type: CHANGE_LOCALIZATION_VALUE,
     value: value,
+    district: district,
   }
 }
 
@@ -431,7 +440,9 @@ export const fetchAutoLogin = (
 export const fetchLoginFacebookUser = (token, id) => {
   return dispatch => {
     dispatch(changeSpinner(true))
-
+    setTimeout(() => {
+      dispatch(changeSpinner(false))
+    }, 5000)
     axios
       .post(`${Site.serverUrl}/auto-login`, {
         userId: id,
@@ -470,7 +481,9 @@ export const fetchLoginFacebookUser = (token, id) => {
 export const fetchLoginGoogleUser = (token, id) => {
   return dispatch => {
     dispatch(changeSpinner(true))
-
+    setTimeout(() => {
+      dispatch(changeSpinner(false))
+    }, 5000)
     axios
       .post(`${Site.serverUrl}/auto-login`, {
         userId: id,
@@ -2150,7 +2163,8 @@ export const fetchAllCompanys = (
   sorts,
   filters,
   localization,
-  selectedName
+  selectedName,
+  district
 ) => {
   return dispatch => {
     if (page === 1) {
@@ -2165,6 +2179,7 @@ export const fetchAllCompanys = (
         filters: filters,
         localization: localization,
         selectedName: selectedName,
+        district: district,
       })
       .then(response => {
         if (page === 1) {
@@ -2213,7 +2228,8 @@ export const fetchAllCompanysOfType = (
   sorts,
   filters,
   localization,
-  selectedName
+  selectedName,
+  district
 ) => {
   return dispatch => {
     if (page === 1) {
@@ -2229,6 +2245,7 @@ export const fetchAllCompanysOfType = (
         filters: filters,
         localization: localization,
         selectedName: selectedName,
+        district: district,
       })
       .then(response => {
         if (page === 1) {
@@ -2276,7 +2293,8 @@ export const fetchAllMapsMarks = (
   sorts,
   filters,
   localization,
-  selectedName
+  selectedName,
+  district
 ) => {
   return dispatch => {
     dispatch(changeAlertExtra("Ładowanie znaczników na mapę", true))
@@ -2288,6 +2306,7 @@ export const fetchAllMapsMarks = (
         filters: filters,
         localization: localization,
         selectedName: selectedName,
+        district: district,
       })
       .then(response => {
         dispatch(
@@ -2297,7 +2316,7 @@ export const fetchAllMapsMarks = (
           )
         )
         dispatch(changeAlertExtra(null, false))
-        if (!(response.data.mapMarks.length > 500)) {
+        if (response.data.mapMarks.length > 500) {
           dispatch(
             addAlertItem(
               "Uwaga pobrano 500 wyników na mapę. Użyj filtrów aby znależć najbardziej odpowiadające wyniki.",
@@ -5389,6 +5408,70 @@ export const fetchCompanyMarker = companyId => {
         if (!!error) {
           if (!!error.response) {
             dispatch(addAlertItem("Błąd podczas ładowania danych firmy", "red"))
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeAlertExtra(null, false))
+      })
+  }
+}
+
+export const fetchAddReport = (
+  token,
+  companyId,
+  reportValue,
+  opinionId = null
+) => {
+  return dispatch => {
+    if (!!opinionId) {
+      dispatch(changeAlertExtra("Raportowanie opinii", true))
+    } else {
+      dispatch(changeAlertExtra("Raportowanie firmy", true))
+    }
+    return axios
+      .post(
+        `${Site.serverUrl}/company-report`,
+        {
+          companyId: companyId,
+          reportValue: reportValue,
+          opinionId: opinionId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeAlertExtra(null, false))
+        if (!!opinionId) {
+          dispatch(addAlertItem("Zgłoszono opinie.", "green"))
+        } else {
+          dispatch(addAlertItem("Zgłoszono firmę.", "green"))
+        }
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(
+                addAlertItem(
+                  "Nie można dokonać reportu więcej niż 3 razy dziennie",
+                  "red"
+                )
+              )
+            } else {
+              if (!!opinionId) {
+                dispatch(
+                  addAlertItem("Błąd podczas raportowania opinii", "red")
+                )
+              } else {
+                dispatch(addAlertItem("Błąd podczas raportowania firmy", "red"))
+              }
+            }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))
           }

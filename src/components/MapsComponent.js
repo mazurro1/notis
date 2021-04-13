@@ -1,8 +1,8 @@
 import React from "react"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
-import styled from "styled-components"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
+import styled from "styled-components"
 
 if (typeof window !== "undefined") {
   delete L.Icon.Default.prototype._getIconUrl
@@ -18,6 +18,15 @@ const BorderMaps = styled.div`
   top: -2px;
   border-radius: 5px;
   overflow: hidden;
+
+  .leaflet-control {
+    z-index: 0 !important;
+  }
+
+  .leaflet-top,
+  .leaflet-bottom {
+    z-index: 400 !important;
+  }
 `
 
 const MapsComponent = ({
