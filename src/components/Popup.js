@@ -28,7 +28,8 @@ const PopupWindow = styled.div`
   right: 0;
   left: 0;
   bottom: ${props => props.bottom};
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: ${props =>
+    props.lightBackground ? "rgba(0, 0, 0, 0.20)" : "rgba(0, 0, 0, 0.85)"};
   z-index: 600;
   display: flex;
   justify-content: center;
@@ -115,6 +116,7 @@ const Popup = ({
   heightFull = false,
   top = 0,
   bottom = 0,
+  lightBackground = false,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -202,6 +204,7 @@ const Popup = ({
         borderRadius={borderRadius}
         top={top}
         bottom={bottom}
+        lightBackground={lightBackground}
       >
         {contentComponent}
       </PopupWindow>

@@ -757,7 +757,6 @@ const ContentCompanyProfilAutoSave = ({
               disabledEditButtons={disabledEditButtons}
             />
           )}
-          <ReportCompany siteProps={siteProps} user={user} company={company} />
           {(company.reserationText || isCompanyEditProfil) &&
             userHasPermisionToOther && (
               <ReserwationTextComponent
@@ -799,6 +798,7 @@ const ContentCompanyProfilAutoSave = ({
                 editMode={editMode}
               />
             )}
+          <ReportCompany siteProps={siteProps} user={user} company={company} />
         </RightColumn>
         {userHasPermToOpinions && (
           <OpinionsComponent

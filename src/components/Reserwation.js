@@ -6,6 +6,7 @@ import {
   fetchDoReserwation,
   fetchWorkerDisabledHours,
   avaibleDateToReserwation,
+  fetchChangeReserwation,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { FaUser, FaStamp } from "react-icons/fa"
@@ -334,7 +335,6 @@ const CheckBoxPositionRelative = styled.div`
 `
 
 const Reserwation = ({
-  handleCloseReserwation,
   reserwationEnable,
   reserwationData = {
     extraCost: false,
@@ -347,6 +347,8 @@ const Reserwation = ({
     companyId: "",
     workers: [],
   },
+  isChangeReserwation = false,
+  selectedReserwationId = null,
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
   const [selectedHour, setSelectedHour] = useState(null)
@@ -367,8 +369,7 @@ const Reserwation = ({
   const avaibleHoursReserwationUpdate = useSelector(
     state => state.avaibleHoursReserwationUpdate
   )
-  // console.log(avaibleHoursReserwation)
-  // console.log(avaibleHoursReserwationUpdate)
+
   const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
 
@@ -542,7 +543,7 @@ const Reserwation = ({
     const workerHasServiceCategory = item.servicesCategory.some(
       item => item === reserwationData._id
     )
-    return workerHasServiceCategory
+    return workerHasServiceCategory && !!item.active
   })
 
   const mapWorkersToSelect = filterWorkers.map((worker, index) => {
@@ -726,8 +727,8 @@ const Reserwation = ({
         </CheckBoxPositionRelative>
         {isStampActive && (
           <NoAvaibleHourStyle siteProps={siteProps}>
-            Prosimy o rozważną rezerwacje, ponieważ odwołanie rezerwacji z
-            promocyjnych pieczątek nie zwroci pieczątek na konto.
+            Prosimy o rozważną rezerwacje, ponieważ odwołanie / zmiana
+            rezerwacji z promocyjnych pieczątek nie zwroci pieczątek na konto.
           </NoAvaibleHourStyle>
         )}
       </>
@@ -763,21 +764,40 @@ const Reserwation = ({
       const dateFullToSent = `${selectedDay}-${selectedMonth}-${selectedYear}`
       const validNumberUser = null
 
-      dispatch(
-        fetchDoReserwation(
-          user.token,
-          reserwationData.companyId,
-          selectedWorkerUserId, //workerUserId
-          selectedWorkerId, //workerUserId
-          selectedHour, //dateStart
-          dateFullToSent, //dateFull
-          reserwationMessage,
-          reserwationData._id,
-          validNumberUser,
-          isStampActive,
-          countStampsToActive
+      if (!isChangeReserwation) {
+        dispatch(
+          fetchDoReserwation(
+            user.token,
+            reserwationData.companyId,
+            selectedWorkerUserId, //workerUserId
+            selectedWorkerId, //workerUserId
+            selectedHour, //dateStart
+            dateFullToSent, //dateFull
+            reserwationMessage,
+            reserwationData._id,
+            validNumberUser,
+            isStampActive,
+            countStampsToActive
+          )
         )
-      )
+      } else if (!!selectedReserwationId) {
+        dispatch(
+          fetchChangeReserwation(
+            user.token,
+            reserwationData.companyId,
+            selectedWorkerUserId, //workerUserId
+            selectedWorkerId, //workerUserId
+            selectedHour, //dateStart
+            dateFullToSent, //dateFull
+            reserwationMessage,
+            reserwationData._id,
+            validNumberUser,
+            isStampActive,
+            countStampsToActive,
+            selectedReserwationId
+          )
+        )
+      }
     }
   }
   return (

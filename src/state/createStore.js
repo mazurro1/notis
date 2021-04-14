@@ -116,6 +116,7 @@ import {
   REPLACE_COMPANY_DATA,
   RESET_EDIT_COMPANY,
   CHANGE_RESERWATION_VALUE,
+  CHANGE_RESERWATION_USER,
   CHANGE_EDIT_WORKER_HOURS,
   AVAIBLE_DATE_TO_RESERWATION,
   AVAIBLE_DATE_TO_RESERWATION_UPDATE,
@@ -217,6 +218,7 @@ const initialState = {
   mapMarks: [],
   companyMarker: null,
   mapActive: false,
+  resetChangeReserwationUser: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -613,6 +615,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_RESERWATION_USER: {
+      return {
+        ...state,
+        resetChangeReserwationUser: action.value,
+      }
+    }
 
     case CHANGE_MAP_ACTIVE: {
       return {

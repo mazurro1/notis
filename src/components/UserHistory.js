@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   fetchUserReserwations,
   fetchUserReserwationsAll,
+  changeReserwationUser,
 } from "../state/actions"
 import UserHistoryCategory from "./UserHistoryCategory"
 import styled from "styled-components"
@@ -74,10 +75,7 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
     value: new Date().getFullYear(),
     label: new Date().getFullYear(),
   })
-  const [monthPicker, setMonthPicker] = useState({
-    value: 1,
-    label: "Styczeń",
-  })
+  const [monthPicker, setMonthPicker] = useState(null)
   const [hiddenCanceledReserwation, setHiddenCanceledReserwation] = useState(
     true
   )
@@ -87,22 +85,34 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
   const userHistoryReserwations = useSelector(
     state => state.userHistoryReserwations
   )
+  const resetChangeReserwationUser = useSelector(
+    state => state.resetChangeReserwationUser
+  )
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (!!hiddenCanceledReserwation && !onlyToOpinion) {
-      dispatch(fetchUserReserwations(user.token))
-    } else {
-      dispatch(
-        fetchUserReserwationsAll(
-          user.token,
-          yearPicker.value,
-          monthPicker.value,
-          onlyToOpinion
+    if (!!monthPicker) {
+      if (!!hiddenCanceledReserwation && !onlyToOpinion) {
+        dispatch(fetchUserReserwations(user.token))
+      } else {
+        dispatch(
+          fetchUserReserwationsAll(
+            user.token,
+            yearPicker.value,
+            monthPicker.value,
+            onlyToOpinion
+          )
         )
-      )
+      }
     }
-  }, [hiddenCanceledReserwation, yearPicker, monthPicker, onlyToOpinion]) // eslint-disable-line react-hooks/exhaustive-deps
+    dispatch(changeReserwationUser(false))
+  }, [
+    hiddenCanceledReserwation,
+    yearPicker,
+    monthPicker,
+    onlyToOpinion,
+    resetChangeReserwationUser,
+  ]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -186,6 +196,7 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
         hiddenCanceledReserwation={hiddenCanceledReserwation}
         company={item.company}
         handleClose={handleClose}
+        resetChangeReserwationUser={resetChangeReserwationUser}
       />
     )
   })
@@ -302,6 +313,9 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
         multiline={true}
       >
         <span>Edytuj opinię</span>
+      </ReactTooltip>
+      <ReactTooltip id="editReserwationTooltip" effect="float" multiline={true}>
+        <span>Edytuj rezerwację</span>
       </ReactTooltip>
       <ReactTooltip id="goToWebsite" effect="float" multiline={true}>
         <span>Przejdz do strony internetowej firmy</span>

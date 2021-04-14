@@ -88,6 +88,7 @@ const UserHistoryCategory = ({
   userToken,
   company,
   handleClose,
+  resetChangeReserwationUser,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
   const dispatch = useDispatch()
@@ -125,6 +126,7 @@ const UserHistoryCategory = ({
         handleDeleteReserwation={handleDeleteReserwation}
         userToken={userToken}
         company={company}
+        resetChangeReserwationUser={resetChangeReserwationUser}
       />
     )
   })
@@ -140,7 +142,7 @@ const UserHistoryCategory = ({
             data-for="goToWebsite"
           >
             <LinkEffect
-              path={`/company/${company.company.linkPath}`}
+              path={`/company?${company.company.linkPath}`}
               text={<FaChrome />}
             />
           </PositionCompanyLink>

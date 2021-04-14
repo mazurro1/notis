@@ -868,6 +868,14 @@ export const ACUTLIZATION_SMS_COMPANY_CLIENTS =
 export const RESTART_COMPANY_SMS = "RESTART_COMPANY_SMS"
 export const UPDATE_GEOLOCATION_MARKS = "UPDATE_GEOLOCATION_MARKS"
 export const UPDATE_COMPANY_MARKER = "UPDATE_COMPANY_MARKER"
+export const CHANGE_RESERWATION_USER = "CHANGE_RESERWATION_USER"
+
+export const changeReserwationUser = value => {
+  return {
+    type: CHANGE_RESERWATION_USER,
+    value: value,
+  }
+}
 
 export const changeCompanyMarker = data => {
   return {
@@ -2046,6 +2054,76 @@ export const fetchDoReserwation = (
         }
         dispatch(addAlertItem("Dokonano rezerwacji.", "green"))
         dispatch(changeReserwationValue(null))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 419) {
+              dispatch(addAlertItem("Konto firmowe jest nieaktywne", "red"))
+            } else {
+              dispatch(addAlertItem("Podany termin jest już zajęty", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchChangeReserwation = (
+  token,
+  companyId,
+  workerUserId,
+  workerId,
+  dateStart,
+  dateFull,
+  reserwationMessage,
+  serviceId,
+  numberPhone,
+  isStampActive,
+  countStampsToActive,
+  selectedReserwationId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/change-reserwation`,
+        {
+          workerUserId: workerUserId,
+          workerId: workerId,
+          companyId: companyId,
+          dateStart: dateStart,
+          dateFull: dateFull,
+          reserwationMessage: reserwationMessage,
+          serviceId: serviceId,
+          numberPhone: numberPhone,
+          isStampActive: isStampActive,
+          selectedReserwationId: selectedReserwationId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        if (!!isStampActive) {
+          dispatch(
+            updateUserReserwationsCount(
+              companyId,
+              isStampActive,
+              countStampsToActive
+            )
+          )
+        }
+        dispatch(addAlertItem("Dokonano zmiany rezerwacji.", "green"))
+        dispatch(changeReserwationUser(true))
         dispatch(changeSpinner(false))
       })
       .catch(error => {

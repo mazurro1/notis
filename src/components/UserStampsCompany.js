@@ -283,7 +283,7 @@ const UserStampsCompany = ({ company, siteProps, handleClose }) => {
           onClick={handleStopPropagation}
         >
           <LinkEffect
-            path={`/company/${company.companyId.linkPath}`}
+            path={`/company?${company.companyId.linkPath}`}
             text={<FaChrome />}
           />
         </PositionCompanyLink>

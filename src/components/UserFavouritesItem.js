@@ -157,7 +157,7 @@ const UserFavouritesItem = ({
           data-for={`goToWebsiteFav${index}`}
         >
           <LinkEffect
-            path={`/company/${favourite.linkPath}`}
+            path={`/company?${favourite.linkPath}`}
             text={<FaChrome />}
           />
         </PositionCompanyLink>

@@ -12,8 +12,13 @@ import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import InputIcon from "./InputIcon"
 import { useDispatch } from "react-redux"
-import { fetchAddOpinion, fetchUpdateEditedOpinion } from "../state/actions"
+import {
+  fetchAddOpinion,
+  fetchUpdateEditedOpinion,
+  addAlertItem,
+} from "../state/actions"
 import Popup from "./Popup"
+import Reserwation from "./Reserwation"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -30,7 +35,7 @@ const ServiceItem = styled.div`
       ? Colors(props.siteProps).secondColorLight
       : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
-  padding-right: 50px;
+  padding-right: 85px;
   border-radius: 5px;
   padding-bottom: ${props => (props.active ? "200px" : "10px")};
   border-top-left-radius: ${props => (props.index ? "0px" : "5px")};
@@ -58,8 +63,7 @@ const ArrowDeleteReserwation = styled.div`
   cursor: pointer;
   background-color: ${props => Colors(props.siteProps).dangerColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-radius: 5px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -83,8 +87,7 @@ const ArrowAddOpinionReserwation = styled.div`
   cursor: pointer;
   background-color: ${props => Colors(props.siteProps).dangerColor};
   color: ${props => Colors(props.siteProps).textNormalWhite};
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-radius: 5px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -96,6 +99,36 @@ const ArrowAddOpinionReserwation = styled.div`
 
   &:hover {
     background-color: ${props => Colors(props.siteProps).dangerColorDark};
+  }
+`
+
+const ArrowEditReserwation = styled.div`
+  position: absolute;
+  right: 42px;
+  top: 0px;
+  padding: 5px;
+  font-size: 1.7rem;
+  cursor: pointer;
+  background-color: ${props =>
+    props.disabled
+      ? Colors(props.siteProps).secondColor
+      : Colors(props.siteProps).disabled};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${props =>
+      props.disabled
+        ? Colors(props.siteProps).secondDarkColor
+        : Colors(props.siteProps).disabled};
   }
 `
 
@@ -274,13 +307,16 @@ const UserHistoryCategoryItem = ({
   handleDeleteReserwation,
   userToken,
   company,
+  resetChangeReserwationUser,
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [changeReserwation, setChangeReserwation] = useState(false)
   const [addOpinion, setAddOpinion] = useState(false)
   const [opinionText, setOpinionText] = useState("")
   const [opinionStars, setOpinionStars] = useState(5)
   const [editedOpinionText, setEditedOpinionText] = useState("")
   const [editedOpinion, setEditedOpinion] = useState(false)
+  const [reserwationDataToChange, setReserwationDataToChange] = useState(null)
   console.log(item)
   useEffect(() => {
     setConfirmDelete(false)
@@ -298,6 +334,10 @@ const UserHistoryCategoryItem = ({
     setEditedOpinionText(resetEditedOpinionText)
     setOpinionStars(numberStars)
   }, [item.opinionId])
+
+  useEffect(() => {
+    setChangeReserwation(false)
+  }, [resetChangeReserwationUser])
 
   const dispatch = useDispatch()
 
@@ -364,6 +404,101 @@ const UserHistoryCategoryItem = ({
       reserwationId: item._id,
     }
     dispatch(fetchUpdateEditedOpinion(userToken, opinionData, company))
+  }
+
+  const handleChangeReserwation = () => {
+    if (!changeReserwation) {
+      if (!!item.company) {
+        if (
+          !!item.company.services &&
+          !!item.company.owner._id &&
+          !!item.company.workers &&
+          !!item.company._id
+        ) {
+          const selectService = item.company.services.find(
+            itemService => itemService._id === item.serviceId
+          )
+          if (!!selectService) {
+            const mapWorkers = []
+            item.company.workers.forEach(worker => {
+              if (!!worker.user._id) {
+                const unhashedName = Buffer.from(
+                  worker.user.name,
+                  "base64"
+                ).toString("ascii")
+                const unhashedSurname = Buffer.from(
+                  worker.user.surname,
+                  "base64"
+                ).toString("ascii")
+                mapWorkers.push({
+                  servicesCategory: worker.servicesCategory,
+                  specialization: worker.specialization,
+                  user: {
+                    name: unhashedName,
+                    surname: unhashedSurname,
+                    _id: worker.user._id,
+                  },
+                  _id: worker._id,
+                  active: worker.active,
+                })
+              }
+            })
+
+            const unhashedOwnerName = Buffer.from(
+              item.company.owner.name,
+              "base64"
+            ).toString("ascii")
+
+            const unhashedOwnerSurname = Buffer.from(
+              item.company.owner.surname,
+              "base64"
+            ).toString("ascii")
+
+            const validMonthAdd = !!item.company.reservationMonthTime
+              ? item.company.reservationMonthTime
+              : 1
+            const newItemChangeReserwation = {
+              companyId: !!item.company._id ? item.company._id : null,
+              companyStamps: !!item.company.companyStamps
+                ? item.company.companyStamps
+                : [],
+              extraCost: selectService.extraCost,
+              extraTime: selectService.extraTime,
+              maxDate: new Date(new Date().setMonth(validMonthAdd)),
+              ownerData: {
+                name: unhashedOwnerName,
+                ownerCategory: item.company.ownerData.servicesCategory,
+                ownerId: item.company.owner._id,
+                ownerImageUrl: !!item.company.owner.imageUrl
+                  ? item.company.owner.imageUrl
+                  : !!item.company.owner.imageOther
+                  ? item.company.owner.imageOther
+                  : "",
+                specialization: item.company.ownerData.specialization,
+                surname: unhashedOwnerSurname,
+              },
+              serviceCategory: selectService.serviceCategory,
+              serviceColor: selectService.serviceColor,
+              serviceCost: selectService.serviceCost,
+              serviceId: selectService._id,
+              serviceName: selectService.serviceName,
+              serviceText: selectService.serviceText,
+              time: selectService.time,
+              workers: mapWorkers,
+              _id: selectService._id,
+            }
+            setReserwationDataToChange(newItemChangeReserwation)
+            setChangeReserwation(true)
+          } else {
+            dispatch(addAlertItem("Nie można edytować tej usługi.", "red"))
+          }
+        }
+      }
+    }
+  }
+
+  const handleCloseChangeReserwation = () => {
+    setChangeReserwation(false)
   }
 
   let timeService = ""
@@ -437,6 +572,16 @@ const UserHistoryCategoryItem = ({
 
   const historyItemHasActiveSomePromotion =
     !!item.activePromotion || item.activeHappyHour || item.activeStamp
+
+  let serviceNotInCompany = false
+
+  if (!!item.company) {
+    if (!!item.company.services) {
+      serviceNotInCompany = item.company.services.some(
+        itemService => itemService._id === item.serviceId
+      )
+    }
+  }
 
   return (
     <ServiceItem
@@ -569,6 +714,37 @@ const UserHistoryCategoryItem = ({
       !!!item.visitNotFinished &&
       !!!item.visitCanceled ? (
         <>
+          <ArrowEditReserwation
+            siteProps={siteProps}
+            data-tip
+            data-for="editReserwationTooltip"
+            onClick={handleChangeReserwation}
+            disabled={
+              !!item.company.services &&
+              !!item.company.owner._id &&
+              !!item.company.workers &&
+              !!item.company._id &&
+              serviceNotInCompany
+            }
+          >
+            <MdEdit />
+          </ArrowEditReserwation>
+          <Popup
+            popupEnable={changeReserwation && !!reserwationDataToChange}
+            position="fixed"
+            handleClose={handleCloseChangeReserwation}
+            title="Edytuj rezerwację"
+            fullScreen
+            lightBackground
+          >
+            <Reserwation
+              reserwationData={reserwationDataToChange}
+              reserwationEnable={changeReserwation}
+              handleCloseReserwation={handleCloseChangeReserwation}
+              isChangeReserwation={true}
+              selectedReserwationId={item._id}
+            />
+          </Popup>
           <ArrowDeleteReserwation
             siteProps={siteProps}
             data-tip
