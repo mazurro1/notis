@@ -15,10 +15,10 @@ export const ChartsAdmin = [
     value: 4,
     label: "Porównanie miesięcy",
   },
-  {
-    value: 5,
-    label: "Statystyki SMS w rezerwacjach",
-  },
+  // {
+  //   value: 5,
+  //   label: "Statystyki SMS w rezerwacjach",
+  // },
   {
     value: 6,
     label: "Statystyki SMS",

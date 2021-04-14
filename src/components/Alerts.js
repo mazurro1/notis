@@ -18,7 +18,7 @@ const OneAlert = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  transform: ${props => `translateY(${props.index * 47}px)`};
+  transform: ${props => `translateY(${props.alertHeight}px)`};
   transition-property: transform, padding-top;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -72,16 +72,45 @@ const StyleIconInfo = styled.div`
 `
 
 const Alerts = () => {
+  const [heightPrevAlerts, setHeightPrevAlerts] = useState([])
   const alerts = useSelector(state => state.alerts)
+  const refAlerts = useRef(null)
+
+  useEffect(() => {
+    if (!!refAlerts) {
+      let countHeight = []
+      refAlerts.current.childNodes.forEach((itemAlert, index) => {
+        countHeight.push({
+          index: index,
+          height: itemAlert.clientHeight,
+        })
+      })
+      setHeightPrevAlerts(countHeight)
+    }
+  }, [alerts])
 
   const mapAlerts = alerts.map((item, index) => {
-    return <Alert key={item.id} item={item} index={index} />
+    let alertHeight = 0
+    heightPrevAlerts.forEach(itemAlert => {
+      if (itemAlert.index < index) {
+        alertHeight = alertHeight + itemAlert.height
+      }
+    })
+
+    return (
+      <Alert
+        key={item.id}
+        item={item}
+        index={index}
+        alertHeight={alertHeight}
+      />
+    )
   })
-  return <PositionAlerts>{mapAlerts}</PositionAlerts>
+  return <PositionAlerts ref={refAlerts}>{mapAlerts}</PositionAlerts>
 }
 export default Alerts
 
-const Alert = ({ item, index }) => {
+const Alert = ({ item, index, alertHeight }) => {
   const [alertVisible, setAlertVisible] = useState(false)
   const [isNew, setIsNew] = useState(true)
   const timerToClearSomewhere = useRef(null)
@@ -122,7 +151,7 @@ const Alert = ({ item, index }) => {
       classNames="alert"
       unmountOnExit
     >
-      <OneAlert index={index}>
+      <OneAlert index={index} alertHeight={alertHeight}>
         <ContentAlert color={item.color} siteProps={siteProps}>
           {item.text}
           <IconClose color={item.color} onClick={handleClose}>
