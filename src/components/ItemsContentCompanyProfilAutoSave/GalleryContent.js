@@ -266,7 +266,7 @@ const GalleryContent = ({
   const handleAddImage = event => {
     if (!!event.target.files[0]) {
       if (
-        event.target.files[0].size <= 2000000 &&
+        event.target.files[0].size <= 5000000 &&
         event.target.files.length &&
         (event.target.files[0].type === "image/jpeg" ||
           event.target.files[0].type === "image/png")
@@ -294,8 +294,8 @@ const GalleryContent = ({
           setAddedImages(allImages)
         }
         reader.readAsDataURL(event.target.files[0])
-      } else if (event.target.files[0].size > 2000000) {
-        dispatch(addAlertItem("Zdjęcie nie może mieć więcej niż 2mpx", "blue"))
+      } else if (event.target.files[0].size > 5000000) {
+        dispatch(addAlertItem("Zdjęcie nie może mieć więcej niż 2mb", "blue"))
       } else {
         dispatch(
           dispatch(

@@ -84,16 +84,19 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
   let alertMessage = ""
   let textBeginningAlert = ""
   let alertColor = "default"
+  let reserwationDate = null
 
-  const reserwationDate = `${
-    alert.reserwationId.dateDay < 10
-      ? `0${alert.reserwationId.dateDay}`
-      : alert.reserwationId.dateDay
-  }-${
-    alert.reserwationId.dateMonth < 10
-      ? `0${alert.reserwationId.dateMonth}`
-      : alert.reserwationId.dateMonth
-  }-${alert.reserwationId.dateYear}`
+  if (!!alert.reserwationId) {
+    reserwationDate = `${
+      alert.reserwationId.dateDay < 10
+        ? `0${alert.reserwationId.dateDay}`
+        : alert.reserwationId.dateDay
+    }-${
+      alert.reserwationId.dateMonth < 10
+        ? `0${alert.reserwationId.dateMonth}`
+        : alert.reserwationId.dateMonth
+    }-${alert.reserwationId.dateYear}`
+  }
 
   let userName = null
   let userSurname = null
@@ -103,7 +106,9 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
     alert.type !== "new_rezerwation_worker" &&
     alert.type !== "opinion_client" &&
     alert.type !== "opinion_client_edit" &&
-    alert.type !== "opinion_from_company"
+    alert.type !== "opinion_from_company" &&
+    alert.type !== "alert_notifaction_sms" &&
+    alert.type !== "alert_notifaction_premium"
   ) {
     if (!!alert.reserwationId) {
       if (!!alert.reserwationId.fromUser) {
@@ -172,6 +177,11 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
         textBeginningAlert = isUserReserwation
           ? "Zmieniono status twojej rezerwacji na odbytą"
           : "Zmieniono status rezerwacji na odbytą"
+      }
+    } else if (alert.type === "rezerwation_notifaction") {
+      alertColor = "green"
+      if (isUserReserwation) {
+        textBeginningAlert = "Przypomnienie o rezerwacji w firmie"
       }
     } else {
       alertColor = "default"
@@ -387,6 +397,22 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
         </>
       )
     }
+  } else if (alert.type === "alert_notifaction_sms") {
+    alertMessage = (
+      <>
+        <span>Uwaga!</span> Ilość <span>SMS</span> w Twojej firmie{" "}
+        <span>jest poniżej 50</span>
+      </>
+    )
+    alertColor = "red"
+  } else if (alert.type === "alert_notifaction_premium") {
+    alertMessage = (
+      <>
+        <span>Uwaga!</span> za mniej niż{" "}
+        <span>3 dni kończy się konto premium</span> w Twojej firmie
+      </>
+    )
+    alertColor = "red"
   } else if (alert.type === "opinion_from_company") {
     if (isUserReserwation) {
       alertMessage = (

@@ -210,7 +210,11 @@ const BellAlerts = ({ siteProps, user }) => {
   }
 
   const mapAlerts = allAlerts.map((alert, index) => {
-    if (!!alert.reserwationId) {
+    if (
+      !!alert.reserwationId ||
+      alert.type === "alert_notifaction_sms" ||
+      alert.type === "alert_notifaction_premium"
+    ) {
       return (
         <BellAlertsItem
           key={index}

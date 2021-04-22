@@ -317,7 +317,7 @@ const UserHistoryCategoryItem = ({
   const [editedOpinionText, setEditedOpinionText] = useState("")
   const [editedOpinion, setEditedOpinion] = useState(false)
   const [reserwationDataToChange, setReserwationDataToChange] = useState(null)
-  console.log(item)
+
   useEffect(() => {
     setConfirmDelete(false)
     setAddOpinion(false)
