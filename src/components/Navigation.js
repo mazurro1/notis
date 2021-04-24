@@ -424,8 +424,6 @@ const Navigation = ({ isMainPage }) => {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(userVapid),
     })
-    console.log(result)
-    console.log("ok?")
     dispatch(fetchNotificationEndpoint(user.token, result))
   }
 

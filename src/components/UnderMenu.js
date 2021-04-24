@@ -172,66 +172,70 @@ const UnderMenu = ({ isMainPage }) => {
 
   return (
     <div>
-      <CSSTransition
+      {!!isMainPage && (
+        <div>
+          {/* <CSSTransition
         in={isMainPage}
         timeout={400}
         classNames="opacitySpinner"
         unmountOnExit
-      >
-        <WrapperNavigationUnder
-          siteProps={siteProps}
-          active={visibleMenuIndustries}
-          isMainPage={isMainPage}
-          heightPadding={heightMenuIndustries}
-          topNavVisibleMenu={topNavVisibleMenu}
-        >
-          <NavigationDiv>
-            <AllInputs>
-              <ButtonTakeData
-                setResetText={() => {
-                  dispatch(changeSelectedNameMenu(""))
-                }}
-                resetTextEnable={!!selectedNameMenu}
-                icon={<FaSearch />}
-                text={
-                  !!selectedNameMenu
-                    ? selectedNameMenu
-                    : "Znajdz ulubione miejsce..."
-                }
-                onClick={handleClickTakePlace}
-              />
-            </AllInputs>
-            <UnderMenuIndustries ref={refUnderMenuIndustries}>
-              <PaddingRight>
-                <ButtonIconStyles
-                  active={industries === null}
-                  siteProps={siteProps}
-                  onClick={() => handleChangeIndustries(null)}
-                >
-                  {Translates[siteProps.language].buttons.all}
-                </ButtonIconStyles>
-              </PaddingRight>
-              {mapIndustries}
-              <ButtonShowMore>
-                <ButtonIcon
-                  title={
-                    isMobileSize
-                      ? "Wybierz specializacje"
-                      : visibleMenuIndustries
-                      ? "Pokaż mniej"
-                      : "Pokaż więcej"
+      > */}
+          <WrapperNavigationUnder
+            siteProps={siteProps}
+            active={visibleMenuIndustries}
+            isMainPage={isMainPage}
+            heightPadding={heightMenuIndustries}
+            topNavVisibleMenu={topNavVisibleMenu}
+          >
+            <NavigationDiv>
+              <AllInputs>
+                <ButtonTakeData
+                  setResetText={() => {
+                    dispatch(changeSelectedNameMenu(""))
+                  }}
+                  resetTextEnable={!!selectedNameMenu}
+                  icon={<FaSearch />}
+                  text={
+                    !!selectedNameMenu
+                      ? selectedNameMenu
+                      : "Znajdz ulubione miejsce..."
                   }
-                  uppercase
-                  fontIconSize="20"
-                  fontSize="15"
-                  icon={<MdExpandMore />}
-                  onClick={handleClickMenuIndustries}
+                  onClick={handleClickTakePlace}
                 />
-              </ButtonShowMore>
-            </UnderMenuIndustries>
-          </NavigationDiv>
-        </WrapperNavigationUnder>
-      </CSSTransition>
+              </AllInputs>
+              <UnderMenuIndustries ref={refUnderMenuIndustries}>
+                <PaddingRight>
+                  <ButtonIconStyles
+                    active={industries === null}
+                    siteProps={siteProps}
+                    onClick={() => handleChangeIndustries(null)}
+                  >
+                    {Translates[siteProps.language].buttons.all}
+                  </ButtonIconStyles>
+                </PaddingRight>
+                {mapIndustries}
+                <ButtonShowMore>
+                  <ButtonIcon
+                    title={
+                      isMobileSize
+                        ? "Wybierz specializacje"
+                        : visibleMenuIndustries
+                        ? "Pokaż mniej"
+                        : "Pokaż więcej"
+                    }
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="15"
+                    icon={<MdExpandMore />}
+                    onClick={handleClickMenuIndustries}
+                  />
+                </ButtonShowMore>
+              </UnderMenuIndustries>
+            </NavigationDiv>
+          </WrapperNavigationUnder>
+          {/* </CSSTransition> */}
+        </div>
+      )}
     </div>
   )
 }
