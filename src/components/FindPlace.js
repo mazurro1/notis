@@ -5,6 +5,8 @@ import ButtonIcon from "./ButtonIcon"
 import { Colors } from "../common/Colors"
 import { MdSearch, MdClose } from "react-icons/md"
 import { FaArrowLeft, FaSearch } from "react-icons/fa"
+import { changeSelectedNameMenu } from "../state/actions"
+import { useDispatch } from "react-redux"
 
 const ButtonsPosition = styled.div`
   display: flex;
@@ -18,14 +20,10 @@ const ButtonsMargin = styled.div`
   margin: 5px;
 `
 
-const FindPlaceContent = ({
-  handleClose,
-  setSelectedName,
-  selectedName,
-  siteProps,
-}) => {
+const FindPlaceContent = ({ handleClose, selectedName, siteProps }) => {
   const [nameInput, setNameInput] = useState(selectedName)
   const inputSearchCompany = useRef(null)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!!inputSearchCompany) {
@@ -40,12 +38,12 @@ const FindPlaceContent = ({
   }
 
   const handleConfirm = () => {
-    setSelectedName(nameInput)
+    dispatch(changeSelectedNameMenu(nameInput))
     handleClose()
   }
 
   const handleReset = () => {
-    setSelectedName("")
+    dispatch(changeSelectedNameMenu(""))
     handleClose()
   }
 

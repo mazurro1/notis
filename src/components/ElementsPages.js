@@ -2,7 +2,9 @@ import React from "react"
 import { useSelector } from "react-redux"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
-import { MdKeyboardArrowUp } from "react-icons/md"
+import { MdKeyboardArrowUp, MdChevronLeft } from "react-icons/md"
+import { navigate } from "gatsby"
+import { Site } from "../common/Site"
 
 const BackgroundColorPage = styled.div`
   position: relative;
@@ -55,6 +57,47 @@ const ScrollUp = styled.div`
   &:hover {
     background-color: ${props => Colors(props.siteProps).primaryColorDark};
   }
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    bottom: 10px;
+    width: 50px;
+    height: 50px;
+  }
+`
+
+const ScrollGoBack = styled.div`
+  position: fixed;
+  z-index: 20;
+  bottom: 10px;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: ${props => Colors(props.siteProps).primaryColor};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.4rem;
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: linear;
+
+  &:hover {
+    background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+
+  @media all and (min-width: ${Site.mobileSize + "px"}) {
+    display: none;
+  }
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    bottom: 10px;
+    width: 50px;
+    height: 50px;
+  }
 `
 
 const ElementsPages = ({ isMainPage, children }) => {
@@ -66,6 +109,10 @@ const ElementsPages = ({ isMainPage, children }) => {
 
   const handleClickScroll = () => {
     window.scrollTo(0, 0)
+  }
+
+  const handleHistoryGoBack = () => {
+    navigate(-1)
   }
 
   return (
@@ -86,6 +133,9 @@ const ElementsPages = ({ isMainPage, children }) => {
       <ScrollUp siteProps={siteProps} onClick={handleClickScroll}>
         <MdKeyboardArrowUp />
       </ScrollUp>
+      <ScrollGoBack siteProps={siteProps} onClick={handleHistoryGoBack}>
+        <MdChevronLeft />
+      </ScrollGoBack>
     </BackgroundColorPage>
   )
 }

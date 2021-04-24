@@ -68,6 +68,10 @@ const AddImage = styled.div`
       background-color: #dadada;
     }
   }
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    height: 150px;
+    width: 150px;
+  }
 `
 
 const BackGroundImageAvatarCustomUrl = styled.div`

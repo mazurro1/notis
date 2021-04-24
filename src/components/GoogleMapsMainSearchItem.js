@@ -57,6 +57,7 @@ const PlaceImage = styled.div`
   }
   @media all and (max-width: 920px) {
     width: 100%;
+    display: none;
   }
 `
 
@@ -214,6 +215,7 @@ const ContentPopupMarker = styled.div`
   background-color: white;
   width: 600px;
   height: 200px;
+  max-width: 90vw;
 `
 const PaddingRight = styled.div`
   padding-right: 10px;
@@ -244,6 +246,7 @@ const GoogleMapsMainSearchItem = ({
   const userResetFavourites = useSelector(state => state.userResetFavourites)
   const companyMarker = useSelector(state => state.companyMarker)
   const refSelect = useRef(null)
+  const refItemMarker = useRef(null)
   const map = useGoogleMap()
 
   const dispatch = useDispatch()
@@ -415,7 +418,7 @@ const GoogleMapsMainSearchItem = ({
             top="-220px"
             bottom="auto"
           >
-            <ContentPopupMarker>
+            <ContentPopupMarker ref={refItemMarker}>
               <PlaceItem siteProps={siteProps}>
                 {!!companyMarker && (
                   <PlaceImage>

@@ -16,6 +16,12 @@ module.exports = {
 
   plugins: [
     {
+      resolve: "gatsby-plugin-offline",
+      options: {
+        appendScript: require.resolve("./src/custom-sw.js"),
+      },
+    },
+    {
       resolve: "gatsby-plugin-styled-components",
     },
     {
@@ -50,11 +56,9 @@ module.exports = {
         downloadFiles: true,
       },
     },
-
     "gatsby-plugin-transition-link",
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-offline`,
   ],
 }
 

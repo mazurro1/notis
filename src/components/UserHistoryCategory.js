@@ -21,7 +21,7 @@ const TitleCategory = styled.div`
   user-select: none;
   text-transform: uppercase;
   cursor: pointer;
-  padding-right: 250px;
+  padding-right: 100px;
   transition-property: padding-bottom, background-color, color;
   transition-duration: 0.5s;
   transition-timing-function: ease;

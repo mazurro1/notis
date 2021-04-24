@@ -14,6 +14,7 @@ import SelectCreated from "./SelectCreated"
 import { AllMonths } from "../common/AllMonths"
 import { CSSTransition } from "react-transition-group"
 import { Translates } from "../common/Translates"
+import { Site } from "../common/Site"
 
 const NoReserwationsStyle = styled.div`
   position: absolute;
@@ -50,6 +51,12 @@ const PositionSelectAll = styled.div`
 const WidthSelect = styled.div`
   width: 160px;
   margin-right: 20px;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    width: 100%;
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
 `
 
 const UserHistory = ({ siteProps, user, handleClose }) => {
@@ -202,43 +209,45 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
   })
 
   return (
-    <>
+    <div>
+      <CSSTransition
+        in={!hiddenCanceledReserwation}
+        timeout={400}
+        classNames="popup"
+        unmountOnExit
+      >
+        <PositionSelectAll>
+          <WidthSelect>
+            <SelectCreated
+              options={allYears}
+              value={yearPicker}
+              handleChange={handleChangeYear}
+              placeholder="Rok..."
+              defaultMenuIsOpen={false}
+              isClearable={false}
+              widthAuto
+              isDisabled={disabledSwitch}
+              deleteItem={false}
+              width="auto"
+            />
+          </WidthSelect>
+          <WidthSelect>
+            <SelectCreated
+              options={AllMonths}
+              value={monthPicker}
+              handleChange={handleChangeMonth}
+              placeholder="Miesiąc..."
+              defaultMenuIsOpen={false}
+              isClearable={false}
+              widthAuto
+              isDisabled={disabledSwitch}
+              deleteItem={false}
+              width="auto"
+            />
+          </WidthSelect>
+        </PositionSelectAll>
+      </CSSTransition>
       <PositionSwitchFlex>
-        <CSSTransition
-          in={!hiddenCanceledReserwation}
-          timeout={400}
-          classNames="popup"
-          unmountOnExit
-        >
-          <PositionSelectAll>
-            <WidthSelect>
-              <SelectCreated
-                options={allYears}
-                value={yearPicker}
-                handleChange={handleChangeYear}
-                placeholder="Rok..."
-                defaultMenuIsOpen={false}
-                isClearable={false}
-                widthAuto
-                isDisabled={disabledSwitch}
-                deleteItem={false}
-              />
-            </WidthSelect>
-            <WidthSelect>
-              <SelectCreated
-                options={AllMonths}
-                value={monthPicker}
-                handleChange={handleChangeMonth}
-                placeholder="Miesiąc..."
-                defaultMenuIsOpen={false}
-                isClearable={false}
-                widthAuto
-                isDisabled={disabledSwitch}
-                deleteItem={false}
-              />
-            </WidthSelect>
-          </PositionSelectAll>
-        </CSSTransition>
         <PositionSwitchFlex>
           {Translates[siteProps.language].buttons.bookingHistory}
         </PositionSwitchFlex>
@@ -320,7 +329,7 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
       <ReactTooltip id="goToWebsite" effect="float" multiline={true}>
         <span>Przejdz do strony internetowej firmy</span>
       </ReactTooltip>
-    </>
+    </div>
   )
 }
 export default UserHistory

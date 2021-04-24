@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md"
 import ButtonIcon from "./ButtonIcon"
 import { FaArrowLeft } from "react-icons/fa"
 import Popup from "./Popup"
+import { Site } from "../common/Site"
 
 const BackGroundImageCustomUrl = styled.div`
   position: relative;
@@ -18,6 +19,10 @@ const BackGroundImageCustomUrl = styled.div`
   border-radius: 50%;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1) inset;
   overflow: hidden;
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    height: 150px;
+    width: 150px;
+  }
 `
 
 const IconDelete = styled.div`
@@ -56,6 +61,7 @@ const PositionImage = styled.div`
   position: relative;
   display: inline-block;
   padding: 20px;
+  max-width: 100%;
 `
 
 const UserProfilImage = ({

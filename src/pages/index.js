@@ -312,7 +312,7 @@ const Home = () => {
         </GoogleMapsStyle>
       </CSSTransition>
       <CSSTransition
-        in={!loadingPlaces && selectedView.value === 1}
+        in={selectedView.value === 1}
         timeout={400}
         classNames="popup"
         unmountOnExit

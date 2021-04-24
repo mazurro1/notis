@@ -36,10 +36,6 @@ const ButtonStyle = styled.div`
   transition-property: background-color, transform;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
-
-  &:active {
-    background-color: "red";
-  }
 `
 
 const IconStyle = styled.div`

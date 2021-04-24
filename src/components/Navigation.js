@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Colors } from "../common/Colors"
-import { AllIndustries } from "../common/AllIndustries"
 import ButtonIcon from "../components/ButtonIcon"
-import ButtonTakeData from "../components/ButtonTakeData"
 import styled from "styled-components"
 import {
   FaUserPlus,
   FaUser,
-  FaSearch,
   FaShoppingBag,
   FaBars,
   FaChrome,
@@ -17,14 +14,12 @@ import {
   FaStamp,
   FaHeart,
   FaChartBar,
-  FaCrown,
 } from "react-icons/fa"
 import {
   MdWork,
   MdPowerSettingsNew,
   MdTimelapse,
   MdClose,
-  MdExpandMore,
   MdVerifiedUser,
   MdAttachMoney,
   MdHistory,
@@ -40,7 +35,6 @@ import "react-input-checkbox/lib/react-input-checkbox.min.css"
 import {
   changeFilterVisible,
   changeLocaliaztionVisible,
-  changeIndustries,
   changeLoginVisible,
   changeRegistrationVisible,
   fetchAutoLogin,
@@ -59,10 +53,11 @@ import {
   changeActiveAccount,
   confirmDeleteCompany,
   setHeightMenuIndustries,
-  setVisibleMenuIndustries,
   saveUserTokenToAutoLogin,
   saveUserTokenToLocal,
   fetchAllMapsMarks,
+  changePopupTakePlace,
+  fetchNotificationEndpoint,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -89,7 +84,6 @@ import CompanyAvailability from "./CompanyAvailability"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyStatistics from "./CompanyStatistics"
 import DeleteCompanyContent from "./DeleteCompany"
-import { CSSTransition } from "react-transition-group"
 import CoinsOffers from "./CoinsOffers"
 import TransactionHistory from "./TransactionHistory"
 import ReactTooltip from "react-tooltip"
@@ -138,24 +132,6 @@ const WrapperNavigation = styled.div`
   height: 70px;
 `
 
-const WrapperNavigationUnder = styled.div`
-  position: absolute;
-  z-index: 90;
-  top: 70px;
-  left: 0;
-  right: 0;
-  background-color: ${props => Colors(props.siteProps).navDownBackground};
-  padding-top: 20px;
-  padding-bottom: ${props =>
-    props.active ? `${props.heightPadding + 80}px` : "10px"};
-  height: 137px;
-  overflow: hidden;
-  /* opacity: ${props => (props.isMainPage ? "1" : "0")}; */
-  transition-property: background-color, color, padding, opacity;
-  transition-timing-function: ease;
-  transition-duration: 0.3s;
-`
-
 const NavigationDiv = styled.div`
   color: ${props => Colors(props.siteProps).navText};
   max-width: 1200px;
@@ -185,78 +161,12 @@ const NavigationItems = styled.div`
   }
 `
 
-const UnderMenuIndustries = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 5px;
-  padding-top: 10px;
-  padding-bottom: 5px;
-  overflow: hidden;
-  padding-right: 160px;
-
-  @media all and (max-width: ${Site.mobileSize + "px"}) {
-    padding-top: 50px;
-    padding-right: 5px;
-  }
-`
-
-const ButtonShowMore = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 5px;
-
-  @media all and (max-width: ${Site.mobileSize + "px"}) {
-    position: absolute;
-    top: 0;
-    right: 5px;
-    left: 5px;
-    z-index: 10;
-  }
-`
-
 const LogoStyle = styled.div`
   position: absolute;
   left: 5%;
   a {
     font-size: 3.2rem;
     color: white;
-  }
-`
-
-const AllInputs = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 10px 5px;
-`
-const PaddingRight = styled.div`
-  padding-right: 10px;
-  padding-bottom: 5px;
-`
-
-const ButtonIconStyles = styled.div`
-  padding: 4px 10px;
-  padding-left: 10px;
-  border-radius: 5px;
-  background-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).primaryColor
-      : Colors(props.siteProps).darkColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 15px;
-  user-select: none;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  &:hover {
-    background-color: ${props => Colors(props.siteProps).primaryColorDark};
   }
 `
 
@@ -428,10 +338,7 @@ const Navigation = ({ isMainPage }) => {
   ] = useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [workPropsVisible, setWorkPropsVisible] = useState(false)
-  const [popupTakePlace, setPopupTakePlace] = useState(false)
-  const [selectedName, setSelectedName] = useState("")
-  const [topNavVisible, setTopNavVisible] = useState(false)
-  const [topNavVisibleMenu, setTopNavVisibleMenu] = useState(false)
+  const selectedNameMenu = useSelector(state => state.selectedNameMenu)
   const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(
     false
   )
@@ -443,6 +350,7 @@ const Navigation = ({ isMainPage }) => {
   const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
     false
   )
+  const popupTakePlace = useSelector(state => state.popupTakePlace)
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
   const editWorkerHoursData = useSelector(state => state.editWorkerHoursData)
@@ -464,7 +372,6 @@ const Navigation = ({ isMainPage }) => {
   const reserwationData = useSelector(state => state.reserwationData)
   const userProfilVisible = useSelector(state => state.userProfilVisible)
   const activeAccountVisible = useSelector(state => state.activeAccountVisible)
-  const heightMenuIndustries = useSelector(state => state.heightMenuIndustries)
   const mapActive = useSelector(state => state.mapActive)
   const visibleTokenToAutoLogin = useSelector(
     state => state.visibleTokenToAutoLogin
@@ -496,6 +403,38 @@ const Navigation = ({ isMainPage }) => {
     }
   }, [refUnderMenuIndustries, userId, visibleMenuIndustries])
 
+  function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
+    const base64 = (base64String + padding)
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+
+    const rawData = window.atob(base64)
+    const outputArray = new Uint8Array(rawData.length)
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i)
+    }
+    return outputArray
+  }
+
+  const handleEnableNotifaction = async userVapid => {
+    let sw = await navigator.serviceWorker.ready
+    const result = await sw.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(userVapid),
+    })
+    console.log(result)
+    console.log("ok?")
+    dispatch(fetchNotificationEndpoint(user.token, result))
+  }
+
+  useEffect(() => {
+    if (!!user) {
+      handleEnableNotifaction(user.vapidPublic)
+    }
+  }, [userId])
+
   useEffect(() => {
     if (!!userId) {
       const socket = openSocket(Site.serverUrl)
@@ -515,16 +454,6 @@ const Navigation = ({ isMainPage }) => {
   }, [dispatch, user])
 
   useEffect(() => {
-    if (isMainPage) {
-      setTopNavVisible(true)
-      setTopNavVisibleMenu(true)
-    } else {
-      setTopNavVisible(false)
-      setTopNavVisibleMenu(false)
-    }
-  }, [isMainPage])
-
-  useEffect(() => {
     if (!!sorts && !mapActive) {
       const sortsValue = !!sorts ? sorts.value : null
       if (!!industries || industries === 0) {
@@ -535,7 +464,7 @@ const Navigation = ({ isMainPage }) => {
             sortsValue,
             filters,
             localization,
-            selectedName,
+            selectedNameMenu,
             !!district && !!localization
               ? !!localization.value
                 ? district
@@ -550,7 +479,7 @@ const Navigation = ({ isMainPage }) => {
             sortsValue,
             filters,
             localization,
-            selectedName,
+            selectedNameMenu,
             !!district && !!localization
               ? !!localization.value
                 ? district
@@ -561,7 +490,7 @@ const Navigation = ({ isMainPage }) => {
       }
     }
   }, [
-    selectedName,
+    selectedNameMenu,
     sorts,
     filters,
     localization,
@@ -580,7 +509,7 @@ const Navigation = ({ isMainPage }) => {
           sortsValue,
           filters,
           localization,
-          selectedName,
+          selectedNameMenu,
           !!district && !!localization
             ? !!localization.value
               ? district
@@ -590,7 +519,7 @@ const Navigation = ({ isMainPage }) => {
       )
     }
   }, [
-    selectedName,
+    selectedNameMenu,
     sorts,
     filters,
     localization,
@@ -621,11 +550,7 @@ const Navigation = ({ isMainPage }) => {
   }
 
   const handleClickTakePlace = () => {
-    setPopupTakePlace(prevValue => !prevValue)
-  }
-
-  const handleChangeIndustries = item => {
-    dispatch(changeIndustries(item))
+    dispatch(changePopupTakePlace(false))
   }
 
   const handleLogout = () => {
@@ -715,10 +640,6 @@ const Navigation = ({ isMainPage }) => {
     setWorkPropsVisible(prevState => !prevState)
   }
 
-  const handleClickMenuIndustries = () => {
-    dispatch(setVisibleMenuIndustries(!visibleMenuIndustries))
-  }
-
   const handleClickCompanyStatistics = () => {
     setCompanyStatistics(prevState => !prevState)
     setWorkPropsVisible(prevState => !prevState)
@@ -747,84 +668,7 @@ const Navigation = ({ isMainPage }) => {
     setTransactionHistoryVisible(prevState => !prevState)
   }
 
-  const mapIndustries = AllIndustries[siteProps.language].map((item, index) => {
-    const isIndustriesActive = industries === item.value
-    return (
-      <PaddingRight key={index}>
-        <ButtonIconStyles
-          active={isIndustriesActive}
-          siteProps={siteProps}
-          onClick={() => handleChangeIndustries(item.value)}
-        >
-          {item.label}
-        </ButtonIconStyles>
-      </PaddingRight>
-    )
-  })
-
   const isMobileSize = Site.mobileSize >= size.width
-
-  const renderExtraPropsInMainMenu = (
-    // <Popup popupEnable={topNavVisibleMenu} noContent position="absolute">
-    <CSSTransition
-      in={isMainPage}
-      timeout={400}
-      classNames="opacitySpinner"
-      unmountOnExit
-    >
-      <WrapperNavigationUnder
-        siteProps={siteProps}
-        active={visibleMenuIndustries}
-        isMainPage={isMainPage}
-        heightPadding={heightMenuIndustries}
-        topNavVisibleMenu={topNavVisibleMenu}
-      >
-        <NavigationDiv>
-          <AllInputs>
-            <ButtonTakeData
-              setResetText={() => {
-                setSelectedName("")
-              }}
-              resetTextEnable={!!selectedName}
-              icon={<FaSearch />}
-              text={
-                !!selectedName ? selectedName : "Znajdz ulubione miejsce..."
-              }
-              onClick={handleClickTakePlace}
-            />
-          </AllInputs>
-          <UnderMenuIndustries ref={refUnderMenuIndustries}>
-            <PaddingRight>
-              <ButtonIconStyles
-                active={industries === null}
-                siteProps={siteProps}
-                onClick={() => handleChangeIndustries(null)}
-              >
-                {Translates[siteProps.language].buttons.all}
-              </ButtonIconStyles>
-            </PaddingRight>
-            {mapIndustries}
-            <ButtonShowMore>
-              <ButtonIcon
-                title={
-                  isMobileSize
-                    ? "Wybierz specializacje"
-                    : visibleMenuIndustries
-                    ? "Pokaż mniej"
-                    : "Pokaż więcej"
-                }
-                uppercase
-                fontIconSize="20"
-                fontSize="15"
-                icon={<MdExpandMore />}
-                onClick={handleClickMenuIndustries}
-              />
-            </ButtonShowMore>
-          </UnderMenuIndustries>
-        </NavigationDiv>
-      </WrapperNavigationUnder>
-    </CSSTransition>
-  )
 
   const PopupWorkersReserwations = !!user && (
     <Popup
@@ -1000,7 +844,7 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupTakePlace = (
+  const PopupTakePlaceContent = (
     <Popup
       popupEnable={popupTakePlace}
       handleClose={handleClickTakePlace}
@@ -1009,8 +853,8 @@ const Navigation = ({ isMainPage }) => {
     >
       <FindPlaceContent
         handleClose={handleClickTakePlace}
-        setSelectedName={setSelectedName}
-        selectedName={selectedName}
+        // setSelectedName={dispatch}
+        selectedName={selectedNameMenu}
         siteProps={siteProps}
       />
     </Popup>
@@ -1506,7 +1350,7 @@ const Navigation = ({ isMainPage }) => {
       {PopupLogin}
       {PopupCreateCompany}
       {PopupRegister}
-      {PopupTakePlace}
+      {PopupTakePlaceContent}
       {PopupFilter}
       {PopupLocalization}
       {PopupUserProfil}
@@ -1673,7 +1517,6 @@ const Navigation = ({ isMainPage }) => {
               </NavigationItems>
             </NavigationDiv>
           </WrapperNavigation>
-          {renderExtraPropsInMainMenu}
           {/* <PaddingContent
             topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
             heightPadding={heightMenuIndustries}

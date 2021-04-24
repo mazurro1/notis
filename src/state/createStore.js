@@ -39,6 +39,8 @@ import {
   VERIFIED_PHONE_COMPONENT,
   ADD_CHECKOUT_ID,
   ADD_COINS_OFFER,
+  CHANGE_POPUP_TAKE_PLACE,
+  CHANGE_SELECTED_NAME_MENU,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -219,10 +221,25 @@ const initialState = {
   companyMarker: null,
   mapActive: false,
   resetChangeReserwationUser: false,
+  popupTakePlace: false,
+  selectedNameMenu: "",
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_SELECTED_NAME_MENU: {
+      return {
+        ...state,
+        selectedNameMenu: action.value,
+      }
+    }
+
+    case CHANGE_POPUP_TAKE_PLACE: {
+      return {
+        ...state,
+        popupTakePlace: action.value,
+      }
+    }
     case ADD_COINS_OFFER: {
       return {
         ...state,

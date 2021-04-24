@@ -19,6 +19,7 @@ import {
 } from "../state/actions"
 import Popup from "./Popup"
 import Reserwation from "./Reserwation"
+import { Site } from "../common/Site"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -139,12 +140,13 @@ const TitleService = styled.div`
 
 const PriceService = styled.span`
   position: relative;
+  display: inline-block;
   background-color: red;
   font-size: 0.8rem;
   padding: 2px 5px;
   font-family: "Poppins-Regular", sans-serif;
   color: white;
-  margin-left: 10px;
+  margin-right: 10px;
   border-radius: 5px;
   background-color: ${props =>
     props.otherColor
@@ -159,6 +161,7 @@ const PriceService = styled.span`
 `
 
 const StatusReserwation = styled.span`
+  display: inline-block;
   border-radius: 5px;
   padding: 0px 5px;
   margin-top: 5px;
@@ -187,6 +190,13 @@ const ButtonsAddPositionOpinion = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+`
+
+const PriceContentService = styled.div`
+  display: inline-block;
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    display: block;
+  }
 `
 
 const ButtonMargin = styled.div`
@@ -596,26 +606,28 @@ const UserHistoryCategoryItem = ({
       active={addOpinion}
     >
       <TitleService>
-        {item.serviceName}
-        <PriceService
-          siteProps={siteProps}
-          active={historyItemHasActiveSomePromotion}
-        >
-          {`${!!item.basicPrice ? item.basicPrice : item.costReserwation}zł ${
-            item.extraCost ? "+" : ""
-          }`}
-          <CrossPricePosition active={historyItemHasActiveSomePromotion}>
-            <CrossPrice />
-          </CrossPricePosition>
-        </PriceService>
-        {historyItemHasActiveSomePromotion && (
-          <PriceService siteProps={siteProps}>
-            {`${item.costReserwation}zł ${item.extraCost ? "+" : ""}`}
+        {item.serviceName + " "}
+        <PriceContentService>
+          <PriceService
+            siteProps={siteProps}
+            active={historyItemHasActiveSomePromotion}
+          >
+            {`${!!item.basicPrice ? item.basicPrice : item.costReserwation}zł ${
+              item.extraCost ? "+" : ""
+            }`}
+            <CrossPricePosition active={historyItemHasActiveSomePromotion}>
+              <CrossPrice />
+            </CrossPricePosition>
           </PriceService>
-        )}
-        <PriceService otherColor siteProps={siteProps}>
-          {`${timeService} ${item.extraTime ? "+" : ""}`}
-        </PriceService>
+          {historyItemHasActiveSomePromotion && (
+            <PriceService siteProps={siteProps}>
+              {`${item.costReserwation}zł ${item.extraCost ? "+" : ""}`}
+            </PriceService>
+          )}
+          <PriceService otherColor siteProps={siteProps}>
+            {`${timeService} ${item.extraTime ? "+" : ""}`}
+          </PriceService>
+        </PriceContentService>
       </TitleService>
       <div>
         Wykonawca usługi:

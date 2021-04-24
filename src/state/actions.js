@@ -38,6 +38,22 @@ export const CHANGE_ALERT_EXTRA = "CHANGE_ALERT_EXTRA"
 export const ADD_TOKEN_AUTO_LOGIN_VISIBLE = "ADD_TOKEN_AUTO_LOGIN_VISIBLE"
 export const VERIFIED_PHONE_COMPONENT = "VERIFIED_PHONE_COMPONENT"
 export const CHANGE_MAP_ACTIVE = "CHANGE_MAP_ACTIVE"
+export const CHANGE_POPUP_TAKE_PLACE = "CHANGE_POPUP_TAKE_PLACE"
+export const CHANGE_SELECTED_NAME_MENU = "CHANGE_SELECTED_NAME_MENU"
+
+export const changeSelectedNameMenu = value => {
+  return {
+    type: CHANGE_SELECTED_NAME_MENU,
+    value: value,
+  }
+}
+
+export const changePopupTakePlace = value => {
+  return {
+    type: CHANGE_POPUP_TAKE_PLACE,
+    value: value,
+  }
+}
 
 export const changeMapsActive = value => {
   return {
@@ -5556,5 +5572,24 @@ export const fetchAddReport = (
         }
         dispatch(changeAlertExtra(null, false))
       })
+  }
+}
+
+export const fetchNotificationEndpoint = (token, endpoint) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/save-notification-endpoint`,
+        {
+          endpoint: endpoint,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {})
+      .catch(error => {})
   }
 }
