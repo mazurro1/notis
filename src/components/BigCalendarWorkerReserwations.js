@@ -34,13 +34,12 @@ const BackgroundContentCalendar = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   padding: 10px;
+  max-width: 95vw;
 `
 
 const BackgroundCalendarStyle = styled.div`
   background-color: white;
   max-height: 70vh;
-  max-width: 90vw;
-  width: 900px;
   overflow: hidden;
   overflow-y: auto;
   opacity: 0.95;
@@ -213,20 +212,27 @@ const BackgroundCalendarStyle = styled.div`
   }
 `
 
+const IconMobileDays = styled.div`
+  height: 35px;
+  width: 35px;
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  cursor: pointer;
+  font-size: 0.9rem;
+`
+
 const TitleMonthYear = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  @media all and (max-width: 767px) {
-    display: block;
-    width: 100%;
-
-    .marginItems {
-      margin: 5px;
-    }
-  }
 `
 
 const TitleMonthYearContent = styled.div`
@@ -237,6 +243,10 @@ const TitleMonthYearContent = styled.div`
   padding: 5px 20px;
   font-size: 1.6rem;
   text-align: center;
+  @media all and (max-width: 767px) {
+    font-size: 0.8rem;
+    padding-bottom: 14px;
+  }
 `
 
 const ButtonsPosition = styled.div`
@@ -254,6 +264,11 @@ const WidthSelect = styled.div`
   width: 160px;
   margin: 5px;
   margin-right: 20px;
+  @media all and (max-width: 767px) {
+    width: 135px;
+    margin-right: 0px;
+    margin: 2px;
+  }
 `
 
 const ContentSelect = styled.div`
@@ -263,6 +278,10 @@ const ContentSelect = styled.div`
   align-items: center;
   margin-bottom: 10px;
   flex-wrap: wrap;
+  @media all and (max-width: 767px) {
+    justify-content: space-around;
+    margin-bottom: 0px;
+  }
 `
 
 const ContentWorkersAdmin = styled.div`
@@ -272,7 +291,15 @@ const ContentWorkersAdmin = styled.div`
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 10px;
+  max-width: 100%;
+  width: 900px;
+  overflow-y: auto;
+  height: 50px;
+  @media all and (max-width: 767px) {
+    height: 40px;
+  }
 `
+
 const WorkerItemStyle = styled.div`
   background-color: ${props =>
     props.active
@@ -284,12 +311,17 @@ const WorkerItemStyle = styled.div`
   padding: 5px 10px;
   cursor: pointer;
   margin-top: 10px;
+  font-size: 1rem;
   transition-property: transform, background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 
   &:hover {
     transform: scale(1.1);
+  }
+
+  @media all and (max-width: 767px) {
+    font-size: 0.8rem;
   }
 `
 
@@ -343,10 +375,7 @@ const BigCalendarWorkerReserwations = ({
     label: new Date().getFullYear(),
   })
 
-  const [monthPicker, setMonthPicker] = useState({
-    value: 1,
-    label: "Styczeń",
-  })
+  const [monthPicker, setMonthPicker] = useState(null)
 
   const dispatch = useDispatch()
 
@@ -557,7 +586,7 @@ const BigCalendarWorkerReserwations = ({
         let userName = "Brak użytkownika"
         if (!!itemMaped.fromUser) {
           userName = Buffer.from(itemMaped.fromUser.name, "base64").toString(
-            "ascii"
+            "utf-8"
           )
         }
         let userSurname = ""
@@ -565,7 +594,7 @@ const BigCalendarWorkerReserwations = ({
           userSurname = Buffer.from(
             itemMaped.fromUser.surname,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
         }
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
@@ -789,7 +818,6 @@ const BigCalendarWorkerReserwations = ({
     const prevDateCountWeeksMonth = Math.floor(prevDateCalendar.getDate() / 7)
     if (value === "plus") {
       const isValidNextMonth = prevDateCountWeeksMonth + 1 === countWeeksMonth
-
       const disabledNextWeek =
         afterAddedDays.getMonth() === takeDateDayToday &&
         afterAddedDays.getFullYear() === takeDateYear
@@ -800,17 +828,17 @@ const BigCalendarWorkerReserwations = ({
           dateCalendar.getMonth(),
           dateCalendar.getDate() + plusDaysValid
         )
-      } else if (isValidNextMonth) {
+      } else if (!isValidNextMonth) {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
-          0
+          1
         )
       } else {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
-          1
+          0
         )
       }
       setDateCalendar(newDate)
@@ -1015,9 +1043,9 @@ const BigCalendarWorkerReserwations = ({
   const mapWorkers =
     isAdmin &&
     item.company.workers.map((worker, indexWorker) => {
-      const userName = Buffer.from(worker.user.name, "base64").toString("ascii")
+      const userName = Buffer.from(worker.user.name, "base64").toString("utf-8")
       const userSurname = Buffer.from(worker.user.surname, "base64").toString(
-        "ascii"
+        "utf-8"
       )
       return (
         <WorkerItemStyle
@@ -1080,39 +1108,66 @@ const BigCalendarWorkerReserwations = ({
           </ContentWorkersAdmin>
         )}
         <TitleMonthYear>
-          <div className="marginItems">
-            <ButtonIcon
-              title={isMobile ? "Poprzedni dzień" : "Poprzedni tydzień"}
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarMinus />}
+          {!!!isMobile ? (
+            <div className="marginItems">
+              <ButtonIcon
+                title={isMobile ? "Poprzedni dzień" : "Poprzedni tydzień"}
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaCalendarMinus />}
+                onClick={() => handleChangeDate("minus")}
+              />
+            </div>
+          ) : (
+            <IconMobileDays
+              siteProps={siteProps}
               onClick={() => handleChangeDate("minus")}
-            />
-          </div>
+            >
+              <FaCalendarMinus />
+            </IconMobileDays>
+          )}
           <TitleMonthYearContent siteProps={siteProps} className="marginItems">
             {finnalDate}
           </TitleMonthYearContent>
-          <div className="marginItems">
-            <ButtonIcon
-              title="Dzisiaj"
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarDay />}
+          {!!!isMobile ? (
+            <div className="marginItems">
+              <ButtonIcon
+                title="Dzisiaj"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaCalendarDay />}
+                onClick={() => handleChangeDate("today")}
+              />
+            </div>
+          ) : (
+            <IconMobileDays
+              siteProps={siteProps}
               onClick={() => handleChangeDate("today")}
-            />
-          </div>
-          <div className="marginItems">
-            <ButtonIcon
-              title={isMobile ? "Kolejny dzień" : "Kolejny tydzień"}
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarPlus />}
+            >
+              <FaCalendarDay />
+            </IconMobileDays>
+          )}
+          {!!!isMobile ? (
+            <div className="marginItems">
+              <ButtonIcon
+                title={isMobile ? "Kolejny dzień" : "Kolejny tydzień"}
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<FaCalendarPlus />}
+                onClick={() => handleChangeDate("plus")}
+              />
+            </div>
+          ) : (
+            <IconMobileDays
+              siteProps={siteProps}
               onClick={() => handleChangeDate("plus")}
-            />
-          </div>
+            >
+              <FaCalendarPlus />
+            </IconMobileDays>
+          )}
         </TitleMonthYear>
         <BackgroundCalendarStyle siteProps={siteProps}>
           <Calendar

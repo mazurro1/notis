@@ -17,6 +17,7 @@ import { fetchSaveCompanyServices } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import Popup from "../Popup"
+import { Element, scroller } from "react-scroll"
 
 const AddCategory = styled.div`
   position: relative;
@@ -186,10 +187,6 @@ const AllCategoryOfServices = ({
   useEffect(() => {
     setAllCategoryEdit(false)
   }, [editMode]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleClickContent = e => {
-    e.stopPropagation()
-  }
 
   const handleClickAddCategory = () => {
     setClickAddCategory(prevState => !prevState)
@@ -408,10 +405,20 @@ const AllCategoryOfServices = ({
   const handleClickEditComponent = () => {
     handleResetAllEditedComponents()
     setAllCategoryEdit(prevState => !prevState)
+    scroller.scrollTo("servicesScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleReserAllCategoryOfServices = () => {
     setAllCategoryEdit(false)
+    scroller.scrollTo("servicesScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
 
     const categories = getCategories([...services], "serviceCategory")
     const items = categoryItemsMenu(categories, [...services])
@@ -430,6 +437,11 @@ const AllCategoryOfServices = ({
       edited: editedCategoryItems,
       new: newCategoryItems,
     }
+    scroller.scrollTo("servicesScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     dispatch(fetchSaveCompanyServices(user.token, user.company._id, services))
   }
 
@@ -470,153 +482,159 @@ const AllCategoryOfServices = ({
     editedCategoryItems.length > 0
 
   return (
-    <BackgroundEditedComponent
-      active={allCategoryEdit}
-      siteProps={siteProps}
-      disabledEditButtons={disabledEditButtons}
-    >
-      {!!userIsBlocked && (
-        <BlockUserInfo>
-          Twoje konto zostało zablokowane na tej stronie
-        </BlockUserInfo>
-      )}
+    <Element name="servicesScrollElement" className="element">
+      <BackgroundEditedComponent
+        active={allCategoryEdit}
+        siteProps={siteProps}
+        disabledEditButtons={disabledEditButtons}
+      >
+        {!!userIsBlocked && (
+          <BlockUserInfo>
+            Twoje konto zostało zablokowane na tej stronie
+          </BlockUserInfo>
+        )}
 
-      {(services.length > 0 || isCompanyEditProfil) && (
-        <>
-          <TitleRightColumnOpinion
-            siteProps={siteProps}
-            isCompanyEditProfil={allCategoryEdit}
-          >
-            Usługi
-          </TitleRightColumnOpinion>
-
-          {mapCategories}
-        </>
-      )}
-      {allCategoryEdit && (
-        <>
-          <AddCategory
-            data-tip
-            data-for="addNewCategory"
-            onClick={handleClickAddCategory}
-            clickAddCategory={clickAddCategory}
-            siteProps={siteProps}
-          >
-            <IconAddCategory siteProps={siteProps}>
-              <MdAddBox />
-            </IconAddCategory>
-
-            <Popup
-              popupEnable={clickAddCategory}
-              position="absolute"
-              title="Nowa kategoria"
-              borderRadius
-              closeTitle={false}
-              smallTitle
-              secondColors
+        {(services.length > 0 || isCompanyEditProfil) && (
+          <>
+            <TitleRightColumnOpinion
+              siteProps={siteProps}
+              isCompanyEditProfil={allCategoryEdit}
             >
-              <InputIcon
-                icon={<MdTitle />}
-                placeholder="Nazwa kategorii"
-                secondColor
-                value={newCategoryTitle}
-                type="text"
-                onChange={handleChangeNewCategory}
-                required
-                validText="Minimum 3 znaki"
-              />
-              <ButtonsAddPosition>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Anuluj"
-                    uppercase
-                    fontIconSize="40"
-                    fontSize="13"
-                    icon={<MdArrowBack />}
-                    onClick={handleClickAddCategory}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                  />
-                </ButtonMargin>
-                <ButtonMargin>
-                  <ButtonIcon
-                    title="Dodaj"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="13"
-                    icon={<MdAddBox />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    disabled={disabledAddCategoryButton}
-                    onClick={handleAddCategory}
-                  />
-                </ButtonMargin>
-              </ButtonsAddPosition>
-            </Popup>
-            {!clickAddCategory && (
-              <ReactTooltip id="addNewCategory" effect="float" multiline={true}>
-                <span>Dodaj nową kategorie</span>
-              </ReactTooltip>
-            )}
-          </AddCategory>
-          <ReactTooltip id="addItem" effect="float" multiline={true}>
-            <span>Dodaj podkategorie</span>
-          </ReactTooltip>
-          <ReactTooltip id="deleteCategory" effect="float" multiline={true}>
-            <span>Usuń całą kategorię</span>
-          </ReactTooltip>
-          <ReactTooltip id="editCategory" effect="float" multiline={true}>
-            <span>Edytuj nazwe kategorii</span>
-          </ReactTooltip>
-        </>
-      )}
-      <ButtonsEditPosition>
-        {!allCategoryEdit ? (
-          isCompanyEditProfil && (
-            <div data-tip data-for="disabledButton">
+              Usługi
+            </TitleRightColumnOpinion>
+
+            {mapCategories}
+          </>
+        )}
+        {allCategoryEdit && (
+          <>
+            <AddCategory
+              data-tip
+              data-for="addNewCategory"
+              onClick={handleClickAddCategory}
+              clickAddCategory={clickAddCategory}
+              siteProps={siteProps}
+            >
+              <IconAddCategory siteProps={siteProps}>
+                <MdAddBox />
+              </IconAddCategory>
+
+              <Popup
+                popupEnable={clickAddCategory}
+                position="absolute"
+                title="Nowa kategoria"
+                borderRadius
+                closeTitle={false}
+                smallTitle
+                secondColors
+              >
+                <InputIcon
+                  icon={<MdTitle />}
+                  placeholder="Nazwa kategorii"
+                  secondColor
+                  value={newCategoryTitle}
+                  type="text"
+                  onChange={handleChangeNewCategory}
+                  required
+                  validText="Minimum 3 znaki"
+                />
+                <ButtonsAddPosition>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Anuluj"
+                      uppercase
+                      fontIconSize="40"
+                      fontSize="13"
+                      icon={<MdArrowBack />}
+                      onClick={handleClickAddCategory}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                    />
+                  </ButtonMargin>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Dodaj"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="13"
+                      icon={<MdAddBox />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      disabled={disabledAddCategoryButton}
+                      onClick={handleAddCategory}
+                    />
+                  </ButtonMargin>
+                </ButtonsAddPosition>
+              </Popup>
+              {!clickAddCategory && (
+                <ReactTooltip
+                  id="addNewCategory"
+                  effect="float"
+                  multiline={true}
+                >
+                  <span>Dodaj nową kategorie</span>
+                </ReactTooltip>
+              )}
+            </AddCategory>
+            <ReactTooltip id="addItem" effect="float" multiline={true}>
+              <span>Dodaj podkategorie</span>
+            </ReactTooltip>
+            <ReactTooltip id="deleteCategory" effect="float" multiline={true}>
+              <span>Usuń całą kategorię</span>
+            </ReactTooltip>
+            <ReactTooltip id="editCategory" effect="float" multiline={true}>
+              <span>Edytuj nazwe kategorii</span>
+            </ReactTooltip>
+          </>
+        )}
+        <ButtonsEditPosition>
+          {!allCategoryEdit ? (
+            isCompanyEditProfil && (
+              <div data-tip data-for="disabledButton">
+                <ButtonIcon
+                  title="Edytuj usługi"
+                  uppercase
+                  fontIconSize="40"
+                  fontSize="14"
+                  icon={<MdEdit />}
+                  onClick={handleClickEditComponent}
+                  secondColors
+                  disabled={disabledEditButtons}
+                  data-tip
+                  data-for="disabledButton"
+                />
+              </div>
+            )
+          ) : (
+            <>
               <ButtonIcon
-                title="Edytuj usługi"
+                title="Anuluj"
                 uppercase
                 fontIconSize="40"
                 fontSize="14"
-                icon={<MdEdit />}
-                onClick={handleClickEditComponent}
-                secondColors
-                disabled={disabledEditButtons}
-                data-tip
-                data-for="disabledButton"
+                icon={<MdArrowBack />}
+                onClick={handleReserAllCategoryOfServices}
+                customColorButton={Colors(siteProps).dangerColorDark}
+                customColorIcon={Colors(siteProps).dangerColor}
               />
-            </div>
-          )
-        ) : (
-          <>
-            <ButtonIcon
-              title="Anuluj"
-              uppercase
-              fontIconSize="40"
-              fontSize="14"
-              icon={<MdArrowBack />}
-              onClick={handleReserAllCategoryOfServices}
-              customColorButton={Colors(siteProps).dangerColorDark}
-              customColorIcon={Colors(siteProps).dangerColor}
-            />
-            <MarginButtonLeft>
-              <ButtonIcon
-                title="Zapisz"
-                uppercase
-                fontIconSize="20"
-                fontSize="14"
-                icon={<FaSave />}
-                onClick={handleSaveAllServices}
-                customColorButton={Colors(siteProps).successColorDark}
-                customColorIcon={Colors(siteProps).successColor}
-                disabled={!isAnyChanges}
-              />
-            </MarginButtonLeft>
-          </>
-        )}
-      </ButtonsEditPosition>
-    </BackgroundEditedComponent>
+              <MarginButtonLeft>
+                <ButtonIcon
+                  title="Zapisz"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<FaSave />}
+                  onClick={handleSaveAllServices}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={!isAnyChanges}
+                />
+              </MarginButtonLeft>
+            </>
+          )}
+        </ButtonsEditPosition>
+      </BackgroundEditedComponent>
+    </Element>
   )
 }
 export default AllCategoryOfServices

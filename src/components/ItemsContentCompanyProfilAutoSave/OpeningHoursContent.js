@@ -9,6 +9,7 @@ import { Colors } from "../../common/Colors"
 import { fetchSaveOpeningHoursCompany } from "../../state/actions"
 import { useDispatch } from "react-redux"
 import { arraysEqual } from "../../common/Functions"
+import { Element, scroller } from "react-scroll"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -182,6 +183,11 @@ const OpeningHoursContent = ({
   }
 
   const handleClickEdit = () => {
+    scroller.scrollTo("openingHoursScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     setEditableOpeningHours(prevState => !prevState)
   }
@@ -223,6 +229,11 @@ const OpeningHoursContent = ({
   }
 
   const handleResetValues = () => {
+    scroller.scrollTo("openingHoursScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     const transformedHoursData = []
     for (const key in hoursDate) {
       transformedHoursData.push({
@@ -258,6 +269,11 @@ const OpeningHoursContent = ({
   )
 
   const handleSaveAllComponent = () => {
+    scroller.scrollTo("openingHoursScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     dispatch(
       fetchSaveOpeningHoursCompany(
         user.token,
@@ -288,65 +304,63 @@ const OpeningHoursContent = ({
   })
 
   return (
-    <>
-      <>
-        <TitleRightColumn
-          isCompanyEditProfil={editableOpeningHours}
-          siteProps={siteProps}
-        >
-          GODZINY OTWARCIA
-        </TitleRightColumn>
-        {arrayHoursData.length > 0 && mapDayHours}
-        {isCompanyEditProfil ? (
-          editableOpeningHours ? (
-            <>
-              <ButtonEditPosition>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Cofnij"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleResetValues}
-                  />
-                </MarginButton>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Zapisz"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaSave />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleSaveAllComponent}
-                    disabled={disabledSaveHours}
-                  />
-                </MarginButton>
-              </ButtonEditPosition>
-            </>
-          ) : (
+    <Element name="openingHoursScrollElement" className="element">
+      <TitleRightColumn
+        isCompanyEditProfil={editableOpeningHours}
+        siteProps={siteProps}
+      >
+        GODZINY OTWARCIA
+      </TitleRightColumn>
+      {arrayHoursData.length > 0 && mapDayHours}
+      {isCompanyEditProfil ? (
+        editableOpeningHours ? (
+          <>
             <ButtonEditPosition>
-              <div data-tip data-for="disabledButton">
+              <MarginButton>
                 <ButtonIcon
-                  title="Edytuj godziny otwarcia"
+                  title="Cofnij"
                   uppercase
-                  fontIconSize="25"
+                  fontIconSize="16"
                   fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                  onClick={handleClickEdit}
-                  disabled={disabledEditButtons}
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleResetValues}
                 />
-              </div>
+              </MarginButton>
+              <MarginButton>
+                <ButtonIcon
+                  title="Zapisz"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaSave />}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  onClick={handleSaveAllComponent}
+                  disabled={disabledSaveHours}
+                />
+              </MarginButton>
             </ButtonEditPosition>
-          )
-        ) : null}
-      </>
-    </>
+          </>
+        ) : (
+          <ButtonEditPosition>
+            <div data-tip data-for="disabledButton">
+              <ButtonIcon
+                title="Edytuj godziny otwarcia"
+                uppercase
+                fontIconSize="25"
+                fontSize="14"
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
+              />
+            </div>
+          </ButtonEditPosition>
+        )
+      ) : null}
+    </Element>
   )
 }
 export default OpeningHoursContent

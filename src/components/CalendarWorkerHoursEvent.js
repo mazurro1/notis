@@ -317,11 +317,11 @@ const CalendarWorkerReserwatinEvent = ({
       const userName = Buffer.from(
         selectedEvent.fromUser.name,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
       const userSurname = Buffer.from(
         selectedEvent.fromUser.surname,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
 
       client = `${userName} ${userSurname}`
     } else {

@@ -19,6 +19,7 @@ import {
   sortItemsInArray,
 } from "../../common/Functions"
 import Popup from "../Popup"
+import { Element, scroller } from "react-scroll"
 
 const WorkerContent = styled.div`
   display: ${props => (props.isCompanyEditProfil ? "block" : "block")};
@@ -287,11 +288,21 @@ const OurWorkersContent = ({
   }
 
   const handleEditWorkers = () => {
+    scroller.scrollTo("workersScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     setEditedWorkers(prevState => !prevState)
   }
 
   const handleEditWorkersReset = () => {
+    scroller.scrollTo("workersScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     setEditedWorkers(false)
   }
 
@@ -353,171 +364,173 @@ const OurWorkersContent = ({
   })
 
   return (
-    <PositionRelative
-      siteProps={siteProps}
-      active={editedWorkers}
-      disabledEditButtons={disabledEditButtons}
-    >
-      <RightColumnItem
-        isCompanyEditProfil={editedWorkers}
+    <Element name="workersScrollElement" className="element">
+      <PositionRelative
         siteProps={siteProps}
+        active={editedWorkers}
+        disabledEditButtons={disabledEditButtons}
       >
-        <TitleRightColumn
+        <RightColumnItem
           isCompanyEditProfil={editedWorkers}
           siteProps={siteProps}
         >
-          NASI PRACOWNICY
-        </TitleRightColumn>
-        <WorkerContent isCompanyEditProfil={editedWorkers}>
-          <OwnerWorker
-            companyId={companyId}
-            {...companyEditProfilProps}
-            WorkerItemStyle={WorkerItemStyle}
-            WorkerCircle={WorkerCircle}
-            WorkerName={WorkerName}
-            WorkerSpecjalization={WorkerSpecjalization}
-            EditUserStyle={EditUserStyle}
-            EditIconStyle={EditIconStyle}
-            allCategories={allCategories}
+          <TitleRightColumn
+            isCompanyEditProfil={editedWorkers}
             siteProps={siteProps}
-            ButtonContent={ButtonContent}
-            ButtonDeleteStyle={ButtonDeleteStyle}
-            owner={owner}
-            handleClickContent={handleClickContent}
-            company={company}
-            ownerData={ownerData}
-            isAdmin={isAdmin}
-            setAllCategories={setAllCategories}
-            allCategoriesWithItems={allCategoriesWithItems}
-            editedWorkers={editedWorkers}
-            ownerSpecialization={ownerSpecialization}
-            user={user}
-            editMode={editMode}
-            handleClickActiveWorker={handleClickActiveWorker}
-            activeWorkerUserId={activeWorkerUserId}
-            BackGroundImageCustomUrl={BackGroundImageCustomUrl}
-          />
-          {mapWorkers}
-        </WorkerContent>
-        {editedWorkers && isAdmin ? (
-          <ButtonEditPosition>
-            <ButtonIcon
-              title="Dodaj użytkownika"
-              uppercase
-              fontIconSize="25"
-              fontSize="14"
-              icon={<FaUserPlus />}
-              secondColors
-              onClick={handleEdit}
+          >
+            NASI PRACOWNICY
+          </TitleRightColumn>
+          <WorkerContent isCompanyEditProfil={editedWorkers}>
+            <OwnerWorker
+              companyId={companyId}
+              {...companyEditProfilProps}
+              WorkerItemStyle={WorkerItemStyle}
+              WorkerCircle={WorkerCircle}
+              WorkerName={WorkerName}
+              WorkerSpecjalization={WorkerSpecjalization}
+              EditUserStyle={EditUserStyle}
+              EditIconStyle={EditIconStyle}
+              allCategories={allCategories}
+              siteProps={siteProps}
+              ButtonContent={ButtonContent}
+              ButtonDeleteStyle={ButtonDeleteStyle}
+              owner={owner}
+              handleClickContent={handleClickContent}
+              company={company}
+              ownerData={ownerData}
+              isAdmin={isAdmin}
+              setAllCategories={setAllCategories}
+              allCategoriesWithItems={allCategoriesWithItems}
+              editedWorkers={editedWorkers}
+              ownerSpecialization={ownerSpecialization}
+              user={user}
+              editMode={editMode}
+              handleClickActiveWorker={handleClickActiveWorker}
+              activeWorkerUserId={activeWorkerUserId}
+              BackGroundImageCustomUrl={BackGroundImageCustomUrl}
             />
-          </ButtonEditPosition>
-        ) : null}
-
-        {editedWorkers && (
-          <>
-            <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
-              <span>Ustaw czas pracy pracownika</span>
-            </ReactTooltip>
-            <ReactTooltip id="timeWork" effect="float" multiline={true}>
-              <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
-            </ReactTooltip>
-
-            <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
-              <span>Wyślij ponownie email weryfikacyjny</span>
-            </ReactTooltip>
-            <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
-              <span>Edytuj godziny pracy pracownika</span>
-            </ReactTooltip>
-            <ReactTooltip id="editUser" effect="float" multiline={true}>
-              <span>Edytuj stanowisko pracownika</span>
-            </ReactTooltip>
-            <ReactTooltip id="deleteUser" effect="float" multiline={true}>
-              <span>Usuń pracownika</span>
-            </ReactTooltip>
-          </>
-        )}
-      </RightColumnItem>
-      {isCompanyEditProfil &&
-        (!editedWorkers ? (
-          <ButtonEditPositionEdit>
-            <div data-tip data-for="disabledButton">
+            {mapWorkers}
+          </WorkerContent>
+          {editedWorkers && isAdmin ? (
+            <ButtonEditPosition>
               <ButtonIcon
-                title="Edytuj pracowników"
+                title="Dodaj użytkownika"
                 uppercase
                 fontIconSize="25"
                 fontSize="14"
-                icon={<MdEdit />}
+                icon={<FaUserPlus />}
                 secondColors
-                onClick={handleEditWorkers}
-                disabled={disabledEditButtons}
+                onClick={handleEdit}
               />
-            </div>
-          </ButtonEditPositionEdit>
-        ) : (
-          <ButtonEditPositionEdit>
-            <ButtonIcon
-              title="Anuluj"
-              uppercase
-              fontIconSize="20"
-              fontSize="14"
-              icon={<FaArrowLeft />}
-              customColorButton={Colors(siteProps).dangerColorDark}
-              customColorIcon={Colors(siteProps).dangerColor}
-              onClick={handleEditWorkersReset}
-            />
-          </ButtonEditPositionEdit>
-        ))}
-      {isAdmin && (
-        <Popup
-          popupEnable={isaddUser}
-          position="absolute"
-          title="Dodawanie pracownika"
-          borderRadius
-          closeTitle={false}
-          smallTitle
-          secondColors
-        >
-          <form onSubmit={handleSentInvation}>
-            <InputIcon
-              icon={<FaUserPlus />}
-              placeholder="Adres email"
-              value={emailInput}
-              type="email"
-              secondColor
-              onChange={e => handleChange(e, setEmailInput)}
-              required
-              validText="Wartość wymagana"
-            />
-            <ButtonSentPosition>
+            </ButtonEditPosition>
+          ) : null}
+
+          {editedWorkers && (
+            <>
+              <ReactTooltip id="constTimeWork" effect="float" multiline={true}>
+                <span>Ustaw czas pracy pracownika</span>
+              </ReactTooltip>
+              <ReactTooltip id="timeWork" effect="float" multiline={true}>
+                <span>Ustaw czas pracy pracownika w innych dniach itp itd</span>
+              </ReactTooltip>
+
+              <ReactTooltip id="sentAgainEmail" effect="float" multiline={true}>
+                <span>Wyślij ponownie email weryfikacyjny</span>
+              </ReactTooltip>
+              <ReactTooltip id="timeWorkUser" effect="float" multiline={true}>
+                <span>Edytuj godziny pracy pracownika</span>
+              </ReactTooltip>
+              <ReactTooltip id="editUser" effect="float" multiline={true}>
+                <span>Edytuj stanowisko pracownika</span>
+              </ReactTooltip>
+              <ReactTooltip id="deleteUser" effect="float" multiline={true}>
+                <span>Usuń pracownika</span>
+              </ReactTooltip>
+            </>
+          )}
+        </RightColumnItem>
+        {isCompanyEditProfil &&
+          (!editedWorkers ? (
+            <ButtonEditPositionEdit>
+              <div data-tip data-for="disabledButton">
+                <ButtonIcon
+                  title="Edytuj pracowników"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="14"
+                  icon={<MdEdit />}
+                  secondColors
+                  onClick={handleEditWorkers}
+                  disabled={disabledEditButtons}
+                />
+              </div>
+            </ButtonEditPositionEdit>
+          ) : (
+            <ButtonEditPositionEdit>
               <ButtonIcon
-                title="Anuluj"
+                title="Zakończ edycję"
                 uppercase
                 fontIconSize="20"
                 fontSize="14"
                 icon={<FaArrowLeft />}
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleOnClickBg}
+                onClick={handleEditWorkersReset}
               />
-            </ButtonSentPosition>
-            <ButtonSentPosition>
-              <ButtonAddWorker type="submit">
+            </ButtonEditPositionEdit>
+          ))}
+        {isAdmin && (
+          <Popup
+            popupEnable={isaddUser}
+            position="absolute"
+            title="Dodawanie pracownika"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+            secondColors
+          >
+            <form onSubmit={handleSentInvation}>
+              <InputIcon
+                icon={<FaUserPlus />}
+                placeholder="Adres email"
+                value={emailInput}
+                type="email"
+                secondColor
+                onChange={e => handleChange(e, setEmailInput)}
+                required
+                validText="Wartość wymagana"
+              />
+              <ButtonSentPosition>
                 <ButtonIcon
-                  title="Wyślij zaproszenie"
+                  title="Anuluj"
                   uppercase
                   fontIconSize="20"
                   fontSize="14"
-                  icon={<MdEmail />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  disabled={!!!emailInput}
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleOnClickBg}
                 />
-              </ButtonAddWorker>
-            </ButtonSentPosition>
-          </form>
-        </Popup>
-      )}
-    </PositionRelative>
+              </ButtonSentPosition>
+              <ButtonSentPosition>
+                <ButtonAddWorker type="submit">
+                  <ButtonIcon
+                    title="Wyślij zaproszenie"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="14"
+                    icon={<MdEmail />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    disabled={!!!emailInput}
+                  />
+                </ButtonAddWorker>
+              </ButtonSentPosition>
+            </form>
+          </Popup>
+        )}
+      </PositionRelative>
+    </Element>
   )
 }
 export default OurWorkersContent

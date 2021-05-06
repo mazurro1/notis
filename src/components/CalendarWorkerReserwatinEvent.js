@@ -271,11 +271,11 @@ const CalendarWorkerReserwatinEvent = ({
           const userOwnerName = Buffer.from(
             itemCompany.owner.name,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
           const userOwnerSurname = Buffer.from(
             itemCompany.owner.surname,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
           setSelectedWorker({
             label: `${userOwnerName} ${userOwnerSurname}`,
             value: itemCompany.owner._id,
@@ -289,11 +289,11 @@ const CalendarWorkerReserwatinEvent = ({
               const userOwnerName = Buffer.from(
                 workerCompany.user.name,
                 "base64"
-              ).toString("ascii")
+              ).toString("utf-8")
               const userOwnerSurname = Buffer.from(
                 workerCompany.user.surname,
                 "base64"
-              ).toString("ascii")
+              ).toString("utf-8")
               setSelectedWorker({
                 label: `${userOwnerName} ${userOwnerSurname}`,
                 value: workerCompany.user._id,
@@ -410,11 +410,11 @@ const CalendarWorkerReserwatinEvent = ({
         const userOwnerName = Buffer.from(
           itemCompany.owner.name,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
         const userOwnerSurname = Buffer.from(
           itemCompany.owner.surname,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
         workersToSelect.push({
           label: `${userOwnerName} ${userOwnerSurname}`,
           value: itemCompany.owner._id,
@@ -436,11 +436,11 @@ const CalendarWorkerReserwatinEvent = ({
             const userWorkerName = Buffer.from(
               workerDoc.user.name,
               "base64"
-            ).toString("ascii")
+            ).toString("utf-8")
             const userWorkerSurname = Buffer.from(
               workerDoc.user.surname,
               "base64"
-            ).toString("ascii")
+            ).toString("utf-8")
             workersToSelect.push({
               label: `${userWorkerName} ${userWorkerSurname}`,
               value: workerDoc.user._id,
@@ -494,11 +494,11 @@ const CalendarWorkerReserwatinEvent = ({
       const userName = Buffer.from(
         selectedEvent.fromUser.name,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
       const userSurname = Buffer.from(
         selectedEvent.fromUser.surname,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
 
       client = `${userName} ${userSurname}`
     } else {

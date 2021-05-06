@@ -424,6 +424,21 @@ const Navigation = ({ isMainPage }) => {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(userVapid),
     })
+    // sw.periodicSync
+    //   .register({
+    //     tag: "myFirstSync",
+    //     minPeriod: 3000,
+    //     powerState: "avoid-draining",
+    //     networkState: "avoid-cellular",
+    //   })
+    //   .then(
+    //     periodicSyncReg => {
+    //       console.log("sucess")
+    //     },
+    //     () => {
+    //       console.log("some error occured.")
+    //     }
+    //   )
     dispatch(fetchNotificationEndpoint(user.token, result))
   }
 
@@ -1104,7 +1119,7 @@ const Navigation = ({ isMainPage }) => {
                     </>
                   ) : (
                     <>
-                      Konto premium <span>Nie aktywne</span>
+                      Konto premium: <span>Nie aktywne</span>
                     </>
                   )}
                 </SMSStyle>
@@ -1465,13 +1480,15 @@ const Navigation = ({ isMainPage }) => {
                 </ButtonsNav>
                 {!!user && (
                   <>
-                    <ReactTooltip
-                      id="showFavourites"
-                      effect="float"
-                      multiline={true}
-                    >
-                      <span>Ulubione firmy</span>
-                    </ReactTooltip>
+                    {!isMobileSize && (
+                      <ReactTooltip
+                        id="showFavourites"
+                        effect="float"
+                        multiline={true}
+                      >
+                        <span>Ulubione firmy</span>
+                      </ReactTooltip>
+                    )}
                     <BellAlertsStyle
                       siteProps={siteProps}
                       onClick={handleUserFavourites}
@@ -1487,13 +1504,15 @@ const Navigation = ({ isMainPage }) => {
                 )}
                 {!!user && (
                   <>
-                    <ReactTooltip
-                      id="showStamps"
-                      effect="float"
-                      multiline={true}
-                    >
-                      <span>Zebrane pieczątki</span>
-                    </ReactTooltip>
+                    {!isMobileSize && (
+                      <ReactTooltip
+                        id="showStamps"
+                        effect="float"
+                        multiline={true}
+                      >
+                        <span>Zebrane pieczątki</span>
+                      </ReactTooltip>
+                    )}
                     <BellAlertsStyle
                       siteProps={siteProps}
                       onClick={handleUserStamps}
@@ -1507,7 +1526,13 @@ const Navigation = ({ isMainPage }) => {
                     </BellAlertsStyle>
                   </>
                 )}
-                {!!user && <BellAlerts siteProps={siteProps} user={user} />}
+                {!!user && (
+                  <BellAlerts
+                    siteProps={siteProps}
+                    user={user}
+                    isMobileSize={isMobileSize}
+                  />
+                )}
 
                 <BurgerButton onClick={handleMenuOpen}>
                   <FaBars />

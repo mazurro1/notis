@@ -5,6 +5,7 @@ import { MdKeyboardArrowDown, MdClose } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
 import { useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
+import { Site } from "../common/Site"
 
 const WrapSelectedElements = styled.div`
   width: 100%;
@@ -71,6 +72,10 @@ const DataItem = styled.button`
   transition-property: background-color, color, transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    font-size: 0.8rem;
+  }
 
   span {
     position: relative;
@@ -169,6 +174,10 @@ const DeleteItemSelected = styled.div`
 const DefaultPlaceholderStyle = styled.div`
   font-size: 0.9rem;
   padding: 1.5px;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    font-size: 0.8rem;
+  }
 `
 
 const TextSelect = styled.div`

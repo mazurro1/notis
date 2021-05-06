@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux"
 import { fetchSaveShopStore } from "../../state/actions"
 import sal from "sal.js"
 import { sortItemsInArrayToString } from "../../common/Functions"
+import { Element, scroller } from "react-scroll"
 
 const PositionRelative = styled.div`
   position: relative;
@@ -92,10 +93,21 @@ const ShopStoreContent = ({
   const handleClickEdit = () => {
     handleResetAllEditedComponents()
     setEditShopStore(true)
+    scroller.scrollTo("shopStoreScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleReset = () => {
     handleResetAllEditedComponents()
+
+    scroller.scrollTo("shopStoreScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleClickContent = e => {
@@ -133,6 +145,11 @@ const ShopStoreContent = ({
   }
 
   const handleSaveAllShopStore = () => {
+    scroller.scrollTo("shopStoreScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     dispatch(
       fetchSaveShopStore(
         user.token,
@@ -178,103 +195,105 @@ const ShopStoreContent = ({
     deletedCategory.length > 0
 
   return (
-    <PositionRelative
-      active={editShopStore}
-      siteProps={siteProps}
-      disabled={disabledEditButtons && !editShopStore}
-    >
-      {(companyShopStore.length > 0 || (isCompanyEditProfil && editMode)) && (
-        <>
-          <div>
-            <TitleRightColumnOpinion
-              siteProps={siteProps}
-              isCompanyEditProfil={editShopStore}
-            >
-              Stan sklepu
-            </TitleRightColumnOpinion>
-          </div>
-          {mapAllCategories}
-        </>
-      )}
-      {isCompanyEditProfil && editMode && editShopStore && (
-        <>
-          <ShopStoreContentAddCategory
-            handleClickContent={handleClickContent}
-            handleChangeNewCategory={handleChangeNewCategory}
-            handleAddNewCategory={handleAddNewCategory}
-            handleResetAddCategory={handleResetAddCategory}
-            handleClickAddCategory={handleClickAddCategory}
-            clickAddCategory={clickAddCategory}
-            newCategoryName={newCategoryName}
-          />
-          <ReactTooltip id="addItem" effect="float" multiline={true}>
-            <span>Dodaj przedmiot</span>
-          </ReactTooltip>
-          <ReactTooltip id="deleteCategory" effect="float" multiline={true}>
-            <span>Usuń całą kategorię</span>
-          </ReactTooltip>
-          <ReactTooltip id="editCategory" effect="float" multiline={true}>
-            <span>Edytuj nazwe kategorii</span>
-          </ReactTooltip>
-          {!clickAddCategory && (
-            <ReactTooltip
-              id="addNewCategoryShopStore"
-              effect="float"
-              multiline={true}
-            >
-              <span>Dodaj nową kategorie</span>
-            </ReactTooltip>
-          )}
-        </>
-      )}
-
-      {editMode && isCompanyEditProfil && !editShopStore ? (
-        <ButtonEditPosition>
-          <div data-tip data-for="disabledButton">
-            <ButtonIcon
-              title="Edytuj sklep"
-              uppercase
-              fontIconSize="25"
-              fontSize="14"
-              icon={<MdEdit />}
-              secondColors
-              onClick={handleClickEdit}
-              disabled={disabledEditButtons}
+    <Element name="shopStoreScrollElement" className="element">
+      <PositionRelative
+        active={editShopStore}
+        siteProps={siteProps}
+        disabled={disabledEditButtons && !editShopStore}
+      >
+        {(companyShopStore.length > 0 || (isCompanyEditProfil && editMode)) && (
+          <>
+            <div>
+              <TitleRightColumnOpinion
+                siteProps={siteProps}
+                isCompanyEditProfil={editShopStore}
+              >
+                Stan sklepu
+              </TitleRightColumnOpinion>
+            </div>
+            {mapAllCategories}
+          </>
+        )}
+        {isCompanyEditProfil && editMode && editShopStore && (
+          <>
+            <ShopStoreContentAddCategory
+              handleClickContent={handleClickContent}
+              handleChangeNewCategory={handleChangeNewCategory}
+              handleAddNewCategory={handleAddNewCategory}
+              handleResetAddCategory={handleResetAddCategory}
+              handleClickAddCategory={handleClickAddCategory}
+              clickAddCategory={clickAddCategory}
+              newCategoryName={newCategoryName}
             />
-          </div>
-        </ButtonEditPosition>
-      ) : (
-        isCompanyEditProfil && (
+            <ReactTooltip id="addItem" effect="float" multiline={true}>
+              <span>Dodaj przedmiot</span>
+            </ReactTooltip>
+            <ReactTooltip id="deleteCategory" effect="float" multiline={true}>
+              <span>Usuń całą kategorię</span>
+            </ReactTooltip>
+            <ReactTooltip id="editCategory" effect="float" multiline={true}>
+              <span>Edytuj nazwe kategorii</span>
+            </ReactTooltip>
+            {!clickAddCategory && (
+              <ReactTooltip
+                id="addNewCategoryShopStore"
+                effect="float"
+                multiline={true}
+              >
+                <span>Dodaj nową kategorie</span>
+              </ReactTooltip>
+            )}
+          </>
+        )}
+
+        {editMode && isCompanyEditProfil && !editShopStore ? (
           <ButtonEditPosition>
-            <MarginButton>
+            <div data-tip data-for="disabledButton">
               <ButtonIcon
-                title="Anuluj"
-                uppercase
-                fontIconSize="20"
-                fontSize="14"
-                icon={<FaArrowLeft />}
-                onClick={handleReset}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-              />
-            </MarginButton>
-            <MarginButton>
-              <ButtonIcon
-                title="Zapisz"
+                title="Edytuj sklep"
                 uppercase
                 fontIconSize="25"
                 fontSize="14"
-                icon={<MdSave />}
-                onClick={handleSaveAllShopStore}
-                customColorButton={Colors(siteProps).successColorDark}
-                customColorIcon={Colors(siteProps).successColor}
-                disabled={!disabledButtonSave}
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
               />
-            </MarginButton>
+            </div>
           </ButtonEditPosition>
-        )
-      )}
-    </PositionRelative>
+        ) : (
+          isCompanyEditProfil && (
+            <ButtonEditPosition>
+              <MarginButton>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  onClick={handleReset}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </MarginButton>
+              <MarginButton>
+                <ButtonIcon
+                  title="Zapisz"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="14"
+                  icon={<MdSave />}
+                  onClick={handleSaveAllShopStore}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={!disabledButtonSave}
+                />
+              </MarginButton>
+            </ButtonEditPosition>
+          )
+        )}
+      </PositionRelative>
+    </Element>
   )
 }
 export default ShopStoreContent

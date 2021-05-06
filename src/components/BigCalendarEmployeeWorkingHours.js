@@ -296,10 +296,7 @@ const BigCalendarEmployeeWorkingHours = ({
     label: new Date().getFullYear(),
   })
 
-  const [monthPicker, setMonthPicker] = useState({
-    value: 1,
-    label: "Styczeń",
-  })
+  const [monthPicker, setMonthPicker] = useState(null)
 
   useEffect(() => {
     const newDate = new Date(
@@ -636,17 +633,17 @@ const BigCalendarEmployeeWorkingHours = ({
           dateCalendar.getMonth(),
           dateCalendar.getDate() + plusDaysValid
         )
-      } else if (isValidNextMonth) {
+      } else if (!isValidNextMonth) {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
-          0
+          1
         )
       } else {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
-          1
+          0
         )
       }
       setDateCalendar(newDate)

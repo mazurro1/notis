@@ -545,11 +545,11 @@ const WorkerUsersInformationItem = ({
         workerName = Buffer.from(
           item.workerWhoWritedUserId.name,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
         workerSurname = Buffer.from(
           item.workerWhoWritedUserId.surname,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
       }
       const dateMessage = new Date(item.dateMessage)
       const renderDate = `${
@@ -609,11 +609,11 @@ const WorkerUsersInformationItem = ({
           const workerName = Buffer.from(
             reserwation.toWorkerUserId.name,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
           const workerSurname = Buffer.from(
             reserwation.toWorkerUserId.surname,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
           console.log(reserwation)
           const splitReserwationDate = reserwation.dateStart.split(":")
           const splitReserwationDateEnd = reserwation.dateEnd.split(":")
@@ -689,9 +689,9 @@ const WorkerUsersInformationItem = ({
   let userName = "Brak użytkownika"
   let userSurname = ""
   if (!!userInfo.userId) {
-    userName = Buffer.from(userInfo.userId.name, "base64").toString("ascii")
+    userName = Buffer.from(userInfo.userId.name, "base64").toString("utf-8")
     userSurname = Buffer.from(userInfo.userId.surname, "base64").toString(
-      "ascii"
+      "utf-8"
     )
   }
 

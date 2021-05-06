@@ -29,7 +29,7 @@ const Sort = ({ enableMaps }) => {
       isLoading={sortDataLoading}
       placeholder="Sortuj"
       closeMenuOnSelect
-      width="250px"
+      width="auto"
       deleteItem={false}
       isDisabled={enableMaps}
     />

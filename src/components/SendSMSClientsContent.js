@@ -97,9 +97,9 @@ const SendSMSClientsContent = ({ clients, siteProps, user }) => {
   const filterClients = []
   clients.forEach(item => {
     if (!!!item.isBlocked && !!item.userId) {
-      const userName = Buffer.from(item.userId.name, "base64").toString("ascii")
+      const userName = Buffer.from(item.userId.name, "base64").toString("utf-8")
       const userSurname = Buffer.from(item.userId.surname, "base64").toString(
-        "ascii"
+        "utf-8"
       )
 
       const itemClient = {

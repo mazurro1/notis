@@ -8,6 +8,7 @@ import HappyHoursConstContentNewItem from "./HappyHoursConstContentNewItem"
 import HappyHoursConstContentCategory from "./HappyHoursConstContentCategory"
 import { useDispatch, useSelector } from "react-redux"
 import { updateConstHappyHoursFunction } from "../../state/actions"
+import { Element, scroller } from "react-scroll"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -66,12 +67,23 @@ const HappyHoursConstContent = ({
   }, [happyHoursConst, editMode, updateConstHappyHours]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {
+    scroller.scrollTo("happyHoursScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     setEditConstHappyHours(prevState => !prevState)
   }
 
   const handleReset = () => {
     setEditConstHappyHours(false)
+
+    scroller.scrollTo("happyHoursScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleAddItem = () => {
@@ -95,79 +107,83 @@ const HappyHoursConstContent = ({
   })
 
   return (
-    <PositionRelative active={newHappyHour || enableTimeStart || enableTimeEnd}>
-      <TitleRightColumn
-        isCompanyEditProfil={editConstHappyHours}
-        siteProps={siteProps}
+    <Element name="happyHoursScrollElement" className="element">
+      <PositionRelative
+        active={newHappyHour || enableTimeStart || enableTimeEnd}
       >
-        Happy Hours
-      </TitleRightColumn>
-      {mapCategories}
-      <ItemsAddHappyHour>
-        {editConstHappyHours && (
-          <ButtonIcon
-            title="Dodaj happy hour"
-            uppercase
-            fontIconSize="25"
-            fontSize="14"
-            icon={<MdAddBox />}
-            secondColors
-            onClick={handleAddItem}
-          />
-        )}
-      </ItemsAddHappyHour>
-      {isCompanyEditProfil && !editConstHappyHours ? (
-        <ButtonEditPosition>
-          <div data-tip data-for="disabledButton">
+        <TitleRightColumn
+          isCompanyEditProfil={editConstHappyHours}
+          siteProps={siteProps}
+        >
+          Happy Hours
+        </TitleRightColumn>
+        {mapCategories}
+        <ItemsAddHappyHour>
+          {editConstHappyHours && (
             <ButtonIcon
-              title="Edytuj happy hours"
+              title="Dodaj happy hour"
               uppercase
               fontIconSize="25"
               fontSize="14"
-              icon={<MdEdit />}
+              icon={<MdAddBox />}
               secondColors
-              onClick={handleClickEdit}
-              disabled={disabledEditButtons}
+              onClick={handleAddItem}
             />
-          </div>
-        </ButtonEditPosition>
-      ) : (
-        isCompanyEditProfil && (
+          )}
+        </ItemsAddHappyHour>
+        {isCompanyEditProfil && !editConstHappyHours ? (
           <ButtonEditPosition>
-            <MarginButton>
+            <div data-tip data-for="disabledButton">
               <ButtonIcon
-                title="Zakończ edytowanie"
+                title="Edytuj happy hours"
                 uppercase
-                fontIconSize="20"
+                fontIconSize="25"
                 fontSize="14"
-                icon={<FaArrowLeft />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleReset}
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
               />
-            </MarginButton>
+            </div>
           </ButtonEditPosition>
-        )
-      )}
-      {isCompanyEditProfil && (
-        <>
-          <HappyHoursConstContentNewItem
-            siteProps={siteProps}
-            TitleRightColumn={TitleRightColumn}
-            editConstHappyHours={editConstHappyHours}
-            newHappyHour={newHappyHour}
-            setNewHappyHour={setNewHappyHour}
-            enableTimeStart={enableTimeStart}
-            setEnableTimeStart={setEnableTimeStart}
-            setEnableTimeEnd={setEnableTimeEnd}
-            enableTimeEnd={enableTimeEnd}
-            companyServices={companyServices}
-            user={user}
-            happyHoursConst={happyHoursConst}
-          />
-        </>
-      )}
-    </PositionRelative>
+        ) : (
+          isCompanyEditProfil && (
+            <ButtonEditPosition>
+              <MarginButton>
+                <ButtonIcon
+                  title="Zakończ edytowanie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleReset}
+                />
+              </MarginButton>
+            </ButtonEditPosition>
+          )
+        )}
+        {isCompanyEditProfil && (
+          <>
+            <HappyHoursConstContentNewItem
+              siteProps={siteProps}
+              TitleRightColumn={TitleRightColumn}
+              editConstHappyHours={editConstHappyHours}
+              newHappyHour={newHappyHour}
+              setNewHappyHour={setNewHappyHour}
+              enableTimeStart={enableTimeStart}
+              setEnableTimeStart={setEnableTimeStart}
+              setEnableTimeEnd={setEnableTimeEnd}
+              enableTimeEnd={enableTimeEnd}
+              companyServices={companyServices}
+              user={user}
+              happyHoursConst={happyHoursConst}
+            />
+          </>
+        )}
+      </PositionRelative>
+    </Element>
   )
 }
 export default HappyHoursConstContent

@@ -515,17 +515,17 @@ const BigCalendarWorkerHoursAutoSave = ({
           dateCalendar.getMonth(),
           dateCalendar.getDate() + plusDaysValid
         )
-      } else if (isValidNextMonth) {
+      } else if (!isValidNextMonth) {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
-          0
+          1
         )
       } else {
         newDate = new Date(
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1,
-          1
+          0
         )
       }
       setDateCalendar(newDate)

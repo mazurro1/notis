@@ -84,6 +84,11 @@ const AllAlerts = styled.div`
   max-width: 70vw;
   background-color: ${props => Colors(props.siteProps).navBackground};
   padding: 5px;
+
+  @media all and (max-width: 767px) {
+    max-width: 80vw;
+    right: -50px;
+  }
 `
 
 const ContentAllAlerts = styled.div`
@@ -139,7 +144,7 @@ const AlertItemStyle = styled.div`
   }
 `
 
-const BellAlerts = ({ siteProps, user }) => {
+const BellAlerts = ({ siteProps, user, isMobileSize }) => {
   const [allAlerts, setAllAlerts] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0)
   const [pageUpdate, setPageUpdate] = useState(1)
@@ -231,9 +236,11 @@ const BellAlerts = ({ siteProps, user }) => {
 
   return (
     <PositionRelative ref={refBell}>
-      <ReactTooltip id="showAlerts" effect="float" multiline={true}>
-        <span>Powiadomienia</span>
-      </ReactTooltip>
+      {!isMobileSize && (
+        <ReactTooltip id="showAlerts" effect="float" multiline={true}>
+          <span>Powiadomienia</span>
+        </ReactTooltip>
+      )}
       <BellAlertsStyle
         siteProps={siteProps}
         onClick={handleClickAlertVisible}

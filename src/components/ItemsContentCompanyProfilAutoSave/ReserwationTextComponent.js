@@ -5,6 +5,7 @@ import ColumnItemTextarea from "./ColumnItemTextarea"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import styled from "styled-components"
+import { Element, scroller } from "react-scroll"
 
 const MarginTopReserwation = styled.div`
   margin-top: 30px;
@@ -35,9 +36,19 @@ const ReserwationTextComponent = ({
 
   const handleEdit = setChange => {
     setChange(prevState => !prevState)
+    scroller.scrollTo("reserwationScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleSaveChangesAboutUs = textAboutUsToSave => {
+    scroller.scrollTo("reserwationScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     dispatch(
       fetchSaveTextsCompany(
         user.token,
@@ -57,39 +68,41 @@ const ReserwationTextComponent = ({
         active={editedReserwation}
         disabledEditButtons={disabledEditButtons}
       >
-        <ColumnItemTextarea
-          titleColumnItem="ZASADY REZERWACJI"
-          TitleRightColumn={TitleRightColumn}
-          ParagraphRightColumn={ParagraphRightColumn}
-          title={company.reserationText}
-          onClickEdit={() => handleEdit(setEditedReserwation)}
-          setTextEditedChange={setTextReserwation}
-          textEdited={textReserwation}
-          siteProps={siteProps}
-          isCompanyEditProfil={editedReserwation}
-          editable={editedReserwation}
-          handleSaveTextarea={handleSaveChangesAboutUs}
-          editMode={editMode}
-        />
-        {isCompanyEditProfil && (
-          <ButtonEditPosition>
-            <div data-tip data-for="disabledButton">
-              <ButtonIcon
-                title="Edytuj tekst"
-                uppercase
-                fontIconSize="25"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                onClick={() => {
-                  handleResetAllEditedComponents()
-                  handleEdit(setEditedReserwation)
-                }}
-                disabled={disabledEditButtons}
-              />
-            </div>
-          </ButtonEditPosition>
-        )}
+        <Element name="reserwationScrollElement" className="element">
+          <ColumnItemTextarea
+            titleColumnItem="ZASADY REZERWACJI"
+            TitleRightColumn={TitleRightColumn}
+            ParagraphRightColumn={ParagraphRightColumn}
+            title={company.reserationText}
+            onClickEdit={() => handleEdit(setEditedReserwation)}
+            setTextEditedChange={setTextReserwation}
+            textEdited={textReserwation}
+            siteProps={siteProps}
+            isCompanyEditProfil={editedReserwation}
+            editable={editedReserwation}
+            handleSaveTextarea={handleSaveChangesAboutUs}
+            editMode={editMode}
+          />
+          {isCompanyEditProfil && (
+            <ButtonEditPosition>
+              <div data-tip data-for="disabledButton">
+                <ButtonIcon
+                  title="Edytuj tekst"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="14"
+                  icon={<MdEdit />}
+                  secondColors
+                  onClick={() => {
+                    handleResetAllEditedComponents()
+                    handleEdit(setEditedReserwation)
+                  }}
+                  disabled={disabledEditButtons}
+                />
+              </div>
+            </ButtonEditPosition>
+          )}
+        </Element>
       </RightColumnItem>
     </MarginTopReserwation>
   )

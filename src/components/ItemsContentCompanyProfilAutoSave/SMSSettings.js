@@ -7,6 +7,7 @@ import { Colors } from "../../common/Colors"
 import { useDispatch } from "react-redux"
 import { Checkbox } from "react-input-checkbox"
 import { fetchSaveCompanySMS } from "../../state/actions"
+import { Element, scroller } from "react-scroll"
 
 const MarginButton = styled.div`
   margin-left: 5px;
@@ -95,6 +96,12 @@ const SMSSettings = ({
   const handleClickEdit = () => {
     handleResetAllEditedComponents()
     setEditSMSSettngs(prevState => !prevState)
+
+    scroller.scrollTo("smsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleResetValues = () => {
@@ -103,6 +110,12 @@ const SMSSettings = ({
     setCompanySMSCanceledAvaible(smsCanceledAvaible)
     setCompanySMSChangedAvaible(smsChangedAvaible)
     setEditSMSSettngs(false)
+
+    scroller.scrollTo("smsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
   }
 
   const handleChangeCheckbox = () => {
@@ -122,6 +135,11 @@ const SMSSettings = ({
   }
 
   const handleSaveCompanySMSSettings = () => {
+    scroller.scrollTo("smsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     dispatch(
       fetchSaveCompanySMS(
         user.token,
@@ -135,202 +153,198 @@ const SMSSettings = ({
   }
 
   return (
-    <>
-      <>
-        <TitleRightColumn
-          isCompanyEditProfil={editSMSSettngs}
-          siteProps={siteProps}
-        >
-          Ustawienia SMS
-        </TitleRightColumn>
-        <TextInfoCheckbox
-          siteProps={siteProps}
-          edited={editSMSSettngs}
-          active={companySMSReserwationAvaible}
-          noMargin
-        >
-          Wiadomość sms <span>zostanie wysłana</span> podczas, gdy{" "}
-          <span>proces rezerwacji dokona się pozytywnie</span>.
-          {editSMSSettngs && (
-            <>
-              Podczas próby wysłania konto zostanie obciążone o 1 SMS-a z konta
-              firmowego, o ile saldo SMS-ów jest dodatnie.
-            </>
-          )}
-        </TextInfoCheckbox>
+    <Element name="smsScrollElement" className="element">
+      <TitleRightColumn
+        isCompanyEditProfil={editSMSSettngs}
+        siteProps={siteProps}
+      >
+        Ustawienia SMS
+      </TitleRightColumn>
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSReserwationAvaible}
+        noMargin
+      >
+        Wiadomość sms <span>zostanie wysłana</span> podczas, gdy{" "}
+        <span>proces rezerwacji dokona się pozytywnie</span>.
         {editSMSSettngs && (
-          <CheckboxStyle siteProps={siteProps}>
-            <Checkbox
-              theme="material-checkbox"
-              value={companySMSReserwationAvaible}
-              onChange={handleChangeCheckbox}
-            >
-              <TextCheckbox>
-                {!companySMSReserwationAvaible
-                  ? "Usługa wyłączona"
-                  : "Usługa włączona"}
-              </TextCheckbox>
-            </Checkbox>
-          </CheckboxStyle>
+          <>
+            Podczas próby wysłania konto zostanie obciążone o 1 SMS-a z konta
+            firmowego, o ile saldo SMS-ów jest dodatnie.
+          </>
         )}
-        <TextInfoCheckbox
-          siteProps={siteProps}
-          edited={editSMSSettngs}
-          active={companySMSNotifactionAvaible}
-        >
-          Wiadomość sms{" "}
-          <span>zostanie wysłana 1 dzień przed umówioną wizytą</span> około
-          <span> godziny 12</span>.
-          {editSMSSettngs && (
-            <>
-              {" "}
-              Jeżeli wizyta jest w tym samym dniu to sms nie wyśle się. Podczas
-              próby wysłania konto zostanie obciążone o 1 SMS-a z konta
-              firmowego, o ile saldo SMS-ów jest dodatnie.
-            </>
-          )}
-        </TextInfoCheckbox>
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSReserwationAvaible}
+            onChange={handleChangeCheckbox}
+          >
+            <TextCheckbox>
+              {!companySMSReserwationAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSNotifactionAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>zostanie wysłana 1 dzień przed umówioną wizytą</span> około
+        <span> godziny 12</span>.
         {editSMSSettngs && (
-          <CheckboxStyle siteProps={siteProps}>
-            <Checkbox
-              theme="material-checkbox"
-              value={companySMSNotifactionAvaible}
-              onChange={handleChangeCheckboxNotifaction}
-            >
-              <TextCheckbox>
-                {!companySMSNotifactionAvaible
-                  ? "Usługa wyłączona"
-                  : "Usługa włączona"}
-              </TextCheckbox>
-            </Checkbox>
-          </CheckboxStyle>
+          <>
+            {" "}
+            Jeżeli wizyta jest w tym samym dniu to sms nie wyśle się. Podczas
+            próby wysłania konto zostanie obciążone o 1 SMS-a z konta firmowego,
+            o ile saldo SMS-ów jest dodatnie.
+          </>
         )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSNotifactionAvaible}
+            onChange={handleChangeCheckboxNotifaction}
+          >
+            <TextCheckbox>
+              {!companySMSNotifactionAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
 
-        <TextInfoCheckbox
-          siteProps={siteProps}
-          edited={editSMSSettngs}
-          active={companySMSChangedAvaible}
-        >
-          Wiadomość sms{" "}
-          <span>
-            zostanie wysłana podczas zmiany rezerwacji przez
-            pracownika/pracodawce
-          </span>
-          {editSMSSettngs && (
-            <>
-              {" "}
-              Jeżeli wizyta zostanie zmieniona przez pracownika lub pracodawce
-              firmy, to użytkownik otrzyma wiadomość SMS o zmianie statusu
-              rezerwacji.
-            </>
-          )}
-        </TextInfoCheckbox>
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSChangedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas zmiany rezerwacji przez pracownika/pracodawce
+        </span>
         {editSMSSettngs && (
-          <CheckboxStyle siteProps={siteProps}>
-            <Checkbox
-              theme="material-checkbox"
-              value={companySMSChangedAvaible}
-              onChange={handleChangeCheckboxChanged}
-            >
-              <TextCheckbox>
-                {!companySMSChangedAvaible
-                  ? "Usługa wyłączona"
-                  : "Usługa włączona"}
-              </TextCheckbox>
-            </Checkbox>
-          </CheckboxStyle>
+          <>
+            {" "}
+            Jeżeli wizyta zostanie zmieniona przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS o zmianie statusu
+            rezerwacji.
+          </>
         )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSChangedAvaible}
+            onChange={handleChangeCheckboxChanged}
+          >
+            <TextCheckbox>
+              {!companySMSChangedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
 
-        <TextInfoCheckbox
-          siteProps={siteProps}
-          edited={editSMSSettngs}
-          active={companySMSCanceledAvaible}
-        >
-          Wiadomość sms{" "}
-          <span>
-            zostanie wysłana podczas anulowania rezerwacji przez
-            pracownika/pracodawce
-          </span>
-          {editSMSSettngs && (
-            <>
-              {" "}
-              Jeżeli wizyta zostanie anulowana przez pracownika lub pracodawce
-              firmy, to użytkownik otrzyma wiadomość SMS o anulowaniu
-              rezerwacji.
-            </>
-          )}
-        </TextInfoCheckbox>
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSCanceledAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas anulowania rezerwacji przez
+          pracownika/pracodawce
+        </span>
         {editSMSSettngs && (
-          <CheckboxStyle siteProps={siteProps}>
-            <Checkbox
-              theme="material-checkbox"
-              value={companySMSCanceledAvaible}
-              onChange={handleChangeCheckboxCanceled}
-            >
-              <TextCheckbox>
-                {!companySMSCanceledAvaible
-                  ? "Usługa wyłączona"
-                  : "Usługa włączona"}
-              </TextCheckbox>
-            </Checkbox>
-          </CheckboxStyle>
+          <>
+            {" "}
+            Jeżeli wizyta zostanie anulowana przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS o anulowaniu rezerwacji.
+          </>
         )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSCanceledAvaible}
+            onChange={handleChangeCheckboxCanceled}
+          >
+            <TextCheckbox>
+              {!companySMSCanceledAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
 
-        {isCompanyEditProfil ? (
-          editSMSSettngs ? (
-            <>
-              <ButtonEditPosition>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Cofnij"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).dangerColorDark}
-                    customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleResetValues}
-                  />
-                </MarginButton>
-                <MarginButton>
-                  <ButtonIcon
-                    title="Zapisz"
-                    uppercase
-                    fontIconSize="16"
-                    fontSize="14"
-                    icon={<FaSave />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleSaveCompanySMSSettings}
-                    disabled={
-                      smsReserwationAvaible === companySMSReserwationAvaible &&
-                      smsNotifactionAvaible === companySMSNotifactionAvaible &&
-                      smsCanceledAvaible === companySMSCanceledAvaible &&
-                      smsChangedAvaible === companySMSChangedAvaible
-                    }
-                  />
-                </MarginButton>
-              </ButtonEditPosition>
-            </>
-          ) : (
+      {isCompanyEditProfil ? (
+        editSMSSettngs ? (
+          <>
             <ButtonEditPosition>
-              <div data-tip data-for="disabledButton">
+              <MarginButton>
                 <ButtonIcon
-                  title="Edytuj ustawienia sms"
+                  title="Cofnij"
                   uppercase
-                  fontIconSize="25"
+                  fontIconSize="16"
                   fontSize="14"
-                  icon={<MdEdit />}
-                  secondColors
-                  onClick={handleClickEdit}
-                  disabled={disabledEditButtons}
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleResetValues}
                 />
-              </div>
+              </MarginButton>
+              <MarginButton>
+                <ButtonIcon
+                  title="Zapisz"
+                  uppercase
+                  fontIconSize="16"
+                  fontSize="14"
+                  icon={<FaSave />}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  onClick={handleSaveCompanySMSSettings}
+                  disabled={
+                    smsReserwationAvaible === companySMSReserwationAvaible &&
+                    smsNotifactionAvaible === companySMSNotifactionAvaible &&
+                    smsCanceledAvaible === companySMSCanceledAvaible &&
+                    smsChangedAvaible === companySMSChangedAvaible
+                  }
+                />
+              </MarginButton>
             </ButtonEditPosition>
-          )
-        ) : null}
-      </>
-    </>
+          </>
+        ) : (
+          <ButtonEditPosition>
+            <div data-tip data-for="disabledButton">
+              <ButtonIcon
+                title="Edytuj ustawienia sms"
+                uppercase
+                fontIconSize="25"
+                fontSize="14"
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
+              />
+            </div>
+          </ButtonEditPosition>
+        )
+      ) : null}
+    </Element>
   )
 }
 export default SMSSettings

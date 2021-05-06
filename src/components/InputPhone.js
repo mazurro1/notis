@@ -27,7 +27,8 @@ const PanFieldStyle = styled(PinField)`
   outline: none;
   text-align: center;
   margin: 1px;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-family: "Poppins-Medium", sans-serif;
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;

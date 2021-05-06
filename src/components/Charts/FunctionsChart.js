@@ -54,12 +54,12 @@ export const chartErnings = (companyStats, companyName, isAdmin) => {
       const userSurname = Buffer.from(
         state.toWorkerUserId.surname,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
 
       const userName = Buffer.from(
         state.toWorkerUserId.name,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
       const dateToChar = {
         allCosts: state.costReserwation,
         countReserwations: 1,
@@ -176,12 +176,12 @@ export const chartResState = (companyStats, companyName, isAdmin) => {
       const userSurname = Buffer.from(
         state.toWorkerUserId.surname,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
 
       const userName = Buffer.from(
         state.toWorkerUserId.name,
         "base64"
-      ).toString("ascii")
+      ).toString("utf-8")
 
       const dateToChar = {
         countReserwations: 1,

@@ -64,6 +64,8 @@ const IconStyle = styled.div`
       : Colors(props.siteProps).primaryColor};
   transform: ${props =>
     props.mouseOn ? `scale(${props.numberScale})` : "scale(1)"};
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   transition-property: transform, background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease-in-out;

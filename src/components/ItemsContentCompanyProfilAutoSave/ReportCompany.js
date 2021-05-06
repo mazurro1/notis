@@ -27,7 +27,12 @@ const StyledSelect = styled.div`
   margin-bottom: 150px;
 `
 
-const ReportCompany = ({ siteProps, user, company }) => {
+const ReportCompany = ({
+  siteProps,
+  user,
+  company,
+  disabledEditButtons = false,
+}) => {
   const [reportActive, setReportActive] = useState(false)
   const [selectedReport, setSelectedReport] = useState(null)
 
@@ -54,16 +59,19 @@ const ReportCompany = ({ siteProps, user, company }) => {
 
   return (
     <StyledReport>
-      <ButtonIcon
-        title="Zgłoś firmę"
-        uppercase
-        fontIconSize="20"
-        fontSize="16"
-        icon={<MdReport />}
-        customColorButton={Colors(siteProps).dangerColorDark}
-        customColorIcon={Colors(siteProps).dangerColor}
-        onClick={handleClickReport}
-      />
+      <div data-tip data-for="disabledButton">
+        <ButtonIcon
+          title="Zgłoś firmę"
+          uppercase
+          fontIconSize="20"
+          fontSize="16"
+          icon={<MdReport />}
+          customColorButton={Colors(siteProps).dangerColorDark}
+          customColorIcon={Colors(siteProps).dangerColor}
+          onClick={handleClickReport}
+          disabled={disabledEditButtons}
+        />
+      </div>
 
       <Popup
         popupEnable={reportActive && !!user}

@@ -20,9 +20,11 @@ import { MdExpandMore } from "react-icons/md"
 import { Colors } from "../common/Colors"
 
 const WrapperNavigationUnder = styled.div`
-  position: absolute;
+  /* position: absolute; */
+  position: relative;
   z-index: 90;
-  top: 70px;
+  /* top: 70px; */
+  margin-top: 70px;
   left: 0;
   right: 0;
   background-color: ${props => Colors(props.siteProps).navDownBackground};
@@ -172,70 +174,66 @@ const UnderMenu = ({ isMainPage }) => {
 
   return (
     <div>
-      {!!isMainPage && (
-        <div>
-          {/* <CSSTransition
+      <CSSTransition
         in={isMainPage}
-        timeout={400}
+        timeout={0}
         classNames="opacitySpinner"
         unmountOnExit
-      > */}
-          <WrapperNavigationUnder
-            siteProps={siteProps}
-            active={visibleMenuIndustries}
-            isMainPage={isMainPage}
-            heightPadding={heightMenuIndustries}
-            topNavVisibleMenu={topNavVisibleMenu}
-          >
-            <NavigationDiv>
-              <AllInputs>
-                <ButtonTakeData
-                  setResetText={() => {
-                    dispatch(changeSelectedNameMenu(""))
-                  }}
-                  resetTextEnable={!!selectedNameMenu}
-                  icon={<FaSearch />}
-                  text={
-                    !!selectedNameMenu
-                      ? selectedNameMenu
-                      : "Znajdz ulubione miejsce..."
+      >
+        <WrapperNavigationUnder
+          siteProps={siteProps}
+          active={visibleMenuIndustries}
+          isMainPage={isMainPage}
+          heightPadding={heightMenuIndustries}
+          topNavVisibleMenu={topNavVisibleMenu}
+        >
+          <NavigationDiv>
+            <AllInputs>
+              <ButtonTakeData
+                setResetText={() => {
+                  dispatch(changeSelectedNameMenu(""))
+                }}
+                resetTextEnable={!!selectedNameMenu}
+                icon={<FaSearch />}
+                text={
+                  !!selectedNameMenu
+                    ? selectedNameMenu
+                    : "Znajdz ulubione miejsce..."
+                }
+                onClick={handleClickTakePlace}
+              />
+            </AllInputs>
+            <UnderMenuIndustries ref={refUnderMenuIndustries}>
+              <PaddingRight>
+                <ButtonIconStyles
+                  active={industries === null}
+                  siteProps={siteProps}
+                  onClick={() => handleChangeIndustries(null)}
+                >
+                  {Translates[siteProps.language].buttons.all}
+                </ButtonIconStyles>
+              </PaddingRight>
+              {mapIndustries}
+              <ButtonShowMore>
+                <ButtonIcon
+                  title={
+                    isMobileSize
+                      ? "Wybierz specializacje"
+                      : visibleMenuIndustries
+                      ? "Pokaż mniej"
+                      : "Pokaż więcej"
                   }
-                  onClick={handleClickTakePlace}
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdExpandMore />}
+                  onClick={handleClickMenuIndustries}
                 />
-              </AllInputs>
-              <UnderMenuIndustries ref={refUnderMenuIndustries}>
-                <PaddingRight>
-                  <ButtonIconStyles
-                    active={industries === null}
-                    siteProps={siteProps}
-                    onClick={() => handleChangeIndustries(null)}
-                  >
-                    {Translates[siteProps.language].buttons.all}
-                  </ButtonIconStyles>
-                </PaddingRight>
-                {mapIndustries}
-                <ButtonShowMore>
-                  <ButtonIcon
-                    title={
-                      isMobileSize
-                        ? "Wybierz specializacje"
-                        : visibleMenuIndustries
-                        ? "Pokaż mniej"
-                        : "Pokaż więcej"
-                    }
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="15"
-                    icon={<MdExpandMore />}
-                    onClick={handleClickMenuIndustries}
-                  />
-                </ButtonShowMore>
-              </UnderMenuIndustries>
-            </NavigationDiv>
-          </WrapperNavigationUnder>
-          {/* </CSSTransition> */}
-        </div>
-      )}
+              </ButtonShowMore>
+            </UnderMenuIndustries>
+          </NavigationDiv>
+        </WrapperNavigationUnder>
+      </CSSTransition>
     </div>
   )
 }

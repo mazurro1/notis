@@ -50,11 +50,11 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
         const userName = Buffer.from(
           userCompany.userId.name,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
         const userSurname = Buffer.from(
           userCompany.userId.surname,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
         const isInThisName = `${userName.toLowerCase()} ${userSurname.toLowerCase()}`.includes(
           filterUsers.toLowerCase()
         )

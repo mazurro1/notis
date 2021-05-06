@@ -341,16 +341,18 @@ const GalleryContent = ({
           )}
           {editMode && isAdmin && isCompanyEditProfil && (
             <ButtonTextPositionMap>
-              <ButtonIcon
-                title="Edytuj galerie"
-                uppercase
-                fontIconSize="40"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                disabled={disabledEditButtons}
-                onClick={handleEditGalery}
-              />
+              <div data-tip data-for="disabledButton">
+                <ButtonIcon
+                  title="Edytuj galerie"
+                  uppercase
+                  fontIconSize="40"
+                  fontSize="14"
+                  icon={<MdEdit />}
+                  secondColors
+                  disabled={disabledEditButtons}
+                  onClick={handleEditGalery}
+                />
+              </div>
             </ButtonTextPositionMap>
           )}
           {isAdmin && (

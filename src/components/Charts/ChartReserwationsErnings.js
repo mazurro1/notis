@@ -110,12 +110,12 @@ const ChartReserwationsErnings = ({
         const userSurname = Buffer.from(
           state.toWorkerUserId.surname,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
 
         const userName = Buffer.from(
           state.toWorkerUserId.name,
           "base64"
-        ).toString("ascii")
+        ).toString("utf-8")
 
         const dateToChar = {
           allCosts: state.costReserwation,

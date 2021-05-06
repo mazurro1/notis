@@ -67,7 +67,7 @@ const PositionCompanyLink = styled.div`
 const PositionCompanyFavDelete = styled.div`
   position: absolute;
   right: 0px;
-  top: 0px;
+  bottom: -5px;
   border-radius: 5px;
   font-size: 1.8rem;
   padding: 8px;
@@ -83,7 +83,7 @@ const PositionCompanyFavDelete = styled.div`
   }
   @media all and (max-width: ${Site.mobileSize + "px"}) {
     top: auto;
-    bottom: 0px;
+    bottom: -5px;
   }
 `
 

@@ -159,6 +159,13 @@ const UnderMenuServices = styled.div`
   margin-bottom: 10px;
 `
 
+const InServiceTitle = styled.div`
+  width: 100%;
+  font-family: "Poppins-Bold", sans-serif;
+  font-size: 1rem;
+  margin-bottom: 5px;
+`
+
 const OpinionMainDiv = styled.div`
   position: absolute;
   right: 0;
@@ -270,7 +277,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
           <ButtonIcon
             title={
               isInServicesFilterSome
-                ? `W usługach znajduje się: ${filterService.serviceName}`
+                ? `${filterService.serviceName}`
                 : "Brak w usługach"
             }
             fontSize="13"
@@ -287,7 +294,10 @@ const PlacesItem = ({ item, filters, index, user }) => {
       classNames="popup"
       unmountOnExit
     >
-      <UnderMenuServices>{mapFilteredServices}</UnderMenuServices>
+      <UnderMenuServices>
+        <InServiceTitle>W usługach znajduje się: </InServiceTitle>
+        {mapFilteredServices}
+      </UnderMenuServices>
     </CSSTransition>
   )
 

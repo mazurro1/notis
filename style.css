@@ -54,6 +54,16 @@ body {
   font-size: 1rem;
   margin: 0 !important;
 }
+/* @media all and (max-width: 767px) {
+  body {
+    font-family: "Poppins-Regular", sans-serif;
+    color: var(--mainBlack);
+    background: var(--mainWhite);
+    line-height: 1.4;
+    font-size: 0.9rem;
+    margin: 0 !important;
+  }
+} */
 h1,
 h2,
 h3,

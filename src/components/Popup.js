@@ -20,6 +20,10 @@ const TitlePagePopup = styled.div`
   padding-right: 35px;
   overflow: hidden;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2) inset;
+
+  @media all and (max-width: 767px) {
+    font-size: ${props => (props.smallTitle ? "1.0rem" : "1.2rem")};
+  }
 `
 
 const PopupWindow = styled.div`

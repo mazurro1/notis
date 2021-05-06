@@ -19,12 +19,14 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  padding-top: ${props =>
+  /* padding-top: ${props =>
     props.topNavVisibleMenu
       ? props.active
         ? `${props.heightMenuIndustries + 170}px`
         : "207px"
-      : "70px"};
+      : "70px"}; */
+
+  padding-top: ${props => (props.topNavVisibleMenu ? "0px" : "70px")};
   transition-property: padding-top;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -50,6 +52,7 @@ const ScrollUp = styled.div`
   align-items: center;
   font-size: 2.4rem;
   cursor: pointer;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
   transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: linear;
@@ -81,6 +84,7 @@ const ScrollGoBack = styled.div`
   align-items: center;
   font-size: 2.4rem;
   cursor: pointer;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
   transition-property: background-color, color;
   transition-duration: 0.3s;
   transition-timing-function: linear;

@@ -25,6 +25,9 @@ import ShopStoreContent from "./ItemsContentCompanyProfilAutoSave/ShopStoreConte
 import SMSSettings from "./ItemsContentCompanyProfilAutoSave/SMSSettings"
 import sal from "sal.js"
 import ReportCompany from "./ItemsContentCompanyProfilAutoSave/ReportCompany"
+import { Site } from "../common/Site"
+import UseWindowSize from "../common/UseWindowSize"
+import CompanyLink from "./ItemsContentCompanyProfilAutoSave/CompanyLink"
 
 const TextH1 = styled.div`
   position: relative;
@@ -45,9 +48,16 @@ const TextH1 = styled.div`
       ? Colors(props.siteProps).secondColor
       : Colors(props.siteProps).primaryColor};
 
+  margin-right: 100px;
   transition-property: color, background-color;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+  @media all and (max-width: 767px) {
+    & {
+      letter-spacing: 0.15rem;
+      font-size: 1.4rem;
+    }
+  }
 `
 
 const ContentDiv = styled.div`
@@ -159,6 +169,11 @@ const EditModeToChange = styled.div`
     background-color: ${props =>
       props.disabled ? "#e0e0e0" : Colors(props.siteProps).secondColor};
   }
+  @media all and (max-width: 767px) {
+    & {
+      font-size: 1.1rem;
+    }
+  }
 `
 
 const CompanyPremiumInformation = styled.div`
@@ -193,6 +208,7 @@ const ContentCompanyProfilAutoSave = ({
   const [editedWorkers, setEditedWorkers] = useState(false)
   const [editedReserwation, setEditedReserwation] = useState(false)
   const [editLinks, setEditLinks] = useState(false)
+  const [editCompanyLink, setEditCompanyLink] = useState(false)
   const [editConstHappyHours, setEditConstHappyHours] = useState(false)
   const [editPromotions, setEditPromotions] = useState(false)
   const [editMap, setEditMap] = useState(false)
@@ -203,6 +219,9 @@ const ContentCompanyProfilAutoSave = ({
   const user = useSelector(state => state.user)
   const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
+  const size = UseWindowSize()
+
+  const isMobileSize = Site.mobileSize >= size.width
 
   useEffect(() => {
     setEditShopStore(false)
@@ -225,6 +244,7 @@ const ContentCompanyProfilAutoSave = ({
     editedWorkers ||
     editedReserwation ||
     editLinks ||
+    editCompanyLink ||
     editConstHappyHours ||
     editPromotions ||
     editMap ||
@@ -242,6 +262,7 @@ const ContentCompanyProfilAutoSave = ({
     setEditedWorkers(false)
     setEditedReserwation(false)
     setEditLinks(false)
+    setEditCompanyLink(false)
     setEditConstHappyHours(false)
     setEditPromotions(false)
     setEditMap(false)
@@ -326,6 +347,7 @@ const ContentCompanyProfilAutoSave = ({
   }
 
   let userHasPermisionToOther = !isCompanyEditProfil || isAdmin
+  let isEditAndAdmin = isCompanyEditProfil && isAdmin && editMode
   let userIsBlocked = false
   let userCannotMakeReservation = !!user
   let isWorkerBlocked = false
@@ -587,6 +609,8 @@ const ContentCompanyProfilAutoSave = ({
                 handleResetAllEditedComponents={handleResetAllEditedComponents}
                 disabledEditButtons={disabledEditButtons}
                 editMode={editMode}
+                dataToInvoice={company.dataToInvoice}
+                linkPath={company.linkPath}
               />
             </RightColumnItem>
           )}
@@ -776,6 +800,24 @@ const ContentCompanyProfilAutoSave = ({
                 editMode={editMode}
               />
             )}
+          {isEditAndAdmin && (
+            <CompanyLink
+              editCompanyLink={editCompanyLink}
+              setEditCompanyLink={setEditCompanyLink}
+              RightColumnItem={RightColumnItem}
+              companyEditProfilProps={companyEditProfilProps}
+              {...companyEditProfilProps}
+              siteProps={siteProps}
+              TitleRightColumn={TitleRightColumn}
+              ParagraphRightColumn={ParagraphRightColumn}
+              company={company}
+              user={user}
+              ButtonEditPosition={ButtonEditPosition}
+              disabledEditButtons={disabledEditButtons}
+              editMode={editMode}
+              handleResetAllEditedComponents={handleResetAllEditedComponents}
+            />
+          )}
           {(!!company.linkFacebook ||
             !!company.linkiWebsite ||
             !!company.linkInstagram ||
@@ -798,7 +840,12 @@ const ContentCompanyProfilAutoSave = ({
                 editMode={editMode}
               />
             )}
-          <ReportCompany siteProps={siteProps} user={user} company={company} />
+          <ReportCompany
+            siteProps={siteProps}
+            user={user}
+            company={company}
+            disabledEditButtons={disabledEditButtons}
+          />
         </RightColumn>
         {userHasPermToOpinions && (
           <OpinionsComponent
@@ -814,7 +861,7 @@ const ContentCompanyProfilAutoSave = ({
           />
         )}
       </ContentDiv>
-      {isCompanyEditProfil && (
+      {isCompanyEditProfil && !isMobileSize && (
         <ReactTooltip id="editMode" effect="float" multiline={true}>
           {editMode ? (
             disabledEditButtons ? (
@@ -829,7 +876,7 @@ const ContentCompanyProfilAutoSave = ({
           )}
         </ReactTooltip>
       )}
-      {disabledEditButtons && (
+      {disabledEditButtons && !isMobileSize && (
         <ReactTooltip id="disabledButton" effect="float" multiline={true}>
           <span>
             Aby móc edytować ten element zakończ edytowanie poprzedniego

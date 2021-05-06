@@ -7,6 +7,7 @@ import { MdEdit, MdAddBox } from "react-icons/md"
 import PromotionsContentNewItem from "./PromotionsContentNewItem"
 import PromotionsContentItem from "./PromotionsContentItem"
 import { sortItemsInArrayDateConvert } from "../../common/Functions"
+import { Element, scroller } from "react-scroll"
 
 const PositionRelative = styled.div`
   font-size: 1rem;
@@ -59,11 +60,21 @@ const PromotionsContent = ({
   }, [promotions, editMode])
 
   const handleClickEdit = () => {
+    scroller.scrollTo("promotionsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     setEditPromotions(prevState => !prevState)
   }
 
   const handleReset = () => {
+    scroller.scrollTo("promotionsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     setEditPromotions(false)
   }
 
@@ -91,79 +102,81 @@ const PromotionsContent = ({
     )
   })
   return (
-    <PositionRelative
-      active={newPromotion || enableDatePickerStart || enableDatePickerEnd}
-    >
-      <TitleRightColumn
-        isCompanyEditProfil={editPromotions}
-        siteProps={siteProps}
+    <Element name="promotionsScrollElement" className="element">
+      <PositionRelative
+        active={newPromotion || enableDatePickerStart || enableDatePickerEnd}
       >
-        Promocje
-      </TitleRightColumn>
-      <ItemsPromotions>{mapPromotions}</ItemsPromotions>
-      <ItemsAddHappyHour>
-        {isCompanyEditProfil && editPromotions && (
-          <ButtonIcon
-            title="Dodaj promocje"
-            uppercase
-            fontIconSize="25"
-            fontSize="14"
-            icon={<MdAddBox />}
-            secondColors
-            onClick={handleClickAddNewNoConsrHappyHour}
-          />
-        )}
-      </ItemsAddHappyHour>
-      {isCompanyEditProfil && !editPromotions ? (
-        <ButtonEditPosition>
-          <div data-tip data-for="disabledButton">
+        <TitleRightColumn
+          isCompanyEditProfil={editPromotions}
+          siteProps={siteProps}
+        >
+          Promocje
+        </TitleRightColumn>
+        <ItemsPromotions>{mapPromotions}</ItemsPromotions>
+        <ItemsAddHappyHour>
+          {isCompanyEditProfil && editPromotions && (
             <ButtonIcon
-              title="Edytuj promocje"
+              title="Dodaj promocje"
               uppercase
               fontIconSize="25"
               fontSize="14"
-              icon={<MdEdit />}
+              icon={<MdAddBox />}
               secondColors
-              onClick={handleClickEdit}
-              disabled={disabledEditButtons}
+              onClick={handleClickAddNewNoConsrHappyHour}
             />
-          </div>
-        </ButtonEditPosition>
-      ) : (
-        isCompanyEditProfil && (
+          )}
+        </ItemsAddHappyHour>
+        {isCompanyEditProfil && !editPromotions ? (
           <ButtonEditPosition>
-            <MarginButton>
+            <div data-tip data-for="disabledButton">
               <ButtonIcon
-                title="Zakończ edytowanie"
+                title="Edytuj promocje"
                 uppercase
-                fontIconSize="20"
+                fontIconSize="25"
                 fontSize="14"
-                icon={<FaArrowLeft />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleReset}
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
               />
-            </MarginButton>
+            </div>
           </ButtonEditPosition>
-        )
-      )}
-      {isCompanyEditProfil && (
-        <PromotionsContentNewItem
-          TitleRightColumn={TitleRightColumn}
-          newPromotion={newPromotion}
-          siteProps={siteProps}
-          setEditPromotions={setEditPromotions}
-          setNewPromotion={setNewPromotion}
-          companyServices={companyServices}
-          enableDatePickerStart={enableDatePickerStart}
-          setEnableDatePickerStart={setEnableDatePickerStart}
-          enableDatePickerEnd={enableDatePickerEnd}
-          setEnableDatePickerEnd={setEnableDatePickerEnd}
-          user={user}
-          promotions={promotions}
-        />
-      )}
-    </PositionRelative>
+        ) : (
+          isCompanyEditProfil && (
+            <ButtonEditPosition>
+              <MarginButton>
+                <ButtonIcon
+                  title="Zakończ edytowanie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleReset}
+                />
+              </MarginButton>
+            </ButtonEditPosition>
+          )
+        )}
+        {isCompanyEditProfil && (
+          <PromotionsContentNewItem
+            TitleRightColumn={TitleRightColumn}
+            newPromotion={newPromotion}
+            siteProps={siteProps}
+            setEditPromotions={setEditPromotions}
+            setNewPromotion={setNewPromotion}
+            companyServices={companyServices}
+            enableDatePickerStart={enableDatePickerStart}
+            setEnableDatePickerStart={setEnableDatePickerStart}
+            enableDatePickerEnd={enableDatePickerEnd}
+            setEnableDatePickerEnd={setEnableDatePickerEnd}
+            user={user}
+            promotions={promotions}
+          />
+        )}
+      </PositionRelative>
+    </Element>
   )
 }
 export default PromotionsContent

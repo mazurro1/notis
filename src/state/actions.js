@@ -885,6 +885,29 @@ export const RESTART_COMPANY_SMS = "RESTART_COMPANY_SMS"
 export const UPDATE_GEOLOCATION_MARKS = "UPDATE_GEOLOCATION_MARKS"
 export const UPDATE_COMPANY_MARKER = "UPDATE_COMPANY_MARKER"
 export const CHANGE_RESERWATION_USER = "CHANGE_RESERWATION_USER"
+export const CHANGE_LIST_MAP_OFFERS = "CHANGE_LIST_MAP_OFFERS"
+export const UPDATE_COMPANY_LINK_PATH = "UPDATE_COMPANY_LINK_PATH"
+export const CHANGE_RESTART_COMPANY_LINK = "CHANGE_RESTART_COMPANY_LINK"
+
+export const changeRestartCompanyLink = () => {
+  return {
+    type: CHANGE_RESTART_COMPANY_LINK,
+  }
+}
+
+export const updateCompanyPath = linkPath => {
+  return {
+    type: UPDATE_COMPANY_LINK_PATH,
+    linkPath: linkPath,
+  }
+}
+
+export const changeListMapOffers = value => {
+  return {
+    type: CHANGE_LIST_MAP_OFFERS,
+    value: value,
+  }
+}
 
 export const changeReserwationUser = value => {
   return {
@@ -1690,7 +1713,7 @@ export const fetchCompanyRegistration = (
 
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(addAlertItem("Stworzono konto firmowe.", "green"))
+        // dispatch(addAlertItem("Stworzono konto firmowe.", "green"))
         dispatch(fetchAutoLogin(true, true, userToken, userId, true))
         // dispatch(
         //   fetchAddCompanyToUser(response.data.companyId, userToken, userId)
@@ -1701,6 +1724,8 @@ export const fetchCompanyRegistration = (
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 442) {
+              dispatch(addAlertItem("Podano nieprawidłowy adress", "red"))
             } else {
               dispatch(
                 addAlertItem("Błąd podczas tworzenia konta firmowego", "red")
@@ -3723,6 +3748,7 @@ export const fetchSaveTextsCompany = (
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(updateComanyTeksts(allTextsCompany))
+        dispatch(addAlertItem("Zaktualizowano tekst", "green"))
       })
       .catch(error => {
         if (!!error) {
@@ -5591,5 +5617,45 @@ export const fetchNotificationEndpoint = (token, endpoint) => {
       )
       .then(response => {})
       .catch(error => {})
+  }
+}
+
+export const fetchAddCompanyLink = (token, companyId, pathValue) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-add-link`,
+        {
+          companyId: companyId,
+          pathValue: pathValue,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano link firmowy.", "green"))
+        dispatch(updateCompanyPath(pathValue))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(addAlertItem("Link jest zajęty", "red"))
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania linku", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
   }
 }

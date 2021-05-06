@@ -605,3 +605,156 @@ export const arraysEqual = (a1, a2) => {
     a1.length === a2.length && a1.every((o, idx) => objectsEqual(o, a2[idx]))
   )
 }
+
+export const convertLinkString = phrase => {
+  const maxLength = 100
+  let str = phrase.toLowerCase()
+
+  const charMapITems = [
+    {
+      old: "?",
+      new: "",
+    },
+    {
+      old: "@",
+      new: "",
+    },
+    {
+      old: "#",
+      new: "",
+    },
+    {
+      old: "$",
+      new: "",
+    },
+    {
+      old: "%",
+      new: "",
+    },
+    {
+      old: "^",
+      new: "",
+    },
+    {
+      old: "&",
+      new: "",
+    },
+    {
+      old: "*",
+      new: "",
+    },
+    {
+      old: "(",
+      new: "",
+    },
+    {
+      old: ")",
+      new: "",
+    },
+    {
+      old: ";",
+      new: "",
+    },
+    {
+      old: ":",
+      new: "",
+    },
+    {
+      old: "'",
+      new: "",
+    },
+    {
+      old: ",",
+      new: "",
+    },
+    {
+      old: ".",
+      new: "",
+    },
+    {
+      old: "/",
+      new: "",
+    },
+    {
+      old: "<",
+      new: "",
+    },
+    {
+      old: ">",
+      new: "",
+    },
+    {
+      old: "/",
+      new: "",
+    },
+    {
+      old: "`",
+      new: "",
+    },
+    {
+      old: "!",
+      new: "",
+    },
+    {
+      old: "=",
+      new: "",
+    },
+    {
+      old: "`",
+      new: "",
+    },
+    {
+      old: "ó",
+      new: "o",
+    },
+    {
+      old: "ę",
+      new: "e",
+    },
+    {
+      old: "ą",
+      new: "a",
+    },
+    {
+      old: "ś",
+      new: "s",
+    },
+    {
+      old: "ł",
+      new: "l",
+    },
+    {
+      old: "ż",
+      new: "z",
+    },
+    {
+      old: "ź",
+      new: "z",
+    },
+    {
+      old: "ć",
+      new: "c",
+    },
+    {
+      old: "ń",
+      new: "n",
+    },
+  ]
+
+  const newArrayString = str.split("")
+  const newStr = newArrayString.map(strItem => {
+    const findInAll = charMapITems.find(
+      itemVariable => itemVariable.old.toLowerCase() === strItem.toLowerCase()
+    )
+    if (!!findInAll) {
+      return findInAll.new
+    } else {
+      return strItem
+    }
+  })
+  const convertedArray = newStr.join("")
+  str = convertedArray
+  str = str.replace(/\s/g, "-")
+  str = str.substring(0, str.length <= maxLength ? str.length : maxLength)
+  return str
+}

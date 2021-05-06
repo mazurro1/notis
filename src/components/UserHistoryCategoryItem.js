@@ -435,11 +435,11 @@ const UserHistoryCategoryItem = ({
                 const unhashedName = Buffer.from(
                   worker.user.name,
                   "base64"
-                ).toString("ascii")
+                ).toString("utf-8")
                 const unhashedSurname = Buffer.from(
                   worker.user.surname,
                   "base64"
-                ).toString("ascii")
+                ).toString("utf-8")
                 mapWorkers.push({
                   servicesCategory: worker.servicesCategory,
                   specialization: worker.specialization,
@@ -457,12 +457,12 @@ const UserHistoryCategoryItem = ({
             const unhashedOwnerName = Buffer.from(
               item.company.owner.name,
               "base64"
-            ).toString("ascii")
+            ).toString("utf-8")
 
             const unhashedOwnerSurname = Buffer.from(
               item.company.owner.surname,
               "base64"
-            ).toString("ascii")
+            ).toString("utf-8")
 
             const validMonthAdd = !!item.company.reservationMonthTime
               ? item.company.reservationMonthTime
@@ -557,12 +557,12 @@ const UserHistoryCategoryItem = ({
   let workerName = " Konto nieaktywne"
   if (!!item.toWorkerUserId) {
     const userName = Buffer.from(item.toWorkerUserId.name, "base64").toString(
-      "ascii"
+      "utf-8"
     )
     const userSurname = Buffer.from(
       item.toWorkerUserId.surname,
       "base64"
-    ).toString("ascii")
+    ).toString("utf-8")
     workerName = ` ${userName} ${userSurname}`
   }
 

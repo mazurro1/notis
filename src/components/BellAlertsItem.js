@@ -116,11 +116,11 @@ const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
           userName = Buffer.from(
             alert.reserwationId.fromUser.name,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
           userSurname = Buffer.from(
             alert.reserwationId.fromUser.surname,
             "base64"
-          ).toString("ascii")
+          ).toString("utf-8")
         }
       }
     }

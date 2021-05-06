@@ -6,6 +6,7 @@ import { MdEdit, MdAddBox } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import StampsContentItem from "./StampsContentItem"
 import StampsContentItemNewItem from "./StampsContentItemNewItem"
+import { Element, scroller } from "react-scroll"
 
 const PositionRelative = styled.div`
   font-size: 1rem;
@@ -48,11 +49,21 @@ const StampsContent = ({
   }, [companyStamps])
 
   const handleClickEdit = () => {
+    scroller.scrollTo("stampsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     setEditStamps(true)
   }
 
   const handleReset = () => {
+    scroller.scrollTo("stampsScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     setEditStamps(false)
   }
 
@@ -83,66 +94,71 @@ const StampsContent = ({
     )
   })
   return (
-    <PositionRelative active={newStampActive}>
-      <TitleRightColumn isCompanyEditProfil={editStamps} siteProps={siteProps}>
-        Pieczątki
-      </TitleRightColumn>
-      {mapStamps}
-      <ItemsAddHappyHour>
-        {isCompanyEditProfil && editStamps && (
-          <ButtonIcon
-            title="Dodaj pieczątke"
-            uppercase
-            fontIconSize="25"
-            fontSize="14"
-            icon={<MdAddBox />}
-            secondColors
-            onClick={handleClickAddNewStamp}
-          />
-        )}
-      </ItemsAddHappyHour>
-      {isCompanyEditProfil && !editStamps ? (
-        <ButtonEditPosition>
-          <div data-tip data-for="disabledButton">
+    <Element name="stampsScrollElement" className="element">
+      <PositionRelative active={newStampActive}>
+        <TitleRightColumn
+          isCompanyEditProfil={editStamps}
+          siteProps={siteProps}
+        >
+          Pieczątki
+        </TitleRightColumn>
+        {mapStamps}
+        <ItemsAddHappyHour>
+          {isCompanyEditProfil && editStamps && (
             <ButtonIcon
-              title="Edytuj naklejki"
+              title="Dodaj pieczątke"
               uppercase
               fontIconSize="25"
               fontSize="14"
-              icon={<MdEdit />}
+              icon={<MdAddBox />}
               secondColors
-              onClick={handleClickEdit}
-              disabled={disabledEditButtons}
+              onClick={handleClickAddNewStamp}
             />
-          </div>
-        </ButtonEditPosition>
-      ) : (
-        isCompanyEditProfil && (
+          )}
+        </ItemsAddHappyHour>
+        {isCompanyEditProfil && !editStamps ? (
           <ButtonEditPosition>
-            <MarginButton>
+            <div data-tip data-for="disabledButton">
               <ButtonIcon
-                title="Zakończ edytowanie"
+                title="Edytuj naklejki"
                 uppercase
-                fontIconSize="20"
+                fontIconSize="25"
                 fontSize="14"
-                icon={<FaArrowLeft />}
-                customColorButton={Colors(siteProps).dangerColorDark}
-                customColorIcon={Colors(siteProps).dangerColor}
-                onClick={handleReset}
+                icon={<MdEdit />}
+                secondColors
+                onClick={handleClickEdit}
+                disabled={disabledEditButtons}
               />
-            </MarginButton>
+            </div>
           </ButtonEditPosition>
-        )
-      )}
-      <StampsContentItemNewItem
-        editedItemEnable={newStampActive}
-        setEditedItemEnable={setNewStampActive}
-        siteProps={siteProps}
-        services={services}
-        user={user}
-        companyStamps={companyStamps}
-      />
-    </PositionRelative>
+        ) : (
+          isCompanyEditProfil && (
+            <ButtonEditPosition>
+              <MarginButton>
+                <ButtonIcon
+                  title="Zakończ edytowanie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="14"
+                  icon={<FaArrowLeft />}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                  onClick={handleReset}
+                />
+              </MarginButton>
+            </ButtonEditPosition>
+          )
+        )}
+        <StampsContentItemNewItem
+          editedItemEnable={newStampActive}
+          setEditedItemEnable={setNewStampActive}
+          siteProps={siteProps}
+          services={services}
+          user={user}
+          companyStamps={companyStamps}
+        />
+      </PositionRelative>
+    </Element>
   )
 }
 export default StampsContent

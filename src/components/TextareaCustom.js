@@ -53,7 +53,7 @@ const TextareaCustom = ({
         isErrorText={isErrorText}
         spellcheck
         placeholder={`${placeholder}...`}
-        maxLength={maxLength}
+        // maxLength={maxLength}
         autocomplete="off"
         autocapitalize="sentences"
         onChange={e => handleOnChange(e)}

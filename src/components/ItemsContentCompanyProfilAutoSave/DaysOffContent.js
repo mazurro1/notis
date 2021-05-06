@@ -11,6 +11,7 @@ import DaysOffContentAdd from "./DaysOffContentAdd"
 import { useDispatch } from "react-redux"
 import { addAlertItem, fetchSaveOpeningHoursCompany } from "../../state/actions"
 import { sortItemsInArrayDaysOff } from "../../common/Functions"
+import { Element, scroller } from "react-scroll"
 
 const DayOffContent = styled.div`
   display: flex;
@@ -139,11 +140,21 @@ const DaysOffContent = ({
   }
 
   const handleClickEdit = () => {
+    scroller.scrollTo("daysOffScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     setEditableDaysOff(prevState => !prevState)
   }
 
   const handleResetEdit = () => {
+    scroller.scrollTo("daysOffScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     setDeletedDayOff([])
     setCreatedDayOff([])
     setDayOffData(companyDaysOff)
@@ -191,6 +202,11 @@ const DaysOffContent = ({
   }
 
   const handleSaveDayOff = () => {
+    scroller.scrollTo("daysOffScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     const daysOff = {
       deletedDayOff: deletedDayOff,
       createdDayOff: createdDayOff,
@@ -215,81 +231,83 @@ const DaysOffContent = ({
     )
   })
   return (
-    <PaddingBottomStyle takeDateActive={takeDateActive}>
-      <TitleRightColumn
-        isCompanyEditProfil={editableDaysOff}
-        siteProps={siteProps}
-      >
-        Dni wolne od pracy
-      </TitleRightColumn>
-      <DayOffContent>
-        {mapDayOff}
-        {!!isCompanyEditProfil && editableDaysOff && (
-          <CreateDayOff siteProps={siteProps} onClick={handleClickCreate}>
-            <MdAddBox />
-          </CreateDayOff>
-        )}
-      </DayOffContent>
+    <Element name="daysOffScrollElement" className="element">
+      <PaddingBottomStyle takeDateActive={takeDateActive}>
+        <TitleRightColumn
+          isCompanyEditProfil={editableDaysOff}
+          siteProps={siteProps}
+        >
+          Dni wolne od pracy
+        </TitleRightColumn>
+        <DayOffContent>
+          {mapDayOff}
+          {!!isCompanyEditProfil && editableDaysOff && (
+            <CreateDayOff siteProps={siteProps} onClick={handleClickCreate}>
+              <MdAddBox />
+            </CreateDayOff>
+          )}
+        </DayOffContent>
 
-      {isCompanyEditProfil ? (
-        editableDaysOff ? (
-          <>
+        {isCompanyEditProfil ? (
+          editableDaysOff ? (
+            <>
+              <ButtonEditPosition>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Cofnij"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaArrowLeft />}
+                    customColorButton={Colors(siteProps).dangerColorDark}
+                    customColorIcon={Colors(siteProps).dangerColor}
+                    onClick={handleResetEdit}
+                  />
+                </MarginButton>
+                <MarginButton>
+                  <ButtonIcon
+                    title="Zapisz"
+                    uppercase
+                    fontIconSize="16"
+                    fontSize="14"
+                    icon={<FaSave />}
+                    customColorButton={Colors(siteProps).successColorDark}
+                    customColorIcon={Colors(siteProps).successColor}
+                    onClick={handleSaveDayOff}
+                  />
+                </MarginButton>
+              </ButtonEditPosition>
+            </>
+          ) : (
             <ButtonEditPosition>
-              <MarginButton>
+              <div data-tip data-for="disabledButton">
                 <ButtonIcon
-                  title="Cofnij"
+                  title="Edytuj dni wolne"
                   uppercase
-                  fontIconSize="16"
+                  fontIconSize="25"
                   fontSize="14"
-                  icon={<FaArrowLeft />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleResetEdit}
+                  icon={<MdEdit />}
+                  secondColors
+                  onClick={handleClickEdit}
+                  disabled={disabledEditButtons}
                 />
-              </MarginButton>
-              <MarginButton>
-                <ButtonIcon
-                  title="Zapisz"
-                  uppercase
-                  fontIconSize="16"
-                  fontSize="14"
-                  icon={<FaSave />}
-                  customColorButton={Colors(siteProps).successColorDark}
-                  customColorIcon={Colors(siteProps).successColor}
-                  onClick={handleSaveDayOff}
-                />
-              </MarginButton>
+              </div>
             </ButtonEditPosition>
-          </>
-        ) : (
-          <ButtonEditPosition>
-            <div data-tip data-for="disabledButton">
-              <ButtonIcon
-                title="Edytuj dni wolne"
-                uppercase
-                fontIconSize="25"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                onClick={handleClickEdit}
-                disabled={disabledEditButtons}
-              />
-            </div>
-          </ButtonEditPosition>
-        )
-      ) : null}
-      <DaysOffContentAdd
-        handleClickContent={handleClickContent}
-        handleAddClose={handleAddClose}
-        siteProps={siteProps}
-        createDayOff={createDayOff}
-        setCreateDayOff={setCreateDayOff}
-        takeDateActive={takeDateActive}
-        setTakeDateActive={setTakeDateActive}
-        handleAddNewDayOff={handleAddNewDayOff}
-        TitleRightColumnEdit={TitleRightColumnEdit}
-      />
-    </PaddingBottomStyle>
+          )
+        ) : null}
+        <DaysOffContentAdd
+          handleClickContent={handleClickContent}
+          handleAddClose={handleAddClose}
+          siteProps={siteProps}
+          createDayOff={createDayOff}
+          setCreateDayOff={setCreateDayOff}
+          takeDateActive={takeDateActive}
+          setTakeDateActive={setTakeDateActive}
+          handleAddNewDayOff={handleAddNewDayOff}
+          TitleRightColumnEdit={TitleRightColumnEdit}
+        />
+      </PaddingBottomStyle>
+    </Element>
   )
 }
 export default DaysOffContent

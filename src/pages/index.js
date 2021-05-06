@@ -12,6 +12,7 @@ import {
   changeFilterValue,
   changeLocalizationValue,
   changeMapsActive,
+  changeListMapOffers,
 } from "../state/actions"
 import { Colors } from "../common/Colors"
 import sal from "sal.js"
@@ -23,6 +24,7 @@ import Sort from "../components/Sort"
 import GoogleMapsMainSearch from "../components/GoogleMapsMainSearch"
 // import GoogleMapsMainSearch from "../components/LeafletMapsMainSearch"
 import SelectCreated from "../components/SelectCreated"
+import { Site } from "../common/Site"
 
 const GoogleMapsStyle = styled.div`
   margin-top: 20px;
@@ -43,6 +45,11 @@ const ButtonsFilters = styled.div`
 const ButtonMargin = styled.div`
   margin-right: 10px;
   margin-top: 10px;
+
+  @media all and (max-width: ${Site.mobileSize + "px"}) {
+    width: 100%;
+    margin-top: 5px;
+  }
 `
 
 const MarginBottomPlaces = styled.div`
@@ -100,10 +107,7 @@ const ResetFilter = styled.div`
 
 const Home = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
-  const [selectedView, setSelectedView] = useState({
-    value: 1,
-    label: "Lista ofert",
-  })
+  const selectedListMapView = useSelector(state => state.selectedListMapView)
   const placesData = useSelector(state => state.placesData)
   const filters = useSelector(state => state.filters)
   const localization = useSelector(state => state.localization)
@@ -119,10 +123,6 @@ const Home = () => {
   const mapActive = useSelector(state => state.mapActive)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(changeMapsActive(false))
-  }, [])
 
   useEffect(() => {
     if (!!refAllPlaces) {
@@ -157,7 +157,7 @@ const Home = () => {
       threshold: 0.1,
       once: true,
     })
-  }, [loadingPlaces, placesData, selectedView])
+  }, [loadingPlaces, placesData, selectedListMapView])
 
   const handleResetFilter = e => {
     e.stopPropagation()
@@ -172,7 +172,7 @@ const Home = () => {
   }
 
   const handleChangeView = view => {
-    setSelectedView(view)
+    dispatch(changeListMapOffers(view))
     if (!!view) {
       if (view.value === 1) {
         dispatch(changeMapsActive(false))
@@ -231,9 +231,7 @@ const Home = () => {
                   </ResetFilter>
                 </TextButtonsSearch>
               ) : (
-                <TextButtonsSearch>
-                  filtruj po wybranej usłudze
-                </TextButtonsSearch>
+                <TextButtonsSearch>filtruj po usługach</TextButtonsSearch>
               )
             }
             uppercase
@@ -281,14 +279,14 @@ const Home = () => {
               },
               { value: 2, label: "Mapa ofert" },
             ]}
-            value={selectedView}
+            value={selectedListMapView}
             handleChange={handleChangeView}
             placeholder="Widok..."
             defaultMenuIsOpen={false}
             isClearable={false}
             deleteItem={false}
             closeMenuOnSelect
-            width="150px"
+            width="auto"
           />
         </ButtonMargin>
       </ButtonsFilters>
@@ -312,7 +310,7 @@ const Home = () => {
         </GoogleMapsStyle>
       </CSSTransition>
       <CSSTransition
-        in={selectedView.value === 1}
+        in={selectedListMapView.value === 1}
         timeout={400}
         classNames="popup"
         unmountOnExit

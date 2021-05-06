@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
-import { MdEdit, MdPhone } from "react-icons/md"
+import { MdEdit, MdPhone, MdLoop } from "react-icons/md"
 import InputIcon from "../InputIcon"
 import { MdDelete, MdLocationOn, MdLocationCity, MdWork } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux"
 import Popup from "../Popup"
 import InputPhone from "../InputPhone"
 import ReactTooltip from "react-tooltip"
+import { Element, scroller } from "react-scroll"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;
@@ -46,7 +47,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "900px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "1100px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -229,9 +230,24 @@ const DisabledTextToEdit = styled.div`
   span {
     display: block;
     font-size: 1rem;
-    font-family: "Poppins-Medium", sans-serif;
+    font-family: "Poppins-Bold", sans-serif;
     color: ${props => Colors(props.siteProps).textNormalBlack};
   }
+
+  .titleInline {
+    display: inline-block;
+    font-size: 1rem;
+    font-family: "Poppins-Bold", sans-serif;
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+  }
+`
+
+const ButtonNipActualization = styled.div`
+  margin-bottom: 20px;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-size: 0.9rem;
+  font-family: "Poppins-Medium", sans-serif;
+  text-align: center;
 `
 
 const OpinionAndAdressContent = ({
@@ -258,6 +274,8 @@ const OpinionAndAdressContent = ({
   disabledEditButtons,
   editMode,
   code = "00-000",
+  dataToInvoice = null,
+  linkPath = "",
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
   const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
@@ -281,7 +299,6 @@ const OpinionAndAdressContent = ({
   const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
-
   useEffect(() => {
     setNewIndustriesComponent([])
     setDeletedIndustriesComponent([])
@@ -394,6 +411,13 @@ const OpinionAndAdressContent = ({
         reserwationMonthToServer: reserwationMonthToServer,
         reserwationEverToServer: reserwationEverToServer,
       }
+
+      scroller.scrollTo("opinionScrollElement", {
+        duration: 100,
+        smooth: true,
+        offset: -100,
+      })
+
       dispatch(
         fetchSaveCompanySettings(user.token, user.company._id, dataSettings)
       )
@@ -438,7 +462,11 @@ const OpinionAndAdressContent = ({
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
     setDeleteCompany(false)
-
+    scroller.scrollTo("opinionScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -80,
+    })
     if (!!companyIndustries) {
       const convertedCompanyIndustriesFromId = companyIndustries.map(itemId => {
         const selectedIndustriesComponent = AllIndustries[
@@ -451,6 +479,11 @@ const OpinionAndAdressContent = ({
   }
 
   const handleEdit = () => {
+    scroller.scrollTo("opinionScrollElement", {
+      duration: 100,
+      smooth: true,
+      offset: -100,
+    })
     handleResetAllEditedComponents()
     onClickEdit()
   }
@@ -567,275 +600,322 @@ const OpinionAndAdressContent = ({
     7
   )}${phoneInput.charAt(8)}`
 
+  let dataNameGUS = !!dataToInvoice ? (
+    <>
+      <div>{!!dataToInvoice.name ? dataToInvoice.name : "Brak"}</div>
+    </>
+  ) : null
+
+  let dataGUS = !!dataToInvoice ? (
+    <>
+      <div>
+        <div className="titleInline">Kod pocztowy:</div>{" "}
+        {!!dataToInvoice.postalCode ? dataToInvoice.postalCode : "Brak"}
+      </div>
+      <div>
+        <div className="titleInline">Miasto:</div>{" "}
+        {!!dataToInvoice.city ? dataToInvoice.city : "Brak"}
+      </div>
+      <div>
+        <div className="titleInline">Ulica:</div>{" "}
+        {!!dataToInvoice.street ? dataToInvoice.street : "Brak"}
+      </div>
+    </>
+  ) : null
+
   return (
-    <HeightComponent
-      isCompanyEditProfil={isCompanyEditProfil}
-      editable={editable}
-    >
-      {isCompanyEditProfil ? (
-        companyPausedItem ? (
+    <Element name="opinionScrollElement" className="element">
+      <HeightComponent
+        isCompanyEditProfil={isCompanyEditProfil}
+        editable={editable}
+      >
+        {isCompanyEditProfil ? (
+          companyPausedItem ? (
+            <IsCompanyPaused color={Colors(siteProps).dangerColor}>
+              Działalność wstrzymana
+            </IsCompanyPaused>
+          ) : (
+            <IsCompanyPaused color={Colors(siteProps).successColor}>
+              Działalność aktywna
+            </IsCompanyPaused>
+          )
+        ) : companyPausedItem ? (
           <IsCompanyPaused color={Colors(siteProps).dangerColor}>
             Działalność wstrzymana
           </IsCompanyPaused>
-        ) : (
-          <IsCompanyPaused color={Colors(siteProps).successColor}>
-            Działalność aktywna
-          </IsCompanyPaused>
-        )
-      ) : companyPausedItem ? (
-        <IsCompanyPaused color={Colors(siteProps).dangerColor}>
-          Działalność wstrzymana
-        </IsCompanyPaused>
-      ) : null}
-      <OpinionsAndAdress>
-        <AdressContent>
-          <TitleRightColumn adress siteProps={siteProps}>
-            <DivInlineBlock> {`${codeInput},`}</DivInlineBlock>
-            <DivInlineBlock> {`${cityInput},`}</DivInlineBlock>
-            <DivInlineBlock>{`${discrictInput},`}</DivInlineBlock>
-            <DivInlineBlock> {`${adressInput}`}</DivInlineBlock>
-          </TitleRightColumn>
-        </AdressContent>
-        <OpinionsContent>
-          <OpinionRight>
-            <OpinionUp siteProps={siteProps}>
-              <OpininPadding>
-                {opinionsValue > 0 && opinionsCount > 0
-                  ? Math.round((opinionsValue / opinionsCount) * 10) / 10
-                  : 0}
-              </OpininPadding>
-              <OpinionDown siteProps={siteProps}>
-                Opinie: {opinionsCount}
-              </OpinionDown>
-            </OpinionUp>
-          </OpinionRight>
-        </OpinionsContent>
-      </OpinionsAndAdress>
-      <TelephoneDiv>
-        <CirclePhone siteProps={siteProps}>
-          <MdPhone />
-        </CirclePhone>
-        {phoneNumberRender}
-      </TelephoneDiv>
-      {isCompanyEditProfil && (
-        <>
-          <ButtonEditPosition>
-            <div data-tip data-for="disabledButton">
-              <ButtonIcon
-                title="Edytuj ustawienia"
-                uppercase
-                fontIconSize="25"
-                fontSize="14"
-                icon={<MdEdit />}
-                secondColors
-                onClick={handleEdit}
-                disabled={disabledEditButtons}
-              />
-            </div>
-          </ButtonEditPosition>
-          <Popup
-            popupEnable={editable}
-            position="absolute"
-            title="Edycja ustawień"
-            borderRadius
-            closeTitle={false}
-            smallTitle
-            maxHeight={false}
-            secondColors
-          >
-            <form onSubmit={handleOnSubmit}>
-              <DisabledTextToEdit siteProps={siteProps}>
-                <span>Email firmowy</span>
-                {!!company.email
-                  ? company.email
-                  : "Błąd podczas pobierania adresu e-mail"}
-              </DisabledTextToEdit>
-              <DisabledTextToEdit siteProps={siteProps}>
-                <span>Nip</span>
-                {!!company.nip ? company.nip : "000 000 00 00"}
-              </DisabledTextToEdit>
-              <InputIcon
-                icon={<MdWork />}
-                placeholder="Nazwa firmy"
-                type="text"
-                secondColor
-                onChange={e => handleChangeInputs(e, setCompanyNameInput)}
-                value={companyNameInput}
-                required
-                validText="Minimum 3 znaki, unikalna nazwa firmy"
-              />
-              <InputIcon
-                icon={<MdLocationCity />}
-                placeholder="Miejscowość"
-                type="text"
-                secondColor
-                onChange={e => handleChangeInputs(e, setCityInput)}
-                value={cityInput}
-                required
-                validText="Minimum 3 znaki"
-              />
-              <InputIcon
-                icon={<MdLocationCity />}
-                placeholder="Kod pocztowy"
-                type="text"
-                secondColor
-                onChange={e => handleChangeInputs(e, setCodeInput)}
-                value={codeInput}
-                required
-                validText="Minimum 5 znaków"
-              />
-              <InputIcon
-                icon={<FaMapSigns />}
-                placeholder="Dzielnica"
-                type="text"
-                secondColor
-                onChange={e => handleChangeInputs(e, setDiscrictInput)}
-                value={discrictInput}
-                required
-                validText="Minimum 3 znaki"
-              />
-              <InputIcon
-                icon={<MdLocationOn />}
-                placeholder="Adres firmy"
-                type="text"
-                secondColor
-                onChange={e => handleChangeInputs(e, setAdressInput)}
-                value={adressInput}
-                required
-                validText="Minimum 3 znaki"
-              />
-              <InputPhone
-                defaultValues={phoneInput}
-                setPhoneNumber={setPhoneInput}
-                width={20}
-                marginElements={5}
-              />
-              <TextStyleInfo siteProps={siteProps}>
-                Rezerwacja co:
-              </TextStyleInfo>
-              <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
-              <TextStyleInfo siteProps={siteProps}>
-                Rezerwacja do:
-              </TextStyleInfo>
-              <AllReserwationTime>
-                {mapReserwationDelayMonth}
-              </AllReserwationTime>
-              <SelectCreated
-                options={AllIndustries[siteProps.language]}
-                value={industriesComponent}
-                handleChange={handleChangeIndystries}
-                placeholder="Typy działalności"
-                defaultMenuIsOpen={false}
-                widthAuto
-                isMulti
-                isClearable={false}
-                darkSelect
-                onlyText
-                maxMenuHeight={200}
-                top
-              />
-              <CheckboxStyle siteProps={siteProps}>
-                <Checkbox
-                  theme="material-checkbox"
-                  value={companyPausedItem}
-                  onChange={handleChangeCheckbox}
-                >
-                  <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
-                </Checkbox>
-              </CheckboxStyle>
-              {editMode && (
-                <ReactTooltip
-                  id="deleteCompany"
-                  effect="float"
-                  multiline={true}
-                >
-                  <span>
-                    Usunięcie działalności spowoduje odwołanie wszystkich
-                    aktywnych wizyt, usunięcie wszystkich pracowników oraz
-                    wszystkich danych na temat Twojej firmy.
-                  </span>
-                </ReactTooltip>
-              )}
-              <DeleteCompanyStyle data-tip data-for="deleteCompany">
+        ) : null}
+        <OpinionsAndAdress>
+          <AdressContent>
+            <TitleRightColumn adress siteProps={siteProps}>
+              <DivInlineBlock> {`${codeInput},`}</DivInlineBlock>
+              <DivInlineBlock> {`${cityInput},`}</DivInlineBlock>
+              <DivInlineBlock>{`${discrictInput},`}</DivInlineBlock>
+              <DivInlineBlock> {`${adressInput}`}</DivInlineBlock>
+            </TitleRightColumn>
+          </AdressContent>
+          <OpinionsContent>
+            <OpinionRight>
+              <OpinionUp siteProps={siteProps}>
+                <OpininPadding>
+                  {opinionsValue > 0 && opinionsCount > 0
+                    ? Math.round((opinionsValue / opinionsCount) * 10) / 10
+                    : 0}
+                </OpininPadding>
+                <OpinionDown siteProps={siteProps}>
+                  Opinie: {opinionsCount}
+                </OpinionDown>
+              </OpinionUp>
+            </OpinionRight>
+          </OpinionsContent>
+        </OpinionsAndAdress>
+        <TelephoneDiv>
+          <CirclePhone siteProps={siteProps}>
+            <MdPhone />
+          </CirclePhone>
+          {phoneNumberRender}
+        </TelephoneDiv>
+        {isCompanyEditProfil && (
+          <>
+            <ButtonEditPosition>
+              <div data-tip data-for="disabledButton">
                 <ButtonIcon
-                  title="Usuń działalność"
+                  title="Edytuj ustawienia"
                   uppercase
-                  fontIconSize="20"
-                  fontSize="13"
-                  icon={<MdDelete />}
-                  customColorButton={Colors(siteProps).dangerColorDark}
-                  customColorIcon={Colors(siteProps).dangerColor}
-                  onClick={handleDeleteCompany}
+                  fontIconSize="25"
+                  fontSize="14"
+                  icon={<MdEdit />}
+                  secondColors
+                  onClick={handleEdit}
+                  disabled={disabledEditButtons}
                 />
-              </DeleteCompanyStyle>
-              <ButtonPosition>
-                <ButtonMargin>
-                  <>
-                    <ButtonIcon
-                      title="Cofnij"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="13"
-                      icon={<FaArrowLeft />}
-                      customColorButton={Colors(siteProps).dangerColorDark}
-                      customColorIcon={Colors(siteProps).dangerColor}
-                      onClick={handleResetInputs}
-                    />
-                  </>
-                </ButtonMargin>
-                <ButtonSubmit type="submit">
-                  <ButtonMargin>
-                    <ButtonIcon
-                      title="Zapisz"
-                      uppercase
-                      fontIconSize="16"
-                      fontSize="13"
-                      icon={<FaSave />}
-                      customColorButton={Colors(siteProps).successColorDark}
-                      customColorIcon={Colors(siteProps).successColor}
-                      disabled={!disabledButtonSubmit}
-                    />
-                  </ButtonMargin>
-                </ButtonSubmit>
-              </ButtonPosition>
-            </form>
+              </div>
+            </ButtonEditPosition>
             <Popup
-              popupEnable={deleteCompany}
+              popupEnable={editable}
               position="absolute"
+              title="Edycja ustawień"
               borderRadius
-              noContent
+              closeTitle={false}
+              smallTitle
+              maxHeight={false}
+              secondColors
             >
-              <ButtonPosition>
-                <ButtonMargin>
+              <form onSubmit={handleOnSubmit}>
+                <TextStyleInfo siteProps={siteProps}>
+                  Email firmowy:
+                </TextStyleInfo>
+                <DisabledTextToEdit siteProps={siteProps}>
+                  {!!company.email
+                    ? company.email
+                    : "Błąd podczas pobierania adresu e-mail"}
+                </DisabledTextToEdit>
+                <TextStyleInfo siteProps={siteProps}>
+                  Dane do faktur:
+                </TextStyleInfo>
+                <DisabledTextToEdit siteProps={siteProps}>
+                  {dataNameGUS}
+                  <div>
+                    <div className="titleInline">Nip:</div>{" "}
+                    {!!company.nip ? `${company.nip}` : "Brak"}
+                  </div>
+                  {dataGUS}
+                </DisabledTextToEdit>
+                <ButtonNipActualization siteProps={siteProps}>
                   <ButtonIcon
-                    title="Anuluj"
+                    title="Zaktualizuj dane firmowe"
                     uppercase
-                    fontIconSize="16"
+                    fontIconSize="20"
                     fontSize="13"
-                    icon={<FaArrowLeft />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleDeleteCompany}
+                    icon={<MdLoop />}
+                    customColorButton={Colors(siteProps).secondDarkColor}
+                    customColorIcon={Colors(siteProps).secondColor}
+                    // onClick={handleDeleteCompany}
                   />
-                </ButtonMargin>
-                <ButtonMargin>
+                  Uwaga: Można dokonać aktualizacji 1 raz na dzień.
+                </ButtonNipActualization>
+                <InputIcon
+                  icon={<MdWork />}
+                  placeholder="Nazwa firmy"
+                  type="text"
+                  secondColor
+                  onChange={e => handleChangeInputs(e, setCompanyNameInput)}
+                  value={companyNameInput}
+                  required
+                  validText="Minimum 3 znaki, unikalna nazwa firmy"
+                />
+                <InputIcon
+                  icon={<MdLocationCity />}
+                  placeholder="Miejscowość"
+                  type="text"
+                  secondColor
+                  onChange={e => handleChangeInputs(e, setCityInput)}
+                  value={cityInput}
+                  required
+                  validText="Minimum 3 znaki"
+                />
+                <InputIcon
+                  icon={<MdLocationCity />}
+                  placeholder="Kod pocztowy"
+                  type="text"
+                  secondColor
+                  onChange={e => handleChangeInputs(e, setCodeInput)}
+                  value={codeInput}
+                  required
+                  validText="Minimum 5 znaków"
+                />
+                <InputIcon
+                  icon={<FaMapSigns />}
+                  placeholder="Dzielnica"
+                  type="text"
+                  secondColor
+                  onChange={e => handleChangeInputs(e, setDiscrictInput)}
+                  value={discrictInput}
+                  required
+                  validText="Minimum 3 znaki"
+                />
+                <InputIcon
+                  icon={<MdLocationOn />}
+                  placeholder="Adres firmy"
+                  type="text"
+                  secondColor
+                  onChange={e => handleChangeInputs(e, setAdressInput)}
+                  value={adressInput}
+                  required
+                  validText="Minimum 3 znaki"
+                />
+                <InputPhone
+                  defaultValues={phoneInput}
+                  setPhoneNumber={setPhoneInput}
+                  width={20}
+                  marginElements={5}
+                />
+                <TextStyleInfo siteProps={siteProps}>
+                  Rezerwacja co:
+                </TextStyleInfo>
+                <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
+                <TextStyleInfo siteProps={siteProps}>
+                  Rezerwacja do:
+                </TextStyleInfo>
+                <AllReserwationTime>
+                  {mapReserwationDelayMonth}
+                </AllReserwationTime>
+                <SelectCreated
+                  options={AllIndustries[siteProps.language]}
+                  value={industriesComponent}
+                  handleChange={handleChangeIndystries}
+                  placeholder="Typy działalności"
+                  defaultMenuIsOpen={false}
+                  widthAuto
+                  isMulti
+                  isClearable={false}
+                  darkSelect
+                  onlyText
+                  maxMenuHeight={200}
+                  top
+                />
+                <CheckboxStyle siteProps={siteProps}>
+                  <Checkbox
+                    theme="material-checkbox"
+                    value={companyPausedItem}
+                    onChange={handleChangeCheckbox}
+                  >
+                    <TextCheckbox>Wstrzymaj działalność</TextCheckbox>
+                  </Checkbox>
+                </CheckboxStyle>
+                {editMode && (
+                  <ReactTooltip
+                    id="deleteCompany"
+                    effect="float"
+                    multiline={true}
+                  >
+                    <span>
+                      Usunięcie działalności spowoduje odwołanie wszystkich
+                      aktywnych wizyt, usunięcie wszystkich pracowników oraz
+                      wszystkich danych na temat Twojej firmy.
+                    </span>
+                  </ReactTooltip>
+                )}
+                <DeleteCompanyStyle data-tip data-for="deleteCompany">
                   <ButtonIcon
-                    title="Usuń"
+                    title="Usuń działalność"
                     uppercase
                     fontIconSize="20"
                     fontSize="13"
                     icon={<MdDelete />}
                     customColorButton={Colors(siteProps).dangerColorDark}
                     customColorIcon={Colors(siteProps).dangerColor}
-                    onClick={handleConfirmDeleteCompany}
+                    onClick={handleDeleteCompany}
                   />
-                </ButtonMargin>
-              </ButtonPosition>
+                </DeleteCompanyStyle>
+                <ButtonPosition>
+                  <ButtonMargin>
+                    <>
+                      <ButtonIcon
+                        title="Cofnij"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="13"
+                        icon={<FaArrowLeft />}
+                        customColorButton={Colors(siteProps).dangerColorDark}
+                        customColorIcon={Colors(siteProps).dangerColor}
+                        onClick={handleResetInputs}
+                      />
+                    </>
+                  </ButtonMargin>
+                  <ButtonSubmit type="submit">
+                    <ButtonMargin>
+                      <ButtonIcon
+                        title="Zapisz"
+                        uppercase
+                        fontIconSize="16"
+                        fontSize="13"
+                        icon={<FaSave />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        disabled={!disabledButtonSubmit}
+                      />
+                    </ButtonMargin>
+                  </ButtonSubmit>
+                </ButtonPosition>
+              </form>
+              <Popup
+                popupEnable={deleteCompany}
+                position="absolute"
+                borderRadius
+                noContent
+              >
+                <ButtonPosition>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Anuluj"
+                      uppercase
+                      fontIconSize="16"
+                      fontSize="13"
+                      icon={<FaArrowLeft />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      onClick={handleDeleteCompany}
+                    />
+                  </ButtonMargin>
+                  <ButtonMargin>
+                    <ButtonIcon
+                      title="Usuń"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="13"
+                      icon={<MdDelete />}
+                      customColorButton={Colors(siteProps).dangerColorDark}
+                      customColorIcon={Colors(siteProps).dangerColor}
+                      onClick={handleConfirmDeleteCompany}
+                    />
+                  </ButtonMargin>
+                </ButtonPosition>
+              </Popup>
             </Popup>
-          </Popup>
-        </>
-      )}
-    </HeightComponent>
+          </>
+        )}
+      </HeightComponent>
+    </Element>
   )
 }
 export default OpinionAndAdressContent

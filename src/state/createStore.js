@@ -46,6 +46,9 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  CHANGE_RESTART_COMPANY_LINK,
+  UPDATE_COMPANY_LINK_PATH,
+  CHANGE_LIST_MAP_OFFERS,
   CHANGE_MAP_ACTIVE,
   UPDATE_COMPANY_MARKER,
   UPDATE_GEOLOCATION_MARKS,
@@ -186,6 +189,10 @@ const initialState = {
   //COMPANY
   //COMPANY
   //COMPANY
+  selectedListMapView: {
+    value: 1,
+    label: "Lista ofert",
+  },
   companyTransactionHistory: [],
   errorLoadingPage: false,
   deleteCompanyConfirm: false,
@@ -223,6 +230,7 @@ const initialState = {
   resetChangeReserwationUser: false,
   popupTakePlace: false,
   selectedNameMenu: "",
+  restartCompanyLink: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -632,6 +640,34 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_RESTART_COMPANY_LINK: {
+      return {
+        ...state,
+        restartCompanyLink: false,
+      }
+    }
+
+    case UPDATE_COMPANY_LINK_PATH: {
+      const newLinkWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newLinkWorkCompanyData) {
+        newLinkWorkCompanyData.linkPath = action.linkPath
+      }
+      return {
+        ...state,
+        workCompanyData: newLinkWorkCompanyData,
+        restartCompanyLink: true,
+      }
+    }
+
+    case CHANGE_LIST_MAP_OFFERS: {
+      return {
+        ...state,
+        selectedListMapView: action.value,
+      }
+    }
 
     case CHANGE_RESERWATION_USER: {
       return {

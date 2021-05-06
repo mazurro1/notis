@@ -1,17 +1,17 @@
 import React, { useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { fetchSaveTextsCompany } from "../../state/actions"
-import OurLinksContent from "./OurLinksContent"
+import { Element, scroller } from "react-scroll"
+import { useDispatch, useSelector } from "react-redux"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit } from "react-icons/md"
 import styled from "styled-components"
-import { Element, scroller } from "react-scroll"
+import CompanyLinkContent from "./CompanyLinkContent"
+import { changeRestartCompanyLink } from "../../state/actions"
 
 const MarginTopReserwation = styled.div`
   margin-top: 30px;
 `
 
-const LinksComponent = ({
+const CompanyLink = ({
   RightColumnItem,
   companyEditProfilProps,
   siteProps,
@@ -20,26 +20,23 @@ const LinksComponent = ({
   user,
   isCompanyEditProfil = false,
   ButtonEditPosition,
-  editLinks,
-  setEditLinks,
+  editCompanyLink,
+  setEditCompanyLink,
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
 }) => {
+  const restartCompanyLink = useSelector(state => state.restartCompanyLink)
   const dispatch = useDispatch()
-
   useEffect(() => {
-    setEditLinks(false)
-  }, [
-    company.linkFacebook,
-    company.linkInstagram,
-    company.linkiWebsite,
-    editMode,
-    setEditLinks,
-  ])
+    if (restartCompanyLink) {
+      setEditCompanyLink(false)
+      dispatch(changeRestartCompanyLink())
+    }
+  }, [company.linkPath, editMode, setEditCompanyLink, restartCompanyLink])
 
   const handleEdit = setChange => {
-    scroller.scrollTo("linksScrollElement", {
+    scroller.scrollTo("companyLinkScrollElement", {
       duration: 100,
       smooth: true,
       offset: -100,
@@ -47,55 +44,33 @@ const LinksComponent = ({
     setChange(prevState => !prevState)
   }
 
-  const handleSaveChangesAboutUs = (
-    newFacebookLink,
-    newInstagramLink,
-    newWebsiteLink
-  ) => {
-    scroller.scrollTo("linksScrollElement", {
-      duration: 100,
-      smooth: true,
-      offset: -100,
-    })
-    const allLinks = {
-      facebook: newFacebookLink,
-      instagram: newInstagramLink,
-      website: newWebsiteLink,
-    }
-    dispatch(
-      fetchSaveTextsCompany(user.token, user.company._id, null, null, allLinks)
-    )
-  }
-
   return (
     <MarginTopReserwation>
       <RightColumnItem
         isCompanyEditProfil={isCompanyEditProfil}
         siteProps={siteProps}
-        active={editLinks}
+        active={editCompanyLink}
         disabledEditButtons={disabledEditButtons}
       >
-        <Element name="linksScrollElement" className="element">
-          <OurLinksContent
+        <Element name="companyLinkScrollElement" className="element">
+          <CompanyLinkContent
             TitleRightColumn={TitleRightColumn}
             companyEditProfilProps={companyEditProfilProps}
             {...companyEditProfilProps}
-            editable={editLinks}
+            editable={editCompanyLink}
             siteProps={siteProps}
-            onClickEdit={() => handleEdit(setEditLinks)}
-            handleSaveLinks={handleSaveChangesAboutUs}
-            linkFacebook={!!company.linkFacebook ? company.linkFacebook : ""}
-            linkiWebsite={!!company.linkiWebsite ? company.linkiWebsite : ""}
-            linkInstagram={!!company.linkInstagram ? company.linkInstagram : ""}
+            onClickEdit={() => handleEdit(setEditCompanyLink)}
+            linkPath={!!company.linkPath ? company.linkPath : ""}
             company={company}
-            editLinks={editLinks}
+            editCompanyLink={editCompanyLink}
             editMode={editMode}
+            user={user}
           />
           {isCompanyEditProfil && (
             <ButtonEditPosition>
               <div data-tip data-for="disabledButton">
                 <ButtonIcon
-                  title="Edytuj linki"
+                  title="Edytuj link firmowy"
                   uppercase
                   fontIconSize="25"
                   fontSize="14"
@@ -103,7 +78,7 @@ const LinksComponent = ({
                   secondColors
                   onClick={() => {
                     handleResetAllEditedComponents()
-                    handleEdit(setEditLinks)
+                    handleEdit(setEditCompanyLink)
                   }}
                   disabled={disabledEditButtons}
                 />
@@ -115,4 +90,4 @@ const LinksComponent = ({
     </MarginTopReserwation>
   )
 }
-export default LinksComponent
+export default CompanyLink

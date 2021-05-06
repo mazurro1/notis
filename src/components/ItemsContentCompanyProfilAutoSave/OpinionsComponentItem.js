@@ -220,7 +220,7 @@ const OpinionsComponentItem = ({
 
   let userName = "Brak użytkownika"
   if (!!opinion.user) {
-    userName = Buffer.from(opinion.user.name, "base64").toString("ascii")
+    userName = Buffer.from(opinion.user.name, "base64").toString("utf-8")
   }
   let workerName = "Brak pracownika"
   let workerSurname = ""
@@ -228,11 +228,11 @@ const OpinionsComponentItem = ({
     workerName = Buffer.from(
       opinion.reserwationId.toWorkerUserId.name,
       "base64"
-    ).toString("ascii")
+    ).toString("utf-8")
     workerSurname = Buffer.from(
       opinion.reserwationId.toWorkerUserId.surname,
       "base64"
-    ).toString("ascii")
+    ).toString("utf-8")
   }
 
   const disabledSaveOpinion = !!opinion.replayOpinionMessage
