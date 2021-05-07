@@ -888,6 +888,22 @@ export const CHANGE_RESERWATION_USER = "CHANGE_RESERWATION_USER"
 export const CHANGE_LIST_MAP_OFFERS = "CHANGE_LIST_MAP_OFFERS"
 export const UPDATE_COMPANY_LINK_PATH = "UPDATE_COMPANY_LINK_PATH"
 export const CHANGE_RESTART_COMPANY_LINK = "CHANGE_RESTART_COMPANY_LINK"
+export const UPDATE_COMPANY_NIP = "UPDATE_COMPANY_NIP"
+export const CHANGE_RESTART_COMPANY_NIP = "CHANGE_RESTART_COMPANY_NIP"
+
+export const updateCompanyNip = (nip, dateInvoice) => {
+  return {
+    type: UPDATE_COMPANY_NIP,
+    nip: nip,
+    dateInvoice: dateInvoice,
+  }
+}
+
+export const changeRestartCompanyNip = () => {
+  return {
+    type: CHANGE_RESTART_COMPANY_NIP,
+  }
+}
 
 export const changeRestartCompanyLink = () => {
   return {
@@ -3447,6 +3463,9 @@ export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
         }
       )
       .then(response => {
+        dispatch(
+          addAlertItem("Zaktualizowano ustawienia działalności", "green")
+        )
         dispatch(changeSpinner(false))
         dispatch(companyPatchSettings(dataSettings))
       })
@@ -5650,6 +5669,114 @@ export const fetchAddCompanyLink = (token, companyId, pathValue) => {
               dispatch(addAlertItem("Link jest zajęty", "red"))
             } else {
               dispatch(addAlertItem("Błąd podczas dodawania linku", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCompanyUpdateNip = (token, companyId, nipValue) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-update-nip`,
+        {
+          companyId: companyId,
+          nipValue: nipValue,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateCompanyNip(response.data.nip, response.data.dataToInvoice)
+        )
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem(
+            "Zaktualizowano NIP firmowy oraz informacje działalności.",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(addAlertItem("Numer NIP jest niepoprawny", "red"))
+            } else if (error.response.status === 441) {
+              dispatch(
+                addAlertItem(
+                  "Nie można teraz zaktualizować numeru NIP. Spróbuj ponownie póżniej.",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji numeru NIP", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCompanyUpdateNipInfo = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-update-nip-info`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateCompanyNip(response.data.nip, response.data.dataToInvoice)
+        )
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem("Zaktualizowano informacje działalności.", "green")
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(addAlertItem("Numer NIP jest niepoprawny", "red"))
+            } else if (error.response.status === 441) {
+              dispatch(
+                addAlertItem(
+                  "Nie można teraz zaktualizować numeru NIP. Spróbuj ponownie póżniej.",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktualizacji numeru NIP", "red")
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

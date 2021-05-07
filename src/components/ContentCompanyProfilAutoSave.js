@@ -17,7 +17,7 @@ import AboutUsComponent from "./ItemsContentCompanyProfilAutoSave/AboutUsCompone
 import ReserwationTextComponent from "./ItemsContentCompanyProfilAutoSave/ReserwationTextComponent"
 import LinksComponent from "./ItemsContentCompanyProfilAutoSave/LinksComponent"
 import MapsComponent from "./MapsComponent"
-import MapsEditComponent from "./MapsEditComponent"
+// import MapsEditComponent from "./MapsEditComponent"
 import OpinionsComponent from "./ItemsContentCompanyProfilAutoSave/OpinionsComponent"
 import GalleryContent from "./ItemsContentCompanyProfilAutoSave/GalleryContent"
 import StampsContent from "./ItemsContentCompanyProfilAutoSave/StampsContent"
@@ -28,6 +28,7 @@ import ReportCompany from "./ItemsContentCompanyProfilAutoSave/ReportCompany"
 import { Site } from "../common/Site"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyLink from "./ItemsContentCompanyProfilAutoSave/CompanyLink"
+import CompanyNip from "./ItemsContentCompanyProfilAutoSave/CompanyNip"
 
 const TextH1 = styled.div`
   position: relative;
@@ -209,6 +210,7 @@ const ContentCompanyProfilAutoSave = ({
   const [editedReserwation, setEditedReserwation] = useState(false)
   const [editLinks, setEditLinks] = useState(false)
   const [editCompanyLink, setEditCompanyLink] = useState(false)
+  const [editCompanyNip, setEditCompanyNip] = useState(false)
   const [editConstHappyHours, setEditConstHappyHours] = useState(false)
   const [editPromotions, setEditPromotions] = useState(false)
   const [editMap, setEditMap] = useState(false)
@@ -245,6 +247,7 @@ const ContentCompanyProfilAutoSave = ({
     editedReserwation ||
     editLinks ||
     editCompanyLink ||
+    editCompanyNip ||
     editConstHappyHours ||
     editPromotions ||
     editMap ||
@@ -263,6 +266,7 @@ const ContentCompanyProfilAutoSave = ({
     setEditedReserwation(false)
     setEditLinks(false)
     setEditCompanyLink(false)
+    setEditCompanyNip(false)
     setEditConstHappyHours(false)
     setEditPromotions(false)
     setEditMap(false)
@@ -609,7 +613,6 @@ const ContentCompanyProfilAutoSave = ({
                 handleResetAllEditedComponents={handleResetAllEditedComponents}
                 disabledEditButtons={disabledEditButtons}
                 editMode={editMode}
-                dataToInvoice={company.dataToInvoice}
                 linkPath={company.linkPath}
               />
             </RightColumnItem>
@@ -800,6 +803,25 @@ const ContentCompanyProfilAutoSave = ({
                 editMode={editMode}
               />
             )}
+          {isEditAndAdmin && (
+            <CompanyNip
+              editCompanyNip={editCompanyNip}
+              setEditCompanyNip={setEditCompanyNip}
+              RightColumnItem={RightColumnItem}
+              companyEditProfilProps={companyEditProfilProps}
+              {...companyEditProfilProps}
+              siteProps={siteProps}
+              TitleRightColumn={TitleRightColumn}
+              ParagraphRightColumn={ParagraphRightColumn}
+              company={company}
+              user={user}
+              ButtonEditPosition={ButtonEditPosition}
+              disabledEditButtons={disabledEditButtons}
+              editMode={editMode}
+              handleResetAllEditedComponents={handleResetAllEditedComponents}
+              dataToInvoice={company.dataToInvoice}
+            />
+          )}
           {isEditAndAdmin && (
             <CompanyLink
               editCompanyLink={editCompanyLink}

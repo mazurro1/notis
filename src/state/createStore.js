@@ -46,6 +46,8 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  CHANGE_RESTART_COMPANY_NIP,
+  UPDATE_COMPANY_NIP,
   CHANGE_RESTART_COMPANY_LINK,
   UPDATE_COMPANY_LINK_PATH,
   CHANGE_LIST_MAP_OFFERS,
@@ -231,6 +233,7 @@ const initialState = {
   popupTakePlace: false,
   selectedNameMenu: "",
   restartCompanyLink: false,
+  restartCompanyNip: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -640,6 +643,28 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case CHANGE_RESTART_COMPANY_NIP: {
+      return {
+        ...state,
+        restartCompanyNip: false,
+      }
+    }
+
+    case UPDATE_COMPANY_NIP: {
+      const newNipWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newNipWorkCompanyData) {
+        newNipWorkCompanyData.nip = action.nip
+        newNipWorkCompanyData.dataToInvoice = action.dateInvoice
+      }
+      return {
+        ...state,
+        workCompanyData: newNipWorkCompanyData,
+        restartCompanyNip: true,
+      }
+    }
 
     case CHANGE_RESTART_COMPANY_LINK: {
       return {

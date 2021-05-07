@@ -48,7 +48,7 @@ const ButtonSubmit = styled.button`
 
 const HeightComponentLinks = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "350px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "200px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;

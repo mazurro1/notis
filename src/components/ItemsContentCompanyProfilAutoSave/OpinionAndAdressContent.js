@@ -47,7 +47,7 @@ const CheckboxStyle = styled.div`
 
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "1100px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "850px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -153,67 +153,6 @@ const IsCompanyPaused = styled.div`
   user-select: none;
 `
 
-const ReserwationItem = styled.div`
-  height: 30px;
-  width: 65px;
-  display: flex;
-  margin-bottom: 5px;
-  margin-right: ${props => (props.index ? "0px" : "5px")};
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).secondDarkColor};
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  transition-property: transform, background-color, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  user-select: none;
-  &:hover {
-    transform: scale(1.2);
-  }
-`
-
-const ReserwationMonth = styled.div`
-  height: 30px;
-  padding: 5px 10px;
-  display: flex;
-  margin-bottom: 5px;
-  margin-right: ${props => (props.index ? "0px" : "12px")};
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).secondColor
-      : Colors(props.siteProps).secondDarkColor};
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  transition-property: transform, background-color, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  user-select: none;
-  font-size: 0.9rem;
-  &:hover {
-    transform: scale(1.2);
-  }
-`
-
-const AllReserwationTime = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-`
-
 const TextStyleInfo = styled.div`
   font-size: 1rem;
   font-family: "Poppins-Medium", sans-serif;
@@ -242,12 +181,8 @@ const DisabledTextToEdit = styled.div`
   }
 `
 
-const ButtonNipActualization = styled.div`
+const MarginBottomSelect = styled.div`
   margin-bottom: 20px;
-  color: ${props => Colors(props.siteProps).textNormalBlack};
-  font-size: 0.9rem;
-  font-family: "Poppins-Medium", sans-serif;
-  text-align: center;
 `
 
 const OpinionAndAdressContent = ({
@@ -274,8 +209,6 @@ const OpinionAndAdressContent = ({
   disabledEditButtons,
   editMode,
   code = "00-000",
-  dataToInvoice = null,
-  linkPath = "",
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
   const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
@@ -496,17 +429,17 @@ const OpinionAndAdressContent = ({
     setCompanyPausedItem(prevState => !prevState)
   }
 
-  const handleClickReserwationEver = item => {
-    setReserwationEver(item)
-  }
-
-  const handleClickReserwationMonth = item => {
-    setReserwationMonth(item)
-  }
-
   const handleConfirmDeleteCompany = () => {
     handleResetInputs()
     dispatch(confirmDeleteCompany(true))
+  }
+
+  const handleChangeReserwationEver = value => {
+    setReserwationEver(value.value)
+  }
+
+  const handleChangeReserwationMonth = value => {
+    setReserwationMonth(value.value)
   }
 
   const handleChangeIndystries = value => {
@@ -562,35 +495,27 @@ const OpinionAndAdressContent = ({
     setIndustriesComponent(value)
   }
 
-  const mapReserwationDelay = ReserwationDelay.map((item, index) => {
-    const isActive = reserwationEver === item
-    return (
-      <ReserwationItem
-        key={index}
-        active={isActive}
-        onClick={() => handleClickReserwationEver(item)}
-        siteProps={siteProps}
-        index={index === 3}
-      >
-        <div>{item} min</div>
-      </ReserwationItem>
-    )
+  const mapReserwationDelaySelect = ReserwationDelay.map(item => {
+    return {
+      value: item,
+      label: item + " min",
+    }
   })
 
-  const mapReserwationDelayMonth = ReserwationDelayMonth.map((item, index) => {
-    const isActive = reserwationMonth === item.id
-    return (
-      <ReserwationMonth
-        key={index}
-        active={isActive}
-        onClick={() => handleClickReserwationMonth(item.id)}
-        siteProps={siteProps}
-        index={index === 11}
-      >
-        <div>{`${item.id} ${item.month}`}</div>
-      </ReserwationMonth>
-    )
+  const mapReserwationMonthSelect = ReserwationDelayMonth.map(item => {
+    return {
+      value: item.id,
+      label: `${item.id} ${item.month}`,
+    }
   })
+
+  const findMonthDelay = ReserwationDelayMonth.find(
+    item => item.id === reserwationMonth
+  )
+  let nameMonthDelay = ""
+  if (!!findMonthDelay) {
+    nameMonthDelay = findMonthDelay.month
+  }
 
   const phoneNumberRender = `${phoneInput.charAt(0)}${phoneInput.charAt(
     1
@@ -599,29 +524,6 @@ const OpinionAndAdressContent = ({
   )}${phoneInput.charAt(5)}-${phoneInput.charAt(6)}${phoneInput.charAt(
     7
   )}${phoneInput.charAt(8)}`
-
-  let dataNameGUS = !!dataToInvoice ? (
-    <>
-      <div>{!!dataToInvoice.name ? dataToInvoice.name : "Brak"}</div>
-    </>
-  ) : null
-
-  let dataGUS = !!dataToInvoice ? (
-    <>
-      <div>
-        <div className="titleInline">Kod pocztowy:</div>{" "}
-        {!!dataToInvoice.postalCode ? dataToInvoice.postalCode : "Brak"}
-      </div>
-      <div>
-        <div className="titleInline">Miasto:</div>{" "}
-        {!!dataToInvoice.city ? dataToInvoice.city : "Brak"}
-      </div>
-      <div>
-        <div className="titleInline">Ulica:</div>{" "}
-        {!!dataToInvoice.street ? dataToInvoice.street : "Brak"}
-      </div>
-    </>
-  ) : null
 
   return (
     <Element name="opinionScrollElement" className="element">
@@ -709,30 +611,6 @@ const OpinionAndAdressContent = ({
                     ? company.email
                     : "Błąd podczas pobierania adresu e-mail"}
                 </DisabledTextToEdit>
-                <TextStyleInfo siteProps={siteProps}>
-                  Dane do faktur:
-                </TextStyleInfo>
-                <DisabledTextToEdit siteProps={siteProps}>
-                  {dataNameGUS}
-                  <div>
-                    <div className="titleInline">Nip:</div>{" "}
-                    {!!company.nip ? `${company.nip}` : "Brak"}
-                  </div>
-                  {dataGUS}
-                </DisabledTextToEdit>
-                <ButtonNipActualization siteProps={siteProps}>
-                  <ButtonIcon
-                    title="Zaktualizuj dane firmowe"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="13"
-                    icon={<MdLoop />}
-                    customColorButton={Colors(siteProps).secondDarkColor}
-                    customColorIcon={Colors(siteProps).secondColor}
-                    // onClick={handleDeleteCompany}
-                  />
-                  Uwaga: Można dokonać aktualizacji 1 raz na dzień.
-                </ButtonNipActualization>
                 <InputIcon
                   icon={<MdWork />}
                   placeholder="Nazwa firmy"
@@ -792,27 +670,64 @@ const OpinionAndAdressContent = ({
                 <TextStyleInfo siteProps={siteProps}>
                   Rezerwacja co:
                 </TextStyleInfo>
-                <AllReserwationTime>{mapReserwationDelay}</AllReserwationTime>
+                <MarginBottomSelect>
+                  <SelectCreated
+                    options={mapReserwationDelaySelect}
+                    value={{
+                      value: reserwationEver,
+                      label: reserwationEver + " min",
+                    }}
+                    handleChange={handleChangeReserwationEver}
+                    placeholder="Rezerwacja co..."
+                    defaultMenuIsOpen={false}
+                    widthAuto
+                    isClearable={false}
+                    deleteItem={false}
+                    darkSelect
+                    maxMenuHeight={200}
+                  />
+                </MarginBottomSelect>
                 <TextStyleInfo siteProps={siteProps}>
                   Rezerwacja do:
                 </TextStyleInfo>
-                <AllReserwationTime>
-                  {mapReserwationDelayMonth}
-                </AllReserwationTime>
-                <SelectCreated
-                  options={AllIndustries[siteProps.language]}
-                  value={industriesComponent}
-                  handleChange={handleChangeIndystries}
-                  placeholder="Typy działalności"
-                  defaultMenuIsOpen={false}
-                  widthAuto
-                  isMulti
-                  isClearable={false}
-                  darkSelect
-                  onlyText
-                  maxMenuHeight={200}
-                  top
-                />
+                <MarginBottomSelect>
+                  <SelectCreated
+                    options={mapReserwationMonthSelect}
+                    value={{
+                      value: reserwationMonth,
+                      label: `${reserwationMonth} ${nameMonthDelay}`,
+                    }}
+                    handleChange={handleChangeReserwationMonth}
+                    placeholder="Rezerwacja do..."
+                    defaultMenuIsOpen={false}
+                    widthAuto
+                    isClearable={false}
+                    deleteItem={false}
+                    darkSelect
+                    maxMenuHeight={200}
+                    top
+                  />
+                </MarginBottomSelect>
+                <TextStyleInfo siteProps={siteProps}>
+                  Typ prowadzonej działalności
+                </TextStyleInfo>
+                <MarginBottomSelect>
+                  <SelectCreated
+                    options={AllIndustries[siteProps.language]}
+                    value={industriesComponent}
+                    handleChange={handleChangeIndystries}
+                    placeholder="Typy działalności"
+                    defaultMenuIsOpen={false}
+                    widthAuto
+                    isMulti
+                    isClearable={false}
+                    darkSelect
+                    onlyText
+                    maxMenuHeight={200}
+                    closeMenuOnSelect={false}
+                    top
+                  />
+                </MarginBottomSelect>
                 <CheckboxStyle siteProps={siteProps}>
                   <Checkbox
                     theme="material-checkbox"
