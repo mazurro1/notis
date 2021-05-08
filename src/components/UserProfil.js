@@ -473,7 +473,8 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
     </ReactTooltip>
   )
 
-  const disabledButtonDeleteAccount = !!user.hasCompany || !!user.company
+  const disabledButtonDeleteAccount =
+    !!user.hasCompany || !!user.company || !!user.companys.length > 0
   const tooltipDisabledDeleteAccount = disabledButtonDeleteAccount && (
     <ReactTooltip id="alerDeleteAccount" effect="float" multiline={true}>
       <div>

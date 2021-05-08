@@ -63,9 +63,9 @@ const YourCompany = () => {
   const handleCreateCompany = () => {
     dispatch(changeCreateCompanyVisible(!createCompanyVisible))
   }
-  console.log(user)
+
   const selectButton = !!user ? (
-    !!!user.company ? (
+    !!!user.hasCompany ? (
       <>
         {!!!user.phoneVerified && (
           <ReactTooltip id="blockCreateCompany" effect="float" multiline={true}>

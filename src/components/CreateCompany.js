@@ -164,6 +164,7 @@ const CreateCompany = ({ user, siteProps }) => {
           darkSelect
           onlyText
           width="350px"
+          closeMenuOnSelect={false}
         />
       </SelectStyles>
       <InputIcon

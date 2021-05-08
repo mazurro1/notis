@@ -1662,43 +1662,6 @@ export const replaceCompanyData = data => {
   }
 }
 
-export const fetchAddCompanyToUser = (companyId, userToken, userId) => {
-  return dispatch => {
-    return axios
-      .post(
-        `${Site.serverUrl}/add-company`,
-        {
-          companyId: companyId,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + userToken,
-          },
-        }
-      )
-
-      .then(response => {
-        dispatch(fetchAutoLogin(true, true, userToken, userId, true))
-      })
-      .catch(error => {
-        if (!!error) {
-          if (!!error.response) {
-            if (error.response.status === 401) {
-              dispatch(logout())
-            } else {
-              dispatch(
-                addAlertItem("Błąd podczas tworzenia konta firmowego", "red")
-              )
-            }
-          } else {
-            dispatch(addAlertItem("Brak internetu.", "red"))
-          }
-        }
-        dispatch(changeSpinner(false))
-      })
-  }
-}
-
 export const fetchCompanyRegistration = (
   companyEmail,
   companyName,
@@ -1737,11 +1700,7 @@ export const fetchCompanyRegistration = (
 
       .then(response => {
         dispatch(changeSpinner(false))
-        // dispatch(addAlertItem("Stworzono konto firmowe.", "green"))
         dispatch(fetchAutoLogin(true, true, userToken, userId, true))
-        // dispatch(
-        //   fetchAddCompanyToUser(response.data.companyId, userToken, userId)
-        // )
       })
       .catch(error => {
         if (!!error) {

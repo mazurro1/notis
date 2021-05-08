@@ -1020,6 +1020,7 @@ const Navigation = ({ isMainPage }) => {
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
   let hasCompany = false
+  let anyCompany = false
   let hasPermission = false
   let companyConfirmed = false
   let isAdmin = false
@@ -1028,7 +1029,13 @@ const Navigation = ({ isMainPage }) => {
   let datePremium = null
 
   if (!!user) {
-    if (!!user.hasCompany) {
+    if (!!user.companys) {
+      hasCompany = user.hasCompany
+      if (user.companys.length > 0) {
+        anyCompany = true
+      }
+    }
+    if (!!user.company) {
       if (!!user.company.accountVerified) {
         companyConfirmed = true
       }
@@ -1060,7 +1067,6 @@ const Navigation = ({ isMainPage }) => {
       )
       workerHasAccessClientsOpinions = user.company.owner === user.userId
       workerHasAccessAvailability = user.company.owner === user.userId
-      hasCompany = true
       hasPermission = user.company.owner === user.userId
       isAdmin = user.company.owner === user.userId
       if (!!user.company.sms) {
@@ -1171,7 +1177,7 @@ const Navigation = ({ isMainPage }) => {
             isDisabled={selectCompanysValues.length <= 1}
           />
         </StyledSelect>
-        {hasCompany && hasPermission && (
+        {anyCompany && hasPermission && (
           <>
             {isAdmin && companyConfirmed && (
               <>
@@ -1301,21 +1307,11 @@ const Navigation = ({ isMainPage }) => {
   )
 
   const renderCompanyOrCreateCompany =
-    !!user && user.hasCompany ? (
-      user.company.owner === user.userId || workerHasAccessButton ? (
-        <>
-          <ButtonNavStyle>
-            <ButtonIcon
-              title={Translates[siteProps.language].buttons.work}
-              uppercase
-              fontIconSize="25"
-              fontSize="16"
-              icon={<MdWork />}
-              onClick={handleClickWork}
-            />
-          </ButtonNavStyle>
-        </>
-      ) : (
+    !!user &&
+    user.companys.length > 0 &&
+    !!user.company &&
+    (user.company.owner === user.userId || workerHasAccessButton ? (
+      <>
         <ButtonNavStyle>
           <ButtonIcon
             title={Translates[siteProps.language].buttons.work}
@@ -1326,24 +1322,37 @@ const Navigation = ({ isMainPage }) => {
             onClick={handleClickWork}
           />
         </ButtonNavStyle>
-      )
+      </>
     ) : (
       <ButtonNavStyle>
-        <LinkEffect
-          path="/your-company"
-          text={
-            <ButtonIcon
-              title="dla firm"
-              uppercase
-              fontIconSize="25"
-              fontSize="16"
-              icon={<MdWork />}
-              secondColors
-            />
-          }
+        <ButtonIcon
+          title={Translates[siteProps.language].buttons.work}
+          uppercase
+          fontIconSize="25"
+          fontSize="16"
+          icon={<MdWork />}
+          onClick={handleClickWork}
         />
       </ButtonNavStyle>
-    )
+    ))
+
+  const renderCreateCompany = !!user && !!!user.hasCompany && (
+    <ButtonNavStyle>
+      <LinkEffect
+        path="/your-company"
+        text={
+          <ButtonIcon
+            title="dla firm"
+            uppercase
+            fontIconSize="25"
+            fontSize="16"
+            icon={<MdWork />}
+            secondColors
+          />
+        }
+      />
+    </ButtonNavStyle>
+  )
 
   const renderButtonsUp = !!user ? (
     <>
@@ -1446,6 +1455,7 @@ const Navigation = ({ isMainPage }) => {
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">
+            {renderCreateCompany}
             {renderCompanyOrCreateCompany}
             {renderButtonsUp}
           </div>
@@ -1541,6 +1551,7 @@ const Navigation = ({ isMainPage }) => {
                   />
                 </LogoStyle>
                 <ButtonsNav isUser={!!user}>
+                  {renderCreateCompany}
                   {renderCompanyOrCreateCompany}
                   {renderButtonsUp}
                 </ButtonsNav>

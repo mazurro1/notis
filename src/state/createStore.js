@@ -815,7 +815,8 @@ const reducer = (state = initialState, action) => {
       const editedUser = !!state.user ? { ...state.user } : null
       if (!!editedUser) {
         editedUser.hasCompany = false
-        editedUser.company = null
+        editedUser.company =
+          editedUser.companys.length > 0 ? editedUser.companys[0] : null
       }
       return {
         ...state,
