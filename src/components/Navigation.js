@@ -882,20 +882,6 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupUserProfil = !!user && (
-    <Popup
-      popupEnable={userProfilVisible}
-      handleClose={handleUserProfil}
-      title="Dane użytkownika"
-    >
-      <UserProfil
-        userProfilVisible={userProfilVisible}
-        user={user}
-        siteProps={siteProps}
-      />
-    </Popup>
-  )
-
   const PopupUserStamps = user && (
     <Popup
       popupEnable={stampsVisible}
@@ -1122,6 +1108,21 @@ const Navigation = ({ isMainPage }) => {
     }
   }
 
+  const PopupUserProfil = !!user && (
+    <Popup
+      popupEnable={userProfilVisible}
+      handleClose={handleUserProfil}
+      title="Dane użytkownika"
+    >
+      <UserProfil
+        userProfilVisible={userProfilVisible}
+        user={user}
+        siteProps={siteProps}
+        selectCompanysValues={selectCompanysValues}
+      />
+    </Popup>
+  )
+
   const PopupWorkerEditHours = !!user && (
     <Popup
       popupEnable={editWorkerHours}
@@ -1336,7 +1337,7 @@ const Navigation = ({ isMainPage }) => {
       </ButtonNavStyle>
     ))
 
-  const renderCreateCompany = !!user && !!!user.hasCompany && (
+  const renderCreateCompany = !!user && !!!hasCompany && (
     <ButtonNavStyle>
       <LinkEffect
         path="/your-company"

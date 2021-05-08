@@ -14,6 +14,7 @@ import {
   MdDelete,
   MdLocalPhone,
   MdInfo,
+  MdWork,
 } from "react-icons/md"
 import {
   fetchUserPhone,
@@ -27,13 +28,14 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
-import { fetchEditUser } from "../state/actions"
+import { fetchEditUser, fetchUpdateDefaultCompany } from "../state/actions"
 import UserProfilImage from "./UserProfilImage"
 import { Site } from "../common/Site"
 import InputPhone from "./InputPhone"
 import Popup from "./Popup"
 import DeleteAccount from "./DeleteAccount"
 import VeryfiedPhone from "./VeryfiedPhone"
+import SelectCreated from "./SelectCreated"
 
 const AddImage = styled.div`
   position: relative;
@@ -99,11 +101,13 @@ const TextToUser = styled.div`
   h1 {
     font-size: 1rem;
   }
-  span {
-    color: ${props => Colors(props.siteProps).primaryColor};
-    padding-left: 10px;
-    font-family: "Poppins-Bold", sans-serif;
-    user-select: none;
+  .styledSpans {
+    span {
+      color: ${props => Colors(props.siteProps).primaryColor};
+      padding-left: 10px;
+      font-family: "Poppins-Bold", sans-serif;
+      user-select: none;
+    }
   }
 `
 
@@ -174,13 +178,21 @@ const EditUserImage = styled.div`
 const TextGallery = styled.div`
   margin-bottom: 20px;
   margin-left: 20px;
-  span {
-    position: relative;
-    top: 8px;
-    font-size: 2rem;
-    color: ${props => Colors(props.siteProps).primaryColorDark};
-    padding-right: 10px;
+  .styledSpans {
+    span {
+      position: relative;
+      top: 8px;
+      font-size: 2rem;
+      color: ${props => Colors(props.siteProps).primaryColorDark};
+      padding-right: 10px;
+    }
   }
+`
+
+const TextChangeActive = styled.div`
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  font-size: 1rem;
+  margin-bottom: 10px;
 `
 
 const MarginButtons = styled.div`
@@ -206,7 +218,17 @@ const TextCodeToDelete = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
-const UserProfil = ({ userProfilVisible, user, siteProps }) => {
+const SelectStyleDefault = styled.div`
+  margin-bottom: 80px;
+`
+
+const UserProfil = ({
+  userProfilVisible,
+  user,
+  siteProps,
+  selectCompanysValues,
+}) => {
+  const [selectedFirstCompany, setSelectedFirstCompany] = useState(null)
   const [newPhone, setNewPhone] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [password, setPassword] = useState("")
@@ -217,12 +239,20 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
   const [newPasswordVisible, setNewPasswordVisible] = useState(false)
   const [veryfiedPhoneVisible, setVeryfiedPhoneVisible] = useState(false)
   const [addedImages, setAddedImages] = useState([])
+  const [activeCompany, setActiveCompany] = useState(false)
   const userPhone = useSelector(state => state.userPhone)
   const verifiedPhoneComponentVisible = useSelector(
     state => state.verifiedPhoneComponentVisible
   )
   const userProfilReset = useSelector(state => state.userProfilReset)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    setSelectedFirstCompany({
+      label: user.company.name,
+      value: user.company._id,
+    })
+  }, [user])
 
   useEffect(() => {
     setVeryfiedPhoneVisible(verifiedPhoneComponentVisible)
@@ -263,7 +293,12 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
       setNewPhoneVisible(false)
       setNewPasswordVisible(false)
       setEditImage(false)
+      setActiveCompany(false)
       dispatch(resetUserProfil())
+      setSelectedFirstCompany({
+        label: user.company.name,
+        value: user.company._id,
+      })
     }
   }, [userProfilVisible, userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -380,6 +415,22 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
     dispatch(verifiedPhoneComponent(false))
   }
 
+  const handleChangeSelectedFirstCompany = value => {
+    setSelectedFirstCompany(value)
+  }
+
+  const handleChangeActiveCompany = () => {
+    setActiveCompany(prevState => !prevState)
+    setSelectedFirstCompany({
+      label: user.company.name,
+      value: user.company._id,
+    })
+  }
+
+  const handleSaveDefaultCompany = () => {
+    dispatch(fetchUpdateDefaultCompany(user.token, selectedFirstCompany.value))
+  }
+
   const disabledNewPassword =
     newPassword.length >= 5 && newPassword !== password && password.length >= 5
 
@@ -485,11 +536,18 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
     </ReactTooltip>
   )
 
+  let disabledButtonSaveDefaultCompany = true
+  if (!!selectedFirstCompany) {
+    if (selectedFirstCompany.value !== user.company._id) {
+      disabledButtonSaveDefaultCompany = false
+    }
+  }
+
   return (
     <HeightComponent>
       <ProfilStyle siteProps={siteProps}>
         <TextToUser siteProps={siteProps}>
-          <UserNameImage>
+          <UserNameImage className="styledSpans">
             {addedImages.length === 0 ? (
               <DefaultImage siteProps={siteProps}>
                 <FaUserAlt />
@@ -510,12 +568,26 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
               </span>
             </div>
           </UserNameImage>
-          <div>
+          <div className="styledSpans">
             <h1>
               Twój adres email: <span>{!!user ? user.email : ""}</span>
             </h1>
           </div>
           {tooltipChangePhone}
+          {!!user.companys.length > 0 && (
+            <div>
+              <MarginButtonPhone>
+                <ButtonIcon
+                  title="Zmień domyślną działalność"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<MdWork />}
+                  onClick={handleChangeActiveCompany}
+                />
+              </MarginButtonPhone>
+            </div>
+          )}
           <div>
             <MarginButtonPhone
               data-tip
@@ -592,7 +664,7 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
         closeTitle={false}
         smallTitle
       >
-        <TextGallery siteProps={siteProps}>
+        <TextGallery siteProps={siteProps} className="styledSpans">
           <div>
             <span>
               <MdPhotoSizeSelectLarge />
@@ -826,6 +898,62 @@ const UserProfil = ({ userProfilVisible, user, siteProps }) => {
             </MarginButtonsSubmit>
           </ButtonsImagePosition>
         </form>
+      </Popup>
+      <Popup
+        popupEnable={activeCompany}
+        position="absolute"
+        borderRadius
+        title="Zmień domyślną działalność"
+        borderRadius
+        closeTitle={false}
+        smallTitle
+      >
+        <SelectStyleDefault siteProps={siteProps}>
+          <TextChangeActive siteProps={siteProps}>
+            Wybierz domyślną działalność, która zostanie załadowana jako 1
+            podczas logowania
+          </TextChangeActive>
+          <SelectCreated
+            options={selectCompanysValues}
+            value={selectedFirstCompany}
+            handleChange={handleChangeSelectedFirstCompany}
+            placeholder="Firma..."
+            defaultMenuIsOpen={false}
+            isClearable={false}
+            deleteItem={false}
+            darkSelect
+            maxMenuHeight={80}
+            isDisabled={selectCompanysValues.length <= 1}
+          />
+        </SelectStyleDefault>
+
+        <ButtonsImagePosition>
+          <MarginButtons>
+            <ButtonIcon
+              title="Anuluj"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdArrowBack />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleChangeActiveCompany}
+            />
+          </MarginButtons>
+          <MarginButtonsSubmit>
+            <ButtonIcon
+              title="Zapisz"
+              uppercase
+              fontIconSize="30"
+              fontSize="14"
+              icon={<MdSave />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              disabled={disabledButtonSaveDefaultCompany}
+              onClick={handleSaveDefaultCompany}
+            />
+          </MarginButtonsSubmit>
+        </ButtonsImagePosition>
       </Popup>
     </HeightComponent>
   )
