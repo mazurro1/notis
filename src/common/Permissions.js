@@ -13,7 +13,7 @@ export const Permissions = [
   },
   {
     value: 4,
-    label: "Grafik wszystkich pracowników",
+    label: "Grafik pracy",
   },
   // {
   //   value: 5,

@@ -8,30 +8,36 @@ import BigCalendarWorkerHoursAutoSave from "./BigCalendarWorkerHoursAutoSave"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyNoAccess from "./CompanyNoAccess"
 
-const WorkerHoursAutoSave = ({ handleClose, item, editWorkerHours }) => {
-  const user = useSelector(state => state.user)
+const WorkerHoursAutoSave = ({
+  handleClose,
+  item,
+  editWorkerHours,
+  user,
+  // isAdmin,
+}) => {
   const [userWorkerActive, setUserWorkerActive] = useState(user.userId)
   const [dateCalendar, setDateCalendar] = useState(new Date())
   const [disabledSwitch, setDisabledSwitch] = useState(false)
 
   const dispatch = useDispatch()
 
-  const isAdmin = user.userId === user.company.owner
+  const isAdmin = item.user._id === user.company.owner
+  console.log(isAdmin)
 
   const size = UseWindowSize()
   let isMobile = false
   if (!!size) {
     isMobile = size.width > 768 ? false : true
   }
-
   useEffect(() => {
-    if (item.user._id === user.userId) {
+    if (isAdmin) {
       dispatch(
         fetchGetOwnerNoConstData(
           user.token,
           user.company._id,
           dateCalendar.getFullYear(),
-          dateCalendar.getMonth() + 1
+          dateCalendar.getMonth() + 1,
+          item.user._id
         )
       )
     } else {

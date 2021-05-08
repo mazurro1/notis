@@ -270,6 +270,7 @@ const BigCalendarWorkerHoursAutoSave = ({
   setDisabledSwitch,
   user,
   isMobile = false,
+  isAdmin,
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -744,6 +745,7 @@ const BigCalendarWorkerHoursAutoSave = ({
             />
           </ButtonItemStyle>
         </ButtonsPosition>
+        {console.log(item)}
         <CalendarWorkerHoursNewEvent
           siteProps={siteProps}
           handleClosePopupEventItem={handleClosePopupEventItem}
@@ -753,7 +755,9 @@ const BigCalendarWorkerHoursAutoSave = ({
           itemCompanyHours={item.company.openingDays}
           user={user}
           workerId={item._id}
+          workerUserId={item.user._id}
           item={item}
+          isAdmin={isAdmin}
         />
         <CalendarWorkerHoursNewEvent
           siteProps={siteProps}
@@ -764,7 +768,9 @@ const BigCalendarWorkerHoursAutoSave = ({
           itemCompanyHours={item.company.openingDays}
           user={user}
           workerId={item._id}
+          workerUserId={item.user._id}
           item={item}
+          isAdmin={isAdmin}
         />
       </BackgroundContentCalendar>
       <Popup

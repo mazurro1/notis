@@ -4,7 +4,7 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import { FaSave } from "react-icons/fa"
-import { MdClose, MdInfo, MdTimelapse } from "react-icons/md"
+import { MdClose, MdInfo, MdTimelapse, MdArrowBack } from "react-icons/md"
 import {
   getMonthNamePl,
   getMonthAndReturnFull,
@@ -164,7 +164,9 @@ const CalendarWorkerReserwatinNewEvent = ({
   itemCompanyHours,
   user,
   workerId,
+  workerUserId,
   item,
+  isAdmin,
 }) => {
   const [openDateStart, setOpenDateStart] = useState(false)
   const [openDateEnd, setOpenDateEnd] = useState(false)
@@ -294,7 +296,7 @@ const CalendarWorkerReserwatinNewEvent = ({
       addNewNoConstHour(
         user.token,
         user.company._id,
-        item.user._id === user.userId ? "owner" : workerId,
+        isAdmin ? "owner" : workerUserId,
         newNoConstHour
       )
     )
@@ -305,7 +307,7 @@ const CalendarWorkerReserwatinNewEvent = ({
       deleteNoConstHour(
         user.token,
         user.company._id,
-        item.user._id === user.userId ? "owner" : workerId,
+        isAdmin ? "owner" : workerUserId,
         selectedEvent._id
       )
     )
@@ -415,9 +417,10 @@ const CalendarWorkerReserwatinNewEvent = ({
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<FaSave />}
-            secondColors
+            icon={<MdArrowBack />}
             onClick={handleReserPopupEvent}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
           />
         </ButtonItemStyle>
         <ButtonItemStyle>
@@ -441,7 +444,7 @@ const CalendarWorkerReserwatinNewEvent = ({
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<FaSave />}
+            icon={<MdArrowBack />}
             secondColors
             onClick={handleReserPopupEvent}
           />

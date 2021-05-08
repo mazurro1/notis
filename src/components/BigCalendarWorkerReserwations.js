@@ -35,6 +35,7 @@ const BackgroundContentCalendar = styled.div`
   border-radius: 5px;
   padding: 10px;
   max-width: 95vw;
+  width: 900px;
 `
 
 const BackgroundCalendarStyle = styled.div`
@@ -1233,6 +1234,8 @@ const BigCalendarWorkerReserwations = ({
           allEvents={allEvents}
           itemCompanyHours={item.company.openingDays}
           handleAddWorkerReserwation={handleAddWorkerReserwation}
+          user={user}
+          isAdmin={isAdmin}
         />
       </BackgroundContentCalendar>
       <Popup

@@ -41,6 +41,7 @@ import {
   ADD_COINS_OFFER,
   CHANGE_POPUP_TAKE_PLACE,
   CHANGE_SELECTED_NAME_MENU,
+  CHANGE_SELECTED_USER_COMPANY,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -238,6 +239,32 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_SELECTED_USER_COMPANY: {
+      const changedUserCompany = !!state.user ? state.user : null
+      if (!!changedUserCompany) {
+        const findIdCompany = changedUserCompany.companys.find(
+          itemCompany => itemCompany._id === action.companyId
+        )
+        if (!!findIdCompany) {
+          changedUserCompany.company = findIdCompany
+        }
+      }
+
+      return {
+        ...state,
+        user: changedUserCompany,
+        userProfilReset: true,
+        companyTransactionHistory: [],
+        userCompanyAvailability: [],
+        companyUsersInformations: [],
+        avaibleHoursReserwation: [],
+        workCompanyData: null,
+        workerHistoryReserwations: null,
+        workingHours: null,
+        activeWorkerUserId: null,
+      }
+    }
+
     case CHANGE_SELECTED_NAME_MENU: {
       return {
         ...state,

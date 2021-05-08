@@ -8,8 +8,7 @@ import BigCalendarEmployeeWorkingHours from "./BigCalendarEmployeeWorkingHours"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyNoAccess from "./CompanyNoAccess"
 
-const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours }) => {
-  const user = useSelector(state => state.user)
+const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours, user }) => {
   const workingHours = useSelector(state => state.workingHours)
   const [userWorkerActive, setUserWorkerActive] = useState(user.userId)
   const [dateCalendar, setDateCalendar] = useState(new Date())

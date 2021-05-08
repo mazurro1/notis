@@ -11,6 +11,7 @@ const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
   const userId = useSelector(state => state.userId)
   const workCompanyData = useSelector(state => state.workCompanyData)
+  const userProfilReset = useSelector(state => state.userProfilReset)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -20,6 +21,14 @@ const CompanyEditProfil = () => {
       }
     }
   }, [userId, dispatch, user.company.accountVerified]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!!userId && userProfilReset) {
+      if (user.company.accountVerified && !!!user.company.adress) {
+        dispatch(fetchCompanyData(user.company._id, user.token))
+      }
+    }
+  }, [userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const PopupActiveCompany = (
     <Popup

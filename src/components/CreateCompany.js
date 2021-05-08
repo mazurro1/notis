@@ -48,7 +48,7 @@ const SelectStyles = styled.div`
   margin-bottom: 10px;
 `
 
-const CreateCompany = () => {
+const CreateCompany = ({ user, siteProps }) => {
   const [industries, setIndustries] = useState([])
   const [emailInput, setEmailInput] = useState("")
   const [nameInput, setNameInput] = useState("")
@@ -58,8 +58,6 @@ const CreateCompany = () => {
   const [codeInput, setCodeInput] = useState("")
   const [discrictInput, setDiscrictInput] = useState("")
   const [adressInput, setAdressInput] = useState("")
-  const user = useSelector(state => state.user)
-  const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
 

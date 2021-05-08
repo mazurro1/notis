@@ -516,32 +516,34 @@ const ContentCompanyProfilAutoSave = ({
                   Pozostała ilość SMS: <span>{companySMS}</span>
                 </div>
               </CompanyPremiumInformation>
-              <RightColumnItem
-                {...companyEditProfilProps}
-                siteProps={siteProps}
-                active={editSMSSettngs}
-                disabledEditButtons={disabledEditButtons}
-              >
-                <SMSSettings
-                  TitleRightColumn={TitleRightColumn}
-                  ButtonEditPosition={ButtonEditPosition}
+              {isEditAndAdmin && (
+                <RightColumnItem
                   {...companyEditProfilProps}
-                  company={company}
-                  editMode={editMode}
                   siteProps={siteProps}
-                  user={user}
-                  editSMSSettngs={editSMSSettngs}
-                  setEditSMSSettngs={setEditSMSSettngs}
-                  handleResetAllEditedComponents={
-                    handleResetAllEditedComponents
-                  }
+                  active={editSMSSettngs}
                   disabledEditButtons={disabledEditButtons}
-                  smsReserwationAvaible={company.smsReserwationAvaible}
-                  smsNotifactionAvaible={company.smsNotifactionAvaible}
-                  smsCanceledAvaible={company.smsCanceledAvaible}
-                  smsChangedAvaible={company.smsChangedAvaible}
-                />
-              </RightColumnItem>
+                >
+                  <SMSSettings
+                    TitleRightColumn={TitleRightColumn}
+                    ButtonEditPosition={ButtonEditPosition}
+                    {...companyEditProfilProps}
+                    company={company}
+                    editMode={editMode}
+                    siteProps={siteProps}
+                    user={user}
+                    editSMSSettngs={editSMSSettngs}
+                    setEditSMSSettngs={setEditSMSSettngs}
+                    handleResetAllEditedComponents={
+                      handleResetAllEditedComponents
+                    }
+                    disabledEditButtons={disabledEditButtons}
+                    smsReserwationAvaible={company.smsReserwationAvaible}
+                    smsNotifactionAvaible={company.smsNotifactionAvaible}
+                    smsCanceledAvaible={company.smsCanceledAvaible}
+                    smsChangedAvaible={company.smsChangedAvaible}
+                  />
+                </RightColumnItem>
+              )}
             </>
           )}
           {editMode && isCompanyEditProfil && isAdmin ? (

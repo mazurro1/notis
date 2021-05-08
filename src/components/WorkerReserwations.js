@@ -5,8 +5,7 @@ import { fetchWorkerReserwationsAll } from "../state/actions"
 import UseWindowSize from "../common/UseWindowSize"
 import CompanyNoAccess from "./CompanyNoAccess"
 
-const WorkerReserwations = ({ handleClose }) => {
-  const user = useSelector(state => state.user)
+const WorkerReserwations = ({ handleClose, user, isAdmin }) => {
   const [userWorkerActive, setUserWorkerActive] = useState(user.userId)
   const [dateCalendar, setDateCalendar] = useState(new Date())
   const [disabledSwitch, setDisabledSwitch] = useState(false)
@@ -17,8 +16,6 @@ const WorkerReserwations = ({ handleClose }) => {
   const workingHours = useSelector(state => state.workingHours)
 
   const dispatch = useDispatch()
-
-  const isAdmin = user.userId === user.company.owner
 
   const size = UseWindowSize()
   let isMobile = false

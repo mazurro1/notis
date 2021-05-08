@@ -58,6 +58,8 @@ import {
   fetchAllMapsMarks,
   changePopupTakePlace,
   fetchNotificationEndpoint,
+  changeSelectedUserCompany,
+  resetUserProfil,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -87,6 +89,7 @@ import DeleteCompanyContent from "./DeleteCompany"
 import CoinsOffers from "./CoinsOffers"
 import TransactionHistory from "./TransactionHistory"
 import ReactTooltip from "react-tooltip"
+import SelectCreated from "./SelectCreated"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -239,6 +242,10 @@ const IconCloseStyle = styled.div`
   }
 `
 
+const StyledSelect = styled.div`
+  margin-bottom: 20px;
+`
+
 const CloseMenuLeft = styled.div`
   position: absolute;
   top: 10px;
@@ -350,6 +357,8 @@ const Navigation = ({ isMainPage }) => {
   const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
     false
   )
+
+  const userProfilReset = useSelector(state => state.userProfilReset)
   const popupTakePlace = useSelector(state => state.popupTakePlace)
   const siteProps = useSelector(state => state.siteProps)
   const editWorkerHours = useSelector(state => state.editWorkerHours)
@@ -379,7 +388,7 @@ const Navigation = ({ isMainPage }) => {
   const visibleMenuIndustries = useSelector(
     state => state.visibleMenuIndustries
   )
-
+  // console.log(userDoc)
   const confirmDeleteCompanyVisible = useSelector(
     state => state.confirmDeleteCompanyVisible
   )
@@ -392,6 +401,13 @@ const Navigation = ({ isMainPage }) => {
   const dispatch = useDispatch()
 
   const size = UseWindowSize()
+
+  useEffect(() => {
+    // setUserDoc(user)
+    if (!!userProfilReset) {
+      dispatch(resetUserProfil())
+    }
+  }, [userProfilReset])
 
   useEffect(() => {
     if (!!refUnderMenuIndustries) {
@@ -681,18 +697,11 @@ const Navigation = ({ isMainPage }) => {
     setTransactionHistoryVisible(prevState => !prevState)
   }
 
-  const isMobileSize = Site.mobileSize >= size.width
+  const handleChangeSelectedCompany = value => {
+    dispatch(changeSelectedUserCompany(value.value))
+  }
 
-  const PopupWorkersReserwations = !!user && (
-    <Popup
-      popupEnable={workerReserwationsVisible}
-      handleClose={handleCloseWorkerReserwations}
-      noContent
-      calendar
-    >
-      <WorkerReserwations handleClose={handleCloseWorkerReserwations} />
-    </Popup>
-  )
+  const isMobileSize = Site.mobileSize >= size.width
 
   const PopupWorkersUsersInformations = !!user && (
     <Popup
@@ -721,21 +730,6 @@ const Navigation = ({ isMainPage }) => {
     </Popup>
   )
 
-  const PopupWorkerEditHours = !!user && (
-    <Popup
-      popupEnable={editWorkerHours}
-      handleClose={() => dispatch(changeEditWorkerHours(false, null))}
-      noContent
-      calendar
-    >
-      <WorkerHoursAutoSave
-        item={editWorkerHoursData}
-        editWorkerHours={editWorkerHours}
-        handleClose={() => dispatch(changeEditWorkerHours(false, null))}
-      />
-    </Popup>
-  )
-
   const PopupEmployeeWorkingHours = !!user && (
     <Popup
       popupEnable={emplyeeWorkingHoursVisible}
@@ -747,6 +741,7 @@ const Navigation = ({ isMainPage }) => {
         item={editWorkerHoursData}
         editWorkerHours={editWorkerHours}
         handleClose={handleEmplyeeWorkingHoursVisible}
+        user={user}
       />
     </Popup>
   )
@@ -822,7 +817,7 @@ const Navigation = ({ isMainPage }) => {
       title="Stwórz konto firmowe"
       close={false}
     >
-      <CreateCompany />
+      <CreateCompany user={user} siteProps={siteProps} />
     </Popup>
   )
 
@@ -853,6 +848,8 @@ const Navigation = ({ isMainPage }) => {
         reserwationData={reserwationData}
         reserwationEnable={reserwationEnable}
         handleCloseReserwation={handleCloseReserwation}
+        user={user}
+        siteProps={siteProps}
       />
     </Popup>
   )
@@ -881,7 +878,7 @@ const Navigation = ({ isMainPage }) => {
       title="Aktywacja konta"
       close={false}
     >
-      <ActiveAccount />
+      <ActiveAccount user={user} siteProps={siteProps} />
     </Popup>
   )
 
@@ -891,7 +888,11 @@ const Navigation = ({ isMainPage }) => {
       handleClose={handleUserProfil}
       title="Dane użytkownika"
     >
-      <UserProfil userProfilVisible={userProfilVisible} />
+      <UserProfil
+        userProfilVisible={userProfilVisible}
+        user={user}
+        siteProps={siteProps}
+      />
     </Popup>
   )
 
@@ -1096,8 +1097,58 @@ const Navigation = ({ isMainPage }) => {
       }
     }
   }
+  let selectCompanysValues = []
+  let selectedCompany = null
+  if (!!user) {
+    if (!!user.companys) {
+      selectCompanysValues = user.companys.map(itemCompany => {
+        return {
+          label: itemCompany.name,
+          value: itemCompany._id,
+        }
+      })
+    }
+    if (!!user.company) {
+      selectedCompany = {
+        label: user.company.name,
+        value: user.company._id,
+      }
+    }
+  }
 
-  const PopupWorkerPropsVisible = (
+  const PopupWorkerEditHours = !!user && (
+    <Popup
+      popupEnable={editWorkerHours}
+      handleClose={() => dispatch(changeEditWorkerHours(false, null))}
+      noContent
+      calendar
+    >
+      <WorkerHoursAutoSave
+        item={editWorkerHoursData}
+        editWorkerHours={editWorkerHours}
+        handleClose={() => dispatch(changeEditWorkerHours(false, null))}
+        user={user}
+        isAdmin={isAdmin}
+      />
+    </Popup>
+  )
+
+  const PopupWorkersReserwations = !!user && (
+    <Popup
+      popupEnable={workerReserwationsVisible}
+      handleClose={handleCloseWorkerReserwations}
+      noContent
+      calendar
+    >
+      <WorkerReserwations
+        handleClose={handleCloseWorkerReserwations}
+        user={user}
+        isAdmin={isAdmin}
+      />
+    </Popup>
+  )
+
+  const PopupWorkerPropsVisible = !!user && (
     <Popup
       popupEnable={workPropsVisible}
       handleClose={handleClickWork}
@@ -1105,6 +1156,21 @@ const Navigation = ({ isMainPage }) => {
       maxWidth="350"
     >
       <div>
+        <StyledSelect>
+          <SMSStyle siteProps={siteProps}>Wybierz firmę</SMSStyle>
+          <SelectCreated
+            options={selectCompanysValues}
+            value={selectedCompany}
+            handleChange={handleChangeSelectedCompany}
+            placeholder="Firma..."
+            defaultMenuIsOpen={false}
+            isClearable={false}
+            width="auto"
+            deleteItem={false}
+            darkSelect
+            isDisabled={selectCompanysValues.length <= 1}
+          />
+        </StyledSelect>
         {hasCompany && hasPermission && (
           <>
             {isAdmin && companyConfirmed && (

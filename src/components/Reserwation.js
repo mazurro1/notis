@@ -335,6 +335,8 @@ const CheckBoxPositionRelative = styled.div`
 `
 
 const Reserwation = ({
+  user,
+  siteProps,
   reserwationEnable,
   reserwationData = {
     extraCost: false,
@@ -362,7 +364,6 @@ const Reserwation = ({
     selectedHappyHourOrPromotion,
     setSelectedHappyHourOrPromotion,
   ] = useState(false)
-  const user = useSelector(state => state.user)
   const avaibleHoursReserwation = useSelector(
     state => state.avaibleHoursReserwation
   )
@@ -370,7 +371,6 @@ const Reserwation = ({
     state => state.avaibleHoursReserwationUpdate
   )
 
-  const siteProps = useSelector(state => state.siteProps)
   const dispatch = useDispatch()
 
   useEffect(() => {

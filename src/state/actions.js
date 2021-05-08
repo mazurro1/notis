@@ -890,6 +890,14 @@ export const UPDATE_COMPANY_LINK_PATH = "UPDATE_COMPANY_LINK_PATH"
 export const CHANGE_RESTART_COMPANY_LINK = "CHANGE_RESTART_COMPANY_LINK"
 export const UPDATE_COMPANY_NIP = "UPDATE_COMPANY_NIP"
 export const CHANGE_RESTART_COMPANY_NIP = "CHANGE_RESTART_COMPANY_NIP"
+export const CHANGE_SELECTED_USER_COMPANY = "CHANGE_SELECTED_USER_COMPANY"
+
+export const changeSelectedUserCompany = companyId => {
+  return {
+    type: CHANGE_SELECTED_USER_COMPANY,
+    companyId: companyId,
+  }
+}
 
 export const updateCompanyNip = (nip, dateInvoice) => {
   return {
@@ -1870,6 +1878,10 @@ export const fetchCompanyData = (companyId, token) => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(
+                addAlertItem("Brak uprawnień do wyświetlenia zawartości", "red")
+              )
             } else {
               dispatch(
                 addAlertItem("Błąd podczas ładowania konta firmowego", "red")
@@ -3412,11 +3424,13 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
           if (services.new.length > 0) {
             dispatch(
               addAlertItem(
-                "Nie zapomnij przypisać pracownika do dodanych usług.",
+                "Zaktualizowano usługi, nie zapomnij przypisać pracownika do dodanych usług.",
                 "blue"
               )
             )
           }
+        } else {
+          dispatch(addAlertItem("Zaktualizowano usługi.", "green"))
         }
         dispatch(
           patchNewCompanyServices(
@@ -3595,7 +3609,13 @@ export const fetchGetWorkerNoConstData = (
   }
 }
 
-export const fetchGetOwnerNoConstData = (token, companyId, year, month) => {
+export const fetchGetOwnerNoConstData = (
+  token,
+  companyId,
+  year,
+  month,
+  ownerId
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -3605,6 +3625,7 @@ export const fetchGetOwnerNoConstData = (token, companyId, year, month) => {
           companyId: companyId,
           year: year,
           month: month,
+          ownerId: ownerId,
         },
         {
           headers: {
@@ -4760,6 +4781,7 @@ export const addCompanyAvailability = (
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(addUserCompanyAvailability(response.data.availability, null))
+        dispatch(addAlertItem("Zaktualizowano stan magazynowy", "green"))
       })
       .catch(error => {
         if (!!error) {
@@ -4802,6 +4824,7 @@ export const deleteCompanyAvailability = (token, companyId, itemId) => {
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(deleteUserCompanyAvailability(itemId))
+        dispatch(addAlertItem("Zaktualizowano stan magazynowy", "green"))
       })
       .catch(error => {
         if (!!error) {
@@ -4847,6 +4870,7 @@ export const editCompanyAvailability = (
       .then(response => {
         dispatch(editUserCompanyAvailability(itemId, itemName, itemCount))
         dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano stan magazynowy", "green"))
       })
       .catch(error => {
         if (!!error) {

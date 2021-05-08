@@ -206,7 +206,7 @@ const TextCodeToDelete = styled.div`
   color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
-const UserProfil = ({ userProfilVisible }) => {
+const UserProfil = ({ userProfilVisible, user, siteProps }) => {
   const [newPhone, setNewPhone] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [password, setPassword] = useState("")
@@ -216,10 +216,8 @@ const UserProfil = ({ userProfilVisible }) => {
   const [newPhoneVisible, setNewPhoneVisible] = useState(false)
   const [newPasswordVisible, setNewPasswordVisible] = useState(false)
   const [veryfiedPhoneVisible, setVeryfiedPhoneVisible] = useState(false)
-  const user = useSelector(state => state.user)
   const [addedImages, setAddedImages] = useState([])
   const userPhone = useSelector(state => state.userPhone)
-  const siteProps = useSelector(state => state.siteProps)
   const verifiedPhoneComponentVisible = useSelector(
     state => state.verifiedPhoneComponentVisible
   )

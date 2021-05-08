@@ -235,6 +235,7 @@ const CompanyStatistics = ({ siteProps, user }) => {
             isMulti
             isDisabled={disabledSwitch}
             textUp
+            closeMenuOnSelect={false}
           />
         </MarginSelect>
         <MarginSelect>

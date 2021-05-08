@@ -59,11 +59,9 @@ const MarginBottom = styled.div`
   margin-top: 5px;
 `
 
-const ActiveAccount = () => {
+const ActiveAccount = ({ user, siteProps }) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
-  const user = useSelector(state => state.user)
-  const siteProps = useSelector(state => state.siteProps)
   const fieldOneRef = useRef(null)
 
   const dispatch = useDispatch()

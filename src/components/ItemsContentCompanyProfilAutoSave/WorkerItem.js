@@ -594,6 +594,7 @@ const WorkerItem = ({
                     darkSelect
                     onlyText
                     maxMenuHeight={120}
+                    top
                   />
                 </SelectStyle>
               </>
