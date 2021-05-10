@@ -115,6 +115,7 @@ const WorkerItem = ({
   handleClickActiveWorker,
   activeWorkerUserId,
   BackGroundImageCustomUrl,
+  premiumActive,
 }) => {
   const [resetConstDays, setResetConstDays] = useState(false)
   const [constTimeWorker, setConstTimeWorker] = useState(false)
@@ -496,16 +497,17 @@ const WorkerItem = ({
       {editedWorkers && (
         <>
           <EditUserStyle>
-            <EditIconStyle
-              onClick={handleChooseTimeWorker}
-              // onClick={handleUserTimeWork}
-              data-tip
-              data-for="timeWorkUser"
-              data-place="left"
-              siteProps={siteProps}
-            >
-              <MdTimelapse />
-            </EditIconStyle>
+            {premiumActive && (
+              <EditIconStyle
+                onClick={handleChooseTimeWorker}
+                data-tip
+                data-for="timeWorkUser"
+                data-place="left"
+                siteProps={siteProps}
+              >
+                <MdTimelapse />
+              </EditIconStyle>
+            )}
             <EditIconStyle
               onClick={handleUserItemEdit}
               data-tip

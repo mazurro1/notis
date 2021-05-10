@@ -24,6 +24,7 @@ import {
   resetUserProfil,
   fetchUserDeleteImageOther,
   verifiedPhoneComponent,
+  resetUpdateUserPhone,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../common/Colors"
@@ -241,6 +242,7 @@ const UserProfil = ({
   const [addedImages, setAddedImages] = useState([])
   const [activeCompany, setActiveCompany] = useState(false)
   const userPhone = useSelector(state => state.userPhone)
+  const resetUserPhone = useSelector(state => state.resetUserPhone)
   const verifiedPhoneComponentVisible = useSelector(
     state => state.verifiedPhoneComponentVisible
   )
@@ -248,10 +250,17 @@ const UserProfil = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    setSelectedFirstCompany({
-      label: user.company.name,
-      value: user.company._id,
-    })
+    if (!!user.defaultCompany) {
+      const findCompanyInAllCompanys = user.allCompanys.find(
+        itemCompany => itemCompany._id === user.defaultCompany
+      )
+      if (!!findCompanyInAllCompanys) {
+        setSelectedFirstCompany({
+          label: findCompanyInAllCompanys.name,
+          value: findCompanyInAllCompanys._id,
+        })
+      }
+    }
   }, [user])
 
   useEffect(() => {
@@ -259,12 +268,12 @@ const UserProfil = ({
   }, [verifiedPhoneComponentVisible])
 
   useEffect(() => {
-    if (!!user && !userPhone) {
+    if (!!user && !userPhone && newPhoneVisible) {
       if (!!user.hasPhone) {
         dispatch(fetchUserPhone(user.token))
       }
     }
-  }, [user, userPhone, dispatch])
+  }, [user, userPhone, dispatch, newPhoneVisible])
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -295,18 +304,28 @@ const UserProfil = ({
       setEditImage(false)
       setActiveCompany(false)
       dispatch(resetUserProfil())
-      setSelectedFirstCompany({
-        label: user.company.name,
-        value: user.company._id,
-      })
+      if (!!user.defaultCompany) {
+        const findCompanyInAllCompanys = user.allCompanys.find(
+          itemCompany => itemCompany._id === user.defaultCompany
+        )
+        if (!!findCompanyInAllCompanys) {
+          setSelectedFirstCompany({
+            label: findCompanyInAllCompanys.name,
+            value: findCompanyInAllCompanys._id,
+          })
+        }
+      }
     }
   }, [userProfilVisible, userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!userPhone) {
-      setNewPhone(userPhone)
+      if (!!resetUserPhone) {
+        setNewPhone(userPhone)
+        dispatch(resetUpdateUserPhone())
+      }
     }
-  }, [userPhone])
+  }, [userPhone, resetUserPhone])
 
   const handleEditImage = () => {
     setEditImage(prevState => !prevState)
@@ -407,7 +426,7 @@ const UserProfil = ({
   const handleNewPhoneVisible = () => {
     setNewPhoneVisible(prevState => !prevState)
     setPassword("")
-    setNewPhone("")
+    setNewPhone(userPhone ? userPhone : "")
   }
 
   const hadndleClickShowVeryfiedPhone = () => {
@@ -421,10 +440,15 @@ const UserProfil = ({
 
   const handleChangeActiveCompany = () => {
     setActiveCompany(prevState => !prevState)
-    setSelectedFirstCompany({
-      label: user.company.name,
-      value: user.company._id,
-    })
+    const findCompanyInAllCompanys = user.allCompanys.find(
+      itemCompany => itemCompany._id === user.defaultCompany
+    )
+    if (!!findCompanyInAllCompanys) {
+      setSelectedFirstCompany({
+        label: findCompanyInAllCompanys.name,
+        value: findCompanyInAllCompanys._id,
+      })
+    }
   }
 
   const handleSaveDefaultCompany = () => {
@@ -525,7 +549,7 @@ const UserProfil = ({
   )
 
   const disabledButtonDeleteAccount =
-    !!user.hasCompany || !!user.company || !!user.companys.length > 0
+    !!user.company || !!user.allCompanys.length > 0
   const tooltipDisabledDeleteAccount = disabledButtonDeleteAccount && (
     <ReactTooltip id="alerDeleteAccount" effect="float" multiline={true}>
       <div>
@@ -538,7 +562,7 @@ const UserProfil = ({
 
   let disabledButtonSaveDefaultCompany = true
   if (!!selectedFirstCompany) {
-    if (selectedFirstCompany.value !== user.company._id) {
+    if (selectedFirstCompany.value !== user.defaultCompany) {
       disabledButtonSaveDefaultCompany = false
     }
   }
@@ -574,7 +598,7 @@ const UserProfil = ({
             </h1>
           </div>
           {tooltipChangePhone}
-          {!!user.companys.length > 0 && (
+          {!!user.allCompanys.length > 0 && (
             <div>
               <MarginButtonPhone>
                 <ButtonIcon
@@ -803,7 +827,7 @@ const UserProfil = ({
         <TextCodeToDelete siteProps={siteProps}>
           Czas na aktywacje numeru telefonu: 1 godzina
         </TextCodeToDelete>
-        <InputPhone setPhoneNumber={setNewPhone} defaultValues={userPhone} />
+        <InputPhone setPhoneNumber={setNewPhone} defaultValues={newPhone} />
         <InputIcon
           icon={<FaLock />}
           placeholder="Aktualne hasło"

@@ -486,7 +486,7 @@ const AllCategoryOfServices = ({
       <BackgroundEditedComponent
         active={allCategoryEdit}
         siteProps={siteProps}
-        disabledEditButtons={disabledEditButtons}
+        disabledEditButtons={disabledEditButtons && premiumActive}
       >
         {!!userIsBlocked && (
           <BlockUserInfo>

@@ -22,7 +22,6 @@ const WorkerHoursAutoSave = ({
   const dispatch = useDispatch()
 
   const isAdmin = item.user._id === user.company.owner
-  console.log(isAdmin)
 
   const size = UseWindowSize()
   let isMobile = false

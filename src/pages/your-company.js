@@ -65,34 +65,25 @@ const YourCompany = () => {
   }
 
   const selectButton = !!user ? (
-    !!!user.hasCompany ? (
-      <>
-        {!!!user.phoneVerified && (
-          <ReactTooltip id="blockCreateCompany" effect="float" multiline={true}>
-            <span>Zweryfikuj numer telefonu aby stworzyć konto firmowe.</span>
-          </ReactTooltip>
-        )}
-        <div data-tip data-for="blockCreateCompany" data-place="bottom">
-          <ButtonIcon
-            title="Stwórz konto firmowe"
-            uppercase
-            fontIconSize="25"
-            fontSize="20"
-            icon={<MdWork />}
-            secondColors
-            onClick={handleCreateCompany}
-            disabled={!!!user.phoneVerified}
-          />
-        </div>
-      </>
-    ) : (
-      <TextWarning siteProps={siteProps}>
-        Posiadasz już konto firmowe
-        <span>
-          <HiEmojiHappy />
-        </span>
-      </TextWarning>
-    )
+    <>
+      {!!!user.phoneVerified && (
+        <ReactTooltip id="blockCreateCompany" effect="float" multiline={true}>
+          <span>Zweryfikuj numer telefonu aby stworzyć konto firmowe.</span>
+        </ReactTooltip>
+      )}
+      <div data-tip data-for="blockCreateCompany" data-place="bottom">
+        <ButtonIcon
+          title="Stwórz konto firmowe"
+          uppercase
+          fontIconSize="25"
+          fontSize="20"
+          icon={<MdWork />}
+          secondColors
+          onClick={handleCreateCompany}
+          disabled={!!!user.phoneVerified}
+        />
+      </div>
+    </>
   ) : (
     <ButtonIcon
       title="Zaloguj się aby stworzyć konto firmowe"

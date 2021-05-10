@@ -61,6 +61,7 @@ const ShopStoreContent = ({
   isCompanyEditProfil,
   companyShopStore = [],
   user,
+  premiumActive,
 }) => {
   const [clickAddCategory, setClickAddCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState("")
@@ -199,7 +200,7 @@ const ShopStoreContent = ({
       <PositionRelative
         active={editShopStore}
         siteProps={siteProps}
-        disabled={disabledEditButtons && !editShopStore}
+        disabled={disabledEditButtons && !editShopStore && premiumActive}
       >
         {(companyShopStore.length > 0 || (isCompanyEditProfil && editMode)) && (
           <>

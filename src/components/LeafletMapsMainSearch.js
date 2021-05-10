@@ -322,8 +322,7 @@ const GoogleMapsMainSearch = ({
       />
     )
   })
-  console.log([Number(latMap), Number(longMap)])
-  console.log([51.505, -0.09])
+
   return (
     <div id="map" ref={mapRef}>
       <MapContainer

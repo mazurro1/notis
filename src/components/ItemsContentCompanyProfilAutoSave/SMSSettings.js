@@ -66,6 +66,7 @@ const SMSSettings = ({
   smsNotifactionAvaible = false,
   smsCanceledAvaible = false,
   smsChangedAvaible = false,
+  premiumActive,
 }) => {
   const [
     companySMSReserwationAvaible,
@@ -329,7 +330,7 @@ const SMSSettings = ({
           </>
         ) : (
           <ButtonEditPosition>
-            <div data-tip data-for="disabledButton">
+            <div data-tip data-for="disabledButtonOnly">
               <ButtonIcon
                 title="Edytuj ustawienia sms"
                 uppercase

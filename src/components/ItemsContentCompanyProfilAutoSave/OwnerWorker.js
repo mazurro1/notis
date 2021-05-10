@@ -88,6 +88,7 @@ const OwnerWorker = ({
   handleClickActiveWorker,
   activeWorkerUserId,
   BackGroundImageCustomUrl,
+  premiumActive,
 }) => {
   const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
@@ -355,15 +356,17 @@ const OwnerWorker = ({
       {editedWorkers && (
         <>
           <EditUserStyle>
-            <EditIconStyle
-              onClick={handleChooseTimeOwner}
-              data-tip
-              data-for={`timeWorkUserOwner`}
-              data-place="left"
-              siteProps={siteProps}
-            >
-              <MdTimelapse />
-            </EditIconStyle>
+            {premiumActive && (
+              <EditIconStyle
+                onClick={handleChooseTimeOwner}
+                data-tip
+                data-for={`timeWorkUserOwner`}
+                data-place="left"
+                siteProps={siteProps}
+              >
+                <MdTimelapse />
+              </EditIconStyle>
+            )}
             <EditIconStyle
               data-tip
               data-for={`editOwner`}

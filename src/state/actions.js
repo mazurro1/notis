@@ -40,6 +40,14 @@ export const VERIFIED_PHONE_COMPONENT = "VERIFIED_PHONE_COMPONENT"
 export const CHANGE_MAP_ACTIVE = "CHANGE_MAP_ACTIVE"
 export const CHANGE_POPUP_TAKE_PLACE = "CHANGE_POPUP_TAKE_PLACE"
 export const CHANGE_SELECTED_NAME_MENU = "CHANGE_SELECTED_NAME_MENU"
+export const UPDATE_USER_PHONE = "UPDATE_USER_PHONE"
+export const RESET_UPDATE_USER_PHONE = "RESET_UPDATE_USER_PHONE"
+
+export const resetUpdateUserPhone = () => {
+  return {
+    type: RESET_UPDATE_USER_PHONE,
+  }
+}
 
 export const changeSelectedNameMenu = value => {
   return {
@@ -156,6 +164,13 @@ export const changeUserProfilVisible = value => {
   return {
     type: CHANGE_USER_PROFIL_VISIBLE,
     value: value,
+  }
+}
+
+export const updateUserPhone = phone => {
+  return {
+    type: UPDATE_USER_PHONE,
+    phone: phone,
   }
 }
 
@@ -364,8 +379,12 @@ export const fetchRegisterUser = (email, name, surname, phone, password) => {
             if (error.response.status === 401) {
               dispatch(logout())
             }
-            if (error.response.status === 412) {
-              dispatch(addAlertItem("Podany e-mail jest zajęty", "red"))
+            if (error.response.status === 440) {
+              dispatch(
+                addAlertItem("Podany numer telefonu jest zajęty.", "red")
+              )
+            } else if (error.response.status === 441) {
+              dispatch(addAlertItem("Podany adres email jest zajęty.", "red"))
             } else {
               dispatch(addAlertItem("Błąd podczas tworzenia konta", "red"))
             }
@@ -578,7 +597,7 @@ export const fetchUserPhone = token => {
         },
       })
       .then(response => {
-        dispatch(addUserPhone(response.data.userPhone))
+        dispatch(updateUserPhone(response.data.userPhone))
       })
       .catch(error => {
         if (!!error) {
@@ -891,6 +910,14 @@ export const CHANGE_RESTART_COMPANY_LINK = "CHANGE_RESTART_COMPANY_LINK"
 export const UPDATE_COMPANY_NIP = "UPDATE_COMPANY_NIP"
 export const CHANGE_RESTART_COMPANY_NIP = "CHANGE_RESTART_COMPANY_NIP"
 export const CHANGE_SELECTED_USER_COMPANY = "CHANGE_SELECTED_USER_COMPANY"
+export const UPDATE_DEFAULT_COMPANY = "UPDATE_DEFAULT_COMPANY"
+
+export const updateDefaultCompany = companyId => {
+  return {
+    type: UPDATE_DEFAULT_COMPANY,
+    companyId: companyId,
+  }
+}
 
 export const changeSelectedUserCompany = companyId => {
   return {
@@ -1707,6 +1734,8 @@ export const fetchCompanyRegistration = (
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(addAlertItem("Email jest zajęty", "red"))
             } else if (error.response.status === 442) {
               dispatch(addAlertItem("Podano nieprawidłowy adress", "red"))
             } else {
@@ -5787,7 +5816,7 @@ export const fetchUpdateDefaultCompany = (token, companyId) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(changeSelectedUserCompany(companyId))
+        dispatch(updateDefaultCompany(companyId))
         dispatch(addAlertItem("Zaktualizowano domyślną działalność.", "green"))
       })
       .catch(error => {

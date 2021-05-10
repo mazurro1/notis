@@ -614,7 +614,6 @@ const WorkerUsersInformationItem = ({
             reserwation.toWorkerUserId.surname,
             "base64"
           ).toString("utf-8")
-          console.log(reserwation)
           const splitReserwationDate = reserwation.dateStart.split(":")
           const splitReserwationDateEnd = reserwation.dateEnd.split(":")
           const isActualReserwation = new Date(

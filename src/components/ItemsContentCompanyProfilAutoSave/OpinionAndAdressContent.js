@@ -209,6 +209,7 @@ const OpinionAndAdressContent = ({
   disabledEditButtons,
   editMode,
   code = "00-000",
+  premiumActive,
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
   const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
@@ -305,7 +306,7 @@ const OpinionAndAdressContent = ({
 
   const handleOnSubmit = e => {
     e.preventDefault()
-    if (disabledButtonSubmit) {
+    if (disabledButtonSubmit && premiumActive) {
       const updateCityInput = cityInput !== city ? cityInput : null
       const updateCodeInput = codeInput !== city ? codeInput : null
       const updateDiscrictInput =
@@ -579,7 +580,7 @@ const OpinionAndAdressContent = ({
         {isCompanyEditProfil && (
           <>
             <ButtonEditPosition>
-              <div data-tip data-for="disabledButton">
+              <div data-tip data-for="disabledButtonOnly">
                 <ButtonIcon
                   title="Edytuj ustawienia"
                   uppercase
@@ -779,16 +780,18 @@ const OpinionAndAdressContent = ({
                   </ButtonMargin>
                   <ButtonSubmit type="submit">
                     <ButtonMargin>
-                      <ButtonIcon
-                        title="Zapisz"
-                        uppercase
-                        fontIconSize="16"
-                        fontSize="13"
-                        icon={<FaSave />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        disabled={!disabledButtonSubmit}
-                      />
+                      <div data-tip data-for="disabledButtonValidPremium">
+                        <ButtonIcon
+                          title="Zapisz"
+                          uppercase
+                          fontIconSize="16"
+                          fontSize="13"
+                          icon={<FaSave />}
+                          customColorButton={Colors(siteProps).successColorDark}
+                          customColorIcon={Colors(siteProps).successColor}
+                          disabled={!disabledButtonSubmit || !premiumActive}
+                        />
+                      </div>
                     </ButtonMargin>
                   </ButtonSubmit>
                 </ButtonPosition>

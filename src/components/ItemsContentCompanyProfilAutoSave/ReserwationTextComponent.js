@@ -26,6 +26,7 @@ const ReserwationTextComponent = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
+  premiumActive,
 }) => {
   const [textReserwation, setTextReserwation] = useState("")
   const dispatch = useDispatch()
@@ -67,6 +68,7 @@ const ReserwationTextComponent = ({
         siteProps={siteProps}
         active={editedReserwation}
         disabledEditButtons={disabledEditButtons}
+        premiumActive={premiumActive}
       >
         <Element name="reserwationScrollElement" className="element">
           <ColumnItemTextarea

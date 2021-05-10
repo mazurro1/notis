@@ -745,7 +745,6 @@ const BigCalendarWorkerHoursAutoSave = ({
             />
           </ButtonItemStyle>
         </ButtonsPosition>
-        {console.log(item)}
         <CalendarWorkerHoursNewEvent
           siteProps={siteProps}
           handleClosePopupEventItem={handleClosePopupEventItem}

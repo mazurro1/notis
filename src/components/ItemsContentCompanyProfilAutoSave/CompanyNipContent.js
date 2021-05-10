@@ -183,7 +183,7 @@ const CompanyNipContent = ({
               />
               <ButtonPositionUpdate>
                 <ButtonIcon
-                  title="Pobierz dane firmowe poprzez NIP"
+                  title="Zaktualizuj dane firmowe poprzez NIP"
                   uppercase
                   fontIconSize="16"
                   fontSize="13"

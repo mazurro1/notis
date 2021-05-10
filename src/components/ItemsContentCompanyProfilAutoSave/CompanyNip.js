@@ -26,6 +26,7 @@ const CompanyNip = ({
   disabledEditButtons,
   editMode,
   dataToInvoice = null,
+  premiumActive,
 }) => {
   const restartCompanyNip = useSelector(state => state.restartCompanyNip)
   const dispatch = useDispatch()
@@ -52,6 +53,7 @@ const CompanyNip = ({
         siteProps={siteProps}
         active={editCompanyNip}
         disabledEditButtons={disabledEditButtons}
+        premiumActive={premiumActive}
       >
         <Element name="companyNipScrollElement" className="element">
           <CompanyNipContent

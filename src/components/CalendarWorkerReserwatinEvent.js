@@ -426,7 +426,6 @@ const CalendarWorkerReserwatinEvent = ({
           const workerHasService = workerDoc.servicesCategory.some(
             itemService => itemService === selectedEvent.serviceId
           )
-          console.log(workerDoc)
           if (
             workerHasService &&
             !!workerDoc.user.name &&

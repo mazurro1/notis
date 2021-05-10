@@ -171,6 +171,7 @@ const GalleryContent = ({
   handleResetAllEditedComponents,
   isAdmin = false,
   disabledEditButtons,
+  premiumActive,
 }) => {
   const [allImagesCompany, setAllImagesCompany] = useState([])
   const [addedImages, setAddedImages] = useState([])
@@ -330,7 +331,7 @@ const GalleryContent = ({
       {(isAdmin || !isCompanyEditProfil) && (
         <PositionRelative
           siteProps={siteProps}
-          disabled={disabledEditButtons && !editGallery}
+          disabled={disabledEditButtons && !editGallery && premiumActive}
         >
           {allImagesCompany.length > 0 ? (
             <ImageGallery items={allImagesCompany} lazyLoad />

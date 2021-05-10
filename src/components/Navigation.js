@@ -243,7 +243,7 @@ const IconCloseStyle = styled.div`
 `
 
 const StyledSelect = styled.div`
-  margin-bottom: 20px;
+  padding-bottom: 40px;
 `
 
 const CloseMenuLeft = styled.div`
@@ -297,6 +297,14 @@ const IconStyle = styled.div`
   position: absolute;
   top: 6px;
   user-select: none;
+`
+
+const MinHeightComponent = styled.div`
+  min-height: 200px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const MeetsyLogo = styled.div`
@@ -388,7 +396,7 @@ const Navigation = ({ isMainPage }) => {
   const visibleMenuIndustries = useSelector(
     state => state.visibleMenuIndustries
   )
-  // console.log(userDoc)
+
   const confirmDeleteCompanyVisible = useSelector(
     state => state.confirmDeleteCompanyVisible
   )
@@ -1005,7 +1013,6 @@ const Navigation = ({ isMainPage }) => {
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
-  let hasCompany = false
   let anyCompany = false
   let hasPermission = false
   let companyConfirmed = false
@@ -1013,11 +1020,11 @@ const Navigation = ({ isMainPage }) => {
   let companySMS = 0
   let premiumActive = false
   let datePremium = null
+  let disabledNoPremium = true
 
   if (!!user) {
-    if (!!user.companys) {
-      hasCompany = user.hasCompany
-      if (user.companys.length > 0) {
+    if (!!user.allCompanys) {
+      if (user.allCompanys.length > 0) {
         anyCompany = true
       }
     }
@@ -1029,6 +1036,7 @@ const Navigation = ({ isMainPage }) => {
         const toDatePremium = new Date(user.company.premium)
         if (toDatePremium >= new Date()) {
           premiumActive = true
+          disabledNoPremium = false
           datePremium = `${
             toDatePremium.getHours() < 10
               ? `0${toDatePremium.getHours()}`
@@ -1092,8 +1100,8 @@ const Navigation = ({ isMainPage }) => {
   let selectCompanysValues = []
   let selectedCompany = null
   if (!!user) {
-    if (!!user.companys) {
-      selectCompanysValues = user.companys.map(itemCompany => {
+    if (!!user.allCompanys) {
+      selectCompanysValues = user.allCompanys.map(itemCompany => {
         return {
           label: itemCompany.name,
           value: itemCompany._id,
@@ -1162,154 +1170,190 @@ const Navigation = ({ isMainPage }) => {
       title={Translates[siteProps.language].buttons.work}
       maxWidth="350"
     >
-      <div>
-        <StyledSelect>
-          <SMSStyle siteProps={siteProps}>Wybierz firmę</SMSStyle>
-          <SelectCreated
-            options={selectCompanysValues}
-            value={selectedCompany}
-            handleChange={handleChangeSelectedCompany}
-            placeholder="Firma..."
-            defaultMenuIsOpen={false}
-            isClearable={false}
-            width="auto"
-            deleteItem={false}
-            darkSelect
-            isDisabled={selectCompanysValues.length <= 1}
-          />
-        </StyledSelect>
-        {anyCompany && hasPermission && (
-          <>
-            {isAdmin && companyConfirmed && (
-              <>
-                <SMSStyle siteProps={siteProps}>
-                  Dostępne SMS-y: <span>{companySMS}</span>
-                </SMSStyle>
-                <SMSStyle siteProps={siteProps}>
-                  {premiumActive ? (
-                    <>
-                      Konto premium aktywne do: <span>{datePremium}</span>
-                    </>
-                  ) : (
-                    <>
-                      Konto premium: <span>Nie aktywne</span>
-                    </>
+      <MinHeightComponent>
+        <div>
+          <StyledSelect siteProps={siteProps}>
+            <SMSStyle siteProps={siteProps}>Wybierz firmę</SMSStyle>
+            <SelectCreated
+              options={selectCompanysValues}
+              value={selectedCompany}
+              handleChange={handleChangeSelectedCompany}
+              placeholder="Firma..."
+              defaultMenuIsOpen={false}
+              isClearable={false}
+              width="auto"
+              deleteItem={false}
+              darkSelect
+              isDisabled={selectCompanysValues.length <= 1}
+            />
+          </StyledSelect>
+        </div>
+        <div>
+          {anyCompany && hasPermission && (
+            <>
+              {isAdmin && companyConfirmed && (
+                <>
+                  <SMSStyle siteProps={siteProps}>
+                    Dostępne SMS-y: <span>{companySMS}</span>
+                  </SMSStyle>
+                  <SMSStyle siteProps={siteProps}>
+                    {premiumActive ? (
+                      <>
+                        Konto premium aktywne do: <span>{datePremium}</span>
+                      </>
+                    ) : (
+                      <>
+                        Konto premium: <span>Nie aktywne</span>
+                      </>
+                    )}
+                  </SMSStyle>
+                </>
+              )}
+              <div onClick={handleClickAdminPanel} aria-hidden="true">
+                <LinkEffect
+                  path="/company-profil"
+                  text={
+                    <ButtonIcon
+                      title="Panel administracyjny"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="16"
+                      icon={<FaChrome />}
+                      secondColors
+                    />
+                  }
+                />
+              </div>
+              {isAdmin && companyConfirmed && (
+                <>
+                  {disabledNoPremium && (
+                    <ReactTooltip
+                      id="disabledButtonPremium"
+                      effect="float"
+                      multiline={true}
+                    >
+                      <span>
+                        Aktywuj konto, aby móc korzystać z wybranych funkcji.
+                      </span>
+                    </ReactTooltip>
                   )}
-                </SMSStyle>
-              </>
-            )}
-            <div onClick={handleClickAdminPanel} aria-hidden="true">
-              <LinkEffect
-                path="/company-profil"
-                text={
-                  <ButtonIcon
-                    title="Panel administracyjny"
-                    uppercase
-                    fontIconSize="20"
-                    fontSize="16"
-                    icon={<FaChrome />}
-                    secondColors
-                  />
-                }
-              />
-            </div>
-            {isAdmin && companyConfirmed && (
-              <>
+                  <MarginButtonsWork>
+                    <div data-tip data-for="disabledButtonPremium">
+                      <ButtonIcon
+                        title="Doładuj konto"
+                        uppercase
+                        fontIconSize="22"
+                        fontSize="16"
+                        icon={<MdAttachMoney />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        onClick={handleClickSMS}
+                        disabled={disabledNoPremium}
+                      />
+                    </div>
+                  </MarginButtonsWork>
+                  <MarginButtonsWork>
+                    <div data-tip data-for="disabledButtonPremium">
+                      <ButtonIcon
+                        title="Historia tranzakcji"
+                        uppercase
+                        fontIconSize="22"
+                        fontSize="16"
+                        icon={<MdHistory />}
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                        onClick={handleClickTransactionHistory}
+                        disabled={disabledNoPremium}
+                      />
+                    </div>
+                  </MarginButtonsWork>
+                </>
+              )}
+              {companyConfirmed && (
                 <MarginButtonsWork>
-                  <ButtonIcon
-                    title="Doładuj konto"
-                    uppercase
-                    fontIconSize="22"
-                    fontSize="16"
-                    icon={<MdAttachMoney />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleClickSMS}
-                  />
+                  <div data-tip data-for="disabledButtonPremium">
+                    <ButtonIcon
+                      title="Statystyki"
+                      uppercase
+                      fontIconSize="20"
+                      fontSize="16"
+                      icon={<FaChartBar />}
+                      onClick={handleClickCompanyStatistics}
+                      disabled={disabledNoPremium}
+                    />
+                  </div>
                 </MarginButtonsWork>
-                <MarginButtonsWork>
-                  <ButtonIcon
-                    title="Historia tranzakcji"
-                    uppercase
-                    fontIconSize="22"
-                    fontSize="16"
-                    icon={<MdHistory />}
-                    customColorButton={Colors(siteProps).successColorDark}
-                    customColorIcon={Colors(siteProps).successColor}
-                    onClick={handleClickTransactionHistory}
-                  />
-                </MarginButtonsWork>
-              </>
-            )}
-            {companyConfirmed && (
-              <MarginButtonsWork>
+              )}
+            </>
+          )}
+          {companyConfirmed && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
                 <ButtonIcon
-                  title="Statystyki"
+                  title="Grafik pracy"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="16"
+                  icon={<MdTimelapse />}
+                  onClick={handleEmplyeeWorkingHoursVisible}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
+          {companyConfirmed && workerHasAccessClientsOpinions && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Klienci"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="16"
+                  icon={<FaUsers />}
+                  onClick={handleWorkerUsersInformation}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
+          {companyConfirmed && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Rezerwacje"
                   uppercase
                   fontIconSize="20"
                   fontSize="16"
-                  icon={<FaChartBar />}
-                  onClick={handleClickCompanyStatistics}
+                  icon={<FaCalendarAlt />}
+                  onClick={handleWorkerReserwations}
+                  disabled={disabledNoPremium}
                 />
-              </MarginButtonsWork>
-            )}
-          </>
-        )}
-        {companyConfirmed && (
-          <MarginButtonsWork>
-            <ButtonIcon
-              title="Grafik pracy"
-              uppercase
-              fontIconSize="25"
-              fontSize="16"
-              icon={<MdTimelapse />}
-              onClick={handleEmplyeeWorkingHoursVisible}
-            />
-          </MarginButtonsWork>
-        )}
-        {companyConfirmed && workerHasAccessClientsOpinions && (
-          <MarginButtonsWork>
-            <ButtonIcon
-              title="Klienci"
-              uppercase
-              fontIconSize="25"
-              fontSize="16"
-              icon={<FaUsers />}
-              onClick={handleWorkerUsersInformation}
-            />
-          </MarginButtonsWork>
-        )}
-        {companyConfirmed && (
-          <MarginButtonsWork>
-            <ButtonIcon
-              title="Rezerwacje"
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaCalendarAlt />}
-              onClick={handleWorkerReserwations}
-            />
-          </MarginButtonsWork>
-        )}
-        {companyConfirmed && workerHasAccessAvailability && (
-          <MarginButtonsWork>
-            <ButtonIcon
-              title="Stan magazynowy"
-              uppercase
-              fontIconSize="20"
-              fontSize="16"
-              icon={<FaBox />}
-              onClick={handleClickAvailability}
-            />
-          </MarginButtonsWork>
-        )}
-      </div>
+              </div>
+            </MarginButtonsWork>
+          )}
+          {companyConfirmed && workerHasAccessAvailability && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Stan magazynowy"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaBox />}
+                  onClick={handleClickAvailability}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
+        </div>
+      </MinHeightComponent>
     </Popup>
   )
 
   const renderCompanyOrCreateCompany =
     !!user &&
-    user.companys.length > 0 &&
+    user.allCompanys.length > 0 &&
     !!user.company &&
     (user.company.owner === user.userId || workerHasAccessButton ? (
       <>
@@ -1337,7 +1381,7 @@ const Navigation = ({ isMainPage }) => {
       </ButtonNavStyle>
     ))
 
-  const renderCreateCompany = !!user && !!!hasCompany && (
+  const renderCreateCompany = !!user && (
     <ButtonNavStyle>
       <LinkEffect
         path="/your-company"

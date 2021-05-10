@@ -186,6 +186,13 @@ const PositionRelative = styled.div`
   transition-timing-function: ease;
 `
 
+const TextNoPremiumWorkers = styled.div`
+  color: ${props => Colors(props.siteProps).dangerColor};
+  font-size: 0.9rem;
+  font-family: "Poppins-Medium", sans-serif;
+  margin-bottom: 20px;
+`
+
 const ButtonEditPositionEdit = styled.div`
   display: flex;
   flex-direction: row;
@@ -228,6 +235,7 @@ const OurWorkersContent = ({
   ownerData,
   companyServices,
   RightColumnItem,
+  premiumActive,
   editedWorkers,
   setEditedWorkers,
   handleResetAllEditedComponents,
@@ -359,6 +367,7 @@ const OurWorkersContent = ({
         handleClickActiveWorker={handleClickActiveWorker}
         activeWorkerUserId={activeWorkerUserId}
         BackGroundImageCustomUrl={BackGroundImageCustomUrl}
+        premiumActive={premiumActive}
       />
     )
   })
@@ -368,11 +377,12 @@ const OurWorkersContent = ({
       <PositionRelative
         siteProps={siteProps}
         active={editedWorkers}
-        disabledEditButtons={disabledEditButtons}
+        disabledEditButtons={disabledEditButtons && premiumActive}
       >
         <RightColumnItem
           isCompanyEditProfil={editedWorkers}
           siteProps={siteProps}
+          premiumActive={premiumActive}
         >
           <TitleRightColumn
             isCompanyEditProfil={editedWorkers}
@@ -380,6 +390,12 @@ const OurWorkersContent = ({
           >
             NASI PRACOWNICY
           </TitleRightColumn>
+          {!premiumActive && editedWorkers && (
+            <TextNoPremiumWorkers siteProps={siteProps}>
+              Aktywuj konto premium, aby móc korzystać z wszystkich dostępnych
+              funkcji
+            </TextNoPremiumWorkers>
+          )}
           <WorkerContent isCompanyEditProfil={editedWorkers}>
             <OwnerWorker
               companyId={companyId}
@@ -408,13 +424,14 @@ const OurWorkersContent = ({
               handleClickActiveWorker={handleClickActiveWorker}
               activeWorkerUserId={activeWorkerUserId}
               BackGroundImageCustomUrl={BackGroundImageCustomUrl}
+              premiumActive={premiumActive}
             />
             {mapWorkers}
           </WorkerContent>
           {editedWorkers && isAdmin ? (
             <ButtonEditPosition>
               <ButtonIcon
-                title="Dodaj użytkownika"
+                title="Dodaj pracownika"
                 uppercase
                 fontIconSize="25"
                 fontSize="14"

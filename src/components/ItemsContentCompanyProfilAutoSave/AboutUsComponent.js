@@ -21,6 +21,7 @@ const AboutUsComponent = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
+  premiumActive,
 }) => {
   const [textAboutUs, setTextAboutUs] = useState("")
   const dispatch = useDispatch()
@@ -63,6 +64,7 @@ const AboutUsComponent = ({
         siteProps={siteProps}
         active={editAboutUs}
         disabledEditButtons={disabledEditButtons}
+        premiumActive={premiumActive}
       >
         <Element name="aboutUsScrollElement" className="element">
           <ColumnItemTextarea

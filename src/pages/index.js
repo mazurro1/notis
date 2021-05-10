@@ -66,7 +66,7 @@ const TitleIndexValue = styled.span`
   margin-bottom: 10px;
   text-transform: uppercase;
   font-size: 2rem;
-  letter-spacing: 0.5rem;
+  letter-spacing: 0.1rem;
   text-align: center;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;

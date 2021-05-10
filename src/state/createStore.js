@@ -20,6 +20,7 @@ import {
   ADD_ALERT_ITEM,
   CHANGE_REGISTRATION_VISIBLE,
   ADD_USER_PHONE,
+  UPDATE_USER_PHONE,
   CHANGE_USER_PROFIL_VISIBLE,
   CHANGE_REMIND_PASSWORD_VISIBLE,
   CHANGE_REMIND_PASSWORD_EMAIL_SENT,
@@ -42,11 +43,13 @@ import {
   CHANGE_POPUP_TAKE_PLACE,
   CHANGE_SELECTED_NAME_MENU,
   CHANGE_SELECTED_USER_COMPANY,
+  RESET_UPDATE_USER_PHONE,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_DEFAULT_COMPANY,
   CHANGE_RESTART_COMPANY_NIP,
   UPDATE_COMPANY_NIP,
   CHANGE_RESTART_COMPANY_LINK,
@@ -187,6 +190,7 @@ const initialState = {
   verifiedPhoneComponentVisible: false,
   checkoutPaymentItem: null,
   coinsOffer: [],
+  resetUserPhone: false,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -242,7 +246,7 @@ const reducer = (state = initialState, action) => {
     case CHANGE_SELECTED_USER_COMPANY: {
       const changedUserCompany = !!state.user ? state.user : null
       if (!!changedUserCompany) {
-        const findIdCompany = changedUserCompany.companys.find(
+        const findIdCompany = changedUserCompany.allCompanys.find(
           itemCompany => itemCompany._id === action.companyId
         )
         if (!!findIdCompany) {
@@ -409,17 +413,34 @@ const reducer = (state = initialState, action) => {
       }
     }
 
-    case ADD_USER_PHONE:
+    case RESET_UPDATE_USER_PHONE: {
+      return {
+        ...state,
+        resetUserPhone: false,
+      }
+    }
+
+    case UPDATE_USER_PHONE: {
+      return {
+        ...state,
+        userPhone: action.phone,
+        resetUserPhone: true,
+      }
+    }
+
+    case ADD_USER_PHONE: {
       const newUserEdited = !!state.user ? { ...state.user } : null
-      if (!!action.email || action.token) {
-        newUserEdited.token = action.token
-        newUserEdited.email = action.email
-        newUserEdited.phoneVerified = action.phoneVerified
-        newUserEdited.hasPhone = action.hasPhone
-        newUserEdited.blockUserChangePhoneNumber =
-          action.blockUserChangePhoneNumber
-        newUserEdited.blockUserSendVerifiedPhoneSms =
-          action.blockUserSendVerifiedPhoneSms
+      if (!!newUserEdited) {
+        if (!!action.email || action.token) {
+          newUserEdited.token = action.token
+          newUserEdited.email = action.email
+          newUserEdited.phoneVerified = action.phoneVerified
+          newUserEdited.hasPhone = action.hasPhone
+          newUserEdited.blockUserChangePhoneNumber =
+            action.blockUserChangePhoneNumber
+          newUserEdited.blockUserSendVerifiedPhoneSms =
+            action.blockUserSendVerifiedPhoneSms
+        }
       }
       return {
         ...state,
@@ -427,6 +448,7 @@ const reducer = (state = initialState, action) => {
         user: newUserEdited,
         userProfilReset: true,
       }
+    }
 
     case ADD_ALERT_ITEM: {
       const newAlertId =
@@ -671,6 +693,18 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case UPDATE_DEFAULT_COMPANY: {
+      const userDefaultCompany = !!state.user ? state.user : null
+      if (!!userDefaultCompany) {
+        userDefaultCompany.defaultCompany = action.companyId
+      }
+      return {
+        ...state,
+        user: userDefaultCompany,
+        userProfilReset: true,
+      }
+    }
+
     case CHANGE_RESTART_COMPANY_NIP: {
       return {
         ...state,
@@ -814,9 +848,8 @@ const reducer = (state = initialState, action) => {
     case DELETE_COMPANY_USER: {
       const editedUser = !!state.user ? { ...state.user } : null
       if (!!editedUser) {
-        editedUser.hasCompany = false
         editedUser.company =
-          editedUser.companys.length > 0 ? editedUser.companys[0] : null
+          editedUser.allCompanys.length > 0 ? editedUser.allCompanys[0] : null
       }
       return {
         ...state,

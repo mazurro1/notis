@@ -100,7 +100,7 @@ const InputPhone = ({
         })
       }
     }
-  }, [fieldOneRef])
+  }, [fieldOneRef, defaultValues])
 
   const handleOnFocus = () => {
     setInputActive(true)

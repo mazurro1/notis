@@ -25,6 +25,7 @@ const CompanyLink = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
+  premiumActive,
 }) => {
   const restartCompanyLink = useSelector(state => state.restartCompanyLink)
   const dispatch = useDispatch()
@@ -51,6 +52,7 @@ const CompanyLink = ({
         siteProps={siteProps}
         active={editCompanyLink}
         disabledEditButtons={disabledEditButtons}
+        premiumActive={premiumActive}
       >
         <Element name="companyLinkScrollElement" className="element">
           <CompanyLinkContent

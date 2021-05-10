@@ -40,7 +40,7 @@ const TextH1 = styled.div`
   padding-left: 25px;
   text-transform: uppercase;
   font-size: 2rem;
-  letter-spacing: 0.5rem;
+  letter-spacing: 0.1rem;
   text-align: center;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -108,7 +108,9 @@ const RightColumnItem = styled.div`
   overflow: hidden;
   height: auto;
   opacity: ${props =>
-    !props.active && props.disabledEditButtons ? "0.5" : "1"};
+    !props.active && props.disabledEditButtons && props.premiumActive
+      ? "0.5"
+      : "1"};
   transition-property: color, background-color, border-color, opacity;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -236,6 +238,16 @@ const ContentCompanyProfilAutoSave = ({
     })
   }, [company, isAdmin, isCompanyEditProfil, userHasAccess, selectedWorker])
 
+  let premiumActive = false
+  if (!!user) {
+    if (!!company.premium) {
+      const toDatePremium = new Date(company.premium)
+      if (toDatePremium >= new Date()) {
+        premiumActive = true
+      }
+    }
+  }
+
   const disabledEditButtons =
     allCategoryEdit ||
     editOpinionAndAdress ||
@@ -285,7 +297,7 @@ const ContentCompanyProfilAutoSave = ({
   }
 
   const handleClickEditMode = () => {
-    if (!disabledEditButtons) {
+    if (!disabledEditButtons || !premiumActive) {
       setEditMode(prevState => !prevState)
       setEditOpinionAndAdress(false)
     }
@@ -357,7 +369,6 @@ const ContentCompanyProfilAutoSave = ({
   let isWorkerBlocked = false
   let userAccountNotVeryfied = false
   let userPhoneVeryfied = false
-  let premiumActive = false
   let premiumDate = null
   let companySMS = 0
 
@@ -448,7 +459,7 @@ const ContentCompanyProfilAutoSave = ({
             data-place="bottom"
             onClick={handleClickEditMode}
             siteProps={siteProps}
-            disabled={disabledEditButtons}
+            disabled={disabledEditButtons && premiumActive}
           >
             <MdEdit />
           </EditModeToChange>
@@ -468,7 +479,8 @@ const ContentCompanyProfilAutoSave = ({
             setEditGallery={setEditGallery}
             handleResetAllEditedComponents={handleResetAllEditedComponents}
             isAdmin={isAdmin}
-            disabledEditButtons={disabledEditButtons}
+            disabledEditButtons={disabledEditButtons || !premiumActive}
+            premiumActive={premiumActive}
           />
           {userHasPermToServices && (
             <AllCategoryOfServices
@@ -486,7 +498,7 @@ const ContentCompanyProfilAutoSave = ({
               allCategoryEdit={allCategoryEdit}
               setAllCategoryEdit={setAllCategoryEdit}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
               editMode={editMode}
             />
           )}
@@ -494,7 +506,7 @@ const ContentCompanyProfilAutoSave = ({
             <ShopStoreContent
               ButtonEditPosition={ButtonEditPosition}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
               editShopStore={editShopStore}
               setEditShopStore={setEditShopStore}
               siteProps={siteProps}
@@ -502,6 +514,7 @@ const ContentCompanyProfilAutoSave = ({
               {...companyEditProfilProps}
               companyShopStore={[...company.shopStore]}
               user={user}
+              premiumActive={premiumActive}
             />
           )}
         </LeftColumn>
@@ -522,8 +535,10 @@ const ContentCompanyProfilAutoSave = ({
                   siteProps={siteProps}
                   active={editSMSSettngs}
                   disabledEditButtons={disabledEditButtons}
+                  premiumActive={premiumActive}
                 >
                   <SMSSettings
+                    premiumActive={premiumActive}
                     TitleRightColumn={TitleRightColumn}
                     ButtonEditPosition={ButtonEditPosition}
                     {...companyEditProfilProps}
@@ -573,7 +588,7 @@ const ContentCompanyProfilAutoSave = ({
             (isAdmin || !isCompanyEditProfil) &&
             !!company.maps.lat &&
             !!company.maps.long && (
-              <RightColumnItem noBg>
+              <RightColumnItem noBg premiumActive={premiumActive}>
                 <MapsComponent
                   company={company}
                   companyLat={company.maps.lat}
@@ -589,6 +604,7 @@ const ContentCompanyProfilAutoSave = ({
               siteProps={siteProps}
               active={editOpinionAndAdress}
               disabledEditButtons={disabledEditButtons}
+              premiumActive={premiumActive}
             >
               <OpinionAndAdressContent
                 {...companyEditProfilProps}
@@ -616,12 +632,14 @@ const ContentCompanyProfilAutoSave = ({
                 disabledEditButtons={disabledEditButtons}
                 editMode={editMode}
                 linkPath={company.linkPath}
+                premiumActive={premiumActive}
               />
             </RightColumnItem>
           )}
           {userHasPermisionToOther && (
             <AboutUsComponent
               RightColumnItem={RightColumnItem}
+              premiumActive={premiumActive}
               companyEditProfilProps={companyEditProfilProps}
               {...companyEditProfilProps}
               siteProps={siteProps}
@@ -633,7 +651,7 @@ const ContentCompanyProfilAutoSave = ({
               editAboutUs={editAboutUs}
               setEditAboutUs={setEditAboutUs}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
               editMode={editMode}
             />
           )}
@@ -642,7 +660,8 @@ const ContentCompanyProfilAutoSave = ({
               {...companyEditProfilProps}
               siteProps={siteProps}
               active={editableOpeningHours}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
+              premiumActive={premiumActive}
             >
               <OpeningHoursContent
                 TitleRightColumn={TitleRightColumn}
@@ -656,7 +675,7 @@ const ContentCompanyProfilAutoSave = ({
                 editableOpeningHours={editableOpeningHours}
                 setEditableOpeningHours={setEditableOpeningHours}
                 handleResetAllEditedComponents={handleResetAllEditedComponents}
-                disabledEditButtons={disabledEditButtons}
+                disabledEditButtons={disabledEditButtons || !premiumActive}
               />
             </RightColumnItem>
           )}
@@ -665,7 +684,8 @@ const ContentCompanyProfilAutoSave = ({
               {...companyEditProfilProps}
               siteProps={siteProps}
               active={editableDaysOff}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
+              premiumActive={premiumActive}
             >
               <DaysOffContent
                 {...companyEditProfilProps}
@@ -678,7 +698,7 @@ const ContentCompanyProfilAutoSave = ({
                 editableDaysOff={editableDaysOff}
                 setEditableDaysOff={setEditableDaysOff}
                 handleResetAllEditedComponents={handleResetAllEditedComponents}
-                disabledEditButtons={disabledEditButtons}
+                disabledEditButtons={disabledEditButtons || !premiumActive}
                 editMode={editMode}
               />
             </RightColumnItem>
@@ -691,7 +711,8 @@ const ContentCompanyProfilAutoSave = ({
                     {...companyEditProfilProps}
                     siteProps={siteProps}
                     active={editConstHappyHours}
-                    disabledEditButtons={disabledEditButtons}
+                    disabledEditButtons={disabledEditButtons || !premiumActive}
+                    premiumActive={premiumActive}
                   >
                     <HappyHoursConstContent
                       {...companyEditProfilProps}
@@ -704,7 +725,9 @@ const ContentCompanyProfilAutoSave = ({
                       handleResetAllEditedComponents={
                         handleResetAllEditedComponents
                       }
-                      disabledEditButtons={disabledEditButtons}
+                      disabledEditButtons={
+                        disabledEditButtons || !premiumActive
+                      }
                       editMode={editMode}
                       ButtonEditPosition={ButtonEditPosition}
                       companyServices={company.services}
@@ -712,10 +735,11 @@ const ContentCompanyProfilAutoSave = ({
                     />
                   </RightColumnItem>
                   <RightColumnItem
+                    premiumActive={premiumActive}
                     {...companyEditProfilProps}
                     siteProps={siteProps}
                     active={editPromotions}
-                    disabledEditButtons={disabledEditButtons}
+                    disabledEditButtons={disabledEditButtons || !premiumActive}
                   >
                     <PromotionsContent
                       {...companyEditProfilProps}
@@ -728,7 +752,9 @@ const ContentCompanyProfilAutoSave = ({
                       handleResetAllEditedComponents={
                         handleResetAllEditedComponents
                       }
-                      disabledEditButtons={disabledEditButtons}
+                      disabledEditButtons={
+                        disabledEditButtons || !premiumActive
+                      }
                       editMode={editMode}
                       ButtonEditPosition={ButtonEditPosition}
                       companyServices={company.services}
@@ -736,10 +762,11 @@ const ContentCompanyProfilAutoSave = ({
                     />
                   </RightColumnItem>
                   <RightColumnItem
+                    premiumActive={premiumActive}
                     {...companyEditProfilProps}
                     siteProps={siteProps}
                     active={editStamps}
-                    disabledEditButtons={disabledEditButtons}
+                    disabledEditButtons={disabledEditButtons || !premiumActive}
                   >
                     <StampsContent
                       {...companyEditProfilProps}
@@ -754,7 +781,9 @@ const ContentCompanyProfilAutoSave = ({
                       companyStamps={company.companyStamps}
                       services={company.services}
                       editMode={editMode}
-                      disabledEditButtons={disabledEditButtons}
+                      disabledEditButtons={
+                        disabledEditButtons || !premiumActive
+                      }
                       user={user}
                     />
                   </RightColumnItem>
@@ -779,6 +808,7 @@ const ContentCompanyProfilAutoSave = ({
               isAdmin={isAdmin}
               ownerData={company.ownerData}
               RightColumnItem={RightColumnItem}
+              premiumActive={premiumActive}
               ButtonTextPosition={ButtonTextPosition}
               editedWorkers={editedWorkers}
               setEditedWorkers={setEditedWorkers}
@@ -790,6 +820,7 @@ const ContentCompanyProfilAutoSave = ({
             userHasPermisionToOther && (
               <ReserwationTextComponent
                 RightColumnItem={RightColumnItem}
+                premiumActive={premiumActive}
                 companyEditProfilProps={companyEditProfilProps}
                 {...companyEditProfilProps}
                 siteProps={siteProps}
@@ -801,7 +832,7 @@ const ContentCompanyProfilAutoSave = ({
                 editedReserwation={editedReserwation}
                 setEditedReserwation={setEditedReserwation}
                 handleResetAllEditedComponents={handleResetAllEditedComponents}
-                disabledEditButtons={disabledEditButtons}
+                disabledEditButtons={disabledEditButtons || !premiumActive}
                 editMode={editMode}
               />
             )}
@@ -810,6 +841,7 @@ const ContentCompanyProfilAutoSave = ({
               editCompanyNip={editCompanyNip}
               setEditCompanyNip={setEditCompanyNip}
               RightColumnItem={RightColumnItem}
+              premiumActive={premiumActive}
               companyEditProfilProps={companyEditProfilProps}
               {...companyEditProfilProps}
               siteProps={siteProps}
@@ -818,7 +850,7 @@ const ContentCompanyProfilAutoSave = ({
               company={company}
               user={user}
               ButtonEditPosition={ButtonEditPosition}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
               editMode={editMode}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
               dataToInvoice={company.dataToInvoice}
@@ -829,6 +861,7 @@ const ContentCompanyProfilAutoSave = ({
               editCompanyLink={editCompanyLink}
               setEditCompanyLink={setEditCompanyLink}
               RightColumnItem={RightColumnItem}
+              premiumActive={premiumActive}
               companyEditProfilProps={companyEditProfilProps}
               {...companyEditProfilProps}
               siteProps={siteProps}
@@ -837,7 +870,7 @@ const ContentCompanyProfilAutoSave = ({
               company={company}
               user={user}
               ButtonEditPosition={ButtonEditPosition}
-              disabledEditButtons={disabledEditButtons}
+              disabledEditButtons={disabledEditButtons || !premiumActive}
               editMode={editMode}
               handleResetAllEditedComponents={handleResetAllEditedComponents}
             />
@@ -849,6 +882,7 @@ const ContentCompanyProfilAutoSave = ({
             userHasPermisionToOther && (
               <LinksComponent
                 RightColumnItem={RightColumnItem}
+                premiumActive={premiumActive}
                 companyEditProfilProps={companyEditProfilProps}
                 {...companyEditProfilProps}
                 siteProps={siteProps}
@@ -860,7 +894,7 @@ const ContentCompanyProfilAutoSave = ({
                 editLinks={editLinks}
                 setEditLinks={setEditLinks}
                 handleResetAllEditedComponents={handleResetAllEditedComponents}
-                disabledEditButtons={disabledEditButtons}
+                disabledEditButtons={disabledEditButtons || !premiumActive}
                 editMode={editMode}
               />
             )}
@@ -869,6 +903,7 @@ const ContentCompanyProfilAutoSave = ({
             user={user}
             company={company}
             disabledEditButtons={disabledEditButtons}
+            premiumActive={premiumActive}
           />
         </RightColumn>
         {userHasPermToOpinions && (
@@ -885,7 +920,7 @@ const ContentCompanyProfilAutoSave = ({
           />
         )}
       </ContentDiv>
-      {isCompanyEditProfil && !isMobileSize && (
+      {isCompanyEditProfil && premiumActive && !isMobileSize && (
         <ReactTooltip id="editMode" effect="float" multiline={true}>
           {editMode ? (
             disabledEditButtons ? (
@@ -900,12 +935,33 @@ const ContentCompanyProfilAutoSave = ({
           )}
         </ReactTooltip>
       )}
-      {disabledEditButtons && !isMobileSize && (
+
+      {(disabledEditButtons || !premiumActive) && !isMobileSize && (
         <ReactTooltip id="disabledButton" effect="float" multiline={true}>
+          <span>
+            {disabledEditButtons && premiumActive
+              ? "Aby móc edytować ten element zakończ edytowanie poprzedniego elementu."
+              : !premiumActive
+              ? "Aktywuj konto, aby móc korzystać z wybranych funkcji."
+              : ""}
+          </span>
+        </ReactTooltip>
+      )}
+      {disabledEditButtons && !isMobileSize && (
+        <ReactTooltip id="disabledButtonOnly" effect="float" multiline={true}>
           <span>
             Aby móc edytować ten element zakończ edytowanie poprzedniego
             elementu.
           </span>
+        </ReactTooltip>
+      )}
+      {!premiumActive && !isMobileSize && (
+        <ReactTooltip
+          id="disabledButtonValidPremium"
+          effect="float"
+          multiline={true}
+        >
+          <span>Aktywuj konto, aby móc korzystać z wybranych funkcji.</span>
         </ReactTooltip>
       )}
     </div>

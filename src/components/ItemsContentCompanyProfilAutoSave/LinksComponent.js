@@ -25,6 +25,7 @@ const LinksComponent = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
   editMode,
+  premiumActive,
 }) => {
   const dispatch = useDispatch()
 
@@ -74,6 +75,7 @@ const LinksComponent = ({
         siteProps={siteProps}
         active={editLinks}
         disabledEditButtons={disabledEditButtons}
+        premiumActive={premiumActive}
       >
         <Element name="linksScrollElement" className="element">
           <OurLinksContent
