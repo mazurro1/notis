@@ -19,21 +19,16 @@ const PaddingContent = styled.div`
   margin: 0 auto;
   padding-left: 1%;
   padding-right: 1%;
-  /* padding-top: ${props =>
-    props.topNavVisibleMenu
-      ? props.active
-        ? `${props.heightMenuIndustries + 170}px`
-        : "207px"
-      : "70px"}; */
-
-  padding-top: ${props => (props.topNavVisibleMenu ? "0px" : "70px")};
-  transition-property: padding-top;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
 `
 const MinHeightContent = styled.div`
+  padding: 0;
+  margin: 0;
+  padding-top: ${props => (props.topNavVisibleMenu ? "0px" : "70px")};
   min-height: ${props =>
     props.isMainPage ? "calc(100vh - 70px - 137px)" : "calc(100vh - 70px)"};
+  transition-property: padding;
+  transition-duration: 0.1s;
+  transition-timing-function: ease;
 `
 
 const ScrollUp = styled.div`
@@ -106,10 +101,6 @@ const ScrollGoBack = styled.div`
 
 const ElementsPages = ({ isMainPage, children }) => {
   const siteProps = useSelector(state => state.siteProps)
-  const heightMenuIndustries = useSelector(state => state.heightMenuIndustries)
-  const visibleMenuIndustries = useSelector(
-    state => state.visibleMenuIndustries
-  )
 
   const handleClickScroll = () => {
     window.scrollTo(0, 0)
@@ -121,18 +112,13 @@ const ElementsPages = ({ isMainPage, children }) => {
 
   return (
     <BackgroundColorPage siteProps={siteProps}>
-      <PaddingContent
-        topNavVisibleMenu={isMainPage}
-        heightMenuIndustries={
-          !!heightMenuIndustries
-            ? heightMenuIndustries < 100
-              ? 170
-              : heightMenuIndustries
-            : 170
-        }
-        active={visibleMenuIndustries}
-      >
-        <MinHeightContent isMainPage={isMainPage}>{children}</MinHeightContent>
+      <PaddingContent>
+        <MinHeightContent
+          topNavVisibleMenu={isMainPage}
+          isMainPage={isMainPage}
+        >
+          {children}
+        </MinHeightContent>
       </PaddingContent>
       <ScrollUp siteProps={siteProps} onClick={handleClickScroll}>
         <MdKeyboardArrowUp />

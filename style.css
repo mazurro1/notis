@@ -332,6 +332,28 @@ button:focus {
   transition-timing-function: ease;
 }
 
+.opacityMenuWrapper-enter {
+  opacity: 0.01;
+}
+
+.opacityMenuWrapper-enter.opacityMenuWrapper-enter-active {
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
+
+.opacityMenuWrapper-exit {
+  opacity: 1;
+}
+
+.opacityMenuWrapper-exit.opacityMenuWrapper-exit-active {
+  opacity: 0.01;
+  transition-property: opacity;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
+
 .popup-enter {
   opacity: 0.01;
   transform: scale(0.1);

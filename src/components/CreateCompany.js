@@ -5,7 +5,7 @@ import {
   MdAccountBox,
   MdEmail,
   MdLocationOn,
-  MdWork,
+  MdStoreMallDirectory,
   MdLocationCity,
 } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
@@ -15,7 +15,7 @@ import { Colors } from "../common/Colors"
 import ReactTooltip from "react-tooltip"
 import ButtonIcon from "./ButtonIcon"
 import { fetchCompanyRegistration, addAlertItem } from "../state/actions"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { AllIndustries } from "../common/AllIndustries"
 import InputPhone from "./InputPhone"
 import { validEmail } from "../common/Functions"
@@ -241,7 +241,7 @@ const CreateCompany = ({ user, siteProps }) => {
             title="ZAREJESTRUJ FIRMĘ"
             uppercase
             fontIconSize="20"
-            icon={<MdWork />}
+            icon={<MdStoreMallDirectory />}
             disabled={!validButtonRegisterCompany || !userVeryfiedPhone}
             fontSize="16"
           />

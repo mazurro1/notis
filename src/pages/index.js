@@ -105,8 +105,13 @@ const ResetFilter = styled.div`
   }
 `
 
+const MinHeightComponent = styled.div`
+  min-height: calc(100vh - 80px - 137px);
+`
+
 const Home = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
   const selectedListMapView = useSelector(state => state.selectedListMapView)
   const placesData = useSelector(state => state.placesData)
   const filters = useSelector(state => state.filters)
@@ -123,6 +128,17 @@ const Home = () => {
   const mapActive = useSelector(state => state.mapActive)
   const refAllPlaces = useRef(null)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    setIsOpen(false)
+    setTimeout(() => {
+      setIsOpen(true)
+      sal({
+        threshold: 0.1,
+        once: true,
+      })
+    }, 10)
+  }, [])
 
   useEffect(() => {
     if (!!refAllPlaces) {
@@ -211,114 +227,122 @@ const Home = () => {
   )
 
   return (
-    <div>
-      {industriesText}
-      <ButtonsFilters>
-        <ButtonMargin>
-          <Sort enableMaps={mapActive} />
-        </ButtonMargin>
-        <ButtonMargin>
-          <ButtonIcon
-            title={
-              !!filters ? (
-                <TextButtonsSearch>
-                  filtruj po: {filters.label}
-                  <ResetFilter
-                    siteProps={siteProps}
-                    onClick={handleResetFilter}
-                  >
-                    <MdClose />
-                  </ResetFilter>
-                </TextButtonsSearch>
-              ) : (
-                <TextButtonsSearch>filtruj po usługach</TextButtonsSearch>
-              )
-            }
-            uppercase
-            fontIconSize="35"
-            fontSize="14"
-            icon={<MdFilterList />}
-            onClick={() => dispatch(changeFilterVisible())}
-          />
-        </ButtonMargin>
-        <ButtonMargin>
-          <ButtonIcon
-            title={
-              !!localization || !!district ? (
-                !!localization.value ? (
-                  <TextButtonsSearch>
-                    lokalizacja: {localization.label}
-                    {!!district ? `, ${district}` : ""}
-                    <ResetFilter
-                      siteProps={siteProps}
-                      onClick={handleResetLocalization}
-                    >
-                      <MdClose />
-                    </ResetFilter>
-                  </TextButtonsSearch>
-                ) : (
-                  <TextButtonsSearch>lokalizacja</TextButtonsSearch>
-                )
-              ) : (
-                <TextButtonsSearch>lokalizacja</TextButtonsSearch>
-              )
-            }
-            uppercase
-            fontIconSize="22"
-            fontSize="14"
-            icon={<MdLocationOn />}
-            onClick={() => dispatch(changeLocaliaztionVisible())}
-          />
-        </ButtonMargin>
-        <ButtonMargin>
-          <SelectCreated
-            options={[
-              {
-                value: 1,
-                label: "Lista ofert",
-              },
-              { value: 2, label: "Mapa ofert" },
-            ]}
-            value={selectedListMapView}
-            handleChange={handleChangeView}
-            placeholder="Widok..."
-            defaultMenuIsOpen={false}
-            isClearable={false}
-            deleteItem={false}
-            closeMenuOnSelect
-            width="auto"
-          />
-        </ButtonMargin>
-      </ButtonsFilters>
-      <CSSTransition
-        in={mapActive && !!mapGeolocation}
-        timeout={400}
-        classNames="map"
-        unmountOnExit
-      >
-        <GoogleMapsStyle>
-          <GoogleMapsMainSearch
-            siteProps={siteProps}
-            mapGeolocation={mapGeolocation}
-            localization={localization}
-            mapMarks={mapMarks}
-            user={user}
-            industries={industries}
-            filters={filters}
-            sorts={sorts}
-          />
-        </GoogleMapsStyle>
-      </CSSTransition>
-      <CSSTransition
-        in={selectedListMapView.value === 1}
-        timeout={400}
-        classNames="popup"
-        unmountOnExit
-        onExited={handleEnableMaps}
-      >
-        <MarginBottomPlaces ref={refAllPlaces}>
-          {mapPlacesData}
-        </MarginBottomPlaces>
+    <div
+      data-sal="fade"
+      data-sal-duration="400"
+      data-sal-easing="ease-out-bounce"
+    >
+      <CSSTransition in={isOpen} timeout={400} classNames="popup" unmountOnExit>
+        <MinHeightComponent>
+          {industriesText}
+          <ButtonsFilters>
+            <ButtonMargin>
+              <Sort enableMaps={mapActive} />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title={
+                  !!filters ? (
+                    <TextButtonsSearch>
+                      filtruj po: {filters.label}
+                      <ResetFilter
+                        siteProps={siteProps}
+                        onClick={handleResetFilter}
+                      >
+                        <MdClose />
+                      </ResetFilter>
+                    </TextButtonsSearch>
+                  ) : (
+                    <TextButtonsSearch>filtruj po usługach</TextButtonsSearch>
+                  )
+                }
+                uppercase
+                fontIconSize="35"
+                fontSize="14"
+                icon={<MdFilterList />}
+                onClick={() => dispatch(changeFilterVisible())}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <ButtonIcon
+                title={
+                  !!localization || !!district ? (
+                    !!localization.value ? (
+                      <TextButtonsSearch>
+                        lokalizacja: {localization.label}
+                        {!!district ? `, ${district}` : ""}
+                        <ResetFilter
+                          siteProps={siteProps}
+                          onClick={handleResetLocalization}
+                        >
+                          <MdClose />
+                        </ResetFilter>
+                      </TextButtonsSearch>
+                    ) : (
+                      <TextButtonsSearch>lokalizacja</TextButtonsSearch>
+                    )
+                  ) : (
+                    <TextButtonsSearch>lokalizacja</TextButtonsSearch>
+                  )
+                }
+                uppercase
+                fontIconSize="22"
+                fontSize="14"
+                icon={<MdLocationOn />}
+                onClick={() => dispatch(changeLocaliaztionVisible())}
+              />
+            </ButtonMargin>
+            <ButtonMargin>
+              <SelectCreated
+                options={[
+                  {
+                    value: 1,
+                    label: "Lista ofert",
+                  },
+                  { value: 2, label: "Mapa ofert" },
+                ]}
+                value={selectedListMapView}
+                handleChange={handleChangeView}
+                placeholder="Widok..."
+                defaultMenuIsOpen={false}
+                isClearable={false}
+                deleteItem={false}
+                closeMenuOnSelect
+                width="auto"
+              />
+            </ButtonMargin>
+          </ButtonsFilters>
+          <CSSTransition
+            in={mapActive && !!mapGeolocation}
+            timeout={400}
+            classNames="map"
+            unmountOnExit
+          >
+            <GoogleMapsStyle>
+              <GoogleMapsMainSearch
+                siteProps={siteProps}
+                mapGeolocation={mapGeolocation}
+                localization={localization}
+                mapMarks={mapMarks}
+                user={user}
+                industries={industries}
+                filters={filters}
+                sorts={sorts}
+              />
+            </GoogleMapsStyle>
+          </CSSTransition>
+          <CSSTransition
+            in={selectedListMapView.value === 1}
+            timeout={400}
+            classNames="popup"
+            unmountOnExit
+            onExited={handleEnableMaps}
+          >
+            <MarginBottomPlaces ref={refAllPlaces}>
+              {mapPlacesData}
+            </MarginBottomPlaces>
+          </CSSTransition>
+        </MinHeightComponent>
       </CSSTransition>
     </div>
   )

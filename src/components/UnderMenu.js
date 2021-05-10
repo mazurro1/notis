@@ -20,10 +20,8 @@ import { MdExpandMore } from "react-icons/md"
 import { Colors } from "../common/Colors"
 
 const WrapperNavigationUnder = styled.div`
-  /* position: absolute; */
   position: relative;
   z-index: 90;
-  /* top: 70px; */
   margin-top: 70px;
   left: 0;
   right: 0;
@@ -33,8 +31,8 @@ const WrapperNavigationUnder = styled.div`
     props.active ? `${props.heightPadding + 80}px` : "10px"};
   height: 137px;
   overflow: hidden;
-  /* opacity: ${props => (props.isMainPage ? "1" : "0")}; */
-  transition-property: background-color, color, padding, opacity;
+  opacity: ${props => (props.isMainPage ? "1" : "0")};
+  transition-property: background-color, color, padding, opacity, margin;
   transition-timing-function: ease;
   transition-duration: 0.3s;
 `
@@ -176,9 +174,9 @@ const UnderMenu = ({ isMainPage }) => {
     <div>
       <CSSTransition
         in={isMainPage}
-        timeout={0}
-        classNames="opacitySpinner"
+        classNames="opacityMenuWrapper"
         unmountOnExit
+        timeout={0}
       >
         <WrapperNavigationUnder
           siteProps={siteProps}

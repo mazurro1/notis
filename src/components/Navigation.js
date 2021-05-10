@@ -23,6 +23,7 @@ import {
   MdVerifiedUser,
   MdAttachMoney,
   MdHistory,
+  MdStoreMallDirectory,
 } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import Popup from "./Popup"
@@ -191,12 +192,7 @@ const MenuPosition = styled.div`
 
 const ContentMenu = styled.div`
   position: relative;
-  /* transform: ${props =>
-    props.active
-      ? "translate(20%, -15%) scale(0.6) rotateY(-50deg) rotateX(-15deg) rotateZ(17deg);"
-      : ""}; */
   box-shadow: 0 0 40px 1px rgba(0, 0, 0, 0.1);
-  /* overflow: hidden; */
   transition-property: transform, padding-left;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -243,7 +239,7 @@ const IconCloseStyle = styled.div`
 `
 
 const StyledSelect = styled.div`
-  padding-bottom: 40px;
+  padding-bottom: 20px;
 `
 
 const CloseMenuLeft = styled.div`
@@ -1238,34 +1234,28 @@ const Navigation = ({ isMainPage }) => {
                     </ReactTooltip>
                   )}
                   <MarginButtonsWork>
-                    <div data-tip data-for="disabledButtonPremium">
-                      <ButtonIcon
-                        title="Doładuj konto"
-                        uppercase
-                        fontIconSize="22"
-                        fontSize="16"
-                        icon={<MdAttachMoney />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        onClick={handleClickSMS}
-                        disabled={disabledNoPremium}
-                      />
-                    </div>
+                    <ButtonIcon
+                      title="Doładuj konto"
+                      uppercase
+                      fontIconSize="22"
+                      fontSize="16"
+                      icon={<MdAttachMoney />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      onClick={handleClickSMS}
+                    />
                   </MarginButtonsWork>
                   <MarginButtonsWork>
-                    <div data-tip data-for="disabledButtonPremium">
-                      <ButtonIcon
-                        title="Historia tranzakcji"
-                        uppercase
-                        fontIconSize="22"
-                        fontSize="16"
-                        icon={<MdHistory />}
-                        customColorButton={Colors(siteProps).successColorDark}
-                        customColorIcon={Colors(siteProps).successColor}
-                        onClick={handleClickTransactionHistory}
-                        disabled={disabledNoPremium}
-                      />
-                    </div>
+                    <ButtonIcon
+                      title="Historia tranzakcji"
+                      uppercase
+                      fontIconSize="22"
+                      fontSize="16"
+                      icon={<MdHistory />}
+                      customColorButton={Colors(siteProps).successColorDark}
+                      customColorIcon={Colors(siteProps).successColor}
+                      onClick={handleClickTransactionHistory}
+                    />
                   </MarginButtonsWork>
                 </>
               )}
@@ -1391,7 +1381,7 @@ const Navigation = ({ isMainPage }) => {
             uppercase
             fontIconSize="25"
             fontSize="16"
-            icon={<MdWork />}
+            icon={<MdStoreMallDirectory />}
             secondColors
           />
         }
@@ -1472,7 +1462,7 @@ const Navigation = ({ isMainPage }) => {
   )
 
   return (
-    <>
+    <div>
       {PopupWorkersReserwations}
       {PopupWorkersUsersInformations}
       {PopupWorkerPropsVisible}
@@ -1662,18 +1652,9 @@ const Navigation = ({ isMainPage }) => {
               </NavigationItems>
             </NavigationDiv>
           </WrapperNavigation>
-          {/* <PaddingContent
-            topNavVisibleMenu={isMainPage ? topNavVisibleMenu : false}
-            heightPadding={heightMenuIndustries}
-            active={visibleMenuIndustries}
-          >
-            <MinHeightContent isMainPage={isMainPage}>
-              {children}
-            </MinHeightContent>
-          </PaddingContent> */}
         </BackgroundColorPage>
       </ContentMenu>
-    </>
+    </div>
   )
 }
 
