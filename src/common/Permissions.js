@@ -27,4 +27,12 @@ export const Permissions = [
     value: 7,
     label: "Stan sklepu",
   },
+  {
+    value: 8,
+    label: "Zarządzanie wszystkimi serwisami",
+  },
+  {
+    value: 9,
+    label: "Dojazdy",
+  },
 ]

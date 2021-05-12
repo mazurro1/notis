@@ -14,6 +14,8 @@ import {
   FaStamp,
   FaHeart,
   FaChartBar,
+  FaTools,
+  FaCar,
 } from "react-icons/fa"
 import {
   MdWork,
@@ -91,6 +93,8 @@ import CoinsOffers from "./CoinsOffers"
 import TransactionHistory from "./TransactionHistory"
 import ReactTooltip from "react-tooltip"
 import SelectCreated from "./SelectCreated"
+import CompanyServices from "./CompanyServices"
+import CompanyCommuniting from "./CompanyCommuniting"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -353,6 +357,8 @@ const Navigation = ({ isMainPage }) => {
   const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(
     false
   )
+  const [companyServicesVisible, setCompanyServicesVisible] = useState(false)
+  const [companyCommutingVisible, setCompanyCommutingsVisible] = useState(false)
   const [stampsVisible, setStampsVisible] = useState(false)
   const [favouritesVisible, setFavouritesVisible] = useState(false)
   const [availabilityVisible, setAvailabilityVisible] = useState(false)
@@ -675,6 +681,16 @@ const Navigation = ({ isMainPage }) => {
 
   const handleClickCompanyStatistics = () => {
     setCompanyStatistics(prevState => !prevState)
+    setWorkPropsVisible(prevState => !prevState)
+  }
+
+  const handleClickCompanyServices = () => {
+    setCompanyServicesVisible(prevState => !prevState)
+    setWorkPropsVisible(prevState => !prevState)
+  }
+
+  const handleClickCompanyCommuting = () => {
+    setCompanyCommutingsVisible(prevState => !prevState)
     setWorkPropsVisible(prevState => !prevState)
   }
 
@@ -1009,6 +1025,7 @@ const Navigation = ({ isMainPage }) => {
   let workerHasAccessButton = false
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
+  let workerHasAccessServices = false
   let anyCompany = false
   let hasPermission = false
   let companyConfirmed = false
@@ -1057,6 +1074,7 @@ const Navigation = ({ isMainPage }) => {
       )
       workerHasAccessClientsOpinions = user.company.owner === user.userId
       workerHasAccessAvailability = user.company.owner === user.userId
+      workerHasAccessServices = user.company.owner === user.userId
       hasPermission = user.company.owner === user.userId
       isAdmin = user.company.owner === user.userId
       if (!!user.company.sms) {
@@ -1090,6 +1108,15 @@ const Navigation = ({ isMainPage }) => {
             workerHasAccessAvailability = true
           }
         }
+
+        if (!workerHasAccessServices) {
+          const hasPermissionServices = selectWorker.permissions.some(
+            perm => perm === 8
+          )
+          if (hasPermissionServices) {
+            workerHasAccessServices = true
+          }
+        }
       }
     }
   }
@@ -1111,6 +1138,37 @@ const Navigation = ({ isMainPage }) => {
       }
     }
   }
+
+  const PopupCompanyServices = user && (
+    <Popup
+      popupEnable={companyServicesVisible}
+      handleClose={handleClickCompanyServices}
+      title="Serwisy"
+      fullScreen
+    >
+      <CompanyServices
+        siteProps={siteProps}
+        user={user}
+        handleClose={handleClickCompanyServices}
+        workerHasAccessServices={workerHasAccessServices}
+      />
+    </Popup>
+  )
+
+  const PopupCompanyCommuniting = user && (
+    <Popup
+      popupEnable={companyCommutingVisible}
+      handleClose={handleClickCompanyCommuting}
+      title="Dojazdy"
+      fullScreen
+    >
+      <CompanyCommuniting
+        siteProps={siteProps}
+        user={user}
+        handleClose={handleClickCompanyCommuting}
+      />
+    </Popup>
+  )
 
   const PopupUserProfil = !!user && (
     <Popup
@@ -1259,21 +1317,6 @@ const Navigation = ({ isMainPage }) => {
                   </MarginButtonsWork>
                 </>
               )}
-              {companyConfirmed && (
-                <MarginButtonsWork>
-                  <div data-tip data-for="disabledButtonPremium">
-                    <ButtonIcon
-                      title="Statystyki"
-                      uppercase
-                      fontIconSize="20"
-                      fontSize="16"
-                      icon={<FaChartBar />}
-                      onClick={handleClickCompanyStatistics}
-                      disabled={disabledNoPremium}
-                    />
-                  </div>
-                </MarginButtonsWork>
-              )}
             </>
           )}
           {companyConfirmed && (
@@ -1286,21 +1329,6 @@ const Navigation = ({ isMainPage }) => {
                   fontSize="16"
                   icon={<MdTimelapse />}
                   onClick={handleEmplyeeWorkingHoursVisible}
-                  disabled={disabledNoPremium}
-                />
-              </div>
-            </MarginButtonsWork>
-          )}
-          {companyConfirmed && workerHasAccessClientsOpinions && (
-            <MarginButtonsWork>
-              <div data-tip data-for="disabledButtonPremium">
-                <ButtonIcon
-                  title="Klienci"
-                  uppercase
-                  fontIconSize="25"
-                  fontSize="16"
-                  icon={<FaUsers />}
-                  onClick={handleWorkerUsersInformation}
                   disabled={disabledNoPremium}
                 />
               </div>
@@ -1321,6 +1349,51 @@ const Navigation = ({ isMainPage }) => {
               </div>
             </MarginButtonsWork>
           )}
+          {companyConfirmed && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Dojazdy"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaCar />}
+                  onClick={handleClickCompanyCommuting}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
+          {companyConfirmed && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Serwisy"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaTools />}
+                  onClick={handleClickCompanyServices}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
+          {companyConfirmed && workerHasAccessClientsOpinions && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Klienci"
+                  uppercase
+                  fontIconSize="25"
+                  fontSize="16"
+                  icon={<FaUsers />}
+                  onClick={handleWorkerUsersInformation}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
           {companyConfirmed && workerHasAccessAvailability && (
             <MarginButtonsWork>
               <div data-tip data-for="disabledButtonPremium">
@@ -1331,6 +1404,21 @@ const Navigation = ({ isMainPage }) => {
                   fontSize="16"
                   icon={<FaBox />}
                   onClick={handleClickAvailability}
+                  disabled={disabledNoPremium}
+                />
+              </div>
+            </MarginButtonsWork>
+          )}
+          {companyConfirmed && isAdmin && (
+            <MarginButtonsWork>
+              <div data-tip data-for="disabledButtonPremium">
+                <ButtonIcon
+                  title="Statystyki"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<FaChartBar />}
+                  onClick={handleClickCompanyStatistics}
                   disabled={disabledNoPremium}
                 />
               </div>
@@ -1487,6 +1575,8 @@ const Navigation = ({ isMainPage }) => {
       {PopupSaveTokenAutoLogin}
       {PopupCompanyAddSMS}
       {PopupCompanyTransactionHistory}
+      {PopupCompanyServices}
+      {PopupCompanyCommuniting}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">

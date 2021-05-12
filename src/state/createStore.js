@@ -49,6 +49,11 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_SERVICE_COMPANY_SERVICES,
+  DELETE_COMPANY_SERVICE,
+  RESET_COMPANY_SERVICES,
+  UPDATE_COMPANY_SERVICES,
+  ADD_COMPANY_SERVICES,
   UPDATE_DEFAULT_COMPANY,
   CHANGE_RESTART_COMPANY_NIP,
   UPDATE_COMPANY_NIP,
@@ -239,6 +244,11 @@ const initialState = {
   selectedNameMenu: "",
   restartCompanyLink: false,
   restartCompanyNip: false,
+  companyServices: {
+    workers: null,
+    services: [],
+  },
+  resetCompanyServices: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -266,6 +276,10 @@ const reducer = (state = initialState, action) => {
         workerHistoryReserwations: null,
         workingHours: null,
         activeWorkerUserId: null,
+        companyServices: {
+          workers: null,
+          services: [],
+        },
       }
     }
 
@@ -693,6 +707,83 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case ADD_COMPANY_SERVICES: {
+      const allCompanyServices = { ...state.companyServices }
+      if (!!action.workers) {
+        allCompanyServices.workers = action.workers
+      }
+      if (!!action.services) {
+        allCompanyServices.services = action.services
+      }
+      return {
+        ...state,
+        companyServices: allCompanyServices,
+      }
+    }
+
+    case DELETE_COMPANY_SERVICE: {
+      let deleteCompanyService = { ...state.companyServices }
+      if (!!deleteCompanyService) {
+        deleteCompanyService.services = deleteCompanyService.services.filter(
+          item => item._id !== action.serviceId
+        )
+      }
+      return {
+        ...state,
+        resetCompanyServices: true,
+        companyServices: deleteCompanyService,
+      }
+    }
+
+    case UPDATE_SERVICE_COMPANY_SERVICES: {
+      let updateCompanyService = { ...state.companyServices }
+      if (!!action.updatedService) {
+        const findIndexService = updateCompanyService.services.findIndex(
+          item => item._id === action.updatedService.serviceId
+        )
+        if (findIndexService >= 0) {
+          if (
+            updateCompanyService.services[findIndexService].workerUserId._id !==
+            action.updatedService.selectedWorkerUserId
+          ) {
+            const filterService = updateCompanyService.services.filter(
+              itemFilter => itemFilter._id !== action.updatedService.serviceId
+            )
+            updateCompanyService.services = filterService
+          } else {
+            updateCompanyService.services[findIndexService].objectName =
+              action.updatedService.objectName
+            updateCompanyService.services[findIndexService].description =
+              action.updatedService.description
+            updateCompanyService.services[findIndexService].cost =
+              action.updatedService.cost
+            updateCompanyService.services[findIndexService].statusValue =
+              action.updatedService.statusValue
+          }
+        }
+      }
+      return {
+        ...state,
+        companyServices: updateCompanyService,
+        resetCompanyServices: true,
+      }
+    }
+
+    case UPDATE_COMPANY_SERVICES: {
+      let newCompanyService = { ...state.companyServices }
+      if (!!action.newService) {
+        newCompanyService.services = [
+          ...newCompanyService.services,
+          action.newService,
+        ]
+      }
+      return {
+        ...state,
+        companyServices: newCompanyService,
+        resetCompanyServices: true,
+      }
+    }
+
     case UPDATE_DEFAULT_COMPANY: {
       const userDefaultCompany = !!state.user ? state.user : null
       if (!!userDefaultCompany) {
@@ -702,6 +793,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: userDefaultCompany,
         userProfilReset: true,
+      }
+    }
+
+    case RESET_COMPANY_SERVICES: {
+      return {
+        ...state,
+        resetCompanyServices: false,
       }
     }
 

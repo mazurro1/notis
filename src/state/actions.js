@@ -911,6 +911,46 @@ export const UPDATE_COMPANY_NIP = "UPDATE_COMPANY_NIP"
 export const CHANGE_RESTART_COMPANY_NIP = "CHANGE_RESTART_COMPANY_NIP"
 export const CHANGE_SELECTED_USER_COMPANY = "CHANGE_SELECTED_USER_COMPANY"
 export const UPDATE_DEFAULT_COMPANY = "UPDATE_DEFAULT_COMPANY"
+export const ADD_COMPANY_SERVICES = "ADD_COMPANY_SERVICES"
+export const UPDATE_COMPANY_SERVICES = "UPDATE_COMPANY_SERVICES"
+export const RESET_COMPANY_SERVICES = "RESET_COMPANY_SERVICES"
+export const DELETE_COMPANY_SERVICE = "DELETE_COMPANY_SERVICE"
+export const UPDATE_SERVICE_COMPANY_SERVICES = "UPDATE_SERVICE_COMPANY_SERVICES"
+
+export const fetchResetCompanyServices = () => {
+  return {
+    type: RESET_COMPANY_SERVICES,
+  }
+}
+
+export const deleteCompanyServices = serviceId => {
+  return {
+    type: DELETE_COMPANY_SERVICE,
+    serviceId: serviceId,
+  }
+}
+
+export const updateServiceCompanyServices = updatedService => {
+  return {
+    type: UPDATE_SERVICE_COMPANY_SERVICES,
+    updatedService: updatedService,
+  }
+}
+
+export const updateCompanyServices = newService => {
+  return {
+    type: UPDATE_COMPANY_SERVICES,
+    newService: newService,
+  }
+}
+
+export const addCompanyServices = (services, workers) => {
+  return {
+    type: ADD_COMPANY_SERVICES,
+    services: services,
+    workers: workers,
+  }
+}
 
 export const updateDefaultCompany = companyId => {
   return {
@@ -5831,6 +5871,214 @@ export const fetchUpdateDefaultCompany = (token, companyId) => {
                   "red"
                 )
               )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchAddService = (
+  token,
+  companyId,
+  nameInput,
+  surnameInput,
+  isActiveUser,
+  phoneInput,
+  objectInput,
+  descriptionInput,
+  costInput,
+  statusValue,
+  email,
+  workerUserId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-add-service`,
+        {
+          companyId: companyId,
+          name: !!nameInput ? nameInput : null,
+          surname: !!surnameInput ? surnameInput : null,
+          isActiveUser: isActiveUser,
+          phone: phoneInput,
+          objectName: objectInput,
+          description: descriptionInput,
+          cost: !!costInput ? costInput : null,
+          statusValue: statusValue,
+          email: !!email ? email : null,
+          workerUserId: workerUserId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyServices(response.data.newService))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano usługę.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(addAlertItem("Nie znaleziono użytkownika", "red"))
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania usługi", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchGetCompanyServices = (
+  token,
+  companyId,
+  year,
+  month,
+  workerUserId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-get-services`,
+        {
+          companyId: companyId,
+          year: year,
+          month: month,
+          workerUserId: workerUserId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addCompanyServices(response.data.services, response.data.workers)
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas pobierania usług", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCompanyDeleteService = (token, companyId, serviceId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-delete-service`,
+        {
+          companyId: companyId,
+          serviceId: serviceId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto usługę", "green"))
+        dispatch(deleteCompanyServices(serviceId))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania usługi", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUpdateCompanyService = (
+  token,
+  companyId,
+  serviceId,
+  descriptionInput,
+  objectInput,
+  costInput,
+  selectedWorkerUserId,
+  statusValue
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-update-service`,
+        {
+          companyId: companyId,
+          serviceId: serviceId,
+          objectName: objectInput,
+          description: descriptionInput,
+          cost: !!costInput ? costInput : null,
+          statusValue: statusValue,
+          selectedWorkerUserId: selectedWorkerUserId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateServiceCompanyServices({
+            serviceId: serviceId,
+            objectName: objectInput,
+            description: descriptionInput,
+            cost: !!costInput ? costInput : null,
+            statusValue: statusValue,
+            selectedWorkerUserId: selectedWorkerUserId,
+          })
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano serwis.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktualizacji serwisu", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

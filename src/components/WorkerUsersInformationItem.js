@@ -133,7 +133,8 @@ const TitleCategory = styled.div`
   padding: 10px;
   border-radius: 5px;
   padding-right: 280px;
-  padding-bottom: ${props => (props.clickAdd ? "250px !important" : "20px")};
+  padding-top: 15px;
+  padding-bottom: ${props => (props.clickAdd ? "250px !important" : "15px")};
   overflow: hidden;
   user-select: none;
   transition-property: padding-bottom, background-color, color;
@@ -226,19 +227,6 @@ const HeightContentMessagesOther = styled.div`
   overflow-y: auto;
 `
 
-const ReserwationsCountStyle = styled.div`
-  position: absolute;
-  bottom: 5px;
-  left: 10px;
-  font-size: 0.8rem;
-
-  @media all and (max-width: ${Site.mobileSize + "px"}) {
-    position: relative;
-    left: 0;
-    bottom: 0;
-  }
-`
-
 const TimeReserwation = styled.div`
   position: absolute;
   top: 5px;
@@ -274,6 +262,7 @@ const PhoneNumberContent = styled.div`
   position: relative;
   padding: 10px;
   color: ${props => Colors(props.siteProps).textNormalBlack};
+  user-select: text;
 `
 
 const TextNoreserwations = styled.div`
@@ -370,10 +359,7 @@ const WorkerUsersInformationItem = ({
     if (!!refAllHistory) {
       if (!!refAllHistory.current) {
         const indexLastChildren = refAllHistory.current.childNodes.length
-        if (
-          indexLastChildren > 0
-          //  && indexLastChildren < userInfo.reserwationsCount
-        ) {
+        if (indexLastChildren > 0) {
           const isLastPlaceVisible =
             refAllHistory.current.childNodes[indexLastChildren - 1]
               .className === "sal-animate"
@@ -703,9 +689,6 @@ const WorkerUsersInformationItem = ({
         isBlocked={!!userInfo.isBlocked}
       >
         {userName} {userSurname}
-        <ReserwationsCountStyle>
-          Liczba rezerwacji: {userInfo.reserwationsCount}
-        </ReserwationsCountStyle>
         <IconCollapse collapseActive={userCollapseActive} right={0}>
           <MdExpandMore />
         </IconCollapse>
