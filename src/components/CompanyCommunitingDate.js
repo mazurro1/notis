@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"
 import { MdExpandMore } from "react-icons/md"
-import CompanyServiceDataItem from "./CompanyServiceDataItem"
+import CompanyCommunitingDataItem from "./CompanyCommunitingDataItem"
 
 const CategoryItemStyle = styled.div`
   margin-top: 20px;
@@ -52,15 +52,15 @@ const IconArrowPosition = styled.div`
   }
 `
 
-const CompanyServicesDate = ({
-  itemService,
+const CompanyCommunitingDate = ({
+  itemCommuniting,
   siteProps,
   user,
-  workerHasAccessServices,
-  resetCompanyServices,
+  workerHasAccessCommunitings,
+  resetCompanyCommunitings,
   workersWithOwner,
   workerHasAccessClientsOpinions,
-  addServiceVisible,
+  addCommunitingVisible,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
 
@@ -68,19 +68,19 @@ const CompanyServicesDate = ({
     setCollapseActive(prevState => !prevState)
   }
 
-  const servicesMap = itemService.items.map((item, itemIndex) => {
+  const communitingsMap = itemCommuniting.items.map((item, itemIndex) => {
     return (
-      <CompanyServiceDataItem
+      <CompanyCommunitingDataItem
         key={itemIndex}
         item={item}
         siteProps={siteProps}
         user={user}
         itemIndex={itemIndex}
-        workerHasAccessServices={workerHasAccessServices}
-        resetCompanyServices={resetCompanyServices}
+        workerHasAccessCommunitings={workerHasAccessCommunitings}
+        resetCompanyCommunitings={resetCompanyCommunitings}
         workersWithOwner={workersWithOwner}
         workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
-        addServiceVisible={addServiceVisible}
+        addCommunitingVisible={addCommunitingVisible}
       />
     )
   })
@@ -92,17 +92,16 @@ const CompanyServicesDate = ({
       data-sal-easing="ease-out-bounce"
     >
       <TitleCategory siteProps={siteProps} onClick={handleClickArrow}>
-        {itemService.dateService}
+        {itemCommuniting.dateCommuniting}
         <IconArrowPosition collapseActive={collapseActive}>
           <MdExpandMore />
         </IconArrowPosition>
       </TitleCategory>
 
       <Collapse isOpened={collapseActive}>
-        <div>{servicesMap}</div>
+        <div>{communitingsMap}</div>
       </Collapse>
     </CategoryItemStyle>
   )
-  //   return <div>{itemService.dateService}</div>
 }
-export default CompanyServicesDate
+export default CompanyCommunitingDate

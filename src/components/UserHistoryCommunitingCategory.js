@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"
 import { MdExpandMore } from "react-icons/md"
-import CompanyServiceDataItem from "./CompanyServiceDataItem"
+import UserHistoryCommunitingCategoryItem from "./UserHistoryCommunitingCategoryItem"
 
 const CategoryItemStyle = styled.div`
   margin-top: 20px;
@@ -52,15 +52,11 @@ const IconArrowPosition = styled.div`
   }
 `
 
-const CompanyServicesDate = ({
+const UserHistoryCommunitingCategory = ({
   itemService,
   siteProps,
   user,
-  workerHasAccessServices,
-  resetCompanyServices,
-  workersWithOwner,
-  workerHasAccessClientsOpinions,
-  addServiceVisible,
+  resetUserHistoryCommunitings,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
 
@@ -70,17 +66,13 @@ const CompanyServicesDate = ({
 
   const servicesMap = itemService.items.map((item, itemIndex) => {
     return (
-      <CompanyServiceDataItem
+      <UserHistoryCommunitingCategoryItem
         key={itemIndex}
         item={item}
         siteProps={siteProps}
-        user={user}
         itemIndex={itemIndex}
-        workerHasAccessServices={workerHasAccessServices}
-        resetCompanyServices={resetCompanyServices}
-        workersWithOwner={workersWithOwner}
-        workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
-        addServiceVisible={addServiceVisible}
+        user={user}
+        resetUserHistoryCommunitings={resetUserHistoryCommunitings}
       />
     )
   })
@@ -103,6 +95,5 @@ const CompanyServicesDate = ({
       </Collapse>
     </CategoryItemStyle>
   )
-  //   return <div>{itemService.dateService}</div>
 }
-export default CompanyServicesDate
+export default UserHistoryCommunitingCategory

@@ -6,8 +6,9 @@ import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"
 import UserHistoryCategoryItem from "./UserHistoryCategoryItem"
 import { useDispatch } from "react-redux"
-import { fetchDeleteReserwation } from "../state/actions"
-import { LinkEffect } from "../common/LinkEffect"
+import { fetchDeleteReserwation, fetchResetUserMenu } from "../state/actions"
+import { navigate } from "gatsby"
+// import { LinkEffect } from "../common/LinkEffect"
 
 const TitleCategory = styled.div`
   position: relative;
@@ -88,6 +89,7 @@ const UserHistoryCategory = ({
   userToken,
   company,
   handleClose,
+  user,
   resetChangeReserwationUser,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
@@ -116,6 +118,13 @@ const UserHistoryCategory = ({
     handleClose()
   }
 
+  const handleClickCompany = () => {
+    if (!!company.company) {
+      navigate(`/company?${company.company.linkPath}`)
+      dispatch(fetchResetUserMenu(true))
+    }
+  }
+
   const allReserwations = [...reserwations]
   const servicesMap = allReserwations.map((item, index) => {
     return (
@@ -126,6 +135,7 @@ const UserHistoryCategory = ({
         handleDeleteReserwation={handleDeleteReserwation}
         userToken={userToken}
         company={company}
+        user={user}
         resetChangeReserwationUser={resetChangeReserwationUser}
       />
     )
@@ -141,10 +151,9 @@ const UserHistoryCategory = ({
             data-tip
             data-for="goToWebsite"
           >
-            <LinkEffect
-              path={`/company?${company.company.linkPath}`}
-              text={<FaChrome />}
-            />
+            <div onClick={handleClickCompany}>
+              <FaChrome />
+            </div>
           </PositionCompanyLink>
         )}
         <IconArrowPosition collapseActive={collapseActive}>

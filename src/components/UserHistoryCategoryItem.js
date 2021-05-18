@@ -318,6 +318,7 @@ const UserHistoryCategoryItem = ({
   userToken,
   company,
   resetChangeReserwationUser,
+  user,
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [changeReserwation, setChangeReserwation] = useState(false)
@@ -397,13 +398,15 @@ const UserHistoryCategoryItem = ({
   }
 
   const handleUpdateOpinion = () => {
-    const opinionData = {
-      opinionStars: opinionStars,
-      opinionMessage: opinionText,
-      company: item.company._id,
-      reserwationId: item._id,
+    if (!!item.company) {
+      const opinionData = {
+        opinionStars: opinionStars,
+        opinionMessage: opinionText,
+        company: item.company._id,
+        reserwationId: item._id,
+      }
+      dispatch(fetchAddOpinion(userToken, opinionData, company))
     }
-    dispatch(fetchAddOpinion(userToken, opinionData, company))
   }
 
   const handleUpdateEditedOpinion = () => {
@@ -722,7 +725,8 @@ const UserHistoryCategoryItem = ({
           </OpinionText>
         </>
       )}
-      {!!isReserwationEnd &&
+      {!!item.company &&
+      !!isReserwationEnd &&
       !!!item.visitNotFinished &&
       !!!item.visitCanceled ? (
         <>
@@ -755,6 +759,7 @@ const UserHistoryCategoryItem = ({
               handleCloseReserwation={handleCloseChangeReserwation}
               isChangeReserwation={true}
               selectedReserwationId={item._id}
+              user={user}
             />
           </Popup>
           <ArrowDeleteReserwation
@@ -807,7 +812,7 @@ const UserHistoryCategoryItem = ({
             </>
           </Popup>
         </>
-      ) : !!!item.opinionId && !!!item.visitCanceled ? (
+      ) : !!!item.opinionId && !!!item.visitCanceled && !!item.company ? (
         <>
           <ArrowAddOpinionReserwation
             siteProps={siteProps}
@@ -868,6 +873,7 @@ const UserHistoryCategoryItem = ({
       ) : (
         !!item.opinionId &&
         !!!item.visitCanceled &&
+        !!item.company &&
         !!!item.opinionId.editedOpinionMessage && (
           <>
             <ArrowAddOpinionReserwation
@@ -879,7 +885,7 @@ const UserHistoryCategoryItem = ({
               <MdEdit />
             </ArrowAddOpinionReserwation>
             <Popup
-              popupEnable={editedOpinion}
+              popupEnable={editedOpinion && !!item.company._id}
               position="absolute"
               title="Edytuj opinie"
               borderRadius

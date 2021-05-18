@@ -94,7 +94,12 @@ const StyleButtonAdd = styled.div`
   }
 `
 
-const CompanyServices = ({ siteProps, user, workerHasAccessServices }) => {
+const CompanyServices = ({
+  siteProps,
+  user,
+  workerHasAccessServices,
+  workerHasAccessClientsOpinions,
+}) => {
   const allYears = [
     {
       value: new Date().getFullYear() - 2,
@@ -282,6 +287,8 @@ const CompanyServices = ({ siteProps, user, workerHasAccessServices }) => {
         workerHasAccessServices={workerHasAccessServices}
         resetCompanyServices={resetCompanyServices}
         workersWithOwner={workersWithOwner}
+        workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
+        addServiceVisible={addServiceVisible}
       />
     )
   })

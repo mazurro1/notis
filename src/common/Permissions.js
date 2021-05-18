@@ -21,7 +21,8 @@ export const Permissions = [
   // },
   {
     value: 6,
-    label: "Opinie o klientach",
+    label:
+      "Dane klientów (numer telefonu, historia, blokada, wiadomości o klientach)",
   },
   {
     value: 7,
@@ -34,5 +35,9 @@ export const Permissions = [
   {
     value: 9,
     label: "Dojazdy",
+  },
+  {
+    value: 10,
+    label: "Zarządzanie wszystkimi dojazdami",
   },
 ]

@@ -42,6 +42,45 @@ export const CHANGE_POPUP_TAKE_PLACE = "CHANGE_POPUP_TAKE_PLACE"
 export const CHANGE_SELECTED_NAME_MENU = "CHANGE_SELECTED_NAME_MENU"
 export const UPDATE_USER_PHONE = "UPDATE_USER_PHONE"
 export const RESET_UPDATE_USER_PHONE = "RESET_UPDATE_USER_PHONE"
+export const ADD_USER_HISTORY_SERVICES = "ADD_USER_HISTORY_SERVICES"
+export const ADD_USER_HISTORY_COMMUNITINGS = "ADD_USER_HISTORY_COMMUNITINGS"
+export const CANCEL_USER_COMMUNITING = "CANCEL_USER_COMMUNITING"
+export const RESET_USER_HISTORY_COMMUNITINGS = "RESET_USER_HISTORY_COMMUNITINGS"
+export const RESET_USER_MENU = "RESET_USER_MENU"
+
+export const fetchResetUserMenu = value => {
+  return {
+    type: RESET_USER_MENU,
+    value: value,
+  }
+}
+
+export const fetchResetUserHistoryCommunitings = () => {
+  return {
+    type: RESET_USER_HISTORY_COMMUNITINGS,
+  }
+}
+
+export const cancelUserCommuniting = communityId => {
+  return {
+    type: CANCEL_USER_COMMUNITING,
+    communityId: communityId,
+  }
+}
+
+export const addUserHistoryCommunitings = userCommunitings => {
+  return {
+    type: ADD_USER_HISTORY_COMMUNITINGS,
+    userCommunitings: userCommunitings,
+  }
+}
+
+export const addUserHistoryServices = userServices => {
+  return {
+    type: ADD_USER_HISTORY_SERVICES,
+    userServices: userServices,
+  }
+}
 
 export const resetUpdateUserPhone = () => {
   return {
@@ -912,14 +951,46 @@ export const CHANGE_RESTART_COMPANY_NIP = "CHANGE_RESTART_COMPANY_NIP"
 export const CHANGE_SELECTED_USER_COMPANY = "CHANGE_SELECTED_USER_COMPANY"
 export const UPDATE_DEFAULT_COMPANY = "UPDATE_DEFAULT_COMPANY"
 export const ADD_COMPANY_SERVICES = "ADD_COMPANY_SERVICES"
+export const ADD_COMPANY_COMMUNITINGS = "ADD_COMPANY_COMMUNITINGS"
 export const UPDATE_COMPANY_SERVICES = "UPDATE_COMPANY_SERVICES"
 export const RESET_COMPANY_SERVICES = "RESET_COMPANY_SERVICES"
 export const DELETE_COMPANY_SERVICE = "DELETE_COMPANY_SERVICE"
+export const DELETE_COMPANY_COMMUNITING = "DELETE_COMPANY_COMMUNITING"
 export const UPDATE_SERVICE_COMPANY_SERVICES = "UPDATE_SERVICE_COMPANY_SERVICES"
+export const UPDATE_COMPANY_SERVICE_PHONE_USER =
+  "UPDATE_COMPANY_SERVICE_PHONE_USER"
+export const RESET_COMPANY_COMMUNITINGS = "RESET_COMPANY_COMMUNITINGS"
+export const UPDATE_COMPANY_COMMUNITINGS = "UPDATE_COMPANY_COMMUNITINGS"
+export const UPDATE_COMPANY_COMMUNITING_PHONE_USER =
+  "UPDATE_COMPANY_COMMUNITING_PHONE_USER"
+export const UPDATE_COMMUNITING_COMPANY_COMMUNITING =
+  "UPDATE_COMMUNITING_COMPANY_COMMUNITING"
+
+export const updateCompanyServicePhoneUser = (userPhone, serviceId) => {
+  return {
+    type: UPDATE_COMPANY_SERVICE_PHONE_USER,
+    userPhone: userPhone,
+    serviceId: serviceId,
+  }
+}
+
+export const updateCompanyCommunitingPhoneUser = (userPhone, communitingId) => {
+  return {
+    type: UPDATE_COMPANY_COMMUNITING_PHONE_USER,
+    userPhone: userPhone,
+    communitingId: communitingId,
+  }
+}
 
 export const fetchResetCompanyServices = () => {
   return {
     type: RESET_COMPANY_SERVICES,
+  }
+}
+
+export const fetchResetCompanyCommunitings = () => {
+  return {
+    type: RESET_COMPANY_COMMUNITINGS,
   }
 }
 
@@ -930,10 +1001,24 @@ export const deleteCompanyServices = serviceId => {
   }
 }
 
+export const deleteCompanyCommuniting = communitingId => {
+  return {
+    type: DELETE_COMPANY_COMMUNITING,
+    communitingId: communitingId,
+  }
+}
+
 export const updateServiceCompanyServices = updatedService => {
   return {
     type: UPDATE_SERVICE_COMPANY_SERVICES,
     updatedService: updatedService,
+  }
+}
+
+export const updateServiceCompanyCommuniting = updatedCommuniting => {
+  return {
+    type: UPDATE_COMMUNITING_COMPANY_COMMUNITING,
+    updatedCommuniting: updatedCommuniting,
   }
 }
 
@@ -944,10 +1029,25 @@ export const updateCompanyServices = newService => {
   }
 }
 
+export const updateCompanyCommunitings = newCommunitings => {
+  return {
+    type: UPDATE_COMPANY_COMMUNITINGS,
+    newCommunitings: newCommunitings,
+  }
+}
+
 export const addCompanyServices = (services, workers) => {
   return {
     type: ADD_COMPANY_SERVICES,
     services: services,
+    workers: workers,
+  }
+}
+
+export const addCompanyCommunitings = (communitings, workers) => {
+  return {
+    type: ADD_COMPANY_COMMUNITINGS,
+    communitings: communitings,
     workers: workers,
   }
 }
@@ -4186,6 +4286,13 @@ export const fetchAddOpinion = (token, opinionData, company) => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(
+                addAlertItem(
+                  "Nie można wystawić więcej niż 10 opinii w ciągu miesiąca",
+                  "red"
+                )
+              )
             } else {
               dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
             }
@@ -6079,6 +6186,452 @@ export const fetchUpdateCompanyService = (
               dispatch(logout())
             } else {
               dispatch(addAlertItem("Błąd podczas aktualizacji serwisu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCheckUserPhone = (token, companyId, serviceId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-get-service-user-phone`,
+        {
+          companyId: companyId,
+          serviceId: serviceId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          updateCompanyServicePhoneUser(response.data.userPhone, serviceId)
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCheckUserPhoneCommuniting = (
+  token,
+  companyId,
+  communitingId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-get-communiting-user-phone`,
+        {
+          companyId: companyId,
+          communitingId: communitingId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          updateCompanyCommunitingPhoneUser(
+            response.data.userPhone,
+            communitingId
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas pobierania numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchGetUserHistoryServices = (token, month, year) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-history-services`,
+        {
+          month: month,
+          year: year,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addUserHistoryServices(response.data.userServices))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania serwisów użytkownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchAddCommuniting = (
+  token,
+  companyId,
+  nameInput,
+  surnameInput,
+  isActiveUser,
+  phoneInput,
+  descriptionInput,
+  costInput,
+  statusValue,
+  email,
+  workerUserId,
+  cityInput,
+  streetInput,
+  timeStart,
+  timeEnd,
+  addWorkerTime,
+  fullDate
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-add-communiting`,
+        {
+          companyId: companyId,
+          name: !!nameInput ? nameInput : null,
+          surname: !!surnameInput ? surnameInput : null,
+          isActiveUser: isActiveUser,
+          phone: phoneInput,
+          description: descriptionInput,
+          cost: !!costInput ? costInput : null,
+          statusValue: statusValue,
+          email: !!email ? email : null,
+          workerUserId: workerUserId,
+          cityInput: cityInput,
+          streetInput: streetInput,
+          timeStart: timeStart,
+          timeEnd: timeEnd,
+          addWorkerTime: addWorkerTime,
+          fullDate: fullDate,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyCommunitings(response.data.newCommuniting))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano dojazd.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(addAlertItem("Nie znaleziono użytkownika", "red"))
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania dojazdu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchGetCompanyCommunitings = (
+  token,
+  companyId,
+  year,
+  month,
+  workerUserId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-get-communitings`,
+        {
+          companyId: companyId,
+          year: year,
+          month: month,
+          workerUserId: workerUserId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(
+          addCompanyCommunitings(
+            response.data.communitings,
+            response.data.workers
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas pobierania dojazdów", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCompanyDeleteCommuniting = (
+  token,
+  companyId,
+  communitingId,
+  reserwationId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-delete-communiting`,
+        {
+          companyId: companyId,
+          communitingId: communitingId,
+          reserwationId: reserwationId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Usunięto dojazd", "green"))
+        dispatch(deleteCompanyCommuniting(communitingId))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas usuwania usługi", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUpdateCompanyCommuniting = (
+  token,
+  companyId,
+  communitingId,
+  descriptionInput,
+  costInput,
+  selectedWorkerUserId,
+  statusValue,
+  timeStart,
+  timeEnd,
+  fullDate,
+  reserwationId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/company-update-communiting`,
+        {
+          companyId: companyId,
+          communitingId: communitingId,
+          description: descriptionInput,
+          cost: !!costInput ? costInput : null,
+          statusValue: statusValue,
+          selectedWorkerUserId: selectedWorkerUserId,
+          timeStart: timeStart,
+          timeEnd: timeEnd,
+          fullDate: fullDate,
+          reserwationId: reserwationId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateServiceCompanyCommuniting({
+            communitingId: communitingId,
+            description: descriptionInput,
+            cost: !!costInput ? costInput : null,
+            statusValue: statusValue,
+            selectedWorkerUserId: selectedWorkerUserId,
+            timeStart: timeStart,
+            timeEnd: timeEnd,
+            fullDate: fullDate,
+          })
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Zaktualizowano dojazd.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktualizacji dojazdu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchGetUserHistoryCommuniting = (token, month, year) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-history-communiting`,
+        {
+          month: month,
+          year: year,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(addUserHistoryCommunitings(response.data.userCommuniting))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas pobierania dojazdów użytkownika",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUserCancelCommunity = (token, communityId, reserwationId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/cancel-user-communiting`,
+        {
+          communityId: communityId,
+          reserwationId: reserwationId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(cancelUserCommuniting(communityId))
+        dispatch(addAlertItem("Odwołano dojazd", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas aktualizacji dojazdu", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

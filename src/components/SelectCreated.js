@@ -185,6 +185,7 @@ const TextSelect = styled.div`
   margin-left: 5px;
   font-family: "Poppins-Bold", sans-serif;
   height: 17px;
+  color: ${props => Colors(props.siteProps).textNormalBlack};
 `
 
 const SelectCreated = ({
@@ -401,7 +402,7 @@ const SelectCreated = ({
         aria-hidden="true"
       >
         {textUp && (
-          <TextSelect>
+          <TextSelect siteProps={siteProps}>
             {!!placeholder && selectedItems.length > 0 && textUp
               ? placeholder
               : ""}

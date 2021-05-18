@@ -16,6 +16,7 @@ import {
   FaChartBar,
   FaTools,
   FaCar,
+  FaBook,
 } from "react-icons/fa"
 import {
   MdWork,
@@ -63,6 +64,7 @@ import {
   fetchNotificationEndpoint,
   changeSelectedUserCompany,
   resetUserProfil,
+  fetchResetUserMenu,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -78,6 +80,7 @@ import UserHistory from "./UserHistory"
 import { Translates } from "../common/Translates"
 import BellAlerts from "./BellAlerts"
 import openSocket from "socket.io-client"
+import { io } from "socket.io-client"
 import { Site } from "../common/Site"
 import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
 import EmployeeWorkingHours from "./EmployeeWorkingHours"
@@ -95,6 +98,8 @@ import ReactTooltip from "react-tooltip"
 import SelectCreated from "./SelectCreated"
 import CompanyServices from "./CompanyServices"
 import CompanyCommuniting from "./CompanyCommuniting"
+import UserHistoryServices from "./UserHistoryServices"
+import UserHistoryCommuniting from "./UserHistoryCommuniting"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -328,7 +333,7 @@ const SaveUserButtons = styled.div`
 `
 
 const MarginButtonSaveToken = styled.div`
-  margin: 5px;
+  margin-bottom: 10px;
 `
 
 const SMSStyle = styled.div`
@@ -364,9 +369,12 @@ const Navigation = ({ isMainPage }) => {
   const [availabilityVisible, setAvailabilityVisible] = useState(false)
   const [companyStatistics, setCompanyStatistics] = useState(false)
   const [addSMSVisible, setAddSMSVisible] = useState(false)
+  const [userServicesVisible, setUserServicesVisible] = useState(false)
   const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
     false
   )
+  const [historyServices, setHistoryServices] = useState(false)
+  const [historyCommunitings, setHistoryCommunitings] = useState(false)
 
   const userProfilReset = useSelector(state => state.userProfilReset)
   const popupTakePlace = useSelector(state => state.popupTakePlace)
@@ -405,12 +413,43 @@ const Navigation = ({ isMainPage }) => {
   const remindPasswordVisible = useSelector(
     state => state.remindPasswordVisible
   )
+  const resetUserMenu = useSelector(state => state.resetUserMenu)
 
   const refUnderMenuIndustries = useRef(null)
 
   const dispatch = useDispatch()
 
   const size = UseWindowSize()
+
+  // useEffect(() => {
+  //   if (!!userId) {
+  //     const socket = openSocket(Site.serverUrl)
+  //     socket.on(`user`, data => {
+  //       console.log(data)
+  //     })
+  //   }
+  // }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!!userId) {
+      const socket = io(Site.serverUrl)
+      socket.on(`user${userId}`, data => {
+        if (data.action === "update-alerts") {
+          dispatch(addNewUserAlert(data.alertData))
+        }
+      })
+    }
+  }, [userId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (resetUserMenu) {
+      setUserServicesVisible(false)
+      setHistoryCommunitings(false)
+      setHistoryServices(false)
+      setHistoryReserwations(false)
+      dispatch(fetchResetUserMenu(false))
+    }
+  }, [resetUserMenu])
 
   useEffect(() => {
     // setUserDoc(user)
@@ -473,17 +512,6 @@ const Navigation = ({ isMainPage }) => {
       handleEnableNotifaction(user.vapidPublic)
     }
   }, [userId])
-
-  useEffect(() => {
-    if (!!userId) {
-      const socket = openSocket(Site.serverUrl)
-      socket.on(`user${userId}`, data => {
-        if (data.action === "update-alerts") {
-          dispatch(addNewUserAlert(data.alertData))
-        }
-      })
-    }
-  }, [userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!!user) {
@@ -621,10 +649,6 @@ const Navigation = ({ isMainPage }) => {
     dispatch(changeDarkStyle())
   }
 
-  const handleHistoryReserwations = () => {
-    setHistoryReserwations(prevState => !prevState)
-  }
-
   const handleClickWork = () => {
     setWorkPropsVisible(prevState => !prevState)
   }
@@ -719,6 +743,25 @@ const Navigation = ({ isMainPage }) => {
 
   const handleChangeSelectedCompany = value => {
     dispatch(changeSelectedUserCompany(value.value))
+  }
+
+  const handleClickUserServicesVisible = () => {
+    setUserServicesVisible(prevState => !prevState)
+  }
+
+  const handleHistoryReserwations = () => {
+    setHistoryReserwations(prevState => !prevState)
+    setUserServicesVisible(prevState => !prevState)
+  }
+
+  const handleUserHistoryServices = () => {
+    setHistoryServices(prevState => !prevState)
+    setUserServicesVisible(prevState => !prevState)
+  }
+
+  const handleUserHistoryCommunitings = () => {
+    setHistoryCommunitings(prevState => !prevState)
+    setUserServicesVisible(prevState => !prevState)
   }
 
   const isMobileSize = Site.mobileSize >= size.width
@@ -1026,6 +1069,7 @@ const Navigation = ({ isMainPage }) => {
   let workerHasAccessClientsOpinions = false
   let workerHasAccessAvailability = false
   let workerHasAccessServices = false
+  let workerHasAccessCommunitings = false
   let anyCompany = false
   let hasPermission = false
   let companyConfirmed = false
@@ -1075,6 +1119,7 @@ const Navigation = ({ isMainPage }) => {
       workerHasAccessClientsOpinions = user.company.owner === user.userId
       workerHasAccessAvailability = user.company.owner === user.userId
       workerHasAccessServices = user.company.owner === user.userId
+      workerHasAccessCommunitings = user.company.owner === user.userId
       hasPermission = user.company.owner === user.userId
       isAdmin = user.company.owner === user.userId
       if (!!user.company.sms) {
@@ -1117,6 +1162,15 @@ const Navigation = ({ isMainPage }) => {
             workerHasAccessServices = true
           }
         }
+
+        if (!workerHasAccessCommunitings) {
+          const hasPermissionCommunitings = selectWorker.permissions.some(
+            perm => perm === 10
+          )
+          if (hasPermissionCommunitings) {
+            workerHasAccessCommunitings = true
+          }
+        }
       }
     }
   }
@@ -1151,6 +1205,7 @@ const Navigation = ({ isMainPage }) => {
         user={user}
         handleClose={handleClickCompanyServices}
         workerHasAccessServices={workerHasAccessServices}
+        workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
       />
     </Popup>
   )
@@ -1166,6 +1221,8 @@ const Navigation = ({ isMainPage }) => {
         siteProps={siteProps}
         user={user}
         handleClose={handleClickCompanyCommuting}
+        workerHasAccessCommunitings={workerHasAccessCommunitings}
+        workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
       />
     </Popup>
   )
@@ -1214,6 +1271,70 @@ const Navigation = ({ isMainPage }) => {
         user={user}
         isAdmin={isAdmin}
       />
+    </Popup>
+  )
+
+  const PopupUserHistoryServices = !!user && (
+    <Popup
+      popupEnable={historyServices}
+      handleClose={handleUserHistoryServices}
+      title="Serwisy"
+      fullScreen
+    >
+      <UserHistoryServices user={user} siteProps={siteProps} />
+    </Popup>
+  )
+
+  const PopupUserHistoryCommunitings = !!user && (
+    <Popup
+      popupEnable={historyCommunitings}
+      handleClose={handleUserHistoryCommunitings}
+      title="Dojazdy"
+      fullScreen
+    >
+      <UserHistoryCommuniting user={user} siteProps={siteProps} />
+    </Popup>
+  )
+
+  const PopupUserServices = !!user && (
+    <Popup
+      popupEnable={userServicesVisible}
+      handleClose={handleClickUserServicesVisible}
+      title="Twoje usługi"
+      maxWidth="350"
+    >
+      <div>
+        <MarginButtonSaveToken>
+          <ButtonIcon
+            title={Translates[siteProps.language].buttons.bookingHistory}
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaShoppingBag />}
+            onClick={handleHistoryReserwations}
+          />
+        </MarginButtonSaveToken>
+        <MarginButtonSaveToken>
+          <ButtonIcon
+            title="Serwisy"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaTools />}
+            onClick={handleUserHistoryServices}
+          />
+        </MarginButtonSaveToken>
+        <div>
+          <ButtonIcon
+            title="Dojazdy"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaCar />}
+            onClick={handleUserHistoryCommunitings}
+          />
+        </div>
+      </div>
     </Popup>
   )
 
@@ -1481,12 +1602,12 @@ const Navigation = ({ isMainPage }) => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
-          title={Translates[siteProps.language].buttons.bookingHistory}
+          title="Twoje usługi"
           uppercase
           fontIconSize="20"
           fontSize="16"
-          icon={<FaShoppingBag />}
-          onClick={handleHistoryReserwations}
+          icon={<FaBook />}
+          onClick={handleClickUserServicesVisible}
         />
       </ButtonNavStyle>
       <ButtonNavStyle>
@@ -1551,6 +1672,7 @@ const Navigation = ({ isMainPage }) => {
 
   return (
     <div>
+      {PopupUserServices}
       {PopupWorkersReserwations}
       {PopupWorkersUsersInformations}
       {PopupWorkerPropsVisible}
@@ -1576,6 +1698,8 @@ const Navigation = ({ isMainPage }) => {
       {PopupCompanyAddSMS}
       {PopupCompanyTransactionHistory}
       {PopupCompanyServices}
+      {PopupUserHistoryServices}
+      {PopupUserHistoryCommunitings}
       {PopupCompanyCommuniting}
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>

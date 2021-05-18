@@ -12,13 +12,13 @@ import ButtonIcon from "./ButtonIcon"
 import Popup from "./Popup"
 import { useDispatch } from "react-redux"
 import {
-  fetchCompanyDeleteService,
-  fetchCheckUserPhone,
+  fetchCompanyDeleteCommuniting,
+  fetchCheckUserPhoneCommuniting,
 } from "../state/actions"
-import CompanyServiceDataItemEdit from "./CompanyServiceDataItemEdit"
+import CompanyCommunitingDataItemEdit from "./CompanyCommunitingDataItemEdit"
 import ReactTooltip from "react-tooltip"
 
-const ServiceItem = styled.div`
+const CommunitingItem = styled.div`
   position: relative;
   background-color: ${props =>
     props.clickDelete
@@ -63,46 +63,17 @@ const ButtonMargin = styled.div`
   margin: 5px;
 `
 
-const TitleService = styled.div`
+const TitleCommuniting = styled.div`
   font-family: "Poppins-Bold", sans-serif;
   font-size: 1.1rem;
 `
 
-const WrapPrices = styled.div`
-  display: inline-block;
-
-  @media all and (max-width: 990px) {
-    display: block;
-  }
-`
 const ButtonMarginLeftNone = styled.div`
   margin: 5px;
   margin-left: 0;
 `
 
-const PriceService = styled.span`
-  display: inline-block;
-  background-color: red;
-  font-size: 0.8rem;
-  padding: 2px 5px;
-  font-family: "Poppins-Regular", sans-serif;
-  color: white;
-  margin-left: 10px;
-  border-radius: 5px;
-  background-color: ${props => props.customColorButton};
-
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: inline;
-
-  @media all and (max-width: 990px) {
-    margin-left: 0px;
-    margin-right: 10px;
-  }
-`
-
-const ServiceDescription = styled.div`
+const CommunitingDescription = styled.div`
   font-size: 1rem;
   margin-top: 10px;
   span {
@@ -136,7 +107,7 @@ const ButtonsDeletePosition = styled.div`
   align-items: center;
 `
 
-const StatusService = styled.div`
+const StatusCommuniting = styled.div`
   display: inline-block;
   border-radius: 5px;
   padding: 0px 5px;
@@ -156,16 +127,16 @@ const StatusService = styled.div`
       : Colors(props.siteProps).dangerColor};
 `
 
-const CompanyServiceDataItem = ({
+const CompanyCommunitingDataItem = ({
   item,
   siteProps,
   user,
   itemIndex,
-  workerHasAccessServices,
-  resetCompanyServices,
+  workerHasAccessCommunitings,
+  resetCompanyCommunitings,
   workersWithOwner,
   workerHasAccessClientsOpinions,
-  addServiceVisible,
+  addCommunitingVisible,
 }) => {
   const [clickDelete, setClickDelete] = useState(false)
   const [clickEdit, setClickEdit] = useState(false)
@@ -173,11 +144,11 @@ const CompanyServiceDataItem = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!!resetCompanyServices) {
+    if (!!resetCompanyCommunitings) {
       setClickEdit(false)
       setClickDelete(false)
     }
-  }, [resetCompanyServices, addServiceVisible])
+  }, [resetCompanyCommunitings, addCommunitingVisible])
 
   const handleClickEdit = () => {
     setClickEdit(prevState => !prevState)
@@ -188,12 +159,20 @@ const CompanyServiceDataItem = ({
   }
 
   const handleConfirmDeleteItem = () => {
-    dispatch(fetchCompanyDeleteService(user.token, user.company._id, item._id))
+    dispatch(
+      fetchCompanyDeleteCommuniting(
+        user.token,
+        user.company._id,
+        item._id,
+        item.reserwationId
+      )
+    )
   }
 
   const handleCheckUserPhone = () => {
-    console.log(item)
-    dispatch(fetchCheckUserPhone(user.token, user.company._id, item._id))
+    dispatch(
+      fetchCheckUserPhoneCommuniting(user.token, user.company._id, item._id)
+    )
   }
 
   let unhashedWorkerFullName = ""
@@ -233,24 +212,13 @@ const CompanyServiceDataItem = ({
     unhashedClientFullName = `${unhashedClientName} ${unhashedClientSurname}`
   }
 
-  const dateService = new Date(item.createdAt)
-  const dateStartService = `${
-    dateService.getHours() < 10
-      ? `0${dateService.getHours()}`
-      : dateService.getHours()
-  }:${
-    dateService.getMinutes() < 10
-      ? `0${dateService.getMinutes()}`
-      : dateService.getMinutes()
-  }`
-
   let phoneUser = ""
   if (!!item.phone) {
     phoneUser = item.phone
   }
 
   return (
-    <ServiceItem
+    <CommunitingItem
       index={itemIndex === 0}
       clickDelete={clickDelete}
       clickEdit={clickEdit}
@@ -261,47 +229,32 @@ const CompanyServiceDataItem = ({
       canceled={item.statusValue === 4}
     >
       <LeftContent>
-        <TitleService>
-          {item.objectName}
-          {/* <WrapPrices>
-            <PriceService
-              siteProps={siteProps}
-              customColorButton={
-                item.statusValue === 1
-                  ? Colors(siteProps).primaryColorDark
-                  : item.statusValue === 2
-                  ? Colors(siteProps).secondDarkColor
-                  : item.statusValue === 3
-                  ? Colors(siteProps).successColorDark
-                  : item.statusValue === 4
-                  ? Colors(siteProps).dangerColorDark
-                  : Colors(siteProps).primaryColorDark
-              }
-            >
-              {!!item.cost ? `${item.cost}zł` : "Brak ceny"}
-            </PriceService>
-          </WrapPrices> */}
-        </TitleService>
-        <ServiceDescription>
-          <span>Koszt serwisu:</span>{" "}
-          {!!item.cost ? `${item.cost}zł` : "Brak ceny"}
-        </ServiceDescription>
-        <ServiceDescription>
-          <span>Opis serwisu:</span> {item.description}
-        </ServiceDescription>
-        <ServiceDescription>
-          <span>Godzina przyjęcia:</span> {dateStartService}
-        </ServiceDescription>
-        <ServiceDescription>
+        <TitleCommuniting>{item.objectName}</TitleCommuniting>
+        <CommunitingDescription>
+          <span>Opis:</span> {item.description}
+        </CommunitingDescription>
+        <CommunitingDescription>
+          <span>Godzina startu:</span> {item.timeStart}
+        </CommunitingDescription>
+        <CommunitingDescription>
+          <span>Godzina końca:</span> {item.timeEnd}
+        </CommunitingDescription>
+        <CommunitingDescription>
+          <span>Koszt:</span> {!!item.cost ? `${item.cost}zł` : "Brak ceny"}
+        </CommunitingDescription>
+        <CommunitingDescription>
           <span>Przypisany pracownik:</span> {unhashedWorkerFullName}
-        </ServiceDescription>
-        <ServiceDescription>
+        </CommunitingDescription>
+        <CommunitingDescription>
           <span>Klient:</span> {unhashedClientFullName}
-        </ServiceDescription>
+        </CommunitingDescription>
+        <CommunitingDescription>
+          <span>Adres:</span> {item.city}, {item.street}
+        </CommunitingDescription>
         {!!item.phone ? (
-          <ServiceDescription>
+          <CommunitingDescription>
             <span>Numer do klienta:</span> {phoneUser}
-          </ServiceDescription>
+          </CommunitingDescription>
         ) : (
           <ButtonMarginLeftNone>
             {!workerHasAccessClientsOpinions && (
@@ -349,41 +302,44 @@ const CompanyServiceDataItem = ({
           </ButtonMarginLeftNone>
         )}
 
-        <ServiceDescription>
+        <CommunitingDescription>
           <span>Status: </span>
           {item.statusValue === 1 ? (
-            <StatusService noStartValue={true} siteProps={siteProps}>
-              Serwis nie rozpoczęty
-            </StatusService>
+            <StatusCommuniting noStartValue={true} siteProps={siteProps}>
+              Dojazd nie rozpoczęty
+            </StatusCommuniting>
           ) : item.statusValue === 2 ? (
-            <StatusService startValue={true} siteProps={siteProps}>
-              Serwis w trakcie
-            </StatusService>
+            <StatusCommuniting startValue={true} siteProps={siteProps}>
+              Dojazd w trakcie
+            </StatusCommuniting>
           ) : item.statusValue === 3 ? (
-            <StatusService finished={true} siteProps={siteProps}>
-              Serwis zakończony
-            </StatusService>
+            <StatusCommuniting finished={true} siteProps={siteProps}>
+              Dojazd zakończony
+            </StatusCommuniting>
           ) : (
             item.statusValue === 4 && (
-              <StatusService canceled={true} siteProps={siteProps}>
-                Serwis odwołany
-              </StatusService>
+              <StatusCommuniting canceled={true} siteProps={siteProps}>
+                Dojazd odwołany
+              </StatusCommuniting>
             )
           )}
-        </ServiceDescription>
+        </CommunitingDescription>
       </LeftContent>
       <RightContent>
-        <ButtonMargin>
-          <ButtonIcon
-            title="Edytuj"
-            uppercase
-            fontIconSize="40"
-            fontSize="14"
-            icon={<MdEdit />}
-            secondColors
-            onClick={handleClickEdit}
-          />
-        </ButtonMargin>
+        {item.statusValue !== 4 && (
+          <ButtonMargin>
+            <ButtonIcon
+              title="Edytuj"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdEdit />}
+              secondColors
+              onClick={handleClickEdit}
+              disabled={item.statusValue === 4}
+            />
+          </ButtonMargin>
+        )}
         <ButtonMargin>
           <ButtonIcon
             title="Usuń"
@@ -398,7 +354,7 @@ const CompanyServiceDataItem = ({
         </ButtonMargin>
       </RightContent>
       <Popup
-        popupEnable={clickDelete && !addServiceVisible}
+        popupEnable={clickDelete && !addCommunitingVisible}
         position="absolute"
         borderRadius
         noContent
@@ -431,23 +387,23 @@ const CompanyServiceDataItem = ({
         </ButtonsDeletePosition>
       </Popup>
       <Popup
-        popupEnable={clickEdit && !addServiceVisible}
+        popupEnable={clickEdit && !addCommunitingVisible}
         position="absolute"
-        title="Edytuj usługę"
+        title="Edytuj dojazd"
         borderRadius
         closeTitle={false}
         smallTitle
       >
-        <CompanyServiceDataItemEdit
+        <CompanyCommunitingDataItemEdit
           user={user}
           siteProps={siteProps}
           item={item}
           handleClickEdit={handleClickEdit}
           workersWithOwner={workersWithOwner}
-          workerHasAccessServices={workerHasAccessServices}
+          workerHasAccessCommunitings={workerHasAccessCommunitings}
         />
       </Popup>
-    </ServiceItem>
+    </CommunitingItem>
   )
 }
-export default CompanyServiceDataItem
+export default CompanyCommunitingDataItem

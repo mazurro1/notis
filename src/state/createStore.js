@@ -44,16 +44,28 @@ import {
   CHANGE_SELECTED_NAME_MENU,
   CHANGE_SELECTED_USER_COMPANY,
   RESET_UPDATE_USER_PHONE,
+  ADD_USER_HISTORY_SERVICES,
+  ADD_USER_HISTORY_COMMUNITINGS,
+  CANCEL_USER_COMMUNITING,
+  RESET_USER_HISTORY_COMMUNITINGS,
+  RESET_USER_MENU,
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_SERVICE_PHONE_USER,
+  UPDATE_COMPANY_COMMUNITING_PHONE_USER,
   UPDATE_SERVICE_COMPANY_SERVICES,
+  UPDATE_COMMUNITING_COMPANY_COMMUNITING,
   DELETE_COMPANY_SERVICE,
+  DELETE_COMPANY_COMMUNITING,
   RESET_COMPANY_SERVICES,
+  RESET_COMPANY_COMMUNITINGS,
   UPDATE_COMPANY_SERVICES,
+  UPDATE_COMPANY_COMMUNITINGS,
   ADD_COMPANY_SERVICES,
+  ADD_COMPANY_COMMUNITINGS,
   UPDATE_DEFAULT_COMPANY,
   CHANGE_RESTART_COMPANY_NIP,
   UPDATE_COMPANY_NIP,
@@ -158,6 +170,7 @@ const initialState = {
   },
   user: null,
   userProfilReset: false,
+  resetUserMenu: false,
   userId: null,
   userResetFavourites: false,
   userPhone: null,
@@ -196,6 +209,9 @@ const initialState = {
   checkoutPaymentItem: null,
   coinsOffer: [],
   resetUserPhone: false,
+  userHistoryServices: [],
+  userHistoryCommunitings: [],
+  resetUserHistoryCommunitings: false,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -249,10 +265,61 @@ const initialState = {
     services: [],
   },
   resetCompanyServices: false,
+  companyCommunitings: {
+    workers: null,
+    communitings: [],
+  },
+  resetCompanyCommunitings: false,
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case RESET_USER_MENU: {
+      return {
+        ...state,
+        resetUserMenu: action.value,
+      }
+    }
+
+    case RESET_USER_HISTORY_COMMUNITINGS: {
+      return {
+        ...state,
+        resetUserHistoryCommunitings: false,
+      }
+    }
+
+    case CANCEL_USER_COMMUNITING: {
+      const cancelUserCommunitings = [...state.userHistoryCommunitings]
+      if (!!action.communityId) {
+        const findIndexItem = cancelUserCommunitings.findIndex(
+          itemCom => itemCom._id === action.communityId
+        )
+
+        if (findIndexItem >= 0) {
+          cancelUserCommunitings[findIndexItem].statusValue = 4
+        }
+      }
+      return {
+        ...state,
+        userHistoryCommunitings: cancelUserCommunitings,
+        resetUserHistoryCommunitings: true,
+      }
+    }
+
+    case ADD_USER_HISTORY_COMMUNITINGS: {
+      return {
+        ...state,
+        userHistoryCommunitings: action.userCommunitings,
+      }
+    }
+
+    case ADD_USER_HISTORY_SERVICES: {
+      return {
+        ...state,
+        userHistoryServices: action.userServices,
+      }
+    }
+
     case CHANGE_SELECTED_USER_COMPANY: {
       const changedUserCompany = !!state.user ? state.user : null
       if (!!changedUserCompany) {
@@ -707,6 +774,20 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case ADD_COMPANY_COMMUNITINGS: {
+      const allCompanyCommunitings = { ...state.companyCommunitings }
+      if (!!action.workers) {
+        allCompanyCommunitings.workers = action.workers
+      }
+      if (!!action.communitings) {
+        allCompanyCommunitings.communitings = action.communitings
+      }
+      return {
+        ...state,
+        companyCommunitings: allCompanyCommunitings,
+      }
+    }
+
     case ADD_COMPANY_SERVICES: {
       const allCompanyServices = { ...state.companyServices }
       if (!!action.workers) {
@@ -721,6 +802,22 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case DELETE_COMPANY_COMMUNITING: {
+      let deleteCompanyCommuniting = { ...state.companyCommunitings }
+      if (!!action.communitingId) {
+        const filterCommunitings = deleteCompanyCommuniting.communitings.filter(
+          item => item._id !== action.communitingId
+        )
+        console.log(filterCommunitings)
+        deleteCompanyCommuniting.communitings = filterCommunitings
+      }
+      return {
+        ...state,
+        resetCompanyCommunitings: true,
+        companyCommunitings: deleteCompanyCommuniting,
+      }
+    }
+
     case DELETE_COMPANY_SERVICE: {
       let deleteCompanyService = { ...state.companyServices }
       if (!!deleteCompanyService) {
@@ -732,6 +829,95 @@ const reducer = (state = initialState, action) => {
         ...state,
         resetCompanyServices: true,
         companyServices: deleteCompanyService,
+      }
+    }
+
+    case UPDATE_COMPANY_COMMUNITING_PHONE_USER: {
+      let updatePhoneCompanyCommunitings = { ...state.companyCommunitings }
+      if (!!action.communitingId && !!action.userPhone) {
+        const findIndexService = updatePhoneCompanyCommunitings.communitings.findIndex(
+          item => item._id === action.communitingId
+        )
+        if (findIndexService >= 0) {
+          updatePhoneCompanyCommunitings.communitings[findIndexService].phone =
+            action.userPhone
+        }
+      }
+      return {
+        ...state,
+        companyCommunitings: updatePhoneCompanyCommunitings,
+      }
+    }
+
+    case UPDATE_COMPANY_SERVICE_PHONE_USER: {
+      let updatePhoneCompanyService = { ...state.companyServices }
+      if (!!action.serviceId && !!action.userPhone) {
+        const findIndexService = updatePhoneCompanyService.services.findIndex(
+          item => item._id === action.serviceId
+        )
+        if (findIndexService >= 0) {
+          updatePhoneCompanyService.services[findIndexService].phone =
+            action.userPhone
+        }
+      }
+      return {
+        ...state,
+        companyServices: updatePhoneCompanyService,
+      }
+    }
+
+    case UPDATE_COMMUNITING_COMPANY_COMMUNITING: {
+      let updateCompanyCommuniting = { ...state.companyCommunitings }
+      if (!!action.updatedCommuniting) {
+        const findIndexService = updateCompanyCommuniting.communitings.findIndex(
+          item => item._id === action.updatedCommuniting.communitingId
+        )
+        if (findIndexService >= 0) {
+          if (
+            updateCompanyCommuniting.communitings[findIndexService].workerUserId
+              ._id !== action.updatedCommuniting.selectedWorkerUserId
+          ) {
+            const filterService = updateCompanyCommuniting.communitings.filter(
+              itemFilter =>
+                itemFilter._id !== action.updatedCommuniting.communitingId
+            )
+            updateCompanyCommuniting.communitings = filterService
+          } else {
+            updateCompanyCommuniting.communitings[
+              findIndexService
+            ].description = action.updatedCommuniting.description
+            updateCompanyCommuniting.communitings[findIndexService].cost =
+              action.updatedCommuniting.cost
+            updateCompanyCommuniting.communitings[
+              findIndexService
+            ].statusValue = action.updatedCommuniting.statusValue
+
+            updateCompanyCommuniting.communitings[findIndexService].timeStart =
+              action.updatedCommuniting.timeStart
+
+            updateCompanyCommuniting.communitings[findIndexService].timeEnd =
+              action.updatedCommuniting.timeEnd
+
+            const splitFullDate = action.updatedCommuniting.fullDate.split("-")
+
+            updateCompanyCommuniting.communitings[
+              findIndexService
+            ].day = Number(splitFullDate[0])
+
+            updateCompanyCommuniting.communitings[
+              findIndexService
+            ].month = Number(splitFullDate[1])
+
+            updateCompanyCommuniting.communitings[
+              findIndexService
+            ].year = Number(splitFullDate[2])
+          }
+        }
+      }
+      return {
+        ...state,
+        companyCommunitings: updateCompanyCommuniting,
+        resetCompanyCommunitings: true,
       }
     }
 
@@ -769,6 +955,21 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case UPDATE_COMPANY_COMMUNITINGS: {
+      let newCompanyCommuniting = { ...state.companyCommunitings }
+      if (!!action.newCommunitings) {
+        newCompanyCommuniting.communitings = [
+          ...newCompanyCommuniting.communitings,
+          action.newCommunitings,
+        ]
+      }
+      return {
+        ...state,
+        companyCommunitings: newCompanyCommuniting,
+        resetCompanyCommunitings: true,
+      }
+    }
+
     case UPDATE_COMPANY_SERVICES: {
       let newCompanyService = { ...state.companyServices }
       if (!!action.newService) {
@@ -793,6 +994,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: userDefaultCompany,
         userProfilReset: true,
+      }
+    }
+
+    case RESET_COMPANY_COMMUNITINGS: {
+      return {
+        ...state,
+        resetCompanyCommunitings: false,
       }
     }
 

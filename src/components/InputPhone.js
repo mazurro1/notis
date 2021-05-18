@@ -82,6 +82,7 @@ const InputPhone = ({
   defaultValues = null,
   width = 35,
   marginElements = 20,
+  textPhone = "Numer telefonu:",
 }) => {
   const [inputActive, setInputActive] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
@@ -112,7 +113,7 @@ const InputPhone = ({
     <StyleInputs onFocus={handleOnFocus} onBlur={handleOnBlur}>
       <div>
         <TextValue siteProps={siteProps} active={inputActive}>
-          Numer telefonu:
+          {textPhone}
         </TextValue>
       </div>
 

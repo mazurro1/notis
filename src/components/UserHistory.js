@@ -204,6 +204,7 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
         company={item.company}
         handleClose={handleClose}
         resetChangeReserwationUser={resetChangeReserwationUser}
+        user={user}
       />
     )
   })
