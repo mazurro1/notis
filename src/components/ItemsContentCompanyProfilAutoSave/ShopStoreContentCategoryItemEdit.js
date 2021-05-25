@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect } from "react"
 import {
   MdSave,
@@ -10,7 +11,6 @@ import { FaDollarSign } from "react-icons/fa"
 import ButtonIcon from "../ButtonIcon"
 import { Checkbox } from "react-input-checkbox"
 import InputIcon from "../InputIcon"
-import { CSSTransition } from "react-transition-group"
 import { Colors } from "../../common/Colors"
 import styled from "styled-components"
 import Popup from "../Popup"

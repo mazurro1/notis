@@ -16,7 +16,6 @@ import { FaUser, FaQuestion, FaGoogle } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { Colors } from "../common/Colors"
 import { Site } from "../common/Site"
-import FacebookLogin from "react-facebook-login"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;

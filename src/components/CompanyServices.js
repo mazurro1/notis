@@ -163,7 +163,7 @@ const CompanyServices = ({
       setAddServiceVisible(false)
       dispatch(fetchResetCompanyServices())
     }
-  }, [resetCompanyServices])
+  }, [resetCompanyServices]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const actualMonth = new Date().getMonth() + 1
@@ -174,7 +174,7 @@ const CompanyServices = ({
       value: user.userId,
       label: `${user.userName} ${user.userSurname}`,
     })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeYear = value => {
     const validValue = !!value

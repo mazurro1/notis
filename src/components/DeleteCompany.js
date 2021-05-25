@@ -59,12 +59,12 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
 
   useEffect(() => {
     dispatch(fetchSentCodeConfirmDelete(user.token, user.company._id))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     dispatch(changeDeleteCompanyConfirm())
     navigate("/")
-  }, [deleteCompanyConfirm])
+  }, [deleteCompanyConfirm]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSentAgain = () => {
     dispatch(fetchSentCodeConfirmDelete(user.token, user.company._id))

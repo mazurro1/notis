@@ -102,10 +102,6 @@ const DayOffItem = ({
     handleDeleteDay(item)
   }
 
-  const handleClickContent = e => {
-    e.stopPropagation()
-  }
-
   return (
     <DayOffStyle
       siteProps={siteProps}

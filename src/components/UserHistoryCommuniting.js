@@ -89,6 +89,7 @@ const UserHistoryCommuniting = ({ user, siteProps }) => {
   const resetUserHistoryCommunitings = useSelector(
     state => state.resetUserHistoryCommunitings
   )
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -114,7 +115,7 @@ const UserHistoryCommuniting = ({ user, siteProps }) => {
     if (resetUserHistoryCommunitings) {
       dispatch(fetchResetUserHistoryCommunitings())
     }
-  }, [resetUserHistoryCommunitings])
+  }, [resetUserHistoryCommunitings]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const actualMonth = new Date().getMonth() + 1
@@ -186,11 +187,30 @@ const UserHistoryCommuniting = ({ user, siteProps }) => {
     }
   })
 
+  dateWithServices.sort((a, b) => {
+    const splitDateFirst = a.dateService.split("-")
+    const splitDateSecond = b.dateService.split("-")
+    const firstItemToSort = new Date(
+      Number(splitDateFirst[2]),
+      Number(splitDateFirst[1]),
+      Number(splitDateFirst[0])
+    )
+    const secondItemToSort = new Date(
+      Number(splitDateSecond[2]),
+      Number(splitDateSecond[1]),
+      Number(splitDateSecond[0])
+    )
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+
   const mapDateCommunitings = dateWithServices.map(
     (itemService, indexService) => {
       return (
         <UserHistoryCommunitingCategory
           key={indexService}
+          indexCommuniting={indexService}
           itemService={itemService}
           siteProps={siteProps}
           user={user}
@@ -234,7 +254,6 @@ const UserHistoryCommuniting = ({ user, siteProps }) => {
           />
         </WidthSelectNoMargin>
       </PositionSelectAllEnd>
-      {/* {mapDateServices} */}
       {userHistoryCommunitings.length > 0 ? (
         mapDateCommunitings
       ) : (

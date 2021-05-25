@@ -62,12 +62,12 @@ const DeleteAccount = ({
 
   useEffect(() => {
     dispatch(fetchSentCodeConfirmDeleteAccount(user.token))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     dispatch(changeDeleteCompanyConfirm())
     navigate("/")
-  }, [deleteCompanyConfirm])
+  }, [deleteCompanyConfirm]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSentAgain = () => {
     dispatch(fetchSentCodeConfirmDeleteAccount(user.token))

@@ -11,7 +11,6 @@ import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import PinField from "react-pin-field"
-import { navigate } from "gatsby"
 import ReactTooltip from "react-tooltip"
 
 const ButtonsPosition = styled.div`
@@ -65,7 +64,7 @@ const VeryfiedPhone = ({
 
   useEffect(() => {
     dispatch(changeDeleteCompanyConfirm())
-  }, [deleteCompanyConfirm])
+  }, [deleteCompanyConfirm]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSentAgain = () => {
     dispatch(fetchSentCodeConfirmVerifiedPhone(user.token))

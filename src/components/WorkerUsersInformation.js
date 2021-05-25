@@ -35,7 +35,7 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
       dispatch(restartCompanySMS())
     }
     setSendSMSClients(false)
-  }, [restartSMSCompany])
+  }, [restartSMSCompany]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     sal({

@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect, useRef } from "react"
 import {
   MdEdit,

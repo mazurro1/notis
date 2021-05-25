@@ -68,6 +68,28 @@ const CompanyCommunitingDate = ({
     setCollapseActive(prevState => !prevState)
   }
 
+  itemCommuniting.items.sort((a, b) => {
+    const splitDateFirst = a.timeStart.split(":")
+    const splitDateSecond = b.timeStart.split(":")
+    const firstItemToSort = new Date(
+      a.year,
+      a.month - 1,
+      a.day,
+      Number(splitDateFirst[0]),
+      Number(splitDateFirst[1])
+    )
+    const secondItemToSort = new Date(
+      b.year,
+      b.month - 1,
+      b.day,
+      Number(splitDateSecond[0]),
+      Number(splitDateSecond[1])
+    )
+    if (firstItemToSort < secondItemToSort) return -1
+    if (firstItemToSort > secondItemToSort) return 1
+    return 0
+  })
+
   const communitingsMap = itemCommuniting.items.map((item, itemIndex) => {
     return (
       <CompanyCommunitingDataItem

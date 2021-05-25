@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import { Checkbox } from "react-input-checkbox"
 import { Colors } from "../../common/Colors"

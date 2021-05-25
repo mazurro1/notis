@@ -119,10 +119,6 @@ const OpeningHoursItem = ({
     setItemEditable(prevState => !prevState)
   }
 
-  const handleClickContent = e => {
-    e.stopPropagation()
-  }
-
   const handleResetButton = () => {
     setItemEditable(prevState => !prevState)
     setItemTimeStart(defaultValue.start)

@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"

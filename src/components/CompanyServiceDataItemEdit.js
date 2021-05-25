@@ -75,7 +75,7 @@ const CompanyServiceDataItemEdit = ({
     if (!!findWorker) {
       setSelectedWorker(findWorker)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeInputs = (e, setChange) => {
     setChange(e.target.value)

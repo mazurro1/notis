@@ -35,7 +35,7 @@ const CompanyNip = ({
       setEditCompanyNip(false)
       dispatch(changeRestartCompanyNip())
     }
-  }, [company.linkPath, editMode, setEditCompanyNip, restartCompanyNip])
+  }, [company.linkPath, editMode, setEditCompanyNip, restartCompanyNip]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = setChange => {
     scroller.scrollTo("companyNipScrollElement", {

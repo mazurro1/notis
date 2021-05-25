@@ -303,7 +303,7 @@ const CalendarWorkerReserwatinEvent = ({
         })
       }
     }
-  }, [selectedEvent])
+  }, [selectedEvent]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeCheckbox = setChange => {
     setIsHolidays(prevState => !prevState)

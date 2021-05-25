@@ -115,13 +115,6 @@ const TitleRightColumnOpinion = styled.h2`
       : Colors(props.siteProps).textNormalBlack};
 `
 
-const TitleItemCategoryTitleAction = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
-`
-
 const AllCategoryOfServices = ({
   isCompanyEditProfil,
   services = [],

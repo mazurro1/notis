@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
@@ -69,13 +68,6 @@ const CheckboxStyle = styled.div`
     color: ${props => Colors(props.siteProps).textNormalBlack};
     border-color: ${props => Colors(props.siteProps).textNormalBlack};
   }
-`
-
-const TitleRightColumnEdit = styled.div`
-  padding: 5px 10px;
-  background-color: ${props => Colors(props.siteProps).secondColor};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: 1rem;
 `
 
 const PromotionsContentNewItem = ({

@@ -224,15 +224,40 @@ const OpinionsComponentItem = ({
   }
   let workerName = "Brak pracownika"
   let workerSurname = ""
-  if (!!opinion.reserwationId.toWorkerUserId) {
-    workerName = Buffer.from(
-      opinion.reserwationId.toWorkerUserId.name,
-      "base64"
-    ).toString("utf-8")
-    workerSurname = Buffer.from(
-      opinion.reserwationId.toWorkerUserId.surname,
-      "base64"
-    ).toString("utf-8")
+
+  if (!!opinion.reserwationId) {
+    if (!!opinion.reserwationId.toWorkerUserId) {
+      workerName = Buffer.from(
+        opinion.reserwationId.toWorkerUserId.name,
+        "base64"
+      ).toString("utf-8")
+      workerSurname = Buffer.from(
+        opinion.reserwationId.toWorkerUserId.surname,
+        "base64"
+      ).toString("utf-8")
+    }
+  } else if (!!opinion.serviceId) {
+    if (!!opinion.serviceId.workerUserId) {
+      workerName = Buffer.from(
+        opinion.serviceId.workerUserId.name,
+        "base64"
+      ).toString("utf-8")
+      workerSurname = Buffer.from(
+        opinion.serviceId.workerUserId.surname,
+        "base64"
+      ).toString("utf-8")
+    }
+  } else if (!!opinion.communitingId) {
+    if (!!opinion.communitingId.workerUserId) {
+      workerName = Buffer.from(
+        opinion.communitingId.workerUserId.name,
+        "base64"
+      ).toString("utf-8")
+      workerSurname = Buffer.from(
+        opinion.communitingId.workerUserId.surname,
+        "base64"
+      ).toString("utf-8")
+    }
   }
 
   const disabledSaveOpinion = !!opinion.replayOpinionMessage
@@ -253,11 +278,33 @@ const OpinionsComponentItem = ({
           </AllStarsContent>
         </UserNameStyle>
         <ExtraInOpinion siteProps={siteProps}>
-          Usługa: <span>{opinion.reserwationId.serviceName}</span>
-        </ExtraInOpinion>
-        <ExtraInOpinion siteProps={siteProps}>
           Pracownik: <span>{`${workerName} ${workerSurname}`}</span>
         </ExtraInOpinion>
+        {!!opinion.reserwationId && (
+          <ExtraInOpinion siteProps={siteProps}>
+            Usługa: <span>{opinion.reserwationId.serviceName}</span>
+          </ExtraInOpinion>
+        )}
+        {!!opinion.communitingId && (
+          <>
+            <ExtraInOpinion siteProps={siteProps}>
+              Miasto dojazdu: <span>{opinion.communitingId.city}</span>
+            </ExtraInOpinion>
+            <ExtraInOpinion siteProps={siteProps}>
+              Opis: <span>{opinion.communitingId.description}</span>
+            </ExtraInOpinion>
+          </>
+        )}
+        {!!opinion.serviceId && (
+          <>
+            <ExtraInOpinion siteProps={siteProps}>
+              Serwisowany przedmiot: <span>{opinion.serviceId.objectName}</span>
+            </ExtraInOpinion>
+            <ExtraInOpinion siteProps={siteProps}>
+              Opis: <span>{opinion.serviceId.description}</span>
+            </ExtraInOpinion>
+          </>
+        )}
         <BackgroundOpinion siteProps={siteProps} active={addReplay}>
           <OpinionWrap>
             {!!opinion.editedOpinionMessage && (
@@ -341,6 +388,7 @@ const OpinionsComponentItem = ({
             value={opinionText}
             onChange={handleChangeTextOpinion}
             validText="Minimum 2 znaki"
+            secondColor
           />
           <ButtonsAddPositionOpinion>
             <ButtonMargin>

@@ -120,7 +120,7 @@ const CompanyCommunitingDataItemEdit = ({
     if (!!item.timeEnd) {
       setTimeEnd(item.timeEnd)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeInputs = (e, setChange) => {
     setChange(e.target.value)
@@ -244,6 +244,10 @@ const CompanyCommunitingDataItemEdit = ({
     }
   }
 
+  const filterAllStatusCommuniting = AllStatusCommuniting.filter(
+    item => item.value !== 4
+  )
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -324,7 +328,7 @@ const CompanyCommunitingDataItemEdit = ({
         )}
         <MarginTopSelect>
           <SelectCreated
-            options={AllStatusCommuniting}
+            options={filterAllStatusCommuniting}
             value={statusValue}
             handleChange={handleChangeSelectStatus}
             placeholder="Status dojazdu"

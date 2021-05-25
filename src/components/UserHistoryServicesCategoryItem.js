@@ -48,10 +48,6 @@ const ServiceItem = styled.div`
   }
 `
 
-const ButtonMargin = styled.div`
-  margin: 5px;
-`
-
 const ButtonInline = styled.div`
   display: flex;
   flex-direction: row;

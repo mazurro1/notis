@@ -896,12 +896,15 @@ export const UPDATE_PROMOTIONS = "UPDATE_PROMOTIONS"
 export const ADD_NEW_OPINIONS_COMPANY = "ADD_NEW_OPINIONS_COMPANY"
 export const ADD_REPLAY_TO_OPINION = "ADD_REPLAY_TO_OPINION"
 export const ADD_NEW_OPINION_TO_RESERWATION = "ADD_NEW_OPINION_TO_RESERWATION"
+export const ADD_NEW_OPINION_TO_COMMUNITING = "ADD_NEW_OPINION_TO_COMMUNITING"
 export const DELETE_COMPANY_IMAGE = "DELETE_COMPANY_IMAGE"
 export const UPDATE_COMPANY_IMAGE = "UPDATE_COMPANY_IMAGE"
 export const UPDATED_IMAGE_ID_COMPANY = "UPDATED_IMAGE_ID_COMPANY"
 export const CHANGE_COMPANY_MAIN_IMAGE = "CHANGE_COMPANY_MAIN_IMAGE"
 export const ADD_EDITED_OPINION_TO_RESERWATION =
   "ADD_EDITED_OPINION_TO_RESERWATION"
+export const ADD_EDITED_OPINION_TO_COMMUNITING =
+  "ADD_EDITED_OPINION_TO_COMMUNITING"
 export const RESET_OPINION = "RESET_OPINION"
 export const CHANGE_WORKING_HOURS = "CHANGE_WORKING_HOURS"
 export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
@@ -1426,6 +1429,23 @@ export const deleteCompanyImage = (companyId, pathImage) => {
   }
 }
 
+export const addEditedOpinionToCommuniting = (
+  communitingId,
+  opinionEdited,
+  company,
+  companyId,
+  opinionId
+) => {
+  return {
+    type: ADD_EDITED_OPINION_TO_COMMUNITING,
+    communitingId: communitingId,
+    opinionEdited: opinionEdited,
+    companyName: company,
+    companyId: companyId,
+    opinionId: opinionId,
+  }
+}
+
 export const addEditedOpinionToReserwation = (
   reserwationId,
   opinionEdited,
@@ -1440,6 +1460,21 @@ export const addEditedOpinionToReserwation = (
     companyName: company,
     companyId: companyId,
     opinionId: opinionId,
+  }
+}
+
+export const addNewOpinionToCommuniting = (
+  communitingId,
+  opinion,
+  company,
+  companyId
+) => {
+  return {
+    type: ADD_NEW_OPINION_TO_COMMUNITING,
+    communitingId: communitingId,
+    opinion: opinion,
+    companyName: company,
+    companyId: companyId,
   }
 }
 
@@ -6453,7 +6488,8 @@ export const fetchCompanyDeleteCommuniting = (
   token,
   companyId,
   communitingId,
-  reserwationId
+  reserwationId,
+  opinionId
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -6464,6 +6500,7 @@ export const fetchCompanyDeleteCommuniting = (
           companyId: companyId,
           communitingId: communitingId,
           reserwationId: reserwationId,
+          opinionId: opinionId,
         },
         {
           headers: {
@@ -6632,6 +6669,106 @@ export const fetchUserCancelCommunity = (token, communityId, reserwationId) => {
               dispatch(logout())
             } else {
               dispatch(addAlertItem("Błąd podczas aktualizacji dojazdu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchAddOpinionCommuniting = (token, opinionData, company) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-opinion`,
+        {
+          opinionData: opinionData,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addNewOpinionToCommuniting(
+            opinionData.communitingId,
+            response.data.opinion,
+            company,
+            opinionData.company
+          )
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano opinie.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(
+                addAlertItem(
+                  "Nie można wystawić więcej niż 10 opinii w ciągu miesiąca",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUpdateEditedOpinionCommuniting = (
+  token,
+  opinionData,
+  company
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-edited-opinion`,
+        {
+          opinionData: opinionData,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addEditedOpinionToCommuniting(
+            opinionData.communitingId,
+            opinionData.opinionEditedMessage,
+            company,
+            opinionData.company,
+            opinionData.opinionId
+          )
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano opinie.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

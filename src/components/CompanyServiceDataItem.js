@@ -68,38 +68,9 @@ const TitleService = styled.div`
   font-size: 1.1rem;
 `
 
-const WrapPrices = styled.div`
-  display: inline-block;
-
-  @media all and (max-width: 990px) {
-    display: block;
-  }
-`
 const ButtonMarginLeftNone = styled.div`
   margin: 5px;
   margin-left: 0;
-`
-
-const PriceService = styled.span`
-  display: inline-block;
-  background-color: red;
-  font-size: 0.8rem;
-  padding: 2px 5px;
-  font-family: "Poppins-Regular", sans-serif;
-  color: white;
-  margin-left: 10px;
-  border-radius: 5px;
-  background-color: ${props => props.customColorButton};
-
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: inline;
-
-  @media all and (max-width: 990px) {
-    margin-left: 0px;
-    margin-right: 10px;
-  }
 `
 
 const ServiceDescription = styled.div`
@@ -261,27 +232,7 @@ const CompanyServiceDataItem = ({
       canceled={item.statusValue === 4}
     >
       <LeftContent>
-        <TitleService>
-          {item.objectName}
-          {/* <WrapPrices>
-            <PriceService
-              siteProps={siteProps}
-              customColorButton={
-                item.statusValue === 1
-                  ? Colors(siteProps).primaryColorDark
-                  : item.statusValue === 2
-                  ? Colors(siteProps).secondDarkColor
-                  : item.statusValue === 3
-                  ? Colors(siteProps).successColorDark
-                  : item.statusValue === 4
-                  ? Colors(siteProps).dangerColorDark
-                  : Colors(siteProps).primaryColorDark
-              }
-            >
-              {!!item.cost ? `${item.cost}zł` : "Brak ceny"}
-            </PriceService>
-          </WrapPrices> */}
-        </TitleService>
+        <TitleService>{item.objectName}</TitleService>
         <ServiceDescription>
           <span>Koszt serwisu:</span>{" "}
           {!!item.cost ? `${item.cost}zł` : "Brak ceny"}

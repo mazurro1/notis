@@ -159,14 +159,26 @@ const CompanyCommunitingDataItem = ({
   }
 
   const handleConfirmDeleteItem = () => {
-    dispatch(
-      fetchCompanyDeleteCommuniting(
-        user.token,
-        user.company._id,
-        item._id,
-        item.reserwationId
-      )
+    const dateItemEndValid = item.timeEnd.split(":")
+    const dateItemValid = new Date(
+      item.year,
+      item.month - 1,
+      item.day,
+      Number(dateItemEndValid[0]),
+      Number(dateItemEndValid[1])
     )
+    const dateIsNoOldValid = dateItemValid > new Date()
+    if (dateIsNoOldValid) {
+      dispatch(
+        fetchCompanyDeleteCommuniting(
+          user.token,
+          user.company._id,
+          item._id,
+          item.reserwationId,
+          !!item.opinionId ? item.opinionId : null
+        )
+      )
+    }
   }
 
   const handleCheckUserPhone = () => {
@@ -216,6 +228,15 @@ const CompanyCommunitingDataItem = ({
   if (!!item.phone) {
     phoneUser = item.phone
   }
+  const dateItemEnd = item.timeEnd.split(":")
+  const dateItem = new Date(
+    item.year,
+    item.month - 1,
+    item.day,
+    Number(dateItemEnd[0]),
+    Number(dateItemEnd[1])
+  )
+  const dateIsNoOld = dateItem > new Date()
 
   return (
     <CommunitingItem
@@ -226,7 +247,7 @@ const CompanyCommunitingDataItem = ({
       noStartValue={item.statusValue === 1}
       startValue={item.statusValue === 2}
       finished={item.statusValue === 3}
-      canceled={item.statusValue === 4}
+      canceled={item.statusValue === 4 || item.statusValue === 5}
     >
       <LeftContent>
         <TitleCommuniting>{item.objectName}</TitleCommuniting>
@@ -283,6 +304,8 @@ const CompanyCommunitingDataItem = ({
                     ? Colors(siteProps).successColorDark
                     : item.statusValue === 4
                     ? Colors(siteProps).dangerColorDark
+                    : item.statusValue === 5
+                    ? Colors(siteProps).dangerColorDark
                     : Colors(siteProps).primaryColorDark
                 }
                 customColorIcon={
@@ -293,6 +316,8 @@ const CompanyCommunitingDataItem = ({
                     : item.statusValue === 3
                     ? Colors(siteProps).successColor
                     : item.statusValue === 4
+                    ? Colors(siteProps).dangerColor
+                    : item.statusValue === 5
                     ? Colors(siteProps).dangerColor
                     : Colors(siteProps).primaryColor
                 }
@@ -316,10 +341,14 @@ const CompanyCommunitingDataItem = ({
             <StatusCommuniting finished={true} siteProps={siteProps}>
               Dojazd zakończony
             </StatusCommuniting>
+          ) : item.statusValue === 4 ? (
+            <StatusCommuniting canceled={true} siteProps={siteProps}>
+              Dojazd odwołany
+            </StatusCommuniting>
           ) : (
-            item.statusValue === 4 && (
+            item.statusValue === 5 && (
               <StatusCommuniting canceled={true} siteProps={siteProps}>
-                Dojazd odwołany
+                Dojazd nie zrealizowany
               </StatusCommuniting>
             )
           )}
@@ -340,21 +369,24 @@ const CompanyCommunitingDataItem = ({
             />
           </ButtonMargin>
         )}
-        <ButtonMargin>
-          <ButtonIcon
-            title="Usuń"
-            uppercase
-            fontIconSize="40"
-            fontSize="14"
-            icon={<MdDelete />}
-            customColorButton={Colors(siteProps).dangerColorDark}
-            customColorIcon={Colors(siteProps).dangerColor}
-            onClick={handleClickDelete}
-          />
-        </ButtonMargin>
+        {dateIsNoOld && (
+          <ButtonMargin>
+            <ButtonIcon
+              title="Usuń"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdDelete />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleClickDelete}
+              disabled={!dateIsNoOld}
+            />
+          </ButtonMargin>
+        )}
       </RightContent>
       <Popup
-        popupEnable={clickDelete && !addCommunitingVisible}
+        popupEnable={clickDelete && !addCommunitingVisible && dateIsNoOld}
         position="absolute"
         borderRadius
         noContent

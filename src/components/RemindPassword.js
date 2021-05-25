@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef } from "react"
 import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdEmail, MdLock, MdDelete, MdDone } from "react-icons/md"

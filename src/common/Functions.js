@@ -1,7 +1,4 @@
 /*eslint-disable eqeqeq*/
-import { useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { resetBellAlerts } from "../state/actions"
 
 export const checkIfBadValue = value => {
   const textHaveVal1 = value.includes("$")

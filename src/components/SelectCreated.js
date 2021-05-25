@@ -225,11 +225,11 @@ const SelectCreated = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [refSelect])
+  }, [refSelect]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setSelectActive(defaultMenuIsOpen)
-  }, [isDisabled])
+  }, [isDisabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedItems.length === 0) {

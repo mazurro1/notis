@@ -166,7 +166,7 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
 
   useEffect(() => {
     dispatch(getCoinsOffer())
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!checkoutPaymentItem) {

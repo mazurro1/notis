@@ -325,7 +325,7 @@ const UserProfil = ({
         dispatch(resetUpdateUserPhone())
       }
     }
-  }, [userPhone, resetUserPhone])
+  }, [userPhone, resetUserPhone]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditImage = () => {
     setEditImage(prevState => !prevState)
@@ -784,7 +784,6 @@ const UserProfil = ({
           position="absolute"
           borderRadius
           title="Usuwanie konta"
-          borderRadius
           handleClose={hadndleClickShowDeleteComponent}
           smallTitle
         >
@@ -800,7 +799,6 @@ const UserProfil = ({
         position="absolute"
         borderRadius
         title="Weryfikuj numeru telefonu"
-        borderRadius
         smallTitle
         closeTitle={false}
       >
@@ -815,7 +813,6 @@ const UserProfil = ({
       <Popup
         popupEnable={newPhoneVisible}
         position="absolute"
-        borderRadius
         title="Dodaj numeru telefonu"
         borderRadius
         smallTitle
@@ -870,7 +867,6 @@ const UserProfil = ({
         position="absolute"
         borderRadius
         title="Edytuj hasło"
-        borderRadius
         closeTitle={false}
         smallTitle
       >
@@ -928,7 +924,6 @@ const UserProfil = ({
         position="absolute"
         borderRadius
         title="Zmień domyślną działalność"
-        borderRadius
         closeTitle={false}
         smallTitle
       >

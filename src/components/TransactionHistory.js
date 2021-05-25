@@ -33,7 +33,7 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getCompanyTransactionHistory(user.token, user.company._id))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckout = async sessionId => {
     if (!!sessionId) {
@@ -83,16 +83,6 @@ const TransactionHistory = ({ siteProps, user, handleClose }) => {
         ? `0${datePayment.getMinutes()}`
         : datePayment.getMinutes()
     }, ${
-      datePayment.getDate() < 10
-        ? `0${datePayment.getDate()}`
-        : datePayment.getDate()
-    }-${
-      datePayment.getMonth() + 1 < 10
-        ? `0${datePayment.getMonth() + 1}`
-        : datePayment.getMonth() + 1
-    }-${datePayment.getFullYear()}`
-
-    const renderDateDay = `${
       datePayment.getDate() < 10
         ? `0${datePayment.getDate()}`
         : datePayment.getDate()

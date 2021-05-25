@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Collapse } from "react-collapse"
 import { Colors } from "../common/Colors"

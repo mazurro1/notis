@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import ButtonIcon from "./ButtonIcon"
 import styled from "styled-components"
-import { FaSave, FaArrowLeft, FaTools } from "react-icons/fa"
+import { FaSave, FaArrowLeft } from "react-icons/fa"
 import {
   MdAccountBox,
   MdBorderColor,
@@ -141,7 +141,7 @@ const CompanyCommunitingAdd = ({
     if (!!findWorker) {
       setSelectedWorker(findWorker)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleResetAddCommuniting = () => {
     handleClose()
@@ -323,6 +323,10 @@ const CompanyCommunitingAdd = ({
     </>
   )
 
+  const filterAllStatusCommuniting = AllStatusCommuniting.filter(
+    item => item.value !== 4 && item.value !== 5
+  )
+
   return (
     <div>
       <PositionRelative>
@@ -451,7 +455,7 @@ const CompanyCommunitingAdd = ({
         )}
         <MarginTopSelect>
           <SelectCreated
-            options={AllStatusCommuniting}
+            options={filterAllStatusCommuniting}
             value={statusValue}
             handleChange={handleChangeSelectStatus}
             placeholder="Status dojazdu"
@@ -527,7 +531,7 @@ const CompanyCommunitingAdd = ({
           setActualCalendarDate={setTimeDate}
           setIsDataActive={setTimeDateActive}
           activeMonth={new Date()}
-          minDateActive={false}
+          minDateActive={true}
           activeData={timeDate}
         />
       </Popup>

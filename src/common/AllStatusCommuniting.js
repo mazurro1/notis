@@ -15,4 +15,8 @@ export const AllStatusCommuniting = [
     value: 4,
     label: "Odwołany",
   },
+  {
+    value: 5,
+    label: "Nie zrealizowany",
+  },
 ]

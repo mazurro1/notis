@@ -11,7 +11,7 @@ const Sort = ({ enableMaps }) => {
 
   useEffect(() => {
     dispatch(changeSortValue(SortsNames[1]))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = value => {
     if (!!value) {

@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 import React, { useState, useEffect } from "react"
 import {
   FaUser,
@@ -7,11 +8,10 @@ import {
 } from "react-icons/fa"
 import SelectCreated from "../SelectCreated"
 import ReactTooltip from "react-tooltip"
-import { MdEdit, MdClose, MdDone, MdTimelapse } from "react-icons/md"
+import { MdEdit, MdDone, MdTimelapse } from "react-icons/md"
 import { useDispatch, useSelector } from "react-redux"
 import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
-import { CSSTransition } from "react-transition-group"
 import InputIcon from "../InputIcon"
 import styled from "styled-components"
 import {
@@ -34,29 +34,12 @@ const ButtonContentEdit = styled.div`
 const ButtonStyles = styled.div`
   display: inline-block;
 `
-const DeleteIconPosition = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`
 
 const SelectStyle = styled.div`
   margin-bottom: 20px;
   margin-top: 20px;
 `
 
-const DeleteIconStyle = styled.div`
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  padding: 8px 8px;
-  padding-bottom: 2px;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-`
 const InputStyles = styled.div`
   input {
     /* padding: 5px 10px; */

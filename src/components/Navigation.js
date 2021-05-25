@@ -79,7 +79,6 @@ import Switch from "react-switch"
 import UserHistory from "./UserHistory"
 import { Translates } from "../common/Translates"
 import BellAlerts from "./BellAlerts"
-import openSocket from "socket.io-client"
 import { io } from "socket.io-client"
 import { Site } from "../common/Site"
 import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
@@ -449,14 +448,14 @@ const Navigation = ({ isMainPage }) => {
       setHistoryReserwations(false)
       dispatch(fetchResetUserMenu(false))
     }
-  }, [resetUserMenu])
+  }, [resetUserMenu]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     // setUserDoc(user)
     if (!!userProfilReset) {
       dispatch(resetUserProfil())
     }
-  }, [userProfilReset])
+  }, [userProfilReset]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!refUnderMenuIndustries) {
@@ -466,7 +465,7 @@ const Navigation = ({ isMainPage }) => {
         )
       }
     }
-  }, [refUnderMenuIndustries, userId, visibleMenuIndustries])
+  }, [refUnderMenuIndustries, userId, visibleMenuIndustries]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
@@ -511,7 +510,7 @@ const Navigation = ({ isMainPage }) => {
     if (!!user) {
       handleEnableNotifaction(user.vapidPublic)
     }
-  }, [userId])
+  }, [userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!!user) {
@@ -593,7 +592,7 @@ const Navigation = ({ isMainPage }) => {
     industries,
     mapActive,
     district,
-  ])
+  ]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCloseActiveAccount = () => {
     dispatch(changeActiveAccount(false))

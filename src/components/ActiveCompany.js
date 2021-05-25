@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react"
+import React, { useRef, useState } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"

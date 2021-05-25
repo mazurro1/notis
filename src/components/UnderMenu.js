@@ -139,7 +139,7 @@ const UnderMenu = ({ isMainPage }) => {
         )
       }
     }
-  }, [refUnderMenuIndustries, userId, visibleMenuIndustries])
+  }, [refUnderMenuIndustries, userId, visibleMenuIndustries]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeIndustries = item => {
     dispatch(changeIndustries(item))

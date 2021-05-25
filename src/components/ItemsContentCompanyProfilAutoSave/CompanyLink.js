@@ -34,7 +34,7 @@ const CompanyLink = ({
       setEditCompanyLink(false)
       dispatch(changeRestartCompanyLink())
     }
-  }, [company.linkPath, editMode, setEditCompanyLink, restartCompanyLink])
+  }, [company.linkPath, editMode, setEditCompanyLink, restartCompanyLink]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = setChange => {
     scroller.scrollTo("companyLinkScrollElement", {

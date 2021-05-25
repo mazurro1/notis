@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react"
+import React, { useRef, useState } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"
@@ -7,7 +7,7 @@ import {
   fetchSentAgainActivedEmail,
   fetchActiveAccount,
 } from "../state/actions"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import { Colors } from "../common/Colors"
 

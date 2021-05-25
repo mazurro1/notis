@@ -217,6 +217,8 @@ const BellAlerts = ({ siteProps, user, isMobileSize }) => {
   const mapAlerts = allAlerts.map((alert, index) => {
     if (
       !!alert.reserwationId ||
+      !!alert.communitingId ||
+      !!alert.serviceId ||
       alert.type === "alert_notifaction_sms" ||
       alert.type === "alert_notifaction_premium"
     ) {

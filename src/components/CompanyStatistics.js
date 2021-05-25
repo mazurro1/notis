@@ -88,7 +88,7 @@ const CompanyStatistics = ({ siteProps, user }) => {
 
   useEffect(() => {
     dispatch(resetCompanyStats())
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!companyStats && chartPicker) {

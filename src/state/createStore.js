@@ -54,6 +54,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  ADD_EDITED_OPINION_TO_COMMUNITING,
   UPDATE_COMPANY_SERVICE_PHONE_USER,
   UPDATE_COMPANY_COMMUNITING_PHONE_USER,
   UPDATE_SERVICE_COMPANY_SERVICES,
@@ -108,6 +109,7 @@ import {
   UPDATE_COMPANY_IMAGE,
   DELETE_COMPANY_IMAGE,
   ADD_NEW_OPINION_TO_RESERWATION,
+  ADD_NEW_OPINION_TO_COMMUNITING,
   ADD_EDITED_OPINION_TO_RESERWATION,
   ADD_REPLAY_TO_OPINION,
   ADD_NEW_OPINIONS_COMPANY,
@@ -808,7 +810,6 @@ const reducer = (state = initialState, action) => {
         const filterCommunitings = deleteCompanyCommuniting.communitings.filter(
           item => item._id !== action.communitingId
         )
-        console.log(filterCommunitings)
         deleteCompanyCommuniting.communitings = filterCommunitings
       }
       return {
@@ -1590,6 +1591,121 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         userHistoryReserwations: userHistoryReserwationsNew,
+        workCompanyData: patchWorkCompanyDataNew,
+        pathCompanyData: patchCompanyDataNew,
+      }
+    }
+
+    case ADD_EDITED_OPINION_TO_COMMUNITING: {
+      const userHistoryCommunitingNew = [...state.userHistoryCommunitings]
+      const patchWorkCompanyDataNew = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      const patchCompanyDataNew = !!state.pathCompanyData
+        ? { ...state.pathCompanyData }
+        : null
+
+      if (!!patchWorkCompanyDataNew) {
+        if (patchWorkCompanyDataNew._id === action.companyId) {
+          const findOpinionIndex = patchWorkCompanyDataNew.opinions.findIndex(
+            item => {
+              return item._id === action.opinionId._id
+            }
+          )
+          if (findOpinionIndex >= 0) {
+            patchWorkCompanyDataNew.opinions[
+              findOpinionIndex
+            ].editedOpinionMessage = action.opinionEdited
+          }
+        }
+      }
+
+      if (!!patchCompanyDataNew) {
+        if (patchCompanyDataNew._id === action.companyId) {
+          const findOpinionIndex = patchCompanyDataNew.opinions.findIndex(
+            item => item._id === action.opinionId._id
+          )
+          if (findOpinionIndex >= 0) {
+            patchCompanyDataNew.opinions[
+              findOpinionIndex
+            ].editedOpinionMessage = action.opinionEdited
+          }
+        }
+      }
+
+      const indexCommunitingId = userHistoryCommunitingNew.findIndex(item => {
+        return item._id === action.communitingId
+      })
+
+      if (indexCommunitingId >= 0) {
+        userHistoryCommunitingNew[
+          indexCommunitingId
+        ].opinionId.editedOpinionMessage = action.opinionEdited
+      }
+
+      return {
+        ...state,
+        userHistoryCommunitings: userHistoryCommunitingNew,
+        resetUserHistoryCommunitings: true,
+        workCompanyData: patchWorkCompanyDataNew,
+        pathCompanyData: patchCompanyDataNew,
+      }
+    }
+
+    case ADD_NEW_OPINION_TO_COMMUNITING: {
+      const userHistoryCommunitingsNew = [...state.userHistoryCommunitings]
+      const patchWorkCompanyDataNew = !!state.workCompanyData
+        ? { ...state.workCompanyData }
+        : null
+
+      const patchCompanyDataNew = !!state.pathCompanyData
+        ? { ...state.pathCompanyData }
+        : null
+
+      if (!!patchWorkCompanyDataNew) {
+        if (patchWorkCompanyDataNew._id === action.companyId) {
+          patchWorkCompanyDataNew.opinions.unshift(action.opinion)
+          const validValue = !!patchWorkCompanyDataNew.opinionsValue
+            ? patchWorkCompanyDataNew.opinionsValue
+            : 0
+          const validCount = !!patchWorkCompanyDataNew.opinionsCount
+            ? patchWorkCompanyDataNew.opinionsCount
+            : 0
+          patchWorkCompanyDataNew.opinionsValue =
+            validValue + action.opinion.opinionStars
+          patchWorkCompanyDataNew.opinionsCount = validCount + 1
+        }
+      }
+
+      if (!!patchCompanyDataNew) {
+        if (patchCompanyDataNew._id === action.companyId) {
+          patchCompanyDataNew.opinions.unshift(action.opinion)
+          const validValue = !!patchCompanyDataNew.opinionsValue
+            ? patchCompanyDataNew.opinionsValue
+            : 0
+          const validCount = !!patchCompanyDataNew.opinionsCount
+            ? patchCompanyDataNew.opinionsCount
+            : 0
+          patchCompanyDataNew.opinionsValue =
+            validValue + action.opinion.opinionStars
+          patchCompanyDataNew.opinionsCount = validCount + 1
+        }
+      }
+
+      const indexCommunitingId = userHistoryCommunitingsNew.findIndex(item => {
+        return item._id === action.opinion.communitingId._id
+      })
+
+      if (indexCommunitingId >= 0) {
+        userHistoryCommunitingsNew[indexCommunitingId].opinionId =
+          action.opinion
+      }
+
+      return {
+        ...state,
+        userHistoryCommunitings: userHistoryCommunitingsNew,
+        resetUserHistoryCommunitings: true,
         workCompanyData: patchWorkCompanyDataNew,
         pathCompanyData: patchCompanyDataNew,
       }

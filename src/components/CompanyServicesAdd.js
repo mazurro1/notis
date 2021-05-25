@@ -103,7 +103,7 @@ const CompanyServicesAdd = ({
     if (!!findWorker) {
       setSelectedWorker(findWorker)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleResetAddService = () => {
     handleClose()

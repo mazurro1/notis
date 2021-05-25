@@ -151,7 +151,12 @@ const UserHistoryCategory = ({
             data-tip
             data-for="goToWebsite"
           >
-            <div onClick={handleClickCompany}>
+            <div
+              onKeyDown={() => {}}
+              role="button"
+              tabIndex={0}
+              onClick={handleClickCompany}
+            >
               <FaChrome />
             </div>
           </PositionCompanyLink>

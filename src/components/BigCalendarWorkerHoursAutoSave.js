@@ -4,11 +4,7 @@ import moment from "moment"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import "moment/locale/pl"
-import {
-  checkAndReturnMinAndMaxValueFromDaysHours,
-  getMonthAndReturnEng,
-  getMonthNamePl,
-} from "../common/Functions"
+import { getMonthAndReturnEng, getMonthNamePl } from "../common/Functions"
 import ButtonIcon from "./ButtonIcon"
 import {
   FaCalendarDay,

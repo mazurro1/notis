@@ -327,10 +327,6 @@ const OurWorkersContent = ({
     setChange(e.target.value)
   }
 
-  const handleClickContentAddWorkers = e => {
-    e.stopPropagation()
-  }
-
   const handleClickContent = e => {
     e.stopPropagation()
   }
