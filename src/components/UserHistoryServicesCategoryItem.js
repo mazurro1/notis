@@ -1,11 +1,19 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import { useDispatch } from "react-redux"
-import { fetchResetUserMenu } from "../state/actions"
+import {
+  fetchResetUserMenu,
+  fetchAddOpinionService,
+  fetchUpdateEditedOpinionService,
+} from "../state/actions"
 import { navigate } from "gatsby"
 import { FaChrome } from "react-icons/fa"
 import ButtonIcon from "./ButtonIcon"
+import ReactTooltip from "react-tooltip"
+import Popup from "./Popup"
+import { MdArrowBack, MdComment, MdSave, MdStar, MdEdit } from "react-icons/md"
+import InputIcon from "./InputIcon"
 
 const ServiceItem = styled.div`
   position: relative;
@@ -35,7 +43,7 @@ const ServiceItem = styled.div`
   align-items: flex-start;
   user-select: none;
   overflow: hidden;
-  padding-bottom: ${props => (props.clickEdit ? "350px" : "auto")};
+  padding-bottom: ${props => (props.activeEdit ? "150px" : "auto")};
   color: ${props => Colors(props.siteProps).textNormalBlack};
   transition-property: background-color, padding-bottom, color;
   transition-duration: 0.3s;
@@ -92,8 +100,241 @@ const StatusService = styled.div`
       : Colors(props.siteProps).dangerColor};
 `
 
-const UserHistoryServicesCategoryItem = ({ item, siteProps, itemIndex }) => {
+const RightContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @media all and (max-width: 990px) {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 20px;
+    width: 100%;
+  }
+`
+
+const IconDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  font-size: 1.5rem;
+  border-radius: 5px;
+  color: ${props => Colors(props.siteProps).textNormalWhite};
+  cursor: pointer;
+  background-color: ${props =>
+    props.red
+      ? Colors(props.siteProps).dangerColor
+      : Colors(props.siteProps).dangerColor};
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    background-color: ${props =>
+      props.red
+        ? Colors(props.siteProps).dangerColorDark
+        : Colors(props.siteProps).dangerColorDark};
+  }
+`
+
+const ButtonsAddPositionOpinion = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+const OpinionTextReserwation = styled.div`
+  margin-top: 20px;
+  font-family: "Poppins-Bold", sans-serif;
+  padding-left: 5px;
+`
+
+const OpinionText = styled.div`
+  position: relative;
+  background-color: ${props => Colors(props.siteProps).backgroundColorPage};
+  color: ${props => Colors(props.siteProps).textNormalBlack};
+  padding: 10px 20px;
+  padding-bottom: 10px;
+  width: 100%;
+  border-radius: 5px;
+
+  .replayCompany {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    background-color: ${props => Colors(props.siteProps).companyItemBackground};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 40px;
+  }
+
+  .replayCompanyName {
+    position: absolute;
+    font-size: 0.9rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+    top: -20px;
+    text-transform: uppercase;
+  }
+`
+
+const StarsPositions = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+
+  span {
+    margin-right: 10px;
+  }
+`
+
+const NoEditedMessage = styled.div`
+  .editedSmallText {
+    font-size: 0.85rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
+const StarItem = styled.div`
+  font-size: 1.4rem;
+  margin-top: 4px;
+  cursor: pointer;
+  color: ${props =>
+    props.active ? "#ffc107" : Colors(props.siteProps).disabled};
+
+  transition-property: transform, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+
+  &:hover {
+    transform: scale(1.4);
+  }
+`
+
+const EditedMessage = styled.div`
+  margin-bottom: 10px;
+
+  .editedSmallText {
+    font-size: 0.85rem;
+    color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+`
+
+const ButtonMargin = styled.div`
+  margin: 5px;
+`
+
+const UserHistoryServicesCategoryItem = ({
+  item,
+  siteProps,
+  itemIndex,
+  user,
+  indexService,
+  resetUserHistoryService,
+}) => {
+  const [addOpinionCommunityActive, setAddOpinionCommunityActive] = useState(
+    false
+  )
+  const [opinionText, setOpinionText] = useState("")
+  const [opinionStars, setOpinionStars] = useState(5)
+  const [editedOpinionText, setEditedOpinionText] = useState("")
+  const [editedOpinion, setEditedOpinion] = useState(false)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    setAddOpinionCommunityActive(false)
+    setOpinionText("")
+    let numberStars = 5
+    let resetEditedOpinionText = ""
+    if (!!item.opinionId) {
+      numberStars = item.opinionId.opinionStars
+      resetEditedOpinionText = !!item.opinionId.opinionMessage
+        ? item.opinionId.opinionMessage
+        : ""
+    }
+    setEditedOpinion(false)
+    setEditedOpinionText(resetEditedOpinionText)
+    setOpinionStars(numberStars)
+  }, [resetUserHistoryService]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleResetAddOpinion = () => {
+    setAddOpinionCommunityActive(false)
+    setOpinionText("")
+    setEditedOpinion(false)
+    let numberStars = 5
+    let resetEditedOpinionText = ""
+    if (!!item.opinionId) {
+      numberStars = item.opinionId.opinionStars
+      resetEditedOpinionText = !!item.opinionId.opinionMessage
+        ? item.opinionId.opinionMessage
+        : ""
+    }
+    setEditedOpinionText(resetEditedOpinionText)
+    setOpinionStars(numberStars)
+    setEditedOpinion(false)
+  }
+
+  const handleUpdateOpinion = () => {
+    if (!!item.companyId) {
+      const opinionData = {
+        opinionStars: opinionStars,
+        opinionMessage: opinionText,
+        company: item.companyId._id,
+        serviceId: item._id,
+      }
+
+      dispatch(
+        fetchAddOpinionService(user.token, opinionData, user.company._id)
+      )
+    }
+  }
+
+  const handleUpdateEditedOpinion = () => {
+    if (!!item.companyId) {
+      const opinionData = {
+        opinionId: item.opinionId,
+        opinionEditedMessage: editedOpinionText,
+        company: item.companyId._id,
+        serviceId: item._id,
+      }
+
+      dispatch(
+        fetchUpdateEditedOpinionService(
+          user.token,
+          opinionData,
+          user.company._id
+        )
+      )
+    }
+  }
+
+  const handleClickEditOpinion = () => {
+    setEditedOpinion(prevState => !prevState)
+  }
+
+  const handleChangeTextEditedOpinion = e => {
+    setEditedOpinionText(e.target.value)
+  }
+
+  const handleClickAddOpinion = () => {
+    setAddOpinionCommunityActive(prevState => !prevState)
+  }
+
+  const handleChangeTextOpinion = e => {
+    setOpinionText(e.target.value)
+  }
+
+  const handleClickStar = indexStar => {
+    setOpinionStars(indexStar)
+  }
 
   const handleClickCompany = () => {
     if (!!item.companyId) {
@@ -101,6 +342,20 @@ const UserHistoryServicesCategoryItem = ({ item, siteProps, itemIndex }) => {
       dispatch(fetchResetUserMenu(true))
     }
   }
+
+  const renderStars = [...Array(5)].map((_, index) => {
+    const starActive = opinionStars >= index + 1
+    return (
+      <StarItem
+        key={index}
+        active={starActive}
+        onClick={() => handleClickStar(index + 1)}
+        siteProps={siteProps}
+      >
+        <MdStar />
+      </StarItem>
+    )
+  })
 
   let unhashedWorkerFullName = ""
   if (!!item.workerUserId._id) {
@@ -127,6 +382,22 @@ const UserHistoryServicesCategoryItem = ({ item, siteProps, itemIndex }) => {
       : dateService.getMinutes()
   }`
 
+  let itemHasCompany = false
+  if (!!item.companyId) {
+    itemHasCompany = true
+  }
+
+  let isEditedOpinion = false
+  let opinionMessageValid = null
+  if (!!item.opinionId) {
+    if (!!item.opinionId.editedOpinionMessage) {
+      isEditedOpinion = true
+    }
+    if (!!item.opinionId.opinionMessage) {
+      opinionMessageValid = item.opinionId.opinionMessage
+    }
+  }
+
   return (
     <ServiceItem
       index={itemIndex === 0}
@@ -135,6 +406,7 @@ const UserHistoryServicesCategoryItem = ({ item, siteProps, itemIndex }) => {
       startValue={item.statusValue === 2}
       finished={item.statusValue === 3}
       canceled={item.statusValue === 4}
+      activeEdit={editedOpinion || addOpinionCommunityActive}
     >
       <LeftContent>
         <ServiceDescription>
@@ -192,7 +464,181 @@ const UserHistoryServicesCategoryItem = ({ item, siteProps, itemIndex }) => {
             )
           )}
         </ServiceDescription>
+        {!!item.opinionId && (
+          <>
+            <OpinionTextReserwation>Wystawiona opinia:</OpinionTextReserwation>
+            <OpinionText siteProps={siteProps}>
+              <StarsPositions>
+                <span>Ocena: </span>
+                {renderStars}
+              </StarsPositions>
+              {!!item.opinionId.editedOpinionMessage && (
+                <EditedMessage siteProps={siteProps}>
+                  <div className="editedSmallText">Edytowana opinia:</div>
+                  {item.opinionId.editedOpinionMessage}
+                </EditedMessage>
+              )}
+              <NoEditedMessage siteProps={siteProps}>
+                <div className="editedSmallText">Opinia:</div>
+                {item.opinionId.opinionMessage}
+              </NoEditedMessage>
+
+              {!!item.opinionId.replayOpinionMessage && (
+                <div className="replayCompany">
+                  <div className="replayCompanyName">
+                    {!!itemHasCompany ? item.companyId.name : "Firma usunięta"}
+                  </div>
+                  {item.opinionId.replayOpinionMessage}
+                </div>
+              )}
+            </OpinionText>
+          </>
+        )}
       </LeftContent>
+      {itemHasCompany && (
+        <>
+          <RightContent>
+            {!!!item.opinionId && !isEditedOpinion && item.statusValue === 3 ? (
+              <>
+                <ReactTooltip
+                  id={`addOpinionCommuniting${indexService}${itemIndex}`}
+                  effect="float"
+                  multiline={true}
+                >
+                  <span>Dodaj opinie.</span>
+                </ReactTooltip>
+                <ButtonMargin
+                  data-tip
+                  data-for={`addOpinionCommuniting${indexService}${itemIndex}`}
+                >
+                  <IconDiv onClick={handleClickAddOpinion}>
+                    <MdComment />
+                  </IconDiv>
+                </ButtonMargin>
+              </>
+            ) : (
+              !!item.opinionId &&
+              item.statusValue === 3 &&
+              !isEditedOpinion && (
+                <>
+                  <ReactTooltip
+                    id={`editOpinionCommuniting${indexService}${itemIndex}`}
+                    effect="float"
+                    multiline={true}
+                  >
+                    <span>Edytuj opinie.</span>
+                  </ReactTooltip>
+                  <ButtonMargin
+                    data-tip
+                    data-for={`editOpinionCommuniting${indexService}${itemIndex}`}
+                  >
+                    <IconDiv onClick={handleClickEditOpinion}>
+                      <MdEdit />
+                    </IconDiv>
+                  </ButtonMargin>
+                </>
+              )
+            )}
+          </RightContent>
+          <Popup
+            popupEnable={
+              addOpinionCommunityActive &&
+              item.statusValue === 3 &&
+              !isEditedOpinion
+            }
+            position="absolute"
+            title="Dodaj opinie"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+          >
+            <StarsPositions>
+              <span>Ocena: </span>
+              {renderStars}
+            </StarsPositions>
+            <InputIcon
+              icon={<MdComment />}
+              placeholder="Opinia"
+              value={opinionText}
+              onChange={handleChangeTextOpinion}
+              validText="Minimum 2 znaki"
+            />
+            <ButtonsAddPositionOpinion>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdArrowBack />}
+                  onClick={handleResetAddOpinion}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonMargin>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Dodaj opinie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdSave />}
+                  onClick={handleUpdateOpinion}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={opinionText.length < 2}
+                />
+              </ButtonMargin>
+            </ButtonsAddPositionOpinion>
+          </Popup>
+          <Popup
+            popupEnable={editedOpinion && itemHasCompany && !isEditedOpinion}
+            position="absolute"
+            title="Edytuj opinie"
+            borderRadius
+            closeTitle={false}
+            smallTitle
+          >
+            <InputIcon
+              icon={<MdComment />}
+              placeholder="Opinia"
+              value={editedOpinionText}
+              onChange={handleChangeTextEditedOpinion}
+              validText="Minimum 2 znaki"
+            />
+            <ButtonsAddPositionOpinion>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Anuluj"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdArrowBack />}
+                  onClick={handleResetAddOpinion}
+                  customColorButton={Colors(siteProps).dangerColorDark}
+                  customColorIcon={Colors(siteProps).dangerColor}
+                />
+              </ButtonMargin>
+              <ButtonMargin>
+                <ButtonIcon
+                  title="Dodaj opinie"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="15"
+                  icon={<MdSave />}
+                  onClick={handleUpdateEditedOpinion}
+                  customColorButton={Colors(siteProps).successColorDark}
+                  customColorIcon={Colors(siteProps).successColor}
+                  disabled={
+                    editedOpinionText.length < 2 ||
+                    editedOpinionText === opinionMessageValid
+                  }
+                />
+              </ButtonMargin>
+            </ButtonsAddPositionOpinion>
+          </Popup>
+        </>
+      )}
     </ServiceItem>
   )
 }

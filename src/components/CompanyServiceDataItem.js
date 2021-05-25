@@ -163,7 +163,6 @@ const CompanyServiceDataItem = ({
   }
 
   const handleCheckUserPhone = () => {
-    console.log(item)
     dispatch(fetchCheckUserPhone(user.token, user.company._id, item._id))
   }
 
@@ -323,33 +322,37 @@ const CompanyServiceDataItem = ({
           )}
         </ServiceDescription>
       </LeftContent>
-      <RightContent>
-        <ButtonMargin>
-          <ButtonIcon
-            title="Edytuj"
-            uppercase
-            fontIconSize="40"
-            fontSize="14"
-            icon={<MdEdit />}
-            secondColors
-            onClick={handleClickEdit}
-          />
-        </ButtonMargin>
-        <ButtonMargin>
-          <ButtonIcon
-            title="Usuń"
-            uppercase
-            fontIconSize="40"
-            fontSize="14"
-            icon={<MdDelete />}
-            customColorButton={Colors(siteProps).dangerColorDark}
-            customColorIcon={Colors(siteProps).dangerColor}
-            onClick={handleClickDelete}
-          />
-        </ButtonMargin>
-      </RightContent>
+      {item.statusValue !== 3 && (
+        <RightContent>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Edytuj"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdEdit />}
+              secondColors
+              onClick={handleClickEdit}
+            />
+          </ButtonMargin>
+          <ButtonMargin>
+            <ButtonIcon
+              title="Usuń"
+              uppercase
+              fontIconSize="40"
+              fontSize="14"
+              icon={<MdDelete />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleClickDelete}
+            />
+          </ButtonMargin>
+        </RightContent>
+      )}
       <Popup
-        popupEnable={clickDelete && !addServiceVisible}
+        popupEnable={
+          clickDelete && !addServiceVisible && item.statusValue !== 3
+        }
         position="absolute"
         borderRadius
         noContent
@@ -382,7 +385,7 @@ const CompanyServiceDataItem = ({
         </ButtonsDeletePosition>
       </Popup>
       <Popup
-        popupEnable={clickEdit && !addServiceVisible}
+        popupEnable={clickEdit && !addServiceVisible && item.statusValue !== 3}
         position="absolute"
         title="Edytuj usługę"
         borderRadius

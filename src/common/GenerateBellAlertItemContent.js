@@ -56,9 +56,11 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
   let userName = null
   let userSurname = null
 
+  console.log(alert)
+
   let isUserReserwation = false
   let isUserCommuniting = false
-  // let isUserService = false
+  let isUserService = false
   let isCompanyChangedReserwation = !!alert.companyChanged
     ? alert.companyChanged
     : false
@@ -76,16 +78,17 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
       }
     }
   }
-  // if (!!alert.serviceId) {
-  //   if (!!alert.serviceId.userId) {
-  //     if (!!alert.serviceId.userId._id) {
-  //       isUserService = user.userId === alert.serviceId.userId._id
-  //     }
-  //   }
-  // }
+  if (!!alert.serviceId) {
+    if (!!alert.serviceId.userId) {
+      if (!!alert.serviceId.userId._id) {
+        isUserService = user.userId === alert.serviceId.userId._id
+      }
+    }
+  }
 
   let reserwationDate = null
   let dateCommunitingService = null
+  let dateService = null
 
   if (!!alert.communitingId) {
     dateCommunitingService = `${
@@ -100,7 +103,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
   }
 
   if (!!alert.serviceId) {
-    dateCommunitingService = `${
+    dateService = `${
       alert.serviceId.day < 10 ? `0${alert.serviceId.day}` : alert.serviceId.day
     }-${
       alert.serviceId.month < 10
@@ -130,7 +133,12 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
     alert.type !== "alert_notifaction_sms" &&
     alert.type !== "alert_notifaction_premium" &&
     alert.type !== "commuting_created" &&
-    alert.type !== "commuting_deleted"
+    alert.type !== "commuting_deleted" &&
+    alert.type !== "commuting_changed" &&
+    alert.type !== "commuting_canceled" &&
+    alert.type !== "service_created" &&
+    alert.type !== "service_deleted" &&
+    alert.type !== "service_changed"
   ) {
     if (!!alert.reserwationId) {
       if (!!alert.reserwationId.fromUser) {
@@ -244,7 +252,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           <TextBeforeCompany>{textBeginningAlert}:</TextBeforeCompany>
           {!!alert.reserwationId.company ? (
             <LinkEffect
-              path={`company/${alert.reserwationId.company.linkPath}`}
+              path={`company?${alert.reserwationId.company.linkPath}`}
               text={
                 <ButtonAlertCompany
                   siteProps={siteProps}
@@ -350,7 +358,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
             Dodano opinie w firmie:{" "}
             {!!alert.reserwationId.company ? (
               <LinkEffect
-                path={`company/${alert.reserwationId.company.linkPath}`}
+                path={`company?${alert.reserwationId.company.linkPath}`}
                 text={
                   <ButtonAlertCompany
                     siteProps={siteProps}
@@ -403,7 +411,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
             Dodano opinie w firmie:{" "}
             {!!alert.communitingId.companyId ? (
               <LinkEffect
-                path={`company/${alert.communitingId.companyId.linkPath}`}
+                path={`company?${alert.communitingId.companyId.linkPath}`}
                 text={
                   <ButtonAlertCompany
                     siteProps={siteProps}
@@ -447,6 +455,43 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           </>
         )
       }
+    } else if (!!alert.serviceId) {
+      if (isUserService) {
+        alertMessage = (
+          <>
+            Dodano opinie w firmie:{" "}
+            {!!alert.serviceId.companyId ? (
+              <LinkEffect
+                path={`company?${alert.serviceId.companyId.linkPath}`}
+                text={
+                  <ButtonAlertCompany
+                    siteProps={siteProps}
+                    active={alert.active}
+                    alertColor={alertColor}
+                  >
+                    {alert.serviceId.companyId.name.toUpperCase()}
+                  </ButtonAlertCompany>
+                }
+              />
+            ) : (
+              "Firma usunięta "
+            )}
+            do serwisu, który odbył się dnia:{" "}
+            <DivInlineBlock>
+              <span>{dateService}</span>
+            </DivInlineBlock>
+          </>
+        )
+      } else {
+        alertMessage = (
+          <>
+            Klient dodał opinie do serwisu, który odbył się dnia:{" "}
+            <DivInlineBlock>
+              <span>{dateService}</span>
+            </DivInlineBlock>
+          </>
+        )
+      }
     }
   } else if (alert.type === "opinion_client_edit") {
     if (!!alert.reserwationId) {
@@ -456,7 +501,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
             Edytowano opinie w firmie:{" "}
             {!!alert.reserwationId.company ? (
               <LinkEffect
-                path={`company/${alert.reserwationId.company.linkPath}`}
+                path={`company?${alert.reserwationId.company.linkPath}`}
                 text={
                   <ButtonAlertCompany
                     siteProps={siteProps}
@@ -509,7 +554,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
             Edytowano opinie w firmie:{" "}
             {!!alert.communitingId.companyId ? (
               <LinkEffect
-                path={`company/${alert.communitingId.companyId.linkPath}`}
+                path={`company?${alert.communitingId.companyId.linkPath}`}
                 text={
                   <ButtonAlertCompany
                     siteProps={siteProps}
@@ -553,6 +598,43 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           </>
         )
       }
+    } else if (!!alert.serviceId) {
+      if (isUserService) {
+        alertMessage = (
+          <>
+            Edytowano opinie w firmie:{" "}
+            {!!alert.serviceId.companyId ? (
+              <LinkEffect
+                path={`company?${alert.serviceId.companyId.linkPath}`}
+                text={
+                  <ButtonAlertCompany
+                    siteProps={siteProps}
+                    active={alert.active}
+                    alertColor={alertColor}
+                  >
+                    {alert.serviceId.companyId.name.toUpperCase()}
+                  </ButtonAlertCompany>
+                }
+              />
+            ) : (
+              "Firma usunięta "
+            )}
+            do serwisu, który odbył się dnia:{" "}
+            <DivInlineBlock>
+              <span>{dateService}</span>
+            </DivInlineBlock>
+          </>
+        )
+      } else {
+        alertMessage = (
+          <>
+            Klient edytował opinie do serwisu, który odbył się:{" "}
+            <DivInlineBlock>
+              <span>{dateService}</span>
+            </DivInlineBlock>
+          </>
+        )
+      }
     }
   } else if (alert.type === "alert_notifaction_sms") {
     alertMessage = (
@@ -578,7 +660,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
             Firma:{" "}
             {!!alert.reserwationId.company ? (
               <LinkEffect
-                path={`company/${alert.reserwationId.company.linkPath}`}
+                path={`company?${alert.reserwationId.company.linkPath}`}
                 text={
                   <ButtonAlertCompany
                     siteProps={siteProps}
@@ -632,7 +714,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
             Frima:{" "}
             {!!alert.communitingId.companyId ? (
               <LinkEffect
-                path={`company/${alert.communitingId.companyId.linkPath}`}
+                path={`company?${alert.communitingId.companyId.linkPath}`}
                 text={
                   <ButtonAlertCompany
                     siteProps={siteProps}
@@ -676,6 +758,43 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           </>
         )
       }
+    } else if (!!alert.serviceId) {
+      if (isUserService) {
+        alertMessage = (
+          <>
+            Frima:{" "}
+            {!!alert.serviceId.companyId ? (
+              <LinkEffect
+                path={`company?${alert.serviceId.companyId.linkPath}`}
+                text={
+                  <ButtonAlertCompany
+                    siteProps={siteProps}
+                    active={alert.active}
+                    alertColor={alertColor}
+                  >
+                    {alert.serviceId.companyId.name.toUpperCase()}
+                  </ButtonAlertCompany>
+                }
+              />
+            ) : (
+              "Firma usunięta "
+            )}
+            odpowiedziała na opinie do serwisu, który odbył się dnia:{" "}
+            <DivInlineBlock>
+              <span>{dateService}</span>
+            </DivInlineBlock>
+          </>
+        )
+      } else {
+        alertMessage = (
+          <>
+            Odpowiedziano na opinie do serwisu, który odbył się:{" "}
+            <DivInlineBlock>
+              <span>{dateService}</span>
+            </DivInlineBlock>
+          </>
+        )
+      }
     }
   } else if (alert.type === "commuting_created") {
     alertColor = "blue"
@@ -685,7 +804,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           Dodano dojazd w firmie:{" "}
           {!!alert.communitingId.companyId ? (
             <LinkEffect
-              path={`company/${alert.communitingId.companyId.linkPath}`}
+              path={`company?${alert.communitingId.companyId.linkPath}`}
               text={
                 <ButtonAlertCompany
                   siteProps={siteProps}
@@ -737,7 +856,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           Usunieto dojazd w firmie:{" "}
           {!!alert.communitingId.companyId ? (
             <LinkEffect
-              path={`company/${alert.communitingId.companyId.linkPath}`}
+              path={`company?${alert.communitingId.companyId.linkPath}`}
               text={
                 <ButtonAlertCompany
                   siteProps={siteProps}
@@ -777,6 +896,224 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
               {alert.communitingId.timeStart}-{alert.communitingId.timeEnd}
             </span>
             ,
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "commuting_changed") {
+    alertColor = "orange"
+    if (isUserCommuniting) {
+      alertMessage = (
+        <>
+          Zaktualizowano dojazd w firmie:{" "}
+          {!!alert.communitingId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.communitingId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.communitingId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateCommunitingService}</span>
+          </DivInlineBlock>
+          , o godzinie:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.communitingId.timeStart}-{alert.communitingId.timeEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Zaktualizowano dojazd dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateCommunitingService}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.communitingId.timeStart}-{alert.communitingId.timeEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "commuting_canceled") {
+    alertColor = "red"
+    if (isUserCommuniting) {
+      alertMessage = (
+        <>
+          Odwołano dojazd w firmie:{" "}
+          {!!alert.communitingId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.communitingId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.communitingId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateCommunitingService}</span>
+          </DivInlineBlock>
+          , o godzinie:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.communitingId.timeStart}-{alert.communitingId.timeEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Dojazd został odwołany dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateCommunitingService}</span>
+          </DivInlineBlock>
+          , o godzinę:{" "}
+          <DivInlineBlock>
+            <span>
+              {alert.communitingId.timeStart}-{alert.communitingId.timeEnd}
+            </span>
+            ,
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "service_created") {
+    alertColor = "green"
+    if (isUserService) {
+      alertMessage = (
+        <>
+          Dodano serwis w firmie:{" "}
+          {!!alert.serviceId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.serviceId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.serviceId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Serwis został dodany dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "service_deleted") {
+    alertColor = "red"
+    if (isUserService) {
+      alertMessage = (
+        <>
+          Usunięto serwis w firmie:{" "}
+          {!!alert.serviceId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.serviceId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.serviceId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Serwis został usunięty dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "service_changed") {
+    alertColor = "orange"
+    if (isUserService) {
+      alertMessage = (
+        <>
+          Zaktualizowano serwis w firmie:{" "}
+          {!!alert.serviceId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.serviceId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.serviceId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Serwis został zaktualizowany dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
           </DivInlineBlock>
         </>
       )

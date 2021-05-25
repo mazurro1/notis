@@ -5,7 +5,10 @@ import sal from "sal.js"
 import { AllMonths } from "../common/AllMonths"
 import { Site } from "../common/Site"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchGetUserHistoryServices } from "../state/actions"
+import {
+  fetchGetUserHistoryServices,
+  fetchResetUserHistoryServices,
+} from "../state/actions"
 import UserHistoryServicesCategory from "./UserHistoryServicesCategory"
 import { Colors } from "../common/Colors"
 
@@ -81,6 +84,9 @@ const UserHistoryServices = ({ user, siteProps }) => {
   const [disabledSwitch, setDisabledSwitch] = useState(false)
   const [monthPicker, setMonthPicker] = useState(null)
   const userHistoryServices = useSelector(state => state.userHistoryServices)
+  const resetUserHistoryService = useSelector(
+    state => state.resetUserHistoryService
+  )
 
   const dispatch = useDispatch()
 
@@ -108,6 +114,13 @@ const UserHistoryServices = ({ user, siteProps }) => {
     const findMonth = AllMonths.find(item => item.value === actualMonth)
     setMonthPicker(findMonth)
   }, [])
+
+  console.log(resetUserHistoryService)
+  useEffect(() => {
+    if (resetUserHistoryService) {
+      dispatch(fetchResetUserHistoryServices())
+    }
+  }, [resetUserHistoryService]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeYear = value => {
     const validValue = !!value
@@ -169,9 +182,11 @@ const UserHistoryServices = ({ user, siteProps }) => {
     return (
       <UserHistoryServicesCategory
         key={indexService}
+        indexService={indexService}
         itemService={itemService}
         siteProps={siteProps}
         user={user}
+        resetUserHistoryService={resetUserHistoryService}
       />
     )
   })

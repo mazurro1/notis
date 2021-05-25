@@ -47,11 +47,18 @@ export const ADD_USER_HISTORY_COMMUNITINGS = "ADD_USER_HISTORY_COMMUNITINGS"
 export const CANCEL_USER_COMMUNITING = "CANCEL_USER_COMMUNITING"
 export const RESET_USER_HISTORY_COMMUNITINGS = "RESET_USER_HISTORY_COMMUNITINGS"
 export const RESET_USER_MENU = "RESET_USER_MENU"
+export const RESET_USER_HISTORY_SERVICES = "RESET_USER_HISTORY_SERVICES"
 
 export const fetchResetUserMenu = value => {
   return {
     type: RESET_USER_MENU,
     value: value,
+  }
+}
+
+export const fetchResetUserHistoryServices = () => {
+  return {
+    type: RESET_USER_HISTORY_SERVICES,
   }
 }
 
@@ -905,6 +912,8 @@ export const ADD_EDITED_OPINION_TO_RESERWATION =
   "ADD_EDITED_OPINION_TO_RESERWATION"
 export const ADD_EDITED_OPINION_TO_COMMUNITING =
   "ADD_EDITED_OPINION_TO_COMMUNITING"
+export const ADD_EDITED_OPINION_TO_SERVICE = "ADD_EDITED_OPINION_TO_SERVICE"
+export const ADD_NEW_OPINION_TO_SERVICE = "ADD_NEW_OPINION_TO_SERVICE"
 export const RESET_OPINION = "RESET_OPINION"
 export const CHANGE_WORKING_HOURS = "CHANGE_WORKING_HOURS"
 export const CHANGE_ACTIVE_WORKER = "CHANGE_ACTIVE_WORKER"
@@ -1446,6 +1455,23 @@ export const addEditedOpinionToCommuniting = (
   }
 }
 
+export const addEditedOpinionToService = (
+  serviceId,
+  opinionEdited,
+  company,
+  companyId,
+  opinionId
+) => {
+  return {
+    type: ADD_EDITED_OPINION_TO_SERVICE,
+    serviceId: serviceId,
+    opinionEdited: opinionEdited,
+    companyName: company,
+    companyId: companyId,
+    opinionId: opinionId,
+  }
+}
+
 export const addEditedOpinionToReserwation = (
   reserwationId,
   opinionEdited,
@@ -1472,6 +1498,21 @@ export const addNewOpinionToCommuniting = (
   return {
     type: ADD_NEW_OPINION_TO_COMMUNITING,
     communitingId: communitingId,
+    opinion: opinion,
+    companyName: company,
+    companyId: companyId,
+  }
+}
+
+export const addNewOpinionToService = (
+  serviceId,
+  opinion,
+  company,
+  companyId
+) => {
+  return {
+    type: ADD_NEW_OPINION_TO_SERVICE,
+    serviceId: serviceId,
     opinion: opinion,
     companyName: company,
     companyId: companyId,
@@ -6073,6 +6114,13 @@ export const fetchAddService = (
               dispatch(logout())
             } else if (error.response.status === 440) {
               dispatch(addAlertItem("Nie znaleziono użytkownika", "red"))
+            } else if (error.response.status === 441) {
+              dispatch(
+                addAlertItem(
+                  "Nie można dodać serwisu do uzytkownika, który pracuje w działalności",
+                  "red"
+                )
+              )
             } else {
               dispatch(addAlertItem("Błąd podczas dodawania usługi", "red"))
             }
@@ -6422,6 +6470,13 @@ export const fetchAddCommuniting = (
               dispatch(logout())
             } else if (error.response.status === 440) {
               dispatch(addAlertItem("Nie znaleziono użytkownika", "red"))
+            } else if (error.response.status === 441) {
+              dispatch(
+                addAlertItem(
+                  "Nie można dodać dojazdu do uzytkownika, który pracuje w działalności",
+                  "red"
+                )
+              )
             } else {
               dispatch(addAlertItem("Błąd podczas dodawania dojazdu", "red"))
             }
@@ -6753,6 +6808,106 @@ export const fetchUpdateEditedOpinionCommuniting = (
         dispatch(
           addEditedOpinionToCommuniting(
             opinionData.communitingId,
+            opinionData.opinionEditedMessage,
+            company,
+            opinionData.company,
+            opinionData.opinionId
+          )
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano opinie.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchAddOpinionService = (token, opinionData, company) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-opinion`,
+        {
+          opinionData: opinionData,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addNewOpinionToService(
+            opinionData.serviceId,
+            response.data.opinion,
+            company,
+            opinionData.company
+          )
+        )
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Dodano opinie.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 440) {
+              dispatch(
+                addAlertItem(
+                  "Nie można wystawić więcej niż 10 opinii w ciągu miesiąca",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUpdateEditedOpinionService = (
+  token,
+  opinionData,
+  company
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-edited-opinion`,
+        {
+          opinionData: opinionData,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          addEditedOpinionToService(
+            opinionData.serviceId,
             opinionData.opinionEditedMessage,
             company,
             opinionData.company,

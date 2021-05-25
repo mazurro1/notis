@@ -52,7 +52,13 @@ const IconArrowPosition = styled.div`
   }
 `
 
-const UserHistoryServicesCategory = ({ itemService, siteProps, user }) => {
+const UserHistoryServicesCategory = ({
+  itemService,
+  siteProps,
+  user,
+  indexService,
+  resetUserHistoryService,
+}) => {
   const [collapseActive, setCollapseActive] = useState(false)
 
   const handleClickArrow = () => {
@@ -66,6 +72,9 @@ const UserHistoryServicesCategory = ({ itemService, siteProps, user }) => {
         item={item}
         siteProps={siteProps}
         itemIndex={itemIndex}
+        user={user}
+        indexService={indexService}
+        resetUserHistoryService={resetUserHistoryService}
       />
     )
   })

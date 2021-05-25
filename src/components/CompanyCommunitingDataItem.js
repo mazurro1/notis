@@ -244,9 +244,9 @@ const CompanyCommunitingDataItem = ({
       clickDelete={clickDelete}
       clickEdit={clickEdit}
       siteProps={siteProps}
-      noStartValue={item.statusValue === 1}
+      noStartValue={item.statusValue === 1 && dateIsNoOld}
       startValue={item.statusValue === 2}
-      finished={item.statusValue === 3}
+      finished={item.statusValue === 3 || !dateIsNoOld}
       canceled={item.statusValue === 4 || item.statusValue === 5}
     >
       <LeftContent>
@@ -296,11 +296,11 @@ const CompanyCommunitingDataItem = ({
                 icon={<MdPhone />}
                 onClick={handleCheckUserPhone}
                 customColorButton={
-                  item.statusValue === 1
+                  item.statusValue === 1 && dateIsNoOld
                     ? Colors(siteProps).primaryColorDark
                     : item.statusValue === 2
                     ? Colors(siteProps).secondDarkColor
-                    : item.statusValue === 3
+                    : item.statusValue === 3 || !dateIsNoOld
                     ? Colors(siteProps).successColorDark
                     : item.statusValue === 4
                     ? Colors(siteProps).dangerColorDark
@@ -309,11 +309,11 @@ const CompanyCommunitingDataItem = ({
                     : Colors(siteProps).primaryColorDark
                 }
                 customColorIcon={
-                  item.statusValue === 1
+                  item.statusValue === 1 && dateIsNoOld
                     ? Colors(siteProps).primaryColor
                     : item.statusValue === 2
                     ? Colors(siteProps).secondColor
-                    : item.statusValue === 3
+                    : item.statusValue === 3 || !dateIsNoOld
                     ? Colors(siteProps).successColor
                     : item.statusValue === 4
                     ? Colors(siteProps).dangerColor
@@ -329,7 +329,7 @@ const CompanyCommunitingDataItem = ({
 
         <CommunitingDescription>
           <span>Status: </span>
-          {item.statusValue === 1 ? (
+          {item.statusValue === 1 && dateIsNoOld ? (
             <StatusCommuniting noStartValue={true} siteProps={siteProps}>
               Dojazd nie rozpoczęty
             </StatusCommuniting>
@@ -337,7 +337,7 @@ const CompanyCommunitingDataItem = ({
             <StatusCommuniting startValue={true} siteProps={siteProps}>
               Dojazd w trakcie
             </StatusCommuniting>
-          ) : item.statusValue === 3 ? (
+          ) : item.statusValue === 3 || !dateIsNoOld ? (
             <StatusCommuniting finished={true} siteProps={siteProps}>
               Dojazd zakończony
             </StatusCommuniting>
@@ -355,7 +355,7 @@ const CompanyCommunitingDataItem = ({
         </CommunitingDescription>
       </LeftContent>
       <RightContent>
-        {item.statusValue !== 4 && (
+        {item.statusValue !== 4 && dateIsNoOld && (
           <ButtonMargin>
             <ButtonIcon
               title="Edytuj"
