@@ -113,6 +113,7 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
       }
     }
     dispatch(changeReserwationUser(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     hiddenCanceledReserwation,
     yearPicker,

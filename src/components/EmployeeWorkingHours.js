@@ -43,6 +43,7 @@ const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours, user }) => {
         )
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dateCalendar.getFullYear(), // eslint-disable-line react-hooks/exhaustive-deps
     dateCalendar.getMonth(), // eslint-disable-line react-hooks/exhaustive-deps

@@ -33,7 +33,7 @@ const WorkerReserwations = ({ handleClose, user, isAdmin }) => {
         user.company._id,
         isAdmin
       )
-    )
+    ) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dateCalendar.getFullYear(), // eslint-disable-line react-hooks/exhaustive-deps
     dateCalendar.getMonth(), // eslint-disable-line react-hooks/exhaustive-deps

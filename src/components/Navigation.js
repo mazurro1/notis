@@ -420,15 +420,6 @@ const Navigation = ({ isMainPage }) => {
 
   const size = UseWindowSize()
 
-  // useEffect(() => {
-  //   if (!!userId) {
-  //     const socket = openSocket(Site.serverUrl)
-  //     socket.on(`user`, data => {
-  //       console.log(data)
-  //     })
-  //   }
-  // }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   useEffect(() => {
     if (!!userId) {
       const socket = io(Site.serverUrl)
@@ -555,6 +546,7 @@ const Navigation = ({ isMainPage }) => {
         )
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedNameMenu,
     sorts,
@@ -584,6 +576,7 @@ const Navigation = ({ isMainPage }) => {
         )
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedNameMenu,
     sorts,

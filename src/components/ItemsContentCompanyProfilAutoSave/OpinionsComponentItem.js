@@ -343,6 +343,9 @@ const OpinionsComponentItem = ({
           <span
             data-tip
             data-for={`reportMessage${index}`}
+            onKeyDown={() => {}}
+            role="button"
+            tabIndex={0}
             onClick={() => {
               if (!!user) {
                 handleClickReport(opinion._id)
