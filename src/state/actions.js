@@ -977,6 +977,13 @@ export const UPDATE_COMPANY_COMMUNITING_PHONE_USER =
   "UPDATE_COMPANY_COMMUNITING_PHONE_USER"
 export const UPDATE_COMMUNITING_COMPANY_COMMUNITING =
   "UPDATE_COMMUNITING_COMPANY_COMMUNITING"
+export const RESET_WORKER_DELETE = "RESET_WORKER_DELETE"
+
+export const resetWorkerDeleteFetch = () => {
+  return {
+    type: RESET_WORKER_DELETE,
+  }
+}
 
 export const updateCompanyServicePhoneUser = (userPhone, serviceId) => {
   return {

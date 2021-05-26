@@ -165,6 +165,7 @@ import {
   ADD_TO_USER_INFORMATIONS,
   COMPANY_PATCH_SETTINGS,
   DELETE_WORKER_FROM_COMPANY,
+  RESET_WORKER_DELETE,
 } from "./actions"
 
 const initialState = {
@@ -246,6 +247,7 @@ const initialState = {
   editWorkerHoursData: null,
   pathCompanyData: null,
   workCompanyData: null,
+  resetWorkerDelete: false,
   updateConstHappyHours: false,
   updatePromotions: false,
   userHistoryReserwations: [],
@@ -2857,7 +2859,32 @@ const reducer = (state = initialState, action) => {
         user: userHasPhone,
       }
 
+    case RESET_WORKER_DELETE: {
+      return {
+        ...state,
+        resetWorkerDelete: false,
+      }
+    }
+
     case DELETE_WORKER_FROM_COMPANY: {
+      const userDeleteWorker = !!state.user ? { ...state.user } : null
+      const allCompanyServices = { ...state.companyServices }
+      const allCompanyCommuniting = { ...state.companyCommunitings }
+
+      if (!!allCompanyServices.workers) {
+        const filterWorkers = allCompanyServices.workers.filter(
+          itemWorker => itemWorker.user._id !== action.workerUserId
+        )
+        allCompanyServices.workers = filterWorkers
+      }
+
+      if (!!allCompanyCommuniting.workers) {
+        const filterWorkers = allCompanyCommuniting.workers.filter(
+          itemWorker => itemWorker.user._id !== action.workerUserId
+        )
+        allCompanyCommuniting.workers = filterWorkers
+      }
+
       const dateToDeleteWorker = !!state.workCompanyData
         ? { ...state.workCompanyData }
         : null
@@ -2867,9 +2894,31 @@ const reducer = (state = initialState, action) => {
         )
         dateToDeleteWorker.workers = filterWorkers
       }
+      if (!!userDeleteWorker) {
+        if (!!userDeleteWorker.company) {
+          const filterUserCompany = userDeleteWorker.company.workers.filter(
+            itemWorker => itemWorker.user !== action.workerUserId
+          )
+
+          userDeleteWorker.company.workers = filterUserCompany
+        }
+        if (!!userDeleteWorker.allCompanys) {
+          userDeleteWorker.allCompanys.forEach((companyValue, companyIndex) => {
+            const filterUserCompanyWorkers = companyValue.workers.filter(
+              itemWorker => itemWorker.user !== action.workerUserId
+            )
+
+            userDeleteWorker.allCompanys[
+              companyIndex
+            ].workers = filterUserCompanyWorkers
+          })
+        }
+      }
       return {
         ...state,
         workCompanyData: dateToDeleteWorker,
+        resetWorkerDelete: true,
+        user: userDeleteWorker,
       }
     }
 

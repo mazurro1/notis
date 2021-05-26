@@ -23,6 +23,7 @@ import {
   changeEditWorkerHours,
   fetchSaveWorkerProps,
   resetWorkersPropsVisible,
+  resetWorkerDeleteFetch,
 } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
@@ -131,6 +132,7 @@ const WorkerItem = ({
   const [workerPermissionsCategory, setWorkerPermissionsCategory] = useState([])
   const [toSaveWorkerHours, setToSaveWorkerHours] = useState([])
   const resetWorkerProps = useSelector(state => state.resetWorkerProps)
+  const resetWorkerDelete = useSelector(state => state.resetWorkerDelete)
 
   const selectRef = useRef(null)
 
@@ -155,6 +157,7 @@ const WorkerItem = ({
     setToSaveWorkerHours([])
     setInputSpeciailization(item.specialization)
     setUserEditItem(false)
+    setUserConfirmDelete(false)
   }, [item]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -190,6 +193,7 @@ const WorkerItem = ({
       setUserEditItem(false)
       setConstTimeWorker(false)
       setEditConstTimeWorker(false)
+      setUserConfirmDelete(false)
       dispatch(resetWorkersPropsVisible())
     }
   }, [resetWorkerProps]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -228,6 +232,7 @@ const WorkerItem = ({
     setConstTimeWorker(false)
     setEditConstTimeWorker(false)
     setChooseTimeWorker(true)
+    setUserConfirmDelete(false)
     setToSaveWorkerHours([])
   }, [editedWorkers, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -240,6 +245,13 @@ const WorkerItem = ({
     setUserConfirmDelete(false)
     setChooseTimeWorker(false)
   }, [editMode, editedWorkers])
+
+  useEffect(() => {
+    if (resetWorkerDelete) {
+      setUserConfirmDelete(false)
+      dispatch(resetWorkerDeleteFetch())
+    }
+  }, [resetWorkerDelete]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!item.permissions) {
