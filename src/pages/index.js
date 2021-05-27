@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react"
-import "../../style.css"
 import { useDispatch, useSelector } from "react-redux"
 import PlacesItem from "../components/PlacesItem"
 import ButtonIcon from "../components/ButtonIcon"

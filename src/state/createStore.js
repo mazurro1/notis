@@ -50,6 +50,8 @@ import {
   RESET_USER_HISTORY_COMMUNITINGS,
   RESET_USER_HISTORY_SERVICES,
   RESET_USER_MENU,
+  UPDATE_DOWNLOADED_COMMUNITING,
+  UPDATE_DOWNLOADED_SERVICE,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -219,6 +221,8 @@ const initialState = {
   resetUserHistoryService: false,
   userHistoryCommunitings: [],
   resetUserHistoryCommunitings: false,
+  downloadedCommuniting: null,
+  downloadedService: null,
   //COMPANY
   //COMPANY
   //COMPANY
@@ -282,6 +286,20 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case UPDATE_DOWNLOADED_SERVICE: {
+      return {
+        ...state,
+        downloadedService: action.service,
+      }
+    }
+
+    case UPDATE_DOWNLOADED_COMMUNITING: {
+      return {
+        ...state,
+        downloadedCommuniting: action.communiting,
+      }
+    }
+
     case RESET_USER_MENU: {
       return {
         ...state,
@@ -1168,8 +1186,12 @@ const reducer = (state = initialState, action) => {
     case DELETE_COMPANY_USER: {
       const editedUser = !!state.user ? { ...state.user } : null
       if (!!editedUser) {
+        const filterAllCompanysUser = editedUser.allCompanys.filter(
+          itemCompany => itemCompany._id !== action.companyId
+        )
+        editedUser.allCompanys = filterAllCompanysUser
         editedUser.company =
-          editedUser.allCompanys.length > 0 ? editedUser.allCompanys[0] : null
+          filterAllCompanysUser.length > 0 ? filterAllCompanysUser[0] : null
       }
       return {
         ...state,

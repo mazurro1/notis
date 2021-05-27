@@ -48,6 +48,22 @@ export const CANCEL_USER_COMMUNITING = "CANCEL_USER_COMMUNITING"
 export const RESET_USER_HISTORY_COMMUNITINGS = "RESET_USER_HISTORY_COMMUNITINGS"
 export const RESET_USER_MENU = "RESET_USER_MENU"
 export const RESET_USER_HISTORY_SERVICES = "RESET_USER_HISTORY_SERVICES"
+export const UPDATE_DOWNLOADED_COMMUNITING = "UPDATE_DOWNLOADED_COMMUNITING"
+export const UPDATE_DOWNLOADED_SERVICE = "UPDATE_DOWNLOADED_SERVICE"
+
+export const updateDownloadService = service => {
+  return {
+    type: UPDATE_DOWNLOADED_SERVICE,
+    service: service,
+  }
+}
+
+export const updateDownloadCommuniting = communiting => {
+  return {
+    type: UPDATE_DOWNLOADED_COMMUNITING,
+    communiting: communiting,
+  }
+}
 
 export const fetchResetUserMenu = value => {
   return {
@@ -1230,9 +1246,10 @@ export const changeDeleteCompanyConfirm = () => {
   }
 }
 
-export const deleteCompanyUser = () => {
+export const deleteCompanyUser = companyId => {
   return {
     type: DELETE_COMPANY_USER,
+    companyId: companyId,
   }
 }
 
@@ -5266,7 +5283,7 @@ export const fetchConfirmDelete = (token, companyId, code) => {
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(confirmDeleteCompany(false))
-        dispatch(deleteCompanyUser())
+        dispatch(deleteCompanyUser(companyId))
         dispatch(addAlertItem("Usunięto działalność.", "green"))
       })
       .catch(error => {
@@ -5312,7 +5329,7 @@ export const fetchConfirmDeleteCreatedCompany = (token, companyId) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(deleteCompanyUser())
+        dispatch(deleteCompanyUser(companyId))
         dispatch(addAlertItem("Usunięto działalność.", "green"))
       })
       .catch(error => {
@@ -6931,6 +6948,64 @@ export const fetchUpdateEditedOpinionService = (
               dispatch(logout())
             } else {
               dispatch(addAlertItem("Błąd podczas dodawania opinii", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchDownloadCommuniting = communitingId => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    dispatch(updateDownloadCommuniting(null))
+    return axios
+      .post(`${Site.serverUrl}/download-communiting`, {
+        communitingId: communitingId,
+      })
+      .then(response => {
+        dispatch(updateDownloadCommuniting(response.data.communiting))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Nie znaleziono dojazdu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchDownloadService = serviceId => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    dispatch(updateDownloadService(null))
+    return axios
+      .post(`${Site.serverUrl}/download-service`, {
+        serviceId: serviceId,
+      })
+      .then(response => {
+        dispatch(updateDownloadService(response.data.service))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Nie znaleziono dojazdu", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

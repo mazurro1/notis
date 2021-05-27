@@ -4,6 +4,14 @@ export const Routes = [
     path: "/about-us",
   },
   {
+    name: "Znajdz dojazd",
+    path: "/communiting",
+  },
+  {
+    name: "Znajdz serwis",
+    path: "/service",
+  },
+  {
     name: "Polityka prywatności",
     path: "/privacy-policy",
   },

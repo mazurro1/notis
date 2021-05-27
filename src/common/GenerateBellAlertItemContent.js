@@ -56,8 +56,6 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
   let userName = null
   let userSurname = null
 
-  console.log(alert)
-
   let isUserReserwation = false
   let isUserCommuniting = false
   let isUserService = false
