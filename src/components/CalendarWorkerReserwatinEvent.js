@@ -395,6 +395,7 @@ const CalendarWorkerReserwatinEvent = ({
   let promotionName = ""
   const workersToSelect = []
   let oldDateToSelectWorker = false
+  let reserwationCommuniting = null
 
   if (!!selectedEvent) {
     if (!!itemCompany) {
@@ -462,6 +463,15 @@ const CalendarWorkerReserwatinEvent = ({
         : !!selectedEvent.activeStamp
         ? "Komplet pieczątek"
         : ""
+    }
+
+    if (!!selectedEvent.communitingId) {
+      if (
+        !!selectedEvent.communitingId.city &&
+        !!selectedEvent.communitingId.street
+      ) {
+        reserwationCommuniting = `${selectedEvent.communitingId.city}, ${selectedEvent.communitingId.street}, ${selectedEvent.communitingId.description}`
+      }
     }
 
     if (!!selectedEvent.workerReserwation) {
@@ -874,6 +884,12 @@ const CalendarWorkerReserwatinEvent = ({
                 Wiadomość:
                 <span>{reserwationMessage}</span>
               </ItemTitle>
+              {!!reserwationCommuniting && (
+                <ItemTitle siteProps={siteProps}>
+                  Dojazd:
+                  <span>{reserwationCommuniting}</span>
+                </ItemTitle>
+              )}
               {!isWorkerReserwation && (
                 <ItemTitle siteProps={siteProps}>
                   Status:

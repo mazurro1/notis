@@ -9,7 +9,7 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `Meetsy rezerwations`,
+    title: `Meetsy reserwations`,
     author: `Hubert Mazur`,
     description: `Rezerwacje online`,
   },

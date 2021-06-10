@@ -224,13 +224,14 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
               options={allYears}
               value={yearPicker}
               handleChange={handleChangeYear}
-              placeholder="Rok..."
+              placeholder="Rok"
               defaultMenuIsOpen={false}
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
               deleteItem={false}
               width="auto"
+              textUp
             />
           </WidthSelect>
           <WidthSelect>
@@ -238,13 +239,14 @@ const UserHistory = ({ siteProps, user, handleClose }) => {
               options={AllMonths}
               value={monthPicker}
               handleChange={handleChangeMonth}
-              placeholder="Miesiąc..."
+              placeholder="Miesiąc"
               defaultMenuIsOpen={false}
               isClearable={false}
               widthAuto
               isDisabled={disabledSwitch}
               deleteItem={false}
               width="auto"
+              textUp
             />
           </WidthSelect>
         </PositionSelectAll>

@@ -232,27 +232,38 @@ const CompanyCommunitingAdd = ({
   const handleSubmit = e => {
     e.preventDefault()
     if (validSave) {
-      dispatch(
-        fetchAddCommuniting(
-          user.token,
-          user.company._id,
-          nameInput,
-          surnameInput,
-          isActiveUser,
-          phoneInput,
-          descriptionInput,
-          costInput,
-          statusValue.value,
-          emailInput,
-          !!selectedWorker ? selectedWorker.value : user.userId,
-          cityInput,
-          streetInput,
-          timeStart,
-          timeEnd,
-          addWorkerTime,
-          fullDate
-        )
+      const timeEndSplit = timeEnd.split(":")
+      const validCommunitingDate = new Date(
+        new Date(
+          new Date(timeDate).setHours(Number(timeEndSplit[0]))
+        ).setMinutes(Number(timeEndSplit[1]))
       )
+
+      if (new Date() < validCommunitingDate) {
+        dispatch(
+          fetchAddCommuniting(
+            user.token,
+            user.company._id,
+            nameInput,
+            surnameInput,
+            isActiveUser,
+            phoneInput,
+            descriptionInput,
+            costInput,
+            statusValue.value,
+            emailInput,
+            !!selectedWorker ? selectedWorker.value : user.userId,
+            cityInput,
+            streetInput,
+            timeStart,
+            timeEnd,
+            addWorkerTime,
+            fullDate
+          )
+        )
+      } else {
+        dispatch(addAlertItem("Nie można dodać już dokonanych dojazdów", "red"))
+      }
     } else {
       if (isActiveUser) {
         if (phoneInput.length !== 9 || !isPolishNumber) {

@@ -1151,10 +1151,33 @@ const reducer = (state = initialState, action) => {
       if (!!newWorkCompanyDataSMS) {
         newWorkCompanyDataSMS.smsReserwationAvaible =
           action.smsReserwationAvaible
+        newWorkCompanyDataSMS.smsReserwationChangedUserAvaible =
+          action.smsReserwationChangedUserAvaible
         newWorkCompanyDataSMS.smsNotifactionAvaible =
           action.smsNotifactionAvaible
         newWorkCompanyDataSMS.smsCanceledAvaible = action.smsCanceledAvaible
         newWorkCompanyDataSMS.smsChangedAvaible = action.smsChangedAvaible
+
+        newWorkCompanyDataSMS.smsServiceCreatedAvaible =
+          action.smsServiceCreatedAvaible
+        newWorkCompanyDataSMS.smsServiceChangedAvaible =
+          action.smsServiceChangedAvaible
+        newWorkCompanyDataSMS.smsServiceFinishedAvaible =
+          action.smsServiceFinishedAvaible
+        newWorkCompanyDataSMS.smsServiceCanceledAvaible =
+          action.smsServiceCanceledAvaible
+        newWorkCompanyDataSMS.smsServiceDeletedAvaible =
+          action.smsServiceDeletedAvaible
+        newWorkCompanyDataSMS.smsCommunitingNotificationAvaible =
+          action.smsCommunitingNotificationAvaible
+        newWorkCompanyDataSMS.smsCommunitingCreatedAvaible =
+          action.smsCommunitingCreatedAvaible
+        newWorkCompanyDataSMS.smsCommunitingChangedAvaible =
+          action.smsCommunitingChangedAvaible
+        newWorkCompanyDataSMS.smsCommunitingCanceledAvaible =
+          action.smsCommunitingCanceledAvaible
+        newWorkCompanyDataSMS.smsCommunitingDeletedAvaible =
+          action.smsCommunitingDeletedAvaible
       }
       return {
         ...state,
@@ -1312,6 +1335,8 @@ const reducer = (state = initialState, action) => {
           services: action.services,
           stats: action.stats,
           raportSMS: action.raportSMS,
+          raportServices: action.raportServices,
+          raportCommunitings: action.raportCommunitings,
         }
       }
       return {
@@ -2779,19 +2804,17 @@ const reducer = (state = initialState, action) => {
       }
     case UPDATE_USER_ONE_RESERWATION: {
       const newUserHistoryReserwations = [...state.userHistoryReserwations]
-      const changedReserwation = action.data
       const indexCompany = newUserHistoryReserwations.findIndex(
-        item => item.category === changedReserwation.company.name
+        item => item.category === action.companyName
       )
       if (indexCompany >= 0) {
         const indexReserwation = newUserHistoryReserwations[
           indexCompany
-        ].items.findIndex(item => item._id === changedReserwation._id)
-
+        ].items.findIndex(item => item._id === action.reserwationId)
         if (indexReserwation >= 0) {
           newUserHistoryReserwations[indexCompany].items[
             indexReserwation
-          ] = changedReserwation
+          ].visitCanceled = true
         }
       }
 

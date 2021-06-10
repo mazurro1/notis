@@ -63,35 +63,105 @@ const SMSSettings = ({
   handleResetAllEditedComponents,
   disabledEditButtons,
   smsReserwationAvaible = false,
+  smsReserwationChangedUserAvaible = false,
   smsNotifactionAvaible = false,
   smsCanceledAvaible = false,
   smsChangedAvaible = false,
   premiumActive,
+
+  smsServiceCreatedAvaible = false,
+  smsServiceChangedAvaible = false,
+  smsServiceFinishedAvaible = false,
+  smsServiceCanceledAvaible = false,
+  smsServiceDeletedAvaible = false,
+  smsCommunitingNotificationAvaible = false,
+  smsCommunitingCreatedAvaible = false,
+  smsCommunitingChangedAvaible = false,
+  smsCommunitingCanceledAvaible = false,
+  smsCommunitingDeletedAvaible = false,
 }) => {
   const [
     companySMSReserwationAvaible,
     setCompanySMSReserwationAvaible,
   ] = useState(false)
   const [
+    companySMSReserwationChangedUserAvaible,
+    setCompanySMSReserwationChangedUserAvaible,
+  ] = useState(false)
+  const [
     companySMSNotifactionAvaible,
     setCompanySMSNotifactionAvaible,
   ] = useState(false)
 
-  const [companySMSCanceledAvaible, setCompanySMSCanceledAvaible] = useState(
-    false
-  )
   const [companySMSChangedAvaible, setCompanySMSChangedAvaible] = useState(
     false
   )
+  const [companySMSCanceledAvaible, setCompanySMSCanceledAvaible] = useState(
+    false
+  )
+  const [
+    companySMSServiceCreatedAvaible,
+    setCompanySMSServiceCreatedAvaible,
+  ] = useState(false)
+  const [
+    companySMSServiceChangedAvaible,
+    setCompanySMSServiceChangedAvaible,
+  ] = useState(false)
+  const [
+    companySMSServiceFinishedAvaible,
+    setCompanySMSServiceFinishedAvaible,
+  ] = useState(false)
+  const [
+    companySMSServiceCanceledAvaible,
+    setCompanySMSServiceCanceledAvaible,
+  ] = useState(false)
+  const [
+    companySMSServiceDeletedAvaible,
+    setCompanySMSServiceDeletedAvaible,
+  ] = useState(false)
+  const [
+    companySMSCommunitingNotificationAvaible,
+    setCompanySMSCommunitingNotificationAvaible,
+  ] = useState(false)
+  const [
+    companySMSCommunitingCreatedAvaible,
+    setCompanySMSCommunitingCreatedAvaible,
+  ] = useState(false)
+  const [
+    companySMSCommunitingChangedAvaible,
+    setCompanySMSCommunitingChangedAvaible,
+  ] = useState(false)
+  const [
+    companySMSCommunitingCanceledAvaible,
+    setCompanySMSCommunitingCanceledAvaible,
+  ] = useState(false)
+
+  const [
+    companySMSCommunitingDeletedAvaible,
+    setCompanySMSCommunitingDeletedAvaible,
+  ] = useState(false)
 
   const dispatch = useDispatch()
 
   useEffect(() => {
     setEditSMSSettngs(false)
     setCompanySMSReserwationAvaible(smsReserwationAvaible)
+    setCompanySMSReserwationChangedUserAvaible(smsReserwationChangedUserAvaible)
     setCompanySMSNotifactionAvaible(smsNotifactionAvaible)
     setCompanySMSCanceledAvaible(smsCanceledAvaible)
     setCompanySMSChangedAvaible(smsChangedAvaible)
+    setCompanySMSServiceCreatedAvaible(smsServiceCreatedAvaible)
+    setCompanySMSServiceChangedAvaible(smsServiceChangedAvaible)
+    setCompanySMSServiceFinishedAvaible(smsServiceFinishedAvaible)
+    setCompanySMSServiceCanceledAvaible(smsServiceCanceledAvaible)
+    setCompanySMSServiceDeletedAvaible(smsServiceDeletedAvaible)
+    setCompanySMSCommunitingNotificationAvaible(
+      smsCommunitingNotificationAvaible
+    )
+    setCompanySMSCommunitingCreatedAvaible(smsCommunitingCreatedAvaible)
+    setCompanySMSCommunitingChangedAvaible(smsCommunitingChangedAvaible)
+    setCompanySMSCommunitingCanceledAvaible(smsCommunitingCanceledAvaible)
+    setCompanySMSCommunitingDeletedAvaible(smsCommunitingDeletedAvaible)
   }, [editMode, company]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {
@@ -107,9 +177,22 @@ const SMSSettings = ({
 
   const handleResetValues = () => {
     setCompanySMSReserwationAvaible(smsReserwationAvaible)
+    setCompanySMSReserwationChangedUserAvaible(smsReserwationChangedUserAvaible)
     setCompanySMSNotifactionAvaible(smsNotifactionAvaible)
     setCompanySMSCanceledAvaible(smsCanceledAvaible)
     setCompanySMSChangedAvaible(smsChangedAvaible)
+    setCompanySMSServiceCreatedAvaible(smsServiceCreatedAvaible)
+    setCompanySMSServiceChangedAvaible(smsServiceChangedAvaible)
+    setCompanySMSServiceFinishedAvaible(smsServiceFinishedAvaible)
+    setCompanySMSServiceCanceledAvaible(smsServiceCanceledAvaible)
+    setCompanySMSServiceDeletedAvaible(smsServiceDeletedAvaible)
+    setCompanySMSCommunitingNotificationAvaible(
+      smsCommunitingNotificationAvaible
+    )
+    setCompanySMSCommunitingCreatedAvaible(smsCommunitingCreatedAvaible)
+    setCompanySMSCommunitingChangedAvaible(smsCommunitingChangedAvaible)
+    setCompanySMSCommunitingCanceledAvaible(smsCommunitingCanceledAvaible)
+    setCompanySMSCommunitingDeletedAvaible(smsCommunitingDeletedAvaible)
     setEditSMSSettngs(false)
 
     scroller.scrollTo("smsScrollElement", {
@@ -119,20 +202,8 @@ const SMSSettings = ({
     })
   }
 
-  const handleChangeCheckbox = () => {
-    setCompanySMSReserwationAvaible(prevState => !prevState)
-  }
-
-  const handleChangeCheckboxNotifaction = () => {
-    setCompanySMSNotifactionAvaible(prevState => !prevState)
-  }
-
-  const handleChangeCheckboxCanceled = () => {
-    setCompanySMSCanceledAvaible(prevState => !prevState)
-  }
-
-  const handleChangeCheckboxChanged = () => {
-    setCompanySMSChangedAvaible(prevState => !prevState)
+  const handleChangeCheckboxes = setState => {
+    setState(prevState => !prevState)
   }
 
   const handleSaveCompanySMSSettings = () => {
@@ -146,9 +217,20 @@ const SMSSettings = ({
         user.token,
         user.company._id,
         companySMSReserwationAvaible,
+        companySMSReserwationChangedUserAvaible,
         companySMSNotifactionAvaible,
         companySMSCanceledAvaible,
-        companySMSChangedAvaible
+        companySMSChangedAvaible,
+        companySMSServiceCreatedAvaible,
+        companySMSServiceChangedAvaible,
+        companySMSServiceFinishedAvaible,
+        companySMSServiceCanceledAvaible,
+        companySMSServiceDeletedAvaible,
+        companySMSCommunitingNotificationAvaible,
+        companySMSCommunitingCreatedAvaible,
+        companySMSCommunitingChangedAvaible,
+        companySMSCommunitingCanceledAvaible,
+        companySMSCommunitingDeletedAvaible
       )
     )
   }
@@ -181,7 +263,9 @@ const SMSSettings = ({
           <Checkbox
             theme="material-checkbox"
             value={companySMSReserwationAvaible}
-            onChange={handleChangeCheckbox}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSReserwationAvaible)
+            }}
           >
             <TextCheckbox>
               {!companySMSReserwationAvaible
@@ -191,6 +275,38 @@ const SMSSettings = ({
           </Checkbox>
         </CheckboxStyle>
       )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSReserwationChangedUserAvaible}
+      >
+        Wiadomość sms <span>zostanie wysłana</span> podczas, gdy{" "}
+        <span>klient dokona zmiany w rezerwacji</span>.
+        {editSMSSettngs && (
+          <>
+            Podczas próby wysłania konto zostanie obciążone o 1 SMS-a z konta
+            firmowego, o ile saldo SMS-ów jest dodatnie.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSReserwationChangedUserAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSReserwationChangedUserAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSReserwationChangedUserAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+
       <TextInfoCheckbox
         siteProps={siteProps}
         edited={editSMSSettngs}
@@ -213,7 +329,9 @@ const SMSSettings = ({
           <Checkbox
             theme="material-checkbox"
             value={companySMSNotifactionAvaible}
-            onChange={handleChangeCheckboxNotifaction}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSNotifactionAvaible)
+            }}
           >
             <TextCheckbox>
               {!companySMSNotifactionAvaible
@@ -223,7 +341,6 @@ const SMSSettings = ({
           </Checkbox>
         </CheckboxStyle>
       )}
-
       <TextInfoCheckbox
         siteProps={siteProps}
         edited={editSMSSettngs}
@@ -247,7 +364,9 @@ const SMSSettings = ({
           <Checkbox
             theme="material-checkbox"
             value={companySMSChangedAvaible}
-            onChange={handleChangeCheckboxChanged}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSChangedAvaible)
+            }}
           >
             <TextCheckbox>
               {!companySMSChangedAvaible
@@ -257,7 +376,6 @@ const SMSSettings = ({
           </Checkbox>
         </CheckboxStyle>
       )}
-
       <TextInfoCheckbox
         siteProps={siteProps}
         edited={editSMSSettngs}
@@ -281,7 +399,9 @@ const SMSSettings = ({
           <Checkbox
             theme="material-checkbox"
             value={companySMSCanceledAvaible}
-            onChange={handleChangeCheckboxCanceled}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSCanceledAvaible)
+            }}
           >
             <TextCheckbox>
               {!companySMSCanceledAvaible
@@ -291,7 +411,350 @@ const SMSSettings = ({
           </Checkbox>
         </CheckboxStyle>
       )}
-
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSServiceCreatedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas tworzenia serwisu przez pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli wizyta zostanie stworzona przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS o nowym serwisie.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSServiceCreatedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSServiceCreatedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSServiceCreatedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSServiceChangedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas edytowania serwisu przez
+          pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli wizyta zostanie zaktualizowana przez pracownika lub
+            pracodawce firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSServiceChangedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSServiceChangedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSServiceChangedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSServiceFinishedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas ukończenia serwisu przez
+          pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli wizyta zostanie ukończona przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSServiceFinishedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSServiceFinishedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSServiceFinishedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSServiceCanceledAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas anulowania serwisu przez
+          pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli wizyta zostanie anulowana przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSServiceCanceledAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSServiceCanceledAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSServiceCanceledAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSServiceDeletedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas usunięcia serwisu przez pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli wizyta zostanie usunięta przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSServiceDeletedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSServiceDeletedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSServiceDeletedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSCommunitingNotificationAvaible}
+      >
+        Wiadomość sms <span>zostanie wysłana 1 dzień przed dojazdem</span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli dojazd jest w tym samym dniu to sms nie wyśle się. Podczas
+            próby wysłania konto zostanie obciążone o 1 SMS-a z konta firmowego,
+            o ile saldo SMS-ów jest dodatnie.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSCommunitingNotificationAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(
+                setCompanySMSCommunitingNotificationAvaible
+              )
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSCommunitingNotificationAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSCommunitingCreatedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas tworzenia dojazdu przez pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli dojazd zostanie utworzony przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSCommunitingCreatedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSCommunitingCreatedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSCommunitingCreatedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSCommunitingChangedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas edycji dojazdu przez pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli dojazd zostanie edytowany przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSCommunitingChangedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSCommunitingChangedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSCommunitingChangedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSCommunitingCanceledAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas anulowania dojazdu przez
+          pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli dojazd zostanie anulowany przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSCommunitingCanceledAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSCommunitingCanceledAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSCommunitingCanceledAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
+      <TextInfoCheckbox
+        siteProps={siteProps}
+        edited={editSMSSettngs}
+        active={companySMSCommunitingDeletedAvaible}
+      >
+        Wiadomość sms{" "}
+        <span>
+          zostanie wysłana podczas usuwania dojazdu przez pracownika/pracodawce
+        </span>
+        {editSMSSettngs && (
+          <>
+            {" "}
+            Jeżeli dojazd zostanie usuwania przez pracownika lub pracodawce
+            firmy, to użytkownik otrzyma wiadomość SMS.
+          </>
+        )}
+      </TextInfoCheckbox>
+      {editSMSSettngs && (
+        <CheckboxStyle siteProps={siteProps}>
+          <Checkbox
+            theme="material-checkbox"
+            value={companySMSCommunitingDeletedAvaible}
+            onChange={() => {
+              handleChangeCheckboxes(setCompanySMSCommunitingDeletedAvaible)
+            }}
+          >
+            <TextCheckbox>
+              {!companySMSCommunitingDeletedAvaible
+                ? "Usługa wyłączona"
+                : "Usługa włączona"}
+            </TextCheckbox>
+          </Checkbox>
+        </CheckboxStyle>
+      )}
       {isCompanyEditProfil ? (
         editSMSSettngs ? (
           <>
@@ -320,9 +783,31 @@ const SMSSettings = ({
                   onClick={handleSaveCompanySMSSettings}
                   disabled={
                     smsReserwationAvaible === companySMSReserwationAvaible &&
+                    smsReserwationChangedUserAvaible ===
+                      companySMSReserwationChangedUserAvaible &&
                     smsNotifactionAvaible === companySMSNotifactionAvaible &&
                     smsCanceledAvaible === companySMSCanceledAvaible &&
-                    smsChangedAvaible === companySMSChangedAvaible
+                    smsChangedAvaible === companySMSChangedAvaible &&
+                    smsServiceCreatedAvaible ===
+                      companySMSServiceCreatedAvaible &&
+                    smsServiceChangedAvaible ===
+                      companySMSServiceChangedAvaible &&
+                    smsServiceFinishedAvaible ===
+                      companySMSServiceFinishedAvaible &&
+                    smsServiceCanceledAvaible ===
+                      companySMSServiceCanceledAvaible &&
+                    smsServiceDeletedAvaible ===
+                      companySMSServiceDeletedAvaible &&
+                    smsCommunitingNotificationAvaible ===
+                      companySMSCommunitingNotificationAvaible &&
+                    smsCommunitingCreatedAvaible ===
+                      companySMSCommunitingCreatedAvaible &&
+                    smsCommunitingChangedAvaible ===
+                      companySMSCommunitingChangedAvaible &&
+                    smsCommunitingCanceledAvaible ===
+                      companySMSCommunitingCanceledAvaible &&
+                    smsCommunitingDeletedAvaible ===
+                      companySMSCommunitingDeletedAvaible
                   }
                 />
               </MarginButton>

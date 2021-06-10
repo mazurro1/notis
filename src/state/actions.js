@@ -1186,16 +1186,38 @@ export const resetCompanyStats = () => {
 
 export const updateCompanySMSSettings = (
   smsReserwationAvaible,
+  smsReserwationChangedUserAvaible,
   smsNotifactionAvaible,
   smsCanceledAvaible,
-  smsChangedAvaible
+  smsChangedAvaible,
+  smsServiceCreatedAvaible,
+  smsServiceChangedAvaible,
+  smsServiceFinishedAvaible,
+  smsServiceCanceledAvaible,
+  smsServiceDeletedAvaible,
+  smsCommunitingNotificationAvaible,
+  smsCommunitingCreatedAvaible,
+  smsCommunitingChangedAvaible,
+  smsCommunitingCanceledAvaible,
+  smsCommunitingDeletedAvaible
 ) => {
   return {
     type: UPDATE_COMPANY_SMS_SETTINGS,
     smsReserwationAvaible: smsReserwationAvaible,
+    smsReserwationChangedUserAvaible: smsReserwationChangedUserAvaible,
     smsNotifactionAvaible: smsNotifactionAvaible,
     smsCanceledAvaible: smsCanceledAvaible,
     smsChangedAvaible: smsChangedAvaible,
+    smsServiceCreatedAvaible: smsServiceCreatedAvaible,
+    smsServiceChangedAvaible: smsServiceChangedAvaible,
+    smsServiceFinishedAvaible: smsServiceFinishedAvaible,
+    smsServiceCanceledAvaible: smsServiceCanceledAvaible,
+    smsServiceDeletedAvaible: smsServiceDeletedAvaible,
+    smsCommunitingNotificationAvaible: smsCommunitingNotificationAvaible,
+    smsCommunitingCreatedAvaible: smsCommunitingCreatedAvaible,
+    smsCommunitingChangedAvaible: smsCommunitingChangedAvaible,
+    smsCommunitingCanceledAvaible: smsCommunitingCanceledAvaible,
+    smsCommunitingDeletedAvaible: smsCommunitingDeletedAvaible,
   }
 }
 
@@ -1295,12 +1317,20 @@ export const addReserwationWorkerDate = data => {
   }
 }
 
-export const saveCompanyStats = (stats, services, raportSMS) => {
+export const saveCompanyStats = (
+  stats,
+  services,
+  raportSMS,
+  raportServices,
+  raportCommunitings
+) => {
   return {
     type: SAVE_COMPANY_STATS,
     stats: stats,
     services: services,
     raportSMS: raportSMS,
+    raportServices: raportServices,
+    raportCommunitings: raportCommunitings,
   }
 }
 
@@ -1837,10 +1867,11 @@ export const updatePage = () => {
   }
 }
 
-export const updateUserOneReserwation = data => {
+export const updateUserOneReserwation = (reserwationId, companyName) => {
   return {
     type: UPDATE_USER_ONE_RESERWATION,
-    data: data,
+    reserwationId: reserwationId,
+    companyName: companyName,
   }
 }
 
@@ -3012,9 +3043,7 @@ export const fetchDeleteReserwation = (
   token,
   reserwationId,
   canceled = null,
-  changed = null,
-  noFinished = null,
-  changedName = ""
+  companyName = ""
 ) => {
   return dispatch => {
     dispatch(changeAlertExtra("Aktualizacja rezerwacji", true))
@@ -3024,8 +3053,6 @@ export const fetchDeleteReserwation = (
         {
           reserwationId: reserwationId,
           canceled: canceled,
-          changed: changed,
-          noFinished: noFinished,
         },
         {
           headers: {
@@ -3035,10 +3062,8 @@ export const fetchDeleteReserwation = (
       )
       .then(response => {
         dispatch(changeAlertExtra(null, false))
-        if ((changedName = "userReserwation")) {
-          dispatch(updateUserOneReserwation(response.data.reserwation))
-          dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
-        }
+        dispatch(updateUserOneReserwation(reserwationId, companyName))
+        dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
       })
       .catch(error => {
         if (!!error) {
@@ -5196,7 +5221,9 @@ export const fetchCompanyStaticts = (token, companyId, months, year) => {
           saveCompanyStats(
             response.data.stats,
             response.data.services,
-            response.data.raportSMS
+            response.data.raportSMS,
+            response.data.raportServices,
+            response.data.raportCommunitings
           )
         )
         dispatch(changeSpinner(false))
@@ -5686,10 +5713,21 @@ export const sendInvoiceToCompanyEmail = (token, companyId, invoiceId) => {
 export const fetchSaveCompanySMS = (
   token,
   companyId,
-  smsReserwationAvaible,
-  smsNotifactionAvaible,
-  smsCanceledAvaible,
-  smsChangedAvaible
+  smsReserwationAvaible = false,
+  smsReserwationChangedUserAvaible = false,
+  smsNotifactionAvaible = false,
+  smsCanceledAvaible = false,
+  smsChangedAvaible = false,
+  smsServiceCreatedAvaible = false,
+  smsServiceChangedAvaible = false,
+  smsServiceFinishedAvaible = false,
+  smsServiceCanceledAvaible = false,
+  smsServiceDeletedAvaible = false,
+  smsCommunitingNotificationAvaible = false,
+  smsCommunitingCreatedAvaible = false,
+  smsCommunitingChangedAvaible = false,
+  smsCommunitingCanceledAvaible = false,
+  smsCommunitingDeletedAvaible = false
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -5699,9 +5737,20 @@ export const fetchSaveCompanySMS = (
         {
           companyId: companyId,
           smsReserwationAvaible: smsReserwationAvaible,
+          smsReserwationChangedUserAvaible: smsReserwationChangedUserAvaible,
           smsNotifactionAvaible: smsNotifactionAvaible,
           smsCanceledAvaible: smsCanceledAvaible,
           smsChangedAvaible: smsChangedAvaible,
+          smsServiceCreatedAvaible: smsServiceCreatedAvaible,
+          smsServiceChangedAvaible: smsServiceChangedAvaible,
+          smsServiceFinishedAvaible: smsServiceFinishedAvaible,
+          smsServiceCanceledAvaible: smsServiceCanceledAvaible,
+          smsServiceDeletedAvaible: smsServiceDeletedAvaible,
+          smsCommunitingNotificationAvaible: smsCommunitingNotificationAvaible,
+          smsCommunitingCreatedAvaible: smsCommunitingCreatedAvaible,
+          smsCommunitingChangedAvaible: smsCommunitingChangedAvaible,
+          smsCommunitingCanceledAvaible: smsCommunitingCanceledAvaible,
+          smsCommunitingDeletedAvaible: smsCommunitingDeletedAvaible,
         },
         {
           headers: {
@@ -5713,9 +5762,20 @@ export const fetchSaveCompanySMS = (
         dispatch(
           updateCompanySMSSettings(
             smsReserwationAvaible,
+            smsReserwationChangedUserAvaible,
             smsNotifactionAvaible,
             smsCanceledAvaible,
-            smsChangedAvaible
+            smsChangedAvaible,
+            smsServiceCreatedAvaible,
+            smsServiceChangedAvaible,
+            smsServiceFinishedAvaible,
+            smsServiceCanceledAvaible,
+            smsServiceDeletedAvaible,
+            smsCommunitingNotificationAvaible,
+            smsCommunitingCreatedAvaible,
+            smsCommunitingChangedAvaible,
+            smsCommunitingCanceledAvaible,
+            smsCommunitingDeletedAvaible
           )
         )
         dispatch(changeSpinner(false))

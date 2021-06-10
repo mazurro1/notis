@@ -100,15 +100,16 @@ const UserHistoryCategory = ({
   }
 
   const handleDeleteReserwation = reserwationId => {
+    let companyNameValid = "None"
+    if (!!company) {
+      if (!!company.company) {
+        if (!!company.company.name) {
+          companyNameValid = company.company.name
+        }
+      }
+    }
     dispatch(
-      fetchDeleteReserwation(
-        userToken,
-        reserwationId,
-        true,
-        null,
-        null,
-        "userReserwation"
-      )
+      fetchDeleteReserwation(userToken, reserwationId, true, companyNameValid)
     )
   }
 

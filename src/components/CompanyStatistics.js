@@ -15,6 +15,8 @@ import {
   chartMonthsState,
   chartSMSState,
   chartSMSStateAll,
+  chartCompanyServices,
+  chartCompanyCommunitings,
 } from "./Charts/FunctionsChart"
 
 import { FaSearch } from "react-icons/fa"
@@ -83,7 +85,7 @@ const CompanyStatistics = ({ siteProps, user }) => {
   const refChart = useRef(null)
   const companyStats = useSelector(state => state.companyStats)
   const dispatch = useDispatch()
-
+  console.log(companyStats)
   const isAdmin = user.userId === user.company.owner
 
   useEffect(() => {
@@ -126,6 +128,18 @@ const CompanyStatistics = ({ siteProps, user }) => {
       } else if (chartPicker.value === 6) {
         statsConvertedCharts = chartSMSStateAll(
           companyStats.raportSMS,
+          AllMonths,
+          isAdmin
+        )
+      } else if (chartPicker.value === 7) {
+        statsConvertedCharts = chartCompanyServices(
+          companyStats.raportServices,
+          user.company.name,
+          isAdmin
+        )
+      } else if (chartPicker.value === 8) {
+        statsConvertedCharts = chartCompanyCommunitings(
+          companyStats.raportCommunitings,
           user.company.name,
           isAdmin
         )

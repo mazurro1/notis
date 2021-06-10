@@ -7,6 +7,7 @@ import {
   fetchWorkerDisabledHours,
   avaibleDateToReserwation,
   fetchChangeReserwation,
+  addAlertItem,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { FaUser, FaStamp } from "react-icons/fa"
@@ -320,7 +321,7 @@ const PositionRelative = styled.div`
   padding-bottom: 60px;
 `
 
-const PositionButtonRezerwation = styled.div`
+const PositionButtonReserwation = styled.div`
   position: absolute;
   background-color: ${props => Colors(props.siteProps).backgroundColorPage};
   padding: 10px;
@@ -478,6 +479,13 @@ const Reserwation = ({
       setSelectedPromotion(null)
     }
     setIsStampActive(prevState => !prevState)
+  }
+
+  const handleUpdateDate = newDate => {
+    setSelectedDate(newDate)
+    if (!!!selectedWorkerId) {
+      dispatch(addAlertItem("Nie wybrano pracownika.", "red"))
+    }
   }
 
   let timeService = ""
@@ -914,7 +922,7 @@ const Reserwation = ({
               ? renderStampCheckbox
               : null
             : null}
-          <PositionButtonRezerwation
+          <PositionButtonReserwation
             siteProps={siteProps}
             data-tip
             data-for="reserwationAlert"
@@ -930,12 +938,12 @@ const Reserwation = ({
               customColorIcon={Colors(siteProps).successColor}
               disabled={!disabledReserwButton}
             />
-          </PositionButtonRezerwation>
+          </PositionButtonReserwation>
         </>
       )}
       <Popup popupEnable={isDataActive} noContent>
         <SelectDataCalendar
-          setActualCalendarDate={setSelectedDate}
+          setActualCalendarDate={handleUpdateDate}
           setIsDataActive={setIsDataActive}
           maxDate={reserwationData.maxDate}
           activeData={selectedDate}

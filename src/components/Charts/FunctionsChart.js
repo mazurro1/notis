@@ -456,35 +456,286 @@ export const chartSMSState = (companyStats, companyName, isAdmin) => {
   }
 }
 
-export const chartSMSStateAll = (companyStats, companyName, isAdmin) => {
+export const chartSMSStateAll = (companyStats, allMonths, isAdmin) => {
+  const allStats = []
+  companyStats.forEach(state => {
+    const findIndexInAllStats = allStats.findIndex(
+      item => item.month === state.month
+    )
+    if (findIndexInAllStats >= 0) {
+      if (!!state.count && !!!state.isAdd) {
+        allStats[findIndexInAllStats].allSMS =
+          allStats[findIndexInAllStats].allSMS + state.count
+      }
+
+      if (!!state.count && !!state.isAdd) {
+        allStats[findIndexInAllStats].allSMSPlus =
+          allStats[findIndexInAllStats].allSMSPlus + state.count
+      }
+    } else {
+      const findMonthName = allMonths.find(item => item.value === state.month)
+      let monthName = "Brak danych"
+      if (!!findMonthName) {
+        monthName = findMonthName.label
+      }
+      const dateToChar = {
+        month: state.month,
+        user: monthName,
+        allSMS: !!!state.isAdd ? state.count : 0,
+        allSMSPlus: !!state.isAdd ? state.count : 0,
+      }
+      allStats.push(dateToChar)
+    }
+  })
+  const allLabels = [
+    {
+      dataKey: "allSMS",
+      label: "Wykorzystane SMS-y",
+      extraValueLabel: "",
+      color: "primaryColor",
+    },
+    {
+      dataKey: "allSMSPlus",
+      label: "Dodane SMS-y",
+      extraValueLabel: "",
+      color: "primaryColorDark",
+    },
+  ]
+
+  return {
+    allStats: allStats,
+    allLabels: allLabels,
+  }
+}
+
+export const chartCompanyServices = (companyStats, companyName, isAdmin) => {
   const allStats = []
 
   companyStats.forEach(state => {
     if (isAdmin) {
       const findIndexAllCompany = allStats.findIndex(
-        item => item.isAdd === state.isAdd
+        item => item.userId === "company"
       )
       if (findIndexAllCompany >= 0) {
-        if (!!state.count) {
-          allStats[findIndexAllCompany].countSMS =
-            allStats[findIndexAllCompany].countSMS + state.count
+        if (!!state.cost) {
+          allStats[findIndexAllCompany].allCosts =
+            allStats[findIndexAllCompany].allCosts + state.cost
         }
+
+        if (!!state.isDeleted) {
+          allStats[findIndexAllCompany].deletedServices =
+            allStats[findIndexAllCompany].deletedServices + 1
+        }
+        allStats[findIndexAllCompany].countServices =
+          allStats[findIndexAllCompany].countServices + 1
       } else {
         const dateToChar = {
-          countSMS: state.count,
-          isAdd: !!state.isAdd,
-          user: !!state.isAdd ? "Dodano" : "Wykorzystano",
+          allCosts: !!state.cost ? state.cost : 0,
+          countServices: 1,
+          deletedServices: !!state.isDeleted ? 1 : 0,
+          userId: "company",
+          user: companyName.toUpperCase(),
         }
         allStats.push(dateToChar)
       }
     }
+
+    const findIndexInAllStats = allStats.findIndex(
+      item => item.userId === state.workerUserId._id
+    )
+    if (findIndexInAllStats >= 0) {
+      if (!!state.cost) {
+        allStats[findIndexInAllStats].allCosts =
+          allStats[findIndexInAllStats].allCosts + state.cost
+      }
+      if (!!state.isDeleted) {
+        allStats[findIndexInAllStats].deletedServices =
+          allStats[findIndexInAllStats].deletedServices + 1
+      }
+      allStats[findIndexInAllStats].countServices =
+        allStats[findIndexInAllStats].countServices + 1
+    } else {
+      const userSurname = Buffer.from(
+        state.workerUserId.surname,
+        "base64"
+      ).toString("utf-8")
+
+      const userName = Buffer.from(state.workerUserId.name, "base64").toString(
+        "utf-8"
+      )
+      const dateToChar = {
+        allCosts: !!state.cost ? state.cost : 0,
+        countServices: 1,
+        deletedServices: !!state.isDeleted ? 1 : 0,
+        userId: state.workerUserId._id,
+        user: `${userName} ${userSurname}`,
+      }
+      allStats.push(dateToChar)
+    }
   })
   const allLabels = [
     {
-      dataKey: "countSMS",
-      label: "Liczba SMS",
+      dataKey: "allCosts",
+      label: "Uzbierana kwota",
+      extraValueLabel: "zł",
+      color: "primaryColor",
+    },
+    {
+      dataKey: "countServices",
+      label: "Liczba serwisów",
       extraValueLabel: "",
       color: "primaryColorDark",
+    },
+    {
+      dataKey: "deletedServices",
+      label: "Serwisy odwołane",
+      extraValueLabel: "",
+      color: "dangerColor",
+    },
+  ]
+  return {
+    allStats: allStats,
+    allLabels: allLabels,
+  }
+}
+
+export const chartCompanyCommunitings = (
+  companyStats,
+  companyName,
+  isAdmin
+) => {
+  const allStats = []
+  const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
+    const actualDate = new Date()
+    const splitDateEnd = item.timeEnd.split(":")
+    const dateItem = new Date(
+      item.year,
+      item.month - 1,
+      item.day,
+      Number(splitDateEnd[0]),
+      Number(splitDateEnd[1])
+    )
+    if (actualDate < dateItem) {
+      return false
+    } else {
+      return true
+    }
+  })
+
+  filterCompanyStatsNoActiveAndDate.forEach(state => {
+    if (isAdmin) {
+      const findIndexAllCompany = allStats.findIndex(
+        item => item.userId === "company"
+      )
+      if (findIndexAllCompany >= 0) {
+        if (!!state.cost) {
+          allStats[findIndexAllCompany].allCosts =
+            allStats[findIndexAllCompany].allCosts + state.cost
+        }
+
+        if (!!state.isDeleted) {
+          allStats[findIndexAllCompany].deleted =
+            allStats[findIndexAllCompany].deleted + 1
+        }
+
+        if (!!state.statusValue === 4) {
+          allStats[findIndexAllCompany].canceled =
+            allStats[findIndexAllCompany].canceled + 1
+        }
+
+        if (!!state.statusValue === 5) {
+          allStats[findIndexAllCompany].notRealized =
+            allStats[findIndexAllCompany].notRealized + 1
+        }
+        allStats[findIndexAllCompany].countCommunitings =
+          allStats[findIndexAllCompany].countCommunitings + 1
+      } else {
+        const dateToChar = {
+          allCosts: !!state.cost ? state.cost : 0,
+          countCommunitings: 1,
+          deleted: !!state.isDeleted ? 1 : 0,
+          canceled: !!state.statusValue === 4 ? 1 : 0,
+          notRealized: !!state.statusValue === 5 ? 1 : 0,
+          userId: "company",
+          user: companyName.toUpperCase(),
+        }
+        allStats.push(dateToChar)
+      }
+    }
+
+    const findIndexInAllStats = allStats.findIndex(
+      item => item.userId === state.workerUserId._id
+    )
+    if (findIndexInAllStats >= 0) {
+      if (!!state.cost) {
+        allStats[findIndexInAllStats].allCosts =
+          allStats[findIndexInAllStats].allCosts + state.cost
+      }
+      if (!!state.isDeleted) {
+        allStats[findIndexInAllStats].deleted =
+          allStats[findIndexInAllStats].deleted + 1
+      }
+      if (!!state.statusValue === 4) {
+        allStats[findIndexInAllStats].canceled =
+          allStats[findIndexInAllStats].canceled + 1
+      }
+      if (!!state.statusValue === 5) {
+        allStats[findIndexInAllStats].notRealized =
+          allStats[findIndexInAllStats].notRealized + 1
+      }
+      allStats[findIndexInAllStats].countCommunitings =
+        allStats[findIndexInAllStats].countCommunitings + 1
+    } else {
+      const userSurname = Buffer.from(
+        state.workerUserId.surname,
+        "base64"
+      ).toString("utf-8")
+
+      const userName = Buffer.from(state.workerUserId.name, "base64").toString(
+        "utf-8"
+      )
+      const dateToChar = {
+        allCosts: !!state.cost ? state.cost : 0,
+        countCommunitings: 1,
+        deleted: !!state.isDeleted ? 1 : 0,
+        canceled: !!state.statusValue === 4 ? 1 : 0,
+        notRealized: !!state.statusValue === 5 ? 1 : 0,
+        userId: state.workerUserId._id,
+        user: `${userName} ${userSurname}`,
+      }
+      allStats.push(dateToChar)
+    }
+  })
+  const allLabels = [
+    {
+      dataKey: "allCosts",
+      label: "Uzbierana kwota",
+      extraValueLabel: "zł",
+      color: "primaryColor",
+    },
+    {
+      dataKey: "countCommunitings",
+      label: "Liczba dojazdów",
+      extraValueLabel: "",
+      color: "primaryColorDark",
+    },
+    {
+      dataKey: "deleted",
+      label: "Dojazdy usunięte",
+      extraValueLabel: "",
+      color: "dangerColor",
+    },
+    {
+      dataKey: "canceled",
+      label: "Dojazdy odwołane",
+      extraValueLabel: "",
+      color: "dangerColorDark",
+    },
+    {
+      dataKey: "notRealized",
+      label: "Dojazdy nie zrealizowany",
+      extraValueLabel: "",
+      color: "secondColor",
     },
   ]
   return {

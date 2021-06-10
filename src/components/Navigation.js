@@ -332,7 +332,7 @@ const SaveUserButtons = styled.div`
 `
 
 const MarginButtonSaveToken = styled.div`
-  margin-bottom: 10px;
+  margin: 5px;
 `
 
 const SMSStyle = styled.div`
@@ -1316,7 +1316,7 @@ const Navigation = ({ isMainPage }) => {
             onClick={handleUserHistoryServices}
           />
         </MarginButtonSaveToken>
-        <div>
+        <MarginButtonSaveToken>
           <ButtonIcon
             title="Dojazdy"
             uppercase
@@ -1325,7 +1325,7 @@ const Navigation = ({ isMainPage }) => {
             icon={<FaCar />}
             onClick={handleUserHistoryCommunitings}
           />
-        </div>
+        </MarginButtonSaveToken>
       </div>
     </Popup>
   )

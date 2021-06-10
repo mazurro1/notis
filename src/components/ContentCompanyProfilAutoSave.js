@@ -23,7 +23,6 @@ import GalleryContent from "./ItemsContentCompanyProfilAutoSave/GalleryContent"
 import StampsContent from "./ItemsContentCompanyProfilAutoSave/StampsContent"
 import ShopStoreContent from "./ItemsContentCompanyProfilAutoSave/ShopStoreContent"
 import SMSSettings from "./ItemsContentCompanyProfilAutoSave/SMSSettings"
-import sal from "sal.js"
 import ReportCompany from "./ItemsContentCompanyProfilAutoSave/ReportCompany"
 import { Site } from "../common/Site"
 import UseWindowSize from "../common/UseWindowSize"
@@ -230,13 +229,6 @@ const ContentCompanyProfilAutoSave = ({
   useEffect(() => {
     setEditShopStore(false)
   }, [company.shopStore])
-
-  useEffect(() => {
-    sal({
-      threshold: 0.1,
-      once: true,
-    })
-  }, [company, isAdmin, isCompanyEditProfil, userHasAccess, selectedWorker])
 
   let premiumActive = false
   if (!!user) {
@@ -445,11 +437,7 @@ const ContentCompanyProfilAutoSave = ({
   }
 
   return (
-    <div
-      data-sal="fade"
-      data-sal-duration="800"
-      data-sal-easing="ease-out-bounce"
-    >
+    <div>
       <TextH1 {...companyEditProfilProps} siteProps={siteProps}>
         {company.name}
         {(isAdmin || userHasAccess) && isCompanyEditProfil && (
@@ -553,9 +541,36 @@ const ContentCompanyProfilAutoSave = ({
                     }
                     disabledEditButtons={disabledEditButtons}
                     smsReserwationAvaible={company.smsReserwationAvaible}
+                    smsReserwationChangedUserAvaible={
+                      company.smsReserwationChangedUserAvaible
+                    }
                     smsNotifactionAvaible={company.smsNotifactionAvaible}
                     smsCanceledAvaible={company.smsCanceledAvaible}
                     smsChangedAvaible={company.smsChangedAvaible}
+                    smsServiceCreatedAvaible={company.smsServiceCreatedAvaible}
+                    smsServiceChangedAvaible={company.smsServiceChangedAvaible}
+                    smsServiceFinishedAvaible={
+                      company.smsServiceFinishedAvaible
+                    }
+                    smsServiceCanceledAvaible={
+                      company.smsServiceCanceledAvaible
+                    }
+                    smsServiceDeletedAvaible={company.smsServiceDeletedAvaible}
+                    smsCommunitingNotificationAvaible={
+                      company.smsCommunitingNotificationAvaible
+                    }
+                    smsCommunitingCreatedAvaible={
+                      company.smsCommunitingCreatedAvaible
+                    }
+                    smsCommunitingChangedAvaible={
+                      company.smsCommunitingChangedAvaible
+                    }
+                    smsCommunitingCanceledAvaible={
+                      company.smsCommunitingCanceledAvaible
+                    }
+                    smsCommunitingDeletedAvaible={
+                      company.smsCommunitingDeletedAvaible
+                    }
                   />
                 </RightColumnItem>
               )}

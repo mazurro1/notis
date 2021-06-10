@@ -244,10 +244,10 @@ const CompanyCommunitingDataItemEdit = ({
     }
   }
 
-  const filterAllStatusCommuniting = AllStatusCommuniting.filter(
-    item => item.value !== 4
-  )
-
+  // const filterAllStatusCommuniting = AllStatusCommuniting.filter(
+  //   item => item.value !== 4
+  // )
+  const filterAllStatusCommuniting = AllStatusCommuniting
   return (
     <div>
       <form onSubmit={handleSubmit}>

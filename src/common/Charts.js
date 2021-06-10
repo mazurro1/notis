@@ -23,4 +23,12 @@ export const ChartsAdmin = [
     value: 6,
     label: "Statystyki SMS",
   },
+  {
+    value: 7,
+    label: "Statystyki serwisów",
+  },
+  {
+    value: 8,
+    label: "Statystyki dojazdów",
+  },
 ]

@@ -612,7 +612,9 @@ const BigCalendarWorkerReserwations = ({
             timeStartSplit[1]
           ),
           title: `${userName} ${userSurname} - ${
-            !!itemMaped.workerReserwation
+            !!itemMaped.communitingId
+              ? `Rezerwacja czasu - dojazd ${itemMaped.communitingId.city}, ${itemMaped.communitingId.street}, ${itemMaped.communitingId.description}`
+              : !!itemMaped.workerReserwation
               ? "Rezerwacja czasu"
               : itemMaped.serviceName
           }`,

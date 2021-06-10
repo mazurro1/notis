@@ -123,8 +123,8 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
   }
 
   if (
-    alert.type !== "rezerwation_worker" &&
-    alert.type !== "new_rezerwation_worker" &&
+    alert.type !== "reserwation_worker" &&
+    alert.type !== "new_reserwation_worker" &&
     alert.type !== "opinion_client" &&
     alert.type !== "opinion_client_edit" &&
     alert.type !== "opinion_from_company" &&
@@ -136,7 +136,9 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
     alert.type !== "commuting_canceled" &&
     alert.type !== "service_created" &&
     alert.type !== "service_deleted" &&
-    alert.type !== "service_changed"
+    alert.type !== "service_changed" &&
+    alert.type !== "service_finished" &&
+    alert.type !== "service_canceled"
   ) {
     if (!!alert.reserwationId) {
       if (!!alert.reserwationId.fromUser) {
@@ -183,7 +185,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
       }
     }
 
-    if (alert.type === "rezerwation_created") {
+    if (alert.type === "reserwation_created") {
       alertColor = "blue"
       if (!isCompanyChangedReserwation) {
         textBeginningAlert = isUserReserwation
@@ -192,7 +194,10 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
       } else {
         textBeginningAlert = isUserReserwation ? "" : ""
       }
-    } else if (alert.type === "rezerwation_changed") {
+    } else if (
+      alert.type === "reserwation_changed" ||
+      alert.type === "reserwation_user_changed"
+    ) {
       alertColor = "orange"
       if (!isCompanyChangedReserwation) {
         textBeginningAlert = isUserReserwation
@@ -203,7 +208,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           ? "Twoja rezerwacja została zmieniona przez firmę"
           : "Dokonano zmianę w rezerwacji"
       }
-    } else if (alert.type === "rezerwation_canceled") {
+    } else if (alert.type === "reserwation_canceled") {
       alertColor = "red"
       if (!isCompanyChangedReserwation) {
         textBeginningAlert = isUserReserwation
@@ -236,7 +241,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
           ? "Zmieniono status twojej rezerwacji na odbytą"
           : "Zmieniono status rezerwacji na odbytą"
       }
-    } else if (alert.type === "rezerwation_notifaction") {
+    } else if (alert.type === "reserwation_notifaction") {
       alertColor = "green"
       if (isUserReserwation) {
         textBeginningAlert = "Przypomnienie o rezerwacji w firmie"
@@ -316,7 +321,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
         </>
       )
     }
-  } else if (alert.type === "rezerwation_worker") {
+  } else if (alert.type === "reserwation_worker") {
     alertMessage = (
       <>
         Zaktualizowano rezerwacje czasu:{" "}
@@ -332,7 +337,7 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
         </DivInlineBlock>
       </>
     )
-  } else if (alert.type === "new_rezerwation_worker") {
+  } else if (alert.type === "new_reserwation_worker") {
     alertMessage = (
       <>
         Rezerwacja czasu została dodana dnia:{" "}
@@ -1110,6 +1115,82 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
       alertMessage = (
         <>
           Serwis został zaktualizowany dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "service_canceled") {
+    alertColor = "red"
+    if (isUserService) {
+      alertMessage = (
+        <>
+          Odwołano serwis w firmie:{" "}
+          {!!alert.serviceId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.serviceId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.serviceId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Serwis został odwołany dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    }
+  } else if (alert.type === "service_finished") {
+    alertColor = "green"
+    if (isUserService) {
+      alertMessage = (
+        <>
+          Ukończono serwis w firmie:{" "}
+          {!!alert.serviceId.companyId ? (
+            <LinkEffect
+              path={`company?${alert.serviceId.companyId.linkPath}`}
+              text={
+                <ButtonAlertCompany
+                  siteProps={siteProps}
+                  active={alert.active}
+                  alertColor={alertColor}
+                >
+                  {alert.serviceId.companyId.name.toUpperCase()}
+                </ButtonAlertCompany>
+              }
+            />
+          ) : (
+            "Firma usunięta "
+          )}
+          dnia:{" "}
+          <DivInlineBlock>
+            <span>{dateService}</span>
+          </DivInlineBlock>
+        </>
+      )
+    } else {
+      alertMessage = (
+        <>
+          Serwis został ukończony dnia:{" "}
           <DivInlineBlock>
             <span>{dateService}</span>
           </DivInlineBlock>
