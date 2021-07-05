@@ -232,14 +232,12 @@ const SelectCreated = ({
   }, [isDisabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (selectedItems.length === 0) {
-      if (!!value && isMulti) {
-        setSelectedItems([...value])
-      } else if (!!value && !isMulti) {
-        setSelectedItems([{ ...value }])
-      } else {
-        setSelectedItems([])
-      }
+    if (!!value && isMulti) {
+      setSelectedItems([...value])
+    } else if (!!value && !isMulti) {
+      setSelectedItems([{ ...value }])
+    } else {
+      setSelectedItems([])
     }
   }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 

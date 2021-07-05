@@ -11,6 +11,7 @@ import {
   FaCalendarPlus,
   FaCalendarMinus,
   FaArrowLeft,
+  FaCalendar,
 } from "react-icons/fa"
 import SelectCreated from "./SelectCreated"
 import CalendarWorkerReserwatinEvent from "./CalendarWorkerReserwatinEvent"
@@ -23,6 +24,7 @@ import {
   fetchDoReserwationWorker,
 } from "../state/actions"
 import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
+import CalendarWorkerReserwatinNewReserwation from "./CalendarWorkerReserwatinNewReserwation"
 import { ServiceColorsReserwationsConvert } from "../common/ServiceColorsReserwationsConvert"
 import NewEventView from "./BigCalendarWorkerReserwationsTooltip"
 
@@ -210,6 +212,10 @@ const BackgroundCalendarStyle = styled.div`
   }
 `
 
+const MarginButtons = styled.div`
+  margin-bottom: 10px;
+`
+
 const IconMobileDays = styled.div`
   height: 35px;
   width: 35px;
@@ -346,6 +352,8 @@ const BigCalendarWorkerReserwations = ({
   const [allEvents, setAllEvents] = useState([])
   const [allWorkingHours, setAllWorkingHours] = useState([])
   const siteProps = useSelector(state => state.siteProps)
+  const [chooseEventMenu, setChooseEventMenu] = useState(false)
+  const [newReserwationOpen, setNewReserwationOpen] = useState(false)
   const timerToClearNew = useRef(null)
   const timerToClearEdited = useRef(null)
 
@@ -791,8 +799,35 @@ const BigCalendarWorkerReserwations = ({
     if (eventItem.slots.length > 2) {
       clearInterval(timerToClearNew.current)
       setNewEvent(eventItem)
-      setNewEventOpen(true)
+      setChooseEventMenu(true)
     }
+  }
+
+  const handleClickNewWorkerReserwation = () => {
+    setNewEventOpen(true)
+    setChooseEventMenu(false)
+  }
+
+  const handleCloseChooseEventMenu = () => {
+    setChooseEventMenu(false)
+    timerToClearNew.current = setTimeout(() => {
+      setNewEvent(null)
+    }, 400)
+  }
+
+  const handleClickNewReserwation = () => {
+    setNewReserwationOpen(true)
+    setChooseEventMenu(false)
+  }
+
+  const handleCloseNewEventItem = () => {
+    setNewEventOpen(false)
+    setChooseEventMenu(true)
+  }
+
+  const handleCloseNewEventReserwationItem = () => {
+    setNewReserwationOpen(false)
+    setChooseEventMenu(true)
   }
 
   const handleChangeDate = value => {
@@ -894,13 +929,6 @@ const BigCalendarWorkerReserwations = ({
       setSelectedEvent(null)
     }, 400)
     setSelectedEventOpen(false)
-  }
-
-  const handleCloseNewEventItem = () => {
-    timerToClearNew.current = setTimeout(() => {
-      setNewEvent(null)
-    }, 400)
-    setNewEventOpen(false)
   }
 
   const handleCloseCalendar = () => {
@@ -1006,6 +1034,15 @@ const BigCalendarWorkerReserwations = ({
         dateCalendar.getMonth() + 1
       )
     )
+  }
+
+  const handleAddNewReserwation = (
+    dateStart,
+    dateEnd,
+    dateFull,
+    reserwationMessage
+  ) => {
+    console.warn(dateStart, dateEnd, dateFull, reserwationMessage)
   }
 
   const handleCloseDatePicker = () => {
@@ -1236,6 +1273,19 @@ const BigCalendarWorkerReserwations = ({
           user={user}
           isAdmin={isAdmin}
         />
+        <CalendarWorkerReserwatinNewReserwation
+          siteProps={siteProps}
+          handleClosePopupEventItem={handleCloseNewEventReserwationItem}
+          selectedEvent={newEvent}
+          screenOpen={newReserwationOpen}
+          allEvents={allEvents}
+          itemCompanyHours={item.company.openingDays}
+          handleAddWorkerReserwation={handleAddNewReserwation}
+          user={user}
+          isAdmin={isAdmin}
+          companyItems={item.company}
+          chooseEventMenu={chooseEventMenu}
+        />
       </BackgroundContentCalendar>
       <Popup
         popupEnable={datePickerActive}
@@ -1249,6 +1299,37 @@ const BigCalendarWorkerReserwations = ({
           minDateActive={false}
           activeData={dateCalendar}
         />
+      </Popup>
+      <Popup
+        popupEnable={chooseEventMenu}
+        handleClose={handleCloseChooseEventMenu}
+        title="Opcje"
+        borderRadius
+        maxWidth="400"
+      >
+        <>
+          <MarginButtons>
+            <ButtonIcon
+              title="Nowa rezerwacja"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<FaCalendarPlus />}
+              customColorButton={Colors(siteProps).successColorDark}
+              customColorIcon={Colors(siteProps).successColor}
+              onClick={handleClickNewReserwation}
+            />
+          </MarginButtons>
+          <ButtonIcon
+            title="Nowa rezerwacja czasu"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<FaCalendar />}
+            secondColors
+            onClick={handleClickNewWorkerReserwation}
+          />
+        </>
       </Popup>
     </>
   )

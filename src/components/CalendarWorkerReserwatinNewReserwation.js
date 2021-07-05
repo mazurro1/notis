@@ -13,6 +13,7 @@ import {
 import Popup from "./Popup"
 import InputIcon from "./InputIcon"
 import TimePickerContent from "./TimePicker"
+import SelectCreated from "./SelectCreated"
 
 const EventItemPosition = styled.div`
   position: absolute;
@@ -115,6 +116,10 @@ const IconWarning = styled.div`
   font-size: 1.3rem;
 `
 
+const MarginTopSelect = styled.div`
+  margin-top: 5px;
+`
+
 const ItemTitle = styled.div`
   font-size: 1.1rem;
   color: ${props => Colors(props.siteProps).textNormalBlack};
@@ -134,7 +139,7 @@ const ButtonItemStyleTime = styled.div`
   margin-left: 10px;
 `
 
-const CalendarWorkerReserwatinNewEvent = ({
+const CalendarWorkerReserwatinNewReserwation = ({
   siteProps,
   handleClosePopupEventItem,
   selectedEvent,
@@ -142,6 +147,10 @@ const CalendarWorkerReserwatinNewEvent = ({
   screenOpen,
   itemCompanyHours,
   handleAddWorkerReserwation,
+  companyItems,
+  isAdmin,
+  chooseEventMenu,
+  user,
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
   const [openDateStart, setOpenDateStart] = useState(false)
@@ -150,7 +159,10 @@ const CalendarWorkerReserwatinNewEvent = ({
   const [newTimeEnd, setNewTimeEnd] = useState(null)
   const [dateStart, setDateStart] = useState(null)
   const [dateEnd, setDateEnd] = useState(null)
+  const [selectedWorker, setSelectedWorker] = useState(null)
+  const [selectedService, setSelectedService] = useState(null)
 
+  console.log(companyItems)
   useEffect(() => {
     if (!!selectedEvent) {
       const dateStartName = `${
@@ -173,8 +185,52 @@ const CalendarWorkerReserwatinNewEvent = ({
       }`
       setDateStart(dateStartName)
       setDateEnd(dateEndName)
+      setNewTimeEnd(null)
+      setNewTimeStart(null)
     }
-  }, [dateStart, dateEnd, selectedEvent])
+  }, [dateStart, dateEnd, selectedEvent, selectedWorker])
+
+  useEffect(() => {
+    let selectedWorkerValue = null
+    if (!!user && !!companyItems) {
+      const ownerName = Buffer.from(companyItems.owner.name, "base64").toString(
+        "utf-8"
+      )
+      const ownerSurname = Buffer.from(
+        companyItems.owner.surname,
+        "base64"
+      ).toString("utf-8")
+
+      const ownerValue = {
+        value: companyItems.owner._id,
+        label: `${ownerName} ${ownerSurname}`,
+      }
+
+      const mapWorkers = companyItems.workers.map(itemWorker => {
+        const workerName = Buffer.from(itemWorker.user.name, "base64").toString(
+          "utf-8"
+        )
+        const workerSurname = Buffer.from(
+          itemWorker.user.surname,
+          "base64"
+        ).toString("utf-8")
+
+        return {
+          value: itemWorker.user._id,
+          label: `${workerName} ${workerSurname}`,
+        }
+      })
+
+      const findWorker = [ownerValue, ...mapWorkers].find(
+        itemWorker => itemWorker.value === user.userId
+      )
+      if (!!findWorker) {
+        selectedWorkerValue = findWorker
+      }
+    }
+    setSelectedService(null)
+    setSelectedWorker(selectedWorkerValue)
+  }, [chooseEventMenu, user, companyItems])
 
   const handleOpenDateStartTimePicker = () => {
     setOpenDateStart(prevState => !prevState)
@@ -214,21 +270,60 @@ const CalendarWorkerReserwatinNewEvent = ({
     setReserwationMessage("")
   }
 
+  const handleChangeSelectedWorker = value => {
+    if (isAdmin) {
+      setSelectedWorker(value)
+      setSelectedService(null)
+    }
+  }
+
+  const handleChangeSelectedService = value => {
+    setSelectedService(value)
+    if (!!companyItems) {
+      if (!!companyItems.services) {
+        const findService = companyItems.services.find(
+          itemService => itemService._id === value.value
+        )
+        if (findService) {
+          const validDateStart = !!newTimeStart ? newTimeStart : dateStart
+          const splitDateStart = validDateStart.split(":")
+
+          const newDateEndValue = new Date(
+            selectedEvent.start.getFullYear(),
+            selectedEvent.start.getMonth(),
+            selectedEvent.start.getDate(),
+            Number(splitDateStart[0]),
+            Number(splitDateStart[1]) + Number(findService.time)
+          )
+
+          const dateEndName = `${
+            newDateEndValue.getHours() < 10
+              ? `0${newDateEndValue.getHours()}`
+              : newDateEndValue.getHours()
+          }:${
+            newDateEndValue.getMinutes() < 10
+              ? `0${newDateEndValue.getMinutes()}`
+              : newDateEndValue.getMinutes()
+          }`
+          setNewTimeEnd(dateEndName)
+        }
+      }
+    }
+  }
+
   let selectedDate = ""
   let selectMonthName = ""
   let selectedDayWeekName = ""
   let selectButtonsToEvents = null
   let selectedEventInAllEventWarningExtraTime = null
-  let titleEvent = ""
   let companyOpenHours = null
   let renderDateStart = ""
   let renderDateEnd = ""
+  let allServices = []
+  let allWorkers = []
+  let selectedWorkerServicesIds = []
+  let allSelectedWorkerServices = []
   if (!!selectedEvent) {
-    const selectedDayOpenCompany = getMonthAndReturnEng(
-      selectedEvent.start.getDay()
-    )
-    companyOpenHours = itemCompanyHours[selectedDayOpenCompany]
-
     selectedDate = `${
       selectedEvent.start.getDate() < 10
         ? `0${selectedEvent.start.getDate()}`
@@ -239,15 +334,82 @@ const CalendarWorkerReserwatinNewEvent = ({
         : selectedEvent.start.getMonth() + 1
     }-${selectedEvent.start.getFullYear()}`
 
+    if (!!companyItems) {
+      if (!!companyItems.services) {
+        allServices = companyItems.services.map(serviceItem => {
+          return {
+            value: serviceItem._id,
+            label: serviceItem.serviceName,
+          }
+        })
+      }
+
+      if (!!selectedWorker) {
+        if (selectedWorker.value === companyItems.owner._id) {
+          selectedWorkerServicesIds = companyItems.ownerData.servicesCategory
+        }
+      } else {
+        const findServicesInWorkers = companyItems.workers.find(
+          itemWorker => itemWorker.user._id === selectedWorker.value
+        )
+        if (!!findServicesInWorkers) {
+          selectedWorkerServicesIds = findServicesInWorkers.servicesCategory
+        }
+      }
+
+      const allFindedServices = []
+      selectedWorkerServicesIds.forEach(serviceId => {
+        const findService = allServices.find(
+          serviceItem => serviceItem.value === serviceId
+        )
+        if (!!findService) {
+          allFindedServices.push(findService)
+        }
+      })
+      allSelectedWorkerServices = allFindedServices
+
+      const ownerName = Buffer.from(companyItems.owner.name, "base64").toString(
+        "utf-8"
+      )
+
+      const ownerSurname = Buffer.from(
+        companyItems.owner.surname,
+        "base64"
+      ).toString("utf-8")
+
+      const ownerValue = {
+        value: companyItems.owner._id,
+        label: `${ownerName} ${ownerSurname}`,
+      }
+
+      const mapWorkers = companyItems.workers.map(itemWorker => {
+        const workerName = Buffer.from(itemWorker.user.name, "base64").toString(
+          "utf-8"
+        )
+        const workerSurname = Buffer.from(
+          itemWorker.user.surname,
+          "base64"
+        ).toString("utf-8")
+
+        return {
+          value: itemWorker.user._id,
+          label: `${workerName} ${workerSurname}`,
+        }
+      })
+
+      allWorkers = [ownerValue, ...mapWorkers]
+    }
+
+    const selectedDayOpenCompany = getMonthAndReturnEng(
+      selectedEvent.start.getDay()
+    )
+    companyOpenHours = itemCompanyHours[selectedDayOpenCompany]
+
     const selectedMonth = selectedEvent.start.getMonth()
     selectMonthName = getMonthNamePl(selectedMonth)
 
     const selectedDayWeek = selectedEvent.start.getDay()
     selectedDayWeekName = getMonthAndReturnFull(selectedDayWeek)
-
-    titleEvent = !!selectedEvent.action
-      ? "Tworzenie rezerwacji czasu"
-      : "Czas pracy"
 
     selectedEventInAllEventWarningExtraTime = companyOpenHours.disabled
       ? "Uwaga rezerwacja jest dodawana w dzień w którym firma jest nieczynna"
@@ -290,6 +452,7 @@ const CalendarWorkerReserwatinNewEvent = ({
           customColorButton={Colors(siteProps).successColorDark}
           customColorIcon={Colors(siteProps).successColor}
           onClick={handleAddReserwationWorkerComponent}
+          disabled={!!!selectedService || !!!selectedWorker}
         />
       </ButtonItemStyle>
     )
@@ -314,7 +477,9 @@ const CalendarWorkerReserwatinNewEvent = ({
         <>
           <EventItemPosition>
             <EventItemPositionContent siteProps={siteProps}>
-              <TitleItemName siteProps={siteProps}>{titleEvent}</TitleItemName>
+              <TitleItemName siteProps={siteProps}>
+                Nowa rezerwacja
+              </TitleItemName>
               {warningItemExtraTime}
               <CloseEditCreateMode
                 siteProps={siteProps}
@@ -336,10 +501,6 @@ const CalendarWorkerReserwatinNewEvent = ({
                   <span>{selectedDate}</span>
                 </ItemTitle>
                 <ItemTitle siteProps={siteProps}>
-                  Nazwa usługi:
-                  <span>Rezerwacja czasu</span>
-                </ItemTitle>
-                <ItemTitle siteProps={siteProps}>
                   Początek rezerwacji:
                   {renderDateStart}
                 </ItemTitle>
@@ -347,6 +508,39 @@ const CalendarWorkerReserwatinNewEvent = ({
                   Koniec rezerwacji:
                   {renderDateEnd}
                 </ItemTitle>
+                {isAdmin && (
+                  <MarginTopSelect>
+                    <SelectCreated
+                      options={allWorkers}
+                      value={selectedWorker}
+                      handleChange={handleChangeSelectedWorker}
+                      placeholder="Pracownik"
+                      defaultMenuIsOpen={false}
+                      isClearable={false}
+                      widthAuto
+                      deleteItem={false}
+                      darkSelect
+                      textUp
+                      top
+                    />
+                  </MarginTopSelect>
+                )}
+                <MarginTopSelect>
+                  <SelectCreated
+                    options={allSelectedWorkerServices}
+                    value={selectedService}
+                    handleChange={handleChangeSelectedService}
+                    placeholder="Usługa"
+                    defaultMenuIsOpen={false}
+                    isClearable={false}
+                    widthAuto
+                    deleteItem={false}
+                    darkSelect
+                    textUp
+                    top
+                    isDisabled={allSelectedWorkerServices.length === 0}
+                  />
+                </MarginTopSelect>
                 <InputIcon
                   placeholder="Wiadomość do rezerwacji (domyślnie)"
                   inputActive={true}
@@ -372,7 +566,7 @@ const CalendarWorkerReserwatinNewEvent = ({
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeStart}
                 timeTimePicker={dateStart}
-                maxTime={dateEnd}
+                maxTime={!!newTimeEnd ? newTimeEnd : dateEnd}
               />
             </WidthTimePicker>
           </Popup>
@@ -385,7 +579,7 @@ const CalendarWorkerReserwatinNewEvent = ({
             <WidthTimePicker>
               <TimePickerContent
                 setSelectedTime={handleUpdateTimeEnd}
-                timeTimePicker={dateEnd}
+                timeTimePicker={!!newTimeEnd ? newTimeEnd : dateEnd}
                 minTime={dateStart}
               />
             </WidthTimePicker>
@@ -395,4 +589,4 @@ const CalendarWorkerReserwatinNewEvent = ({
     </>
   )
 }
-export default CalendarWorkerReserwatinNewEvent
+export default CalendarWorkerReserwatinNewReserwation

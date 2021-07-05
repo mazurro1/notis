@@ -303,6 +303,7 @@ const UserProfil = ({
       setNewPasswordVisible(false)
       setEditImage(false)
       setActiveCompany(false)
+      setVeryfiedPhoneVisible(false)
       dispatch(resetUserProfil())
       if (!!user.defaultCompany) {
         const findCompanyInAllCompanys = user.allCompanys.find(
