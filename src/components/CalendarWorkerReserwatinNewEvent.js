@@ -142,6 +142,7 @@ const CalendarWorkerReserwatinNewEvent = ({
   screenOpen,
   itemCompanyHours,
   handleAddWorkerReserwation,
+  handleResetCloseNewEventItem,
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
   const [openDateStart, setOpenDateStart] = useState(false)
@@ -210,7 +211,7 @@ const CalendarWorkerReserwatinNewEvent = ({
     )
     setNewTimeStart(null)
     setNewTimeEnd(null)
-    handleClosePopupEventItem()
+    handleResetCloseNewEventItem()
     setReserwationMessage("")
   }
 

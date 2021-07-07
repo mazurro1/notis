@@ -6,7 +6,10 @@ import { useSelector } from "react-redux"
 
 const ColorsInput = styled.div`
   input {
-    background-color: ${props => Colors(props.siteProps).companyItemBackground};
+    background-color: ${props =>
+      props.whiteInputs
+        ? Colors(props.siteProps).textNormalWhite
+        : Colors(props.siteProps).companyItemBackground};
     color: ${props => Colors(props.siteProps).textNormalBlack};
     width: ${props => props.width + "px"};
     height: ${props => props.width + "px"};
@@ -83,6 +86,7 @@ const InputPhone = ({
   width = 35,
   marginElements = 20,
   textPhone = "Numer telefonu:",
+  whiteInputs = false,
 }) => {
   const [inputActive, setInputActive] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
@@ -121,6 +125,7 @@ const InputPhone = ({
         siteProps={siteProps}
         width={width}
         marginElements={marginElements}
+        whiteInputs={whiteInputs}
       >
         <NumberToCountry>+48</NumberToCountry>
         <PhoneInline>

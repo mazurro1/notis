@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { CSSTransition } from "react-transition-group"
+import { Checkbox } from "react-input-checkbox"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "./ButtonIcon"
 import { FaSave } from "react-icons/fa"
-import { MdClose, MdInfo, MdTimelapse } from "react-icons/md"
+import {
+  MdClose,
+  MdInfo,
+  MdTimelapse,
+  MdAccountBox,
+  MdEmail,
+} from "react-icons/md"
 import {
   getMonthNamePl,
   getMonthAndReturnFull,
@@ -14,6 +21,12 @@ import Popup from "./Popup"
 import InputIcon from "./InputIcon"
 import TimePickerContent from "./TimePicker"
 import SelectCreated from "./SelectCreated"
+import InputPhone from "./InputPhone"
+import {
+  addAlertItem,
+  fetchResetWorkerNewClientReserwation,
+} from "../state/actions"
+import { useSelector, useDispatch } from "react-redux"
 
 const EventItemPosition = styled.div`
   position: absolute;
@@ -38,8 +51,10 @@ const EventItemPositionContent = styled.div`
   border-radius: 5px;
 `
 
-const EventItemPositionContentPadding = styled.div`
+const EventItemPositionContentPadding = styled.form`
   padding: 10px;
+  overflow-y: auto;
+  max-height: 70vh;
 `
 
 const ButtonsItemEvent = styled.div`
@@ -56,9 +71,12 @@ const WidthTimePicker = styled.div`
   max-width: 90%;
 `
 
-const ButtonItemStyle = styled.div`
+const ButtonItemStyleButton = styled.button`
   margin-left: 10px;
   margin-top: 10px;
+  border: none;
+  outline: none;
+  background-color: transparent;
 `
 
 const TitleItemName = styled.div`
@@ -116,6 +134,10 @@ const IconWarning = styled.div`
   font-size: 1.3rem;
 `
 
+const MarginBottomInputs = styled.div`
+  margin-bottom: 20px;
+`
+
 const MarginTopSelect = styled.div`
   margin-top: 5px;
 `
@@ -137,13 +159,40 @@ const ItemTitle = styled.div`
 
 const ButtonItemStyleTime = styled.div`
   margin-left: 10px;
+  border: none;
+`
+
+const PositionRelative = styled.div`
+  position: relative;
+`
+
+const CheckboxStyle = styled.div`
+  margin-bottom: 10px;
+
+  .material-checkbox {
+    padding-left: 15px;
+  }
+
+  .material-checkbox__input:checked + .material-checkbox__image {
+    background-color: ${props => Colors(props.siteProps).primaryColor};
+  }
+
+  span {
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
+  }
+`
+
+const TextCheckbox = styled.span`
+  padding-left: 10px;
+  font-family: "Poppins-Bold", sans-serif;
+  user-select: none;
 `
 
 const CalendarWorkerReserwatinNewReserwation = ({
   siteProps,
   handleClosePopupEventItem,
   selectedEvent,
-  allEvents,
   screenOpen,
   itemCompanyHours,
   handleAddWorkerReserwation,
@@ -151,6 +200,8 @@ const CalendarWorkerReserwatinNewReserwation = ({
   isAdmin,
   chooseEventMenu,
   user,
+  setChooseEventMenu,
+  setNewReserwationOpen,
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
   const [openDateStart, setOpenDateStart] = useState(false)
@@ -161,8 +212,32 @@ const CalendarWorkerReserwatinNewReserwation = ({
   const [dateEnd, setDateEnd] = useState(null)
   const [selectedWorker, setSelectedWorker] = useState(null)
   const [selectedService, setSelectedService] = useState(null)
+  const [isActiveUser, setIsActiveUser] = useState(true)
+  const [phoneInput, setPhoneInput] = useState("")
+  const [nameInput, setNameInput] = useState("")
+  const [surnameInput, setSurnameInput] = useState("")
+  const [emailInput, setEmailInput] = useState("")
+  const resetWorkerNewClientReserwation = useSelector(
+    state => state.resetWorkerNewClientReserwation
+  )
+  const dispatch = useDispatch()
 
-  console.log(companyItems)
+  useEffect(() => {
+    if (resetWorkerNewClientReserwation) {
+      setNewTimeStart(null)
+      setNewTimeEnd(null)
+      setReserwationMessage("")
+      setPhoneInput("")
+      setNameInput("")
+      setSurnameInput("")
+      setEmailInput("")
+      setIsActiveUser(true)
+      setChooseEventMenu(false)
+      setNewReserwationOpen(false)
+      dispatch(fetchResetWorkerNewClientReserwation())
+    }
+  }, [resetWorkerNewClientReserwation]) // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (!!selectedEvent) {
       const dateStartName = `${
@@ -254,20 +329,51 @@ const CalendarWorkerReserwatinNewReserwation = ({
     setReserwationMessage(e.target.value)
   }
 
-  const handleAddReserwationWorkerComponent = () => {
-    const selectedDateFull = `${selectedEvent.start.getDate()}-${
-      selectedEvent.start.getMonth() + 1
-    }-${selectedEvent.start.getFullYear()}`
-    handleAddWorkerReserwation(
-      !!newTimeStart ? newTimeStart : dateStart,
-      !!newTimeEnd ? newTimeEnd : dateEnd,
-      selectedDateFull,
-      reserwationMessage
+  const handleAddReserwationWorkerComponent = e => {
+    e.preventDefault()
+    const validDateStart = !!newTimeStart ? newTimeStart : dateStart
+    const splitDateStart = validDateStart.split(":")
+    const newDateStartValue = new Date(
+      selectedEvent.start.getFullYear(),
+      selectedEvent.start.getMonth(),
+      selectedEvent.start.getDate(),
+      Number(splitDateStart[0]),
+      Number(splitDateStart[1])
     )
-    setNewTimeStart(null)
-    setNewTimeEnd(null)
-    handleClosePopupEventItem()
-    setReserwationMessage("")
+
+    const isActiveDate = newDateStartValue > new Date()
+
+    const validUser = isActiveUser
+      ? !!phoneInput
+      : !!phoneInput && !!nameInput && !!surnameInput
+    if (!!selectedService && !!selectedWorker && validUser && isActiveDate) {
+      const selectedDateFull = `${selectedEvent.start.getDate()}-${
+        selectedEvent.start.getMonth() + 1
+      }-${selectedEvent.start.getFullYear()}`
+      handleAddWorkerReserwation(
+        !!newTimeStart ? newTimeStart : dateStart,
+        !!newTimeEnd ? newTimeEnd : dateEnd,
+        selectedDateFull,
+        reserwationMessage,
+        selectedWorker.value,
+        selectedService.value,
+        isActiveUser,
+        phoneInput,
+        nameInput,
+        surnameInput,
+        emailInput
+      )
+    } else {
+      if (!validUser) {
+        dispatch(addAlertItem("Niepoprawne dane użytkownika", "red"))
+      } else if (!isActiveDate) {
+        dispatch(addAlertItem("Niepoprawna data wizyty", "red"))
+      } else if (!!!selectedWorker) {
+        dispatch(addAlertItem("Nie wybrano pracownika", "red"))
+      } else if (!!!selectedService) {
+        dispatch(addAlertItem("Nie wybrano usługi", "red"))
+      }
+    }
   }
 
   const handleChangeSelectedWorker = value => {
@@ -309,6 +415,14 @@ const CalendarWorkerReserwatinNewReserwation = ({
         }
       }
     }
+  }
+
+  const handleChangeCheckbox = () => {
+    setIsActiveUser(prevState => !prevState)
+  }
+
+  const handleChangeInputs = (e, setChange) => {
+    setChange(e.target.value)
   }
 
   let selectedDate = ""
@@ -442,7 +556,7 @@ const CalendarWorkerReserwatinNewReserwation = ({
     )
 
     selectButtonsToEvents = !!selectedEvent.action && (
-      <ButtonItemStyle>
+      <ButtonItemStyleButton type="submit">
         <ButtonIcon
           title="Potwierdz"
           uppercase
@@ -451,10 +565,9 @@ const CalendarWorkerReserwatinNewReserwation = ({
           icon={<FaSave />}
           customColorButton={Colors(siteProps).successColorDark}
           customColorIcon={Colors(siteProps).successColor}
-          onClick={handleAddReserwationWorkerComponent}
           disabled={!!!selectedService || !!!selectedWorker}
         />
-      </ButtonItemStyle>
+      </ButtonItemStyleButton>
     )
   }
 
@@ -466,6 +579,36 @@ const CalendarWorkerReserwatinNewReserwation = ({
       </IconWarning>
     </WarningStyle>
   )
+
+  const contentForm = !isActiveUser && (
+    <>
+      <InputIcon
+        icon={<MdAccountBox />}
+        placeholder="Imię"
+        value={nameInput}
+        onChange={e => handleChangeInputs(e, setNameInput)}
+        required
+        validText="Minimum 3 znaki"
+      />
+      <InputIcon
+        icon={<MdAccountBox />}
+        placeholder="Nazwisko"
+        value={surnameInput}
+        onChange={e => handleChangeInputs(e, setSurnameInput)}
+        required
+        validText="Minimum 3 znaki"
+      />
+      <InputIcon
+        icon={<MdEmail />}
+        placeholder="Email"
+        value={emailInput}
+        type="email"
+        onChange={e => handleChangeInputs(e, setEmailInput)}
+        validText="Nie wymagane. Dzięki niemu użytkownik dostanie powiadomienie o zmianie statusu"
+      />
+    </>
+  )
+
   return (
     <>
       <CSSTransition
@@ -487,7 +630,32 @@ const CalendarWorkerReserwatinNewReserwation = ({
               >
                 <MdClose />
               </CloseEditCreateMode>
-              <EventItemPositionContentPadding>
+              <EventItemPositionContentPadding
+                onSubmit={handleAddReserwationWorkerComponent}
+              >
+                <PositionRelative>
+                  <CheckboxStyle siteProps={siteProps}>
+                    <Checkbox
+                      theme="material-checkbox"
+                      value={isActiveUser}
+                      onChange={handleChangeCheckbox}
+                    >
+                      <TextCheckbox>Aktywny użytkownik</TextCheckbox>
+                    </Checkbox>
+                  </CheckboxStyle>
+                </PositionRelative>
+                <MarginBottomInputs>
+                  {contentForm}
+                  <InputPhone
+                    setPhoneNumber={setPhoneInput}
+                    whiteInputs
+                    textPhone={
+                      isActiveUser
+                        ? "Numer telefonu aktywnego użytkownika"
+                        : "Numer telefonu"
+                    }
+                  />
+                </MarginBottomInputs>
                 <ItemTitle siteProps={siteProps}>
                   Miesiąc:
                   <span>{selectMonthName}</span>

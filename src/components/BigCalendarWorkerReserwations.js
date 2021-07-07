@@ -22,6 +22,7 @@ import SelectDataCalendar from "./SelectDataCalendar"
 import {
   fetchUpdateWorkerReserwation,
   fetchDoReserwationWorker,
+  fetchAddWorkerClientReserwation,
 } from "../state/actions"
 import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
 import CalendarWorkerReserwatinNewReserwation from "./CalendarWorkerReserwatinNewReserwation"
@@ -825,6 +826,11 @@ const BigCalendarWorkerReserwations = ({
     setChooseEventMenu(true)
   }
 
+  const handleResetCloseNewEventItem = () => {
+    setNewEventOpen(false)
+    setChooseEventMenu(false)
+  }
+
   const handleCloseNewEventReserwationItem = () => {
     setNewReserwationOpen(false)
     setChooseEventMenu(true)
@@ -1040,9 +1046,32 @@ const BigCalendarWorkerReserwations = ({
     dateStart,
     dateEnd,
     dateFull,
-    reserwationMessage
+    reserwationMessage = null,
+    selectedWorkerUserId = null,
+    selectedServiceId = null,
+    isActiveUser,
+    phone = null,
+    name = null,
+    surname = null,
+    email = null
   ) => {
-    console.warn(dateStart, dateEnd, dateFull, reserwationMessage)
+    dispatch(
+      fetchAddWorkerClientReserwation(
+        user.token,
+        user.company._id,
+        dateStart,
+        dateEnd,
+        dateFull,
+        reserwationMessage,
+        selectedWorkerUserId,
+        selectedServiceId,
+        isActiveUser,
+        phone,
+        name,
+        surname,
+        email
+      )
+    )
   }
 
   const handleCloseDatePicker = () => {
@@ -1265,6 +1294,7 @@ const BigCalendarWorkerReserwations = ({
         <CalendarWorkerReserwatinNewEvent
           siteProps={siteProps}
           handleClosePopupEventItem={handleCloseNewEventItem}
+          handleResetCloseNewEventItem={handleResetCloseNewEventItem}
           selectedEvent={newEvent}
           screenOpen={newEventOpen}
           allEvents={allEvents}
@@ -1278,13 +1308,14 @@ const BigCalendarWorkerReserwations = ({
           handleClosePopupEventItem={handleCloseNewEventReserwationItem}
           selectedEvent={newEvent}
           screenOpen={newReserwationOpen}
-          allEvents={allEvents}
           itemCompanyHours={item.company.openingDays}
           handleAddWorkerReserwation={handleAddNewReserwation}
           user={user}
           isAdmin={isAdmin}
           companyItems={item.company}
           chooseEventMenu={chooseEventMenu}
+          setChooseEventMenu={setChooseEventMenu}
+          setNewReserwationOpen={setNewReserwationOpen}
         />
       </BackgroundContentCalendar>
       <Popup
@@ -1310,7 +1341,7 @@ const BigCalendarWorkerReserwations = ({
         <>
           <MarginButtons>
             <ButtonIcon
-              title="Nowa rezerwacja"
+              title="Nowa rezerwacja klienta"
               uppercase
               fontIconSize="20"
               fontSize="16"

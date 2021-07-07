@@ -951,6 +951,8 @@ export const EDIT_USER_COMPANY_AVAILABILITY = "EXIT_USER_COMPANY_AVAILABILITY"
 export const SAVE_EDITED_COMPANY_SHOP_STORE = "SAVE_EDITED_COMPANY_SHOP_STORE"
 export const SAVE_COMPANY_STATS = "SAVE_COMPANY_STATS"
 export const ADD_RESERWATION_WORKER_DATA = "ADD_RESERWATION_WORKER_DATA"
+export const ADD_WORKER_CLIENT_RESERWATION_DATA =
+  "ADD_WORKER_CLIENT_RESERWATION_DATA"
 export const DELETE_RESERWATION_WORKER_DATA = "DELETE_RESERWATION_WORKER_DATA"
 export const UPDATE_RESERWATION_WORKER_DATA = "UPDATE_RESERWATION_WORKER_DATA"
 export const CONFIRM_DELETE_COMPANY = "CONFIRM_DELETE_COMPANY"
@@ -994,6 +996,14 @@ export const UPDATE_COMPANY_COMMUNITING_PHONE_USER =
 export const UPDATE_COMMUNITING_COMPANY_COMMUNITING =
   "UPDATE_COMMUNITING_COMPANY_COMMUNITING"
 export const RESET_WORKER_DELETE = "RESET_WORKER_DELETE"
+export const RESET_WORKER_NEW_CLIENT_RESERWATION =
+  "RESET_WORKER_NEW_CLIENT_RESERWATION"
+
+export const fetchResetWorkerNewClientReserwation = () => {
+  return {
+    type: RESET_WORKER_NEW_CLIENT_RESERWATION,
+  }
+}
 
 export const resetWorkerDeleteFetch = () => {
   return {
@@ -1313,6 +1323,13 @@ export const deleteReserwationWorkerDate = dataId => {
 export const addReserwationWorkerDate = data => {
   return {
     type: ADD_RESERWATION_WORKER_DATA,
+    data: data,
+  }
+}
+
+export const addWorkerClientReserwationDate = data => {
+  return {
+    type: ADD_WORKER_CLIENT_RESERWATION_DATA,
     data: data,
   }
 }
@@ -7066,6 +7083,68 @@ export const fetchDownloadService = serviceId => {
               dispatch(logout())
             } else {
               dispatch(addAlertItem("Nie znaleziono dojazdu", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchAddWorkerClientReserwation = (
+  token,
+  companyId,
+  dateStart,
+  dateEnd,
+  dateFull,
+  reserwationMessage,
+  selectedWorkerUserId,
+  selectedServiceId,
+  isActiveUser,
+  phone,
+  name,
+  surname,
+  email
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/add-worker-client-reserwation`,
+        {
+          companyId: companyId,
+          dateStart: dateStart,
+          dateEnd: dateEnd,
+          dateFull: dateFull,
+          reserwationMessage: reserwationMessage,
+          selectedWorkerUserId: selectedWorkerUserId,
+          selectedServiceId: selectedServiceId,
+          isActiveUser: isActiveUser,
+          phone: phone,
+          name: name,
+          surname: surname,
+          email: email,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Dodano rezerwację.", "green"))
+        dispatch(addWorkerClientReserwationDate(response.data.reserwation))
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(addAlertItem("Błąd podczas dodawania rezerwacji", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

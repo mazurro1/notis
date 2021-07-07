@@ -94,6 +94,8 @@ import {
   UPDATE_RESERWATION_WORKER_DATA,
   DELETE_RESERWATION_WORKER_DATA,
   ADD_RESERWATION_WORKER_DATA,
+  ADD_WORKER_CLIENT_RESERWATION_DATA,
+  RESET_WORKER_NEW_CLIENT_RESERWATION,
   SAVE_COMPANY_STATS,
   SAVE_EDITED_COMPANY_SHOP_STORE,
   EDIT_USER_COMPANY_AVAILABILITY,
@@ -232,6 +234,7 @@ const initialState = {
     value: 1,
     label: "Lista ofert",
   },
+  resetWorkerNewClientReserwation: false,
   companyTransactionHistory: [],
   errorLoadingPage: false,
   deleteCompanyConfirm: false,
@@ -1312,6 +1315,27 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         workerHistoryReserwations: deleteWorkerHistoryReserwations,
+      }
+    }
+
+    case ADD_WORKER_CLIENT_RESERWATION_DATA: {
+      const newWorkerHistoryReserwations = !!state.workerHistoryReserwations
+        ? { ...state.workerHistoryReserwations }
+        : null
+      if (!!action.data && !!newWorkerHistoryReserwations) {
+        newWorkerHistoryReserwations.reserwations.push(action.data)
+      }
+      return {
+        ...state,
+        workerHistoryReserwations: newWorkerHistoryReserwations,
+        resetWorkerNewClientReserwation: true,
+      }
+    }
+
+    case RESET_WORKER_NEW_CLIENT_RESERWATION: {
+      return {
+        ...state,
+        resetWorkerNewClientReserwation: false,
       }
     }
 
