@@ -7106,7 +7106,9 @@ export const fetchAddWorkerClientReserwation = (
   phone,
   name,
   surname,
-  email
+  email,
+  activePromotion,
+  activeHappyHour
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -7126,6 +7128,8 @@ export const fetchAddWorkerClientReserwation = (
           name: name,
           surname: surname,
           email: email,
+          activePromotion: activePromotion,
+          activeHappyHour: activeHappyHour,
         },
         {
           headers: {

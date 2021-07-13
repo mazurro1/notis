@@ -592,16 +592,20 @@ const BigCalendarWorkerReserwations = ({
         )
         let userName = "Brak użytkownika"
         if (!!itemMaped.fromUser) {
-          userName = Buffer.from(itemMaped.fromUser.name, "base64").toString(
-            "utf-8"
-          )
+          if (!!itemMaped.fromUser.name) {
+            userName = Buffer.from(itemMaped.fromUser.name, "base64").toString(
+              "utf-8"
+            )
+          }
         }
         let userSurname = ""
         if (!!itemMaped.fromUser) {
-          userSurname = Buffer.from(
-            itemMaped.fromUser.surname,
-            "base64"
-          ).toString("utf-8")
+          if (!!itemMaped.fromUser.surname) {
+            userSurname = Buffer.from(
+              itemMaped.fromUser.surname,
+              "base64"
+            ).toString("utf-8")
+          }
         }
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
@@ -1053,7 +1057,9 @@ const BigCalendarWorkerReserwations = ({
     phone = null,
     name = null,
     surname = null,
-    email = null
+    email = null,
+    activePromotion = false,
+    activeHappyHour = false
   ) => {
     dispatch(
       fetchAddWorkerClientReserwation(
@@ -1069,7 +1075,9 @@ const BigCalendarWorkerReserwations = ({
         phone,
         name,
         surname,
-        email
+        email,
+        activePromotion,
+        activeHappyHour
       )
     )
   }

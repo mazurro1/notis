@@ -217,6 +217,8 @@ const CalendarWorkerReserwatinNewReserwation = ({
   const [nameInput, setNameInput] = useState("")
   const [surnameInput, setSurnameInput] = useState("")
   const [emailInput, setEmailInput] = useState("")
+  const [activePromotion, setActivePromotion] = useState(false)
+  const [activeHappyHour, setActiveHappyHour] = useState(false)
   const resetWorkerNewClientReserwation = useSelector(
     state => state.resetWorkerNewClientReserwation
   )
@@ -318,6 +320,8 @@ const CalendarWorkerReserwatinNewReserwation = ({
   const handleUpdateTimeStart = time => {
     setOpenDateStart(false)
     setNewTimeStart(time)
+    setActivePromotion(false)
+    setActiveHappyHour(false)
   }
 
   const handleUpdateTimeEnd = time => {
@@ -327,6 +331,14 @@ const CalendarWorkerReserwatinNewReserwation = ({
 
   const handleReserwationMessage = e => {
     setReserwationMessage(e.target.value)
+  }
+
+  const handleChangeActivePromotion = () => {
+    setActivePromotion(prevState => !prevState)
+  }
+
+  const handleChangeActiveHappyHour = () => {
+    setActiveHappyHour(prevState => !prevState)
   }
 
   const handleAddReserwationWorkerComponent = e => {
@@ -361,7 +373,9 @@ const CalendarWorkerReserwatinNewReserwation = ({
         phoneInput,
         nameInput,
         surnameInput,
-        emailInput
+        emailInput,
+        activePromotion,
+        activeHappyHour
       )
     } else {
       if (!validUser) {
@@ -380,11 +394,15 @@ const CalendarWorkerReserwatinNewReserwation = ({
     if (isAdmin) {
       setSelectedWorker(value)
       setSelectedService(null)
+      setActivePromotion(false)
+      setActiveHappyHour(false)
     }
   }
 
   const handleChangeSelectedService = value => {
     setSelectedService(value)
+    setActivePromotion(false)
+    setActiveHappyHour(false)
     if (!!companyItems) {
       if (!!companyItems.services) {
         const findService = companyItems.services.find(
@@ -437,6 +455,7 @@ const CalendarWorkerReserwatinNewReserwation = ({
   let allWorkers = []
   let selectedWorkerServicesIds = []
   let allSelectedWorkerServices = []
+  let selectedServiceItem = null
   if (!!selectedEvent) {
     selectedDate = `${
       selectedEvent.start.getDate() < 10
@@ -456,6 +475,11 @@ const CalendarWorkerReserwatinNewReserwation = ({
             label: serviceItem.serviceName,
           }
         })
+        if (!!selectedService) {
+          selectedServiceItem = companyItems.services.find(
+            serviceItem => serviceItem._id === selectedService.value
+          )
+        }
       }
 
       if (!!selectedWorker) {
@@ -609,6 +633,90 @@ const CalendarWorkerReserwatinNewReserwation = ({
     </>
   )
 
+  let selectedHappyHours = null
+  let selectedPromotion = null
+  if (!!selectedService) {
+    if (!!companyItems) {
+      const validDateStart = !!newTimeStart ? newTimeStart : dateStart
+      const splitDateValidStart = validDateStart.split(":")
+      const selectedDateStart = new Date(
+        new Date(
+          selectedEvent.start.setHours(Number(splitDateValidStart[0]))
+        ).setMinutes(Number(splitDateValidStart[1]))
+      )
+
+      if (!!companyItems.happyHoursConst) {
+        const filterItemsHappyHours = companyItems.happyHoursConst.find(
+          itemHappyHour => {
+            const isInService = itemHappyHour.servicesInPromotion.some(
+              itemIdInPromotion => itemIdInPromotion === selectedService.value
+            )
+            return isInService
+          }
+        )
+        if (!!filterItemsHappyHours) {
+          const splitDateStart = filterItemsHappyHours.start.split(":")
+          const splitDateEnd = filterItemsHappyHours.end.split(":")
+          const dateStartToValid = new Date(
+            new Date(
+              selectedEvent.start.setHours(Number(splitDateStart[0]))
+            ).setMinutes(Number(splitDateStart[1]))
+          )
+          const dateEndToValid = new Date(
+            new Date(
+              selectedEvent.start.setHours(Number(splitDateEnd[0]))
+            ).setMinutes(Number(splitDateEnd[1]))
+          )
+
+          const validHappyHourDate =
+            dateStartToValid <= selectedDateStart &&
+            selectedDateStart <= dateEndToValid
+          if (validHappyHourDate) {
+            selectedHappyHours = filterItemsHappyHours
+          }
+        }
+      }
+
+      if (!!companyItems.promotions) {
+        const filterItemsPromotion = companyItems.promotions.find(
+          itemPromotion => {
+            const isInService = itemPromotion.servicesInPromotion.some(
+              itemIdInPromotion => itemIdInPromotion === selectedService.value
+            )
+            return isInService
+          }
+        )
+        if (!!filterItemsPromotion) {
+          const dateStartPromotion = new Date(filterItemsPromotion.start)
+          const dateEndPromotion = new Date(filterItemsPromotion.end)
+          const isDayInPromotion =
+            dateStartPromotion <= selectedDateStart &&
+            dateEndPromotion >= selectedDateStart
+          if (isDayInPromotion) {
+            selectedPromotion = filterItemsPromotion
+          }
+        }
+      }
+    }
+  }
+
+  const resultPromotion =
+    selectedPromotion !== null && activePromotion
+      ? selectedPromotion.promotionPercent
+      : selectedHappyHours !== null && activeHappyHour
+      ? selectedHappyHours.promotionPercent
+      : 0
+
+  let resultPriceAfterPromotion = 0
+
+  if (!!selectedServiceItem) {
+    resultPriceAfterPromotion = Math.floor(
+      (Number(selectedServiceItem.serviceCost) *
+        (100 - Number(resultPromotion))) /
+        100
+    )
+  }
+
   return (
     <>
       <CSSTransition
@@ -676,6 +784,49 @@ const CalendarWorkerReserwatinNewReserwation = ({
                   Koniec rezerwacji:
                   {renderDateEnd}
                 </ItemTitle>
+                {!!selectedServiceItem && (
+                  <ItemTitle siteProps={siteProps}>
+                    Cena: {selectedServiceItem.serviceCost}zł
+                  </ItemTitle>
+                )}
+                {!!resultPriceAfterPromotion &&
+                  (!!selectedHappyHours || !!selectedPromotion) && (
+                    <ItemTitle siteProps={siteProps}>
+                      Cena po promocji: {resultPriceAfterPromotion}zł
+                    </ItemTitle>
+                  )}
+                {!!selectedPromotion && !activeHappyHour && (
+                  <PositionRelative>
+                    <CheckboxStyle siteProps={siteProps}>
+                      <Checkbox
+                        theme="material-checkbox"
+                        value={activePromotion}
+                        onChange={handleChangeActivePromotion}
+                      >
+                        <TextCheckbox>
+                          Aktywuj promocję: {selectedPromotion.promotionPercent}
+                          %
+                        </TextCheckbox>
+                      </Checkbox>
+                    </CheckboxStyle>
+                  </PositionRelative>
+                )}
+                {!!selectedHappyHours && !activePromotion && (
+                  <PositionRelative>
+                    <CheckboxStyle siteProps={siteProps}>
+                      <Checkbox
+                        theme="material-checkbox"
+                        value={activeHappyHour}
+                        onChange={handleChangeActiveHappyHour}
+                      >
+                        <TextCheckbox>
+                          Aktywuj happy hour:{" "}
+                          {selectedHappyHours.promotionPercent}%
+                        </TextCheckbox>
+                      </Checkbox>
+                    </CheckboxStyle>
+                  </PositionRelative>
+                )}
                 {isAdmin && (
                   <MarginTopSelect>
                     <SelectCreated
@@ -728,7 +879,6 @@ const CalendarWorkerReserwatinNewReserwation = ({
             popupEnable={openDateStart}
             handleClose={handleOpenDateStartTimePicker}
             noContent
-            // calendar
           >
             <WidthTimePicker>
               <TimePickerContent

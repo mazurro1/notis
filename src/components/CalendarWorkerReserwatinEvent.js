@@ -500,16 +500,24 @@ const CalendarWorkerReserwatinEvent = ({
     }
 
     if (!!selectedEvent.fromUser) {
-      const userName = Buffer.from(
-        selectedEvent.fromUser.name,
-        "base64"
-      ).toString("utf-8")
-      const userSurname = Buffer.from(
-        selectedEvent.fromUser.surname,
-        "base64"
-      ).toString("utf-8")
-
-      client = `${userName} ${userSurname}`
+      let userName = ""
+      if (!!selectedEvent.fromUser.name) {
+        userName = Buffer.from(selectedEvent.fromUser.name, "base64").toString(
+          "utf-8"
+        )
+      }
+      let userSurname = ""
+      if (!!selectedEvent.fromUser.surname) {
+        userSurname = Buffer.from(
+          selectedEvent.fromUser.surname,
+          "base64"
+        ).toString("utf-8")
+      }
+      if (!!userName && !!userSurname) {
+        client = `${userName} ${userSurname}`
+      } else {
+        client = "Brak użytkownika"
+      }
     } else {
       client = "Uzytkownik skasował konto"
     }
