@@ -651,7 +651,10 @@ const CalendarWorkerReserwatinNewReserwation = ({
             const isInService = itemHappyHour.servicesInPromotion.some(
               itemIdInPromotion => itemIdInPromotion === selectedService.value
             )
-            return isInService
+            const isDayInHappyHourItem = itemHappyHour.dayWeekIndex.some(
+              dayIndex => dayIndex === selectedDateStart.getDay()
+            )
+            return isInService && isDayInHappyHourItem
           }
         )
         if (!!filterItemsHappyHours) {
@@ -683,18 +686,24 @@ const CalendarWorkerReserwatinNewReserwation = ({
             const isInService = itemPromotion.servicesInPromotion.some(
               itemIdInPromotion => itemIdInPromotion === selectedService.value
             )
-            return isInService
+            if (isInService) {
+              const dateStartPromotion = new Date(itemPromotion.start)
+              const dateEndPromotion = new Date(itemPromotion.end)
+              const isDayInPromotion =
+                dateStartPromotion <= selectedDateStart &&
+                dateEndPromotion >= selectedDateStart
+              if (isDayInPromotion) {
+                return true
+              } else {
+                return false
+              }
+            } else {
+              return false
+            }
           }
         )
         if (!!filterItemsPromotion) {
-          const dateStartPromotion = new Date(filterItemsPromotion.start)
-          const dateEndPromotion = new Date(filterItemsPromotion.end)
-          const isDayInPromotion =
-            dateStartPromotion <= selectedDateStart &&
-            dateEndPromotion >= selectedDateStart
-          if (isDayInPromotion) {
-            selectedPromotion = filterItemsPromotion
-          }
+          selectedPromotion = filterItemsPromotion
         }
       }
     }
