@@ -499,19 +499,30 @@ const CalendarWorkerReserwatinEvent = ({
       }
     }
 
-    if (!!selectedEvent.fromUser) {
+    if (!!selectedEvent.fromUser || !!selectedEvent.name) {
       let userName = ""
-      if (!!selectedEvent.fromUser.name) {
-        userName = Buffer.from(selectedEvent.fromUser.name, "base64").toString(
-          "utf-8"
-        )
+      if (!!selectedEvent.fromUser) {
+        if (!!selectedEvent.fromUser.name) {
+          userName = Buffer.from(
+            selectedEvent.fromUser.name,
+            "base64"
+          ).toString("utf-8")
+        }
+      } else if (selectedEvent.name) {
+        userName = Buffer.from(selectedEvent.name, "base64").toString("utf-8")
       }
       let userSurname = ""
-      if (!!selectedEvent.fromUser.surname) {
-        userSurname = Buffer.from(
-          selectedEvent.fromUser.surname,
-          "base64"
-        ).toString("utf-8")
+      if (!!selectedEvent.fromUser) {
+        if (!!selectedEvent.fromUser.surname) {
+          userSurname = Buffer.from(
+            selectedEvent.fromUser.surname,
+            "base64"
+          ).toString("utf-8")
+        }
+      } else if (selectedEvent.surname) {
+        userSurname = Buffer.from(selectedEvent.surname, "base64").toString(
+          "utf-8"
+        )
       }
       if (!!userName && !!userSurname) {
         client = `${userName} ${userSurname}`
