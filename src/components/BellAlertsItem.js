@@ -1,7 +1,10 @@
 import React from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
-import { generateBellAlertItemContent } from "../common/GenerateBellAlertItemContent"
+import {
+  generateBellAlertItemContent,
+  generateBellAllertItemContentSwitch,
+} from "../common/GenerateBellAlertItemContent"
 
 const TimeStyle = styled.div`
   position: absolute;
@@ -23,11 +26,11 @@ const TimeStyle = styled.div`
   }
 `
 
-const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user }) => {
+const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user, texts }) => {
   const {
     alertMessage = "",
     alertColor = "default",
-  } = generateBellAlertItemContent(alert, user, siteProps)
+  } = generateBellAllertItemContentSwitch(alert, user, siteProps, texts)
 
   return (
     <div

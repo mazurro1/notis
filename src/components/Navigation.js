@@ -1849,6 +1849,7 @@ const Navigation = ({ isMainPage }) => {
                     siteProps={siteProps}
                     user={user}
                     isMobileSize={isMobileSize}
+                    texts={Translates[siteProps.language].alerts}
                   />
                 )}
 

@@ -144,7 +144,7 @@ const AlertItemStyle = styled.div`
   }
 `
 
-const BellAlerts = ({ siteProps, user, isMobileSize }) => {
+const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
   const [allAlerts, setAllAlerts] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0)
   const [pageUpdate, setPageUpdate] = useState(1)
@@ -215,25 +215,26 @@ const BellAlerts = ({ siteProps, user, isMobileSize }) => {
   }
 
   const mapAlerts = allAlerts.map((alert, index) => {
-    if (
-      !!alert.reserwationId ||
-      !!alert.communitingId ||
-      !!alert.serviceId ||
-      alert.type === "alert_notifaction_sms" ||
-      alert.type === "alert_notifaction_premium"
-    ) {
-      return (
-        <BellAlertsItem
-          key={index}
-          alert={alert}
-          siteProps={siteProps}
-          AlertItemStyle={AlertItemStyle}
-          user={user}
-        />
-      )
-    } else {
-      return null
-    }
+    // if (
+    //   !!alert.reserwationId ||
+    //   !!alert.communitingId ||
+    //   !!alert.serviceId ||
+    //   alert.type === "alert_notifaction_sms" ||
+    //   alert.type === "alert_notifaction_premium"
+    // ) {
+    return (
+      <BellAlertsItem
+        key={index}
+        alert={alert}
+        siteProps={siteProps}
+        AlertItemStyle={AlertItemStyle}
+        user={user}
+        texts={texts}
+      />
+    )
+    // } else {
+    //   return null
+    // }
   })
 
   return (
