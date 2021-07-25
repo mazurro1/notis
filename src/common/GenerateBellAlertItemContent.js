@@ -12,6 +12,11 @@ const DivInlineBlock = styled.div`
   display: inline;
   margin-right: 5px;
 `
+const BoldDivContentCapitalize = styled.span`
+  font-family: "Poppins-Medium", sans-serif;
+  display: inline-block;
+  text-transform: capitalize;
+`
 
 const BoldDivContent = styled.span`
   font-family: "Poppins-Medium", sans-serif;
@@ -94,7 +99,8 @@ const generateAlertFromProps = ({
       )}
       {!!communiting && (
         <DivInlineBlock>
-          {communitingText}: <BoldDivContent>{communiting}</BoldDivContent>
+          {communitingText}:{" "}
+          <BoldDivContentCapitalize>{communiting}</BoldDivContentCapitalize>
         </DivInlineBlock>
       )}
       {!!defaultText && <DivInlineBlock>{defaultText}</DivInlineBlock>}
@@ -203,21 +209,21 @@ export const generateBellAllertItemContentSwitch = (
         ).toString("utf-8")
       }
     }
-    if (!!alert.communitingId.company) {
+    if (!!alert.communitingId.companyId) {
       if (
-        !!alert.communitingId.company.name &&
-        !!alert.communitingId.company.linkPath
+        !!alert.communitingId.companyId.name &&
+        !!alert.communitingId.companyId.linkPath
       ) {
         companyName = color => (
           <LinkEffect
-            path={`company?${alert.communitingId.company.linkPath}`}
+            path={`company?${alert.communitingId.companyId.linkPath}`}
             text={
               <ButtonAlertCompany
                 siteProps={siteProps}
                 active={alert.active}
                 alertColor={color}
               >
-                {alert.communitingId.company.name.toUpperCase()}
+                {alert.communitingId.companyId.name.toUpperCase()}
               </ButtonAlertCompany>
             }
           />
@@ -255,21 +261,21 @@ export const generateBellAllertItemContentSwitch = (
         ).toString("utf-8")
       }
     }
-    if (!!alert.serviceId.company) {
+    if (!!alert.serviceId.companyId) {
       if (
-        !!alert.serviceId.company.name &&
-        !!alert.serviceId.company.linkPath
+        !!alert.serviceId.companyId.name &&
+        !!alert.serviceId.companyId.linkPath
       ) {
         companyName = color => (
           <LinkEffect
-            path={`company?${alert.serviceId.company.linkPath}`}
+            path={`company?${alert.serviceId.companyId.linkPath}`}
             text={
               <ButtonAlertCompany
                 siteProps={siteProps}
                 active={alert.active}
                 alertColor={color}
               >
-                {alert.serviceId.company.name.toUpperCase()}
+                {alert.serviceId.companyId.name.toUpperCase()}
               </ButtonAlertCompany>
             }
           />
@@ -668,6 +674,130 @@ export const generateBellAllertItemContentSwitch = (
       }
       break
     }
+    case "opinion_client": {
+      alertColor = "gray"
+      if (!isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].noCompanyChangedUser.title[0]}{" "}
+                {companyName(alertColor)}
+              </>
+            ),
+            reserwation: alert.reserwationId.serviceName,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].noCompanyChangedNoUser.title[0]} {userName}{" "}
+                {userSurname}{" "}
+                {texts[alert.type].noCompanyChangedNoUser.title[1]}
+              </>
+            ),
+            reserwation: alert.reserwationId.serviceName,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
+    case "opinion_client_edit": {
+      alertColor = "gray"
+      if (!isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].noCompanyChangedUser.title[0]}{" "}
+                {companyName(alertColor)}
+              </>
+            ),
+            reserwation: alert.reserwationId.serviceName,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].noCompanyChangedNoUser.title[0]} {userName}{" "}
+                {userSurname}{" "}
+                {texts[alert.type].noCompanyChangedNoUser.title[1]}
+              </>
+            ),
+            reserwation: alert.reserwationId.serviceName,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
+    case "opinion_from_company": {
+      alertColor = "gray"
+      if (isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedUser.title[0]}{" "}
+                {companyName(alertColor)}{" "}
+                {texts[alert.type].companyChangedUser.title[1]}
+              </>
+            ),
+            reserwation: alert.reserwationId.serviceName,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedNoUser.title[0]} {userName}{" "}
+                {userSurname}
+              </>
+            ),
+            reserwation: alert.reserwationId.serviceName,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
+    case "commuting_created": {
+      alertColor = "green"
+      if (isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedNoUser.title[0]}{" "}
+                {companyName(alertColor)}{" "}
+                {texts[alert.type].companyChangedNoUser.title[1]}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
+            communiting: alert.communitingId.city,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedNoUser.title[0]} {userName}{" "}
+                {userSurname}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
+            communiting: alert.communitingId.city,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
     // case "reserwation_changed": {
     //   alertColor = "green"
     //   alertMessage = "reser changed"
@@ -762,13 +892,13 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
   if (
     alert.type !== "new_reserwation_worker" &&
     alert.type !== "reserwation_worker" &&
+    alert.type !== "opinion_client" &&
+    alert.type !== "opinion_client_edit" &&
+    alert.type !== "opinion_from_company" &&
+    alert.type !== "commuting_created" &&
     true
-    // alert.type !== "opinion_client" &&
-    // alert.type !== "opinion_client_edit" &&
-    // alert.type !== "opinion_from_company" &&
     // alert.type !== "alert_notifaction_sms" &&
     // alert.type !== "alert_notifaction_premium" &&
-    // alert.type !== "commuting_created" &&
     // alert.type !== "commuting_deleted" &&
     // alert.type !== "commuting_changed" &&
     // alert.type !== "commuting_canceled" &&

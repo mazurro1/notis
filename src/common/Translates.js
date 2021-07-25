@@ -18,7 +18,7 @@ export const Translates = {
         hoursText: "w godzinach",
         reserwationText: "usługa",
         serviceText: "serwis",
-        communitingText: "dojazd",
+        communitingText: "miasto",
         companyNotFound: "Nie znaleziono firmy",
       },
 
@@ -109,6 +109,38 @@ export const Translates = {
           title: ["Firma:", "usunęła rezerwację czasu"],
         },
       },
+      opinion_client: {
+        noCompanyChangedUser: {
+          title: ["Dodano opinie w firmie:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["Użytkownik:", "dodał opinie"],
+        },
+      },
+      opinion_client_edit: {
+        noCompanyChangedUser: {
+          title: ["Edytowano opinie w firmie:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["Użytkownik:", "edytował opinie"],
+        },
+      },
+      opinion_from_company: {
+        companyChangedUser: {
+          title: ["Firma:", "odpowiedziała na opinię"],
+        },
+        companyChangedNoUser: {
+          title: ["Odpowiedziano na opinię użytkownikowi:"],
+        },
+      },
+      commuting_created: {
+        companyChangedUser: {
+          title: ["Firma:", "utworzyła dojazd"],
+        },
+        companyChangedNoUser: {
+          title: ["Utworzono dojazd użytkownikowi:"],
+        },
+      },
     },
   },
 
@@ -131,7 +163,7 @@ export const Translates = {
         hoursText: "in hours",
         reserwationText: "service",
         serviceText: "service",
-        communitingText: "communiting",
+        communitingText: "city",
         companyNotFound: "Company not found",
       },
       reserwation_created: {
@@ -219,6 +251,38 @@ export const Translates = {
         },
         companyChangedNoUser: {
           title: ["Company:", "deleted the time reservation"],
+        },
+      },
+      opinion_client: {
+        noCompanyChangedUser: {
+          title: ["Opinion added in company:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["User:", "added opinion"],
+        },
+      },
+      opinion_client_edit: {
+        noCompanyChangedUser: {
+          title: ["Opinion have been edited in company:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["User:", "edited opinion"],
+        },
+      },
+      opinion_from_company: {
+        companyChangedUser: {
+          title: ["Company:", "replied to the opinion"],
+        },
+        companyChangedNoUser: {
+          title: ["Reply to the opinion tu user:"],
+        },
+      },
+      commuting_created: {
+        companyChangedUser: {
+          title: ["Company:", "created a driveway"],
+        },
+        companyChangedNoUser: {
+          title: ["Driveway created to user:"],
         },
       },
     },
