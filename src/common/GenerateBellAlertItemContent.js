@@ -572,7 +572,102 @@ export const generateBellAllertItemContentSwitch = (
       }
       break
     }
-
+    case "reserwation_worker_created": {
+      alertColor = "gray"
+      if (isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedUser.title[0]}{" "}
+                {companyName(alertColor)}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedNoUser.title[0]}{" "}
+                {companyName(alertColor)}{" "}
+                {texts[alert.type].companyChangedNoUser.title[1]}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
+    case "reserwation_worker_changed": {
+      alertColor = "gray"
+      if (isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedUser.title[0]}{" "}
+                {companyName(alertColor)}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedNoUser.title[0]}{" "}
+                {companyName(alertColor)}{" "}
+                {texts[alert.type].companyChangedNoUser.title[1]}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
+    case "reserwation_worker_canceled": {
+      alertColor = "gray"
+      if (isCompanyChanged) {
+        if (isUserAlert) {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedUser.title[0]}{" "}
+                {companyName(alertColor)}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            texts: texts,
+          })
+        } else {
+          alertMessage = generateAlertFromProps({
+            title: (
+              <>
+                {texts[alert.type].companyChangedNoUser.title[0]}{" "}
+                {companyName(alertColor)}{" "}
+                {texts[alert.type].companyChangedNoUser.title[1]}
+              </>
+            ),
+            day: alertDate,
+            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            texts: texts,
+          })
+        }
+      }
+      break
+    }
     // case "reserwation_changed": {
     //   alertColor = "green"
     //   alertMessage = "reser changed"
@@ -665,9 +760,9 @@ export const generateBellAlertItemContent = (alert, user, siteProps) => {
   }
 
   if (
+    alert.type !== "new_reserwation_worker" &&
+    alert.type !== "reserwation_worker" &&
     true
-    // alert.type !== "reserwation_worker" &&
-    // alert.type !== "new_reserwation_worker" &&
     // alert.type !== "opinion_client" &&
     // alert.type !== "opinion_client_edit" &&
     // alert.type !== "opinion_from_company" &&

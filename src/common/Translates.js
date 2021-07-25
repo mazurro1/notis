@@ -85,6 +85,30 @@ export const Translates = {
           title: ["Firma:", "przypomina o wizycie"],
         },
       },
+      reserwation_worker_created: {
+        companyChangedUser: {
+          title: ["Dodano rezerwację czasu w firmie:"],
+        },
+        companyChangedNoUser: {
+          title: ["Firma:", "dodała rezerwację czasu"],
+        },
+      },
+      reserwation_worker_changed: {
+        companyChangedUser: {
+          title: ["Edytowano rezerwację czasu w firmie:"],
+        },
+        companyChangedNoUser: {
+          title: ["Firma:", "edytowała rezerwację czasu"],
+        },
+      },
+      reserwation_worker_canceled: {
+        companyChangedUser: {
+          title: ["Usunięto rezerwację czasu w firmie:"],
+        },
+        companyChangedNoUser: {
+          title: ["Firma:", "usunęła rezerwację czasu"],
+        },
+      },
     },
   },
 
@@ -171,6 +195,30 @@ export const Translates = {
       reserwation_notifaction: {
         companyChangedUser: {
           title: ["Company:", "reminds you of your visit"],
+        },
+      },
+      reserwation_worker_created: {
+        companyChangedUser: {
+          title: ["Time reservation added in company:"],
+        },
+        companyChangedNoUser: {
+          title: ["Company:", "added time reservation"],
+        },
+      },
+      reserwation_worker_changed: {
+        companyChangedUser: {
+          title: ["Time reservation edited in company:"],
+        },
+        companyChangedNoUser: {
+          title: ["Company:", "edited time booking"],
+        },
+      },
+      reserwation_worker_canceled: {
+        companyChangedUser: {
+          title: ["Time reservation deleted in company:"],
+        },
+        companyChangedNoUser: {
+          title: ["Company:", "deleted the time reservation"],
         },
       },
     },
