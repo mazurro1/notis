@@ -17,9 +17,10 @@ export const Translates = {
         dayText: "dnia",
         hoursText: "w godzinach",
         reserwationText: "usługa",
-        serviceText: "serwis",
+        serviceText: "serwisowany przedmiot",
         communitingText: "miasto",
         companyNotFound: "Nie znaleziono firmy",
+        alertNotFound: "Nieprawidłowy alert",
       },
 
       reserwation_created: {
@@ -141,6 +142,111 @@ export const Translates = {
           title: ["Utworzono dojazd użytkownikowi:"],
         },
       },
+      commuting_changed: {
+        companyChangedUser: {
+          title: ["Firma:", "edytowała dojazd"],
+        },
+        companyChangedNoUser: {
+          title: ["Edytowano dojazd użytkownikowi:"],
+        },
+      },
+      commuting_deleted: {
+        companyChangedUser: {
+          title: ["Firma:", "odwołała dojazd"],
+        },
+        companyChangedNoUser: {
+          title: ["Odwołano dojazd użytkownikowi:"],
+        },
+        noCompanyChangedUser: {
+          title: ["Odwołano dojazd w firmie:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["Użytkownik:", "odwołał dojazd"],
+        },
+      },
+      commuting_canceled: {
+        companyChangedUser: {
+          title: ["Firma:", "anulowała dojazd"],
+        },
+        companyChangedNoUser: {
+          title: ["Anulowano dojazd użytkownikowi:"],
+        },
+        noCompanyChangedUser: {
+          title: ["Anulowano dojazd w firmie:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["Użytkownik:", "anulował dojazd"],
+        },
+      },
+      //
+      service_created: {
+        companyChangedUser: {
+          title: ["Firma:", "utworzyła serwis"],
+        },
+        companyChangedNoUser: {
+          title: ["Utworzono serwis użytkownikowi:"],
+        },
+      },
+      service_changed: {
+        companyChangedUser: {
+          title: ["Firma:", "edytowała serwis"],
+        },
+        companyChangedNoUser: {
+          title: ["Edytowano serwis użytkownikowi:"],
+        },
+      },
+      service_deleted: {
+        companyChangedUser: {
+          title: ["Firma:", "odwołała serwis"],
+        },
+        companyChangedNoUser: {
+          title: ["Odwołano serwis użytkownikowi:"],
+        },
+        noCompanyChangedUser: {
+          title: ["Odwołano serwis w firmie:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["Użytkownik:", "odwołał serwis"],
+        },
+      },
+      service_canceled: {
+        companyChangedUser: {
+          title: ["Firma:", "anulowała serwis"],
+        },
+        companyChangedNoUser: {
+          title: ["Anulowano serwis użytkownikowi:"],
+        },
+        noCompanyChangedUser: {
+          title: ["Anulowano serwis w firmie:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["Użytkownik:", "anulował serwis"],
+        },
+      },
+      service_finished: {
+        companyChangedUser: {
+          title: ["Firma:", "zakończyła serwis"],
+        },
+        companyChangedNoUser: {
+          title: ["Zakończono serwis użytkownikowi:"],
+        },
+      },
+      alert_notifaction_sms: {
+        companyChangedUser: {
+          title: [
+            "Posiadasz małą ilość SMS w firmie:",
+            "Doładuj SMS-y aby dalej korzystać z usługi.",
+          ],
+        },
+      },
+      alert_notifaction_premium: {
+        companyChangedUser: {
+          title: [
+            "Twoje konto premium niedługo wygaśnie w firmie:",
+            "Przedłuż konto premium aby dalej korzystać z funkcjonalności strony.",
+          ],
+        },
+      },
     },
   },
 
@@ -162,9 +268,10 @@ export const Translates = {
         dayText: "day",
         hoursText: "in hours",
         reserwationText: "service",
-        serviceText: "service",
+        serviceText: "service item",
         communitingText: "city",
         companyNotFound: "Company not found",
+        alertNotFound: "Invalid alert",
       },
       reserwation_created: {
         companyChangedUser: {
@@ -283,6 +390,110 @@ export const Translates = {
         },
         companyChangedNoUser: {
           title: ["Driveway created to user:"],
+        },
+      },
+      commuting_changed: {
+        companyChangedUser: {
+          title: ["Company:", "edited a driveway"],
+        },
+        companyChangedNoUser: {
+          title: ["Driveway edited to user:"],
+        },
+      },
+      commuting_deleted: {
+        companyChangedUser: {
+          title: ["Company:", "canceled a driveway"],
+        },
+        companyChangedNoUser: {
+          title: ["Driveway canceled to user"],
+        },
+        noCompanyChangedUser: {
+          title: ["Driveway was canceled in company:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["User:", "canceled the driveway"],
+        },
+      },
+      commuting_canceled: {
+        companyChangedUser: {
+          title: ["Company:", "canceled a driveway"],
+        },
+        companyChangedNoUser: {
+          title: ["Driveway canceled to user"],
+        },
+        noCompanyChangedUser: {
+          title: ["Driveway was canceled in company:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["User:", "canceled the driveway"],
+        },
+      },
+      service_created: {
+        companyChangedUser: {
+          title: ["Company:", "created a service"],
+        },
+        companyChangedNoUser: {
+          title: ["Service created to user:"],
+        },
+      },
+      service_changed: {
+        companyChangedUser: {
+          title: ["Company:", "edited a service"],
+        },
+        companyChangedNoUser: {
+          title: ["Service edited to user:"],
+        },
+      },
+      service_deleted: {
+        companyChangedUser: {
+          title: ["Company:", "canceled a service"],
+        },
+        companyChangedNoUser: {
+          title: ["Service canceled to user"],
+        },
+        noCompanyChangedUser: {
+          title: ["Service was canceled in company:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["User:", "canceled the service"],
+        },
+      },
+      service_canceled: {
+        companyChangedUser: {
+          title: ["Company:", "canceled a service"],
+        },
+        companyChangedNoUser: {
+          title: ["Service canceled to user"],
+        },
+        noCompanyChangedUser: {
+          title: ["Service was canceled in company:"],
+        },
+        noCompanyChangedNoUser: {
+          title: ["User:", "canceled the service"],
+        },
+      },
+      service_finished: {
+        companyChangedUser: {
+          title: ["Company:", "ended the service"],
+        },
+        companyChangedNoUser: {
+          title: ["Service ended to user:"],
+        },
+      },
+      alert_notifaction_sms: {
+        companyChangedUser: {
+          title: [
+            "You have a small amount of SMS in company:",
+            "Top up your SMSes to continue using the service.",
+          ],
+        },
+      },
+      alert_notifaction_premium: {
+        companyChangedUser: {
+          title: [
+            "Your premium account will expire soon in company:",
+            "Extend your premium account to continue using the website's functionality.",
+          ],
         },
       },
     },

@@ -1,10 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
-import {
-  generateBellAlertItemContent,
-  generateBellAllertItemContentSwitch,
-} from "../common/GenerateBellAlertItemContent"
+import { generateBellAllertItemContentSwitch } from "../common/GenerateBellAlertItemContent"
 
 const TimeStyle = styled.div`
   position: absolute;
