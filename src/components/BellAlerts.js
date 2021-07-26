@@ -215,13 +215,6 @@ const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
   }
 
   const mapAlerts = allAlerts.map((alert, index) => {
-    // if (
-    //   !!alert.reserwationId ||
-    //   !!alert.communitingId ||
-    //   !!alert.serviceId ||
-    //   alert.type === "alert_notifaction_sms" ||
-    //   alert.type === "alert_notifaction_premium"
-    // ) {
     return (
       <BellAlertsItem
         key={index}
@@ -232,9 +225,6 @@ const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
         texts={texts}
       />
     )
-    // } else {
-    //   return null
-    // }
   })
 
   return (

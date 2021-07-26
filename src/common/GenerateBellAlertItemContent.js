@@ -116,6 +116,8 @@ export const generateBellAllertItemContentSwitch = (
   let isUserAlert = false
   let isCompanyChanged = !!alert.companyChanged ? alert.companyChanged : false
   let alertDate = "00-00-0000"
+  let timeStartEnd = "0:00 - 0:00"
+  let city = "None"
 
   let companyName = () => {
     return texts.general.companyNotFound
@@ -123,6 +125,9 @@ export const generateBellAllertItemContentSwitch = (
 
   //reserwation
   if (!!alert.reserwationId) {
+    if (!!alert.reserwationId.dateStart && !!alert.reserwationId.dateEnd) {
+      timeStartEnd = `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`
+    }
     if (!!alert.reserwationId.fromUser) {
       if (!!alert.reserwationId.fromUser._id) {
         isUserAlert = user.userId === alert.reserwationId.fromUser._id
@@ -188,6 +193,12 @@ export const generateBellAllertItemContentSwitch = (
     }
   } else if (!!alert.communitingId) {
     //communiting
+    if (!!alert.communitingId.city) {
+      city = alert.communitingId.city
+    }
+    if (!!alert.communitingId.timeStart && !!alert.communitingId.timeEnd) {
+      timeStartEnd = `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`
+    }
     if (!!alert.communitingId.userId) {
       if (!!alert.communitingId.userId._id) {
         isUserAlert = user.userId === alert.communitingId.userId._id
@@ -326,7 +337,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -339,7 +350,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -354,7 +365,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -368,7 +379,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -389,7 +400,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -402,7 +413,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -417,7 +428,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -431,7 +442,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -452,7 +463,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -465,7 +476,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -480,7 +491,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -494,7 +505,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -515,7 +526,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -528,7 +539,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -549,7 +560,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -562,7 +573,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -584,7 +595,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             reserwation: alert.reserwationId.serviceName,
             texts: texts,
           })
@@ -604,7 +615,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             texts: texts,
           })
         } else {
@@ -617,7 +628,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             texts: texts,
           })
         }
@@ -636,7 +647,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             texts: texts,
           })
         } else {
@@ -649,7 +660,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             texts: texts,
           })
         }
@@ -668,7 +679,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             texts: texts,
           })
         } else {
@@ -681,7 +692,7 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.reserwationId.dateStart}-${alert.reserwationId.dateEnd}`,
+            hours: timeStartEnd,
             texts: texts,
           })
         }
@@ -791,8 +802,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         } else {
@@ -804,8 +815,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         }
@@ -825,8 +836,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         } else {
@@ -838,8 +849,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         }
@@ -859,8 +870,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         } else {
@@ -872,8 +883,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         }
@@ -887,8 +898,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         } else {
@@ -901,8 +912,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         }
@@ -922,8 +933,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         } else {
@@ -935,8 +946,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         }
@@ -950,8 +961,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         } else {
@@ -964,8 +975,8 @@ export const generateBellAllertItemContentSwitch = (
               </>
             ),
             day: alertDate,
-            hours: `${alert.communitingId.timeStart}-${alert.communitingId.timeEnd}`,
-            communiting: alert.communitingId.city,
+            hours: timeStartEnd,
+            communiting: city,
             texts: texts,
           })
         }
