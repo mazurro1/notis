@@ -65,6 +65,7 @@ import {
   changeSelectedUserCompany,
   resetUserProfil,
   fetchResetUserMenu,
+  fetchUpdateUserProps,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -374,6 +375,7 @@ const Navigation = ({ isMainPage }) => {
   )
   const [historyServices, setHistoryServices] = useState(false)
   const [historyCommunitings, setHistoryCommunitings] = useState(false)
+  const [disabledSwitchUserProps, setDisabledSwitchUserProps] = useState(false)
 
   const userProfilReset = useSelector(state => state.userProfilReset)
   const popupTakePlace = useSelector(state => state.popupTakePlace)
@@ -634,11 +636,53 @@ const Navigation = ({ isMainPage }) => {
   }
 
   const handleBlindStyleClick = () => {
-    dispatch(changeBlindStyle())
+    if (!!!disabledSwitchUserProps) {
+      if (!!userId && !!user) {
+        const dataSiteProps = {
+          blind: !siteProps.blind,
+          dark: false,
+          language: siteProps.language,
+        }
+        dispatch(
+          fetchUpdateUserProps(
+            user.token,
+            dataSiteProps.language,
+            dataSiteProps.dark,
+            dataSiteProps.blind
+          )
+        )
+      }
+      dispatch(changeBlindStyle())
+      setDisabledSwitchUserProps(true)
+      setTimeout(() => {
+        setDisabledSwitchUserProps(false)
+      }, 2000)
+    }
   }
 
   const handleDarkStyleClick = () => {
-    dispatch(changeDarkStyle())
+    if (!!!disabledSwitchUserProps) {
+      dispatch(changeDarkStyle())
+      if (!!userId && !!user) {
+        const dataSiteProps = {
+          blind: false,
+          dark: !siteProps.dark,
+          language: siteProps.language,
+        }
+        dispatch(
+          fetchUpdateUserProps(
+            user.token,
+            dataSiteProps.language,
+            dataSiteProps.dark,
+            dataSiteProps.blind
+          )
+        )
+      }
+      setDisabledSwitchUserProps(true)
+      setTimeout(() => {
+        setDisabledSwitchUserProps(false)
+      }, 2000)
+    }
   }
 
   const handleClickWork = () => {
@@ -674,8 +718,29 @@ const Navigation = ({ isMainPage }) => {
   }
 
   const handleChangeLanguage = () => {
-    const languageSelected = siteProps.language === "PL" ? "EN" : "PL"
-    dispatch(changeLanguageStyle(languageSelected))
+    if (!!!disabledSwitchUserProps) {
+      const languageSelected = siteProps.language === "PL" ? "EN" : "PL"
+      dispatch(changeLanguageStyle(languageSelected))
+      if (!!userId && !!user) {
+        const dataSiteProps = {
+          blind: siteProps.blind,
+          dark: siteProps.dark,
+          language: languageSelected,
+        }
+        dispatch(
+          fetchUpdateUserProps(
+            user.token,
+            dataSiteProps.language,
+            dataSiteProps.dark,
+            dataSiteProps.blind
+          )
+        )
+      }
+      setDisabledSwitchUserProps(true)
+      setTimeout(() => {
+        setDisabledSwitchUserProps(false)
+      }, 2000)
+    }
   }
 
   const handleClickAdminPanel = () => {
@@ -1718,6 +1783,7 @@ const Navigation = ({ isMainPage }) => {
                   <PositionPl siteProps={siteProps}>PL</PositionPl>
                 }
                 checkedIcon={<PositionEn siteProps={siteProps}>EN</PositionEn>}
+                disabled={disabledSwitchUserProps}
               />
             </LabelStyle>
           </ButtonNavStyle>
@@ -1736,6 +1802,7 @@ const Navigation = ({ isMainPage }) => {
                 height={22}
                 uncheckedIcon
                 checkedIcon
+                disabled={disabledSwitchUserProps}
               />
             </LabelStyle>
           </ButtonNavStyle>
@@ -1754,6 +1821,7 @@ const Navigation = ({ isMainPage }) => {
                 height={22}
                 uncheckedIcon
                 checkedIcon
+                disabled={disabledSwitchUserProps}
               />
             </LabelStyle>
           </ButtonNavStyle>

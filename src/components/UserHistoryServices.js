@@ -115,7 +115,6 @@ const UserHistoryServices = ({ user, siteProps }) => {
     setMonthPicker(findMonth)
   }, [])
 
-  console.log(resetUserHistoryService)
   useEffect(() => {
     if (resetUserHistoryService) {
       dispatch(fetchResetUserHistoryServices())

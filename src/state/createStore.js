@@ -604,13 +604,23 @@ const reducer = (state = initialState, action) => {
         registrationVisible: action.value,
       }
 
-    case LOGIN:
+    case LOGIN: {
+      const sitePropsLogin = { ...state.siteProps }
+      if (!!sitePropsLogin && !!action.user) {
+        if (!!action.user.language) {
+          sitePropsLogin.language = action.user.language.toUpperCase()
+          sitePropsLogin.dark = action.user.darkMode
+          sitePropsLogin.blind = action.user.blindMode
+        }
+      }
       return {
         ...state,
         user: action.user,
         userId: action.user.userId,
         activeAccountVisible: !action.user.accountVerified,
+        siteProps: sitePropsLogin,
       }
+    }
     case LOGOUT:
       return {
         ...state,

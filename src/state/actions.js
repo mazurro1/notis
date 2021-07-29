@@ -7158,3 +7158,24 @@ export const fetchAddWorkerClientReserwation = (
       })
   }
 }
+
+export const fetchUpdateUserProps = (token, language, darkMode, blindMode) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/update-user-props`,
+        {
+          language: language,
+          darkMode: darkMode,
+          blindMode: blindMode,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(() => {})
+      .catch(() => {})
+  }
+}
