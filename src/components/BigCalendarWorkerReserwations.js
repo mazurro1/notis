@@ -597,7 +597,10 @@ const BigCalendarWorkerReserwations = ({
               "utf-8"
             )
           }
+        } else if (!!itemMaped.name) {
+          userName = Buffer.from(itemMaped.name, "base64").toString("utf-8")
         }
+        console.log(itemMaped)
         let userSurname = ""
         if (!!itemMaped.fromUser) {
           if (!!itemMaped.fromUser.surname) {
@@ -606,7 +609,11 @@ const BigCalendarWorkerReserwations = ({
               "base64"
             ).toString("utf-8")
           }
-        }
+        } else if (!!itemMaped.surname) {
+            userSurname = Buffer.from(itemMaped.surname, "base64").toString(
+              "utf-8"
+            )
+          }
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
         const itemMapedResult = {
