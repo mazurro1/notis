@@ -6723,18 +6723,22 @@ export const fetchUpdateCompanyCommuniting = (
         }
       )
       .then(response => {
-        dispatch(
-          updateServiceCompanyCommuniting({
-            communitingId: communitingId,
-            description: descriptionInput,
-            cost: !!costInput ? costInput : null,
-            statusValue: statusValue,
-            selectedWorkerUserId: selectedWorkerUserId,
-            timeStart: timeStart,
-            timeEnd: timeEnd,
-            fullDate: fullDate,
-          })
-        )
+        if (statusValue === 4) {
+          dispatch(deleteCompanyCommuniting(communitingId))
+        } else {
+          dispatch(
+            updateServiceCompanyCommuniting({
+              communitingId: communitingId,
+              description: descriptionInput,
+              cost: !!costInput ? costInput : null,
+              statusValue: statusValue,
+              selectedWorkerUserId: selectedWorkerUserId,
+              timeStart: timeStart,
+              timeEnd: timeEnd,
+              fullDate: fullDate,
+            })
+          )
+        }
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano dojazd.", "green"))
       })

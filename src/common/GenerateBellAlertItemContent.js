@@ -122,7 +122,7 @@ export const generateBellAllertItemContentSwitch = (
   let companyName = () => {
     return texts.general.companyNotFound
   }
-
+  console.log(alert)
   //reserwation
   if (!!alert.reserwationId) {
     if (!!alert.reserwationId.dateStart && !!alert.reserwationId.dateEnd) {
