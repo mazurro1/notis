@@ -628,6 +628,7 @@ const ContentCompanyProfilAutoSave = ({
                 opinionsCount={company.opinionsCount}
                 opinionsValue={company.opinionsValue}
                 phone={company.phone}
+                landline={company.landlinePhone}
                 pauseCompany={company.pauseCompany}
                 ButtonEditPosition={ButtonEditPosition}
                 editable={editOpinionAndAdress}

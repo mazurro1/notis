@@ -2523,6 +2523,10 @@ const reducer = (state = initialState, action) => {
         if (!!action.data.updatePhoneInput) {
           newWorkCompanyDataSettings.phone = action.data.updatePhoneInput
         }
+        if (action.data.updatedLandlinePhone !== null) {
+          newWorkCompanyDataSettings.landlinePhone =
+            action.data.updatedLandlinePhone
+        }
         if (!!action.data.updateCityInput) {
           newWorkCompanyDataSettings.city = action.data.updateCityInput
         }

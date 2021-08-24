@@ -24,6 +24,33 @@ const ColorsInput = styled.div`
   }
 `
 
+const ColorsInputShort = styled.div`
+  input {
+    background-color: ${props =>
+      props.whiteInputs
+        ? Colors(props.siteProps).textNormalWhite
+        : Colors(props.siteProps).companyItemBackground};
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    width: ${props => props.width + "px"};
+    height: ${props => props.width + "px"};
+
+    &:nth-child(3) {
+      margin-right: ${props => props.marginElements + "px"};
+
+      @media all and (max-width: 490px) {
+        margin-right: 5px;
+      }
+    }
+    &:nth-child(5) {
+      margin-right: ${props => props.marginElements + "px"};
+
+      @media all and (max-width: 490px) {
+        margin-right: 5px;
+      }
+    }
+  }
+`
+
 const PanFieldStyle = styled(PinField)`
   border-radius: 2px;
   border: none;
@@ -87,6 +114,7 @@ const InputPhone = ({
   marginElements = 20,
   textPhone = "Numer telefonu:",
   whiteInputs = false,
+  phoneLength = 9,
 }) => {
   const [inputActive, setInputActive] = useState(false)
   const siteProps = useSelector(state => state.siteProps)
@@ -113,6 +141,9 @@ const InputPhone = ({
   const handleOnBlur = () => {
     setInputActive(false)
   }
+
+  const SelectStyleInput = phoneLength === 7 ? ColorsInputShort : ColorsInput
+
   return (
     <StyleInputs onFocus={handleOnFocus} onBlur={handleOnBlur}>
       <div>
@@ -121,7 +152,7 @@ const InputPhone = ({
         </TextValue>
       </div>
 
-      <ColorsInput
+      <SelectStyleInput
         siteProps={siteProps}
         width={width}
         marginElements={marginElements}
@@ -135,11 +166,11 @@ const InputPhone = ({
               setPhoneNumber(code)
             }}
             format={k => k.toUpperCase()}
-            length={9}
+            length={phoneLength}
             validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
           />
         </PhoneInline>
-      </ColorsInput>
+      </SelectStyleInput>
     </StyleInputs>
   )
 }

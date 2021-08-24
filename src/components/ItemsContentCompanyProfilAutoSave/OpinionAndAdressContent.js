@@ -4,7 +4,13 @@ import { Colors } from "../../common/Colors"
 import ButtonIcon from "../ButtonIcon"
 import { MdEdit, MdPhone } from "react-icons/md"
 import InputIcon from "../InputIcon"
-import { MdDelete, MdLocationOn, MdLocationCity, MdWork } from "react-icons/md"
+import {
+  MdDelete,
+  MdLocationOn,
+  MdLocationCity,
+  MdWork,
+  MdSmartphone,
+} from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { FaArrowLeft, FaSave } from "react-icons/fa"
@@ -192,7 +198,8 @@ const OpinionAndAdressContent = ({
   TitleRightColumn,
   opinionsCount = 0,
   opinionsValue = "0,0",
-  phone = "000000000",
+  phone = "",
+  landline = "",
   ButtonEditPosition,
   isCompanyEditProfil = false,
   editable = false,
@@ -223,6 +230,7 @@ const OpinionAndAdressContent = ({
   const [discrictInput, setDiscrictInput] = useState(district)
   const [adressInput, setAdressInput] = useState(adress)
   const [phoneInput, setPhoneInput] = useState(phone)
+  const [landlinePhone, setLandlinePhone] = useState(landline)
   const [companyPausedItem, setCompanyPausedItem] = useState(pauseCompany)
   const [reserwationEver, setReserwationEver] = useState(
     reservationEveryTimeServer
@@ -243,6 +251,7 @@ const OpinionAndAdressContent = ({
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
+    setLandlinePhone(landline)
     setCompanyPausedItem(pauseCompany)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
@@ -267,6 +276,7 @@ const OpinionAndAdressContent = ({
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
+    setLandlinePhone(landline)
     setCompanyPausedItem(pauseCompany)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
@@ -282,13 +292,21 @@ const OpinionAndAdressContent = ({
     }
   }, [editable, editMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const validLandlinePhone =
+    landlinePhone !== null
+      ? landlinePhone.length === 7 || landlinePhone.length === 0
+        ? true
+        : null
+      : true
+
   const validButtonRegisterCompany =
     companyNameInput.length >= 3 &&
-    phoneInput.length >= 7 &&
+    phoneInput.length === 9 &&
     cityInput.length >= 3 &&
     codeInput.length >= 5 &&
     discrictInput.length >= 3 &&
-    adressInput.length >= 3
+    adressInput.length >= 3 &&
+    validLandlinePhone
 
   const disabledButtonSubmit =
     (deletedIndustriesComponent.length > 0 ||
@@ -301,6 +319,7 @@ const OpinionAndAdressContent = ({
       discrictInput !== district ||
       adressInput !== adress ||
       phoneInput !== phone ||
+      landlinePhone !== landline ||
       companyPausedItem !== pauseCompany) &&
     validButtonRegisterCompany
 
@@ -313,6 +332,8 @@ const OpinionAndAdressContent = ({
         discrictInput !== district ? discrictInput : null
       const updateAdressInput = adressInput !== adress ? adressInput : null
       const updatePhoneInput = phoneInput !== phone ? phoneInput : null
+      const updatedLandlinePhone =
+        landlinePhone !== landline ? landlinePhone : null
       const updateNompanyNameInput =
         companyNameInput !== companyName ? companyNameInput : null
 
@@ -344,6 +365,7 @@ const OpinionAndAdressContent = ({
         pauseCompanyToServer: pauseCompanyToServer,
         reserwationMonthToServer: reserwationMonthToServer,
         reserwationEverToServer: reserwationEverToServer,
+        updatedLandlinePhone: updatedLandlinePhone,
       }
 
       scroller.scrollTo("opinionScrollElement", {
@@ -359,7 +381,12 @@ const OpinionAndAdressContent = ({
       if (companyNameInput.length < 3) {
         dispatch(addAlertItem("Nazwa firmy jest za krótka", "red"))
       }
-      if (phoneInput.length < 7) {
+      if (landlinePhone !== null) {
+        if (landlinePhone.length !== 7) {
+          dispatch(addAlertItem("Nieprawidłowy numer stacjonarny", "red"))
+        }
+      }
+      if (phoneInput.length !== 9) {
         dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
       }
       if (cityInput.length < 3) {
@@ -392,6 +419,7 @@ const OpinionAndAdressContent = ({
     setDiscrictInput(district)
     setAdressInput(adress)
     setPhoneInput(phone)
+    setLandlinePhone(landline)
     setCompanyPausedItem(pauseCompany)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
@@ -518,13 +546,29 @@ const OpinionAndAdressContent = ({
     nameMonthDelay = findMonthDelay.month
   }
 
-  const phoneNumberRender = `${phoneInput.charAt(0)}${phoneInput.charAt(
-    1
-  )}${phoneInput.charAt(2)}-${phoneInput.charAt(3)}${phoneInput.charAt(
-    4
-  )}${phoneInput.charAt(5)}-${phoneInput.charAt(6)}${phoneInput.charAt(
-    7
-  )}${phoneInput.charAt(8)}`
+  let phoneNumberRender = null
+  if (phoneInput.length === 9) {
+    phoneNumberRender = `${phoneInput.charAt(0)}${phoneInput.charAt(
+      1
+    )}${phoneInput.charAt(2)}-${phoneInput.charAt(3)}${phoneInput.charAt(
+      4
+    )}${phoneInput.charAt(5)}-${phoneInput.charAt(6)}${phoneInput.charAt(
+      7
+    )}${phoneInput.charAt(8)}`
+  }
+
+  let phoneLandlineNumberRender = null
+  if (!!landlinePhone) {
+    if (landlinePhone.length === 7) {
+      phoneLandlineNumberRender = `+48 ${landlinePhone.charAt(
+        0
+      )}${landlinePhone.charAt(1)}${landlinePhone.charAt(
+        2
+      )}-${landlinePhone.charAt(3)}${landlinePhone.charAt(
+        4
+      )}-${landlinePhone.charAt(5)}${landlinePhone.charAt(6)}`
+    }
+  }
 
   return (
     <Element name="opinionScrollElement" className="element">
@@ -571,12 +615,22 @@ const OpinionAndAdressContent = ({
             </OpinionRight>
           </OpinionsContent>
         </OpinionsAndAdress>
-        <TelephoneDiv>
-          <CirclePhone siteProps={siteProps}>
-            <MdPhone />
-          </CirclePhone>
-          {phoneNumberRender}
-        </TelephoneDiv>
+        {!!phoneNumberRender && (
+          <TelephoneDiv>
+            <CirclePhone siteProps={siteProps}>
+              <MdSmartphone />
+            </CirclePhone>
+            {phoneNumberRender}
+          </TelephoneDiv>
+        )}
+        {!!phoneLandlineNumberRender && (
+          <TelephoneDiv>
+            <CirclePhone siteProps={siteProps}>
+              <MdPhone />
+            </CirclePhone>
+            {phoneLandlineNumberRender}
+          </TelephoneDiv>
+        )}
         {isCompanyEditProfil && (
           <>
             <ButtonEditPosition>
@@ -662,11 +716,21 @@ const OpinionAndAdressContent = ({
                   required
                   validText="Minimum 3 znaki"
                 />
+                <MarginBottomSelect>
+                  <InputPhone
+                    defaultValues={phoneInput}
+                    setPhoneNumber={setPhoneInput}
+                    width={20}
+                    marginElements={5}
+                  />
+                </MarginBottomSelect>
                 <InputPhone
-                  defaultValues={phoneInput}
-                  setPhoneNumber={setPhoneInput}
+                  defaultValues={landlinePhone}
+                  setPhoneNumber={setLandlinePhone}
                   width={20}
                   marginElements={5}
+                  textPhone="Numer stacjonarny:"
+                  phoneLength={7}
                 />
                 <TextStyleInfo siteProps={siteProps}>
                   Rezerwacja co:
