@@ -1204,12 +1204,10 @@ export const updateCompanySMSSettings = (
   smsServiceChangedAvaible,
   smsServiceFinishedAvaible,
   smsServiceCanceledAvaible,
-  smsServiceDeletedAvaible,
   smsCommunitingNotificationAvaible,
   smsCommunitingCreatedAvaible,
   smsCommunitingChangedAvaible,
-  smsCommunitingCanceledAvaible,
-  smsCommunitingDeletedAvaible
+  smsCommunitingCanceledAvaible
 ) => {
   return {
     type: UPDATE_COMPANY_SMS_SETTINGS,
@@ -1222,12 +1220,10 @@ export const updateCompanySMSSettings = (
     smsServiceChangedAvaible: smsServiceChangedAvaible,
     smsServiceFinishedAvaible: smsServiceFinishedAvaible,
     smsServiceCanceledAvaible: smsServiceCanceledAvaible,
-    smsServiceDeletedAvaible: smsServiceDeletedAvaible,
     smsCommunitingNotificationAvaible: smsCommunitingNotificationAvaible,
     smsCommunitingCreatedAvaible: smsCommunitingCreatedAvaible,
     smsCommunitingChangedAvaible: smsCommunitingChangedAvaible,
     smsCommunitingCanceledAvaible: smsCommunitingCanceledAvaible,
-    smsCommunitingDeletedAvaible: smsCommunitingDeletedAvaible,
   }
 }
 
@@ -5740,12 +5736,10 @@ export const fetchSaveCompanySMS = (
   smsServiceChangedAvaible = false,
   smsServiceFinishedAvaible = false,
   smsServiceCanceledAvaible = false,
-  smsServiceDeletedAvaible = false,
   smsCommunitingNotificationAvaible = false,
   smsCommunitingCreatedAvaible = false,
   smsCommunitingChangedAvaible = false,
-  smsCommunitingCanceledAvaible = false,
-  smsCommunitingDeletedAvaible = false
+  smsCommunitingCanceledAvaible = false
 ) => {
   return dispatch => {
     dispatch(changeSpinner(true))
@@ -5763,12 +5757,10 @@ export const fetchSaveCompanySMS = (
           smsServiceChangedAvaible: smsServiceChangedAvaible,
           smsServiceFinishedAvaible: smsServiceFinishedAvaible,
           smsServiceCanceledAvaible: smsServiceCanceledAvaible,
-          smsServiceDeletedAvaible: smsServiceDeletedAvaible,
           smsCommunitingNotificationAvaible: smsCommunitingNotificationAvaible,
           smsCommunitingCreatedAvaible: smsCommunitingCreatedAvaible,
           smsCommunitingChangedAvaible: smsCommunitingChangedAvaible,
           smsCommunitingCanceledAvaible: smsCommunitingCanceledAvaible,
-          smsCommunitingDeletedAvaible: smsCommunitingDeletedAvaible,
         },
         {
           headers: {
@@ -5788,12 +5780,10 @@ export const fetchSaveCompanySMS = (
             smsServiceChangedAvaible,
             smsServiceFinishedAvaible,
             smsServiceCanceledAvaible,
-            smsServiceDeletedAvaible,
             smsCommunitingNotificationAvaible,
             smsCommunitingCreatedAvaible,
             smsCommunitingChangedAvaible,
-            smsCommunitingCanceledAvaible,
-            smsCommunitingDeletedAvaible
+            smsCommunitingCanceledAvaible
           )
         )
         dispatch(changeSpinner(false))

@@ -1179,8 +1179,6 @@ const reducer = (state = initialState, action) => {
           action.smsServiceFinishedAvaible
         newWorkCompanyDataSMS.smsServiceCanceledAvaible =
           action.smsServiceCanceledAvaible
-        newWorkCompanyDataSMS.smsServiceDeletedAvaible =
-          action.smsServiceDeletedAvaible
         newWorkCompanyDataSMS.smsCommunitingNotificationAvaible =
           action.smsCommunitingNotificationAvaible
         newWorkCompanyDataSMS.smsCommunitingCreatedAvaible =
@@ -1189,8 +1187,6 @@ const reducer = (state = initialState, action) => {
           action.smsCommunitingChangedAvaible
         newWorkCompanyDataSMS.smsCommunitingCanceledAvaible =
           action.smsCommunitingCanceledAvaible
-        newWorkCompanyDataSMS.smsCommunitingDeletedAvaible =
-          action.smsCommunitingDeletedAvaible
       }
       return {
         ...state,

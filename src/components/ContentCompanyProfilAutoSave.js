@@ -555,7 +555,6 @@ const ContentCompanyProfilAutoSave = ({
                     smsServiceCanceledAvaible={
                       company.smsServiceCanceledAvaible
                     }
-                    smsServiceDeletedAvaible={company.smsServiceDeletedAvaible}
                     smsCommunitingNotificationAvaible={
                       company.smsCommunitingNotificationAvaible
                     }
@@ -567,9 +566,6 @@ const ContentCompanyProfilAutoSave = ({
                     }
                     smsCommunitingCanceledAvaible={
                       company.smsCommunitingCanceledAvaible
-                    }
-                    smsCommunitingDeletedAvaible={
-                      company.smsCommunitingDeletedAvaible
                     }
                   />
                 </RightColumnItem>

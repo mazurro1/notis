@@ -68,17 +68,14 @@ const SMSSettings = ({
   smsCanceledAvaible = false,
   smsChangedAvaible = false,
   premiumActive,
-
   smsServiceCreatedAvaible = false,
   smsServiceChangedAvaible = false,
   smsServiceFinishedAvaible = false,
   smsServiceCanceledAvaible = false,
-  smsServiceDeletedAvaible = false,
   smsCommunitingNotificationAvaible = false,
   smsCommunitingCreatedAvaible = false,
   smsCommunitingChangedAvaible = false,
   smsCommunitingCanceledAvaible = false,
-  smsCommunitingDeletedAvaible = false,
 }) => {
   const [
     companySMSReserwationAvaible,
@@ -116,10 +113,6 @@ const SMSSettings = ({
     setCompanySMSServiceCanceledAvaible,
   ] = useState(false)
   const [
-    companySMSServiceDeletedAvaible,
-    setCompanySMSServiceDeletedAvaible,
-  ] = useState(false)
-  const [
     companySMSCommunitingNotificationAvaible,
     setCompanySMSCommunitingNotificationAvaible,
   ] = useState(false)
@@ -136,11 +129,6 @@ const SMSSettings = ({
     setCompanySMSCommunitingCanceledAvaible,
   ] = useState(false)
 
-  const [
-    companySMSCommunitingDeletedAvaible,
-    setCompanySMSCommunitingDeletedAvaible,
-  ] = useState(false)
-
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -154,14 +142,12 @@ const SMSSettings = ({
     setCompanySMSServiceChangedAvaible(smsServiceChangedAvaible)
     setCompanySMSServiceFinishedAvaible(smsServiceFinishedAvaible)
     setCompanySMSServiceCanceledAvaible(smsServiceCanceledAvaible)
-    setCompanySMSServiceDeletedAvaible(smsServiceDeletedAvaible)
     setCompanySMSCommunitingNotificationAvaible(
       smsCommunitingNotificationAvaible
     )
     setCompanySMSCommunitingCreatedAvaible(smsCommunitingCreatedAvaible)
     setCompanySMSCommunitingChangedAvaible(smsCommunitingChangedAvaible)
     setCompanySMSCommunitingCanceledAvaible(smsCommunitingCanceledAvaible)
-    setCompanySMSCommunitingDeletedAvaible(smsCommunitingDeletedAvaible)
   }, [editMode, company]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClickEdit = () => {
@@ -185,14 +171,12 @@ const SMSSettings = ({
     setCompanySMSServiceChangedAvaible(smsServiceChangedAvaible)
     setCompanySMSServiceFinishedAvaible(smsServiceFinishedAvaible)
     setCompanySMSServiceCanceledAvaible(smsServiceCanceledAvaible)
-    setCompanySMSServiceDeletedAvaible(smsServiceDeletedAvaible)
     setCompanySMSCommunitingNotificationAvaible(
       smsCommunitingNotificationAvaible
     )
     setCompanySMSCommunitingCreatedAvaible(smsCommunitingCreatedAvaible)
     setCompanySMSCommunitingChangedAvaible(smsCommunitingChangedAvaible)
     setCompanySMSCommunitingCanceledAvaible(smsCommunitingCanceledAvaible)
-    setCompanySMSCommunitingDeletedAvaible(smsCommunitingDeletedAvaible)
     setEditSMSSettngs(false)
 
     scroller.scrollTo("smsScrollElement", {
@@ -225,12 +209,10 @@ const SMSSettings = ({
         companySMSServiceChangedAvaible,
         companySMSServiceFinishedAvaible,
         companySMSServiceCanceledAvaible,
-        companySMSServiceDeletedAvaible,
         companySMSCommunitingNotificationAvaible,
         companySMSCommunitingCreatedAvaible,
         companySMSCommunitingChangedAvaible,
-        companySMSCommunitingCanceledAvaible,
-        companySMSCommunitingDeletedAvaible
+        companySMSCommunitingCanceledAvaible
       )
     )
   }
@@ -553,40 +535,6 @@ const SMSSettings = ({
       <TextInfoCheckbox
         siteProps={siteProps}
         edited={editSMSSettngs}
-        active={companySMSServiceDeletedAvaible}
-      >
-        Wiadomość sms{" "}
-        <span>
-          zostanie wysłana podczas usunięcia serwisu przez pracownika/pracodawce
-        </span>
-        {editSMSSettngs && (
-          <>
-            {" "}
-            Jeżeli wizyta zostanie usunięta przez pracownika lub pracodawce
-            firmy, to użytkownik otrzyma wiadomość SMS.
-          </>
-        )}
-      </TextInfoCheckbox>
-      {editSMSSettngs && (
-        <CheckboxStyle siteProps={siteProps}>
-          <Checkbox
-            theme="material-checkbox"
-            value={companySMSServiceDeletedAvaible}
-            onChange={() => {
-              handleChangeCheckboxes(setCompanySMSServiceDeletedAvaible)
-            }}
-          >
-            <TextCheckbox>
-              {!companySMSServiceDeletedAvaible
-                ? "Usługa wyłączona"
-                : "Usługa włączona"}
-            </TextCheckbox>
-          </Checkbox>
-        </CheckboxStyle>
-      )}
-      <TextInfoCheckbox
-        siteProps={siteProps}
-        edited={editSMSSettngs}
         active={companySMSCommunitingNotificationAvaible}
       >
         Wiadomość sms <span>zostanie wysłana 1 dzień przed dojazdem</span>
@@ -721,40 +669,6 @@ const SMSSettings = ({
           </Checkbox>
         </CheckboxStyle>
       )}
-      <TextInfoCheckbox
-        siteProps={siteProps}
-        edited={editSMSSettngs}
-        active={companySMSCommunitingDeletedAvaible}
-      >
-        Wiadomość sms{" "}
-        <span>
-          zostanie wysłana podczas usuwania dojazdu przez pracownika/pracodawce
-        </span>
-        {editSMSSettngs && (
-          <>
-            {" "}
-            Jeżeli dojazd zostanie usuwania przez pracownika lub pracodawce
-            firmy, to użytkownik otrzyma wiadomość SMS.
-          </>
-        )}
-      </TextInfoCheckbox>
-      {editSMSSettngs && (
-        <CheckboxStyle siteProps={siteProps}>
-          <Checkbox
-            theme="material-checkbox"
-            value={companySMSCommunitingDeletedAvaible}
-            onChange={() => {
-              handleChangeCheckboxes(setCompanySMSCommunitingDeletedAvaible)
-            }}
-          >
-            <TextCheckbox>
-              {!companySMSCommunitingDeletedAvaible
-                ? "Usługa wyłączona"
-                : "Usługa włączona"}
-            </TextCheckbox>
-          </Checkbox>
-        </CheckboxStyle>
-      )}
       {isCompanyEditProfil ? (
         editSMSSettngs ? (
           <>
@@ -796,8 +710,6 @@ const SMSSettings = ({
                       companySMSServiceFinishedAvaible &&
                     smsServiceCanceledAvaible ===
                       companySMSServiceCanceledAvaible &&
-                    smsServiceDeletedAvaible ===
-                      companySMSServiceDeletedAvaible &&
                     smsCommunitingNotificationAvaible ===
                       companySMSCommunitingNotificationAvaible &&
                     smsCommunitingCreatedAvaible ===
@@ -805,9 +717,7 @@ const SMSSettings = ({
                     smsCommunitingChangedAvaible ===
                       companySMSCommunitingChangedAvaible &&
                     smsCommunitingCanceledAvaible ===
-                      companySMSCommunitingCanceledAvaible &&
-                    smsCommunitingDeletedAvaible ===
-                      companySMSCommunitingDeletedAvaible
+                      companySMSCommunitingCanceledAvaible
                   }
                 />
               </MarginButton>
