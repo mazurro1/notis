@@ -202,6 +202,7 @@ const CalendarWorkerReserwatinNewReserwation = ({
   user,
   setChooseEventMenu,
   setNewReserwationOpen,
+  activeWorker,
 }) => {
   const [reserwationMessage, setReserwationMessage] = useState("")
   const [openDateStart, setOpenDateStart] = useState(false)
@@ -299,7 +300,7 @@ const CalendarWorkerReserwatinNewReserwation = ({
       })
 
       const findWorker = [ownerValue, ...mapWorkers].find(
-        itemWorker => itemWorker.value === user.userId
+        itemWorker => itemWorker.value === activeWorker
       )
       if (!!findWorker) {
         selectedWorkerValue = findWorker
@@ -307,7 +308,7 @@ const CalendarWorkerReserwatinNewReserwation = ({
     }
     setSelectedService(null)
     setSelectedWorker(selectedWorkerValue)
-  }, [chooseEventMenu, user, companyItems])
+  }, [chooseEventMenu, user, companyItems, activeWorker])
 
   const handleOpenDateStartTimePicker = () => {
     setOpenDateStart(prevState => !prevState)
@@ -485,13 +486,15 @@ const CalendarWorkerReserwatinNewReserwation = ({
       if (!!selectedWorker) {
         if (selectedWorker.value === companyItems.owner._id) {
           selectedWorkerServicesIds = companyItems.ownerData.servicesCategory
-        }
-      } else {
-        const findServicesInWorkers = companyItems.workers.find(
-          itemWorker => itemWorker.user._id === selectedWorker.value
-        )
-        if (!!findServicesInWorkers) {
-          selectedWorkerServicesIds = findServicesInWorkers.servicesCategory
+        } else {
+          if (!!companyItems.workers) {
+            const findServicesInWorkers = companyItems.workers.find(
+              itemWorker => itemWorker.user._id === selectedWorker.value
+            )
+            if (!!findServicesInWorkers) {
+              selectedWorkerServicesIds = findServicesInWorkers.servicesCategory
+            }
+          }
         }
       }
 

@@ -600,7 +600,7 @@ const BigCalendarWorkerReserwations = ({
         } else if (!!itemMaped.name) {
           userName = Buffer.from(itemMaped.name, "base64").toString("utf-8")
         }
-        console.log(itemMaped)
+
         let userSurname = ""
         if (!!itemMaped.fromUser) {
           if (!!itemMaped.fromUser.surname) {
@@ -610,10 +610,10 @@ const BigCalendarWorkerReserwations = ({
             ).toString("utf-8")
           }
         } else if (!!itemMaped.surname) {
-            userSurname = Buffer.from(itemMaped.surname, "base64").toString(
-              "utf-8"
-            )
-          }
+          userSurname = Buffer.from(itemMaped.surname, "base64").toString(
+            "utf-8"
+          )
+        }
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
         const itemMapedResult = {
@@ -1331,6 +1331,7 @@ const BigCalendarWorkerReserwations = ({
           chooseEventMenu={chooseEventMenu}
           setChooseEventMenu={setChooseEventMenu}
           setNewReserwationOpen={setNewReserwationOpen}
+          activeWorker={isAdmin ? userWorkerActive : user.userId}
         />
       </BackgroundContentCalendar>
       <Popup

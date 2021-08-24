@@ -119,7 +119,7 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
             effect="float"
             multiline={true}
           >
-            <span>Historia rezerwacji klienta</span>
+            <span>Rezerwacje klienta</span>
           </ReactTooltip>
           <ReactTooltip id="phoneItemUserInfo" effect="float" multiline={true}>
             <span>Pokaż numer telefonu klienta</span>

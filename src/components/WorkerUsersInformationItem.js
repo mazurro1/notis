@@ -852,7 +852,7 @@ const WorkerUsersInformationItem = ({
         <Popup
           popupEnable={clickHistory}
           position="absolute"
-          title="Historia rezerwacji"
+          title="Rezerwacje"
           borderRadius
           closeTitle={false}
           smallTitle

@@ -194,7 +194,9 @@ const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
   }
 
   const handleClickAlertVisible = () => {
-    // setAlertVisible(prevState => !prevState)
+    if (!!user.alertActiveCount) {
+      dispatch(resetUserAlerts())
+    }
 
     dispatch(resetBellAlerts(!bellAlertsActive))
     const isSomeActive = allAlerts.some(item => item.active)
@@ -203,7 +205,6 @@ const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
         dispatch(fetchUpdateUserAlert(user.token))
       }
     } else if (bellAlertsActive === false) {
-      dispatch(resetUserAlerts())
     }
     if (bellAlertsActive === true) {
       const mapAllerts = allAlerts.map(item => {
