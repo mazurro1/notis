@@ -1901,7 +1901,7 @@ const reducer = (state = initialState, action) => {
       }
 
       const indexCommunitingId = userHistoryCommunitingsNew.findIndex(item => {
-        return item._id === action.opinion.communitingId._id
+        return item._id === action.opinion.communitingId
       })
 
       if (indexCommunitingId >= 0) {

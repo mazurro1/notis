@@ -292,7 +292,7 @@ const UserHistoryServicesCategoryItem = ({
       }
 
       dispatch(
-        fetchAddOpinionService(user.token, opinionData, user.company._id)
+        fetchAddOpinionService(user.token, opinionData, item.companyId._id)
       )
     }
   }
@@ -310,7 +310,7 @@ const UserHistoryServicesCategoryItem = ({
         fetchUpdateEditedOpinionService(
           user.token,
           opinionData,
-          user.company._id
+          item.companyId._id
         )
       )
     }

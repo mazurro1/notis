@@ -701,6 +701,14 @@ export const generateBellAllertItemContentSwitch = (
     }
     case "opinion_client": {
       alertColor = "gray"
+      const validTexts = !!alert.reserwationId
+        ? { reserwation: alert.reserwationId.serviceName }
+        : !!alert.serviceId
+        ? { service: alert.serviceId.objectName }
+        : !!alert.communitingId
+        ? { communiting: alert.communitingId.city }
+        : null
+
       if (!isCompanyChanged) {
         if (isUserAlert) {
           alertMessage = generateAlertFromProps({
@@ -710,7 +718,7 @@ export const generateBellAllertItemContentSwitch = (
                 {companyName(alertColor)}
               </>
             ),
-            reserwation: alert.reserwationId.serviceName,
+            ...validTexts,
             texts: texts,
           })
         } else {
@@ -722,7 +730,7 @@ export const generateBellAllertItemContentSwitch = (
                 {texts[alert.type].noCompanyChangedNoUser.title[1]}
               </>
             ),
-            reserwation: alert.reserwationId.serviceName,
+            ...validTexts,
             texts: texts,
           })
         }
@@ -731,6 +739,14 @@ export const generateBellAllertItemContentSwitch = (
     }
     case "opinion_client_edit": {
       alertColor = "gray"
+      const validTexts = !!alert.reserwationId
+        ? { reserwation: alert.reserwationId.serviceName }
+        : !!alert.serviceId
+        ? { service: alert.serviceId.objectName }
+        : !!alert.communitingId
+        ? { communiting: alert.communitingId.city }
+        : null
+
       if (!isCompanyChanged) {
         if (isUserAlert) {
           alertMessage = generateAlertFromProps({
@@ -740,7 +756,7 @@ export const generateBellAllertItemContentSwitch = (
                 {companyName(alertColor)}
               </>
             ),
-            reserwation: alert.reserwationId.serviceName,
+            ...validTexts,
             texts: texts,
           })
         } else {
@@ -752,7 +768,7 @@ export const generateBellAllertItemContentSwitch = (
                 {texts[alert.type].noCompanyChangedNoUser.title[1]}
               </>
             ),
-            reserwation: alert.reserwationId.serviceName,
+            ...validTexts,
             texts: texts,
           })
         }
@@ -761,6 +777,14 @@ export const generateBellAllertItemContentSwitch = (
     }
     case "opinion_from_company": {
       alertColor = "gray"
+      const validTexts = !!alert.reserwationId
+        ? { reserwation: alert.reserwationId.serviceName }
+        : !!alert.serviceId
+        ? { service: alert.serviceId.objectName }
+        : !!alert.communitingId
+        ? { communiting: alert.communitingId.city }
+        : null
+
       if (isCompanyChanged) {
         if (isUserAlert) {
           alertMessage = generateAlertFromProps({
@@ -771,7 +795,7 @@ export const generateBellAllertItemContentSwitch = (
                 {texts[alert.type].companyChangedUser.title[1]}
               </>
             ),
-            reserwation: alert.reserwationId.serviceName,
+            ...validTexts,
             texts: texts,
           })
         } else {
@@ -782,7 +806,7 @@ export const generateBellAllertItemContentSwitch = (
                 {userSurname}
               </>
             ),
-            reserwation: alert.reserwationId.serviceName,
+            ...validTexts,
             texts: texts,
           })
         }

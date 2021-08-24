@@ -311,7 +311,7 @@ const UserHistoryCommunitingCategoryItem = ({
       }
 
       dispatch(
-        fetchAddOpinionCommuniting(user.token, opinionData, user.company._id)
+        fetchAddOpinionCommuniting(user.token, opinionData, item.companyId._id)
       )
     }
   }
@@ -329,7 +329,7 @@ const UserHistoryCommunitingCategoryItem = ({
         fetchUpdateEditedOpinionCommuniting(
           user.token,
           opinionData,
-          user.company._id
+          item.companyId._id
         )
       )
     }

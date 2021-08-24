@@ -4412,10 +4412,11 @@ export const fetchAddOpinion = (token, opinionData, company) => {
         }
       )
       .then(response => {
+        console.log(response.data)
         dispatch(
           addNewOpinionToReserwation(
             opinionData.reserwationId,
-            response.data.opinion,
+            response.data.opinion.opinionId,
             company,
             opinionData.company
           )
@@ -6858,7 +6859,7 @@ export const fetchAddOpinionCommuniting = (token, opinionData, company) => {
         dispatch(
           addNewOpinionToCommuniting(
             opinionData.communitingId,
-            response.data.opinion,
+            response.data.opinion.opinionId,
             company,
             opinionData.company
           )
@@ -6958,7 +6959,7 @@ export const fetchAddOpinionService = (token, opinionData, company) => {
         dispatch(
           addNewOpinionToService(
             opinionData.serviceId,
-            response.data.opinion,
+            response.data.opinion.opinionId,
             company,
             opinionData.company
           )

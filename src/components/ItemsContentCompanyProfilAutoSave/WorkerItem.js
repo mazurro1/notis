@@ -294,7 +294,9 @@ const WorkerItem = ({
     )
   }
 
-  const handleSentAgainEmailVeryfication = () => {
+  const handleSentAgainEmailVeryfication = e => {
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     dispatch(
       fetchAddAgainWorkerToCompany(companyId, item.user.email, user.token)
     )
