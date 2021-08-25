@@ -85,7 +85,7 @@ const CompanyStatistics = ({ siteProps, user }) => {
   const refChart = useRef(null)
   const companyStats = useSelector(state => state.companyStats)
   const dispatch = useDispatch()
-  console.log(companyStats)
+
   const isAdmin = user.userId === user.company.owner
 
   useEffect(() => {

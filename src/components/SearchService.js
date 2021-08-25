@@ -236,7 +236,7 @@ const SearchService = ({ serviceId = null, siteProps }) => {
   ) : (
     <div></div>
   )
-  console.log(downloadedService)
+
   return (
     <>
       <TitleIndexValue>Znajdz serwis</TitleIndexValue>

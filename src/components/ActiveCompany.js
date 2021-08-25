@@ -2,11 +2,13 @@ import React, { useRef, useState } from "react"
 import styled from "styled-components"
 import PinField from "react-pin-field"
 import ButtonIcon from "./ButtonIcon"
-import { MdClose, MdCheck, MdEmail, MdDelete } from "react-icons/md"
+import { MdClose, MdCheck, MdEmail, MdDelete, MdPhone } from "react-icons/md"
 import {
   fetchActiveCompanyAccount,
   fetchSentAgainCompanyActivedEmail,
   fetchConfirmDeleteCreatedCompany,
+  fetchSentAgainCompanyActivedPhone,
+  fetchActiveCompanyAccountPhone,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
@@ -68,7 +70,11 @@ const SaveUserButtons = styled.div`
   align-items: center;
 `
 
-const ActiveCompany = () => {
+const ActiveCompany = ({
+  smsToConfirm = false,
+  isBlockUserSendVerifiedPhoneSms = false,
+  dateBlockUserSendVerifiedPhoneSms = null,
+}) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [activeCode, setActiveCode] = useState("")
@@ -85,18 +91,33 @@ const ActiveCompany = () => {
   }
 
   const handleSentAgain = () => {
-    dispatch(fetchSentAgainCompanyActivedEmail(user.token, user.company._id))
+    if (smsToConfirm) {
+      dispatch(fetchSentAgainCompanyActivedPhone(user.token, user.company._id))
+    } else {
+      dispatch(fetchSentAgainCompanyActivedEmail(user.token, user.company._id))
+    }
   }
 
   const handleActiveAccount = () => {
-    dispatch(
-      fetchActiveCompanyAccount(
-        activeCode,
-        user.company._id,
-        user.token,
-        user.userId
+    if (smsToConfirm) {
+      dispatch(
+        fetchActiveCompanyAccountPhone(
+          activeCode,
+          user.company._id,
+          user.token,
+          user.userId
+        )
       )
-    )
+    } else {
+      dispatch(
+        fetchActiveCompanyAccount(
+          activeCode,
+          user.company._id,
+          user.token,
+          user.userId
+        )
+      )
+    }
   }
 
   const handleToConfirmDelete = () => {
@@ -109,7 +130,39 @@ const ActiveCompany = () => {
 
   const tooltipActive = activeCode.length === 0 && (
     <ReactTooltip id="alertActive" effect="float" multiline={true}>
-      <span>Uzupełnij kod aktywacyjny, który otrzymałeś na adres email.</span>
+      <span>
+        {smsToConfirm
+          ? "Uzupełnij kod aktywacyjny, który otrzymałeś na podany numer telefonu."
+          : "Uzupełnij kod aktywacyjny, który otrzymałeś na podany adres email."}
+      </span>
+    </ReactTooltip>
+  )
+
+  const tooltipSendAgainPhoneSms = isBlockUserSendVerifiedPhoneSms && (
+    <ReactTooltip
+      id="alertChangePhoneSendSmsCompany"
+      effect="float"
+      multiline={true}
+    >
+      <div>
+        Kod aktywacyjny można ponownie wysłać:{" "}
+        {dateBlockUserSendVerifiedPhoneSms.getDate() < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getDate()}`
+          : dateBlockUserSendVerifiedPhoneSms.getDate()}
+        .
+        {dateBlockUserSendVerifiedPhoneSms.getMonth() + 1 < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getMonth() + 1}`
+          : dateBlockUserSendVerifiedPhoneSms.getMonth() + 1}
+        .{dateBlockUserSendVerifiedPhoneSms.getFullYear()}
+        {" o godzinie: "}
+        {dateBlockUserSendVerifiedPhoneSms.getHours() < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getHours()}`
+          : dateBlockUserSendVerifiedPhoneSms.getHours()}
+        :
+        {dateBlockUserSendVerifiedPhoneSms.getMinutes() < 10
+          ? `0${dateBlockUserSendVerifiedPhoneSms.getMinutes()}`
+          : dateBlockUserSendVerifiedPhoneSms.getMinutes()}
+      </div>
     </ReactTooltip>
   )
 
@@ -117,7 +170,9 @@ const ActiveCompany = () => {
     <BackgroundContent>
       {tooltipActive}
       <TextToActivation>
-        Kod do aktywacji, który został wysłany na adres e-mail:
+        {smsToConfirm
+          ? "Podaj kod do aktywacji, który został wysłany na podany numer telefonu:"
+          : "Podaj kod do aktywacji, który został wysłany na podany adres e-mail:"}
       </TextToActivation>
       <PanFieldStyle
         ref={fieldOneRef}
@@ -141,14 +196,16 @@ const ActiveCompany = () => {
           onClick={handleReset}
           disabled={!activeCode.length > 0}
         />
-        <MarginBottom>
+        {tooltipSendAgainPhoneSms}
+        <MarginBottom data-tip data-for="alertChangePhoneSendSmsCompany">
           <ButtonIcon
             title="Wyślij kod jeszcze raz"
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<MdEmail />}
+            icon={smsToConfirm ? <MdPhone /> : <MdEmail />}
             onClick={handleSentAgain}
+            disabled={isBlockUserSendVerifiedPhoneSms}
           />
         </MarginBottom>
         <MarginBottom>

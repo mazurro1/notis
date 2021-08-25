@@ -1143,7 +1143,10 @@ const Navigation = ({ isMainPage }) => {
       }
     }
     if (!!user.company) {
-      if (!!user.company.accountVerified) {
+      if (
+        !!user.company.accountPhoneVerified &&
+        !!user.company.accountEmailVerified
+      ) {
         companyConfirmed = true
       }
       if (!!user.company.premium) {

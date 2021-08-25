@@ -998,6 +998,42 @@ export const UPDATE_COMMUNITING_COMPANY_COMMUNITING =
 export const RESET_WORKER_DELETE = "RESET_WORKER_DELETE"
 export const RESET_WORKER_NEW_CLIENT_RESERWATION =
   "RESET_WORKER_NEW_CLIENT_RESERWATION"
+export const UPDATE_STATUS_ACTIVE_COMPANY_EMAIL =
+  "UPDATE_STATUS_ACTIVE_COMPANY_EMAIL"
+export const RESET_COMPANY_EDIT_PROFIL = "RESET_COMPANY_EDIT_PROFIL"
+export const UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS =
+  "UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS"
+
+export const fetchResetCompanyEditProfil = value => {
+  return {
+    type: RESET_COMPANY_EDIT_PROFIL,
+    value: value,
+  }
+}
+
+export const fetchUpdateStatusActiveCompanyEmail = (
+  companyId,
+  accountEmailVerified,
+  codeToVerifiedPhone
+) => {
+  return {
+    type: UPDATE_STATUS_ACTIVE_COMPANY_EMAIL,
+    companyId: companyId,
+    accountEmailVerified: accountEmailVerified,
+    codeToVerifiedPhone: codeToVerifiedPhone,
+  }
+}
+
+export const updateBlockSendVerifiedPhoneSms = (
+  companyId,
+  blockSendVerifiedPhoneSms
+) => {
+  return {
+    type: UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS,
+    companyId: companyId,
+    blockSendVerifiedPhoneSms: blockSendVerifiedPhoneSms,
+  }
+}
 
 export const fetchResetWorkerNewClientReserwation = () => {
   return {
@@ -2053,7 +2089,56 @@ export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
       .then(response => {
         dispatch(
           addAlertItem(
-            "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe na adres email",
+            "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe podany adres email",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania kodu aktywującego konto firmowe",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+      })
+  }
+}
+
+export const fetchSentAgainCompanyActivedPhone = (token, companyId) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/company-sent-again-verification-phone`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateBlockSendVerifiedPhoneSms(
+            companyId,
+            response.data.blockSendVerifiedPhoneSms
+          )
+        )
+        dispatch(
+          addAlertItem(
+            "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe na podany numer telefonu",
             "green"
           )
         )
@@ -2101,9 +2186,61 @@ export const fetchActiveCompanyAccount = (
         }
       )
       .then(response => {
-        dispatch(addAlertItem("Pomyślnie aktywowano konto firmowe", "green"))
-        dispatch(fetchAutoLogin(true, true, token, userId))
+        dispatch(addAlertItem("Pomyślnie aktywowano email firmowy", "green"))
+        dispatch(
+          fetchUpdateStatusActiveCompanyEmail(
+            companyId,
+            response.data.accountEmailVerified,
+            false
+          )
+        )
+
         dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas aktywowania konta firmowego", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchActiveCompanyAccountPhone = (
+  codeToVerified,
+  companyId,
+  token,
+  userId
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .patch(
+        `${Site.serverUrl}/company-veryfied-phone`,
+        {
+          companyId: companyId,
+          codeToVerified: codeToVerified,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(addAlertItem("Pomyślnie aktywowano telefon firmowy", "green"))
+        dispatch(fetchAutoLogin(true, true, token, userId))
+        dispatch(fetchUpdateStatusActiveCompanyEmail(companyId, true, true))
       })
       .catch(error => {
         if (!!error) {
@@ -4408,7 +4545,6 @@ export const fetchAddOpinion = (token, opinionData, company) => {
         }
       )
       .then(response => {
-        console.log(response.data)
         dispatch(
           addNewOpinionToReserwation(
             opinionData.reserwationId,

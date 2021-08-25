@@ -57,6 +57,9 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS,
+  RESET_COMPANY_EDIT_PROFIL,
+  UPDATE_STATUS_ACTIVE_COMPANY_EMAIL,
   ADD_EDITED_OPINION_TO_SERVICE,
   ADD_EDITED_OPINION_TO_COMMUNITING,
   ADD_NEW_OPINION_TO_SERVICE,
@@ -234,6 +237,7 @@ const initialState = {
     value: 1,
     label: "Lista ofert",
   },
+  resetCompanyEditProfil: false,
   resetWorkerNewClientReserwation: false,
   companyTransactionHistory: [],
   errorLoadingPage: false,
@@ -819,6 +823,72 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case RESET_COMPANY_EDIT_PROFIL: {
+      return {
+        ...state,
+        resetCompanyEditProfil: action.value,
+      }
+    }
+
+    case UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS: {
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.blockSendVerifiedPhoneSms =
+              action.blockSendVerifiedPhoneSms
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].blockSendVerifiedPhoneSms = action.blockSendVerifiedPhoneSms
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+      }
+    }
+
+    case UPDATE_STATUS_ACTIVE_COMPANY_EMAIL: {
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.accountEmailVerified =
+              action.accountEmailVerified
+            userCompanyToConfirm.company.codeToVerifiedPhone =
+              action.codeToVerifiedPhone
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].accountEmailVerified = action.accountEmailVerified
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].codeToVerifiedPhone = action.codeToVerifiedPhone
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+      }
+    }
 
     case ADD_COMPANY_COMMUNITINGS: {
       const allCompanyCommunitings = { ...state.companyCommunitings }
