@@ -666,6 +666,32 @@ const OpinionAndAdressContent = ({
                     ? company.email
                     : "Błąd podczas pobierania adresu e-mail"}
                 </DisabledTextToEdit>
+                <TextStyleInfo siteProps={siteProps}>
+                  Telefon firmowy:
+                </TextStyleInfo>
+                <DisabledTextToEdit siteProps={siteProps}>
+                  {!!phoneInput
+                    ? phoneInput
+                    : "Błąd podczas pobierania telefonu firmowego"}
+                </DisabledTextToEdit>
+                {/* <MarginBottomSelect>
+                  <InputPhone
+                    defaultValues={phoneInput}
+                    setPhoneNumber={setPhoneInput}
+                    width={20}
+                    marginElements={5}
+                  />
+                </MarginBottomSelect> */}
+                <MarginBottomSelect>
+                  <InputPhone
+                    defaultValues={landlinePhone}
+                    setPhoneNumber={setLandlinePhone}
+                    width={26}
+                    marginElements={5}
+                    textPhone="Numer stacjonarny:"
+                    phoneLength={7}
+                  />
+                </MarginBottomSelect>
                 <InputIcon
                   icon={<MdWork />}
                   placeholder="Nazwa firmy"
@@ -716,22 +742,7 @@ const OpinionAndAdressContent = ({
                   required
                   validText="Minimum 3 znaki"
                 />
-                <MarginBottomSelect>
-                  <InputPhone
-                    defaultValues={phoneInput}
-                    setPhoneNumber={setPhoneInput}
-                    width={20}
-                    marginElements={5}
-                  />
-                </MarginBottomSelect>
-                <InputPhone
-                  defaultValues={landlinePhone}
-                  setPhoneNumber={setLandlinePhone}
-                  width={20}
-                  marginElements={5}
-                  textPhone="Numer stacjonarny:"
-                  phoneLength={7}
-                />
+
                 <TextStyleInfo siteProps={siteProps}>
                   Rezerwacja co:
                 </TextStyleInfo>

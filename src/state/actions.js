@@ -1003,6 +1003,14 @@ export const UPDATE_STATUS_ACTIVE_COMPANY_EMAIL =
 export const RESET_COMPANY_EDIT_PROFIL = "RESET_COMPANY_EDIT_PROFIL"
 export const UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS =
   "UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS"
+export const RESET_CREATE_COMPANY = "RESET_CREATE_COMPANY"
+
+export const updateResetCreateCompany = value => {
+  return {
+    type: RESET_CREATE_COMPANY,
+    value: value,
+  }
+}
 
 export const fetchResetCompanyEditProfil = value => {
   return {
@@ -2048,6 +2056,7 @@ export const fetchCompanyRegistration = (
       .then(response => {
         dispatch(changeSpinner(false))
         dispatch(fetchAutoLogin(true, true, userToken, userId, true))
+        dispatch(updateResetCreateCompany(true))
       })
       .catch(error => {
         if (!!error) {
@@ -2058,6 +2067,8 @@ export const fetchCompanyRegistration = (
               dispatch(addAlertItem("Email jest zajęty", "red"))
             } else if (error.response.status === 442) {
               dispatch(addAlertItem("Podano nieprawidłowy adress", "red"))
+            } else if (error.response.status === 443) {
+              dispatch(addAlertItem("Nieprawidłowy numer NIP", "red"))
             } else {
               dispatch(
                 addAlertItem("Błąd podczas tworzenia konta firmowego", "red")

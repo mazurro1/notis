@@ -69,7 +69,7 @@ const CreateCompany = ({ user, siteProps }) => {
     emailInput.length > 0 &&
     nameInput.length >= 3 &&
     nipInput.length === 10 &&
-    phoneInput.length >= 7 &&
+    phoneInput.length === 9 &&
     cityInput.length >= 3 &&
     codeInput.length >= 5 &&
     discrictInput.length >= 3 &&
@@ -106,7 +106,7 @@ const CreateCompany = ({ user, siteProps }) => {
       if (nipInput.length < 10) {
         dispatch(addAlertItem("Nieprawidłowy numer nip", "red"))
       }
-      if (phoneInput.length < 7) {
+      if (phoneInput.length < 9) {
         dispatch(addAlertItem("Nieprawidłowy numer telefonu", "red"))
       }
       if (cityInput.length < 3) {
@@ -230,7 +230,10 @@ const CreateCompany = ({ user, siteProps }) => {
         required
         validText="Minimum 3 znaki"
       />
-      <InputPhone setPhoneNumber={setPhoneInput} />
+      <InputPhone
+        setPhoneNumber={setPhoneInput}
+        textPhone="Numer telefonu służący do weryfikacji działalności"
+      />
       <RegulationsText siteProps={siteProps}>
         Klikając w przycisk poniżej akceptujesz{" "}
         <LinkEffect text="Regulamin" path="/regulations" />

@@ -57,6 +57,7 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  RESET_CREATE_COMPANY,
   UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS,
   RESET_COMPANY_EDIT_PROFIL,
   UPDATE_STATUS_ACTIVE_COMPANY_EMAIL,
@@ -237,6 +238,7 @@ const initialState = {
     value: 1,
     label: "Lista ofert",
   },
+  resetCreateCompany: false,
   resetCompanyEditProfil: false,
   resetWorkerNewClientReserwation: false,
   companyTransactionHistory: [],
@@ -823,6 +825,13 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
     //COMPANY
+
+    case RESET_CREATE_COMPANY: {
+      return {
+        ...state,
+        resetCreateCompany: action.value,
+      }
+    }
 
     case RESET_COMPANY_EDIT_PROFIL: {
       return {

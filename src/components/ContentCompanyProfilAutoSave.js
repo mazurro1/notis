@@ -517,59 +517,6 @@ const ContentCompanyProfilAutoSave = ({
                   Pozostała ilość SMS: <span>{companySMS}</span>
                 </div>
               </CompanyPremiumInformation>
-              {isEditAndAdmin && (
-                <RightColumnItem
-                  {...companyEditProfilProps}
-                  siteProps={siteProps}
-                  active={editSMSSettngs}
-                  disabledEditButtons={disabledEditButtons}
-                  premiumActive={premiumActive}
-                >
-                  <SMSSettings
-                    premiumActive={premiumActive}
-                    TitleRightColumn={TitleRightColumn}
-                    ButtonEditPosition={ButtonEditPosition}
-                    {...companyEditProfilProps}
-                    company={company}
-                    editMode={editMode}
-                    siteProps={siteProps}
-                    user={user}
-                    editSMSSettngs={editSMSSettngs}
-                    setEditSMSSettngs={setEditSMSSettngs}
-                    handleResetAllEditedComponents={
-                      handleResetAllEditedComponents
-                    }
-                    disabledEditButtons={disabledEditButtons}
-                    smsReserwationAvaible={company.smsReserwationAvaible}
-                    smsReserwationChangedUserAvaible={
-                      company.smsReserwationChangedUserAvaible
-                    }
-                    smsNotifactionAvaible={company.smsNotifactionAvaible}
-                    smsCanceledAvaible={company.smsCanceledAvaible}
-                    smsChangedAvaible={company.smsChangedAvaible}
-                    smsServiceCreatedAvaible={company.smsServiceCreatedAvaible}
-                    smsServiceChangedAvaible={company.smsServiceChangedAvaible}
-                    smsServiceFinishedAvaible={
-                      company.smsServiceFinishedAvaible
-                    }
-                    smsServiceCanceledAvaible={
-                      company.smsServiceCanceledAvaible
-                    }
-                    smsCommunitingNotificationAvaible={
-                      company.smsCommunitingNotificationAvaible
-                    }
-                    smsCommunitingCreatedAvaible={
-                      company.smsCommunitingCreatedAvaible
-                    }
-                    smsCommunitingChangedAvaible={
-                      company.smsCommunitingChangedAvaible
-                    }
-                    smsCommunitingCanceledAvaible={
-                      company.smsCommunitingCanceledAvaible
-                    }
-                  />
-                </RightColumnItem>
-              )}
             </>
           )}
           {editMode && isCompanyEditProfil && isAdmin ? (
@@ -910,6 +857,64 @@ const ContentCompanyProfilAutoSave = ({
                 editMode={editMode}
               />
             )}
+          {companyEditProfilProps.isCompanyEditProfil && (
+            <>
+              {isEditAndAdmin && (
+                <RightColumnItem
+                  {...companyEditProfilProps}
+                  siteProps={siteProps}
+                  active={editSMSSettngs}
+                  disabledEditButtons={disabledEditButtons}
+                  premiumActive={premiumActive}
+                >
+                  <SMSSettings
+                    premiumActive={premiumActive}
+                    TitleRightColumn={TitleRightColumn}
+                    ButtonEditPosition={ButtonEditPosition}
+                    {...companyEditProfilProps}
+                    company={company}
+                    editMode={editMode}
+                    siteProps={siteProps}
+                    user={user}
+                    editSMSSettngs={editSMSSettngs}
+                    setEditSMSSettngs={setEditSMSSettngs}
+                    handleResetAllEditedComponents={
+                      handleResetAllEditedComponents
+                    }
+                    disabledEditButtons={disabledEditButtons}
+                    smsReserwationAvaible={company.smsReserwationAvaible}
+                    smsReserwationChangedUserAvaible={
+                      company.smsReserwationChangedUserAvaible
+                    }
+                    smsNotifactionAvaible={company.smsNotifactionAvaible}
+                    smsCanceledAvaible={company.smsCanceledAvaible}
+                    smsChangedAvaible={company.smsChangedAvaible}
+                    smsServiceCreatedAvaible={company.smsServiceCreatedAvaible}
+                    smsServiceChangedAvaible={company.smsServiceChangedAvaible}
+                    smsServiceFinishedAvaible={
+                      company.smsServiceFinishedAvaible
+                    }
+                    smsServiceCanceledAvaible={
+                      company.smsServiceCanceledAvaible
+                    }
+                    smsCommunitingNotificationAvaible={
+                      company.smsCommunitingNotificationAvaible
+                    }
+                    smsCommunitingCreatedAvaible={
+                      company.smsCommunitingCreatedAvaible
+                    }
+                    smsCommunitingChangedAvaible={
+                      company.smsCommunitingChangedAvaible
+                    }
+                    smsCommunitingCanceledAvaible={
+                      company.smsCommunitingCanceledAvaible
+                    }
+                  />
+                </RightColumnItem>
+              )}
+            </>
+          )}
+
           <ReportCompany
             siteProps={siteProps}
             user={user}
@@ -954,7 +959,7 @@ const ContentCompanyProfilAutoSave = ({
             {disabledEditButtons && premiumActive
               ? "Aby móc edytować ten element zakończ edytowanie poprzedniego elementu."
               : !premiumActive
-              ? "Aktywuj konto, aby móc korzystać z wybranych funkcji."
+              ? "Aktywuj konto premium, aby móc korzystać z wybranych funkcji."
               : ""}
           </span>
         </ReactTooltip>
@@ -973,7 +978,9 @@ const ContentCompanyProfilAutoSave = ({
           effect="float"
           multiline={true}
         >
-          <span>Aktywuj konto, aby móc korzystać z wybranych funkcji.</span>
+          <span>
+            Aktywuj konto premium, aby móc korzystać z wybranych funkcji.
+          </span>
         </ReactTooltip>
       )}
     </div>

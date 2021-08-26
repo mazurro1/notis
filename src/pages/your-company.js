@@ -7,20 +7,29 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   changeLoginVisible,
   changeCreateCompanyVisible,
+  updateResetCreateCompany,
 } from "../state/actions"
 import sal from "sal.js"
 import ReactTooltip from "react-tooltip"
+import { navigate } from "gatsby"
 
 const MarginTop = styled.div`
   margin-top: 30px;
 `
-
 const YourCompany = () => {
   const user = useSelector(state => state.user)
   const loginVisible = useSelector(state => state.loginVisible)
+  const resetCreateCompany = useSelector(state => state.resetCreateCompany)
   const createCompanyVisible = useSelector(state => state.createCompanyVisible)
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!!resetCreateCompany) {
+      dispatch(updateResetCreateCompany(false))
+      navigate("/company-profil")
+    }
+  }, [resetCreateCompany]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     sal({
@@ -31,7 +40,7 @@ const YourCompany = () => {
 
   useEffect(() => {
     ReactTooltip.rebuild()
-  }, [user])
+  }, [user, resetCreateCompany])
 
   const handleToLogin = () => {
     dispatch(changeLoginVisible(!loginVisible))

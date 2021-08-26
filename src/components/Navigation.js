@@ -1468,7 +1468,8 @@ const Navigation = ({ isMainPage }) => {
                       multiline={true}
                     >
                       <span>
-                        Aktywuj konto, aby móc korzystać z wybranych funkcji.
+                        Aktywuj konto premium, aby móc korzystać z wybranych
+                        funkcji.
                       </span>
                     </ReactTooltip>
                   )}
