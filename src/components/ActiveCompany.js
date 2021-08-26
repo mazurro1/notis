@@ -9,6 +9,8 @@ import {
   fetchConfirmDeleteCreatedCompany,
   fetchSentAgainCompanyActivedPhone,
   fetchActiveCompanyAccountPhone,
+  fetchCancelUpdateCompanyPhone,
+  fetchUpdateCompanyPhoneVeryfiedCode,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
@@ -74,6 +76,7 @@ const ActiveCompany = ({
   smsToConfirm = false,
   isBlockUserSendVerifiedPhoneSms = false,
   dateBlockUserSendVerifiedPhoneSms = null,
+  hasNewFieldToValid = true,
 }) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -91,32 +94,72 @@ const ActiveCompany = ({
   }
 
   const handleSentAgain = () => {
-    if (smsToConfirm) {
-      dispatch(fetchSentAgainCompanyActivedPhone(user.token, user.company._id))
+    if (hasNewFieldToValid) {
+      if (smsToConfirm) {
+        console.log("to do sent again")
+        // dispatch(
+        //   fetchUpdateCompanyPhoneVeryfiedCode(user.token, user.company._id)
+        // )
+      } else {
+        console.log("to do email")
+        // dispatch(
+        //   fetchSentAgainCompanyActivedEmail(user.token, user.company._id)
+        // )
+      }
     } else {
-      dispatch(fetchSentAgainCompanyActivedEmail(user.token, user.company._id))
+      if (smsToConfirm) {
+        dispatch(
+          fetchSentAgainCompanyActivedPhone(user.token, user.company._id)
+        )
+      } else {
+        dispatch(
+          fetchSentAgainCompanyActivedEmail(user.token, user.company._id)
+        )
+      }
     }
   }
 
   const handleActiveAccount = () => {
-    if (smsToConfirm) {
-      dispatch(
-        fetchActiveCompanyAccountPhone(
-          activeCode,
-          user.company._id,
-          user.token,
-          user.userId
+    if (hasNewFieldToValid) {
+      if (smsToConfirm) {
+        dispatch(
+          fetchUpdateCompanyPhoneVeryfiedCode(
+            user.token,
+            user.company._id,
+            activeCode
+          )
         )
-      )
+      } else {
+        console.log("to do email")
+        // dispatch(
+        //   fetchActiveCompanyAccount(
+        //     activeCode,
+        //     user.company._id,
+        //     user.token,
+        //     user.userId
+        //   )
+        // )
+      }
     } else {
-      dispatch(
-        fetchActiveCompanyAccount(
-          activeCode,
-          user.company._id,
-          user.token,
-          user.userId
+      if (smsToConfirm) {
+        dispatch(
+          fetchActiveCompanyAccountPhone(
+            activeCode,
+            user.company._id,
+            user.token,
+            user.userId
+          )
         )
-      )
+      } else {
+        dispatch(
+          fetchActiveCompanyAccount(
+            activeCode,
+            user.company._id,
+            user.token,
+            user.userId
+          )
+        )
+      }
     }
   }
 
@@ -125,7 +168,12 @@ const ActiveCompany = ({
   }
 
   const handleConfirmDeleteCompany = () => {
-    dispatch(fetchConfirmDeleteCreatedCompany(user.token, user.company._id))
+    if (hasNewFieldToValid) {
+      setConfirmDelete(false)
+      dispatch(fetchCancelUpdateCompanyPhone(user.token, user.company._id))
+    } else {
+      dispatch(fetchConfirmDeleteCreatedCompany(user.token, user.company._id))
+    }
   }
 
   const tooltipActive = activeCode.length === 0 && (
@@ -210,7 +258,11 @@ const ActiveCompany = ({
         </MarginBottom>
         <MarginBottom>
           <ButtonIcon
-            title="Usuń działalność"
+            title={
+              hasNewFieldToValid
+                ? "Anuluj zmianę numeru telefonu"
+                : "Usuń działalność"
+            }
             uppercase
             fontIconSize="20"
             fontSize="16"
@@ -240,7 +292,7 @@ const ActiveCompany = ({
         <SaveUserButtons>
           <MarginButtons>
             <ButtonIcon
-              title="Anuluj"
+              title={hasNewFieldToValid ? "Cofnij" : "Anuluj"}
               uppercase
               fontIconSize="20"
               fontSize="16"
@@ -252,7 +304,11 @@ const ActiveCompany = ({
           </MarginButtons>
           <MarginButtons>
             <ButtonIcon
-              title="Usuń działalność"
+              title={
+                hasNewFieldToValid
+                  ? "Anuluj zmianę numeru telefonu"
+                  : "Usuń działalność"
+              }
               uppercase
               fontIconSize="20"
               fontSize="16"

@@ -22,6 +22,7 @@ import {
   fetchSaveCompanySettings,
   addAlertItem,
   confirmDeleteCompany,
+  updateCompanyChangePhoneEmail,
 } from "../../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import Popup from "../Popup"
@@ -32,6 +33,11 @@ import { Element, scroller } from "react-scroll"
 const TextCheckbox = styled.span`
   padding-left: 10px;
   font-family: "Poppins-Bold", sans-serif;
+  user-select: none;
+`
+
+const TextCheckboxSecond = styled.span`
+  padding-left: 10px;
   user-select: none;
 `
 
@@ -51,9 +57,21 @@ const CheckboxStyle = styled.div`
   }
 `
 
+const CheckboxStyleSecond = styled.div`
+  margin-bottom: 10px;
+  margin-top: 10px;
+  .material-checkbox__input:checked + .material-checkbox__image {
+    background-color: ${props => Colors(props.siteProps).primaryColorDark};
+  }
+  span {
+    color: ${props => Colors(props.siteProps).textNormalBlack};
+    border-color: ${props => Colors(props.siteProps).textNormalBlack};
+  }
+`
+
 const HeightComponent = styled.div`
   padding-bottom: ${props =>
-    props.isCompanyEditProfil && props.editable ? "850px" : "auto"};
+    props.isCompanyEditProfil && props.editable ? "950px" : "auto"};
   transition-property: padding-bottom;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -217,6 +235,11 @@ const OpinionAndAdressContent = ({
   editMode,
   code = "00-000",
   premiumActive,
+  sharePhone = false,
+  isCompanyDisabledChangePhone = false,
+  isCompanyDisabledChangeEmail = false,
+  dateCompanyDisabledChangePhone = null,
+  dateCompanyDisabledChangeEmail = null,
 }) => {
   const [industriesComponent, setIndustriesComponent] = useState(null)
   const [newIndustriesComponent, setNewIndustriesComponent] = useState([])
@@ -232,6 +255,7 @@ const OpinionAndAdressContent = ({
   const [phoneInput, setPhoneInput] = useState(phone)
   const [landlinePhone, setLandlinePhone] = useState(landline)
   const [companyPausedItem, setCompanyPausedItem] = useState(pauseCompany)
+  const [companyPhoneShare, setCompanyPhoneShare] = useState(sharePhone)
   const [reserwationEver, setReserwationEver] = useState(
     reservationEveryTimeServer
   )
@@ -241,6 +265,7 @@ const OpinionAndAdressContent = ({
   const siteProps = useSelector(state => state.siteProps)
 
   const dispatch = useDispatch()
+
   useEffect(() => {
     setNewIndustriesComponent([])
     setDeletedIndustriesComponent([])
@@ -253,6 +278,7 @@ const OpinionAndAdressContent = ({
     setPhoneInput(phone)
     setLandlinePhone(landline)
     setCompanyPausedItem(pauseCompany)
+    setCompanyPhoneShare(sharePhone)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
 
@@ -278,6 +304,7 @@ const OpinionAndAdressContent = ({
     setPhoneInput(phone)
     setLandlinePhone(landline)
     setCompanyPausedItem(pauseCompany)
+    setCompanyPhoneShare(sharePhone)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
 
@@ -320,7 +347,8 @@ const OpinionAndAdressContent = ({
       adressInput !== adress ||
       phoneInput !== phone ||
       landlinePhone !== landline ||
-      companyPausedItem !== pauseCompany) &&
+      companyPausedItem !== pauseCompany ||
+      companyPhoneShare !== sharePhone) &&
     validButtonRegisterCompany
 
   const handleOnSubmit = e => {
@@ -340,6 +368,11 @@ const OpinionAndAdressContent = ({
       let pauseCompanyToServer = null
       if (pauseCompany !== companyPausedItem) {
         pauseCompanyToServer = !pauseCompany
+      }
+
+      let updateCompanySharePhone = null
+      if (sharePhone !== companyPhoneShare) {
+        updateCompanySharePhone = !sharePhone
       }
 
       let reserwationMonthToServer = null
@@ -366,6 +399,7 @@ const OpinionAndAdressContent = ({
         reserwationMonthToServer: reserwationMonthToServer,
         reserwationEverToServer: reserwationEverToServer,
         updatedLandlinePhone: updatedLandlinePhone,
+        updateCompanySharePhone: updateCompanySharePhone,
       }
 
       scroller.scrollTo("opinionScrollElement", {
@@ -421,6 +455,7 @@ const OpinionAndAdressContent = ({
     setPhoneInput(phone)
     setLandlinePhone(landline)
     setCompanyPausedItem(pauseCompany)
+    setCompanyPhoneShare(sharePhone)
     setReserwationEver(reservationEveryTimeServer)
     setReserwationMonth(reservationMonthServer)
     setDeleteCompany(false)
@@ -458,6 +493,10 @@ const OpinionAndAdressContent = ({
     setCompanyPausedItem(prevState => !prevState)
   }
 
+  const handleChangeCheckboxPhone = () => {
+    setCompanyPhoneShare(prevState => !prevState)
+  }
+
   const handleConfirmDeleteCompany = () => {
     handleResetInputs()
     dispatch(confirmDeleteCompany(true))
@@ -469,6 +508,10 @@ const OpinionAndAdressContent = ({
 
   const handleChangeReserwationMonth = value => {
     setReserwationMonth(value.value)
+  }
+
+  const handleUpdateChangeCompanyPhoneEmail = (changePhone, changeEmail) => {
+    dispatch(updateCompanyChangePhoneEmail(changePhone, changeEmail))
   }
 
   const handleChangeIndystries = value => {
@@ -615,13 +658,23 @@ const OpinionAndAdressContent = ({
             </OpinionRight>
           </OpinionsContent>
         </OpinionsAndAdress>
-        {!!phoneNumberRender && (
+        {!!phoneNumberRender && companyPhoneShare ? (
           <TelephoneDiv>
             <CirclePhone siteProps={siteProps}>
               <MdSmartphone />
             </CirclePhone>
             {phoneNumberRender}
           </TelephoneDiv>
+        ) : (
+          !!phoneNumberRender &&
+          !!!phoneLandlineNumberRender && (
+            <TelephoneDiv>
+              <CirclePhone siteProps={siteProps}>
+                <MdSmartphone />
+              </CirclePhone>
+              Brak numeru
+            </TelephoneDiv>
+          )
         )}
         {!!phoneLandlineNumberRender && (
           <TelephoneDiv>
@@ -666,6 +719,49 @@ const OpinionAndAdressContent = ({
                     ? company.email
                     : "Błąd podczas pobierania adresu e-mail"}
                 </DisabledTextToEdit>
+                {isCompanyDisabledChangeEmail &&
+                  !!dateCompanyDisabledChangeEmail && (
+                    <ReactTooltip
+                      id="changeEmailCompany"
+                      effect="float"
+                      multiline={true}
+                    >
+                      <span>
+                        Adres e-mail można ponownie zmienić:{" "}
+                        {dateCompanyDisabledChangeEmail.getDate() < 10
+                          ? `0${dateCompanyDisabledChangeEmail.getDate()}`
+                          : dateCompanyDisabledChangeEmail.getDate()}
+                        .
+                        {dateCompanyDisabledChangeEmail.getMonth() + 1 < 10
+                          ? `0${dateCompanyDisabledChangeEmail.getMonth() + 1}`
+                          : dateCompanyDisabledChangeEmail.getMonth() + 1}
+                        .{dateCompanyDisabledChangeEmail.getFullYear()}
+                        {" o godzinie: "}
+                        {dateCompanyDisabledChangeEmail.getHours() < 10
+                          ? `0${dateCompanyDisabledChangeEmail.getHours()}`
+                          : dateCompanyDisabledChangeEmail.getHours()}
+                        :
+                        {dateCompanyDisabledChangeEmail.getMinutes() < 10
+                          ? `0${dateCompanyDisabledChangeEmail.getMinutes()}`
+                          : dateCompanyDisabledChangeEmail.getMinutes()}
+                      </span>
+                    </ReactTooltip>
+                  )}
+                <DeleteCompanyStyle data-tip data-for="changeEmailCompany">
+                  <ButtonIcon
+                    title="Zmień adres e-mail"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="13"
+                    icon={<MdEdit />}
+                    customColorButton={Colors(siteProps).primaryColorDark}
+                    customColorIcon={Colors(siteProps).primaryColor}
+                    disabled={isCompanyDisabledChangeEmail}
+                    onClick={() => {
+                      handleUpdateChangeCompanyPhoneEmail(false, true)
+                    }}
+                  />
+                </DeleteCompanyStyle>
                 <TextStyleInfo siteProps={siteProps}>
                   Telefon firmowy:
                 </TextStyleInfo>
@@ -674,14 +770,60 @@ const OpinionAndAdressContent = ({
                     ? phoneInput
                     : "Błąd podczas pobierania telefonu firmowego"}
                 </DisabledTextToEdit>
-                {/* <MarginBottomSelect>
-                  <InputPhone
-                    defaultValues={phoneInput}
-                    setPhoneNumber={setPhoneInput}
-                    width={20}
-                    marginElements={5}
+                {isCompanyDisabledChangePhone &&
+                  !!dateCompanyDisabledChangePhone && (
+                    <ReactTooltip
+                      id="changePhoneCompany"
+                      effect="float"
+                      multiline={true}
+                    >
+                      <span>
+                        Numer telefonu można ponownie zmienić:{" "}
+                        {dateCompanyDisabledChangePhone.getDate() < 10
+                          ? `0${dateCompanyDisabledChangePhone.getDate()}`
+                          : dateCompanyDisabledChangePhone.getDate()}
+                        .
+                        {dateCompanyDisabledChangePhone.getMonth() + 1 < 10
+                          ? `0${dateCompanyDisabledChangePhone.getMonth() + 1}`
+                          : dateCompanyDisabledChangePhone.getMonth() + 1}
+                        .{dateCompanyDisabledChangePhone.getFullYear()}
+                        {" o godzinie: "}
+                        {dateCompanyDisabledChangePhone.getHours() < 10
+                          ? `0${dateCompanyDisabledChangePhone.getHours()}`
+                          : dateCompanyDisabledChangePhone.getHours()}
+                        :
+                        {dateCompanyDisabledChangePhone.getMinutes() < 10
+                          ? `0${dateCompanyDisabledChangePhone.getMinutes()}`
+                          : dateCompanyDisabledChangePhone.getMinutes()}
+                      </span>
+                    </ReactTooltip>
+                  )}
+                <DeleteCompanyStyle data-tip data-for="changePhoneCompany">
+                  <ButtonIcon
+                    title="Zmień numer telefonu"
+                    uppercase
+                    fontIconSize="20"
+                    fontSize="13"
+                    icon={<MdEdit />}
+                    customColorButton={Colors(siteProps).primaryColorDark}
+                    customColorIcon={Colors(siteProps).primaryColor}
+                    disabled={isCompanyDisabledChangePhone}
+                    onClick={() => {
+                      handleUpdateChangeCompanyPhoneEmail(true, false)
+                    }}
                   />
-                </MarginBottomSelect> */}
+                </DeleteCompanyStyle>
+                <CheckboxStyleSecond siteProps={siteProps}>
+                  <Checkbox
+                    theme="material-checkbox"
+                    value={companyPhoneShare}
+                    onChange={handleChangeCheckboxPhone}
+                  >
+                    <TextCheckboxSecond>
+                      Udostępnij telefon firmowy
+                    </TextCheckboxSecond>
+                  </Checkbox>
+                </CheckboxStyleSecond>
                 <MarginBottomSelect>
                   <InputPhone
                     defaultValues={landlinePhone}

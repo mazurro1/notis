@@ -1004,6 +1004,45 @@ export const RESET_COMPANY_EDIT_PROFIL = "RESET_COMPANY_EDIT_PROFIL"
 export const UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS =
   "UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS"
 export const RESET_CREATE_COMPANY = "RESET_CREATE_COMPANY"
+export const UPDATE_COMPANY_CHANGE_PHONE_EMAIL =
+  "UPDATE_COMPANY_CHANGE_PHONE_EMAIL"
+export const CANCEL_UPDATE_COMPANY_PHONE = "CANCEL_UPDATE_COMPANY_PHONE"
+export const UPDATE_COMPANY_PHONE = "UPDATE_COMPANY_PHONE"
+export const UPDATE_COMPANY_PHONE_SUCCESS = "UPDATE_COMPANY_PHONE_SUCCESS"
+
+export const updateCompanyPhoneSuccess = (companyId, newPhone) => {
+  return {
+    type: UPDATE_COMPANY_PHONE_SUCCESS,
+    companyId: companyId,
+    newPhone: newPhone,
+  }
+}
+
+export const cancelUpdateCompanyPhone = companyId => {
+  return {
+    type: CANCEL_UPDATE_COMPANY_PHONE,
+    companyId: companyId,
+  }
+}
+
+export const updateCompanyChangePhoneEmail = (
+  valuePhone = false,
+  valueEmail = false
+) => {
+  return {
+    type: UPDATE_COMPANY_CHANGE_PHONE_EMAIL,
+    valuePhone: valuePhone,
+    valueEmail: valueEmail,
+  }
+}
+
+export const updateCompanyPhone = (companyId, newPhone) => {
+  return {
+    type: UPDATE_COMPANY_PHONE,
+    companyId: companyId,
+    newPhone: newPhone,
+  }
+}
 
 export const updateResetCreateCompany = value => {
   return {
@@ -7319,5 +7358,187 @@ export const fetchUpdateUserProps = (token, language, darkMode, blindMode) => {
       )
       .then(() => {})
       .catch(() => {})
+  }
+}
+
+export const fetchUpdateCompanyPhone = (
+  token,
+  companyId,
+  newPhone,
+  password
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-company-phone`,
+        {
+          companyId: companyId,
+          newPhone: newPhone,
+          password: password,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyPhone(companyId, newPhone))
+        dispatch(changeSpinner(false))
+        dispatch(
+          addAlertItem(
+            "Wysłano kod aktywacyjny na podany numer telefonu",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 443) {
+              dispatch(addAlertItem("Numer telefonu zajęty", "red"))
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas zmiany numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCancelUpdateCompanyPhone = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/cancel-update-company-phone`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(cancelUpdateCompanyPhone(companyId))
+        dispatch(addAlertItem("Anulowano zmianę numeru telefonu", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas anulowania zmiany numeru telefonu",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUpdateCompanyPhoneVeryfiedCode = (token, companyId, code) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-company-phone-veryfied-code`,
+        {
+          companyId: companyId,
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyPhoneSuccess(companyId, response.data.newPhone))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Numer telefonu został zmieniony", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 443) {
+              dispatch(addAlertItem("Błędny kod", "red"))
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas zmiany numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchUpdateCompanyEmail = (
+  token,
+  companyId,
+  newEmail,
+  password
+) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-company-email`,
+        {
+          companyId: companyId,
+          newEmail: newEmail,
+          password: password,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        console.log(response.data)
+        dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas zmiany numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
   }
 }

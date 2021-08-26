@@ -57,6 +57,10 @@ import {
   //COMPANY
   //COMPANY
   //COMPANY
+  UPDATE_COMPANY_PHONE_SUCCESS,
+  UPDATE_COMPANY_PHONE,
+  CANCEL_UPDATE_COMPANY_PHONE,
+  UPDATE_COMPANY_CHANGE_PHONE_EMAIL,
   RESET_CREATE_COMPANY,
   UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS,
   RESET_COMPANY_EDIT_PROFIL,
@@ -238,6 +242,8 @@ const initialState = {
     value: 1,
     label: "Lista ofert",
   },
+  changeCompanyPhone: false,
+  changeCompanyEmail: false,
   resetCreateCompany: false,
   resetCompanyEditProfil: false,
   resetWorkerNewClientReserwation: false,
@@ -826,6 +832,14 @@ const reducer = (state = initialState, action) => {
     //COMPANY
     //COMPANY
 
+    case UPDATE_COMPANY_CHANGE_PHONE_EMAIL: {
+      return {
+        ...state,
+        changeCompanyPhone: action.valuePhone,
+        changeCompanyEmail: action.valueEmail,
+      }
+    }
+
     case RESET_CREATE_COMPANY: {
       return {
         ...state,
@@ -837,6 +851,123 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         resetCompanyEditProfil: action.value,
+      }
+    }
+
+    case UPDATE_COMPANY_PHONE_SUCCESS: {
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.phone = action.newPhone
+      }
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.phone = action.newPhone
+            userCompanyToConfirm.company.phoneToVeryfied = null
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[findIndexCompany].phone =
+              action.newPhone
+
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].phoneToVeryfied = null
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        changeCompanyPhone: false,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
+
+    case UPDATE_COMPANY_PHONE: {
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.phone = action.newPhone
+        newWorkCompanyData.phoneToVeryfied = action.newPhone
+        newWorkCompanyData.blockSendVerifiedPhoneSms = new Date(
+          new Date().setHours(new Date().getHours() + 1)
+        )
+      }
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.phoneToVeryfied = action.newPhone
+            userCompanyToConfirm.company.blockSendVerifiedPhoneSms = new Date(
+              new Date().setHours(new Date().getHours() + 1)
+            )
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[findIndexCompany].phoneToVeryfied =
+              action.newPhone
+
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].blockSendVerifiedPhoneSms = new Date(
+              new Date().setHours(new Date().getHours() + 1)
+            )
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        changeCompanyPhone: false,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
+
+    case CANCEL_UPDATE_COMPANY_PHONE: {
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.phoneToVeryfied = null
+      }
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.phoneToVeryfied = null
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].phoneToVeryfied = null
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        workCompanyData: newWorkCompanyData,
       }
     }
 
@@ -2581,6 +2712,10 @@ const reducer = (state = initialState, action) => {
         if (action.data.pauseCompanyToServer !== null) {
           newWorkCompanyDataSettings.pauseCompany =
             action.data.pauseCompanyToServer
+        }
+        if (action.data.updateCompanySharePhone !== null) {
+          newWorkCompanyDataSettings.sharePhone =
+            action.data.updateCompanySharePhone
         }
         if (!!action.data.reserwationEverToServer) {
           newWorkCompanyDataSettings.reservationEveryTime =

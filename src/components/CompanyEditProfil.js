@@ -3,13 +3,20 @@ import "../../style.css"
 import ActiveCompany from "./ActiveCompany"
 import Popup from "./Popup"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchCompanyData } from "../state/actions"
+import {
+  fetchCompanyData,
+  updateCompanyChangePhoneEmail,
+} from "../state/actions"
 import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
 import CompanyNoAccess from "./CompanyNoAccess"
 import { fetchResetCompanyEditProfil } from "../state/actions"
+import CompanyChangeNumberPhone from "./ItemsContentCompanyProfilAutoSave/CompanyChangeNumberPhone"
 
 const CompanyEditProfil = () => {
   const user = useSelector(state => state.user)
+  const changeCompanyPhone = useSelector(state => state.changeCompanyPhone)
+  const changeCompanyEmail = useSelector(state => state.changeCompanyEmail)
+  const siteProps = useSelector(state => state.siteProps)
   const resetCompanyEditProfil = useSelector(
     state => state.resetCompanyEditProfil
   )
@@ -21,15 +28,41 @@ const CompanyEditProfil = () => {
   const [companyBlockVeryfiedPhone, setCompanyBlockVeryfiedPhone] = useState(
     null
   )
+  const [
+    companyDisabledChangePhoneDate,
+    setCompanyDisabledChangePhoneDate,
+  ] = useState(null)
+  const [
+    companyDisabledChangeEmailDate,
+    setCompanyDisabledChangeEmailDate,
+  ] = useState(null)
+  const [hasPhoneToVeryfied, setHasPhoneToVeryfied] = useState(false)
+  const [hasEmailToVeryfied, setHasEmailToVeryfied] = useState(false)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(updateCompanyChangePhoneEmail(false, false))
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!!user) {
       if (!!user.company) {
+        setHasPhoneToVeryfied(!!user.company.phoneToVeryfied)
+        setHasEmailToVeryfied(!!user.company.emailToVeryfied)
         setEnableEmailVeryfi(!!!user.company.accountEmailVerified)
         setEnablePhoneVeryfi(!!!user.company.accountPhoneVerified)
         if (!!user.company.blockSendVerifiedPhoneSms) {
           setCompanyBlockVeryfiedPhone(user.company.blockSendVerifiedPhoneSms)
+        }
+        if (!!user.company.blockSendVerifiedPhoneSms) {
+          setCompanyDisabledChangePhoneDate(
+            user.company.blockSendVerifiedPhoneSms
+          )
+        }
+        if (!!user.company.disabledChangeEmailDate) {
+          setCompanyDisabledChangeEmailDate(
+            user.company.disabledChangeEmailDate
+          )
         }
       }
     }
@@ -72,12 +105,33 @@ const CompanyEditProfil = () => {
   let selectedWorker = null
   let isBlockUserSendVerifiedPhoneSms = false
   let dateBlockUserSendVerifiedPhoneSms = null
+  let dateCompanyDisabledChangePhone = null
+  let isCompanyDisabledChangePhone = false
+  let dateCompanyDisabledChangeEmail = null
+  let isCompanyDisabledChangeEmail = false
+
   if (!!user) {
     if (!!user.company) {
       if (!!companyBlockVeryfiedPhone) {
         dateBlockUserSendVerifiedPhoneSms = new Date(companyBlockVeryfiedPhone)
         if (new Date(companyBlockVeryfiedPhone) >= new Date()) {
           isBlockUserSendVerifiedPhoneSms = true
+        }
+      }
+      if (!!companyDisabledChangePhoneDate) {
+        dateCompanyDisabledChangePhone = new Date(
+          companyDisabledChangePhoneDate
+        )
+        if (new Date(companyDisabledChangePhoneDate) >= new Date()) {
+          isCompanyDisabledChangePhone = true
+        }
+      }
+      if (!!companyDisabledChangeEmailDate) {
+        dateCompanyDisabledChangeEmail = new Date(
+          companyDisabledChangeEmailDate
+        )
+        if (new Date(companyDisabledChangeEmailDate) >= new Date()) {
+          isCompanyDisabledChangeEmail = true
         }
       }
     }
@@ -134,6 +188,78 @@ const CompanyEditProfil = () => {
     </Popup>
   )
 
+  const PopupActiveEmailPhone = (
+    <Popup
+      popupEnable={hasEmailToVeryfied}
+      maxWidth="500"
+      title="Weryfikacja nowego adresu e-mail"
+      close={false}
+      closeTitle={false}
+    >
+      <ActiveCompany
+        hasNewFieldToValid={hasEmailToVeryfied}
+        isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
+        dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
+      />
+    </Popup>
+  )
+
+  const PopupActiveNewPhone = (
+    <Popup
+      popupEnable={hasPhoneToVeryfied && !hasEmailToVeryfied}
+      maxWidth="500"
+      title="Weryfikacja nowego numeru telefonu"
+      close={false}
+      closeTitle={false}
+    >
+      <ActiveCompany
+        hasNewFieldToValid={hasPhoneToVeryfied}
+        smsToConfirm
+        isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
+        dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
+      />
+    </Popup>
+  )
+
+  const PopupNewPhone = (
+    <Popup
+      popupEnable={changeCompanyPhone}
+      maxWidth="500"
+      title="Nowy numer telefonu"
+      close={false}
+      closeTitle={false}
+    >
+      <CompanyChangeNumberPhone
+        siteProps={siteProps}
+        isCompanyDisabledChangePhone={isCompanyDisabledChangePhone}
+        isCompanyDisabledChangeEmail={isCompanyDisabledChangeEmail}
+        dateCompanyDisabledChangePhone={dateCompanyDisabledChangePhone}
+        dateCompanyDisabledChangeEmail={dateCompanyDisabledChangeEmail}
+        user={user}
+      />
+    </Popup>
+  )
+
+  const PopupNewEmail = (
+    <Popup
+      popupEnable={changeCompanyEmail}
+      maxWidth="500"
+      title="Nowy adres e-mail"
+      close={false}
+      closeTitle={false}
+    >
+      <CompanyChangeNumberPhone
+        changeEmail
+        siteProps={siteProps}
+        isCompanyDisabledChangePhone={isCompanyDisabledChangePhone}
+        isCompanyDisabledChangeEmail={isCompanyDisabledChangeEmail}
+        dateCompanyDisabledChangePhone={dateCompanyDisabledChangePhone}
+        dateCompanyDisabledChangeEmail={dateCompanyDisabledChangeEmail}
+        user={user}
+      />
+    </Popup>
+  )
+
   return (
     <>
       {userHasAccess ? (
@@ -143,12 +269,20 @@ const CompanyEditProfil = () => {
           isCompanyEditProfil
           userHasAccess={userHasAccess}
           selectedWorker={selectedWorker}
+          isCompanyDisabledChangePhone={isCompanyDisabledChangePhone}
+          isCompanyDisabledChangeEmail={isCompanyDisabledChangeEmail}
+          dateCompanyDisabledChangePhone={dateCompanyDisabledChangePhone}
+          dateCompanyDisabledChangeEmail={dateCompanyDisabledChangeEmail}
         />
       ) : (
         <CompanyNoAccess />
       )}
+      {PopupNewPhone}
+      {PopupNewEmail}
       {PopupActiveCompany}
       {PopupActiveSMSCompany}
+      {PopupActiveEmailPhone}
+      {PopupActiveNewPhone}
     </>
   )
 }
