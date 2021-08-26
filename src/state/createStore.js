@@ -898,7 +898,6 @@ const reducer = (state = initialState, action) => {
         ? state.workCompanyData
         : null
       if (!!newWorkCompanyData) {
-        newWorkCompanyData.phone = action.newPhone
         newWorkCompanyData.phoneToVeryfied = action.newPhone
         newWorkCompanyData.blockSendVerifiedPhoneSms = new Date(
           new Date().setHours(new Date().getHours() + 1)

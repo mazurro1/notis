@@ -590,14 +590,12 @@ const OpinionAndAdressContent = ({
   }
 
   let phoneNumberRender = null
-  if (phoneInput.length === 9) {
-    phoneNumberRender = `${phoneInput.charAt(0)}${phoneInput.charAt(
-      1
-    )}${phoneInput.charAt(2)}-${phoneInput.charAt(3)}${phoneInput.charAt(
-      4
-    )}${phoneInput.charAt(5)}-${phoneInput.charAt(6)}${phoneInput.charAt(
-      7
-    )}${phoneInput.charAt(8)}`
+  if (phone.length === 9) {
+    phoneNumberRender = `${phone.charAt(0)}${phone.charAt(1)}${phone.charAt(
+      2
+    )}-${phone.charAt(3)}${phone.charAt(4)}${phone.charAt(5)}-${phone.charAt(
+      6
+    )}${phone.charAt(7)}${phone.charAt(8)}`
   }
 
   let phoneLandlineNumberRender = null
@@ -766,8 +764,8 @@ const OpinionAndAdressContent = ({
                   Telefon firmowy:
                 </TextStyleInfo>
                 <DisabledTextToEdit siteProps={siteProps}>
-                  {!!phoneInput
-                    ? phoneInput
+                  {!!phone
+                    ? phone
                     : "Błąd podczas pobierania telefonu firmowego"}
                 </DisabledTextToEdit>
                 {isCompanyDisabledChangePhone &&
