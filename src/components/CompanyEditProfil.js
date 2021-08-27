@@ -29,10 +29,6 @@ const CompanyEditProfil = () => {
     null
   )
   const [
-    companyDisabledChangePhoneDate,
-    setCompanyDisabledChangePhoneDate,
-  ] = useState(null)
-  const [
     companyDisabledChangeEmailDate,
     setCompanyDisabledChangeEmailDate,
   ] = useState(null)
@@ -54,15 +50,8 @@ const CompanyEditProfil = () => {
         if (!!user.company.blockSendVerifiedPhoneSms) {
           setCompanyBlockVeryfiedPhone(user.company.blockSendVerifiedPhoneSms)
         }
-        if (!!user.company.blockSendVerifiedPhoneSms) {
-          setCompanyDisabledChangePhoneDate(
-            user.company.blockSendVerifiedPhoneSms
-          )
-        }
-        if (!!user.company.disabledChangeEmailDate) {
-          setCompanyDisabledChangeEmailDate(
-            user.company.disabledChangeEmailDate
-          )
+        if (!!user.company.blockSendVerifiedEmail) {
+          setCompanyDisabledChangeEmailDate(user.company.blockSendVerifiedEmail)
         }
       }
     }
@@ -103,8 +92,6 @@ const CompanyEditProfil = () => {
   let isAdminCompany = false
   let userHasAccess = false
   let selectedWorker = null
-  let isBlockUserSendVerifiedPhoneSms = false
-  let dateBlockUserSendVerifiedPhoneSms = null
   let dateCompanyDisabledChangePhone = null
   let isCompanyDisabledChangePhone = false
   let dateCompanyDisabledChangeEmail = null
@@ -113,16 +100,8 @@ const CompanyEditProfil = () => {
   if (!!user) {
     if (!!user.company) {
       if (!!companyBlockVeryfiedPhone) {
-        dateBlockUserSendVerifiedPhoneSms = new Date(companyBlockVeryfiedPhone)
+        dateCompanyDisabledChangePhone = new Date(companyBlockVeryfiedPhone)
         if (new Date(companyBlockVeryfiedPhone) >= new Date()) {
-          isBlockUserSendVerifiedPhoneSms = true
-        }
-      }
-      if (!!companyDisabledChangePhoneDate) {
-        dateCompanyDisabledChangePhone = new Date(
-          companyDisabledChangePhoneDate
-        )
-        if (new Date(companyDisabledChangePhoneDate) >= new Date()) {
           isCompanyDisabledChangePhone = true
         }
       }
@@ -182,8 +161,8 @@ const CompanyEditProfil = () => {
     >
       <ActiveCompany
         smsToConfirm
-        isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
-        dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
+        isBlockUserSendVerifiedPhoneSms={isCompanyDisabledChangePhone}
+        dateBlockUserSendVerifiedPhoneSms={dateCompanyDisabledChangePhone}
       />
     </Popup>
   )
@@ -198,8 +177,8 @@ const CompanyEditProfil = () => {
     >
       <ActiveCompany
         hasNewFieldToValid={hasEmailToVeryfied}
-        isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
-        dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
+        isBlockUserSendVerifiedPhoneSms={isCompanyDisabledChangeEmail}
+        dateBlockUserSendVerifiedPhoneSms={dateCompanyDisabledChangeEmail}
       />
     </Popup>
   )
@@ -215,8 +194,8 @@ const CompanyEditProfil = () => {
       <ActiveCompany
         hasNewFieldToValid={hasPhoneToVeryfied}
         smsToConfirm
-        isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
-        dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
+        isBlockUserSendVerifiedPhoneSms={isCompanyDisabledChangePhone}
+        dateBlockUserSendVerifiedPhoneSms={dateCompanyDisabledChangePhone}
       />
     </Popup>
   )

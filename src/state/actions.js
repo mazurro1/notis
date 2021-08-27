@@ -1009,6 +1009,11 @@ export const UPDATE_COMPANY_CHANGE_PHONE_EMAIL =
 export const CANCEL_UPDATE_COMPANY_PHONE = "CANCEL_UPDATE_COMPANY_PHONE"
 export const UPDATE_COMPANY_PHONE = "UPDATE_COMPANY_PHONE"
 export const UPDATE_COMPANY_PHONE_SUCCESS = "UPDATE_COMPANY_PHONE_SUCCESS"
+export const UPDATE_COMPANY_EMAIL_SUCCESS = "UPDATE_COMPANY_EMAIL_SUCCESS"
+export const UPDATE_COMPANY_EMAIL = "UPDATE_COMPANY_EMAIL"
+export const CANCEL_UPDATE_COMPANY_EMAIL = "CANCEL_UPDATE_COMPANY_EMAIL"
+export const UPDATE_BLOCK_SEND_VERYFIED_EMAIL =
+  "UPDATE_BLOCK_SEND_VERYFIED_EMAIL"
 
 export const updateCompanyPhoneSuccess = (companyId, newPhone) => {
   return {
@@ -1018,9 +1023,24 @@ export const updateCompanyPhoneSuccess = (companyId, newPhone) => {
   }
 }
 
+export const updateCompanyEmailSuccess = (companyId, newEmail) => {
+  return {
+    type: UPDATE_COMPANY_EMAIL_SUCCESS,
+    companyId: companyId,
+    newEmail: newEmail,
+  }
+}
+
 export const cancelUpdateCompanyPhone = companyId => {
   return {
     type: CANCEL_UPDATE_COMPANY_PHONE,
+    companyId: companyId,
+  }
+}
+
+export const cancelUpdateCompanyEmail = companyId => {
+  return {
+    type: CANCEL_UPDATE_COMPANY_EMAIL,
     companyId: companyId,
   }
 }
@@ -1041,6 +1061,14 @@ export const updateCompanyPhone = (companyId, newPhone) => {
     type: UPDATE_COMPANY_PHONE,
     companyId: companyId,
     newPhone: newPhone,
+  }
+}
+
+export const updateCompanyEmail = (companyId, newEmail) => {
+  return {
+    type: UPDATE_COMPANY_EMAIL,
+    companyId: companyId,
+    newEmail: newEmail,
   }
 }
 
@@ -1068,6 +1096,17 @@ export const fetchUpdateStatusActiveCompanyEmail = (
     companyId: companyId,
     accountEmailVerified: accountEmailVerified,
     codeToVerifiedPhone: codeToVerifiedPhone,
+  }
+}
+
+export const updateBlockSendVerifiedEmail = (
+  companyId,
+  blockSendVerifiedEmail
+) => {
+  return {
+    type: UPDATE_BLOCK_SEND_VERYFIED_EMAIL,
+    companyId: companyId,
+    blockSendVerifiedEmail: blockSendVerifiedEmail,
   }
 }
 
@@ -2140,6 +2179,55 @@ export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
         dispatch(
           addAlertItem(
             "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe podany adres email",
+            "green"
+          )
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania kodu aktywującego konto firmowe",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+      })
+  }
+}
+
+export const fetchSentAgainCompanyActivedNewPhone = (token, companyId) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/company-sent-again-verification-new-phone`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateBlockSendVerifiedPhoneSms(
+            companyId,
+            response.data.blockSendVerifiedPhoneSms
+          )
+        )
+        dispatch(
+          addAlertItem(
+            "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe na podany numer telefonu",
             "green"
           )
         )
@@ -7398,6 +7486,13 @@ export const fetchUpdateCompanyPhone = (
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 442) {
+              dispatch(
+                addAlertItem(
+                  "Numer telefonu jest takie samo jak poprzednie",
+                  "red"
+                )
+              )
             } else if (error.response.status === 443) {
               dispatch(addAlertItem("Numer telefonu zajęty", "red"))
             } else {
@@ -7443,6 +7538,48 @@ export const fetchCancelUpdateCompanyPhone = (token, companyId) => {
               dispatch(
                 addAlertItem(
                   "Błąd podczas anulowania zmiany numeru telefonu",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchCancelUpdateCompanyEmail = (token, companyId) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/cancel-update-company-email`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(cancelUpdateCompanyEmail(companyId))
+        dispatch(addAlertItem("Anulowano zmianę adresu email", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas anulowania zmiany adresu email",
                   "red"
                 )
               )
@@ -7521,8 +7658,57 @@ export const fetchUpdateCompanyEmail = (
         }
       )
       .then(response => {
-        console.log(response.data)
+        dispatch(updateCompanyEmail(companyId, newEmail))
         dispatch(changeSpinner(false))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 443) {
+              dispatch(addAlertItem("Podany adres email jest zajęty.", "red"))
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas zmiany numeru telefonu", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSentAgainCompanyActivedNewEmail = (token, companyId) => {
+  return dispatch => {
+    return axios
+      .post(
+        `${Site.serverUrl}/company-sent-again-verification-new-email`,
+        {
+          companyId: companyId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(
+          updateBlockSendVerifiedEmail(
+            companyId,
+            response.data.blockSendVerifiedEmail
+          )
+        )
+        dispatch(
+          addAlertItem(
+            "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe na podany adres email",
+            "green"
+          )
+        )
       })
       .catch(error => {
         if (!!error) {
@@ -7531,8 +7717,50 @@ export const fetchUpdateCompanyEmail = (
               dispatch(logout())
             } else {
               dispatch(
-                addAlertItem("Błąd podczas zmiany numeru telefonu", "red")
+                addAlertItem(
+                  "Błąd podczas wysyłania kodu aktywującego konto firmowe",
+                  "red"
+                )
               )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+      })
+  }
+}
+
+export const fetchUpdateCompanyEmailVeryfiedCode = (token, companyId, code) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/update-company-email-veryfied-code`,
+        {
+          companyId: companyId,
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(updateCompanyEmailSuccess(companyId, response.data.newEmail))
+        dispatch(changeSpinner(false))
+        dispatch(addAlertItem("Adres email został zmieniony", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 443) {
+              dispatch(addAlertItem("Błędny kod", "red"))
+            } else {
+              dispatch(addAlertItem("Błąd podczas zmiany adresu email", "red"))
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

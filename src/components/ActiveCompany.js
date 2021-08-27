@@ -11,6 +11,10 @@ import {
   fetchActiveCompanyAccountPhone,
   fetchCancelUpdateCompanyPhone,
   fetchUpdateCompanyPhoneVeryfiedCode,
+  fetchSentAgainCompanyActivedNewPhone,
+  fetchCancelUpdateCompanyEmail,
+  fetchSentAgainCompanyActivedNewEmail,
+  fetchUpdateCompanyEmailVeryfiedCode,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
@@ -96,15 +100,13 @@ const ActiveCompany = ({
   const handleSentAgain = () => {
     if (hasNewFieldToValid) {
       if (smsToConfirm) {
-        console.log("to do sent again")
-        // dispatch(
-        //   fetchUpdateCompanyPhoneVeryfiedCode(user.token, user.company._id)
-        // )
+        dispatch(
+          fetchSentAgainCompanyActivedNewPhone(user.token, user.company._id)
+        )
       } else {
-        console.log("to do email")
-        // dispatch(
-        //   fetchSentAgainCompanyActivedEmail(user.token, user.company._id)
-        // )
+        dispatch(
+          fetchSentAgainCompanyActivedNewEmail(user.token, user.company._id)
+        )
       }
     } else {
       if (smsToConfirm) {
@@ -131,14 +133,13 @@ const ActiveCompany = ({
         )
       } else {
         console.log("to do email")
-        // dispatch(
-        //   fetchActiveCompanyAccount(
-        //     activeCode,
-        //     user.company._id,
-        //     user.token,
-        //     user.userId
-        //   )
-        // )
+        dispatch(
+          fetchUpdateCompanyEmailVeryfiedCode(
+            user.token,
+            user.company._id,
+            activeCode
+          )
+        )
       }
     } else {
       if (smsToConfirm) {
@@ -170,8 +171,16 @@ const ActiveCompany = ({
   const handleConfirmDeleteCompany = () => {
     if (hasNewFieldToValid) {
       setConfirmDelete(false)
-      dispatch(fetchCancelUpdateCompanyPhone(user.token, user.company._id))
-    } else {
+      if (smsToConfirm) {
+        dispatch(fetchCancelUpdateCompanyPhone(user.token, user.company._id))
+      } else {
+        dispatch(fetchCancelUpdateCompanyEmail(user.token, user.company._id))
+      }
+    }
+  }
+
+  const handleConfirmDeleteCompanyDelete = () => {
+    if (!hasNewFieldToValid) {
       dispatch(fetchConfirmDeleteCreatedCompany(user.token, user.company._id))
     }
   }
@@ -185,7 +194,7 @@ const ActiveCompany = ({
       </span>
     </ReactTooltip>
   )
-
+  console.log(dateBlockUserSendVerifiedPhoneSms)
   const tooltipSendAgainPhoneSms = isBlockUserSendVerifiedPhoneSms && (
     <ReactTooltip
       id="alertChangePhoneSendSmsCompany"
@@ -315,7 +324,11 @@ const ActiveCompany = ({
               icon={<MdDelete />}
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
-              onClick={handleConfirmDeleteCompany}
+              onClick={
+                hasNewFieldToValid
+                  ? handleConfirmDeleteCompany
+                  : handleConfirmDeleteCompanyDelete
+              }
             />
           </MarginButtons>
         </SaveUserButtons>

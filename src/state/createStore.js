@@ -58,11 +58,15 @@ import {
   //COMPANY
   //COMPANY
   UPDATE_COMPANY_PHONE_SUCCESS,
+  UPDATE_COMPANY_EMAIL_SUCCESS,
   UPDATE_COMPANY_PHONE,
+  UPDATE_COMPANY_EMAIL,
   CANCEL_UPDATE_COMPANY_PHONE,
+  CANCEL_UPDATE_COMPANY_EMAIL,
   UPDATE_COMPANY_CHANGE_PHONE_EMAIL,
   RESET_CREATE_COMPANY,
   UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS,
+  UPDATE_BLOCK_SEND_VERYFIED_EMAIL,
   RESET_COMPANY_EDIT_PROFIL,
   UPDATE_STATUS_ACTIVE_COMPANY_EMAIL,
   ADD_EDITED_OPINION_TO_SERVICE,
@@ -854,6 +858,45 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case UPDATE_COMPANY_EMAIL_SUCCESS: {
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.email = action.newEmail
+        newWorkCompanyData.emailToVeryfied = null
+      }
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.email = action.newEmail
+            userCompanyToConfirm.company.emailToVeryfied = null
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[findIndexCompany].email =
+              action.newEmail
+
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].emailToVeryfied = null
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        changeCompanyEmail: false,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
+
     case UPDATE_COMPANY_PHONE_SUCCESS: {
       const userCompanyToConfirm = !!state.user ? state.user : null
       let newWorkCompanyData = !!state.workCompanyData
@@ -861,6 +904,7 @@ const reducer = (state = initialState, action) => {
         : null
       if (!!newWorkCompanyData) {
         newWorkCompanyData.phone = action.newPhone
+        newWorkCompanyData.phoneToVeryfied = null
       }
       if (!!userCompanyToConfirm) {
         if (!!userCompanyToConfirm.company) {
@@ -891,7 +935,50 @@ const reducer = (state = initialState, action) => {
         workCompanyData: newWorkCompanyData,
       }
     }
+    case UPDATE_COMPANY_EMAIL: {
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.emailToVeryfied = action.newEmail
+        newWorkCompanyData.blockSendVerifiedEmail = new Date(
+          new Date().setHours(new Date().getHours() + 1)
+        )
+      }
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.emailToVeryfied = action.newEmail
+            userCompanyToConfirm.company.blockSendVerifiedEmail = new Date(
+              new Date().setHours(new Date().getHours() + 1)
+            )
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[findIndexCompany].emailToVeryfied =
+              action.newEmail
 
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].blockSendVerifiedEmail = new Date(
+              new Date().setHours(new Date().getHours() + 1)
+            )
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        changeCompanyEmail: false,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
     case UPDATE_COMPANY_PHONE: {
       const userCompanyToConfirm = !!state.user ? state.user : null
       let newWorkCompanyData = !!state.workCompanyData
@@ -937,6 +1024,39 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case CANCEL_UPDATE_COMPANY_EMAIL: {
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.emailToVeryfied = null
+      }
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.emailToVeryfied = null
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].emailToVeryfied = null
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
+
     case CANCEL_UPDATE_COMPANY_PHONE: {
       let newWorkCompanyData = !!state.workCompanyData
         ? state.workCompanyData
@@ -970,7 +1090,52 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case UPDATE_BLOCK_SEND_VERYFIED_EMAIL: {
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.blockSendVerifiedEmail =
+          action.blockSendVerifiedEmail
+        console.log(newWorkCompanyData)
+      }
+      const userCompanyToConfirm = !!state.user ? state.user : null
+      if (!!userCompanyToConfirm) {
+        if (!!userCompanyToConfirm.company) {
+          if (userCompanyToConfirm.company._id === action.companyId) {
+            userCompanyToConfirm.company.blockSendVerifiedEmail =
+              action.blockSendVerifiedEmail
+            console.log(userCompanyToConfirm.company)
+          }
+        }
+        if (!!userCompanyToConfirm.allCompanys) {
+          const findIndexCompany = userCompanyToConfirm.allCompanys.findIndex(
+            itemCompany => itemCompany._id === action.companyId
+          )
+          if (findIndexCompany >= 0) {
+            userCompanyToConfirm.allCompanys[
+              findIndexCompany
+            ].blockSendVerifiedEmail = action.blockSendVerifiedEmail
+            console.log(userCompanyToConfirm.allCompanys[findIndexCompany])
+          }
+        }
+      }
+      return {
+        ...state,
+        user: userCompanyToConfirm,
+        resetCompanyEditProfil: true,
+        workCompanyData: newWorkCompanyData,
+      }
+    }
+
     case UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS: {
+      let newWorkCompanyData = !!state.workCompanyData
+        ? state.workCompanyData
+        : null
+      if (!!newWorkCompanyData) {
+        newWorkCompanyData.blockSendVerifiedPhoneSms =
+          action.blockSendVerifiedPhoneSms
+      }
       const userCompanyToConfirm = !!state.user ? state.user : null
       if (!!userCompanyToConfirm) {
         if (!!userCompanyToConfirm.company) {
@@ -994,6 +1159,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: userCompanyToConfirm,
         resetCompanyEditProfil: true,
+        workCompanyData: newWorkCompanyData,
       }
     }
 
