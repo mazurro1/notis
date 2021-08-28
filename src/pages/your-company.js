@@ -52,10 +52,16 @@ const YourCompany = () => {
 
   const selectButton = !!user ? (
     <>
-      {!!!user.phoneVerified && (
+      {!!!user.phoneVerified ? (
         <ReactTooltip id="blockCreateCompany" effect="float" multiline={true}>
           <span>Zweryfikuj numer telefonu aby stworzyć konto firmowe.</span>
         </ReactTooltip>
+      ) : (
+        !!!user.emailVerified && (
+          <ReactTooltip id="blockCreateCompany" effect="float" multiline={true}>
+            <span>Zweryfikuj adres e-mail aby stworzyć konto firmowe.</span>
+          </ReactTooltip>
+        )
       )}
       <div data-tip data-for="blockCreateCompany" data-place="bottom">
         <ButtonIcon
@@ -66,7 +72,7 @@ const YourCompany = () => {
           icon={<MdStoreMallDirectory />}
           secondColors
           onClick={handleCreateCompany}
-          disabled={!!!user.phoneVerified}
+          disabled={!!!user.phoneVerified || !!!user.emailVerified}
         />
       </div>
     </>

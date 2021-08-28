@@ -37,6 +37,7 @@ export const ADD_NEW_USER_ALERT = "ADD_NEW_USER_ALERT"
 export const CHANGE_ALERT_EXTRA = "CHANGE_ALERT_EXTRA"
 export const ADD_TOKEN_AUTO_LOGIN_VISIBLE = "ADD_TOKEN_AUTO_LOGIN_VISIBLE"
 export const VERIFIED_PHONE_COMPONENT = "VERIFIED_PHONE_COMPONENT"
+export const VERIFIED_EMAIL_COMPONENT = "VERIFIED_EMAIL_COMPONENT"
 export const CHANGE_MAP_ACTIVE = "CHANGE_MAP_ACTIVE"
 export const CHANGE_POPUP_TAKE_PLACE = "CHANGE_POPUP_TAKE_PLACE"
 export const CHANGE_SELECTED_NAME_MENU = "CHANGE_SELECTED_NAME_MENU"
@@ -135,6 +136,13 @@ export const changeMapsActive = value => {
 export const verifiedPhoneComponent = value => {
   return {
     type: VERIFIED_PHONE_COMPONENT,
+    value: value,
+  }
+}
+
+export const verifiedEmailComponent = value => {
+  return {
+    type: VERIFIED_EMAIL_COMPONENT,
     value: value,
   }
 }
@@ -243,7 +251,10 @@ export const addUserPhone = (
   phoneVerified,
   hasPhone,
   blockUserChangePhoneNumber,
-  blockUserSendVerifiedPhoneSms
+  blockUserSendVerifiedPhoneSms,
+  emailVerified,
+  emailToVerified,
+  blockUserChangeEmail
 ) => {
   return {
     type: ADD_USER_PHONE,
@@ -254,6 +265,9 @@ export const addUserPhone = (
     hasPhone: hasPhone,
     blockUserChangePhoneNumber: blockUserChangePhoneNumber,
     blockUserSendVerifiedPhoneSms: blockUserSendVerifiedPhoneSms,
+    emailVerified: emailVerified,
+    emailToVerified: emailToVerified,
+    blockUserChangeEmail: blockUserChangeEmail,
   }
 }
 
@@ -684,7 +698,8 @@ export const fetchEditUser = (
   newPassword,
   password,
   token,
-  editPhone = false
+  editPhone = false,
+  newEmail
 ) => {
   return dispatch => {
     return axios
@@ -694,6 +709,7 @@ export const fetchEditUser = (
           newPhone: newPhone,
           newPassword: newPassword,
           password: password,
+          newEmail: newEmail,
         },
         {
           headers: {
@@ -710,11 +726,17 @@ export const fetchEditUser = (
             response.data.phoneVerified,
             response.data.hasPhone,
             response.data.blockUserChangePhoneNumber,
-            response.data.blockUserSendVerifiedPhoneSms
+            response.data.blockUserSendVerifiedPhoneSms,
+            response.data.emailVerified,
+            response.data.emailToVerified,
+            response.data.blockUserChangeEmail
           )
         )
         if (!!editPhone && !!!response.data.phoneVerified) {
           dispatch(verifiedPhoneComponent(true))
+        }
+        if (!!newEmail && !!!response.data.emailVerified) {
+          dispatch(verifiedEmailComponent(true))
         }
         dispatch(
           addAlertItem("Pomyślnie zaktualizowano dane użytkownika", "green")
@@ -725,6 +747,10 @@ export const fetchEditUser = (
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(addAlertItem("Nie poprawne hasło", "red"))
+            } else if (error.response.status === 443) {
+              dispatch(addAlertItem("Adres e-mail jest zajęty", "red"))
+            } else if (error.response.status === 442) {
+              dispatch(addAlertItem("Numer telefonu jest zajęty", "red"))
             } else if (error.response.status === 423) {
               dispatch(
                 addAlertItem(
@@ -959,8 +985,10 @@ export const CONFIRM_DELETE_COMPANY = "CONFIRM_DELETE_COMPANY"
 export const DELETE_COMPANY_USER = "DELETE_COMPANY_USER"
 export const DELETE_COMPANY_CONFIRM = "DELETE_COMPANY_CONFIRM"
 export const VERYFIED_USER_PHONE = "VERYFIED_USER_PHONE"
+export const VERYFIED_USER_EMAIL = "VERYFIED_USER_EMAIL"
 export const ERROR_LOADING_PAGE = "ERROR_LOADING_PAGE"
 export const CHANGE_USER_BLOCK_SMS_SEND = "CHANGE_USER_BLOCK_SMS_SEND"
+export const CHANGE_BLOCK_USER_CHANGE_EMAIL = "CHANGE_BLOCK_USER_CHANGE_EMAIL"
 export const ADD_CHECKOUT_ID = "ADD_CHECKOUT_ID"
 export const ADD_COMPANY_TRANSACTION_HISTORY = "ADD_COMPANY_TRANSACTION_HISTORY"
 export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
@@ -1377,6 +1405,13 @@ export const changeUserBlockSmsSend = date => {
   }
 }
 
+export const changeBlockUserChangeEmail = date => {
+  return {
+    type: CHANGE_BLOCK_USER_CHANGE_EMAIL,
+    date: date,
+  }
+}
+
 export const errorLoadingPage = value => {
   return {
     type: ERROR_LOADING_PAGE,
@@ -1384,9 +1419,17 @@ export const errorLoadingPage = value => {
   }
 }
 
-export const veryfiedUserPhone = () => {
+export const veryfiedUserPhone = token => {
   return {
     type: VERYFIED_USER_PHONE,
+    token: token,
+  }
+}
+
+export const veryfiedUserEmail = token => {
+  return {
+    type: VERYFIED_USER_EMAIL,
+    token: token,
   }
 }
 
@@ -5727,7 +5770,7 @@ export const fetchSentCodeConfirmVerifiedPhone = token => {
         )
         dispatch(
           addAlertItem(
-            "Wysłano na telefon / e-maila kod potwierdzenia numeru telefonu.",
+            "Wysłano na telefon kod potwierdzenia numeru telefonu.",
             "green"
           )
         )
@@ -5747,7 +5790,7 @@ export const fetchSentCodeConfirmVerifiedPhone = token => {
             } else {
               dispatch(
                 addAlertItem(
-                  "Błąd podczas wysyłania na adres telefon / e-mail kodu do potwierdzenia numeru telefonu",
+                  "Błąd podczas wysyłania na adres telefon kodu do potwierdzenia numeru telefonu",
                   "red"
                 )
               )
@@ -5820,7 +5863,7 @@ export const fetchVerifiedPhone = (token, code) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(veryfiedUserPhone())
+        dispatch(veryfiedUserPhone(response.data.token))
         dispatch(addAlertItem("Zweryfikowano numer telefonu.", "green"))
       })
       .catch(error => {
@@ -5828,6 +5871,8 @@ export const fetchVerifiedPhone = (token, code) => {
           if (!!error.response) {
             if (error.response.status === 401) {
               dispatch(logout())
+            } else if (error.response.status === 423) {
+              dispatch(addAlertItem("Numer telefonu jest zajęty", "red"))
             } else if (error.response.status === 422) {
               dispatch(
                 addAlertItem(
@@ -7759,8 +7804,107 @@ export const fetchUpdateCompanyEmailVeryfiedCode = (token, companyId, code) => {
               dispatch(logout())
             } else if (error.response.status === 443) {
               dispatch(addAlertItem("Błędny kod", "red"))
+            } else if (error.response.status === 442) {
+              dispatch(addAlertItem("Adres email jest zajęty", "red"))
             } else {
               dispatch(addAlertItem("Błąd podczas zmiany adresu email", "red"))
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchVerifiedEmail = (token, code) => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/verified-user-email`,
+        {
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(veryfiedUserEmail(response.data.token))
+        dispatch(addAlertItem("Zweryfikowano adres e-mail.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 423) {
+              dispatch(addAlertItem("Adres e-mail jest zajęty", "red"))
+            } else if (error.response.status === 422) {
+              dispatch(
+                addAlertItem(
+                  "Błędny kod do zweryfikowania adresu e-mail",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(
+                addAlertItem("Błąd podczas weryfikacji adresu e-mail", "red")
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchSentCodeConfirmVerifiedEmail = token => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-sent-code-verified-email`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(changeBlockUserChangeEmail(response.data.blockUserChangeEmail))
+        dispatch(
+          addAlertItem("Wysłano na adres e-mail kod potwierdzenia.", "green")
+        )
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else if (error.response.status === 423) {
+              dispatch(
+                addAlertItem(
+                  "Nie można teraz wysłać kodu do aktywacji adresu e-mail",
+                  "red"
+                )
+              )
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas wysyłania na adres e-mail kodu do potwierdzenia",
+                  "red"
+                )
+              )
             }
           } else {
             dispatch(addAlertItem("Brak internetu.", "red"))

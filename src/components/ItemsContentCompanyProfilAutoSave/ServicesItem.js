@@ -167,6 +167,7 @@ const ServicesItem = ({
   premiumActive,
   userCannotMakeReservation,
   userPhoneVeryfied,
+  userEmailVeryfied,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
     value: 1,
@@ -195,6 +196,7 @@ const ServicesItem = ({
     userAccountNotVeryfied,
     userPhoneVeryfied,
     premiumActive,
+    userEmailVeryfied,
   ])
 
   const indexValueColorService = !!itemServices.serviceColor
@@ -333,7 +335,8 @@ const ServicesItem = ({
         !premiumActive ||
         isWorkerBlocked ||
         userAccountNotVeryfied ||
-        !userPhoneVeryfied) && (
+        !userPhoneVeryfied ||
+        !userEmailVeryfied) && (
         <ReactTooltip
           id={`userIsBlockedAlert${itemServices._id}`}
           effect="float"
@@ -349,6 +352,8 @@ const ServicesItem = ({
             <span>Zweryfikuj numer telefonu, aby dokonać rezerwacji</span>
           ) : !premiumActive ? (
             <span>Nie można dokonać rezerwacji</span>
+          ) : !userEmailVeryfied ? (
+            <span>Zweryfikuj adres e-mial, aby dokonać rezerwacji</span>
           ) : (
             <span>Twoje konto zostało zablokowane na tej stronie</span>
           )}
@@ -424,7 +429,8 @@ const ServicesItem = ({
                   isWorkerBlocked ||
                   !premiumActive ||
                   userAccountNotVeryfied ||
-                  !userPhoneVeryfied
+                  !userPhoneVeryfied ||
+                  !userEmailVeryfied
                 }
               />
             </WidthButtonRezerv>

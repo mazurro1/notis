@@ -34,10 +34,12 @@ import {
   DELETE_FAVOURITES_COMPANY,
   RESET_USER_FAVOURITES,
   VERYFIED_USER_PHONE,
+  VERYFIED_USER_EMAIL,
   HEIGHT_NAV_INDUSTRIES,
   VISIBLE_NAV_INDUSTRIES,
   ADD_TOKEN_AUTO_LOGIN_VISIBLE,
   VERIFIED_PHONE_COMPONENT,
+  VERIFIED_EMAIL_COMPONENT,
   ADD_CHECKOUT_ID,
   ADD_COINS_OFFER,
   CHANGE_POPUP_TAKE_PLACE,
@@ -99,6 +101,7 @@ import {
   UPDATE_COMPANY_SMS_SETTINGS,
   ADD_COMPANY_TRANSACTION_HISTORY,
   CHANGE_USER_BLOCK_SMS_SEND,
+  CHANGE_BLOCK_USER_CHANGE_EMAIL,
   ERROR_LOADING_PAGE,
   DELETE_COMPANY_CONFIRM,
   DELETE_COMPANY_USER,
@@ -228,6 +231,7 @@ const initialState = {
   visibleMenuIndustries: false,
   visibleTokenToAutoLogin: false,
   verifiedPhoneComponentVisible: false,
+  verifiedEmailComponentVisible: false,
   checkoutPaymentItem: null,
   coinsOffer: [],
   resetUserPhone: false,
@@ -433,6 +437,12 @@ const reducer = (state = initialState, action) => {
         verifiedPhoneComponentVisible: action.value,
       }
     }
+    case VERIFIED_EMAIL_COMPONENT: {
+      return {
+        ...state,
+        verifiedEmailComponentVisible: action.value,
+      }
+    }
     case ADD_TOKEN_AUTO_LOGIN_VISIBLE: {
       return {
         ...state,
@@ -455,12 +465,29 @@ const reducer = (state = initialState, action) => {
       const newUserVerifiedPhone = !!state.user ? { ...state.user } : null
       if (!!newUserVerifiedPhone) {
         newUserVerifiedPhone.phoneVerified = true
+        newUserVerifiedPhone.token = action.token
       }
       return {
         ...state,
         user: newUserVerifiedPhone,
         userProfilReset: true,
         verifiedPhoneComponentVisible: false,
+      }
+    }
+
+    case VERYFIED_USER_EMAIL: {
+      const newUserVerifiedEmail = !!state.user ? { ...state.user } : null
+      if (!!newUserVerifiedEmail) {
+        newUserVerifiedEmail.emailVerified = true
+        newUserVerifiedEmail.email = newUserVerifiedEmail.emailToVerified
+        newUserVerifiedEmail.emailToVerified = null
+        newUserVerifiedEmail.token = action.token
+      }
+      return {
+        ...state,
+        user: newUserVerifiedEmail,
+        userProfilReset: true,
+        verifiedEmailComponentVisible: false,
       }
     }
 
@@ -546,6 +573,17 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case CHANGE_BLOCK_USER_CHANGE_EMAIL: {
+      const newUserEditedEmail = !!state.user ? { ...state.user } : null
+      if (newUserEditedEmail) {
+        newUserEditedEmail.blockUserChangeEmail = action.date
+      }
+      return {
+        ...state,
+        user: newUserEditedEmail,
+      }
+    }
+
     case RESET_UPDATE_USER_PHONE: {
       return {
         ...state,
@@ -565,6 +603,9 @@ const reducer = (state = initialState, action) => {
       const newUserEdited = !!state.user ? { ...state.user } : null
       if (!!newUserEdited) {
         if (!!action.email || action.token) {
+          newUserEdited.emailVerified = action.emailVerified
+          newUserEdited.emailToVerified = action.emailToVerified
+          newUserEdited.blockUserChangeEmail = action.blockUserChangeEmail
           newUserEdited.token = action.token
           newUserEdited.email = action.email
           newUserEdited.phoneVerified = action.phoneVerified

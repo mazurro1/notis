@@ -123,6 +123,7 @@ const AllCategoryOfServices = ({
   userIsBlocked,
   userAccountNotVeryfied,
   userPhoneVeryfied,
+  userEmailVeryfied,
   isWorkerBlocked,
   premiumActive,
   userCannotMakeReservation,
@@ -455,6 +456,7 @@ const AllCategoryOfServices = ({
         userIsBlocked={userIsBlocked}
         userAccountNotVeryfied={userAccountNotVeryfied}
         userPhoneVeryfied={userPhoneVeryfied}
+        userEmailVeryfied={userEmailVeryfied}
         userCannotMakeReservation={userCannotMakeReservation}
         isWorkerBlocked={isWorkerBlocked}
         premiumActive={premiumActive}

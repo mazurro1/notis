@@ -375,7 +375,12 @@ const Reserwation = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!!selectedDate && !!selectedWorkerUserId && !!user.phoneVerified) {
+    if (
+      !!selectedDate &&
+      !!selectedWorkerUserId &&
+      !!user.phoneVerified &&
+      !!user.emailVerified
+    ) {
       const selectedDay = selectedDate.getDate()
       const selectedMonth = selectedDate.getMonth() + 1
       const selectedYear = selectedDate.getFullYear()
@@ -765,7 +770,12 @@ const Reserwation = ({
   ])
 
   const handleDoReserwation = () => {
-    if (!!selectedDate && !!selectedWorkerUserId && !!user.phoneVerified) {
+    if (
+      !!selectedDate &&
+      !!selectedWorkerUserId &&
+      !!user.phoneVerified &&
+      !!user.emailVerified
+    ) {
       const selectedDay = selectedDate.getDate()
       const selectedMonth = selectedDate.getMonth() + 1
       const selectedYear = selectedDate.getFullYear()

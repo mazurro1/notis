@@ -15,6 +15,7 @@ import {
   MdLocalPhone,
   MdInfo,
   MdWork,
+  MdEmail,
 } from "react-icons/md"
 import {
   fetchUserPhone,
@@ -24,6 +25,7 @@ import {
   resetUserProfil,
   fetchUserDeleteImageOther,
   verifiedPhoneComponent,
+  verifiedEmailComponent,
   resetUpdateUserPhone,
 } from "../state/actions"
 import { useDispatch, useSelector } from "react-redux"
@@ -32,11 +34,11 @@ import ReactTooltip from "react-tooltip"
 import { fetchEditUser, fetchUpdateDefaultCompany } from "../state/actions"
 import UserProfilImage from "./UserProfilImage"
 import { Site } from "../common/Site"
-import InputPhone from "./InputPhone"
 import Popup from "./Popup"
 import DeleteAccount from "./DeleteAccount"
 import VeryfiedPhone from "./VeryfiedPhone"
 import SelectCreated from "./SelectCreated"
+import UserProfilEditPhoneEmail from "./UserProfilEditPhoneEmail"
 
 const AddImage = styled.div`
   position: relative;
@@ -231,14 +233,17 @@ const UserProfil = ({
 }) => {
   const [selectedFirstCompany, setSelectedFirstCompany] = useState(null)
   const [newPhone, setNewPhone] = useState("")
+  const [newEmail, setNewEmail] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [password, setPassword] = useState("")
   const [editImage, setEditImage] = useState(false)
   const [deleteAccountToConfirm, setDeleteAccountToConfirm] = useState(false)
   const [showComponentDelete, setShowComponentDelete] = useState(false)
   const [newPhoneVisible, setNewPhoneVisible] = useState(false)
+  const [newEmailVisible, setNewEmailVisible] = useState(false)
   const [newPasswordVisible, setNewPasswordVisible] = useState(false)
   const [veryfiedPhoneVisible, setVeryfiedPhoneVisible] = useState(false)
+  const [veryfiedEmailVisible, setVeryfiedEmailVisible] = useState(false)
   const [addedImages, setAddedImages] = useState([])
   const [activeCompany, setActiveCompany] = useState(false)
   const userPhone = useSelector(state => state.userPhone)
@@ -246,19 +251,24 @@ const UserProfil = ({
   const verifiedPhoneComponentVisible = useSelector(
     state => state.verifiedPhoneComponentVisible
   )
+  const verifiedEmailComponentVisible = useSelector(
+    state => state.verifiedEmailComponentVisible
+  )
   const userProfilReset = useSelector(state => state.userProfilReset)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!!user.defaultCompany) {
-      const findCompanyInAllCompanys = user.allCompanys.find(
-        itemCompany => itemCompany._id === user.defaultCompany
-      )
-      if (!!findCompanyInAllCompanys) {
-        setSelectedFirstCompany({
-          label: findCompanyInAllCompanys.name,
-          value: findCompanyInAllCompanys._id,
-        })
+    if (!!user) {
+      if (!!user.defaultCompany) {
+        const findCompanyInAllCompanys = user.allCompanys.find(
+          itemCompany => itemCompany._id === user.defaultCompany
+        )
+        if (!!findCompanyInAllCompanys) {
+          setSelectedFirstCompany({
+            label: findCompanyInAllCompanys.name,
+            value: findCompanyInAllCompanys._id,
+          })
+        }
       }
     }
   }, [user])
@@ -266,6 +276,10 @@ const UserProfil = ({
   useEffect(() => {
     setVeryfiedPhoneVisible(verifiedPhoneComponentVisible)
   }, [verifiedPhoneComponentVisible])
+
+  useEffect(() => {
+    setVeryfiedEmailVisible(verifiedEmailComponentVisible)
+  }, [verifiedEmailComponentVisible])
 
   useEffect(() => {
     if (!!user && !userPhone && newPhoneVisible) {
@@ -300,10 +314,13 @@ const UserProfil = ({
       setDeleteAccountToConfirm(false)
       setShowComponentDelete(false)
       setNewPhoneVisible(false)
+      setNewEmailVisible(false)
       setNewPasswordVisible(false)
       setEditImage(false)
       setActiveCompany(false)
       setVeryfiedPhoneVisible(false)
+      setVeryfiedEmailVisible(false)
+      setNewEmail(!!user.emial ? user.email : "")
       dispatch(resetUserProfil())
       if (!!user.defaultCompany) {
         const findCompanyInAllCompanys = user.allCompanys.find(
@@ -430,9 +447,22 @@ const UserProfil = ({
     setNewPhone(userPhone ? userPhone : "")
   }
 
+  const handleNewEmailVisible = () => {
+    setNewEmailVisible(prevState => !prevState)
+    setPassword("")
+    if (!!user) {
+      setNewEmail(!!user.emial ? user.email : "")
+    }
+  }
+
   const hadndleClickShowVeryfiedPhone = () => {
     setVeryfiedPhoneVisible(prevState => !prevState)
     dispatch(verifiedPhoneComponent(false))
+  }
+
+  const handleClickShowVerifiedEmail = () => {
+    setVeryfiedEmailVisible(prevState => !prevState)
+    dispatch(verifiedEmailComponent(false))
   }
 
   const handleChangeSelectedFirstCompany = value => {
@@ -472,10 +502,19 @@ const UserProfil = ({
     userPhone !== newPhone &&
     isPolishNumber
 
+  let disabledNewEmail = true
+  if (!!user) {
+    if (!!user.email) {
+      disabledNewEmail = newEmail === user.email
+    }
+  }
+
   const handleSaveNewPassword = e => {
     e.preventDefault()
     if (disabledNewPassword) {
-      dispatch(fetchEditUser(null, newPassword, password, user.token))
+      dispatch(
+        fetchEditUser(null, newPassword, password, user.token, null, null)
+      )
     } else {
       if (newPassword.length < 5 || password.length < 5) {
         dispatch(addAlertItem("Hasła są za krótkie", "red"))
@@ -487,7 +526,13 @@ const UserProfil = ({
 
   const handleSaveNewPhone = () => {
     if (disabledNewPhone) {
-      dispatch(fetchEditUser(newPhone, null, password, user.token, true))
+      dispatch(fetchEditUser(newPhone, null, password, user.token, true, null))
+    }
+  }
+
+  const handleSaveNewEmail = () => {
+    if (!disabledNewEmail) {
+      dispatch(fetchEditUser(null, null, password, user.token, false, newEmail))
     }
   }
 
@@ -508,12 +553,20 @@ const UserProfil = ({
   let isBlockUserSendVerifiedPhoneSms = false
   let dateBlockUserSendVerifiedPhoneSms = null
   let isUserBlockChangePhoneNumber = false
+  let isUserBlockChangeEmail = false
   let dateBlockChangePhone = null
+  let dateBlockChangeEmail = null
   if (!!user) {
     if (!!user.blockUserChangePhoneNumber) {
       dateBlockChangePhone = new Date(user.blockUserChangePhoneNumber)
       if (new Date(user.blockUserChangePhoneNumber) >= new Date()) {
         isUserBlockChangePhoneNumber = true
+      }
+    }
+    if (!!user.blockUserChangeEmail) {
+      dateBlockChangeEmail = new Date(user.blockUserChangeEmail)
+      if (new Date(user.blockUserChangeEmail) >= new Date()) {
+        isUserBlockChangeEmail = true
       }
     }
     if (!!user.blockUserSendVerifiedPhoneSms) {
@@ -545,6 +598,30 @@ const UserProfil = ({
         {dateBlockChangePhone.getMinutes() < 10
           ? `0${dateBlockChangePhone.getMinutes()}`
           : dateBlockChangePhone.getMinutes()}
+      </div>
+    </ReactTooltip>
+  )
+
+  const tooltipChangeEmail = isUserBlockChangeEmail && (
+    <ReactTooltip id="alertChangeEmail" effect="float" multiline={true}>
+      <div>
+        Adres e-mail można ponownie zmienić:{" "}
+        {dateBlockChangeEmail.getDate() < 10
+          ? `0${dateBlockChangeEmail.getDate()}`
+          : dateBlockChangeEmail.getDate()}
+        .
+        {dateBlockChangeEmail.getMonth() + 1 < 10
+          ? `0${dateBlockChangeEmail.getMonth() + 1}`
+          : dateBlockChangeEmail.getMonth() + 1}
+        .{dateBlockChangeEmail.getFullYear()}
+        {" o godzinie: "}
+        {dateBlockChangeEmail.getHours() < 10
+          ? `0${dateBlockChangeEmail.getHours()}`
+          : dateBlockChangeEmail.getHours()}
+        :
+        {dateBlockChangeEmail.getMinutes() < 10
+          ? `0${dateBlockChangeEmail.getMinutes()}`
+          : dateBlockChangeEmail.getMinutes()}
       </div>
     </ReactTooltip>
   )
@@ -599,6 +676,7 @@ const UserProfil = ({
             </h1>
           </div>
           {tooltipChangePhone}
+          {tooltipChangeEmail}
           {!!user.allCompanys.length > 0 && (
             <div>
               <MarginButtonPhone>
@@ -634,6 +712,23 @@ const UserProfil = ({
               />
             </MarginButtonPhone>
           </div>
+          <div>
+            <MarginButtonPhone
+              data-tip
+              data-for="alertChangeEmail"
+              data-place="right"
+            >
+              <ButtonIcon
+                title="Edytuj adres e-mail"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdEmail />}
+                onClick={handleNewEmailVisible}
+                disabled={isUserBlockChangeEmail}
+              />
+            </MarginButtonPhone>
+          </div>
           {!!user.hasPhone && !!!user.phoneVerified && (
             <div>
               <MarginButtonPhone>
@@ -645,6 +740,21 @@ const UserProfil = ({
                   icon={<MdInfo />}
                   secondColors
                   onClick={hadndleClickShowVeryfiedPhone}
+                />
+              </MarginButtonPhone>
+            </div>
+          )}
+          {!!!user.emailVerified && (
+            <div>
+              <MarginButtonPhone>
+                <ButtonIcon
+                  title="Weryfikuj adres e-mail"
+                  uppercase
+                  fontIconSize="20"
+                  fontSize="16"
+                  icon={<MdInfo />}
+                  secondColors
+                  onClick={handleClickShowVerifiedEmail}
                 />
               </MarginButtonPhone>
             </div>
@@ -806,62 +916,78 @@ const UserProfil = ({
         <VeryfiedPhone
           siteProps={siteProps}
           user={user}
+          isEmailVerified={false}
           hadndleClickShowVeryfiedPhone={hadndleClickShowVeryfiedPhone}
           isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
           dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
         />
       </Popup>
       <Popup
+        popupEnable={veryfiedEmailVisible || verifiedEmailComponentVisible}
+        position="absolute"
+        borderRadius
+        title="Weryfikuj adres e-mail"
+        smallTitle
+        closeTitle={false}
+      >
+        <VeryfiedPhone
+          siteProps={siteProps}
+          user={user}
+          isEmailVerified
+          hadndleClickShowVeryfiedPhone={handleClickShowVerifiedEmail}
+          isBlockUserSendVerifiedPhoneSms={isUserBlockChangeEmail}
+          dateBlockUserSendVerifiedPhoneSms={dateBlockChangeEmail}
+        />
+      </Popup>
+      <Popup
         popupEnable={newPhoneVisible}
         position="absolute"
-        title="Dodaj numeru telefonu"
+        title="Edytuj numeru telefonu"
         borderRadius
         smallTitle
         closeTitle={false}
       >
-        <TextCodeToDelete siteProps={siteProps}>
-          Numer telefonu można zmieniać 1 raz na godzine.
-        </TextCodeToDelete>
-        <TextCodeToDelete siteProps={siteProps}>
-          Czas na aktywacje numeru telefonu: 1 godzina
-        </TextCodeToDelete>
-        <InputPhone setPhoneNumber={setNewPhone} defaultValues={newPhone} />
-        <InputIcon
-          icon={<FaLock />}
-          placeholder="Aktualne hasło"
-          value={password}
-          type="password"
-          onChange={e => handleChangeInput(e, setPassword)}
-          validText="Minimum 5 znaków"
-          showPassword
+        <UserProfilEditPhoneEmail
+          siteProps={siteProps}
+          setInput={setNewPhone}
+          velueInput={newPhone}
+          handleChangeInput={handleChangeInput}
+          setPassword={setPassword}
+          password={password}
+          handleCancelChange={handleNewPhoneVisible}
+          disabledSave={!disabledNewPhone}
+          handleSaveChanges={handleSaveNewPhone}
+          TextCodeToDelete={TextCodeToDelete}
+          ButtonsImagePosition={ButtonsImagePosition}
+          MarginButtons={MarginButtons}
+          MarginButtonsSubmit={MarginButtonsSubmit}
         />
-        <ButtonsImagePosition>
-          <MarginButtons>
-            <ButtonIcon
-              title="Anuluj"
-              uppercase
-              fontIconSize="30"
-              fontSize="14"
-              icon={<MdArrowBack />}
-              customColorButton={Colors(siteProps).dangerColorDark}
-              customColorIcon={Colors(siteProps).dangerColor}
-              onClick={handleNewPhoneVisible}
-            />
-          </MarginButtons>
-          <MarginButtons>
-            <ButtonIcon
-              title="Zapisz"
-              uppercase
-              fontIconSize="30"
-              fontSize="14"
-              icon={<MdSave />}
-              customColorButton={Colors(siteProps).successColorDark}
-              customColorIcon={Colors(siteProps).successColor}
-              disabled={!disabledNewPhone}
-              onClick={handleSaveNewPhone}
-            />
-          </MarginButtons>
-        </ButtonsImagePosition>
+      </Popup>
+      <Popup
+        popupEnable={newEmailVisible}
+        position="absolute"
+        title="Edytuj adres email"
+        borderRadius
+        smallTitle
+        closeTitle={false}
+      >
+        <UserProfilEditPhoneEmail
+          siteProps={siteProps}
+          setInput={setNewEmail}
+          velueInput={newEmail}
+          handleChangeInput={handleChangeInput}
+          setPassword={setPassword}
+          password={password}
+          handleCancelChange={handleNewEmailVisible}
+          disabledSave={disabledNewEmail}
+          handleSaveChanges={handleSaveNewEmail}
+          TextCodeToDelete={TextCodeToDelete}
+          ButtonsImagePosition={ButtonsImagePosition}
+          MarginButtons={MarginButtons}
+          MarginButtonsSubmit={MarginButtonsSubmit}
+          isNewEmail
+          oldEmail={!!user.email ? user.email : ""}
+        />
       </Popup>
       <Popup
         popupEnable={newPasswordVisible}
@@ -914,7 +1040,6 @@ const UserProfil = ({
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
                 disabled={!disabledNewPassword}
-                // onClick={}
               />
             </MarginButtonsSubmit>
           </ButtonsImagePosition>

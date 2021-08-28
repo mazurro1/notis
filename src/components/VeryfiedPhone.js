@@ -4,9 +4,11 @@ import {
   fetchVerifiedPhone,
   changeDeleteCompanyConfirm,
   fetchSentCodeConfirmVerifiedPhone,
+  fetchVerifiedEmail,
+  fetchSentCodeConfirmVerifiedEmail,
 } from "../state/actions"
 import ButtonIcon from "../components/ButtonIcon"
-import { MdEmail, MdSave, MdClose } from "react-icons/md"
+import { MdEmail, MdSave, MdClose, MdPhone } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
@@ -55,6 +57,7 @@ const VeryfiedPhone = ({
   hadndleClickShowVeryfiedPhone,
   isBlockUserSendVerifiedPhoneSms,
   dateBlockUserSendVerifiedPhoneSms,
+  isEmailVerified = false,
 }) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
@@ -67,7 +70,11 @@ const VeryfiedPhone = ({
   }, [deleteCompanyConfirm]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSentAgain = () => {
-    dispatch(fetchSentCodeConfirmVerifiedPhone(user.token))
+    if (isEmailVerified) {
+      dispatch(fetchSentCodeConfirmVerifiedEmail(user.token))
+    } else {
+      dispatch(fetchSentCodeConfirmVerifiedPhone(user.token))
+    }
   }
   const handleGoBack = () => {
     hadndleClickShowVeryfiedPhone()
@@ -80,7 +87,11 @@ const VeryfiedPhone = ({
   }
 
   const handleVeryfiedPhone = () => {
-    dispatch(fetchVerifiedPhone(user.token, activeCode))
+    if (isEmailVerified) {
+      dispatch(fetchVerifiedEmail(user.token, activeCode))
+    } else {
+      dispatch(fetchVerifiedPhone(user.token, activeCode))
+    }
   }
 
   const tooltipSendAgainPhoneSms = isBlockUserSendVerifiedPhoneSms && (
@@ -110,8 +121,9 @@ const VeryfiedPhone = ({
   return (
     <>
       <TextCodeToDelete siteProps={siteProps}>
-        Wpisz kod do weryfikacji telefonu, który został wysłany na e-maila /
-        numer telefonu.
+        {isEmailVerified
+          ? "Wpisz kod do weryfikacji adresu e-mail, który został wysłany na podany adres."
+          : "Wpisz kod do weryfikacji telefonu, który został wysłany podany numer."}
       </TextCodeToDelete>
       <TextCodeToDelete siteProps={siteProps}>
         Kod jest ważny przez 1 godzine.
@@ -145,7 +157,7 @@ const VeryfiedPhone = ({
             uppercase
             fontIconSize="20"
             fontSize="16"
-            icon={<MdEmail />}
+            icon={isEmailVerified ? <MdEmail /> : <MdPhone />}
             onClick={handleSentAgain}
             disabled={isBlockUserSendVerifiedPhoneSms}
           />
@@ -164,7 +176,11 @@ const VeryfiedPhone = ({
         </MarginButtons>
         <MarginButtons>
           <ButtonIcon
-            title="Weryfikuj numer telefonu"
+            title={
+              isEmailVerified
+                ? "Weryfikuj adres e-mail"
+                : "Weryfikuj numer telefonu"
+            }
             uppercase
             fontIconSize="20"
             fontSize="16"

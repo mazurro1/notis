@@ -195,6 +195,7 @@ const CategoryItem = ({
   isWorkerBlocked,
   userAccountNotVeryfied,
   userPhoneVeryfied,
+  userEmailVeryfied,
   premiumActive,
 }) => {
   const [colorServiceComponent, setColorServiceComponent] = useState({
@@ -357,6 +358,7 @@ const CategoryItem = ({
         userIsBlocked={userIsBlocked}
         userAccountNotVeryfied={userAccountNotVeryfied}
         userPhoneVeryfied={userPhoneVeryfied}
+        userEmailVeryfied={userEmailVeryfied}
         activeWorkerUserId={activeWorkerUserId}
         isWorkerBlocked={isWorkerBlocked}
         premiumActive={premiumActive}

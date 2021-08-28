@@ -133,9 +133,14 @@ const CreateCompany = ({ user, siteProps }) => {
   }
 
   let userVeryfiedPhone = false
+  let userVeryfiedEmail = false
+
   if (!!user) {
     if (!!user.phoneVerified) {
       userVeryfiedPhone = user.phoneVerified
+    }
+    if (!!user.emailVerified) {
+      userVeryfiedEmail = user.emailVerified
     }
   }
 
@@ -143,6 +148,8 @@ const CreateCompany = ({ user, siteProps }) => {
     <ReactTooltip id="alertRegistration" effect="float" multiline={true}>
       {!userVeryfiedPhone ? (
         <span>Zweryfikuj numer telefonu aby stworzyć konto firmowe</span>
+      ) : !userVeryfiedEmail ? (
+        <span>Zweryfikuj adres e-mail aby stworzyć konto firmowe</span>
       ) : (
         <span>Uzupełnij wszystkie dane</span>
       )}
@@ -245,7 +252,11 @@ const CreateCompany = ({ user, siteProps }) => {
             uppercase
             fontIconSize="20"
             icon={<MdStoreMallDirectory />}
-            disabled={!validButtonRegisterCompany || !userVeryfiedPhone}
+            disabled={
+              !validButtonRegisterCompany ||
+              !userVeryfiedPhone ||
+              !userVeryfiedEmail
+            }
             fontSize="16"
           />
         </div>
