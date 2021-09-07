@@ -102,6 +102,7 @@ import {
   ADD_COMPANY_TRANSACTION_HISTORY,
   CHANGE_USER_BLOCK_SMS_SEND,
   CHANGE_BLOCK_USER_CHANGE_EMAIL,
+  CHANGE_VERIFIED_USER_FIELDS,
   ERROR_LOADING_PAGE,
   DELETE_COMPANY_CONFIRM,
   DELETE_COMPANY_USER,
@@ -564,7 +565,7 @@ const reducer = (state = initialState, action) => {
 
     case CHANGE_USER_BLOCK_SMS_SEND: {
       const newUserEditedSms = !!state.user ? { ...state.user } : null
-      if (newUserEditedSms) {
+      if (!!newUserEditedSms) {
         newUserEditedSms.blockUserSendVerifiedPhoneSms = action.date
       }
       return {
@@ -573,9 +574,29 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case CHANGE_VERIFIED_USER_FIELDS: {
+      const userEditedPhoneEmail = !!state.user ? { ...state.user } : null
+      if (!!userEditedPhoneEmail) {
+        if (!!action.changePhone) {
+          userEditedPhoneEmail.phone = action.changePhone
+          userEditedPhoneEmail.phoneVerified = true
+        }
+        if (!!action.changeEmail) {
+          userEditedPhoneEmail.email = action.changeEmail
+          userEditedPhoneEmail.emailVerified = true
+          userEditedPhoneEmail.emailToVerified = null
+        }
+      }
+      return {
+        ...state,
+        user: userEditedPhoneEmail,
+        userProfilReset: true,
+      }
+    }
+
     case CHANGE_BLOCK_USER_CHANGE_EMAIL: {
       const newUserEditedEmail = !!state.user ? { ...state.user } : null
-      if (newUserEditedEmail) {
+      if (!!newUserEditedEmail) {
         newUserEditedEmail.blockUserChangeEmail = action.date
       }
       return {

@@ -989,6 +989,7 @@ export const VERYFIED_USER_EMAIL = "VERYFIED_USER_EMAIL"
 export const ERROR_LOADING_PAGE = "ERROR_LOADING_PAGE"
 export const CHANGE_USER_BLOCK_SMS_SEND = "CHANGE_USER_BLOCK_SMS_SEND"
 export const CHANGE_BLOCK_USER_CHANGE_EMAIL = "CHANGE_BLOCK_USER_CHANGE_EMAIL"
+export const CHANGE_VERIFIED_USER_FIELDS = "CHANGE_VERIFIED_USER_FIELDS"
 export const ADD_CHECKOUT_ID = "ADD_CHECKOUT_ID"
 export const ADD_COMPANY_TRANSACTION_HISTORY = "ADD_COMPANY_TRANSACTION_HISTORY"
 export const ADD_COINS_OFFER = "ADD_COINS_OFFER"
@@ -1409,6 +1410,14 @@ export const changeBlockUserChangeEmail = date => {
   return {
     type: CHANGE_BLOCK_USER_CHANGE_EMAIL,
     date: date,
+  }
+}
+
+export const changeVerifiedUserFields = (changePhone, changeEmail) => {
+  return {
+    type: CHANGE_VERIFIED_USER_FIELDS,
+    changePhone: changePhone,
+    changeEmail: changeEmail,
   }
 }
 
@@ -7902,6 +7911,86 @@ export const fetchSentCodeConfirmVerifiedEmail = token => {
               dispatch(
                 addAlertItem(
                   "Błąd podczas wysyłania na adres e-mail kodu do potwierdzenia",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchDeleteVerifiedUserPhone = token => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-delete-verified-phone`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(changeVerifiedUserFields(response.data.userPhone, null))
+        dispatch(addAlertItem("Anulowano zmianę numeru telefonu.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas anulowania zmiany numeru telefonu",
+                  "red"
+                )
+              )
+            }
+          } else {
+            dispatch(addAlertItem("Brak internetu.", "red"))
+          }
+        }
+        dispatch(changeSpinner(false))
+      })
+  }
+}
+
+export const fetchDeleteVerifiedUserEmail = token => {
+  return dispatch => {
+    dispatch(changeSpinner(true))
+    return axios
+      .post(
+        `${Site.serverUrl}/user-delete-verified-email`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(response => {
+        dispatch(changeSpinner(false))
+        dispatch(changeVerifiedUserFields(null, response.data.userEmail))
+        dispatch(addAlertItem("Anulowano zmianę adresu e-mail.", "green"))
+      })
+      .catch(error => {
+        if (!!error) {
+          if (!!error.response) {
+            if (error.response.status === 401) {
+              dispatch(logout())
+            } else {
+              dispatch(
+                addAlertItem(
+                  "Błąd podczas anulowania zmiany adresu e-mail",
                   "red"
                 )
               )

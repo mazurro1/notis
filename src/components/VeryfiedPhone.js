@@ -6,9 +6,11 @@ import {
   fetchSentCodeConfirmVerifiedPhone,
   fetchVerifiedEmail,
   fetchSentCodeConfirmVerifiedEmail,
+  fetchDeleteVerifiedUserPhone,
+  fetchDeleteVerifiedUserEmail,
 } from "../state/actions"
 import ButtonIcon from "../components/ButtonIcon"
-import { MdEmail, MdSave, MdClose, MdPhone } from "react-icons/md"
+import { MdEmail, MdSave, MdClose, MdPhone, MdDelete } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
@@ -25,6 +27,14 @@ const ButtonsPosition = styled.div`
 
 const MarginButtons = styled.div`
   margin: 5px;
+`
+
+const FlexResetCode = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
 `
 
 const PanFieldStyle = styled(PinField)`
@@ -58,6 +68,7 @@ const VeryfiedPhone = ({
   isBlockUserSendVerifiedPhoneSms,
   dateBlockUserSendVerifiedPhoneSms,
   isEmailVerified = false,
+  isAccountVeryfied = false,
 }) => {
   const [demoCompleted, setDemoCompleted] = useState(false)
   const [activeCode, setActiveCode] = useState("")
@@ -68,6 +79,16 @@ const VeryfiedPhone = ({
   useEffect(() => {
     dispatch(changeDeleteCompanyConfirm())
   }, [deleteCompanyConfirm]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleDeleteVeryfiedAccount = () => {
+    if (isAccountVeryfied) {
+      if (isEmailVerified) {
+        dispatch(fetchDeleteVerifiedUserEmail(user.token))
+      } else {
+        dispatch(fetchDeleteVerifiedUserPhone(user.token))
+      }
+    }
+  }
 
   const handleSentAgain = () => {
     if (isEmailVerified) {
@@ -128,18 +149,17 @@ const VeryfiedPhone = ({
       <TextCodeToDelete siteProps={siteProps}>
         Kod jest ważny przez 1 godzine.
       </TextCodeToDelete>
-      <PanFieldStyle
-        ref={fieldOneRef}
-        onComplete={code => {
-          setActiveCode(code)
-          setDemoCompleted(true)
-        }}
-        format={k => k.toUpperCase()}
-        disabled={demoCompleted}
-        length={6}
-      />
-
-      <ButtonsPosition>
+      <FlexResetCode>
+        <PanFieldStyle
+          ref={fieldOneRef}
+          onComplete={code => {
+            setActiveCode(code)
+            setDemoCompleted(true)
+          }}
+          format={k => k.toUpperCase()}
+          disabled={demoCompleted}
+          length={6}
+        />
         <MarginButtons>
           <ButtonIcon
             title="Resetuj kod"
@@ -150,7 +170,23 @@ const VeryfiedPhone = ({
             onClick={handleReset}
           />
         </MarginButtons>
+      </FlexResetCode>
+      <ButtonsPosition>
         {tooltipSendAgainPhoneSms}
+        {isAccountVeryfied && (
+          <MarginButtons>
+            <ButtonIcon
+              title="Anuluj zmianę"
+              uppercase
+              fontIconSize="20"
+              fontSize="16"
+              icon={<MdDelete />}
+              customColorButton={Colors(siteProps).dangerColorDark}
+              customColorIcon={Colors(siteProps).dangerColor}
+              onClick={handleDeleteVeryfiedAccount}
+            />
+          </MarginButtons>
+        )}
         <MarginButtons data-tip data-for="alertChangePhoneSendSms">
           <ButtonIcon
             title="Wyślij kod jeszcze raz"
@@ -164,7 +200,7 @@ const VeryfiedPhone = ({
         </MarginButtons>
         <MarginButtons>
           <ButtonIcon
-            title="Anuluj"
+            title="Cofnij"
             uppercase
             fontIconSize="20"
             fontSize="16"

@@ -556,7 +556,11 @@ const UserProfil = ({
   let isUserBlockChangeEmail = false
   let dateBlockChangePhone = null
   let dateBlockChangeEmail = null
+  let isAccountVeryfied = false
   if (!!user) {
+    if (!!user.accountVerified) {
+      isAccountVeryfied = user.accountVerified
+    }
     if (!!user.blockUserChangePhoneNumber) {
       dateBlockChangePhone = new Date(user.blockUserChangePhoneNumber)
       if (new Date(user.blockUserChangePhoneNumber) >= new Date()) {
@@ -920,6 +924,7 @@ const UserProfil = ({
           hadndleClickShowVeryfiedPhone={hadndleClickShowVeryfiedPhone}
           isBlockUserSendVerifiedPhoneSms={isBlockUserSendVerifiedPhoneSms}
           dateBlockUserSendVerifiedPhoneSms={dateBlockUserSendVerifiedPhoneSms}
+          isAccountVeryfied={isAccountVeryfied}
         />
       </Popup>
       <Popup
@@ -937,6 +942,7 @@ const UserProfil = ({
           hadndleClickShowVeryfiedPhone={handleClickShowVerifiedEmail}
           isBlockUserSendVerifiedPhoneSms={isUserBlockChangeEmail}
           dateBlockUserSendVerifiedPhoneSms={dateBlockChangeEmail}
+          isAccountVeryfied={isAccountVeryfied}
         />
       </Popup>
       <Popup
