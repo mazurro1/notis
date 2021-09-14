@@ -44,7 +44,7 @@ const WorkerHoursAutoSave = ({
         fetchGetWorkerNoConstData(
           user.token,
           user.company._id,
-          item._id,
+          item.user._id,
           dateCalendar.getFullYear(),
           dateCalendar.getMonth() + 1
         )

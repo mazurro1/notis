@@ -332,7 +332,11 @@ const BigCalendarWorkerHoursAutoSave = ({
 
   useEffect(() => {
     if (!!item) {
-      const mapItemNoConstantWorkingHoursDate = item.noConstantWorkingHours.map(
+      let validWorkerNoConstHours = []
+      if (!!item.noConstantWorkingHours) {
+        validWorkerNoConstHours = item.noConstantWorkingHours
+      }
+      const mapItemNoConstantWorkingHoursDate = validWorkerNoConstHours.map(
         itemMaped => {
           const itemMapedResult = {
             end: new Date(itemMaped.end),

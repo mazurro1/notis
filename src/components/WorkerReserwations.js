@@ -24,14 +24,15 @@ const WorkerReserwations = ({ handleClose, user, isAdmin }) => {
   }
 
   useEffect(() => {
+    console.log(user.company.owner, user.userId, userWorkerActive)
     dispatch(
       fetchWorkerReserwationsAll(
         user.token,
-        isAdmin ? userWorkerActive : user.userId,
+        user.company.owner === user.userId ? userWorkerActive : user.userId,
         dateCalendar.getFullYear(),
         dateCalendar.getMonth() + 1,
         user.company._id,
-        isAdmin
+        user.company.owner === userWorkerActive
       )
     ) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
