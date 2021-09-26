@@ -118,6 +118,7 @@ const WorkerItem = ({
   activeWorkerUserId,
   BackGroundImageCustomUrl,
   premiumActive,
+  isLogginUserWorker = false,
 }) => {
   const [resetConstDays, setResetConstDays] = useState(false)
   const [constTimeWorker, setConstTimeWorker] = useState(false)
@@ -509,7 +510,7 @@ const WorkerItem = ({
       )}
       <WorkerName>{`${item.user.name} ${item.user.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecialization}</WorkerSpecjalization>
-      {editedWorkers && (
+      {editedWorkers && (!!isLogginUserWorker || !!isAdmin) && (
         <>
           <EditUserStyle>
             {premiumActive && (

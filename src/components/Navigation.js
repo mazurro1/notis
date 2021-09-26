@@ -1330,6 +1330,7 @@ const Navigation = ({ isMainPage }) => {
         handleClose={handleCloseWorkerReserwations}
         user={user}
         isAdmin={isAdmin}
+        workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
       />
     </Popup>
   )

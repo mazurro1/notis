@@ -245,7 +245,7 @@ const CompanyCommunitingDataItem = ({
       clickEdit={clickEdit}
       siteProps={siteProps}
       noStartValue={item.statusValue === 1 && dateIsNoOld}
-      startValue={item.statusValue === 2}
+      startValue={item.statusValue === 2 && dateIsNoOld}
       finished={item.statusValue === 3 || !dateIsNoOld}
       canceled={item.statusValue === 4 || item.statusValue === 5}
     >
@@ -298,7 +298,7 @@ const CompanyCommunitingDataItem = ({
                 customColorButton={
                   item.statusValue === 1 && dateIsNoOld
                     ? Colors(siteProps).primaryColorDark
-                    : item.statusValue === 2
+                    : item.statusValue === 2 && dateIsNoOld
                     ? Colors(siteProps).secondDarkColor
                     : item.statusValue === 3 || !dateIsNoOld
                     ? Colors(siteProps).successColorDark
@@ -311,7 +311,7 @@ const CompanyCommunitingDataItem = ({
                 customColorIcon={
                   item.statusValue === 1 && dateIsNoOld
                     ? Colors(siteProps).primaryColor
-                    : item.statusValue === 2
+                    : item.statusValue === 2 && dateIsNoOld
                     ? Colors(siteProps).secondColor
                     : item.statusValue === 3 || !dateIsNoOld
                     ? Colors(siteProps).successColor
@@ -333,7 +333,7 @@ const CompanyCommunitingDataItem = ({
             <StatusCommuniting noStartValue={true} siteProps={siteProps}>
               Dojazd nie rozpoczęty
             </StatusCommuniting>
-          ) : item.statusValue === 2 ? (
+          ) : item.statusValue === 2 && dateIsNoOld ? (
             <StatusCommuniting startValue={true} siteProps={siteProps}>
               Dojazd w trakcie
             </StatusCommuniting>

@@ -23,6 +23,7 @@ import {
   fetchUpdateWorkerReserwation,
   fetchDoReserwationWorker,
   fetchAddWorkerClientReserwation,
+  fetchCustomUserPhone,
 } from "../state/actions"
 import CalendarWorkerReserwatinNewEvent from "./CalendarWorkerReserwatinNewEvent"
 import CalendarWorkerReserwatinNewReserwation from "./CalendarWorkerReserwatinNewReserwation"
@@ -343,6 +344,7 @@ const BigCalendarWorkerReserwations = ({
   setUserWorkerActive,
   workingHours,
   isMobile = false,
+  workerHasAccessClientsOpinions,
 }) => {
   const [datePicker, setDatePicker] = useState(new Date())
   const [datePickerActive, setDatePickerActive] = useState(false)
@@ -695,6 +697,17 @@ const BigCalendarWorkerReserwations = ({
     } else {
       return false
     }
+  }
+
+  const handleFetchPhoneNumber = (toUserId, reserwationId) => {
+    dispatch(
+      fetchCustomUserPhone(
+        user.token,
+        toUserId,
+        user.company._id,
+        reserwationId
+      )
+    )
   }
 
   const handleSlotPropGetterOpenHoursCompany = date => {
@@ -1305,6 +1318,8 @@ const BigCalendarWorkerReserwations = ({
           itemCompanyHours={item.company.openingDays}
           itemCompany={item.company}
           isAdmin={isAdmin}
+          workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
+          handleFetchPhoneNumber={handleFetchPhoneNumber}
         />
         <CalendarWorkerReserwatinNewEvent
           siteProps={siteProps}

@@ -181,6 +181,7 @@ import {
   UPDATE_USER_ONE_RESERWATION,
   RESET_PLACES,
   ADD_NEW_PHONE_WORKER_USER_INFORMATION,
+  ADD_NEW_PHONE_WORKER_RESERWATION,
   DELETE_MESSAGE_WORKER_USER_INFORMATION,
   ADD_TO_USER_INFORMATIONS,
   COMPANY_PATCH_SETTINGS,
@@ -3071,6 +3072,33 @@ const reducer = (state = initialState, action) => {
         return {
           ...state,
         }
+      }
+    }
+
+    case ADD_NEW_PHONE_WORKER_RESERWATION: {
+      const workerHistoryReserwationsWithPhone = !!state.workerHistoryReserwations
+        ? { ...state.workerHistoryReserwations }
+        : null
+      console.log("update phone")
+      if (!!workerHistoryReserwationsWithPhone && !!action.userPhone) {
+        const findIndexReserwation = workerHistoryReserwationsWithPhone.reserwations.findIndex(
+          itemReserwation => itemReserwation._id === action.reserwationId
+        )
+        if (findIndexReserwation >= 0) {
+          if (
+            !!workerHistoryReserwationsWithPhone.reserwations[
+              findIndexReserwation
+            ].fromUser
+          ) {
+            workerHistoryReserwationsWithPhone.reserwations[
+              findIndexReserwation
+            ].fromUser.phone = action.userPhone
+          }
+        }
+      }
+      return {
+        ...state,
+        workerHistoryReserwations: workerHistoryReserwationsWithPhone,
       }
     }
 

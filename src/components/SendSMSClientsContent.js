@@ -132,6 +132,7 @@ const SendSMSClientsContent = ({ clients, siteProps, user }) => {
         onlyText
         isDisabled={selectedAllClients}
         maxMenuHeight={200}
+        closeMenuOnSelect={false}
       />
       <CheckboxContainer>
         <CheckboxStyle siteProps={siteProps}>

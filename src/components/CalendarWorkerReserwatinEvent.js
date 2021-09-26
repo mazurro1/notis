@@ -12,6 +12,7 @@ import {
   MdAssignmentLate,
   MdTimelapse,
   MdArrowBack,
+  MdPhone,
 } from "react-icons/md"
 import {
   getMonthNamePl,
@@ -36,6 +37,11 @@ const EventItemPosition = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 5px;
+`
+
+const ButtonStylePhone = styled.div`
+  display: inline-block;
+  margin-left: 5px;
 `
 
 const EventItemPositionContent = styled.div`
@@ -198,6 +204,8 @@ const CalendarWorkerReserwatinEvent = ({
   itemCompanyHours,
   isAdmin,
   itemCompany,
+  workerHasAccessClientsOpinions,
+  handleFetchPhoneNumber,
 }) => {
   const [confirmCancelReserwation, setConfirmCancelReserwation] = useState(
     false
@@ -396,8 +404,22 @@ const CalendarWorkerReserwatinEvent = ({
   const workersToSelect = []
   let oldDateToSelectWorker = false
   let reserwationCommuniting = null
+  let fromUserReserwationId = null
+  let fromUserReserwationPhone = null
+  let reserwationId = null
 
   if (!!selectedEvent) {
+    if (!!selectedEvent._id) {
+      reserwationId = selectedEvent._id
+    }
+    if (!!selectedEvent.fromUser) {
+      if (!!selectedEvent.fromUser._id) {
+        fromUserReserwationId = selectedEvent.fromUser._id
+      }
+      if (!!selectedEvent.fromUser.phone) {
+        fromUserReserwationPhone = selectedEvent.fromUser.phone
+      }
+    }
     if (!!itemCompany) {
       oldDateToSelectWorker = new Date() > selectedEvent.end
       const adminHasService = itemCompany.ownerData.servicesCategory.some(
@@ -698,10 +720,7 @@ const CalendarWorkerReserwatinEvent = ({
                   customColorIcon={Colors(siteProps).dangerColor}
                   onClick={() => {
                     handleClosePopupEventItem()
-                    handleChangeReserwationStatus(
-                      selectedEvent._id,
-                      "noFinished"
-                    )
+                    handleChangeReserwationStatus(reserwationId, "noFinished")
                   }}
                 />
               </ButtonItemStyle>
@@ -735,7 +754,7 @@ const CalendarWorkerReserwatinEvent = ({
                 customColorIcon={Colors(siteProps).successColor}
                 onClick={() => {
                   handleClosePopupEventItem()
-                  handleChangeReserwationStatus(selectedEvent._id, "finished")
+                  handleChangeReserwationStatus(reserwationId, "finished")
                 }}
               />
             </ButtonItemStyle>
@@ -792,7 +811,7 @@ const CalendarWorkerReserwatinEvent = ({
                 onClick={() => {
                   handleClosePopupEventItem()
                   handleChangeReserwationStatus(
-                    selectedEvent._id,
+                    reserwationId,
                     "update",
                     newTimeStart === dateStart ? null : newTimeStart,
                     newTimeEnd === dateEnd ? null : newTimeEnd,
@@ -857,6 +876,32 @@ const CalendarWorkerReserwatinEvent = ({
                 {isWorkerReserwation ? "Pracownik:" : "Klient:"}
                 <span>{client}</span>
               </ItemTitle>
+              {!!workerHasAccessClientsOpinions && !isWorkerReserwation && (
+                <ItemTitle siteProps={siteProps}>
+                  Numer telefonu:
+                  {!!fromUserReserwationPhone ? (
+                    <span>{fromUserReserwationPhone}</span>
+                  ) : (
+                    <ButtonStylePhone>
+                      <ButtonIcon
+                        title="Zobacz numer"
+                        uppercase
+                        fontIconSize="40"
+                        fontSize="15"
+                        icon={<MdPhone />}
+                        onClick={() =>
+                          handleFetchPhoneNumber(
+                            fromUserReserwationId,
+                            reserwationId
+                          )
+                        }
+                        customColorButton={Colors(siteProps).successColorDark}
+                        customColorIcon={Colors(siteProps).successColor}
+                      />
+                    </ButtonStylePhone>
+                  )}
+                </ItemTitle>
+              )}
               <ItemTitle siteProps={siteProps}>
                 Nazwa usługi:
                 <span>
@@ -972,7 +1017,7 @@ const CalendarWorkerReserwatinEvent = ({
                         onClick={() => {
                           handleClosePopupEventItem()
                           handleChangeReserwationStatus(
-                            selectedEvent._id,
+                            reserwationId,
                             "canceled"
                           )
                           setConfirmCancelReserwation(false)

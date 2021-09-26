@@ -1,19 +1,19 @@
 export const Permissions = [
   {
     value: 1,
-    label: "Edycja stanu magazynowego",
+    label: "Edytowanie/dodawanie/usuwanie: stanu magazynowego",
   },
   {
     value: 2,
-    label: "Usługi",
+    label: "Edytowanie/dodawanie/usuwanie: usług",
   },
   {
     value: 3,
-    label: "Happy hours, promocje, pieczątki",
+    label: "Edytowanie/dodawanie/usuwanie: happy hours, promocje, pieczątki",
   },
   {
     value: 4,
-    label: "Grafik pracy",
+    label: "Edycja swojego grafiku pracy, wykonywanych usług, stanowiska",
   },
   // {
   //   value: 5,
@@ -22,19 +22,15 @@ export const Permissions = [
   {
     value: 6,
     label:
-      "Dane klientów (numer telefonu, historia, blokada, wiadomości o klientach)",
+      "Podgląd danych klientów, podgląd historii klientów, blokowanie klientów, tworzenie wiadomości o klientach, wysyłanie SMS do klientów.",
   },
   {
     value: 7,
-    label: "Stan sklepu",
+    label: "Edytowanie/dodawanie/usuwanie: stanu sklepu",
   },
   {
     value: 8,
     label: "Zarządzanie wszystkimi serwisami",
-  },
-  {
-    value: 9,
-    label: "Dojazdy",
   },
   {
     value: 10,

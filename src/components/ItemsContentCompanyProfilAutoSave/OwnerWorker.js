@@ -72,6 +72,7 @@ const OwnerWorker = ({
   activeWorkerUserId,
   BackGroundImageCustomUrl,
   premiumActive,
+  isAdmin,
 }) => {
   const [ownerServicesCategory, setOwnerServicesCategory] = useState([])
   const [inputSpecializationOwner, setInputSpecializationOwner] = useState(
@@ -157,7 +158,9 @@ const OwnerWorker = ({
   const handleClickOwnerEdit = e => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
-    setOwnerEdit(prevState => !prevState)
+    if (!!isAdmin) {
+      setOwnerEdit(prevState => !prevState)
+    }
   }
 
   const handleResetDay = (itemWorkerId, dayOfTheWeek) => {}
@@ -336,7 +339,7 @@ const OwnerWorker = ({
       )}
       <WorkerName>{`${owner.name} ${owner.surname}`}</WorkerName>
       <WorkerSpecjalization>{inputSpecializationOwner}</WorkerSpecjalization>
-      {editedWorkers && (
+      {editedWorkers && !!isAdmin && (
         <>
           <EditUserStyle>
             {premiumActive && (

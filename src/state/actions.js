@@ -908,6 +908,8 @@ export const RESET_USER_ALERTS = "RESET_USER_ALERTS"
 export const ADD_NEW_ALERTS = "ADD_NEW_ALERTS"
 export const ADD_NEW_PHONE_WORKER_USER_INFORMATION =
   "ADD_NEW_PHONE_WORKER_USER_INFORMATION"
+export const ADD_NEW_PHONE_WORKER_RESERWATION =
+  "ADD_NEW_PHONE_WORKER_RESERWATION"
 export const ADD_NEW_MESSAGE_WORKER_USER_INFORMATION =
   "ADD_NEW_MESSAGE_WORKER_USER_INFORMATION"
 export const RESET_BELL_ALERT = "RESET_BELL_ALERT"
@@ -1996,6 +1998,19 @@ export const addPhoneToWorkerUserInformation = (selectedUserId, userPhone) => {
     type: ADD_NEW_PHONE_WORKER_USER_INFORMATION,
     selectedUserId: selectedUserId,
     userPhone: userPhone,
+  }
+}
+
+export const addPhoneToWorkerReserwation = (
+  selectedUserId,
+  userPhone,
+  reserwationId
+) => {
+  return {
+    type: ADD_NEW_PHONE_WORKER_RESERWATION,
+    selectedUserId: selectedUserId,
+    userPhone: userPhone,
+    reserwationId: reserwationId,
   }
 }
 
@@ -3863,7 +3878,12 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
   }
 }
 
-export const fetchCustomUserPhone = (token, selectedUserId, companyId) => {
+export const fetchCustomUserPhone = (
+  token,
+  selectedUserId,
+  companyId,
+  reserwationId = null
+) => {
   return dispatch => {
     dispatch(changeSpinner(true))
     return axios
@@ -3881,12 +3901,22 @@ export const fetchCustomUserPhone = (token, selectedUserId, companyId) => {
       )
       .then(response => {
         dispatch(changeSpinner(false))
-        dispatch(
-          addPhoneToWorkerUserInformation(
-            selectedUserId,
-            response.data.userPhone
+        if (!!reserwationId) {
+          dispatch(
+            addPhoneToWorkerReserwation(
+              selectedUserId,
+              response.data.userPhone,
+              reserwationId
+            )
           )
-        )
+        } else {
+          dispatch(
+            addPhoneToWorkerUserInformation(
+              selectedUserId,
+              response.data.userPhone
+            )
+          )
+        }
       })
       .catch(error => {
         if (!!error) {

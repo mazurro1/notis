@@ -335,7 +335,17 @@ const OurWorkersContent = ({
     dispatch(changeActiveWorker(workerUserId))
   }
 
-  const mapWorkers = workers.map((item, index) => {
+  const filterWorkers = isAdmin
+    ? workers
+    : workers.filter(itemWorker => !!itemWorker.active)
+
+  const mapWorkers = filterWorkers.map((item, index) => {
+    let isLogginUserWorker = false
+    if (!!item.user) {
+      if (!!item.user._id) {
+        isLogginUserWorker = user.userId === item.user._id
+      }
+    }
     return (
       <WorkerItem
         index={index}
@@ -364,6 +374,7 @@ const OurWorkersContent = ({
         activeWorkerUserId={activeWorkerUserId}
         BackGroundImageCustomUrl={BackGroundImageCustomUrl}
         premiumActive={premiumActive}
+        isLogginUserWorker={isLogginUserWorker}
       />
     )
   })
