@@ -16,6 +16,7 @@ import { FaUser, FaQuestion, FaGoogle } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
 import { Colors } from "../common/Colors"
 import { Site } from "../common/Site"
+// import ReCaptcha from "./ReCaptcha"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;
@@ -119,6 +120,12 @@ const LoginContent = () => {
           type="password"
           onChange={e => handleChange(e, setPasswordInput)}
         />
+        {/* <ReCaptcha
+          onVerify={token => {
+            console.log("token", token)
+            // setToken(token)
+          }}
+        /> */}
         <CheckboxStyle siteProps={siteProps}>
           <Checkbox
             theme="material-checkbox"

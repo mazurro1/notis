@@ -325,6 +325,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
       data-sal={index % 2 === 0 ? "zoom-in" : "zoom-in"}
       data-sal-duration="1000"
       data-sal-easing="ease-out-bounce"
+      id="PlaceItem"
     >
       <PlaceItem siteProps={siteProps}>
         <PlaceImage>

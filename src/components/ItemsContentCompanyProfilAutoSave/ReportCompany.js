@@ -71,7 +71,21 @@ const ReportCompany = ({
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleClickReport}
-            disabled={disabledEditButtons}
+            disabled={disabledEditButtons || !!!user}
+          />
+        </div>
+      ) : !!!user ? (
+        <div data-tip data-for="noUserLoginButton">
+          <ButtonIcon
+            title="Zgłoś firmę"
+            uppercase
+            fontIconSize="20"
+            fontSize="16"
+            icon={<MdReport />}
+            customColorButton={Colors(siteProps).dangerColorDark}
+            customColorIcon={Colors(siteProps).dangerColor}
+            onClick={handleClickReport}
+            disabled={!!!user}
           />
         </div>
       ) : (
@@ -84,6 +98,7 @@ const ReportCompany = ({
           customColorButton={Colors(siteProps).dangerColorDark}
           customColorIcon={Colors(siteProps).dangerColor}
           onClick={handleClickReport}
+          disabled={!!!user}
         />
       )}
 
@@ -123,7 +138,7 @@ const ReportCompany = ({
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleConfirmReport}
-            disabled={!!!selectedReport}
+            disabled={!!!selectedReport || !!!user}
           />
         </div>
       </Popup>

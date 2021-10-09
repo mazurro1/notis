@@ -341,9 +341,11 @@ const OurWorkersContent = ({
 
   const mapWorkers = filterWorkers.map((item, index) => {
     let isLogginUserWorker = false
-    if (!!item.user) {
-      if (!!item.user._id) {
-        isLogginUserWorker = user.userId === item.user._id
+    if (!!user) {
+      if (!!item.user) {
+        if (!!item.user._id) {
+          isLogginUserWorker = user.userId === item.user._id
+        }
       }
     }
     return (

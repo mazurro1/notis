@@ -27,6 +27,7 @@ import {
   MdAttachMoney,
   MdHistory,
   MdStoreMallDirectory,
+  MdHelp,
 } from "react-icons/md"
 import { LinkEffect } from "../common/LinkEffect"
 import Popup from "./Popup"
@@ -100,6 +101,7 @@ import CompanyServices from "./CompanyServices"
 import CompanyCommuniting from "./CompanyCommuniting"
 import UserHistoryServices from "./UserHistoryServices"
 import UserHistoryCommuniting from "./UserHistoryCommuniting"
+import InfoMenu from "./InfoMenu"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -347,7 +349,16 @@ const SMSStyle = styled.div`
   }
 `
 
-const Navigation = ({ isMainPage }) => {
+const HelpIconStyle = styled.div`
+  font-size: 1.6rem;
+  line-height: 0;
+  margin-left: 10px;
+  cursor: pointer;
+  color: ${props =>
+    props.helpVisible ? Colors(props.siteProps).primaryColor : "white"};
+`
+
+const Navigation = props => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
     false
@@ -376,6 +387,8 @@ const Navigation = ({ isMainPage }) => {
   const [historyServices, setHistoryServices] = useState(false)
   const [historyCommunitings, setHistoryCommunitings] = useState(false)
   const [disabledSwitchUserProps, setDisabledSwitchUserProps] = useState(false)
+  const [helpVisible, setHelpVisible] = useState(false)
+  const [helpContentVisible, setHelpContentVisible] = useState(false)
 
   const userProfilReset = useSelector(state => state.userProfilReset)
   const popupTakePlace = useSelector(state => state.popupTakePlace)
@@ -473,6 +486,17 @@ const Navigation = ({ isMainPage }) => {
       outputArray[i] = rawData.charCodeAt(i)
     }
     return outputArray
+  }
+
+  const handleClickHelp = () => {
+    if (!helpVisible) {
+      setHelpVisible(prevState => !prevState)
+      setTimeout(() => {
+        setHelpContentVisible(prevState => !prevState)
+      }, 100)
+    } else {
+      setHelpContentVisible(prevState => !prevState)
+    }
   }
 
   const handleEnableNotifaction = async userVapid => {
@@ -1763,12 +1787,38 @@ const Navigation = ({ isMainPage }) => {
       {PopupUserHistoryServices}
       {PopupUserHistoryCommunitings}
       {PopupCompanyCommuniting}
+      <ReactTooltip
+        id="helpIconInfo"
+        effect="float"
+        multiline={true}
+        place="bottom"
+      >
+        {helpVisible ? <span>Ukryj pomoc</span> : <span>Pokaż pomoc</span>}
+      </ReactTooltip>
+      <InfoMenu
+        helpVisible={helpVisible}
+        setHelpVisible={setHelpVisible}
+        siteProps={siteProps}
+        helpContentVisible={helpContentVisible}
+        setHelpContentVisible={setHelpContentVisible}
+        {...props}
+      />
       <MenuPosition active={menuOpen} siteProps={siteProps}>
         <LeftMenuStyle>
           <div onClick={handleMenuOpen} aria-hidden="true">
             {renderCreateCompany}
             {renderCompanyOrCreateCompany}
             {renderButtonsUp}
+            <ButtonNavStyle>
+              <ButtonIcon
+                title="Pomoc"
+                uppercase
+                fontIconSize="20"
+                fontSize="16"
+                icon={<MdHelp />}
+                onClick={handleClickHelp}
+              />
+            </ButtonNavStyle>
           </div>
           <ButtonNavStyle>
             <LabelStyle>
@@ -1925,6 +1975,15 @@ const Navigation = ({ isMainPage }) => {
                     texts={Translates[siteProps.language].alerts}
                   />
                 )}
+                <HelpIconStyle
+                  data-tip
+                  data-for="helpIconInfo"
+                  onClick={handleClickHelp}
+                  helpVisible={helpVisible}
+                  siteProps={siteProps}
+                >
+                  <MdHelp />
+                </HelpIconStyle>
 
                 <BurgerButton onClick={handleMenuOpen}>
                   <FaBars />

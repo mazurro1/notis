@@ -967,6 +967,17 @@ const ContentCompanyProfilAutoSave = ({
         </ReactTooltip>
       )}
 
+      {(disabledEditButtons || !!!user) && !isMobileSize && (
+        <ReactTooltip id="noUserLoginButton" effect="float" multiline={true}>
+          <span>
+            {disabledEditButtons && premiumActive
+              ? "Aby móc edytować ten element zakończ edytowanie poprzedniego elementu."
+              : !!!user
+              ? "Zaloguj się aby móc skorzystać z wybranej funkcji"
+              : ""}
+          </span>
+        </ReactTooltip>
+      )}
       {(disabledEditButtons || !premiumActive) && !isMobileSize && (
         <ReactTooltip id="disabledButton" effect="float" multiline={true}>
           <span>

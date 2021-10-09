@@ -477,7 +477,11 @@ const AllCategoryOfServices = ({
     editedCategoryItems.length > 0
 
   return (
-    <Element name="servicesScrollElement" className="element">
+    <Element
+      name="servicesScrollElement"
+      className="element"
+      id="AllCategoryOfServices"
+    >
       <BackgroundEditedComponent
         active={allCategoryEdit}
         siteProps={siteProps}

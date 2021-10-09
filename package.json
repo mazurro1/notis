@@ -52,6 +52,7 @@
     "react-collapse": "^5.0.1",
     "react-dom": "^16.12.0",
     "react-facebook-login": "^4.1.1",
+    "react-google-recaptcha-v3": "^1.9.5",
     "react-icons": "^3.11.0",
     "react-image-gallery": "^1.0.9",
     "react-input-checkbox": "^0.1.6",

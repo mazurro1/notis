@@ -121,6 +121,7 @@ const Popup = ({
   top = 0,
   bottom = 0,
   lightBackground = false,
+  unmountOnExit = true,
 }) => {
   const siteProps = useSelector(state => state.siteProps)
   const handleOnClick = e => {
@@ -199,7 +200,7 @@ const Popup = ({
       in={popupEnable}
       timeout={400}
       classNames={opacity ? "opacitySpinner" : "popup"}
-      unmountOnExit
+      unmountOnExit={unmountOnExit}
     >
       <PopupWindow
         onClick={handleClickBackground}
