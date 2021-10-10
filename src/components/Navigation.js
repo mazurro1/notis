@@ -1388,9 +1388,10 @@ const Navigation = props => {
       title="Twoje usługi"
       maxWidth="350"
     >
-      <div>
+      <div id="YourServicesAllButtons">
         <MarginButtonSaveToken>
           <ButtonIcon
+            id="BookingHistoryButton"
             title={Translates[siteProps.language].buttons.bookingHistory}
             uppercase
             fontIconSize="20"
@@ -1688,6 +1689,7 @@ const Navigation = props => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
+          id="YourServicesButton"
           title="Twoje usługi"
           uppercase
           fontIconSize="20"
@@ -1801,6 +1803,11 @@ const Navigation = props => {
         siteProps={siteProps}
         helpContentVisible={helpContentVisible}
         setHelpContentVisible={setHelpContentVisible}
+        handleClickLogin={handleClickLogin}
+        loginVisible={loginVisible}
+        userServicesVisible={userServicesVisible}
+        user={user}
+        handleClickUserServicesVisible={handleClickUserServicesVisible}
         {...props}
       />
       <MenuPosition active={menuOpen} siteProps={siteProps}>

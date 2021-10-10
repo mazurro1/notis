@@ -48,9 +48,9 @@ const InfoMenuItem = ({
   itemMenu,
   itemMenuIndex,
   handleClickInfo,
-  pathname,
   siteProps,
   handleClickShowContentHelp,
+  setHelpContentVisible,
 }) => {
   const [collapseActive, setCollapseActive] = useState(false)
 
@@ -59,18 +59,16 @@ const InfoMenuItem = ({
   }
 
   const mapItemMenuSteps = itemMenu.steps.map((itemStep, itemStepIndex) => {
-    const isRoutePathname = pathname === itemStep.path
-    console.log(isRoutePathname, pathname, itemStep.path)
     return (
       <InfoMenuItemStep
         key={itemStepIndex}
         itemStepIndex={itemStepIndex}
         itemStep={itemStep}
         handleClickInfo={handleClickInfo}
-        isRoutePathname={isRoutePathname}
         siteProps={siteProps}
         itemMenuIndex={itemMenuIndex}
         handleClickShowContentHelp={handleClickShowContentHelp}
+        setHelpContentVisible={setHelpContentVisible}
       />
     )
   })

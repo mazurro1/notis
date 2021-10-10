@@ -26,58 +26,87 @@ const PositionButton = styled.div`
   margin-top: 10px;
 `
 
+const PositionNumeric = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+`
+
+const NumericContent = styled.div`
+  width: 40px;
+`
+
+const TextContent = styled.div`
+  width: calc(100% - 40px);
+`
+
 const InfoMenuItemStep = ({
   itemStep,
   itemStepIndex,
   handleClickInfo,
-  isRoutePathname,
   siteProps,
   itemMenuIndex,
   handleClickShowContentHelp,
+  setHelpContentVisible,
 }) => {
   let buttonElement = null
-  if (isRoutePathname) {
-    buttonElement = (
-      <ButtonIcon
-        title={itemStep.elementName}
-        uppercase
-        fontIconSize="22"
-        fontSize="16"
-        icon={<MdSearch />}
-        customColorButton={Colors(siteProps).primaryColorDark}
-        customColorIcon={Colors(siteProps).primaryColor}
-        onClick={() => {
-          handleClickInfo(itemStep.elementId)
-        }}
-      />
-    )
-  } else {
-    if (itemStep.enableRoute) {
+  if (itemStep.pathValid) {
+    if (itemStep.elementValid) {
       buttonElement = (
-        <LinkEffect
-          path={itemStep.path}
-          text={
-            <ButtonIcon
-              title={itemStep.routeName}
-              uppercase
-              fontIconSize="22"
-              fontSize="16"
-              icon={<MdWeb />}
-              customColorButton={Colors(siteProps).primaryColorDark}
-              customColorIcon={Colors(siteProps).primaryColor}
-              onClick={handleClickShowContentHelp}
-            />
-          }
+        <ButtonIcon
+          title={itemStep.elementName}
+          uppercase
+          fontIconSize="22"
+          fontSize="16"
+          icon={<MdSearch />}
+          customColorButton={Colors(siteProps).primaryColorDark}
+          customColorIcon={Colors(siteProps).primaryColor}
+          onClick={() => {
+            if (!!itemStep.elementHandler) {
+              itemStep.elementHandler()
+              setHelpContentVisible(false)
+              setTimeout(() => {
+                handleClickInfo(itemStep.elementId, itemStep.lightFromEffect)
+              }, 400)
+            } else {
+              handleClickInfo(itemStep.elementId, itemStep.lightFromEffect)
+            }
+          }}
         />
       )
     }
+  } else if (itemStep.pathRouteEnable) {
+    buttonElement = (
+      <LinkEffect
+        path={itemStep.path}
+        text={
+          <ButtonIcon
+            title={itemStep.pathRouteName}
+            uppercase
+            fontIconSize="22"
+            fontSize="16"
+            icon={<MdWeb />}
+            customColorButton={Colors(siteProps).primaryColorDark}
+            customColorIcon={Colors(siteProps).primaryColor}
+            onClick={handleClickShowContentHelp}
+          />
+        }
+      />
+    )
   }
+
   return (
     <ServiceItem index={itemStepIndex === 0} siteProps={siteProps}>
-      <div>
-        {itemMenuIndex + 1}.{itemStepIndex + 1}. {itemStep.title}
-      </div>
-      <PositionButton>{buttonElement}</PositionButton>
+      <PositionNumeric>
+        <NumericContent>
+          {itemMenuIndex + 1}.{itemStepIndex + 1}.
+        </NumericContent>
+        <TextContent>
+          <div>{itemStep.title}</div>
+          {!!buttonElement && <PositionButton>{buttonElement}</PositionButton>}
+        </TextContent>
+      </PositionNumeric>
     </ServiceItem>
   )
 }

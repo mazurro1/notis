@@ -104,6 +104,7 @@ const ButtonIcon = ({
   disabled = false,
   customColorButton = false,
   customColorIcon = false,
+  id = "",
 }) => {
   const [mouseOn, setMouseOn] = useState(false)
   const [mouseClick, setMouseClick] = useState(false)
@@ -157,6 +158,7 @@ const ButtonIcon = ({
         disabled={disabled}
         customColorIcon={customColorIcon}
         siteProps={siteProps}
+        id="IconStyle"
       />
       <OnlyIcon fontIconSize={fontIconSize} siteProps={siteProps}>
         {iconRender}
@@ -166,6 +168,7 @@ const ButtonIcon = ({
 
   return (
     <ButtonStyle
+      id={id}
       fontSize={Number(fontSize) <= 18 ? 14 : fontSize}
       uppercase={uppercase}
       onMouseEnter={handleOnMouseOn}
