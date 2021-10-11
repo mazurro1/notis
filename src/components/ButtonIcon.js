@@ -3,7 +3,10 @@ import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import { useSelector } from "react-redux"
 
-const ButtonStyle = styled.div`
+const ButtonStyle = styled.button`
+  border: none;
+  background: transparent;
+  width: 100%;
   position: relative;
   padding: 4px 10px;
   padding-left: 45px;

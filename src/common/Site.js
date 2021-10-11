@@ -5,4 +5,5 @@ export const Site = {
   // siteUrl: "https://www.meetsy.pl",
   awsUrl: "https://nootis.s3.eu-central-1.amazonaws.com",
   mobileSize: 576,
+  barSize: 1200,
 }

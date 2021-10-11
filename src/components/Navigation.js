@@ -846,6 +846,7 @@ const Navigation = props => {
   }
 
   const isMobileSize = Site.mobileSize >= size.width
+  const isBarSize = Site.barSize >= size.width
 
   const PopupWorkersUsersInformations = !!user && (
     <Popup
@@ -1402,6 +1403,7 @@ const Navigation = props => {
         </MarginButtonSaveToken>
         <MarginButtonSaveToken>
           <ButtonIcon
+            id="ServicesHistoryButton"
             title="Serwisy"
             uppercase
             fontIconSize="20"
@@ -1412,6 +1414,7 @@ const Navigation = props => {
         </MarginButtonSaveToken>
         <MarginButtonSaveToken>
           <ButtonIcon
+            id="CommunitingsHistoryButton"
             title="Dojazdy"
             uppercase
             fontIconSize="20"
@@ -1808,6 +1811,9 @@ const Navigation = props => {
         userServicesVisible={userServicesVisible}
         user={user}
         handleClickUserServicesVisible={handleClickUserServicesVisible}
+        isMobileSize={isMobileSize}
+        handleMenuOpen={handleMenuOpen}
+        isBarSize={isBarSize}
         {...props}
       />
       <MenuPosition active={menuOpen} siteProps={siteProps}>
