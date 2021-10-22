@@ -3,11 +3,14 @@ import { LinkEffect } from "../common/LinkEffect"
 import styled from "styled-components"
 import { Colors } from "../common/Colors"
 import ButtonIcon from "../components/ButtonIcon"
-import { MdWeb, MdSearch } from "react-icons/md"
+import { MdWeb, MdSearch, MdWarning } from "react-icons/md"
 
 const ServiceItem = styled.div`
   position: relative;
-  background-color: ${props => Colors(props.siteProps).companyItemBackground};
+  background-color: ${props =>
+    props.isAlert
+      ? Colors(props.siteProps).dangerLightColor
+      : Colors(props.siteProps).companyItemBackground};
   padding: 10px;
   border-radius: 5px;
   border-top-left-radius: ${props => (props.index ? "0px" : "5px")};
@@ -37,6 +40,12 @@ const NumericContent = styled.div`
   width: 40px;
 `
 
+const NumericContentWarning = styled.div`
+  width: 40px;
+  font-size: 1.4rem;
+  color: ${props => Colors(props.siteProps).dangerColorDark};
+`
+
 const TextContent = styled.div`
   width: calc(100% - 40px);
 `
@@ -49,6 +58,8 @@ const InfoMenuItemStep = ({
   itemMenuIndex,
   handleClickShowContentHelp,
   setHelpContentVisible,
+  isAlert = false,
+  hasAlert = false,
 }) => {
   let buttonElement = null
   if (itemStep.pathValid) {
@@ -97,11 +108,21 @@ const InfoMenuItemStep = ({
   }
 
   return (
-    <ServiceItem index={itemStepIndex === 0} siteProps={siteProps}>
+    <ServiceItem
+      index={hasAlert ? itemStepIndex === null : itemStepIndex === 0}
+      siteProps={siteProps}
+      isAlert={isAlert}
+    >
       <PositionNumeric>
-        <NumericContent>
-          {itemMenuIndex + 1}.{itemStepIndex + 1}.
-        </NumericContent>
+        {isAlert ? (
+          <NumericContentWarning>
+            <MdWarning />
+          </NumericContentWarning>
+        ) : (
+          <NumericContent>
+            {itemMenuIndex + 1}.{itemStepIndex + 1}.
+          </NumericContent>
+        )}
         <TextContent>
           <div>{itemStep.title}</div>
           {!!buttonElement && <PositionButton>{buttonElement}</PositionButton>}

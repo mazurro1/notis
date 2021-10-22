@@ -69,6 +69,7 @@ const InfoMenuItem = ({
         itemMenuIndex={itemMenuIndex}
         handleClickShowContentHelp={handleClickShowContentHelp}
         setHelpContentVisible={setHelpContentVisible}
+        hasAlert={!!itemMenu.alert}
       />
     )
   })
@@ -80,7 +81,24 @@ const InfoMenuItem = ({
           <MdExpandMore />
         </IconArrowPosition>
       </TitleCategory>
-      <Collapse isOpened={collapseActive}>{mapItemMenuSteps}</Collapse>
+      <Collapse isOpened={collapseActive}>
+        <div>
+          {itemMenu.alert && (
+            <InfoMenuItemStep
+              isAlert
+              hasAlert={!!itemMenu.alert}
+              itemStepIndex={null}
+              itemStep={itemMenu.alert}
+              handleClickInfo={handleClickInfo}
+              siteProps={siteProps}
+              itemMenuIndex={null}
+              handleClickShowContentHelp={handleClickShowContentHelp}
+              setHelpContentVisible={setHelpContentVisible}
+            />
+          )}
+          {mapItemMenuSteps}
+        </div>
+      </Collapse>
     </>
   )
 }

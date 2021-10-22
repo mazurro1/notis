@@ -67,6 +67,7 @@ import {
   resetUserProfil,
   fetchResetUserMenu,
   fetchUpdateUserProps,
+  resetBellAlerts,
 } from "../state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
@@ -390,6 +391,7 @@ const Navigation = props => {
   const [helpVisible, setHelpVisible] = useState(false)
   const [helpContentVisible, setHelpContentVisible] = useState(false)
 
+  const bellAlertsActive = useSelector(state => state.bellAlertsActive)
   const userProfilReset = useSelector(state => state.userProfilReset)
   const popupTakePlace = useSelector(state => state.popupTakePlace)
   const siteProps = useSelector(state => state.siteProps)
@@ -1714,6 +1716,7 @@ const Navigation = props => {
           />
         ) : (
           <ButtonIcon
+            id="UserAccountEditButton"
             title={`${user.userName}`}
             uppercase
             fontIconSize="20"
@@ -1725,6 +1728,7 @@ const Navigation = props => {
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
+          id="LogoutUserButton"
           title={Translates[siteProps.language].buttons.logOut}
           uppercase
           fontIconSize="26"
@@ -1740,6 +1744,7 @@ const Navigation = props => {
     <>
       <ButtonNavStyle>
         <ButtonIcon
+          id="RegistrationUserButton"
           title={Translates[siteProps.language].buttons.register}
           uppercase
           fontIconSize="35"
@@ -1750,6 +1755,7 @@ const Navigation = props => {
       </ButtonNavStyle>
       <ButtonNavStyle>
         <ButtonIcon
+          id="LoginUserButton"
           title={Translates[siteProps.language].buttons.logIn}
           uppercase
           fontIconSize="20"
@@ -1814,6 +1820,9 @@ const Navigation = props => {
         isMobileSize={isMobileSize}
         handleMenuOpen={handleMenuOpen}
         isBarSize={isBarSize}
+        registrationVisible={registrationVisible}
+        handleClickRegister={handleClickRegister}
+        handleUserProfil={handleUserProfil}
         {...props}
       />
       <MenuPosition active={menuOpen} siteProps={siteProps}>
@@ -1834,7 +1843,7 @@ const Navigation = props => {
             </ButtonNavStyle>
           </div>
           <ButtonNavStyle>
-            <LabelStyle>
+            <LabelStyle id="LanguageModeButton">
               <SpanSwitch siteProps={siteProps}>
                 {Translates[siteProps.language].buttons.language}
               </SpanSwitch>
@@ -1856,7 +1865,7 @@ const Navigation = props => {
             </LabelStyle>
           </ButtonNavStyle>
           <ButtonNavStyle>
-            <LabelStyle>
+            <LabelStyle id="DarkModeButton">
               <SpanSwitch siteProps={siteProps}>
                 {Translates[siteProps.language].buttons.darkMode}
               </SpanSwitch>
@@ -1875,7 +1884,7 @@ const Navigation = props => {
             </LabelStyle>
           </ButtonNavStyle>
           <ButtonNavStyle>
-            <LabelStyle>
+            <LabelStyle id="BlindModeButton">
               <SpanSwitch siteProps={siteProps}>
                 {Translates[siteProps.language].buttons.colorBlindMode}
               </SpanSwitch>
@@ -1944,6 +1953,7 @@ const Navigation = props => {
                       </ReactTooltip>
                     )}
                     <BellAlertsStyle
+                      id="FavouritesUserButton"
                       siteProps={siteProps}
                       onClick={handleUserFavourites}
                       data-tip
@@ -1968,6 +1978,7 @@ const Navigation = props => {
                       </ReactTooltip>
                     )}
                     <BellAlertsStyle
+                      id="StampsUserButton"
                       siteProps={siteProps}
                       onClick={handleUserStamps}
                       data-tip

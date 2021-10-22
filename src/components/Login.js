@@ -105,7 +105,7 @@ const LoginContent = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} id="LoginContent">
+      <form onSubmit={handleSubmit} id="LoginUserContent">
         <InputIcon
           icon={<MdEmail />}
           placeholder="Email"

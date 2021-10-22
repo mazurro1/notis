@@ -236,6 +236,7 @@ const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
         </ReactTooltip>
       )}
       <BellAlertsStyle
+        id="AlertsButton"
         siteProps={siteProps}
         onClick={handleClickAlertVisible}
         data-tip

@@ -39,6 +39,7 @@ import DeleteAccount from "./DeleteAccount"
 import VeryfiedPhone from "./VeryfiedPhone"
 import SelectCreated from "./SelectCreated"
 import UserProfilEditPhoneEmail from "./UserProfilEditPhoneEmail"
+import { Translates } from "../common/Translates"
 
 const AddImage = styled.div`
   position: relative;
@@ -651,7 +652,7 @@ const UserProfil = ({
 
   return (
     <HeightComponent>
-      <ProfilStyle siteProps={siteProps}>
+      <ProfilStyle siteProps={siteProps} id="UserProfilContent">
         <TextToUser siteProps={siteProps}>
           <UserNameImage className="styledSpans">
             {addedImages.length === 0 ? (
@@ -702,10 +703,11 @@ const UserProfil = ({
               data-place="right"
             >
               <ButtonIcon
+                id="EditUserPhoneNumberButton"
                 title={
                   !!user.hasPhone
-                    ? "Edytuj numer telefonu"
-                    : "Dodaj numer telefonu"
+                    ? Translates[siteProps.language].buttons.editPhoneNumber
+                    : Translates[siteProps.language].buttons.addPhoneNumber
                 }
                 uppercase
                 fontIconSize="20"
@@ -723,7 +725,8 @@ const UserProfil = ({
               data-place="right"
             >
               <ButtonIcon
-                title="Edytuj adres e-mail"
+                id="EditUserEmailButton"
+                title={Translates[siteProps.language].buttons.editEmail}
                 uppercase
                 fontIconSize="20"
                 fontSize="16"
@@ -737,7 +740,11 @@ const UserProfil = ({
             <div>
               <MarginButtonPhone>
                 <ButtonIcon
-                  title="Weryfikuj numer telefonu"
+                  id="VeryfiedUserPhoneNumberButton"
+                  title={
+                    Translates[siteProps.language].buttons
+                      .veryfiedUserPhoneNumber
+                  }
                   uppercase
                   fontIconSize="20"
                   fontSize="16"
@@ -752,7 +759,10 @@ const UserProfil = ({
             <div>
               <MarginButtonPhone>
                 <ButtonIcon
-                  title="Weryfikuj adres e-mail"
+                  id="VeryfiedUserEmailButton"
+                  title={
+                    Translates[siteProps.language].buttons.veryfiedUserEmail
+                  }
                   uppercase
                   fontIconSize="20"
                   fontSize="16"

@@ -118,7 +118,7 @@ const RegisterContent = () => {
   )
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="RegistrationContent">
       <InputIcon
         icon={<MdEmail />}
         placeholder="Email"

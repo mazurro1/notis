@@ -11,6 +11,12 @@ export const Translates = {
       bookingHistory: "Rezerwacje",
       reserwationOpinion: "Dodaj opinie",
       all: "Wszystko",
+      editPhoneNumber: "Edytuj numer telefonu",
+      addPhoneNumber: "Dodaj numer telefonu",
+      save: "Zapisz",
+      veryfiedUserPhoneNumber: "Weryfikuj numer telefonu",
+      veryfiedUserEmail: "Weryfikuj adres e-mail",
+      editEmail: "Edytuj adres e-mail",
     },
     alerts: {
       general: {
@@ -22,7 +28,6 @@ export const Translates = {
         companyNotFound: "Nie znaleziono firmy",
         alertNotFound: "Nieprawidłowy alert",
       },
-
       reserwation_created: {
         companyChangedUser: {
           title: ["Firma:", "dodała rezerwację"],
@@ -251,6 +256,227 @@ export const Translates = {
             "Przedłuż konto premium aby dalej korzystać z funkcjonalności strony.",
           ],
         },
+      },
+    },
+    info: {
+      createUserAccount: {
+        title: "Zakładanie konta użytkownika",
+        alert: {
+          title:
+            "Do konta może być przypisany tylko 1 unikalny adres e-mail oraz 1 numer telefonu, który nie został wcześniej użyty.",
+        },
+        steps: [
+          {
+            title: "Gdy użytkownik nie jest zalogowany przejdz do przycisku:",
+            title2:
+              ", który znajduje się w górnym menu (nawigacja) lub w rozwijanym menu bocznym, a następnie go kliknij",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title: "Wprowadz wszystkie potrzebne dane do założenia konta",
+            button: "Pokaż dane do wypełnienia",
+          },
+        ],
+      },
+      loginUserAccount: {
+        title: "Logowanie do konta",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title: "Przejdz do przycisku:",
+            title2:
+              ", który znajduje się w górnym menu (nawigacja) lub w rozwijanym menu bocznym, a następnie go kliknij",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title:
+              "Wprowadz wszystkie potrzebne dane logowania, lub wybierz logowanie za pomocą Facebook-a lub Google",
+            button: "Pokaż dane do wypełnienia",
+          },
+        ],
+      },
+      logoutUserAccount: {
+        title: "Wylogowanie z konta",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title: "Przejdz do przycisku:",
+            title2:
+              ", który znajduje się w górnym menu (nawigacja) lub w rozwijanym menu bocznym, a następnie go kliknij",
+            button: "Pokaż przycisk:",
+          },
+        ],
+      },
+      languageMode: {
+        title: "Zmiana języka na stronie",
+        steps: [
+          {
+            title: "Przejdz do suwaka:",
+            title2:
+              ", który znajduje się w rozwijanym menu bocznym, a następnie go kliknij",
+            button: "Pokaż suwak:",
+          },
+        ],
+      },
+      darkMode: {
+        title: "Zmiana trybu ciemnego/jasnego strony",
+        steps: [
+          {
+            title: "Przejdz do suwaka:",
+            title2:
+              ", który znajduje się w rozwijanym menu bocznym, a następnie go kliknij",
+            button: "Pokaż suwak:",
+          },
+        ],
+      },
+      blindMode: {
+        title: "Zmiana trybu dla daltonistów",
+        steps: [
+          {
+            title: "Przejdz do suwaka:",
+            title2:
+              ", który znajduje się w rozwijanym menu bocznym, a następnie go kliknij",
+            button: "Pokaż suwak:",
+          },
+        ],
+      },
+      checkAlerts: {
+        title: "Sprawdzanie alertów",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę dzwonka, a następnie kliknij ją.",
+            button: "Pokaż ikonkę dzwonka",
+          },
+        ],
+      },
+      checkStamps: {
+        title: "Sprawdzanie pieczątek",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę stempla, a następnie kliknij ją.",
+            button: "Pokaż ikonkę stępla",
+          },
+        ],
+      },
+      checkFavourites: {
+        title: "Sprawdzanie ulubionych",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę serduszka, a następnie kliknij ją.",
+            button: "Pokaż ikonkę serduszka",
+          },
+        ],
+      },
+      userAccountData: {
+        title: "Sprawdzanie danych konta",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż przycisk",
+          },
+          {
+            title: "Kliknij przycisk",
+            button: "Pokaż widok z danymi konta",
+          },
+        ],
+      },
+      userAccountDataChangePhone: {
+        title: "Zmiana numeru telefonu / Weryfikacja numeru telefonu",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż przycisk",
+          },
+          {
+            title:
+              "Kliknij przycisk, który znajduje się na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż widok z danymi konta",
+          },
+          {
+            title: "Wyszukaj przycisk:",
+            title2: ", a następnie kliknij go",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title:
+              "Wprowadz nowy numer telefonu, hasło do konta oraz kliknij przycisk:",
+          },
+          {
+            title:
+              "Gdy przyjdzie Tobie SMS z kodem potwierdzającym, to wpisz go w wyznaczonym okienku oraz zatwierdz.",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title: "Gotowe!",
+          },
+        ],
+      },
+      userAccountDataChangeEmail: {
+        title: "Zmiana adresu e-mail / Weryfikacja adresu e-mail",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż przycisk",
+          },
+          {
+            title:
+              "Kliknij przycisk, który znajduje się na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż widok z danymi konta",
+          },
+          {
+            title: "Wyszukaj przycisk:",
+            title2: ", a następnie kliknij go",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title:
+              "Wprowadz nowy adres e-mail, hasło do konta oraz kliknij przycisk:",
+          },
+          {
+            title:
+              "Gdy przyjdzie Tobie na podany adres e-mail kodem potwierdzającym, to wpisz go w wyznaczonym okienku oraz zatwierdz.",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title: "Gotowe!",
+          },
+        ],
       },
     },
   },

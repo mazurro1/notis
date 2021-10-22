@@ -113,6 +113,7 @@ h6 {
 }
 
 .selectedInfoElementButton {
+  transform: scale(1);
   animation: bounce-in-fwd 0.8s both;
   animation-delay: 0.4s;
   transform: translate3d(0, 0, 0);
@@ -131,6 +132,12 @@ h6 {
 
 @keyframes bounce-in-fwd {
   0% {
+    transform: scale(1);
+    animation-timing-function: ease-in;
+    opacity: 1;
+    filter: brightness(100%);
+  }
+  5% {
     transform: scale(0);
     animation-timing-function: ease-in;
     opacity: 0;

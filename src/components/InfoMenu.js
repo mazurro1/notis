@@ -1,12 +1,13 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
-import { MdHelp, MdClose, MdArrowBack } from "react-icons/md"
+import { MdHelp, MdClose, MdArrowBack, MdSearch } from "react-icons/md"
 import { Colors } from "../common/Colors"
 import { addAlertItem } from "../state/actions"
 import { useDispatch } from "react-redux"
 import ButtonIcon from "../components/ButtonIcon"
 import InfoMenuItem from "./InfoMenuItem"
 import generateMenuInfo from "../common/GenerateMenuInfo"
+import InputIcon from "./InputIcon"
 
 const PositionInfoMenu = styled.div`
   position: fixed;
@@ -126,9 +127,15 @@ const InfoMenu = props => {
     helpContentVisible,
   } = props
 
+  const [searchValue, setSearchValue] = useState("")
+
   const dispatch = useDispatch()
 
   const menuInfo = generateMenuInfo(props)
+
+  const handleChangeSearchValue = e => {
+    setSearchValue(e.target.value)
+  }
 
   const handleClickInfo = (elementId, lightFromEffect = false) => {
     if (!!elementId) {
@@ -167,7 +174,13 @@ const InfoMenu = props => {
     }, 300)
   }
 
-  const mapMenuInfo = menuInfo.map((itemMenu, itemMenuIndex) => {
+  const filterMenuInfo = menuInfo.filter(itemMenuFilter => {
+    return itemMenuFilter.title
+      .toLowerCase()
+      .includes(searchValue.toLowerCase())
+  })
+
+  const mapMenuInfo = filterMenuInfo.map((itemMenu, itemMenuIndex) => {
     return (
       <InfoMenuItem
         key={itemMenuIndex}
@@ -197,6 +210,13 @@ const InfoMenu = props => {
             <PaddingContnent maxHeight siteProps={siteProps}>
               <div>
                 <ContentInfoHeight>
+                  <InputIcon
+                    placeholder="Wyszukaj pytanie"
+                    inputActive={true}
+                    value={searchValue}
+                    onChange={handleChangeSearchValue}
+                    icon={<MdSearch />}
+                  />
                   <ContentInfo>{mapMenuInfo}</ContentInfo>
                 </ContentInfoHeight>
                 <ContentInfoMenuButtons siteProps={siteProps}>
