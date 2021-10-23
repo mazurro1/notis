@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react"
-import ButtonIcon from "./ButtonIcon"
+import { ButtonIcon, Popup, InputIcon } from "@ui"
 import { MdEdit } from "react-icons/md"
 import { FaMapMarkerAlt, FaSave, FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
-import InputIcon from "./InputIcon"
-import { fetchSaveMaps } from "../state/actions"
+import { Colors } from "@common/Colors"
+import { fetchSaveMaps } from "@state/actions"
 import { useDispatch } from "react-redux"
-import Popup from "./Popup"
 
 const ParagraphStyle = styled.div`
   overflow-wrap: normal;

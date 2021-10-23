@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import {
   MdAccountBox,
@@ -9,16 +8,14 @@ import {
   MdLocationCity,
 } from "react-icons/md"
 import { FaMapSigns } from "react-icons/fa"
-import SelectCreated from "./SelectCreated"
-import { LinkEffect } from "../common/LinkEffect"
-import { Colors } from "../common/Colors"
+import { LinkEffect } from "@common/LinkEffect"
+import { Colors } from "@common/Colors"
 import ReactTooltip from "react-tooltip"
-import ButtonIcon from "./ButtonIcon"
-import { fetchCompanyRegistration, addAlertItem } from "../state/actions"
+import { ButtonIcon, InputIcon, SelectCreated, InputPhone } from "@ui"
+import { fetchCompanyRegistration, addAlertItem } from "@state/actions"
 import { useDispatch } from "react-redux"
-import { AllIndustries } from "../common/AllIndustries"
-import InputPhone from "./InputPhone"
-import { validEmail } from "../common/Functions"
+import { AllIndustries } from "@common/AllIndustries"
+import { validEmail } from "@common/Functions"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;

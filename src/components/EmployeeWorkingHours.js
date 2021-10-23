@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   fetchGetOwnerWorkingHours,
   fetchGetWorkerWorkingHours,
-} from "../state/actions"
-import BigCalendarEmployeeWorkingHours from "./BigCalendarEmployeeWorkingHours"
-import UseWindowSize from "../common/UseWindowSize"
-import CompanyNoAccess from "./CompanyNoAccess"
+} from "@state/actions"
+import BigCalendarEmployeeWorkingHours from "./calendars/BigCalendarEmployeeWorkingHours"
+import UseWindowSize from "@common/UseWindowSize"
+import CompanyNoAccess from "./companyInterface/CompanyNoAccess"
 
 const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours, user }) => {
   const workingHours = useSelector(state => state.workingHours)

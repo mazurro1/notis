@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react"
-import InputIcon from "../components/InputIcon"
 import styled from "styled-components"
-import ButtonIcon from "./ButtonIcon"
+import { ButtonIcon, InputIcon } from "@ui"
 import { MdSearch, MdClose, MdLocationOn } from "react-icons/md"
 import { FaArrowLeft, FaMapSigns } from "react-icons/fa"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { useDispatch, useSelector } from "react-redux"
-import { changeLocalizationValue } from "../state/actions"
-import { CitySelect } from "../common/CitySelect"
+import { changeLocalizationValue } from "@state/actions"
+import { CitySelect } from "@common/CitySelect"
 
 const ButtonsPosition = styled.div`
   display: flex;

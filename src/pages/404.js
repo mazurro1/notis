@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import "../../style.css"
 import styled from "styled-components"
 import { HiEmojiSad } from "react-icons/hi"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { useSelector } from "react-redux"
 import sal from "sal.js"
 

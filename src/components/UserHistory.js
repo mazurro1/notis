@@ -4,17 +4,17 @@ import {
   fetchUserReserwations,
   fetchUserReserwationsAll,
   changeReserwationUser,
-} from "../state/actions"
+} from "@state/actions"
 import UserHistoryCategory from "./UserHistoryCategory"
 import styled from "styled-components"
 import Switch from "react-switch"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import ReactTooltip from "react-tooltip"
-import SelectCreated from "./SelectCreated"
-import { AllMonths } from "../common/AllMonths"
+import { SelectCreated } from "@ui"
+import { AllMonths } from "@common/AllMonths"
 import { CSSTransition } from "react-transition-group"
-import { Translates } from "../common/Translates"
-import { Site } from "../common/Site"
+import { Translates } from "@common/Translates"
+import { Site } from "@common/Site"
 
 const NoReserwationsStyle = styled.div`
   position: absolute;

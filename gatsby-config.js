@@ -3,6 +3,7 @@
  *
  * See: https://www.gatsbyjs.org/docs/gatsby-config/
  */
+const path = require("path")
 require("dotenv").config({
   path: `.env`,
 })
@@ -54,6 +55,18 @@ module.exports = {
         secretKey:
           "sk_test_51IVJ3xJdVBka0wzfMu79jGftD4HZj5hU5WsujypvG3Z2n5LgKrk2fj6kYyyv0kiiv1UxgJBUNB9QECXjls1VZgKX008JFBZZmQ",
         downloadFiles: true,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-alias-imports`,
+      options: {
+        alias: {
+          "@components": path.resolve(__dirname, "src/components"),
+          "@state": path.resolve(__dirname, "src/state"),
+          "@common": path.resolve(__dirname, "src/common"),
+          "@ui": path.resolve(__dirname, "src/ui"),
+        },
+        extensions: ["js"],
       },
     },
     "gatsby-plugin-transition-link",

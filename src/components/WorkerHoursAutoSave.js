@@ -3,10 +3,10 @@ import { useDispatch } from "react-redux"
 import {
   fetchGetWorkerNoConstData,
   fetchGetOwnerNoConstData,
-} from "../state/actions"
-import BigCalendarWorkerHoursAutoSave from "./BigCalendarWorkerHoursAutoSave"
-import UseWindowSize from "../common/UseWindowSize"
-import CompanyNoAccess from "./CompanyNoAccess"
+} from "@state/actions"
+import BigCalendarWorkerHoursAutoSave from "./calendars/BigCalendarWorkerHoursAutoSave"
+import UseWindowSize from "@common/UseWindowSize"
+import CompanyNoAccess from "./companyInterface/CompanyNoAccess"
 
 const WorkerHoursAutoSave = ({
   handleClose,

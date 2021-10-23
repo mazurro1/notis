@@ -1,7 +1,7 @@
 import React from "react"
-import { LinkEffect } from "../common/LinkEffect"
+import { LinkEffect } from "@common/LinkEffect"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 
 const DivInlineBlock = styled.div`
   display: inline;

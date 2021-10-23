@@ -1,8 +1,8 @@
 import React from "react"
-import { LinkEffect } from "../common/LinkEffect"
+import { LinkEffect } from "@common/LinkEffect"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
-import ButtonIcon from "../components/ButtonIcon"
+import { Colors } from "@common/Colors"
+import { ButtonIcon } from "@ui"
 import { MdWeb, MdSearch, MdWarning } from "react-icons/md"
 
 const ServiceItem = styled.div`
@@ -44,6 +44,7 @@ const NumericContentWarning = styled.div`
   width: 40px;
   font-size: 1.4rem;
   color: ${props => Colors(props.siteProps).dangerColorDark};
+  line-height: 0px;
 `
 
 const TextContent = styled.div`

@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdEmail, MdLock } from "react-icons/md"
 import { FaFacebookF } from "react-icons/fa"
@@ -9,13 +8,13 @@ import {
   changeRemindPasswordVisible,
   addAlertItem,
   changeSpinner,
-} from "../state/actions"
+} from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import ButtonIcon from "../components/ButtonIcon"
+import { ButtonIcon, InputIcon } from "@ui"
 import { FaUser, FaQuestion, FaGoogle } from "react-icons/fa"
 import { Checkbox } from "react-input-checkbox"
-import { Colors } from "../common/Colors"
-import { Site } from "../common/Site"
+import { Colors } from "@common/Colors"
+import { Site } from "@common/Site"
 // import ReCaptcha from "./ReCaptcha"
 
 const ButtonLoginRegister = styled.button`

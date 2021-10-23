@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import sal from "sal.js"
-import SearchService from "../components/SearchService"
+import SearchService from "@components/SearchService"
 
 const ServicePage = props => {
   const siteProps = useSelector(state => state.siteProps)

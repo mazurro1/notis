@@ -1,13 +1,12 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { MdHelp, MdClose, MdArrowBack, MdSearch } from "react-icons/md"
-import { Colors } from "../common/Colors"
-import { addAlertItem } from "../state/actions"
+import { Colors } from "@common/Colors"
+import { addAlertItem } from "@state/actions"
 import { useDispatch } from "react-redux"
-import ButtonIcon from "../components/ButtonIcon"
+import { ButtonIcon, InputIcon } from "@ui"
 import InfoMenuItem from "./InfoMenuItem"
-import generateMenuInfo from "../common/GenerateMenuInfo"
-import InputIcon from "./InputIcon"
+import generateMenuInfo from "@common/GenerateMenuInfo"
 
 const PositionInfoMenu = styled.div`
   position: fixed;

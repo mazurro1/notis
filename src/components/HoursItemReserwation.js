@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 
 const ColumnAvaibleHours = styled.div`
   width: 30%;

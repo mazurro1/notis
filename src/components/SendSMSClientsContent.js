@@ -1,13 +1,11 @@
 import React, { useState } from "react"
-import SelectCreated from "./SelectCreated"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { Checkbox } from "react-input-checkbox"
-import InputIcon from "./InputIcon"
 import { FaSms } from "react-icons/fa"
 import { RiMailSendLine } from "react-icons/ri"
-import ButtonIcon from "./ButtonIcon"
-import { fetchSendSMSCompanyClients, addAlertItem } from "../state/actions"
+import { ButtonIcon, InputIcon, SelectCreated } from "@ui"
+import { fetchSendSMSCompanyClients, addAlertItem } from "@state/actions"
 import { useDispatch } from "react-redux"
 
 const TextCheckbox = styled.span`

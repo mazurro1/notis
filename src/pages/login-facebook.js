@@ -1,6 +1,6 @@
 import React from "react"
-import LoginFacebookComponent from "../components/LoginFacebookComponent"
-import CompanyPriv from "../components/CompanyPriv"
+import LoginFacebookComponent from "@components/LoginFacebookComponent"
+import CompanyPriv from "@components/companyInterface/CompanyPriv"
 
 const LoginFacebook = props => {
   let dataProps = []

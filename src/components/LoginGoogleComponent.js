@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { navigate } from "gatsby"
 import { useDispatch } from "react-redux"
-import { fetchLoginGoogleUser, addAlertItem } from "../state/actions"
+import { fetchLoginGoogleUser, addAlertItem } from "@state/actions"
 
 const LoginGoogleComponent = ({ message, id, newAccount }) => {
   const dispatch = useDispatch()

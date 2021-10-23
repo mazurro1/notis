@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { navigate } from "gatsby"
 import { useDispatch } from "react-redux"
-import { fetchLoginFacebookUser, addAlertItem } from "../state/actions"
+import { fetchLoginFacebookUser, addAlertItem } from "@state/actions"
 
 const LoginFacebookComponent = ({ message, id, newAccount }) => {
   const dispatch = useDispatch()

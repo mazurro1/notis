@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Colors } from "../common/Colors"
-import ButtonIcon from "../components/ButtonIcon"
+import { Colors } from "@common/Colors"
+import { ButtonIcon, Popup, SelectCreated } from "@ui"
 import styled from "styled-components"
 import {
   FaUserPlus,
@@ -29,8 +29,7 @@ import {
   MdStoreMallDirectory,
   MdHelp,
 } from "react-icons/md"
-import { LinkEffect } from "../common/LinkEffect"
-import Popup from "./Popup"
+import { LinkEffect } from "@common/LinkEffect"
 import LoginContent from "./Login"
 import RegisterContent from "./Register"
 import Spinner from "./Spinner"
@@ -67,12 +66,11 @@ import {
   resetUserProfil,
   fetchResetUserMenu,
   fetchUpdateUserProps,
-  resetBellAlerts,
-} from "../state/actions"
+} from "@state/actions"
 import Filter from "./Filter"
 import Localization from "./Localization"
-import Alerts from "./Alerts"
-import ActiveAccount from "./ActiveAccount"
+import Alerts from "./Alerts/Alerts"
+import ActiveAccount from "./userInterface/ActiveAccount"
 import UserProfil from "./UserProfil"
 import RemindPassword from "./RemindPassword"
 import CreateCompany from "./CreateCompany"
@@ -80,26 +78,25 @@ import Reserwation from "./Reserwation"
 import WorkerReserwations from "./WorkerReserwations"
 import Switch from "react-switch"
 import UserHistory from "./UserHistory"
-import { Translates } from "../common/Translates"
-import BellAlerts from "./BellAlerts"
+import { Translates } from "@common/Translates"
+import BellAlerts from "./Alerts/BellAlerts"
 import { io } from "socket.io-client"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 import WorkerHoursAutoSave from "./WorkerHoursAutoSave"
 import EmployeeWorkingHours from "./EmployeeWorkingHours"
 import WorkerUsersInformation from "./WorkerUsersInformation"
-import AlertExtra from "./AlertExtra"
+import AlertExtra from "./Alerts/AlertExtra"
 import UserStamps from "./UserStamps"
 import UserFavourites from "./UserFavourites"
-import CompanyAvailability from "./CompanyAvailability"
-import UseWindowSize from "../common/UseWindowSize"
+import CompanyAvailability from "./companyInterface/CompanyAvailability/CompanyAvailability"
+import UseWindowSize from "@common/UseWindowSize"
 import CompanyStatistics from "./CompanyStatistics"
 import DeleteCompanyContent from "./DeleteCompany"
-import CoinsOffers from "./CoinsOffers"
+import CoinsOffers from "./companyInterface/CoinsOffers"
 import TransactionHistory from "./TransactionHistory"
 import ReactTooltip from "react-tooltip"
-import SelectCreated from "./SelectCreated"
-import CompanyServices from "./CompanyServices"
-import CompanyCommuniting from "./CompanyCommuniting"
+import CompanyServices from "./companyInterface/CompanyServices"
+import CompanyCommuniting from "./companyInterface/CompanyCommuniting/CompanyCommuniting"
 import UserHistoryServices from "./UserHistoryServices"
 import UserHistoryCommuniting from "./UserHistoryCommuniting"
 import InfoMenu from "./InfoMenu"
@@ -391,7 +388,6 @@ const Navigation = props => {
   const [helpVisible, setHelpVisible] = useState(false)
   const [helpContentVisible, setHelpContentVisible] = useState(false)
 
-  const bellAlertsActive = useSelector(state => state.bellAlertsActive)
   const userProfilReset = useSelector(state => state.userProfilReset)
   const popupTakePlace = useSelector(state => state.popupTakePlace)
   const siteProps = useSelector(state => state.siteProps)
@@ -925,7 +921,7 @@ const Navigation = props => {
     <Popup
       popupEnable={loginVisible}
       handleClose={handleClickLogin}
-      maxWidth="400"
+      maxWidth={400}
       title="Logowanie"
       close={false}
     >
@@ -937,7 +933,7 @@ const Navigation = props => {
     <Popup
       popupEnable={remindPasswordVisible}
       handleClose={handleCloseRemindPassword}
-      maxWidth="400"
+      maxWidth={400}
       title="Przypomnij hasło"
       close={false}
     >
@@ -949,7 +945,7 @@ const Navigation = props => {
     <Popup
       popupEnable={registrationVisible}
       handleClose={handleClickRegister}
-      maxWidth="500"
+      maxWidth={500}
       title="Rejestracja"
       close={false}
     >
@@ -974,7 +970,7 @@ const Navigation = props => {
       handleClose={handleHistoryReserwations}
       title={Translates[siteProps.language].buttons.bookingHistory}
       fullScreen
-      maxWidth="800"
+      maxWidth={800}
     >
       <UserHistory
         siteProps={siteProps}
@@ -1005,12 +1001,11 @@ const Navigation = props => {
     <Popup
       popupEnable={popupTakePlace}
       handleClose={handleClickTakePlace}
-      maxWidth="500"
+      maxWidth={500}
       title="Znajdz ulubione miejsce"
     >
       <FindPlaceContent
         handleClose={handleClickTakePlace}
-        // setSelectedName={dispatch}
         selectedName={selectedNameMenu}
         siteProps={siteProps}
       />
@@ -1020,7 +1015,7 @@ const Navigation = props => {
   const PopupActiveAccount = !!user && (
     <Popup
       popupEnable={activeAccountVisible}
-      maxWidth="400"
+      maxWidth={400}
       handleClose={handleCloseActiveAccount}
       title="Aktywacja konta"
       close={false}
@@ -1101,7 +1096,7 @@ const Navigation = props => {
       popupEnable={transactionHistoryVisible}
       handleClose={handleClickTransactionHistory}
       title="Historia tranzakcji"
-      maxWidth="600"
+      maxWidth={600}
       heightFull
     >
       <TransactionHistory
@@ -1389,7 +1384,7 @@ const Navigation = props => {
       popupEnable={userServicesVisible}
       handleClose={handleClickUserServicesVisible}
       title="Twoje usługi"
-      maxWidth="350"
+      maxWidth={350}
     >
       <div id="YourServicesAllButtons">
         <MarginButtonSaveToken>
@@ -1434,7 +1429,7 @@ const Navigation = props => {
       popupEnable={workPropsVisible}
       handleClose={handleClickWork}
       title={Translates[siteProps.language].buttons.work}
-      maxWidth="350"
+      maxWidth={350}
     >
       <MinHeightComponent>
         <div>

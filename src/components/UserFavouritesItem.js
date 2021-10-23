@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { LinkEffect } from "../common/LinkEffect"
+import { LinkEffect } from "@common/LinkEffect"
 import { FaChrome } from "react-icons/fa"
 import { MdDelete, MdArrowBack } from "react-icons/md"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import ReactTooltip from "react-tooltip"
-import ButtonIcon from "./ButtonIcon"
-import { deleteCompanyFavourites } from "../state/actions"
+import { ButtonIcon, Popup } from "@ui"
+import { deleteCompanyFavourites } from "@state/actions"
 import { useDispatch } from "react-redux"
-import { Site } from "../common/Site"
-import Popup from "./Popup"
+import { Site } from "@common/Site"
 
 const TitleCategory = styled.div`
   position: relative;

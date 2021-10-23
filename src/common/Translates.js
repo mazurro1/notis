@@ -17,6 +17,7 @@ export const Translates = {
       veryfiedUserPhoneNumber: "Weryfikuj numer telefonu",
       veryfiedUserEmail: "Weryfikuj adres e-mail",
       editEmail: "Edytuj adres e-mail",
+      editPassword: "Edytuj hasło",
     },
     alerts: {
       general: {
@@ -282,7 +283,7 @@ export const Translates = {
         title: "Logowanie do konta",
         alert: {
           title:
-            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+            "Użytkownik nie może być zalogowany, aby mógł skorzystać z podanej opcji.",
         },
         steps: [
           {
@@ -315,6 +316,10 @@ export const Translates = {
       },
       languageMode: {
         title: "Zmiana języka na stronie",
+        alert: {
+          title:
+            "Jeżeli użytkownik jest zalogowany to wybrany język zostanie zapamiętany na jego koncie.",
+        },
         steps: [
           {
             title: "Przejdz do suwaka:",
@@ -326,6 +331,10 @@ export const Translates = {
       },
       darkMode: {
         title: "Zmiana trybu ciemnego/jasnego strony",
+        alert: {
+          title:
+            "Jeżeli użytkownik jest zalogowany to wybrany tryb strony zostanie zapamiętany na jego koncie.",
+        },
         steps: [
           {
             title: "Przejdz do suwaka:",
@@ -337,6 +346,10 @@ export const Translates = {
       },
       blindMode: {
         title: "Zmiana trybu dla daltonistów",
+        alert: {
+          title:
+            "Jeżeli użytkownik jest zalogowany to wybrany tryb strony zostanie zapamiętany na jego koncie.",
+        },
         steps: [
           {
             title: "Przejdz do suwaka:",
@@ -364,7 +377,7 @@ export const Translates = {
         title: "Sprawdzanie pieczątek",
         alert: {
           title:
-            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji. Pieczątki są dodawane tylko po wykonywanych usługach, które je zawierają.",
         },
         steps: [
           {
@@ -410,7 +423,7 @@ export const Translates = {
         title: "Zmiana numeru telefonu / Weryfikacja numeru telefonu",
         alert: {
           title:
-            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji. Nowy numer telefonu nie może być take samo jak poprzedne oraz nie może być używany na kilku kontach na raz.",
         },
         steps: [
           {
@@ -446,7 +459,7 @@ export const Translates = {
         title: "Zmiana adresu e-mail / Weryfikacja adresu e-mail",
         alert: {
           title:
-            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji.",
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji. Nowy adres e-mail nie może być taki sam jak poprzedni oraz nie może być używany na kilku kontach na raz.",
         },
         steps: [
           {
@@ -472,6 +485,37 @@ export const Translates = {
             title:
               "Gdy przyjdzie Tobie na podany adres e-mail kodem potwierdzającym, to wpisz go w wyznaczonym okienku oraz zatwierdz.",
             button: "Pokaż przycisk:",
+          },
+          {
+            title: "Gotowe!",
+          },
+        ],
+      },
+      userAccountDataChangePassword: {
+        title: "Zmiana hasła do konta",
+        alert: {
+          title:
+            "Użytkownik musi być zalogowany, aby mógł skorzystać z podanej opcji. Nowe hasło nie może być takie samo jak poprzednie.",
+        },
+        steps: [
+          {
+            title:
+              "Wyszukaj na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż przycisk",
+          },
+          {
+            title:
+              "Kliknij przycisk, który znajduje się na górnej belce ikonkę ludzika wraz z imieniem zalogowanej osoby",
+            button: "Pokaż widok z danymi konta",
+          },
+          {
+            title: "Wyszukaj przycisk:",
+            title2: ", a następnie kliknij go",
+            button: "Pokaż przycisk:",
+          },
+          {
+            title:
+              "Wprowadz stare oraz nowe hasło do konta, a następnie kliknij przycisk:",
           },
           {
             title: "Gotowe!",

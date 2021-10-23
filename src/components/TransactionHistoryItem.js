@@ -1,12 +1,12 @@
 import React, { useState } from "react"
-import ButtonIcon from "./ButtonIcon"
+import { ButtonIcon } from "@ui"
 import {
   MdAttachMoney,
   MdPictureAsPdf,
   MdKeyboardArrowDown,
 } from "react-icons/md"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { Collapse } from "react-collapse"
 
 const PaddingContent = styled.div`

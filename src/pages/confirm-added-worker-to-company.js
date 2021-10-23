@@ -1,6 +1,6 @@
 import React from "react"
-import ActiveWorker from "../components/ActiveWorker"
-import CompanyPriv from "../components/CompanyPriv"
+import ActiveWorker from "@components/companyInterface/ActiveWorker"
+import CompanyPriv from "@components/companyInterface/CompanyPriv"
 
 const ComfirmAddedWorkerToCompany = props => {
   let dataProps = []

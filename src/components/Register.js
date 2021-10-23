@@ -1,16 +1,14 @@
 import React, { useState } from "react"
-import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdAccountBox, MdEmail, MdLock } from "react-icons/md"
-import { LinkEffect } from "../common/LinkEffect"
-import { Colors } from "../common/Colors"
+import { LinkEffect } from "@common/LinkEffect"
+import { Colors } from "@common/Colors"
 import ReactTooltip from "react-tooltip"
 import { FaUserPlus } from "react-icons/fa"
-import ButtonIcon from "./ButtonIcon"
-import { fetchRegisterUser, addAlertItem } from "../state/actions"
+import { ButtonIcon, InputIcon, InputPhone } from "@ui"
+import { fetchRegisterUser, addAlertItem } from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import { validEmail } from "../common/Functions"
-import InputPhone from "./InputPhone"
+import { validEmail } from "@common/Functions"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;

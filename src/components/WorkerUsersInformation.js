@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  fetchworkerUsersInformations,
-  restartCompanySMS,
-} from "../state/actions"
+import { fetchworkerUsersInformations, restartCompanySMS } from "@state/actions"
 import WorkerUsersInformationItem from "./WorkerUsersInformationItem"
 import ReactTooltip from "react-tooltip"
 import sal from "sal.js"
-import InputIcon from "./InputIcon"
 import { FaUserFriends, FaSms } from "react-icons/fa"
-import ButtonIcon from "./ButtonIcon"
-import Popup from "./Popup"
+import { ButtonIcon, Popup, InputIcon } from "@ui"
 import SendSMSClientsContent from "./SendSMSClientsContent"
 
 const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {

@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 
 // USER ACTIONS
 // USER ACTIONS

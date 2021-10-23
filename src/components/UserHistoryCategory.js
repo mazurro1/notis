@@ -3,12 +3,11 @@ import styled from "styled-components"
 import { MdExpandMore } from "react-icons/md"
 import { FaChrome } from "react-icons/fa"
 import { Collapse } from "react-collapse"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import UserHistoryCategoryItem from "./UserHistoryCategoryItem"
 import { useDispatch } from "react-redux"
-import { fetchDeleteReserwation, fetchResetUserMenu } from "../state/actions"
+import { fetchDeleteReserwation, fetchResetUserMenu } from "@state/actions"
 import { navigate } from "gatsby"
-// import { LinkEffect } from "../common/LinkEffect"
 
 const TitleCategory = styled.div`
   position: relative;

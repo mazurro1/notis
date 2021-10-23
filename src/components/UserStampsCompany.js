@@ -3,9 +3,9 @@ import styled from "styled-components"
 import { MdExpandMore } from "react-icons/md"
 import { FaChrome, FaStamp } from "react-icons/fa"
 import { Collapse } from "react-collapse"
-import { LinkEffect } from "../common/LinkEffect"
-import { Colors } from "../common/Colors"
-import { Site } from "../common/Site"
+import { LinkEffect } from "@common/LinkEffect"
+import { Colors } from "@common/Colors"
+import { Site } from "@common/Site"
 
 const CategoryItemStyle = styled.div`
   margin-top: 5px;

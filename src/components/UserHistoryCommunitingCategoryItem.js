@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
-import ButtonIcon from "./ButtonIcon"
+import { Colors } from "@common/Colors"
+import { ButtonIcon, Popup, InputIcon } from "@ui"
 import {
   MdDelete,
   MdArrowBack,
@@ -11,17 +11,15 @@ import {
   MdEdit,
 } from "react-icons/md"
 import { FaArrowLeft, FaChrome } from "react-icons/fa"
-import Popup from "./Popup"
 import { useDispatch } from "react-redux"
 import {
   fetchUserCancelCommunity,
   fetchResetUserMenu,
   fetchAddOpinionCommuniting,
   fetchUpdateEditedOpinionCommuniting,
-} from "../state/actions"
+} from "@state/actions"
 import { navigate } from "gatsby"
 import ReactTooltip from "react-tooltip"
-import InputIcon from "./InputIcon"
 
 const PositionButtonsCancel = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { Collapse } from "react-collapse"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { MdExpandMore } from "react-icons/md"
 import UserHistoryServicesCategoryItem from "./UserHistoryServicesCategoryItem"
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
-import SelectCreated from "../components/SelectCreated"
+import { SelectCreated } from "@ui"
 import { useDispatch, useSelector } from "react-redux"
-import { changeSortValue } from "../state/actions"
-import { SortsNames } from "../common/SortsNames"
+import { changeSortValue } from "@state/actions"
+import { SortsNames } from "@common/SortsNames"
 
 const Sort = ({ enableMaps }) => {
   const sortDataLoading = useSelector(state => state.sortDataLoading)

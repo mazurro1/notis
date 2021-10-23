@@ -1,11 +1,9 @@
 import React from "react"
-import InputPhone from "./InputPhone"
 import { MdSave, MdArrowBack } from "react-icons/md"
 import { FaLock } from "react-icons/fa"
-import ButtonIcon from "../components/ButtonIcon"
-import InputIcon from "../components/InputIcon"
-import { Colors } from "../common/Colors"
-import { addAlertItem } from "../state/actions"
+import { ButtonIcon, InputIcon, InputPhone } from "@ui"
+import { Colors } from "@common/Colors"
+import { addAlertItem } from "@state/actions"
 import { useDispatch } from "react-redux"
 
 const UserProfilEditPhoneEmail = ({

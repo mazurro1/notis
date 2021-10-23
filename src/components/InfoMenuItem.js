@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import InfoMenuItemStep from "./InfoMenuItemStep"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { Collapse } from "react-collapse"
 import { MdExpandMore } from "react-icons/md"
 

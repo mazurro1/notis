@@ -1,8 +1,8 @@
 import React from "react"
 import { Router } from "@reach/router"
-import CompanyPriv from "../components/CompanyPriv"
-import CompanyNoPriv from "../components/CompanyNoPriv"
-import CompanyEditProfil from "../components/CompanyEditProfil"
+import CompanyPriv from "@components/companyInterface/CompanyPriv"
+import CompanyNoPriv from "@components/companyInterface/CompanyNoPriv"
+import CompanyEditProfil from "@components/companyInterface/CompanyEditProfil"
 import { useSelector } from "react-redux"
 
 const CompanyProfil = () => {

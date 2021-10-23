@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react"
-import { AllMonths } from "../common/AllMonths"
-import SelectCreated from "./SelectCreated"
-import { Colors } from "../common/Colors"
+import { AllMonths } from "@common/AllMonths"
+import { Colors } from "@common/Colors"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
-import ButtonIcon from "./ButtonIcon"
-import { fetchCompanyStaticts, resetCompanyStats } from "../state/actions"
-import ChartReserwationsStats from "./Charts/ChartReserwationsStats"
-import { ChartsAdmin } from "../common/Charts"
+import { ButtonIcon, SelectCreated } from "@ui"
+import { fetchCompanyStaticts, resetCompanyStats } from "@state/actions"
+import ChartReserwationsStats from "./companyInterface/Charts/ChartReserwationsStats"
+import { ChartsAdmin } from "@common/Charts"
 import {
   chartErnings,
   chartResState,
@@ -17,7 +16,7 @@ import {
   chartSMSStateAll,
   chartCompanyServices,
   chartCompanyCommunitings,
-} from "./Charts/FunctionsChart"
+} from "./companyInterface/Charts/FunctionsChart"
 
 import { FaSearch } from "react-icons/fa"
 const ButtonsPosition = styled.div`

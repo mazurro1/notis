@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   getCompanyTransactionHistory,
   sendInvoiceToCompanyEmail,
-} from "../state/actions"
-import getStripe from "../common/stripejs"
+} from "@state/actions"
+import getStripe from "@common/stripejs"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import TransactionHistoryItem from "./TransactionHistoryItem"
 
 const ItemHistory = styled.div`

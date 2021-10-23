@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react"
-import InputIcon from "./InputIcon"
 import styled from "styled-components"
 import { MdEmail, MdLock, MdDelete, MdDone } from "react-icons/md"
 import ReactTooltip from "react-tooltip"
@@ -7,12 +6,12 @@ import {
   fetchSentEmailResetPassword,
   fetchResetPassword,
   addAlertItem,
-} from "../state/actions"
+} from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import ButtonIcon from "../components/ButtonIcon"
+import { ButtonIcon, InputIcon } from "@ui"
 import PinField from "react-pin-field"
-import { validEmail } from "../common/Functions"
-import { Colors } from "../common/Colors"
+import { validEmail } from "@common/Functions"
+import { Colors } from "@common/Colors"
 
 const ButtonLoginRegister = styled.button`
   width: 100%;

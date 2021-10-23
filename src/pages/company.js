@@ -1,6 +1,6 @@
 import React from "react"
-import TakeCompanyData from "../components/TakeCompanyData"
-import CompanyPriv from "../components/CompanyPriv"
+import TakeCompanyData from "@components/TakeCompanyData"
+import CompanyPriv from "@components/companyInterface/CompanyPriv"
 
 const Companys = props => {
   let dataProps = []

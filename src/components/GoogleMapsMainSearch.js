@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import { GoogleMap, LoadScript } from "@react-google-maps/api"
 import GoogleMapsMainSearchItem from "./GoogleMapsMainSearchItem"
-import { fetchCompanyMarker } from "../state/actions"
+import { fetchCompanyMarker } from "@state/actions"
 
 const containerStyle = {
   width: "100%",

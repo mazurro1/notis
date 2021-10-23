@@ -5,12 +5,12 @@ import {
   confirmDeleteCompany,
   fetchConfirmDelete,
   changeDeleteCompanyConfirm,
-} from "../state/actions"
-import ButtonIcon from "../components/ButtonIcon"
+} from "@state/actions"
+import { ButtonIcon } from "@ui"
 import { MdEmail, MdDelete, MdClose } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import PinField from "react-pin-field"
 import { navigate } from "gatsby"
 

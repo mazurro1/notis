@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
-import ButtonIcon from "../components/ButtonIcon"
+import { Colors } from "@common/Colors"
+import { ButtonIcon, Popup } from "@ui"
 import { CSSTransition } from "react-transition-group"
 import { MdWork, MdImage } from "react-icons/md"
 import { useSelector, useDispatch } from "react-redux"
-import { LinkEffect } from "../common/LinkEffect"
-import { Site } from "../common/Site"
+import { LinkEffect } from "@common/LinkEffect"
+import { Site } from "@common/Site"
 import { FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
 import {
   addCompanyFavourites,
   deleteCompanyFavourites,
   resetUserFavourites,
-} from "../state/actions"
-import Popup from "./Popup"
+} from "@state/actions"
 
 const PlaceItem = styled.div`
   position: relative;

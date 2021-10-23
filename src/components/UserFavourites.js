@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { resetUserFavourites } from "../state/actions"
+import { resetUserFavourites } from "@state/actions"
 import UserFavouritesItem from "./UserFavouritesItem"
 import styled from "styled-components"
 

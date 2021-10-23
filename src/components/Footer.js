@@ -1,9 +1,9 @@
 import React from "react"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import styled from "styled-components"
-import { Routes } from "../common/Routes"
+import { Routes } from "@common/Routes"
 import { FaFacebookSquare } from "react-icons/fa"
-import { LinkEffect } from "../common/LinkEffect"
+import { LinkEffect } from "@common/LinkEffect"
 import { useSelector } from "react-redux"
 
 const WrapperFooter = styled.div`

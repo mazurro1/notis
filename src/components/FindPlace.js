@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react"
-import InputIcon from "./InputIcon"
 import styled from "styled-components"
-import ButtonIcon from "./ButtonIcon"
-import { Colors } from "../common/Colors"
+import { ButtonIcon, InputIcon } from "@ui"
+import { Colors } from "@common/Colors"
 import { MdSearch, MdClose } from "react-icons/md"
 import { FaArrowLeft, FaSearch } from "react-icons/fa"
-import { changeSelectedNameMenu } from "../state/actions"
+import { changeSelectedNameMenu } from "@state/actions"
 import { useDispatch } from "react-redux"
 
 const ButtonsPosition = styled.div`

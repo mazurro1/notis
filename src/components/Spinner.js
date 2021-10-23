@@ -2,7 +2,7 @@ import React from "react"
 import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { CgSpinner } from "react-icons/cg"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { useSelector } from "react-redux"
 
 const PopupWindow = styled.div`

@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import { MdDelete, MdArrowBack } from "react-icons/md"
-import ButtonIcon from "./ButtonIcon"
-import { Colors } from "../common/Colors"
+import { ButtonIcon, Popup } from "@ui"
+import { Colors } from "@common/Colors"
 import styled from "styled-components"
-import Popup from "./Popup"
 
 const ButtonsDeletePosition = styled.div`
   display: flex;

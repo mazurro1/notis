@@ -2,22 +2,22 @@ import React, { useEffect, useState, useRef } from "react"
 import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
-import { Translates } from "../common/Translates"
-import ButtonTakeData from "../components/ButtonTakeData"
-import { AllIndustries } from "../common/AllIndustries"
-import { Site } from "../common/Site"
-import UseWindowSize from "../common/UseWindowSize"
+import { Translates } from "@common/Translates"
+import { ButtonTakeData } from "@ui"
+import { AllIndustries } from "@common/AllIndustries"
+import { Site } from "@common/Site"
+import UseWindowSize from "@common/UseWindowSize"
 import {
   changeIndustries,
   setHeightMenuIndustries,
   setVisibleMenuIndustries,
   changePopupTakePlace,
   changeSelectedNameMenu,
-} from "../state/actions"
-import ButtonIcon from "../components/ButtonIcon"
+} from "@state/actions"
+import { ButtonIcon } from "@ui"
 import { FaSearch } from "react-icons/fa"
 import { MdExpandMore } from "react-icons/md"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 
 const WrapperNavigationUnder = styled.div`
   position: relative;

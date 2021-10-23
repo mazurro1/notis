@@ -1,20 +1,19 @@
 import React, { useState, useRef, useEffect } from "react"
 import { OverlayView, useGoogleMap } from "@react-google-maps/api"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import ReactTooltip from "react-tooltip"
-import Popup from "./Popup"
-import { LinkEffect } from "../common/LinkEffect"
-import ButtonIcon from "../components/ButtonIcon"
+import { LinkEffect } from "@common/LinkEffect"
+import { ButtonIcon, Popup } from "@ui"
 import { MdWork, MdImage } from "react-icons/md"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 import { FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa"
 import { useSelector, useDispatch } from "react-redux"
 import {
   addCompanyFavourites,
   deleteCompanyFavourites,
   resetUserFavourites,
-} from "../state/actions"
+} from "@state/actions"
 import { CSSTransition } from "react-transition-group"
 
 const UnderMenuServices = styled.div`

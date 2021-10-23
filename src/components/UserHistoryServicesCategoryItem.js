@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { useDispatch } from "react-redux"
 import {
   fetchResetUserMenu,
   fetchAddOpinionService,
   fetchUpdateEditedOpinionService,
-} from "../state/actions"
+} from "@state/actions"
 import { navigate } from "gatsby"
 import { FaChrome } from "react-icons/fa"
-import ButtonIcon from "./ButtonIcon"
+import { ButtonIcon, Popup, InputIcon } from "@ui"
 import ReactTooltip from "react-tooltip"
-import Popup from "./Popup"
 import { MdArrowBack, MdComment, MdSave, MdStar, MdEdit } from "react-icons/md"
-import InputIcon from "./InputIcon"
 
 const ServiceItem = styled.div`
   position: relative;

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react"
-import SelectCreated from "./SelectCreated"
+import { SelectCreated } from "@ui"
 import styled from "styled-components"
 import sal from "sal.js"
-import { AllMonths } from "../common/AllMonths"
-import { Site } from "../common/Site"
+import { AllMonths } from "@common/AllMonths"
+import { Site } from "@common/Site"
 import { useDispatch, useSelector } from "react-redux"
 import {
   fetchGetUserHistoryServices,
   fetchResetUserHistoryServices,
-} from "../state/actions"
+} from "@state/actions"
 import UserHistoryServicesCategory from "./UserHistoryServicesCategory"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 
 const PositionSelectAllEnd = styled.div`
   display: flex;

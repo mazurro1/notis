@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useRef } from "react"
-import InputIcon from "./InputIcon"
 import { FaChrome, FaTools } from "react-icons/fa"
 import { MdSearch } from "react-icons/md"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
-import ButtonIcon from "../components/ButtonIcon"
+import { Colors } from "@common/Colors"
+import { ButtonIcon, InputIcon } from "@ui"
 import {
   fetchDownloadService,
   updateDownloadService,
   addAlertItem,
-} from "../state/actions"
+} from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { navigate } from "gatsby"
 import { CSSTransition } from "react-transition-group"

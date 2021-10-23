@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
-import InputIcon from "../components/InputIcon"
 import { MdShoppingBasket, MdSearch, MdClose } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
-import { Colors } from "../common/Colors"
-import { changeFilterValue } from "../state/actions"
-import ButtonIcon from "./ButtonIcon"
+import { Colors } from "@common/Colors"
+import { changeFilterValue } from "@state/actions"
+import { ButtonIcon, InputIcon } from "@ui"
 import styled from "styled-components"
 
 const ButtonsPosition = styled.div`

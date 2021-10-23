@@ -8,18 +8,16 @@ import {
   MdStar,
   MdEdit,
 } from "react-icons/md"
-import { Colors } from "../common/Colors"
-import ButtonIcon from "./ButtonIcon"
-import InputIcon from "./InputIcon"
+import { Colors } from "@common/Colors"
+import { ButtonIcon, Popup, InputIcon } from "@ui"
 import { useDispatch } from "react-redux"
 import {
   fetchAddOpinion,
   fetchUpdateEditedOpinion,
   addAlertItem,
-} from "../state/actions"
-import Popup from "./Popup"
+} from "@state/actions"
 import Reserwation from "./Reserwation"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 
 const ServiceItem = styled.div`
   position: relative;

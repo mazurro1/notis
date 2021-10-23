@@ -1,4 +1,4 @@
-import { Translates } from "../common/Translates"
+import { Translates } from "@common/Translates"
 
 const generateMenuInfo = ({
   handleClickLogin,
@@ -100,7 +100,7 @@ const generateMenuInfo = ({
     },
     {
       title: currentTexts.info.languageMode.title,
-      alert: null,
+      alert: currentTexts.info.languageMode.alert,
       steps: [
         {
           title: `${currentTexts.info.languageMode.steps[0].title} ${currentTexts.buttons.language}${currentTexts.info.languageMode.steps[0].title2}`,
@@ -118,7 +118,7 @@ const generateMenuInfo = ({
     },
     {
       title: currentTexts.info.darkMode.title,
-      alert: null,
+      alert: currentTexts.info.darkMode.alert,
       steps: [
         {
           title: `${currentTexts.info.darkMode.steps[0].title} ${currentTexts.buttons.darkMode}${currentTexts.info.darkMode.steps[0].title2}`,
@@ -136,7 +136,7 @@ const generateMenuInfo = ({
     },
     {
       title: currentTexts.info.blindMode.title,
-      alert: null,
+      alert: currentTexts.info.blindMode.alert,
       steps: [
         {
           title: `${currentTexts.info.blindMode.steps[0].title} ${currentTexts.buttons.colorBlindMode}${currentTexts.info.blindMode.steps[0].title2}`,
@@ -380,6 +380,72 @@ const generateMenuInfo = ({
         },
         {
           title: `${currentTexts.info.userAccountDataChangeEmail.steps[5].title}`,
+          path: null,
+          pathValid: true,
+          pathRouteEnable: false,
+          pathRouteName: null,
+          elementId: null,
+          elementName: null,
+          elementValid: null,
+          elementHandler: null,
+          lightFromEffect: false,
+        },
+      ],
+    },
+    {
+      title: currentTexts.info.userAccountDataChangePassword.title,
+      alert: currentTexts.info.userAccountDataChangePassword.alert,
+      steps: [
+        {
+          title: `${currentTexts.info.userAccountDataChangePassword.steps[0].title}`,
+          path: null,
+          pathValid: true,
+          pathRouteEnable: false,
+          pathRouteName: null,
+          elementId: "UserAccountEditButton",
+          elementName: `${currentTexts.info.userAccountDataChangePassword.steps[0].button}`,
+          elementValid: !!user,
+          elementHandler: isBarSize ? handleMenuOpen : null,
+          lightFromEffect: true,
+        },
+        {
+          title: `${currentTexts.info.userAccountDataChangePassword.steps[1].title}`,
+          path: null,
+          pathValid: true,
+          pathRouteEnable: false,
+          pathRouteName: null,
+          elementId: "UserProfilContent",
+          elementName: `${currentTexts.info.userAccountDataChangePassword.steps[1].button}`,
+          elementValid: !!user,
+          elementHandler: handleUserProfil,
+          lightFromEffect: false,
+        },
+        {
+          title: `${currentTexts.info.userAccountDataChangePassword.steps[2].title} ${currentTexts.buttons.editPassword}${currentTexts.info.userAccountDataChangePassword.steps[2].title2}`,
+          path: null,
+          pathValid: true,
+          pathRouteEnable: false,
+          pathRouteName: null,
+          elementId: "EditUserPasswordButton",
+          elementName: `${currentTexts.info.userAccountDataChangePassword.steps[2].button} ${currentTexts.buttons.editPassword}`,
+          elementValid: !!user,
+          elementHandler: handleUserProfil,
+          lightFromEffect: true,
+        },
+        {
+          title: `${currentTexts.info.userAccountDataChangePassword.steps[3].title} ${currentTexts.buttons.save}`,
+          path: null,
+          pathValid: true,
+          pathRouteEnable: false,
+          pathRouteName: null,
+          elementId: null,
+          elementName: null,
+          elementValid: null,
+          elementHandler: null,
+          lightFromEffect: false,
+        },
+        {
+          title: `${currentTexts.info.userAccountDataChangePassword.steps[4].title}`,
           path: null,
           pathValid: true,
           pathRouteEnable: false,

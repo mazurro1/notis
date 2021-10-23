@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react"
-import "../../style.css"
 import styled from "styled-components"
-import ButtonIcon from "../components/ButtonIcon"
-import InputIcon from "../components/InputIcon"
+import { ButtonIcon, Popup, InputIcon, SelectCreated } from "@ui"
 import { FaLock, FaUserAlt } from "react-icons/fa"
 import {
   MdEdit,
@@ -27,19 +25,18 @@ import {
   verifiedPhoneComponent,
   verifiedEmailComponent,
   resetUpdateUserPhone,
-} from "../state/actions"
+  fetchEditUser,
+  fetchUpdateDefaultCompany,
+} from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import ReactTooltip from "react-tooltip"
-import { fetchEditUser, fetchUpdateDefaultCompany } from "../state/actions"
 import UserProfilImage from "./UserProfilImage"
-import { Site } from "../common/Site"
-import Popup from "./Popup"
+import { Site } from "@common/Site"
 import DeleteAccount from "./DeleteAccount"
 import VeryfiedPhone from "./VeryfiedPhone"
-import SelectCreated from "./SelectCreated"
 import UserProfilEditPhoneEmail from "./UserProfilEditPhoneEmail"
-import { Translates } from "../common/Translates"
+import { Translates } from "@common/Translates"
 
 const AddImage = styled.div`
   position: relative;
@@ -775,7 +772,8 @@ const UserProfil = ({
           )}
           <MarginButtonPhone>
             <ButtonIcon
-              title="Edytuj hasło"
+              id="EditUserPasswordButton"
+              title={Translates[siteProps.language].buttons.editPassword}
               uppercase
               fontIconSize="16"
               fontSize="16"

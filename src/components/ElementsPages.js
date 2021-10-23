@@ -1,10 +1,10 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { MdKeyboardArrowUp, MdChevronLeft } from "react-icons/md"
 import { navigate } from "gatsby"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 
 const BackgroundColorPage = styled.div`
   position: relative;

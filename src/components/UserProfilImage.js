@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import { MdDelete } from "react-icons/md"
-import ButtonIcon from "./ButtonIcon"
+import { ButtonIcon, Popup } from "@ui"
 import { FaArrowLeft } from "react-icons/fa"
-import Popup from "./Popup"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 
 const BackGroundImageCustomUrl = styled.div`
   position: relative;

@@ -1,14 +1,14 @@
 import React, { useEffect } from "react"
 import "../../style.css"
 import styled from "styled-components"
-import ButtonIcon from "../components/ButtonIcon"
+import { ButtonIcon } from "@ui"
 import { MdStoreMallDirectory } from "react-icons/md"
 import { useDispatch, useSelector } from "react-redux"
 import {
   changeLoginVisible,
   changeCreateCompanyVisible,
   updateResetCreateCompany,
-} from "../state/actions"
+} from "@state/actions"
 import sal from "sal.js"
 import ReactTooltip from "react-tooltip"
 import { navigate } from "gatsby"

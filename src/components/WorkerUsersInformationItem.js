@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 import { Collapse } from "react-collapse"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import {
   MdExpandMore,
   MdLibraryAdd,
@@ -13,8 +13,7 @@ import {
   MdPhone,
 } from "react-icons/md"
 import { FaLock, FaLockOpen } from "react-icons/fa"
-import InputIcon from "./InputIcon"
-import ButtonIcon from "./ButtonIcon"
+import { ButtonIcon, Popup, InputIcon } from "@ui"
 import sal from "sal.js"
 import {
   fetchworkerUsersMoreInformationsHistory,
@@ -26,12 +25,11 @@ import {
   fetchUserInformations,
   fetchSelectedUserReserwations,
   addAlertItem,
-} from "../state/actions"
+} from "@state/actions"
 import { useDispatch } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import WorkerUsersInformationItemMessage from "./WorkerUsersInformationItemMessage"
-import { Site } from "../common/Site"
-import Popup from "./Popup"
+import { Site } from "@common/Site"
 
 const ServiceItem = styled.div`
   position: relative;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import BigCalendarWorkerReserwations from "./BigCalendarWorkerReserwations"
-import { fetchWorkerReserwationsAll } from "../state/actions"
-import UseWindowSize from "../common/UseWindowSize"
-import CompanyNoAccess from "./CompanyNoAccess"
+import BigCalendarWorkerReserwations from "./calendars/BigCalendarWorkerReserwations"
+import { fetchWorkerReserwationsAll } from "@state/actions"
+import UseWindowSize from "@common/UseWindowSize"
+import CompanyNoAccess from "./companyInterface/CompanyNoAccess"
 
 const WorkerReserwations = ({
   handleClose,
@@ -29,7 +29,6 @@ const WorkerReserwations = ({
   }
 
   useEffect(() => {
-    console.log(user.company.owner, user.userId, userWorkerActive)
     dispatch(
       fetchWorkerReserwationsAll(
         user.token,

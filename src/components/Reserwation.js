@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from "react"
-import { Colors } from "../common/Colors"
+import { Colors } from "@common/Colors"
 import styled from "styled-components"
-import SelectDataCalendar from "./SelectDataCalendar"
 import {
   fetchDoReserwation,
   fetchWorkerDisabledHours,
   avaibleDateToReserwation,
   fetchChangeReserwation,
   addAlertItem,
-} from "../state/actions"
+} from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { FaUser, FaStamp } from "react-icons/fa"
-import ButtonIcon from "../components/ButtonIcon"
+import { ButtonIcon, Popup, InputIcon, SelectDataCalendar } from "@ui"
 import { FaCalendarDay, FaCalendarCheck } from "react-icons/fa"
-import { getMonthAndReturn } from "../common/Functions"
+import { getMonthAndReturn } from "@common/Functions"
 import { CgSpinner } from "react-icons/cg"
 import HoursItemReserwation from "./HoursItemReserwation"
-import InputIcon from "./InputIcon"
-import { Site } from "../common/Site"
+import { Site } from "@common/Site"
 import ReactTooltip from "react-tooltip"
 import { Checkbox } from "react-input-checkbox"
-import Popup from "./Popup"
 
 const TextCheckbox = styled.span`
   padding-left: 10px;

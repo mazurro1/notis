@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import PlacesItem from "../components/PlacesItem"
-import ButtonIcon from "../components/ButtonIcon"
+import PlacesItem from "@components/PlacesItem"
+import { ButtonIcon, SelectCreated } from "@ui"
 import styled from "styled-components"
 import { MdFilterList, MdLocationOn, MdClose } from "react-icons/md"
 import {
@@ -12,18 +12,17 @@ import {
   changeLocalizationValue,
   changeMapsActive,
   changeListMapOffers,
-} from "../state/actions"
-import { Colors } from "../common/Colors"
+} from "@state/actions"
+import { Colors } from "@common/Colors"
 import sal from "sal.js"
 import { CSSTransition } from "react-transition-group"
 import { useScrollPosition } from "@n8tb1t/use-scroll-position"
-import { AllIndustries } from "../common/AllIndustries"
-import { Translates } from "../common/Translates"
-import Sort from "../components/Sort"
-import GoogleMapsMainSearch from "../components/GoogleMapsMainSearch"
-// import GoogleMapsMainSearch from "../components/LeafletMapsMainSearch"
-import SelectCreated from "../components/SelectCreated"
-import { Site } from "../common/Site"
+import { AllIndustries } from "@common/AllIndustries"
+import { Translates } from "@common/Translates"
+import Sort from "@components/Sort"
+import GoogleMapsMainSearch from "@components/GoogleMapsMainSearch"
+// import GoogleMapsMainSearch from "@components/LeafletMapsMainSearch"
+import { Site } from "@common/Site"
 
 const GoogleMapsStyle = styled.div`
   margin-top: 20px;
