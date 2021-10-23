@@ -5,7 +5,7 @@ import {
   fetchUserReserwationsAll,
   changeReserwationUser,
 } from "@state/actions"
-import UserHistoryCategory from "./UserHistoryCategory"
+import UserHistoryCategory from "./userHistorys/UserHistoryCategory"
 import styled from "styled-components"
 import Switch from "react-switch"
 import { Colors } from "@common/Colors"

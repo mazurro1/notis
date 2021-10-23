@@ -16,7 +16,7 @@ import {
   fetchUpdateEditedOpinion,
   addAlertItem,
 } from "@state/actions"
-import Reserwation from "./Reserwation"
+import Reserwation from "@components/companyInterface/Reserwation"
 import { Site } from "@common/Site"
 
 const ServiceItem = styled.div`

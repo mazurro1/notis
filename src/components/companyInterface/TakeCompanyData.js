@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { fetchPathCompany } from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import ContentCompanyProfilAutoSave from "./ContentCompanyProfilAutoSave"
-import CompanyPriv from "./companyInterface/CompanyPriv"
+import CompanyPriv from "./CompanyPriv"
 import { CSSTransition } from "react-transition-group"
 
 const TakeCompanyData = ({ pathCompany = null }) => {

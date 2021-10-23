@@ -1,5 +1,5 @@
 import React from "react"
-import LoginGoogleComponent from "@components/LoginGoogleComponent"
+import LoginGoogleComponent from "@components/userInterface/LoginGoogleComponent"
 import CompanyPriv from "@components/companyInterface/CompanyPriv"
 
 const LoginGoogle = props => {

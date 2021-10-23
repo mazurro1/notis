@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import { ButtonIcon, SelectCreated } from "@ui"
 import { fetchCompanyStaticts, resetCompanyStats } from "@state/actions"
-import ChartReserwationsStats from "./companyInterface/Charts/ChartReserwationsStats"
+import ChartReserwationsStats from "./Charts/ChartReserwationsStats"
 import { ChartsAdmin } from "@common/Charts"
 import {
   chartErnings,
@@ -16,7 +16,7 @@ import {
   chartSMSStateAll,
   chartCompanyServices,
   chartCompanyCommunitings,
-} from "./companyInterface/Charts/FunctionsChart"
+} from "./Charts/FunctionsChart"
 
 import { FaSearch } from "react-icons/fa"
 const ButtonsPosition = styled.div`

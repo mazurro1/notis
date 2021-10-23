@@ -6,7 +6,7 @@ import ReactTooltip from "react-tooltip"
 import sal from "sal.js"
 import { FaUserFriends, FaSms } from "react-icons/fa"
 import { ButtonIcon, Popup, InputIcon } from "@ui"
-import SendSMSClientsContent from "./SendSMSClientsContent"
+import SendSMSClientsContent from "../SendSMSClientsContent"
 
 const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
   const [filterUsers, setFilterUsers] = useState("")

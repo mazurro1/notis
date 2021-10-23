@@ -1,5 +1,5 @@
 import React from "react"
-import TakeCompanyData from "@components/TakeCompanyData"
+import TakeCompanyData from "@components/companyInterface/TakeCompanyData"
 import CompanyPriv from "@components/companyInterface/CompanyPriv"
 
 const Companys = props => {

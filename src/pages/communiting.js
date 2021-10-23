@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import sal from "sal.js"
-import SearchCommuniting from "@components/SearchCommuniting"
+import SearchCommuniting from "@components/userInterface/SearchCommuniting"
 
 const CommunitingPage = props => {
   const siteProps = useSelector(state => state.siteProps)

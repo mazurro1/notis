@@ -4,9 +4,9 @@ import {
   fetchGetOwnerWorkingHours,
   fetchGetWorkerWorkingHours,
 } from "@state/actions"
-import BigCalendarEmployeeWorkingHours from "./calendars/BigCalendarEmployeeWorkingHours"
+import BigCalendarEmployeeWorkingHours from "../calendars/BigCalendarEmployeeWorkingHours"
 import UseWindowSize from "@common/UseWindowSize"
-import CompanyNoAccess from "./companyInterface/CompanyNoAccess"
+import CompanyNoAccess from "./CompanyNoAccess"
 
 const EmployeeWorkingHours = ({ handleClose, item, editWorkerHours, user }) => {
   const workingHours = useSelector(state => state.workingHours)

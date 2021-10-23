@@ -1,5 +1,5 @@
 import React from "react"
-import LoginFacebookComponent from "@components/LoginFacebookComponent"
+import LoginFacebookComponent from "@components/userInterface/LoginFacebookComponent"
 import CompanyPriv from "@components/companyInterface/CompanyPriv"
 
 const LoginFacebook = props => {

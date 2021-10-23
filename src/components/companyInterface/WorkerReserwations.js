@@ -1,68 +1,55 @@
 import React, { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
-import {
-  fetchGetWorkerNoConstData,
-  fetchGetOwnerNoConstData,
-} from "@state/actions"
-import BigCalendarWorkerHoursAutoSave from "./calendars/BigCalendarWorkerHoursAutoSave"
+import { useSelector, useDispatch } from "react-redux"
+import BigCalendarWorkerReserwations from "../calendars/BigCalendarWorkerReserwations"
+import { fetchWorkerReserwationsAll } from "@state/actions"
 import UseWindowSize from "@common/UseWindowSize"
-import CompanyNoAccess from "./companyInterface/CompanyNoAccess"
+import CompanyNoAccess from "./CompanyNoAccess"
 
-const WorkerHoursAutoSave = ({
+const WorkerReserwations = ({
   handleClose,
-  item,
-  editWorkerHours,
   user,
-  // isAdmin,
+  isAdmin,
+  workerHasAccessClientsOpinions,
 }) => {
   const [userWorkerActive, setUserWorkerActive] = useState(user.userId)
   const [dateCalendar, setDateCalendar] = useState(new Date())
   const [disabledSwitch, setDisabledSwitch] = useState(false)
 
-  const dispatch = useDispatch()
+  const workerHistoryReserwations = useSelector(
+    state => state.workerHistoryReserwations
+  )
+  const workingHours = useSelector(state => state.workingHours)
 
-  const isAdmin = item.user._id === user.company.owner
+  const dispatch = useDispatch()
 
   const size = UseWindowSize()
   let isMobile = false
   if (!!size) {
     isMobile = size.width > 768 ? false : true
   }
+
   useEffect(() => {
-    if (isAdmin) {
-      dispatch(
-        fetchGetOwnerNoConstData(
-          user.token,
-          user.company._id,
-          dateCalendar.getFullYear(),
-          dateCalendar.getMonth() + 1,
-          item.user._id
-        )
+    dispatch(
+      fetchWorkerReserwationsAll(
+        user.token,
+        user.company.owner === user.userId ? userWorkerActive : user.userId,
+        dateCalendar.getFullYear(),
+        dateCalendar.getMonth() + 1,
+        user.company._id,
+        user.company.owner === userWorkerActive
       )
-    } else {
-      dispatch(
-        fetchGetWorkerNoConstData(
-          user.token,
-          user.company._id,
-          item.user._id,
-          dateCalendar.getFullYear(),
-          dateCalendar.getMonth() + 1
-        )
-      )
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dateCalendar.getFullYear(), // eslint-disable-line react-hooks/exhaustive-deps
     dateCalendar.getMonth(), // eslint-disable-line react-hooks/exhaustive-deps
     isAdmin,
     userWorkerActive,
-    user,
   ]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
-      {!!item ? (
-        <BigCalendarWorkerHoursAutoSave
-          item={item}
+      {!!workerHistoryReserwations && !!workingHours ? (
+        <BigCalendarWorkerReserwations
+          item={workerHistoryReserwations}
           handleClose={handleClose}
           dateCalendar={dateCalendar}
           setDateCalendar={setDateCalendar}
@@ -72,7 +59,9 @@ const WorkerHoursAutoSave = ({
           isAdmin={isAdmin}
           userWorkerActive={userWorkerActive}
           setUserWorkerActive={setUserWorkerActive}
+          workingHours={workingHours}
           isMobile={isMobile}
+          workerHasAccessClientsOpinions={workerHasAccessClientsOpinions}
         />
       ) : (
         <CompanyNoAccess />
@@ -80,4 +69,4 @@ const WorkerHoursAutoSave = ({
     </>
   )
 }
-export default WorkerHoursAutoSave
+export default WorkerReserwations
