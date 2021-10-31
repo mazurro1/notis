@@ -703,6 +703,7 @@ const CalendarWorkerReserwatinEvent = ({
           icon={<FaSave />}
           customColorButton={Colors(siteProps).successColorDark}
           customColorIcon={Colors(siteProps).successColor}
+          isFetchToBlock
         />
       </ButtonItemStyle>
     ) : (
@@ -724,6 +725,7 @@ const CalendarWorkerReserwatinEvent = ({
                     handleClosePopupEventItem()
                     handleChangeReserwationStatus(reserwationId, "noFinished")
                   }}
+                  isFetchToBlock
                 />
               </ButtonItemStyle>
             ) : (
@@ -741,6 +743,7 @@ const CalendarWorkerReserwatinEvent = ({
                   customColorButton={Colors(siteProps).dangerColorDark}
                   customColorIcon={Colors(siteProps).dangerColor}
                   onClick={handleConfirmCancelReserwation}
+                  isFetchToBlock
                 />
               </ButtonItemStyle>
             )
@@ -758,6 +761,7 @@ const CalendarWorkerReserwatinEvent = ({
                   handleClosePopupEventItem()
                   handleChangeReserwationStatus(reserwationId, "finished")
                 }}
+                isFetchToBlock
               />
             </ButtonItemStyle>
           )
@@ -774,6 +778,7 @@ const CalendarWorkerReserwatinEvent = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleConfirmCancelReserwation}
+              isFetchToBlock
             />
           </ButtonItemStyle>
         )}
@@ -793,6 +798,7 @@ const CalendarWorkerReserwatinEvent = ({
                   disabledChangeWorker &&
                   selectedDate === selectedDateReserwationDate
                 }
+                isFetchToBlock
               />
             </ButtonItemStyle>
             <ButtonItemStyle>
@@ -826,6 +832,7 @@ const CalendarWorkerReserwatinEvent = ({
                   setNewTimeEnd(null)
                   setSelectedWorker(null)
                 }}
+                isFetchToBlock
               />
             </ButtonItemStyle>
           </>
@@ -899,6 +906,7 @@ const CalendarWorkerReserwatinEvent = ({
                         }
                         customColorButton={Colors(siteProps).successColorDark}
                         customColorIcon={Colors(siteProps).successColor}
+                        isFetchToBlock
                       />
                     </ButtonStylePhone>
                   )}
@@ -1024,6 +1032,7 @@ const CalendarWorkerReserwatinEvent = ({
                           )
                           setConfirmCancelReserwation(false)
                         }}
+                        isFetchToBlock
                       />
                     </ButtonItemStyle>
                   </ButtonItemStyleCancelReserwation>

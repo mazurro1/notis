@@ -431,6 +431,7 @@ const CalendarWorkerReserwatinNewEvent = ({
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleAddNewNoConstHour}
+            isFetchToBlock
           />
         </ButtonItemStyle>
       </>
@@ -457,6 +458,7 @@ const CalendarWorkerReserwatinNewEvent = ({
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleDeleteNoConstHours}
+            isFetchToBlock
           />
         </ButtonItemStyle>
         <ButtonItemStyle>
@@ -470,6 +472,7 @@ const CalendarWorkerReserwatinNewEvent = ({
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleAddNewNoConstHour}
             disabled={disabledEditButton}
+            isFetchToBlock
           />
         </ButtonItemStyle>
       </>
@@ -553,7 +556,6 @@ const CalendarWorkerReserwatinNewEvent = ({
             popupEnable={openDateStart}
             handleClose={handleOpenDateStartTimePicker}
             noContent
-            // calendar
           >
             <WidthTimePicker>
               <TimePickerContent
@@ -567,7 +569,6 @@ const CalendarWorkerReserwatinNewEvent = ({
             popupEnable={openDateEnd}
             handleClose={handleOpenDateEndTimePicker}
             noContent
-            // calendar
           >
             <WidthTimePicker>
               <TimePickerContent

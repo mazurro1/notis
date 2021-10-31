@@ -288,6 +288,7 @@ const ShopStoreContent = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={!disabledButtonSave}
+                  isFetchToBlock
                 />
               </MarginButton>
             </ButtonEditPosition>

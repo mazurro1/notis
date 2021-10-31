@@ -126,6 +126,7 @@ const MapsEditComponent = ({
               secondColors
               onClick={handleClickEdit}
               disabled={disabledEditButtons}
+              isFetchToBlock
             />
           </div>
         </ButtonEditPosition>
@@ -165,6 +166,7 @@ const MapsEditComponent = ({
             fontIconSize="18"
             fontSize="14"
             icon={<FaMapMarkerAlt />}
+            isFetchToBlock
           />
         </a>
         <ButtonTextPositionMap>
@@ -191,6 +193,7 @@ const MapsEditComponent = ({
               customColorIcon={Colors(siteProps).successColor}
               onClick={handleSaveMap}
               disabled={!disabledButtonSave}
+              isFetchToBlock
             />
           </MarginButton>
         </ButtonTextPositionMap>

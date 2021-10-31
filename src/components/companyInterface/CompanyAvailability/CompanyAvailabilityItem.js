@@ -171,6 +171,7 @@ const CompanyAvailabilityItem = ({
                 onClick={handleDeleteItem}
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
+                isFetchToBlock
               />
             </ButtonMargin>
           </ButtonsAddPosition>

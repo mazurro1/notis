@@ -239,6 +239,7 @@ const StampsContentItemEdit = ({
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
                 disabled={!disabledSave}
+                isFetchToBlock
               />
             </div>
           ) : (
@@ -252,6 +253,7 @@ const StampsContentItemEdit = ({
               customColorIcon={Colors(siteProps).successColor}
               onClick={handleSaveEditedStamp}
               disabled={!disabledSave}
+              isFetchToBlock
             />
           )}
         </MarginButton>

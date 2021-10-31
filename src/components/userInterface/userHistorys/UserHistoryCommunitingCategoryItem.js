@@ -627,6 +627,7 @@ const UserHistoryCommunitingCategoryItem = ({
                   customColorButton={Colors(siteProps).dangerColorDark}
                   customColorIcon={Colors(siteProps).dangerColor}
                   onClick={handleCancelCommunity}
+                  isFetchToBlock
                 />
               </ButtonMargin>
             </PositionButtonsCancel>
@@ -680,6 +681,7 @@ const UserHistoryCommunitingCategoryItem = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={opinionText.length < 2}
+                  isFetchToBlock
                 />
               </ButtonMargin>
             </ButtonsAddPositionOpinion>
@@ -726,6 +728,7 @@ const UserHistoryCommunitingCategoryItem = ({
                     editedOpinionText.length < 2 ||
                     editedOpinionText === opinionMessageValid
                   }
+                  isFetchToBlock
                 />
               </ButtonMargin>
             </ButtonsAddPositionOpinion>

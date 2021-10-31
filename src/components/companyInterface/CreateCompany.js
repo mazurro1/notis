@@ -255,6 +255,7 @@ const CreateCompany = ({ user, siteProps }) => {
               !userVeryfiedEmail
             }
             fontSize="16"
+            isFetchToBlock
           />
         </div>
       </ButtonLoginRegister>

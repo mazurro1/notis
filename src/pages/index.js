@@ -259,6 +259,7 @@ const Home = () => {
                 fontSize="14"
                 icon={<MdFilterList />}
                 onClick={() => dispatch(changeFilterVisible())}
+                isFetchToBlock
               />
             </ButtonMargin>
             <ButtonMargin>
@@ -288,6 +289,7 @@ const Home = () => {
                 fontSize="14"
                 icon={<MdLocationOn />}
                 onClick={() => dispatch(changeLocaliaztionVisible())}
+                isFetchToBlock
               />
             </ButtonMargin>
             <ButtonMargin>

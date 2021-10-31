@@ -197,6 +197,7 @@ const UserFavouritesItem = ({
               onClick={handleDeleteFromFav}
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsAddPosition>

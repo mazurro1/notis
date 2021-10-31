@@ -1001,6 +1001,7 @@ const OpinionAndAdressContent = ({
                           customColorButton={Colors(siteProps).successColorDark}
                           customColorIcon={Colors(siteProps).successColor}
                           disabled={!disabledButtonSubmit || !premiumActive}
+                          isFetchToBlock
                         />
                       </div>
                     </ButtonMargin>
@@ -1036,6 +1037,7 @@ const OpinionAndAdressContent = ({
                       customColorButton={Colors(siteProps).dangerColorDark}
                       customColorIcon={Colors(siteProps).dangerColor}
                       onClick={handleConfirmDeleteCompany}
+                      isFetchToBlock
                     />
                   </ButtonMargin>
                 </ButtonPosition>

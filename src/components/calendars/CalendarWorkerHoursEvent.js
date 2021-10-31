@@ -460,6 +460,7 @@ const CalendarWorkerReserwatinEvent = ({
                       "noFinished"
                     )
                   }}
+                  isFetchToBlock
                 />
               </ButtonItemStyle>
             ) : (
@@ -494,6 +495,7 @@ const CalendarWorkerReserwatinEvent = ({
                   handleClosePopupEventItem()
                   handleChangeReserwationStatus(selectedEvent._id, "finished")
                 }}
+                isFetchToBlock
               />
             </ButtonItemStyle>
           )
@@ -547,6 +549,7 @@ const CalendarWorkerReserwatinEvent = ({
                   setNewTimeStart(null)
                   setNewTimeEnd(null)
                 }}
+                isFetchToBlock
               />
             </ButtonItemStyle>
           </>
@@ -676,6 +679,7 @@ const CalendarWorkerReserwatinEvent = ({
                           )
                           setConfirmCancelReserwation(false)
                         }}
+                        isFetchToBlock
                       />
                     </ButtonItemStyle>
                   </ButtonItemStyleCancelReserwation>

@@ -559,6 +559,7 @@ const AllCategoryOfServices = ({
                       customColorIcon={Colors(siteProps).successColor}
                       disabled={disabledAddCategoryButton}
                       onClick={handleAddCategory}
+                      isFetchToBlock
                     />
                   </ButtonMargin>
                 </ButtonsAddPosition>
@@ -625,6 +626,7 @@ const AllCategoryOfServices = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={!isAnyChanges}
+                  isFetchToBlock
                 />
               </MarginButtonLeft>
             </>

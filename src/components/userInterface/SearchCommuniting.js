@@ -195,6 +195,7 @@ const SearchCommuniting = ({ communitingId = null, siteProps }) => {
               fontSize="14"
               icon={<FaChrome />}
               onClick={handleClickCompany}
+              isFetchToBlock
             />
           </MarginButtonCompany>
         </ButtonInline>
@@ -281,6 +282,7 @@ const SearchCommuniting = ({ communitingId = null, siteProps }) => {
                 icon={<MdSearch />}
                 onClick={handleSearchCommuniting}
                 disabled={disabledSwitch || !!!commmunitingIdInput}
+                isFetchToBlock
               />
             </ButtonWidth>
           </PositionButton>

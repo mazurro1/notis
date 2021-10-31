@@ -101,6 +101,7 @@ const ConstTimeWorkTimeAutoSave = ({
                 onClick={() => handleSaveConstTimeWork(itemWorker._id)}
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
+                isFetchToBlock
               />
             </ButtonDeleteStyle>
           </ButtonContent>

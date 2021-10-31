@@ -290,6 +290,7 @@ const CompanyServiceDataItem = ({
                     : Colors(siteProps).primaryColor
                 }
                 disabled={!workerHasAccessClientsOpinions}
+                isFetchToBlock
               />
             </div>
           </ButtonMarginLeftNone>
@@ -341,6 +342,7 @@ const CompanyServiceDataItem = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleClickDelete}
+              isFetchToBlock
             />
           </ButtonMargin>
         </RightContent>
@@ -376,6 +378,7 @@ const CompanyServiceDataItem = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleConfirmDeleteItem}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsDeletePosition>

@@ -220,6 +220,7 @@ export const CompanyChangeNumberPhone = ({
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             disabled={!disabledNewPhone}
+            isFetchToBlock
           />
         </MarginButtonsSubmit>
       </ButtonsImagePosition>

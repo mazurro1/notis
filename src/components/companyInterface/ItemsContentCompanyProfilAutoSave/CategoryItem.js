@@ -434,6 +434,7 @@ const CategoryItem = ({
                     customColorButton={Colors(siteProps).dangerColorDark}
                     customColorIcon={Colors(siteProps).dangerColor}
                     onClick={handleDeleteCategory}
+                    isFetchToBlock
                   />
                 </ButtonMargin>
               </ButtonsDeletePosition>
@@ -483,6 +484,7 @@ const CategoryItem = ({
                       disabled={
                         disabledCategorySave || categoryTitle.length < 3
                       }
+                      isFetchToBlock
                     />
                   </ButtonMarginSubmit>
                 </ButtonsAddPosition>
@@ -595,6 +597,7 @@ const CategoryItem = ({
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
                       disabled={!disabledAddItemCategory}
+                      isFetchToBlock
                     />
                   </ButtonMarginSubmit>
                 </ButtonsAddPosition>

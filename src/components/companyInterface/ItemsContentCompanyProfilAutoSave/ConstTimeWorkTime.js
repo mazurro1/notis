@@ -83,6 +83,7 @@ const ConstTimeWorkTime = ({
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             disabled={toSaveWorkerHours.length === 0}
+            isFetchToBlock
           />
         </ButtonDeleteStyle>
       </ButtonContent>

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
-import { useSelector } from "react-redux"
 import PropTypes from "prop-types"
 import * as styled from "./ButtonIconStyle"
+import { disableFetchactions } from "@state/actions"
+import { useDispatch, useSelector } from "react-redux"
 
 const ButtonIcon = ({
   fontIconSize = "25",
@@ -16,6 +17,8 @@ const ButtonIcon = ({
   customColorButton = null,
   customColorIcon = null,
   id = "",
+  isFetchToBlock = false,
+  isActive = false,
 }) => {
   const [mouseOn, setMouseOn] = useState(false)
   const [mouseClick, setMouseClick] = useState(false)
@@ -23,6 +26,9 @@ const ButtonIcon = ({
   const refButton = useRef(null)
   const timerToClearSomewhere = useRef(null)
   const siteProps = useSelector(state => state.siteProps)
+  const disableFetchActions = useSelector(state => state.disableFetchActions)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (mouseClick) {
@@ -33,10 +39,10 @@ const ButtonIcon = ({
     return () => {
       clearInterval(timerToClearSomewhere.current)
     }
-  }, [mouseClick])
+  }, [mouseClick, isActive])
 
   const handleOnMouseOn = () => {
-    if (!disabled) {
+    if (!disabled && !disableFetchActions && !isActive) {
       setMouseOn(true)
       const numberScale = Math.floor(refButton.current.clientWidth / 35) * 2 + 1
       setNumberScale(numberScale)
@@ -44,16 +50,31 @@ const ButtonIcon = ({
   }
 
   const handleOnMouseLeave = () => {
-    if (!disabled) {
+    if (!disabled && !disableFetchActions && !isActive) {
       setMouseOn(false)
     }
   }
 
   const handleOnClick = e => {
     if (!disabled) {
-      setNumberScale(1)
-      setMouseClick(true)
-      onClick(e)
+      if (isFetchToBlock) {
+        if (!disableFetchActions) {
+          dispatch(disableFetchactions(true))
+          setMouseOn(false)
+          setNumberScale(1)
+          setMouseClick(true)
+          onClick(e)
+
+          setTimeout(() => {
+            dispatch(disableFetchactions(false))
+          }, 2000)
+        }
+      } else {
+        setMouseOn(false)
+        setNumberScale(1)
+        setMouseClick(true)
+        onClick(e)
+      }
     }
   }
 
@@ -61,12 +82,12 @@ const ButtonIcon = ({
   const allIcon = icon && (
     <>
       <styled.IconStyle
-        mouseOn={mouseOn}
+        mouseOn={mouseOn || isActive}
         numberScale={numberScale}
         mouseClick={mouseClick}
         secondColors={secondColors}
         buttonBgDark={buttonBgDark}
-        disabled={disabled}
+        disabled={disabled || (disableFetchActions && isFetchToBlock)}
         customColorIcon={customColorIcon}
         siteProps={siteProps}
         id="IconStyle"
@@ -88,10 +109,10 @@ const ButtonIcon = ({
       icon={!!icon}
       ref={refButton}
       mouseClick={mouseClick}
-      mouseOn={mouseOn}
+      mouseOn={mouseOn || isActive}
       secondColors={secondColors}
       buttonBgDark={buttonBgDark}
-      disabled={disabled}
+      disabled={disabled || (disableFetchActions && isFetchToBlock)}
       customColorButton={customColorButton}
       siteProps={siteProps}
     >
@@ -114,6 +135,8 @@ ButtonIcon.propTypes = {
   customColorButton: PropTypes.string,
   customColorIcon: PropTypes.string,
   id: PropTypes.string,
+  isFetchToBlock: PropTypes.bool,
+  isActive: PropTypes.bool,
 }
 
 export default ButtonIcon

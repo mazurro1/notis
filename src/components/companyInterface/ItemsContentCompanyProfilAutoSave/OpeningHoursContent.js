@@ -339,6 +339,7 @@ const OpeningHoursContent = ({
                   customColorIcon={Colors(siteProps).successColor}
                   onClick={handleSaveAllComponent}
                   disabled={disabledSaveHours}
+                  isFetchToBlock
                 />
               </MarginButton>
             </ButtonEditPosition>

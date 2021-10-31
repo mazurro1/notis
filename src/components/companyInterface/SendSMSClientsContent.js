@@ -166,6 +166,7 @@ const SendSMSClientsContent = ({ clients, siteProps, user }) => {
           !disabledNoUsersSelected
         }
         onClick={handleSendSMSToClients}
+        isFetchToBlock
       />
     </div>
   )

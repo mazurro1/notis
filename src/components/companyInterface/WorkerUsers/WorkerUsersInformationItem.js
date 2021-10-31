@@ -767,6 +767,7 @@ const WorkerUsersInformationItem = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={newMessage.length < 2}
+                  isFetchToBlock
                 />
               </ButtonMarginSubmit>
             </ButtonsAddPosition>
@@ -801,6 +802,7 @@ const WorkerUsersInformationItem = ({
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleConfirmBlockUser}
+                isFetchToBlock
               />
             </ButtonMargin>
           </ButtonsAddPosition>
@@ -828,6 +830,7 @@ const WorkerUsersInformationItem = ({
                   onClick={handleFetchPhoneNumber}
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
+                  isFetchToBlock
                 />
               </ButtonStylePhone>
             )}

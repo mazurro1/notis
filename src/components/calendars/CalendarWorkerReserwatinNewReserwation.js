@@ -595,6 +595,7 @@ const CalendarWorkerReserwatinNewReserwation = ({
           customColorButton={Colors(siteProps).successColorDark}
           customColorIcon={Colors(siteProps).successColor}
           disabled={!!!selectedService || !!!selectedWorker}
+          isFetchToBlock
         />
       </ButtonItemStyleButton>
     )

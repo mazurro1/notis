@@ -944,6 +944,7 @@ const Reserwation = ({
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={!disabledReserwButton}
+              isFetchToBlock
             />
           </PositionButtonReserwation>
         </>

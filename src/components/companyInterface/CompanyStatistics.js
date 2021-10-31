@@ -262,6 +262,7 @@ const CompanyStatistics = ({ siteProps, user }) => {
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             disabled={disabledSwitch}
+            isFetchToBlock
           />
         </MarginSelect>
       </ButtonsPosition>

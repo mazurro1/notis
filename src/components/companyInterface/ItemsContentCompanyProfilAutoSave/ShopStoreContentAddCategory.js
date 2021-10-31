@@ -108,6 +108,7 @@ const ShopStoreContentAddCategory = ({
                 customColorIcon={Colors(siteProps).successColor}
                 disabled={newCategoryName.length <= 2}
                 onClick={handleAddNewCategory}
+                isFetchToBlock
               />
             </ButtonMargin>
           </ButtonsAddPosition>

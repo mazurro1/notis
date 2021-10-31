@@ -117,6 +117,7 @@ const UserProfilEditPhoneEmail = ({
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             disabled={disabledSave || password.length < 5 || !!!velueInput}
+            isFetchToBlock
           />
         </MarginButtonsSubmit>
       </ButtonsImagePosition>

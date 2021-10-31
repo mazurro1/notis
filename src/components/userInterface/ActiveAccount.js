@@ -121,6 +121,7 @@ const ActiveAccount = ({ user, siteProps }) => {
             fontSize="16"
             icon={<MdEmail />}
             onClick={handleSentAgain}
+            isFetchToBlock
           />
         </MarginBottom>
         <MarginBottom>
@@ -135,6 +136,7 @@ const ActiveAccount = ({ user, siteProps }) => {
               disabled={activeCode.length === 0}
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
+              isFetchToBlock
             />
           </div>
         </MarginBottom>

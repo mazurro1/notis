@@ -189,6 +189,7 @@ const CompanyNipContent = ({
                   customColorButton={Colors(siteProps).secondDarkColor}
                   customColorIcon={Colors(siteProps).secondColor}
                   onClick={handleUpdateCompanyInfo}
+                  isFetchToBlock
                 />
               </ButtonPositionUpdate>
               <ButtonPosition>
@@ -217,6 +218,7 @@ const CompanyNipContent = ({
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
                       disabled={!disabledButtonSave}
+                      isFetchToBlock
                     />
                   </ButtonMargin>
                 </ButtonSubmit>

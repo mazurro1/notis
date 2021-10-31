@@ -560,6 +560,7 @@ const GoogleMapsMainSearchItem = ({
                               uppercase
                               fontIconSize="20"
                               icon={<FaCalendarAlt />}
+                              isFetchToBlock
                             />
                           }
                         />

@@ -164,6 +164,7 @@ const CompanyLinkContent = ({
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
                       disabled={!disabledButtonSave}
+                      isFetchToBlock
                     />
                   </ButtonMargin>
                 </ButtonSubmit>

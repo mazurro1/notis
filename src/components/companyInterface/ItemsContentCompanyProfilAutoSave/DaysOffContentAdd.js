@@ -114,6 +114,7 @@ const DaysOffContentAdd = ({
               customColorIcon={Colors(siteProps).successColor}
               onClick={handleAddDayOff}
               disabled={!!!calendarDayOffDate}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsDeletePosition>

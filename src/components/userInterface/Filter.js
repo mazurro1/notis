@@ -105,6 +105,7 @@ const Filter = ({ handleClose, siteProps }) => {
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleChangeSearch}
+            isFetchToBlock
           />
         </ButtonsMargin>
       </ButtonsPosition>

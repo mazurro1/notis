@@ -262,6 +262,7 @@ const ActiveCompany = ({
             icon={smsToConfirm ? <MdPhone /> : <MdEmail />}
             onClick={handleSentAgain}
             disabled={isBlockUserSendVerifiedPhoneSms}
+            isFetchToBlock
           />
         </MarginBottom>
         <MarginBottom>
@@ -278,6 +279,7 @@ const ActiveCompany = ({
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleToConfirmDelete}
+            isFetchToBlock
           />
         </MarginBottom>
         <MarginBottom>
@@ -292,6 +294,7 @@ const ActiveCompany = ({
               disabled={activeCode.length === 0}
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
+              isFetchToBlock
             />
           </div>
         </MarginBottom>
@@ -328,6 +331,7 @@ const ActiveCompany = ({
                   ? handleConfirmDeleteCompany
                   : handleConfirmDeleteCompanyDelete
               }
+              isFetchToBlock
             />
           </MarginButtons>
         </SaveUserButtons>

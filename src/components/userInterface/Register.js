@@ -176,6 +176,7 @@ const RegisterContent = () => {
             icon={<FaUserPlus />}
             disabled={!validButtonRegistration}
             fontSize="16"
+            isFetchToBlock
           />
         </div>
       </ButtonLoginRegister>

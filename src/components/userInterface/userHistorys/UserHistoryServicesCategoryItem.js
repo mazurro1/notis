@@ -420,6 +420,7 @@ const UserHistoryServicesCategoryItem = ({
                 fontSize="14"
                 icon={<FaChrome />}
                 onClick={handleClickCompany}
+                isFetchToBlock
               />
             </MarginButtonCompany>
           </ButtonInline>
@@ -585,6 +586,7 @@ const UserHistoryServicesCategoryItem = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={opinionText.length < 2}
+                  isFetchToBlock
                 />
               </ButtonMargin>
             </ButtonsAddPositionOpinion>
@@ -631,6 +633,7 @@ const UserHistoryServicesCategoryItem = ({
                     editedOpinionText.length < 2 ||
                     editedOpinionText === opinionMessageValid
                   }
+                  isFetchToBlock
                 />
               </ButtonMargin>
             </ButtonsAddPositionOpinion>

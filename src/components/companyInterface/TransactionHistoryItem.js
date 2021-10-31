@@ -201,6 +201,7 @@ const TransactionHistoryItem = ({
                   onClick={() => handleCheckout(item.sessionId)}
                   customColorButton={Colors(siteProps).dangerColorDark}
                   customColorIcon={Colors(siteProps).dangerColor}
+                  isFetchToBlock
                 />
               </ButtonPayPosition>
             )}
@@ -215,6 +216,7 @@ const TransactionHistoryItem = ({
                   onClick={() => handleSendInvoiceToEmail(invoiceId)}
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
+                  isFetchToBlock
                 />
               </ButtonPayPosition>
             )}

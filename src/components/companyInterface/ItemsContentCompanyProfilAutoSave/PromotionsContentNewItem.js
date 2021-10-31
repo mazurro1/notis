@@ -333,6 +333,7 @@ const PromotionsContentNewItem = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={!disabledSave}
+                  isFetchToBlock
                 />
               </div>
             ) : (
@@ -346,6 +347,7 @@ const PromotionsContentNewItem = ({
                 customColorIcon={Colors(siteProps).successColor}
                 onClick={handleSaveHappyHour}
                 disabled={!disabledSave}
+                isFetchToBlock
               />
             )}
           </MarginButton>

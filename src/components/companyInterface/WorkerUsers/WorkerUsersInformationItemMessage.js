@@ -85,6 +85,7 @@ const WorkerUsersInformationItemMessage = ({
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleDeleteMessage}
+                isFetchToBlock
               />
             </ButtonMargin>
           </ButtonsDeletePosition>

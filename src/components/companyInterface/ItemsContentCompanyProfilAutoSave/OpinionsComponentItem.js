@@ -416,6 +416,7 @@ const OpinionsComponentItem = ({
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
                 disabled={disabledSaveOpinion}
+                isFetchToBlock
               />
             </ButtonMargin>
           </ButtonsAddPositionOpinion>

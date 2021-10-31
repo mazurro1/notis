@@ -178,6 +178,7 @@ const SearchService = ({ serviceId = null, siteProps }) => {
               fontSize="14"
               icon={<FaChrome />}
               onClick={handleClickCompany}
+              isFetchToBlock
             />
           </MarginButtonCompany>
         </ButtonInline>
@@ -260,6 +261,7 @@ const SearchService = ({ serviceId = null, siteProps }) => {
                 icon={<MdSearch />}
                 onClick={handleSearchService}
                 disabled={disabledSwitch || !!!serviceIdInput}
+                isFetchToBlock
               />
             </ButtonWidth>
           </PositionButton>

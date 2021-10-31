@@ -155,6 +155,7 @@ const LoginContent = () => {
               fontSize="16"
               icon={<FaUser />}
               disabled={!validButtonLogin}
+              isFetchToBlock
             />
           </div>
         </ButtonLoginRegister>
@@ -171,6 +172,7 @@ const LoginContent = () => {
               fontSize="16"
               icon={<FaFacebookF />}
               onClick={handleClickLogin}
+              isFetchToBlock
             />
           </ButtonFacebook>
         </a>
@@ -186,6 +188,7 @@ const LoginContent = () => {
               fontSize="16"
               icon={<FaGoogle />}
               onClick={handleClickLogin}
+              isFetchToBlock
             />
           </ButtonFacebook>
         </a>

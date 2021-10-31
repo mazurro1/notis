@@ -193,6 +193,7 @@ const GalleryContentItem = ({
             onClick={() =>
               handleClickDeleteImage(item.originalPath, item.isNew)
             }
+            isFetchToBlock
           />
         </MarginButton>
       </Popup>

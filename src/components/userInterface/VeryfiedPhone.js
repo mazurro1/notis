@@ -196,6 +196,7 @@ const VeryfiedPhone = ({
             icon={isEmailVerified ? <MdEmail /> : <MdPhone />}
             onClick={handleSentAgain}
             disabled={isBlockUserSendVerifiedPhoneSms}
+            isFetchToBlock
           />
         </MarginButtons>
         <MarginButtons>
@@ -225,6 +226,7 @@ const VeryfiedPhone = ({
             customColorIcon={Colors(siteProps).successColor}
             disabled={!demoCompleted}
             onClick={handleVeryfiedPhone}
+            isFetchToBlock
           />
         </MarginButtons>
       </ButtonsPosition>

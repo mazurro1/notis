@@ -6,6 +6,7 @@ import { Site } from "@common/Site"
 // USER ACTIONS
 // USER ACTIONS
 // USER ACTIONS
+export const DISABLE_FETCH_ACTIONS = "DISABLE_FETCH_ACTIONS"
 export const VISIBLE_NAV_INDUSTRIES = "VISIBLE_NAV_INDUSTRIES"
 export const HEIGHT_NAV_INDUSTRIES = "HEIGHT_NAV_INDUSTRIES"
 export const CHANGE_ACCTIVE_ACCOUNT = "CHANGE_ACCTIVE_ACCOUNT"
@@ -51,6 +52,13 @@ export const RESET_USER_MENU = "RESET_USER_MENU"
 export const RESET_USER_HISTORY_SERVICES = "RESET_USER_HISTORY_SERVICES"
 export const UPDATE_DOWNLOADED_COMMUNITING = "UPDATE_DOWNLOADED_COMMUNITING"
 export const UPDATE_DOWNLOADED_SERVICE = "UPDATE_DOWNLOADED_SERVICE"
+
+export const disableFetchactions = data => {
+  return {
+    type: DISABLE_FETCH_ACTIONS,
+    data: data,
+  }
+}
 
 export const updateDownloadService = service => {
   return {

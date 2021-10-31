@@ -445,6 +445,7 @@ const PlacesItem = ({ item, filters, index, user }) => {
                     uppercase
                     fontIconSize="20"
                     icon={<FaCalendarAlt />}
+                    isFetchToBlock
                   />
                 }
               />

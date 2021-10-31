@@ -229,6 +229,7 @@ const OpinionsComponent = ({
                 fontSize="16"
                 icon={<MdComment />}
                 onClick={handleLoadMoreOpinions}
+                isFetchToBlock
               />
             </ButtonMoreOpinion>
           )}
@@ -270,6 +271,7 @@ const OpinionsComponent = ({
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleConfirmReport}
               disabled={!!!selectedReport}
+              isFetchToBlock
             />
           </div>
         </Popup>

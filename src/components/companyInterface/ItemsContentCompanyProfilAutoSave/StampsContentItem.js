@@ -310,6 +310,7 @@ const StampsContentItem = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleDeleteItem}
+              isFetchToBlock
             />
           </MarginButton>
         </BackgroundDeleteConfirm>

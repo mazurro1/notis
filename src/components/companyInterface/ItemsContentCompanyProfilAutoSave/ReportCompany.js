@@ -137,6 +137,7 @@ const ReportCompany = ({
             customColorIcon={Colors(siteProps).dangerColor}
             onClick={handleConfirmReport}
             disabled={!!!selectedReport || !!!user}
+            isFetchToBlock
           />
         </div>
       </Popup>

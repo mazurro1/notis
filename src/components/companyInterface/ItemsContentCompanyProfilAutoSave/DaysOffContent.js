@@ -274,6 +274,7 @@ const DaysOffContent = ({
                     customColorButton={Colors(siteProps).successColorDark}
                     customColorIcon={Colors(siteProps).successColor}
                     onClick={handleSaveDayOff}
+                    isFetchToBlock
                   />
                 </MarginButton>
               </ButtonEditPosition>

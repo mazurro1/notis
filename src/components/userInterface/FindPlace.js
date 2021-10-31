@@ -91,6 +91,7 @@ const FindPlaceContent = ({ handleClose, selectedName, siteProps }) => {
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleConfirm}
+            isFetchToBlock
           />
         </ButtonsMargin>
       </ButtonsPosition>

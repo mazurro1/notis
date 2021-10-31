@@ -3,6 +3,7 @@ import { applyMiddleware } from "redux"
 import thunk from "redux-thunk"
 
 import {
+  DISABLE_FETCH_ACTIONS,
   CHANGE_ACCTIVE_ACCOUNT,
   CHANGE_SORT_VISIBLE,
   CHANGE_FILTER_VISIBLE,
@@ -190,6 +191,7 @@ import {
 } from "./actions"
 
 const initialState = {
+  disableFetchActions: false,
   siteProps: {
     blind: false,
     dark: false,
@@ -311,6 +313,13 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case DISABLE_FETCH_ACTIONS: {
+      return {
+        ...state,
+        disableFetchActions: action.data,
+      }
+    }
+
     case UPDATE_DOWNLOADED_SERVICE: {
       return {
         ...state,

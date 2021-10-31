@@ -73,6 +73,7 @@ const YourCompany = () => {
           secondColors
           onClick={handleCreateCompany}
           disabled={!!!user.phoneVerified || !!!user.emailVerified}
+          isFetchToBlock
         />
       </div>
     </>

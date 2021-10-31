@@ -183,7 +183,7 @@ const CalendarEventItemClicked = ({
     }
   }, [dateStart, dateEnd, selectedEvent])
 
-  const handleChangeCheckbox = setChange => {
+  const handleChangeCheckbox = () => {
     setIsHolidays(prevState => !prevState)
   }
 
@@ -268,6 +268,7 @@ const CalendarEventItemClicked = ({
           customColorButton={Colors(siteProps).successColorDark}
           customColorIcon={Colors(siteProps).successColor}
           onClick={handleClickSaveItem}
+          isFetchToBlock
         />
       </ButtonItemStyle>
     ) : (
@@ -285,6 +286,7 @@ const CalendarEventItemClicked = ({
               handleClosePopupEventItem()
               handleDeleteNoConstTimeworkToSave(selectedEvent)
             }}
+            isFetchToBlock
           />
         </ButtonItemStyle>
       </>

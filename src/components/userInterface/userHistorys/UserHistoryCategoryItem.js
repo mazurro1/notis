@@ -804,6 +804,7 @@ const UserHistoryCategoryItem = ({
                     onClick={handleToDeleteReserwation}
                     customColorButton={Colors(siteProps).dangerColorDark}
                     customColorIcon={Colors(siteProps).dangerColor}
+                    isFetchToBlock
                   />
                 </ButtonMargin>
               </ButtonsAddPosition>
@@ -863,6 +864,7 @@ const UserHistoryCategoryItem = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={opinionText.length < 2}
+                  isFetchToBlock
                 />
               </ButtonMargin>
             </ButtonsAddPositionOpinion>
@@ -924,6 +926,7 @@ const UserHistoryCategoryItem = ({
                       editedOpinionText.length < 2 ||
                       editedOpinionText === item.opinionId.opinionMessage
                     }
+                    isFetchToBlock
                   />
                 </ButtonMargin>
               </ButtonsAddPositionOpinion>

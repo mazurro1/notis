@@ -321,6 +321,7 @@ const CompanyCommunitingDataItem = ({
                     : Colors(siteProps).primaryColor
                 }
                 disabled={!workerHasAccessClientsOpinions}
+                isFetchToBlock
               />
             </div>
           </ButtonMarginLeftNone>
@@ -380,6 +381,7 @@ const CompanyCommunitingDataItem = ({
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleClickDelete}
               disabled={!dateIsNoOld}
+              isFetchToBlock
             />
           </ButtonMargin>
         )}
@@ -413,6 +415,7 @@ const CompanyCommunitingDataItem = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleConfirmDeleteItem}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsDeletePosition>

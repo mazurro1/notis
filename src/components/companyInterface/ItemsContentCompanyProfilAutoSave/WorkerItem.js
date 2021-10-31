@@ -658,6 +658,7 @@ const WorkerItem = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={disabledButtonSaveWorkerProps}
+                  isFetchToBlock
                 />
               </ButtonStyles>
             </ButtonContentEdit>

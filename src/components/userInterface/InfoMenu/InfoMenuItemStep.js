@@ -102,6 +102,7 @@ const InfoMenuItemStep = ({
             customColorButton={Colors(siteProps).primaryColorDark}
             customColorIcon={Colors(siteProps).primaryColor}
             onClick={handleClickShowContentHelp}
+            isFetchToBlock
           />
         }
       />

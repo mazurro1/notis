@@ -864,6 +864,7 @@ const UserProfil = ({
               customColorIcon={Colors(siteProps).successColor}
               onClick={handleUploadImage}
               disabled={disabledButtonSaveImage}
+              isFetchToBlock
             />
           </MarginButtons>
         </ButtonsImagePosition>
@@ -897,6 +898,7 @@ const UserProfil = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleShowComponentDelete}
+              isFetchToBlock
             />
           </MarginButtons>
         </ButtonsImagePosition>
@@ -1054,6 +1056,7 @@ const UserProfil = ({
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
                 disabled={!disabledNewPassword}
+                isFetchToBlock
               />
             </MarginButtonsSubmit>
           </ButtonsImagePosition>
@@ -1110,6 +1113,7 @@ const UserProfil = ({
               customColorIcon={Colors(siteProps).successColor}
               disabled={disabledButtonSaveDefaultCompany}
               onClick={handleSaveDefaultCompany}
+              isFetchToBlock
             />
           </MarginButtonsSubmit>
         </ButtonsImagePosition>

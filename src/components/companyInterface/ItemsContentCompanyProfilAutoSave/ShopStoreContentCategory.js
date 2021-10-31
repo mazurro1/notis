@@ -463,6 +463,7 @@ const ShopStoreContentCategory = ({
                     customColorButton={Colors(siteProps).dangerColorDark}
                     customColorIcon={Colors(siteProps).dangerColor}
                     onClick={handleDeleteCategory}
+                    isFetchToBlock
                   />
                 </ButtonMargin>
               </ButtonsDeletePosition>
@@ -514,6 +515,7 @@ const ShopStoreContentCategory = ({
                         categoryTitle.length <= 2 ||
                         categoryTitle === category.category
                       }
+                      isFetchToBlock
                     />
                   </ButtonMarginSubmit>
                 </ButtonsAddPosition>

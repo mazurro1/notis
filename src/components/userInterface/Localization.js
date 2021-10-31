@@ -170,6 +170,7 @@ const Localization = ({ handleClose, siteProps }) => {
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleChangeSearchLocalization}
             disabled={localizationText.length < 3}
+            isFetchToBlock
           />
         </ButtonsMargin>
       </ButtonsPosition>

@@ -288,6 +288,7 @@ const CalendarWorkerReserwatinNewEvent = ({
           customColorButton={Colors(siteProps).successColorDark}
           customColorIcon={Colors(siteProps).successColor}
           onClick={handleAddReserwationWorkerComponent}
+          isFetchToBlock
         />
       </ButtonItemStyle>
     )

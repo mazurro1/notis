@@ -217,6 +217,7 @@ const CompanyServiceDataItemEdit = ({
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={!validSave}
+              isFetchToBlock
             />
           </StyleButtonAddSubmit>
         </ButtonsPosition>

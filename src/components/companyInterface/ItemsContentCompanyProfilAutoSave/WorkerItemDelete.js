@@ -66,6 +66,7 @@ const WorkerItemDelete = ({
             customColorButton={Colors(siteProps).dangerColorDark}
             customColorIcon={Colors(siteProps).dangerColor}
             disabled={passwordInput.length < 5}
+            isFetchToBlock
           />
         </ButtonDeleteStyle>
       </ButtonContent>

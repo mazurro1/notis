@@ -128,6 +128,7 @@ const DeleteAccount = ({
             fontSize="16"
             icon={<MdEmail />}
             onClick={handleSentAgain}
+            isFetchToBlock
           />
         </MarginButtons>
         <MarginButtons>
@@ -153,6 +154,7 @@ const DeleteAccount = ({
             customColorIcon={Colors(siteProps).dangerColor}
             disabled={!demoCompleted}
             onClick={handleDeleteACcount}
+            isFetchToBlock
           />
         </MarginButtons>
       </ButtonsPosition>

@@ -141,6 +141,7 @@ const ColumnItemTextarea = ({
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
                       disabled={disabledSave}
+                      isFetchToBlock
                     />
                   </ButtonMargin>
                 </ButtonSubmit>

@@ -504,6 +504,7 @@ const CompanyCommunitingAdd = ({
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={!validSave}
+              isFetchToBlock
             />
           </StyleButtonAddSubmit>
         </PositionSelectAll>

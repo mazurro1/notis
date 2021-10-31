@@ -403,6 +403,7 @@ const ServicesItem = ({
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleClickDelete}
+                isFetchToBlock
               />
             </ButtonMargin>
           </>
@@ -429,6 +430,7 @@ const ServicesItem = ({
                   !userPhoneVeryfied ||
                   !userEmailVeryfied
                 }
+                isFetchToBlock
               />
             </WidthButtonRezerv>
           </>
@@ -543,6 +545,7 @@ const ServicesItem = ({
                 customColorButton={Colors(siteProps).successColorDark}
                 customColorIcon={Colors(siteProps).successColor}
                 disabled={disabledSaveButton}
+                isFetchToBlock
               />
             </ButtonMarginSubmit>
           </ButtonsAddPosition>
@@ -578,6 +581,7 @@ const ServicesItem = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleConfirmDeleteItem}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsDeletePosition>

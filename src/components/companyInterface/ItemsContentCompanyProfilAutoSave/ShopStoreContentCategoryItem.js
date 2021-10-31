@@ -218,6 +218,7 @@ const ShopStoreContentCategoryItem = ({
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleClickDelete}
+                isFetchToBlock
               />
             </ButtonMargin>
           </>
@@ -269,6 +270,7 @@ const ShopStoreContentCategoryItem = ({
               customColorButton={Colors(siteProps).dangerColorDark}
               customColorIcon={Colors(siteProps).dangerColor}
               onClick={handleConfirmDeleteItem}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsDeletePosition>

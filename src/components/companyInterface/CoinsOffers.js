@@ -360,6 +360,7 @@ const CoinsOffers = ({ siteProps, user, handleClose }) => {
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={selectedCoins.length === 0}
+              isFetchToBlock
             />
           </MarginButtonSubmit>
         </ButtonsPosition>

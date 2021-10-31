@@ -303,29 +303,8 @@ const ContentWorkersAdmin = styled.div`
   }
 `
 
-const WorkerItemStyle = styled.div`
-  background-color: ${props =>
-    props.active
-      ? Colors(props.siteProps).primaryColor
-      : Colors(props.siteProps).primaryColorDark};
-  color: ${props => Colors(props.siteProps).textNormalWhite};
-  margin-right: 10px;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 1rem;
-  transition-property: transform, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  @media all and (max-width: 767px) {
-    font-size: 0.8rem;
-  }
+const ButtonMargin = styled.div`
+  margin: 5px;
 `
 
 const BigCalendarWorkerReserwations = ({
@@ -1139,16 +1118,18 @@ const BigCalendarWorkerReserwations = ({
         "utf-8"
       )
       return (
-        <WorkerItemStyle
-          key={indexWorker}
-          siteProps={siteProps}
-          active={userWorkerActive === worker.user._id}
-          onClick={() => handleChangeUserWorkerActive(worker.user._id)}
-        >
-          {`${userName} ${userSurname}`}
-        </WorkerItemStyle>
+        <ButtonMargin key={indexWorker}>
+          <ButtonIcon
+            siteProps={siteProps}
+            isActive={userWorkerActive === worker.user._id}
+            onClick={() => handleChangeUserWorkerActive(worker.user._id)}
+            title={`${userName} ${userSurname}`}
+            isFetchToBlock
+          />
+        </ButtonMargin>
       )
     })
+
   return (
     <>
       <BackgroundContentCalendar>
@@ -1190,11 +1171,15 @@ const BigCalendarWorkerReserwations = ({
         </ContentSelect>
         {isAdmin && (
           <ContentWorkersAdmin>
-            <WorkerItemStyle
-              siteProps={siteProps}
-              active={userWorkerActive === user.userId}
-              onClick={() => handleChangeUserWorkerActive(user.userId)}
-            >{`${user.userName} ${user.userSurname}`}</WorkerItemStyle>
+            <ButtonMargin>
+              <ButtonIcon
+                siteProps={siteProps}
+                isActive={userWorkerActive === user.userId}
+                onClick={() => handleChangeUserWorkerActive(user.userId)}
+                title={`${user.userName} ${user.userSurname}`}
+                isFetchToBlock
+              />
+            </ButtonMargin>
             {mapWorkers}
           </ContentWorkersAdmin>
         )}

@@ -1137,6 +1137,7 @@ const Navigation = props => {
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
             onClick={handleSaveUserToken}
+            isFetchToBlock
           />
         </MarginButtonSaveToken>
       </SaveUserButtons>
@@ -1396,6 +1397,7 @@ const Navigation = props => {
             fontSize="16"
             icon={<FaShoppingBag />}
             onClick={handleHistoryReserwations}
+            isFetchToBlock
           />
         </MarginButtonSaveToken>
         <MarginButtonSaveToken>
@@ -1407,6 +1409,7 @@ const Navigation = props => {
             fontSize="16"
             icon={<FaTools />}
             onClick={handleUserHistoryServices}
+            isFetchToBlock
           />
         </MarginButtonSaveToken>
         <MarginButtonSaveToken>
@@ -1418,6 +1421,7 @@ const Navigation = props => {
             fontSize="16"
             icon={<FaCar />}
             onClick={handleUserHistoryCommunitings}
+            isFetchToBlock
           />
         </MarginButtonSaveToken>
       </div>
@@ -1521,6 +1525,7 @@ const Navigation = props => {
                       customColorButton={Colors(siteProps).successColorDark}
                       customColorIcon={Colors(siteProps).successColor}
                       onClick={handleClickTransactionHistory}
+                      isFetchToBlock
                     />
                   </MarginButtonsWork>
                 </>
@@ -1538,6 +1543,7 @@ const Navigation = props => {
                   icon={<MdTimelapse />}
                   onClick={handleEmplyeeWorkingHoursVisible}
                   disabled={disabledNoPremium}
+                  isFetchToBlock
                 />
               </div>
             </MarginButtonsWork>
@@ -1553,6 +1559,7 @@ const Navigation = props => {
                   icon={<FaCalendarAlt />}
                   onClick={handleWorkerReserwations}
                   disabled={disabledNoPremium}
+                  isFetchToBlock
                 />
               </div>
             </MarginButtonsWork>
@@ -1568,6 +1575,7 @@ const Navigation = props => {
                   icon={<FaCar />}
                   onClick={handleClickCompanyCommuting}
                   disabled={disabledNoPremium}
+                  isFetchToBlock
                 />
               </div>
             </MarginButtonsWork>
@@ -1583,6 +1591,7 @@ const Navigation = props => {
                   icon={<FaTools />}
                   onClick={handleClickCompanyServices}
                   disabled={disabledNoPremium}
+                  isFetchToBlock
                 />
               </div>
             </MarginButtonsWork>
@@ -1598,6 +1607,7 @@ const Navigation = props => {
                   icon={<FaUsers />}
                   onClick={handleWorkerUsersInformation}
                   disabled={disabledNoPremium}
+                  isFetchToBlock
                 />
               </div>
             </MarginButtonsWork>
@@ -1613,6 +1623,7 @@ const Navigation = props => {
                   icon={<FaBox />}
                   onClick={handleClickAvailability}
                   disabled={disabledNoPremium}
+                  isFetchToBlock
                 />
               </div>
             </MarginButtonsWork>
@@ -1732,6 +1743,7 @@ const Navigation = props => {
           customColorIcon={Colors(siteProps).dangerColor}
           icon={<MdPowerSettingsNew />}
           onClick={handleLogout}
+          isFetchToBlock
         />
       </ButtonNavStyle>
     </>

@@ -372,7 +372,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
             {!disabledSave ? (
               <div data-tip data-for="disabledButtonSave">
                 <ButtonIcon
-                  title="zapisz"
+                  title="Zapisz"
                   uppercase
                   fontIconSize="16"
                   fontSize="14"
@@ -380,6 +380,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={!disabledSave}
+                  isFetchToBlock
                 />
               </div>
             ) : (
@@ -393,6 +394,7 @@ const HappyHoursConstContentCategoryItemEdit = ({
                 customColorIcon={Colors(siteProps).successColor}
                 onClick={handleSaveHappyHour}
                 disabled={!disabledSave}
+                isFetchToBlock
               />
             )}
           </MarginButton>

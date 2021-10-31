@@ -117,6 +117,7 @@ const CompanyAvailabilityNewItem = ({
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={!disabledSaveButton}
+              isFetchToBlock
             />
           </ButtonMargin>
         </ButtonsAddPosition>

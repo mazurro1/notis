@@ -164,6 +164,7 @@ const RemindPassword = () => {
         fontSize="16"
         icon={<MdEmail />}
         onClick={handleSentEmailReset}
+        isFetchToBlock
       />
       <ButtonLoginRegister disabled={!validButtonLogin} type="submit">
         <div data-tip data-for="alertLogin">
@@ -177,6 +178,7 @@ const RemindPassword = () => {
             onClick={handleSentResetPassword}
             customColorButton={Colors(siteProps).successColorDark}
             customColorIcon={Colors(siteProps).successColor}
+            isFetchToBlock
           />
         </div>
       </ButtonLoginRegister>
@@ -202,6 +204,7 @@ const RemindPassword = () => {
             icon={<MdEmail />}
             disabled={!emailInput.length > 0}
             onClick={handleSentEmailReset}
+            isFetchToBlock
           />
         </div>
       </ButtonMargin>

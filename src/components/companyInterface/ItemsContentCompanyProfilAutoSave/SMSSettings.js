@@ -719,6 +719,7 @@ const SMSSettings = ({
                     smsCommunitingCanceledAvaible ===
                       companySMSCommunitingCanceledAvaible
                   }
+                  isFetchToBlock
                 />
               </MarginButton>
             </ButtonEditPosition>

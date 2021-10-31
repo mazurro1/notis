@@ -392,6 +392,7 @@ const PromotionsContentItemEdit = ({
                   customColorButton={Colors(siteProps).successColorDark}
                   customColorIcon={Colors(siteProps).successColor}
                   disabled={!disabledSave}
+                  isFetchToBlock
                 />
               </div>
             ) : (
@@ -405,6 +406,7 @@ const PromotionsContentItemEdit = ({
                 customColorIcon={Colors(siteProps).successColor}
                 onClick={handleSaveHappyHour}
                 disabled={!disabledSave}
+                isFetchToBlock
               />
             )}
           </MarginButton>

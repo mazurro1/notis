@@ -127,6 +127,7 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
             fontSize="16"
             icon={<MdEmail />}
             onClick={handleSentAgain}
+            isFetchToBlock
           />
         </MarginButtons>
         <MarginButtons>
@@ -152,6 +153,7 @@ const DeleteCompanyContent = ({ siteProps, user }) => {
             customColorIcon={Colors(siteProps).dangerColor}
             disabled={!demoCompleted}
             onClick={handleDeleteCompany}
+            isFetchToBlock
           />
         </MarginButtons>
       </ButtonsPosition>

@@ -149,6 +149,7 @@ const DayOffItem = ({
                 customColorButton={Colors(siteProps).dangerColorDark}
                 customColorIcon={Colors(siteProps).dangerColor}
                 onClick={handleConfirmDeleteDay}
+                isFetchToBlock
               />
             </ButtonMargin>
           </ButtonsDeletePosition>

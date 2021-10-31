@@ -215,6 +215,7 @@ const ShopStoreContentCategoryNewItem = ({
               customColorButton={Colors(siteProps).successColorDark}
               customColorIcon={Colors(siteProps).successColor}
               disabled={disabledSaveEditedIitem}
+              isFetchToBlock
             />
           </ButtonMarginSubmit>
         </ButtonsAddPosition>
