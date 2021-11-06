@@ -10,7 +10,8 @@ import { MdEmail, MdDelete, MdClose } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
-import PinField from "react-pin-field"
+import loadable from "@loadable/component"
+const PinField = loadable(() => import("react-pin-field"))
 import { navigate } from "gatsby"
 
 const ButtonsPosition = styled.div`

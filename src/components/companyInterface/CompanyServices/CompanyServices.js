@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { AllMonths } from "@common/AllMonths"
 import { Site } from "@common/Site"
 import { useDispatch, useSelector } from "react-redux"
-import { ButtonIcon, Popup, SelectCreated } from "@ui"
+import { ButtonIcon, Popup, SelectCreated, BufferText } from "@ui"
 import { FaTools } from "react-icons/fa"
 import CompanyServicesAdd from "./CompanyServicesAdd"
 import {
@@ -251,14 +251,10 @@ const CompanyServices = ({
     })
 
     const mapCompanyWorkers = filterWorkers.map(itemWorker => {
-      const unhashedWorkerName = Buffer.from(
-        itemWorker.user.name,
-        "base64"
-      ).toString("utf-8")
-      const unhashedWorkerSurame = Buffer.from(
-        itemWorker.user.surname,
-        "base64"
-      ).toString("utf-8")
+      const unhashedWorkerName = <BufferText text={itemWorker.user.name} />
+
+      const unhashedWorkerSurame = <BufferText text={itemWorker.user.surname} />
+
       const newItem = {
         value: itemWorker.user._id,
         label: `${unhashedWorkerName} ${unhashedWorkerSurame}`,

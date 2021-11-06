@@ -8,7 +8,7 @@ import {
   MdArrowBack,
   MdReport,
 } from "react-icons/md"
-import { ButtonIcon, Popup, InputIcon } from "@ui"
+import { ButtonIcon, Popup, InputIcon, BufferText } from "@ui"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAddReplayOpinion, resetOpinionFunction } from "@state/actions"
 import ReactTooltip from "react-tooltip"
@@ -215,43 +215,35 @@ const OpinionsComponentItem = ({
 
   let userName = "Brak użytkownika"
   if (!!opinion.user) {
-    userName = Buffer.from(opinion.user.name, "base64").toString("utf-8")
+    userName = <BufferText text={opinion.user.name} />
   }
   let workerName = "Brak pracownika"
   let workerSurname = ""
 
   if (!!opinion.reserwationId) {
     if (!!opinion.reserwationId.toWorkerUserId) {
-      workerName = Buffer.from(
-        opinion.reserwationId.toWorkerUserId.name,
-        "base64"
-      ).toString("utf-8")
-      workerSurname = Buffer.from(
-        opinion.reserwationId.toWorkerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      workerName = (
+        <BufferText text={opinion.reserwationId.toWorkerUserId.name} />
+      )
+      workerSurname = (
+        <BufferText text={opinion.reserwationId.toWorkerUserId.surname} />
+      )
     }
   } else if (!!opinion.serviceId) {
     if (!!opinion.serviceId.workerUserId) {
-      workerName = Buffer.from(
-        opinion.serviceId.workerUserId.name,
-        "base64"
-      ).toString("utf-8")
-      workerSurname = Buffer.from(
-        opinion.serviceId.workerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      workerName = <BufferText text={opinion.serviceId.workerUserId.name} />
+
+      workerSurname = (
+        <BufferText text={opinion.serviceId.workerUserId.surname} />
+      )
     }
   } else if (!!opinion.communitingId) {
     if (!!opinion.communitingId.workerUserId) {
-      workerName = Buffer.from(
-        opinion.communitingId.workerUserId.name,
-        "base64"
-      ).toString("utf-8")
-      workerSurname = Buffer.from(
-        opinion.communitingId.workerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      workerName = <BufferText text={opinion.communitingId.workerUserId.name} />
+
+      workerSurname = (
+        <BufferText text={opinion.communitingId.workerUserId.surname} />
+      )
     }
   }
 

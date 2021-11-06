@@ -13,7 +13,7 @@ import {
   MdPhone,
 } from "react-icons/md"
 import { FaLock, FaLockOpen } from "react-icons/fa"
-import { ButtonIcon, Popup, InputIcon } from "@ui"
+import { ButtonIcon, Popup, InputIcon, BufferText } from "@ui"
 import sal from "sal.js"
 import {
   fetchworkerUsersMoreInformationsHistory,
@@ -526,14 +526,9 @@ const WorkerUsersInformationItem = ({
       let workerName = "Użytkownik skasował konto"
       let workerSurname = ""
       if (!!item.workerWhoWritedUserId) {
-        workerName = Buffer.from(
-          item.workerWhoWritedUserId.name,
-          "base64"
-        ).toString("utf-8")
-        workerSurname = Buffer.from(
-          item.workerWhoWritedUserId.surname,
-          "base64"
-        ).toString("utf-8")
+        workerName = <BufferText text={item.workerWhoWritedUserId.name} />
+
+        workerSurname = <BufferText text={item.workerWhoWritedUserId.surname} />
       }
       const dateMessage = new Date(item.dateMessage)
       const renderDate = `${
@@ -590,14 +585,14 @@ const WorkerUsersInformationItem = ({
             </>
           )
 
-          const workerName = Buffer.from(
-            reserwation.toWorkerUserId.name,
-            "base64"
-          ).toString("utf-8")
-          const workerSurname = Buffer.from(
-            reserwation.toWorkerUserId.surname,
-            "base64"
-          ).toString("utf-8")
+          const workerName = (
+            <BufferText text={reserwation.toWorkerUserId.name} />
+          )
+
+          const workerSurname = (
+            <BufferText text={reserwation.toWorkerUserId.surname} />
+          )
+
           const splitReserwationDate = reserwation.dateStart.split(":")
           const splitReserwationDateEnd = reserwation.dateEnd.split(":")
           const isActualReserwation = new Date(
@@ -672,10 +667,9 @@ const WorkerUsersInformationItem = ({
   let userName = "Brak użytkownika"
   let userSurname = ""
   if (!!userInfo.userId) {
-    userName = Buffer.from(userInfo.userId.name, "base64").toString("utf-8")
-    userSurname = Buffer.from(userInfo.userId.surname, "base64").toString(
-      "utf-8"
-    )
+    userName = <BufferText text={userInfo.userId.name} />
+
+    userSurname = <BufferText text={userInfo.userId.surname} />
   }
 
   return (

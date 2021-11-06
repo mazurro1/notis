@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
-import { ButtonIcon, Popup, InputIcon } from "@ui"
+import { ButtonIcon, Popup, InputIcon, BufferText } from "@ui"
 import {
   MdDelete,
   MdArrowBack,
@@ -385,15 +385,12 @@ const UserHistoryCommunitingCategoryItem = ({
   let unhashedWorkerFullName = ""
 
   if (!!item.workerUserId._id) {
-    const unhashedWorkerName = Buffer.from(
-      item.workerUserId.name,
-      "base64"
-    ).toString("utf-8")
+    const unhashedWorkerName = <BufferText text={item.workerUserId.name} />
 
-    const unhashedWorkerSurname = Buffer.from(
-      item.workerUserId.surname,
-      "base64"
-    ).toString("utf-8")
+    const unhashedWorkerSurname = (
+      <BufferText text={item.workerUserId.surname} />
+    )
+
     unhashedWorkerFullName = `${unhashedWorkerName} ${unhashedWorkerSurname}`
   }
   const splitDateEndItem = item.timeEnd.split(":")

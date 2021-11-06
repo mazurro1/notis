@@ -9,7 +9,7 @@ import {
 } from "@state/actions"
 import { navigate } from "gatsby"
 import { FaChrome } from "react-icons/fa"
-import { ButtonIcon, Popup, InputIcon } from "@ui"
+import { ButtonIcon, Popup, InputIcon, BufferText } from "@ui"
 import ReactTooltip from "react-tooltip"
 import { MdArrowBack, MdComment, MdSave, MdStar, MdEdit } from "react-icons/md"
 
@@ -357,15 +357,12 @@ const UserHistoryServicesCategoryItem = ({
 
   let unhashedWorkerFullName = ""
   if (!!item.workerUserId._id) {
-    const unhashedWorkerName = Buffer.from(
-      item.workerUserId.name,
-      "base64"
-    ).toString("utf-8")
+    const unhashedWorkerName = <BufferText text={item.workerUserId.name} />
 
-    const unhashedWorkerSurname = Buffer.from(
-      item.workerUserId.surname,
-      "base64"
-    ).toString("utf-8")
+    const unhashedWorkerSurname = (
+      <BufferText text={item.workerUserId.surname} />
+    )
+
     unhashedWorkerFullName = `${unhashedWorkerName} ${unhashedWorkerSurname}`
   }
 

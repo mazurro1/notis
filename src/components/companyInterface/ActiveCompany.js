@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react"
 import styled from "styled-components"
-import PinField from "react-pin-field"
+import loadable from "@loadable/component"
+const PinField = loadable(() => import("react-pin-field"))
 import { ButtonIcon, Popup } from "@ui"
 import { MdClose, MdCheck, MdEmail, MdDelete, MdPhone } from "react-icons/md"
 import {

@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  BufferText,
 } from "recharts"
 import { Colors } from "@common/Colors"
 import styled from "styled-components"
@@ -107,15 +108,9 @@ const ChartReserwationsErnings = ({
         allStats[findIndexInAllStats].countReserwations =
           allStats[findIndexInAllStats].countReserwations + 1
       } else {
-        const userSurname = Buffer.from(
-          state.toWorkerUserId.surname,
-          "base64"
-        ).toString("utf-8")
+        const userSurname = <BufferText text={state.toWorkerUserId.surname} />
 
-        const userName = Buffer.from(
-          state.toWorkerUserId.name,
-          "base64"
-        ).toString("utf-8")
+        const userName = <BufferText text={state.toWorkerUserId.name} />
 
         const dateToChar = {
           allCosts: state.costReserwation,

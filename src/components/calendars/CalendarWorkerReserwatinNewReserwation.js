@@ -10,6 +10,7 @@ import {
   SelectCreated,
   InputPhone,
   TimePickerContent,
+  BufferText,
 } from "@ui"
 import { FaSave } from "react-icons/fa"
 import {
@@ -273,13 +274,9 @@ const CalendarWorkerReserwatinNewReserwation = ({
   useEffect(() => {
     let selectedWorkerValue = null
     if (!!user && !!companyItems) {
-      const ownerName = Buffer.from(companyItems.owner.name, "base64").toString(
-        "utf-8"
-      )
-      const ownerSurname = Buffer.from(
-        companyItems.owner.surname,
-        "base64"
-      ).toString("utf-8")
+      const ownerName = <BufferText text={companyItems.owner.name} />
+
+      const ownerSurname = <BufferText text={companyItems.owner.surname} />
 
       const ownerValue = {
         value: companyItems.owner._id,
@@ -287,13 +284,9 @@ const CalendarWorkerReserwatinNewReserwation = ({
       }
 
       const mapWorkers = companyItems.workers.map(itemWorker => {
-        const workerName = Buffer.from(itemWorker.user.name, "base64").toString(
-          "utf-8"
-        )
-        const workerSurname = Buffer.from(
-          itemWorker.user.surname,
-          "base64"
-        ).toString("utf-8")
+        const workerName = <BufferText text={itemWorker.user.name} />
+
+        const workerSurname = <BufferText text={itemWorker.user.surname} />
 
         return {
           value: itemWorker.user._id,
@@ -511,14 +504,9 @@ const CalendarWorkerReserwatinNewReserwation = ({
       })
       allSelectedWorkerServices = allFindedServices
 
-      const ownerName = Buffer.from(companyItems.owner.name, "base64").toString(
-        "utf-8"
-      )
+      const ownerName = <BufferText text={companyItems.owner.name} />
 
-      const ownerSurname = Buffer.from(
-        companyItems.owner.surname,
-        "base64"
-      ).toString("utf-8")
+      const ownerSurname = <BufferText text={companyItems.owner.surname} />
 
       const ownerValue = {
         value: companyItems.owner._id,
@@ -526,13 +514,9 @@ const CalendarWorkerReserwatinNewReserwation = ({
       }
 
       const mapWorkers = companyItems.workers.map(itemWorker => {
-        const workerName = Buffer.from(itemWorker.user.name, "base64").toString(
-          "utf-8"
-        )
-        const workerSurname = Buffer.from(
-          itemWorker.user.surname,
-          "base64"
-        ).toString("utf-8")
+        const workerName = <BufferText text={itemWorker.user.name} />
+
+        const workerSurname = <BufferText text={itemWorker.user.surname} />
 
         return {
           value: itemWorker.user._id,

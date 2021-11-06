@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { CSSTransition } from "react-transition-group"
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
-import { ButtonIcon, Popup, TimePickerContent } from "@ui"
+import { ButtonIcon, Popup, TimePickerContent, BufferText } from "@ui"
 import { FaSave } from "react-icons/fa"
 import {
   MdClose,
@@ -312,14 +312,9 @@ const CalendarWorkerReserwatinEvent = ({
     }
 
     if (!!selectedEvent.fromUser) {
-      const userName = Buffer.from(
-        selectedEvent.fromUser.name,
-        "base64"
-      ).toString("utf-8")
-      const userSurname = Buffer.from(
-        selectedEvent.fromUser.surname,
-        "base64"
-      ).toString("utf-8")
+      const userName = <BufferText text={selectedEvent.fromUser.name} />
+
+      const userSurname = <BufferText text={selectedEvent.fromUser.surname} />
 
       client = `${userName} ${userSurname}`
     } else {

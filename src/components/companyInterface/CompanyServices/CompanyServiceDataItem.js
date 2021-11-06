@@ -8,7 +8,7 @@ import {
   MdDeleteForever,
   MdArrowBack,
 } from "react-icons/md"
-import { ButtonIcon, Popup } from "@ui"
+import { ButtonIcon, Popup, BufferText } from "@ui"
 import { useDispatch } from "react-redux"
 import { fetchCompanyDeleteService, fetchCheckUserPhone } from "@state/actions"
 import CompanyServiceDataItemEdit from "./CompanyServiceDataItemEdit"
@@ -164,38 +164,29 @@ const CompanyServiceDataItem = ({
 
   let unhashedWorkerFullName = ""
   if (!!item.workerUserId._id) {
-    const unhashedWorkerName = Buffer.from(
-      item.workerUserId.name,
-      "base64"
-    ).toString("utf-8")
+    const unhashedWorkerName = <BufferText text={item.workerUserId.name} />
 
-    const unhashedWorkerSurname = Buffer.from(
-      item.workerUserId.surname,
-      "base64"
-    ).toString("utf-8")
+    const unhashedWorkerSurname = (
+      <BufferText text={item.workerUserId.surname} />
+    )
+
     unhashedWorkerFullName = `${unhashedWorkerName} ${unhashedWorkerSurname}`
   }
 
   let unhashedClientFullName = ""
   if (!!item.userId) {
     if (!!item.userId._id) {
-      const unhashedClientName = Buffer.from(
-        item.userId.name,
-        "base64"
-      ).toString("utf-8")
-      const unhashedClientSurname = Buffer.from(
-        item.userId.surname,
-        "base64"
-      ).toString("utf-8")
+      const unhashedClientName = <BufferText text={item.userId.name} />
+
+      const unhashedClientSurname = <BufferText text={item.userId.surname} />
+
       unhashedClientFullName = `${unhashedClientName} ${unhashedClientSurname}`
     }
   } else if (!!item.name && !!item.surname) {
-    const unhashedClientName = Buffer.from(item.name, "base64").toString(
-      "utf-8"
-    )
-    const unhashedClientSurname = Buffer.from(item.surname, "base64").toString(
-      "utf-8"
-    )
+    const unhashedClientName = <BufferText text={item.name} />
+
+    const unhashedClientSurname = <BufferText text={item.surname} />
+
     unhashedClientFullName = `${unhashedClientName} ${unhashedClientSurname}`
   }
 

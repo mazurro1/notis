@@ -9,7 +9,7 @@ import {
   MdEdit,
 } from "react-icons/md"
 import { Colors } from "@common/Colors"
-import { ButtonIcon, Popup, InputIcon } from "@ui"
+import { ButtonIcon, Popup, InputIcon, BufferText } from "@ui"
 import { useDispatch } from "react-redux"
 import {
   fetchAddOpinion,
@@ -433,14 +433,12 @@ const UserHistoryCategoryItem = ({
             const mapWorkers = []
             item.company.workers.forEach(worker => {
               if (!!worker.user._id) {
-                const unhashedName = Buffer.from(
-                  worker.user.name,
-                  "base64"
-                ).toString("utf-8")
-                const unhashedSurname = Buffer.from(
-                  worker.user.surname,
-                  "base64"
-                ).toString("utf-8")
+                const unhashedName = <BufferText text={worker.user.name} />
+
+                const unhashedSurname = (
+                  <BufferText text={worker.user.surname} />
+                )
+
                 mapWorkers.push({
                   servicesCategory: worker.servicesCategory,
                   specialization: worker.specialization,
@@ -455,15 +453,13 @@ const UserHistoryCategoryItem = ({
               }
             })
 
-            const unhashedOwnerName = Buffer.from(
-              item.company.owner.name,
-              "base64"
-            ).toString("utf-8")
+            const unhashedOwnerName = (
+              <BufferText text={item.company.owner.name} />
+            )
 
-            const unhashedOwnerSurname = Buffer.from(
-              item.company.owner.surname,
-              "base64"
-            ).toString("utf-8")
+            const unhashedOwnerSurname = (
+              <BufferText text={item.company.owner.surname} />
+            )
 
             const validMonthAdd = !!item.company.reservationMonthTime
               ? item.company.reservationMonthTime
@@ -557,13 +553,10 @@ const UserHistoryCategoryItem = ({
 
   let workerName = " Konto nieaktywne"
   if (!!item.toWorkerUserId) {
-    const userName = Buffer.from(item.toWorkerUserId.name, "base64").toString(
-      "utf-8"
-    )
-    const userSurname = Buffer.from(
-      item.toWorkerUserId.surname,
-      "base64"
-    ).toString("utf-8")
+    const userName = <BufferText text={item.toWorkerUserId.name} />
+
+    const userSurname = <BufferText text={item.toWorkerUserId.surname} />
+
     workerName = ` ${userName} ${userSurname}`
   }
 

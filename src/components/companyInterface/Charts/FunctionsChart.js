@@ -1,3 +1,5 @@
+import { BufferText } from "@ui"
+
 export const chartErnings = (companyStats, companyName, isAdmin) => {
   const allStats = []
   const filterCompanyStatsNoActiveAndDate = companyStats.filter(item => {
@@ -51,15 +53,10 @@ export const chartErnings = (companyStats, companyName, isAdmin) => {
       allStats[findIndexInAllStats].countReserwations =
         allStats[findIndexInAllStats].countReserwations + 1
     } else {
-      const userSurname = Buffer.from(
-        state.toWorkerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      const userSurname = <BufferText text={state.toWorkerUserId.surname} />
 
-      const userName = Buffer.from(
-        state.toWorkerUserId.name,
-        "base64"
-      ).toString("utf-8")
+      const userName = <BufferText text={state.toWorkerUserId.name} />
+
       const dateToChar = {
         allCosts: state.costReserwation,
         countReserwations: 1,
@@ -173,15 +170,9 @@ export const chartResState = (companyStats, companyName, isAdmin) => {
       allStats[findIndexInAllStats].countReserwations =
         allStats[findIndexInAllStats].countReserwations + 1
     } else {
-      const userSurname = Buffer.from(
-        state.toWorkerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      const userSurname = <BufferText text={state.toWorkerUserId.surname} />
 
-      const userName = Buffer.from(
-        state.toWorkerUserId.name,
-        "base64"
-      ).toString("utf-8")
+      const userName = <BufferText text={state.toWorkerUserId.name} />
 
       const dateToChar = {
         countReserwations: 1,
@@ -555,14 +546,10 @@ export const chartCompanyServices = (companyStats, companyName, isAdmin) => {
       allStats[findIndexInAllStats].countServices =
         allStats[findIndexInAllStats].countServices + 1
     } else {
-      const userSurname = Buffer.from(
-        state.workerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      const userSurname = <BufferText text={state.workerUserId.surname} />
 
-      const userName = Buffer.from(state.workerUserId.name, "base64").toString(
-        "utf-8"
-      )
+      const userName = <BufferText text={state.workerUserId.name} />
+
       const dateToChar = {
         allCosts: !!state.cost ? state.cost : 0,
         countServices: 1,
@@ -686,14 +673,10 @@ export const chartCompanyCommunitings = (
       allStats[findIndexInAllStats].countCommunitings =
         allStats[findIndexInAllStats].countCommunitings + 1
     } else {
-      const userSurname = Buffer.from(
-        state.workerUserId.surname,
-        "base64"
-      ).toString("utf-8")
+      const userSurname = <BufferText text={state.workerUserId.surname} />
 
-      const userName = Buffer.from(state.workerUserId.name, "base64").toString(
-        "utf-8"
-      )
+      const userName = <BufferText text={state.workerUserId.name} />
+
       const dateToChar = {
         allCosts: !!state.cost ? state.cost : 0,
         countCommunitings: 1,

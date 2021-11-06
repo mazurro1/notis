@@ -1,4 +1,5 @@
-import PinField from "react-pin-field"
+import loadable from "@loadable/component"
+const PinField = loadable(() => import("react-pin-field"))
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
 

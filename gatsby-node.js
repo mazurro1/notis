@@ -1,5 +1,3 @@
-const path = require("path")
-
 exports.onCreatePage = async ({ page, actions }) => {
   const { createPage } = actions
   // page.matchPath is a special key that's used for matching pages
@@ -27,12 +25,12 @@ exports.onCreatePage = async ({ page, actions }) => {
 }
 
 exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
-  if (stage === "build-html") {
+  if (stage === "build-html" || stage === "develop-html") {
     actions.setWebpackConfig({
       module: {
         rules: [
           {
-            test: /react-leaflet|leaflet/,
+            test: /bad-module/,
             use: loaders.null(),
           },
         ],

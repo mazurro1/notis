@@ -2,6 +2,7 @@ import React from "react"
 import { LinkEffect } from "@common/LinkEffect"
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { BufferText } from "@ui"
 
 const DivInlineBlock = styled.div`
   display: inline;
@@ -133,26 +134,16 @@ export const generateBellAllertItemContentSwitch = (
         isUserAlert = user.userId === alert.reserwationId.fromUser._id
       }
       if (!!alert.reserwationId.fromUser.name) {
-        userName = Buffer.from(
-          alert.reserwationId.fromUser.name,
-          "base64"
-        ).toString("utf-8")
-        userSurname = Buffer.from(
-          alert.reserwationId.fromUser.surname,
-          "base64"
-        ).toString("utf-8")
+        userName = <BufferText text={alert.reserwationId.fromUser.name} />
+
+        userSurname = <BufferText text={alert.reserwationId.fromUser.surname} />
       }
     } else {
       if (!!alert.reserwationId.name) {
-        userName = Buffer.from(alert.reserwationId.name, "base64").toString(
-          "utf-8"
-        )
+        userName = <BufferText text={alert.reserwationId.name} />
       }
       if (!!alert.reserwationId.surname) {
-        userSurname = Buffer.from(
-          alert.reserwationId.surname,
-          "base64"
-        ).toString("utf-8")
+        userSurname = <BufferText text={alert.reserwationId.surname} />
       }
     }
     if (!!alert.reserwationId.company) {
@@ -204,14 +195,9 @@ export const generateBellAllertItemContentSwitch = (
         isUserAlert = user.userId === alert.communitingId.userId._id
       }
       if (!!alert.communitingId.userId.name) {
-        userName = Buffer.from(
-          alert.communitingId.userId.name,
-          "base64"
-        ).toString("utf-8")
-        userSurname = Buffer.from(
-          alert.communitingId.userId.surname,
-          "base64"
-        ).toString("utf-8")
+        userName = <BufferText text={alert.communitingId.userId.name} />
+
+        userSurname = <BufferText text={alert.communitingId.userId.surname} />
       }
     }
     if (!!alert.communitingId.companyId) {
@@ -257,13 +243,9 @@ export const generateBellAllertItemContentSwitch = (
         isUserAlert = user.userId === alert.serviceId.userId._id
       }
       if (!!alert.serviceId.userId.name) {
-        userName = Buffer.from(alert.serviceId.userId.name, "base64").toString(
-          "utf-8"
-        )
-        userSurname = Buffer.from(
-          alert.serviceId.userId.surname,
-          "base64"
-        ).toString("utf-8")
+        userName = <BufferText text={alert.serviceId.userId.name} />
+
+        userSurname = <BufferText text={alert.serviceId.userId.surname} />
       }
     }
     if (!!alert.serviceId.companyId) {

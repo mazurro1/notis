@@ -8,6 +8,7 @@ import {
   SelectCreated,
   TimePickerContent,
   SelectDataCalendar,
+  BufferText,
 } from "@ui"
 import { FaSave, FaCalendarDay } from "react-icons/fa"
 import {
@@ -278,14 +279,11 @@ const CalendarWorkerReserwatinEvent = ({
     if (!!itemCompany && !!selectedEvent) {
       if (!!itemCompany.owner._id) {
         if (itemCompany.owner._id === selectedEvent.toWorkerUserId) {
-          const userOwnerName = Buffer.from(
-            itemCompany.owner.name,
-            "base64"
-          ).toString("utf-8")
-          const userOwnerSurname = Buffer.from(
-            itemCompany.owner.surname,
-            "base64"
-          ).toString("utf-8")
+          const userOwnerName = <BufferText text={itemCompany.owner.name} />
+
+          const userOwnerSurname = (
+            <BufferText text={itemCompany.owner.surname} />
+          )
           setSelectedWorker({
             label: `${userOwnerName} ${userOwnerSurname}`,
             value: itemCompany.owner._id,
@@ -296,14 +294,14 @@ const CalendarWorkerReserwatinEvent = ({
         itemCompany.workers.forEach(workerCompany => {
           if (!!workerCompany.user._id) {
             if (workerCompany.user._id === selectedEvent.toWorkerUserId) {
-              const userOwnerName = Buffer.from(
-                workerCompany.user.name,
-                "base64"
-              ).toString("utf-8")
-              const userOwnerSurname = Buffer.from(
-                workerCompany.user.surname,
-                "base64"
-              ).toString("utf-8")
+              const userOwnerName = (
+                <BufferText text={workerCompany.user.name} />
+              )
+
+              const userOwnerSurname = (
+                <BufferText text={workerCompany.user.surname} />
+              )
+
               setSelectedWorker({
                 label: `${userOwnerName} ${userOwnerSurname}`,
                 value: workerCompany.user._id,
@@ -432,14 +430,10 @@ const CalendarWorkerReserwatinEvent = ({
         !!itemCompany.owner.name &&
         !!itemCompany.owner.surname
       ) {
-        const userOwnerName = Buffer.from(
-          itemCompany.owner.name,
-          "base64"
-        ).toString("utf-8")
-        const userOwnerSurname = Buffer.from(
-          itemCompany.owner.surname,
-          "base64"
-        ).toString("utf-8")
+        const userOwnerName = <BufferText text={itemCompany.owner.name} />
+
+        const userOwnerSurname = <BufferText text={itemCompany.owner.surname} />
+
         workersToSelect.push({
           label: `${userOwnerName} ${userOwnerSurname}`,
           value: itemCompany.owner._id,
@@ -457,14 +451,12 @@ const CalendarWorkerReserwatinEvent = ({
             !!workerDoc.user.surname &&
             !!workerDoc.active
           ) {
-            const userWorkerName = Buffer.from(
-              workerDoc.user.name,
-              "base64"
-            ).toString("utf-8")
-            const userWorkerSurname = Buffer.from(
-              workerDoc.user.surname,
-              "base64"
-            ).toString("utf-8")
+            const userWorkerName = <BufferText text={workerDoc.user.name} />
+
+            const userWorkerSurname = (
+              <BufferText text={workerDoc.user.surname} />
+            )
+
             workersToSelect.push({
               label: `${userWorkerName} ${userWorkerSurname}`,
               value: workerDoc.user._id,
@@ -527,26 +519,18 @@ const CalendarWorkerReserwatinEvent = ({
       let userName = ""
       if (!!selectedEvent.fromUser) {
         if (!!selectedEvent.fromUser.name) {
-          userName = Buffer.from(
-            selectedEvent.fromUser.name,
-            "base64"
-          ).toString("utf-8")
+          userName = <BufferText text={selectedEvent.fromUser.name} />
         }
       } else if (selectedEvent.name) {
-        userName = Buffer.from(selectedEvent.name, "base64").toString("utf-8")
+        userName = <BufferText text={selectedEvent.name} />
       }
       let userSurname = ""
       if (!!selectedEvent.fromUser) {
         if (!!selectedEvent.fromUser.surname) {
-          userSurname = Buffer.from(
-            selectedEvent.fromUser.surname,
-            "base64"
-          ).toString("utf-8")
+          userSurname = <BufferText text={selectedEvent.fromUser.surname} />
         }
       } else if (selectedEvent.surname) {
-        userSurname = Buffer.from(selectedEvent.surname, "base64").toString(
-          "utf-8"
-        )
+        userSurname = <BufferText text={selectedEvent.surname} />
       }
       if (!!userName && !!userSurname) {
         client = `${userName} ${userSurname}`

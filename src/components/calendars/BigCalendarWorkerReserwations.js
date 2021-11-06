@@ -5,7 +5,13 @@ import styled from "styled-components"
 import { Colors } from "@common/Colors"
 import "moment/locale/pl"
 import { getMonthNamePl } from "@common/Functions"
-import { ButtonIcon, Popup, SelectCreated, SelectDataCalendar } from "@ui"
+import {
+  ButtonIcon,
+  Popup,
+  SelectCreated,
+  SelectDataCalendar,
+  BufferText,
+} from "@ui"
 import {
   FaCalendarDay,
   FaCalendarPlus,
@@ -576,21 +582,16 @@ const BigCalendarWorkerReserwations = ({
             )
           }
         } else if (!!itemMaped.name) {
-          userName = Buffer.from(itemMaped.name, "base64").toString("utf-8")
+          userName = <BufferText text={itemMaped.name} />
         }
 
         let userSurname = ""
         if (!!itemMaped.fromUser) {
           if (!!itemMaped.fromUser.surname) {
-            userSurname = Buffer.from(
-              itemMaped.fromUser.surname,
-              "base64"
-            ).toString("utf-8")
+            userSurname = <BufferText text={itemMaped.fromUser.surname} />
           }
         } else if (!!itemMaped.surname) {
-          userSurname = Buffer.from(itemMaped.surname, "base64").toString(
-            "utf-8"
-          )
+          userSurname = <BufferText text={itemMaped.surname} />
         }
         const timeEndSplit = itemMaped.dateEnd.split(":")
         const timeStartSplit = itemMaped.dateStart.split(":")
@@ -1113,10 +1114,10 @@ const BigCalendarWorkerReserwations = ({
   const mapWorkers =
     isAdmin &&
     item.company.workers.map((worker, indexWorker) => {
-      const userName = Buffer.from(worker.user.name, "base64").toString("utf-8")
-      const userSurname = Buffer.from(worker.user.surname, "base64").toString(
-        "utf-8"
-      )
+      const userName = <BufferText text={worker.user.name} />
+
+      const userSurname = <BufferText text={worker.user.surname} />
+
       return (
         <ButtonMargin key={indexWorker}>
           <ButtonIcon

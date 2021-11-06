@@ -8,9 +8,7 @@ const ButtonIcon = ({
   fontIconSize = "25",
   fontSize = "18",
   uppercase = false,
-  onClick = (e: any) => {
-    e.preventDefault()
-  },
+  onClick = () => {},
   title = "",
   icon,
   secondColors = false,

@@ -5,7 +5,7 @@ import WorkerUsersInformationItem from "./WorkerUsersInformationItem"
 import ReactTooltip from "react-tooltip"
 import sal from "sal.js"
 import { FaUserFriends, FaSms } from "react-icons/fa"
-import { ButtonIcon, Popup, InputIcon } from "@ui"
+import { ButtonIcon, Popup, InputIcon, BufferText } from "@ui"
 import SendSMSClientsContent from "../SendSMSClientsContent"
 
 const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
@@ -42,14 +42,10 @@ const WorkerUsersInformation = ({ user, handleClose, siteProps }) => {
   useEffect(() => {
     const newFilterUsers = companyUsersInformations.filter(userCompany => {
       if (!!userCompany.userId) {
-        const userName = Buffer.from(
-          userCompany.userId.name,
-          "base64"
-        ).toString("utf-8")
-        const userSurname = Buffer.from(
-          userCompany.userId.surname,
-          "base64"
-        ).toString("utf-8")
+        const userName = <BufferText text={userCompany.userId.name} />
+
+        const userSurname = <BufferText text={userCompany.userId.surname} />
+
         const isInThisName = `${userName.toLowerCase()} ${userSurname.toLowerCase()}`.includes(
           filterUsers.toLowerCase()
         )

@@ -4,7 +4,7 @@ import { Colors } from "@common/Colors"
 import { Checkbox } from "react-input-checkbox"
 import { FaSms } from "react-icons/fa"
 import { RiMailSendLine } from "react-icons/ri"
-import { ButtonIcon, InputIcon, SelectCreated } from "@ui"
+import { ButtonIcon, InputIcon, SelectCreated, BufferText } from "@ui"
 import { fetchSendSMSCompanyClients, addAlertItem } from "@state/actions"
 import { useDispatch } from "react-redux"
 
@@ -95,10 +95,9 @@ const SendSMSClientsContent = ({ clients, siteProps, user }) => {
   const filterClients = []
   clients.forEach(item => {
     if (!!!item.isBlocked && !!item.userId) {
-      const userName = Buffer.from(item.userId.name, "base64").toString("utf-8")
-      const userSurname = Buffer.from(item.userId.surname, "base64").toString(
-        "utf-8"
-      )
+      const userName = <BufferText text={item.userId.name} />
+
+      const userSurname = <BufferText text={item.userId.surname} />
 
       const itemClient = {
         value: item.userId._id,

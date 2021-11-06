@@ -9,7 +9,8 @@ import {
 } from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
 import { ButtonIcon, InputIcon } from "@ui"
-import PinField from "react-pin-field"
+import loadable from "@loadable/component"
+const PinField = loadable(() => import("react-pin-field"))
 import { validEmail } from "@common/Functions"
 import { Colors } from "@common/Colors"
 

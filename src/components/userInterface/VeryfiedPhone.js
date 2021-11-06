@@ -14,7 +14,8 @@ import { MdEmail, MdSave, MdClose, MdPhone, MdDelete } from "react-icons/md"
 import { FaArrowLeft } from "react-icons/fa"
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
-import PinField from "react-pin-field"
+import loadable from "@loadable/component"
+const PinField = loadable(() => import("react-pin-field"))
 import ReactTooltip from "react-tooltip"
 
 const ButtonsPosition = styled.div`

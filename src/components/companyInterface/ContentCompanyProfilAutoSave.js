@@ -937,6 +937,7 @@ const ContentCompanyProfilAutoSave = ({
             premiumActive={premiumActive}
           />
         </RightColumn>
+        */
         {userHasPermToOpinions && (
           <OpinionsComponent
             companyOpinions={company.opinions}
