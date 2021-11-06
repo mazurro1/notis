@@ -1,5 +1,6 @@
 import axios from "axios"
 import { Site } from "@common/Site"
+import { Dispatch } from "redux"
 
 // USER ACTIONS
 // USER ACTIONS
@@ -53,28 +54,28 @@ export const RESET_USER_HISTORY_SERVICES = "RESET_USER_HISTORY_SERVICES"
 export const UPDATE_DOWNLOADED_COMMUNITING = "UPDATE_DOWNLOADED_COMMUNITING"
 export const UPDATE_DOWNLOADED_SERVICE = "UPDATE_DOWNLOADED_SERVICE"
 
-export const disableFetchactions = data => {
+export const disableFetchactions = (data: any) => {
   return {
     type: DISABLE_FETCH_ACTIONS,
     data: data,
   }
 }
 
-export const updateDownloadService = service => {
+export const updateDownloadService = (service: any) => {
   return {
     type: UPDATE_DOWNLOADED_SERVICE,
     service: service,
   }
 }
 
-export const updateDownloadCommuniting = communiting => {
+export const updateDownloadCommuniting = (communiting: any) => {
   return {
     type: UPDATE_DOWNLOADED_COMMUNITING,
     communiting: communiting,
   }
 }
 
-export const fetchResetUserMenu = value => {
+export const fetchResetUserMenu = (value: any) => {
   return {
     type: RESET_USER_MENU,
     value: value,
@@ -93,21 +94,21 @@ export const fetchResetUserHistoryCommunitings = () => {
   }
 }
 
-export const cancelUserCommuniting = communityId => {
+export const cancelUserCommuniting = (communityId: any) => {
   return {
     type: CANCEL_USER_COMMUNITING,
     communityId: communityId,
   }
 }
 
-export const addUserHistoryCommunitings = userCommunitings => {
+export const addUserHistoryCommunitings = (userCommunitings: any) => {
   return {
     type: ADD_USER_HISTORY_COMMUNITINGS,
     userCommunitings: userCommunitings,
   }
 }
 
-export const addUserHistoryServices = userServices => {
+export const addUserHistoryServices = (userServices: any) => {
   return {
     type: ADD_USER_HISTORY_SERVICES,
     userServices: userServices,
@@ -120,70 +121,70 @@ export const resetUpdateUserPhone = () => {
   }
 }
 
-export const changeSelectedNameMenu = value => {
+export const changeSelectedNameMenu = (value: any) => {
   return {
     type: CHANGE_SELECTED_NAME_MENU,
     value: value,
   }
 }
 
-export const changePopupTakePlace = value => {
+export const changePopupTakePlace = (value: any) => {
   return {
     type: CHANGE_POPUP_TAKE_PLACE,
     value: value,
   }
 }
 
-export const changeMapsActive = value => {
+export const changeMapsActive = (value: any) => {
   return {
     type: CHANGE_MAP_ACTIVE,
     value: value,
   }
 }
 
-export const verifiedPhoneComponent = value => {
+export const verifiedPhoneComponent = (value: any) => {
   return {
     type: VERIFIED_PHONE_COMPONENT,
     value: value,
   }
 }
 
-export const verifiedEmailComponent = value => {
+export const verifiedEmailComponent = (value: any) => {
   return {
     type: VERIFIED_EMAIL_COMPONENT,
     value: value,
   }
 }
 
-export const saveUserTokenToAutoLogin = value => {
+export const saveUserTokenToAutoLogin = (value: any) => {
   return {
     type: ADD_TOKEN_AUTO_LOGIN_VISIBLE,
     value: value,
   }
 }
 
-export const setVisibleMenuIndustries = value => {
+export const setVisibleMenuIndustries = (value: any) => {
   return {
     type: VISIBLE_NAV_INDUSTRIES,
     value: value,
   }
 }
 
-export const setHeightMenuIndustries = value => {
+export const setHeightMenuIndustries = (value: any) => {
   return {
     type: HEIGHT_NAV_INDUSTRIES,
     value: value,
   }
 }
 
-export const changeActiveAccount = data => {
+export const changeActiveAccount = (data: any) => {
   return {
     type: CHANGE_ACCTIVE_ACCOUNT,
     data: data,
   }
 }
 
-export const changeAlertExtra = (name, value) => {
+export const changeAlertExtra = (name: any, value: any) => {
   return {
     type: CHANGE_ALERT_EXTRA,
     name: name,
@@ -191,14 +192,14 @@ export const changeAlertExtra = (name, value) => {
   }
 }
 
-export const addNewUserAlert = data => {
+export const addNewUserAlert = (data: any) => {
   return {
     type: ADD_NEW_USER_ALERT,
     data: data,
   }
 }
 
-export const changeLanguageStyle = value => {
+export const changeLanguageStyle = (value: any) => {
   return {
     type: CHANGE_LANGUAGE_STYLE,
     value: value,
@@ -217,35 +218,35 @@ export const changeDarkStyle = () => {
   }
 }
 
-export const changeCreateCompanyVisible = value => {
+export const changeCreateCompanyVisible = (value: any) => {
   return {
     type: CHANGE_CREATE_COMPANY_VISIBLE,
     value: value,
   }
 }
 
-export const changeRemindPasswordEmailSent = value => {
+export const changeRemindPasswordEmailSent = (value: any) => {
   return {
     type: CHANGE_REMIND_PASSWORD_EMAIL_SENT,
     value: value,
   }
 }
 
-export const changeRemindPasswordVisible = value => {
+export const changeRemindPasswordVisible = (value: any) => {
   return {
     type: CHANGE_REMIND_PASSWORD_VISIBLE,
     value: value,
   }
 }
 
-export const changeUserProfilVisible = value => {
+export const changeUserProfilVisible = (value: any) => {
   return {
     type: CHANGE_USER_PROFIL_VISIBLE,
     value: value,
   }
 }
 
-export const updateUserPhone = phone => {
+export const updateUserPhone = (phone: any) => {
   return {
     type: UPDATE_USER_PHONE,
     phone: phone,
@@ -253,16 +254,16 @@ export const updateUserPhone = phone => {
 }
 
 export const addUserPhone = (
-  phone,
-  email,
-  token,
-  phoneVerified,
-  hasPhone,
-  blockUserChangePhoneNumber,
-  blockUserSendVerifiedPhoneSms,
-  emailVerified,
-  emailToVerified,
-  blockUserChangeEmail
+  phone: number,
+  email: string,
+  token: string,
+  phoneVerified: boolean,
+  hasPhone: boolean,
+  blockUserChangePhoneNumber: Date,
+  blockUserSendVerifiedPhoneSms: Date,
+  emailVerified: boolean,
+  emailToVerified: boolean,
+  blockUserChangeEmail: Date
 ) => {
   return {
     type: ADD_USER_PHONE,
@@ -279,7 +280,7 @@ export const addUserPhone = (
   }
 }
 
-export const addAlertItem = (text, color) => {
+export const addAlertItem = (text: string, color: string) => {
   return {
     type: ADD_ALERT_ITEM,
     text: text,
@@ -287,49 +288,49 @@ export const addAlertItem = (text, color) => {
   }
 }
 
-export const removeAlertItem = id => {
+export const removeAlertItem = (id: string) => {
   return {
     type: REMOVE_ALERT_ITEM,
     id: id,
   }
 }
 
-export const changeLoginVisible = value => {
+export const changeLoginVisible = (value: any) => {
   return {
     type: CHANGE_LOGIN_VISIBLE,
     value: value,
   }
 }
 
-export const changeRegistrationVisible = value => {
+export const changeRegistrationVisible = (value: any) => {
   return {
     type: CHANGE_REGISTRATION_VISIBLE,
     value: value,
   }
 }
 
-export const changeLoadingPlaces = value => {
+export const changeLoadingPlaces = (value: any) => {
   return {
     type: LOADING_PLACES,
     value: value,
   }
 }
 
-export const changeSpinner = value => {
+export const changeSpinner = (value: any) => {
   return {
     type: CHANGE_SPINNER,
     value: value,
   }
 }
 
-export const changeIndustries = value => {
+export const changeIndustries = (value: any) => {
   return {
     type: CHANGE_INDUSTRIES,
     value: value,
   }
 }
 
-export const changeLocalizationValue = (value, district) => {
+export const changeLocalizationValue = (value: any, district: any) => {
   return {
     type: CHANGE_LOCALIZATION_VALUE,
     value: value,
@@ -337,14 +338,14 @@ export const changeLocalizationValue = (value, district) => {
   }
 }
 
-export const changeSortValue = value => {
+export const changeSortValue = (value: any) => {
   return {
     type: CHANGE_SORT_VALUE,
     value: value,
   }
 }
 
-export const changeFilterValue = value => {
+export const changeFilterValue = (value: any) => {
   return {
     type: CHANGE_FILTER_VALUE,
     value: value,
@@ -375,7 +376,7 @@ export const changeLogout = () => {
   }
 }
 
-export const loginUser = user => {
+export const loginUser = (user: any) => {
   return {
     type: LOGIN,
     user: user,
@@ -383,7 +384,7 @@ export const loginUser = user => {
 }
 
 export const logout = () => {
-  return dispatch => {
+  return (dispatch: Dispatch) => {
     dispatch(changeSpinner(true))
     localStorage.removeItem("USERID")
     localStorage.removeItem("TOKEN")
@@ -393,8 +394,8 @@ export const logout = () => {
   }
 }
 
-export const saveUserTokenToLocal = (userId, token) => {
-  return dispatch => {
+export const saveUserTokenToLocal = (userId: string, token: string) => {
+  return (dispatch: Dispatch) => {
     localStorage.removeItem("USERID")
     localStorage.removeItem("TOKEN")
     localStorage.setItem("USERID", userId)
@@ -403,8 +404,12 @@ export const saveUserTokenToLocal = (userId, token) => {
   }
 }
 
-export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
-  return dispatch => {
+export const fetchLoginUser = (
+  email: string,
+  password: string,
+  checkboxAutoLogin: boolean
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(`${Site.serverUrl}/login`, {
@@ -440,8 +445,14 @@ export const fetchLoginUser = (email, password, checkboxAutoLogin) => {
   }
 }
 
-export const fetchRegisterUser = (email, name, surname, phone, password) => {
-  return dispatch => {
+export const fetchRegisterUser = (
+  email: string,
+  name: string,
+  surname: string,
+  phone: number,
+  password: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(`${Site.serverUrl}/registration`, {
@@ -482,13 +493,13 @@ export const fetchRegisterUser = (email, name, surname, phone, password) => {
 }
 
 export const fetchAutoLogin = (
-  noAlert = false,
-  noSpinner = false,
-  tokenComing = null,
-  userIdComing = null,
-  lastSpinnerCreateCompany = false
+  noAlert: boolean = false,
+  noSpinner: boolean = false,
+  tokenComing: string = "",
+  userIdComing: string = "",
+  lastSpinnerCreateCompany: boolean = false
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     const userId = !!userIdComing
       ? userIdComing
       : localStorage.getItem("USERID")
@@ -556,8 +567,8 @@ export const fetchAutoLogin = (
   }
 }
 
-export const fetchLoginFacebookUser = (token, id) => {
-  return dispatch => {
+export const fetchLoginFacebookUser = (token: string, id: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     setTimeout(() => {
       dispatch(changeSpinner(false))
@@ -597,8 +608,8 @@ export const fetchLoginFacebookUser = (token, id) => {
   }
 }
 
-export const fetchLoginGoogleUser = (token, id) => {
-  return dispatch => {
+export const fetchLoginGoogleUser = (token: string, id: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     setTimeout(() => {
       dispatch(changeSpinner(false))
@@ -638,8 +649,8 @@ export const fetchLoginGoogleUser = (token, id) => {
   }
 }
 
-export const fetchSentAgainActivedEmail = token => {
-  return dispatch => {
+export const fetchSentAgainActivedEmail = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .get(`${Site.serverUrl}/sent-again-veryfied-email`, {
         headers: {
@@ -672,8 +683,8 @@ export const fetchSentAgainActivedEmail = token => {
   }
 }
 
-export const fetchUserPhone = token => {
-  return dispatch => {
+export const fetchUserPhone = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .get(`${Site.serverUrl}/get-user-phone`, {
         headers: {
@@ -702,14 +713,14 @@ export const fetchUserPhone = token => {
 }
 
 export const fetchEditUser = (
-  newPhone,
-  newPassword,
-  password,
-  token,
-  editPhone = false,
-  newEmail
+  newPhone: string,
+  newPassword: string,
+  password: string,
+  token: string,
+  editPhone: boolean = false,
+  newEmail: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch) => {
     return axios
       .patch(
         `${Site.serverUrl}/edit-user`,
@@ -782,8 +793,12 @@ export const fetchEditUser = (
   }
 }
 
-export const fetchActiveAccount = (codeToVerified, token, userId) => {
-  return dispatch => {
+export const fetchActiveAccount = (
+  codeToVerified: number,
+  token: string,
+  userId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -819,8 +834,8 @@ export const fetchActiveAccount = (codeToVerified, token, userId) => {
   }
 }
 
-export const fetchSentEmailResetPassword = email => {
-  return dispatch => {
+export const fetchSentEmailResetPassword = (email: string) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(`${Site.serverUrl}/sent-email-reset-password`, {
         email: email,
@@ -855,8 +870,12 @@ export const fetchSentEmailResetPassword = email => {
   }
 }
 
-export const fetchResetPassword = (email, password, codeReset) => {
-  return dispatch => {
+export const fetchResetPassword = (
+  email: string,
+  password: string,
+  codeReset: boolean
+) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(`${Site.serverUrl}/reset-password`, {
         email: email,
@@ -1054,7 +1073,10 @@ export const CANCEL_UPDATE_COMPANY_EMAIL = "CANCEL_UPDATE_COMPANY_EMAIL"
 export const UPDATE_BLOCK_SEND_VERYFIED_EMAIL =
   "UPDATE_BLOCK_SEND_VERYFIED_EMAIL"
 
-export const updateCompanyPhoneSuccess = (companyId, newPhone) => {
+export const updateCompanyPhoneSuccess = (
+  companyId: string,
+  newPhone: string
+) => {
   return {
     type: UPDATE_COMPANY_PHONE_SUCCESS,
     companyId: companyId,
@@ -1062,7 +1084,10 @@ export const updateCompanyPhoneSuccess = (companyId, newPhone) => {
   }
 }
 
-export const updateCompanyEmailSuccess = (companyId, newEmail) => {
+export const updateCompanyEmailSuccess = (
+  companyId: string,
+  newEmail: string
+) => {
   return {
     type: UPDATE_COMPANY_EMAIL_SUCCESS,
     companyId: companyId,
@@ -1070,14 +1095,14 @@ export const updateCompanyEmailSuccess = (companyId, newEmail) => {
   }
 }
 
-export const cancelUpdateCompanyPhone = companyId => {
+export const cancelUpdateCompanyPhone = (companyId: string) => {
   return {
     type: CANCEL_UPDATE_COMPANY_PHONE,
     companyId: companyId,
   }
 }
 
-export const cancelUpdateCompanyEmail = companyId => {
+export const cancelUpdateCompanyEmail = (companyId: string) => {
   return {
     type: CANCEL_UPDATE_COMPANY_EMAIL,
     companyId: companyId,
@@ -1095,7 +1120,7 @@ export const updateCompanyChangePhoneEmail = (
   }
 }
 
-export const updateCompanyPhone = (companyId, newPhone) => {
+export const updateCompanyPhone = (companyId: string, newPhone: string) => {
   return {
     type: UPDATE_COMPANY_PHONE,
     companyId: companyId,
@@ -1103,7 +1128,7 @@ export const updateCompanyPhone = (companyId, newPhone) => {
   }
 }
 
-export const updateCompanyEmail = (companyId, newEmail) => {
+export const updateCompanyEmail = (companyId: string, newEmail: string) => {
   return {
     type: UPDATE_COMPANY_EMAIL,
     companyId: companyId,
@@ -1111,14 +1136,14 @@ export const updateCompanyEmail = (companyId, newEmail) => {
   }
 }
 
-export const updateResetCreateCompany = value => {
+export const updateResetCreateCompany = (value: any) => {
   return {
     type: RESET_CREATE_COMPANY,
     value: value,
   }
 }
 
-export const fetchResetCompanyEditProfil = value => {
+export const fetchResetCompanyEditProfil = (value: any) => {
   return {
     type: RESET_COMPANY_EDIT_PROFIL,
     value: value,
@@ -1126,9 +1151,9 @@ export const fetchResetCompanyEditProfil = value => {
 }
 
 export const fetchUpdateStatusActiveCompanyEmail = (
-  companyId,
-  accountEmailVerified,
-  codeToVerifiedPhone
+  companyId: string,
+  accountEmailVerified: boolean,
+  codeToVerifiedPhone: number | null
 ) => {
   return {
     type: UPDATE_STATUS_ACTIVE_COMPANY_EMAIL,
@@ -1139,8 +1164,8 @@ export const fetchUpdateStatusActiveCompanyEmail = (
 }
 
 export const updateBlockSendVerifiedEmail = (
-  companyId,
-  blockSendVerifiedEmail
+  companyId: string,
+  blockSendVerifiedEmail: Date
 ) => {
   return {
     type: UPDATE_BLOCK_SEND_VERYFIED_EMAIL,
@@ -1150,8 +1175,8 @@ export const updateBlockSendVerifiedEmail = (
 }
 
 export const updateBlockSendVerifiedPhoneSms = (
-  companyId,
-  blockSendVerifiedPhoneSms
+  companyId: string,
+  blockSendVerifiedPhoneSms: Date
 ) => {
   return {
     type: UPDATE_BLOCK_SEND_VERYFIED_PHONE_SMS,
@@ -1172,7 +1197,10 @@ export const resetWorkerDeleteFetch = () => {
   }
 }
 
-export const updateCompanyServicePhoneUser = (userPhone, serviceId) => {
+export const updateCompanyServicePhoneUser = (
+  userPhone: number,
+  serviceId: string
+) => {
   return {
     type: UPDATE_COMPANY_SERVICE_PHONE_USER,
     userPhone: userPhone,
@@ -1180,7 +1208,10 @@ export const updateCompanyServicePhoneUser = (userPhone, serviceId) => {
   }
 }
 
-export const updateCompanyCommunitingPhoneUser = (userPhone, communitingId) => {
+export const updateCompanyCommunitingPhoneUser = (
+  userPhone: number,
+  communitingId: string
+) => {
   return {
     type: UPDATE_COMPANY_COMMUNITING_PHONE_USER,
     userPhone: userPhone,
@@ -1200,49 +1231,49 @@ export const fetchResetCompanyCommunitings = () => {
   }
 }
 
-export const deleteCompanyServices = serviceId => {
+export const deleteCompanyServices = (serviceId: string) => {
   return {
     type: DELETE_COMPANY_SERVICE,
     serviceId: serviceId,
   }
 }
 
-export const deleteCompanyCommuniting = communitingId => {
+export const deleteCompanyCommuniting = (communitingId: string) => {
   return {
     type: DELETE_COMPANY_COMMUNITING,
     communitingId: communitingId,
   }
 }
 
-export const updateServiceCompanyServices = updatedService => {
+export const updateServiceCompanyServices = (updatedService: any) => {
   return {
     type: UPDATE_SERVICE_COMPANY_SERVICES,
     updatedService: updatedService,
   }
 }
 
-export const updateServiceCompanyCommuniting = updatedCommuniting => {
+export const updateServiceCompanyCommuniting = (updatedCommuniting: any) => {
   return {
     type: UPDATE_COMMUNITING_COMPANY_COMMUNITING,
     updatedCommuniting: updatedCommuniting,
   }
 }
 
-export const updateCompanyServices = newService => {
+export const updateCompanyServices = (newService: any) => {
   return {
     type: UPDATE_COMPANY_SERVICES,
     newService: newService,
   }
 }
 
-export const updateCompanyCommunitings = newCommunitings => {
+export const updateCompanyCommunitings = (newCommunitings: any) => {
   return {
     type: UPDATE_COMPANY_COMMUNITINGS,
     newCommunitings: newCommunitings,
   }
 }
 
-export const addCompanyServices = (services, workers) => {
+export const addCompanyServices = (services: any, workers: any) => {
   return {
     type: ADD_COMPANY_SERVICES,
     services: services,
@@ -1250,7 +1281,7 @@ export const addCompanyServices = (services, workers) => {
   }
 }
 
-export const addCompanyCommunitings = (communitings, workers) => {
+export const addCompanyCommunitings = (communitings: any, workers: any) => {
   return {
     type: ADD_COMPANY_COMMUNITINGS,
     communitings: communitings,
@@ -1258,21 +1289,21 @@ export const addCompanyCommunitings = (communitings, workers) => {
   }
 }
 
-export const updateDefaultCompany = companyId => {
+export const updateDefaultCompany = (companyId: string) => {
   return {
     type: UPDATE_DEFAULT_COMPANY,
     companyId: companyId,
   }
 }
 
-export const changeSelectedUserCompany = companyId => {
+export const changeSelectedUserCompany = (companyId: string) => {
   return {
     type: CHANGE_SELECTED_USER_COMPANY,
     companyId: companyId,
   }
 }
 
-export const updateCompanyNip = (nip, dateInvoice) => {
+export const updateCompanyNip = (nip: number, dateInvoice: Date) => {
   return {
     type: UPDATE_COMPANY_NIP,
     nip: nip,
@@ -1292,35 +1323,35 @@ export const changeRestartCompanyLink = () => {
   }
 }
 
-export const updateCompanyPath = linkPath => {
+export const updateCompanyPath = (linkPath: string) => {
   return {
     type: UPDATE_COMPANY_LINK_PATH,
     linkPath: linkPath,
   }
 }
 
-export const changeListMapOffers = value => {
+export const changeListMapOffers = (value: any) => {
   return {
     type: CHANGE_LIST_MAP_OFFERS,
     value: value,
   }
 }
 
-export const changeReserwationUser = value => {
+export const changeReserwationUser = (value: any) => {
   return {
     type: CHANGE_RESERWATION_USER,
     value: value,
   }
 }
 
-export const changeCompanyMarker = data => {
+export const changeCompanyMarker = (data: any) => {
   return {
     type: UPDATE_COMPANY_MARKER,
     data: data,
   }
 }
 
-export const updateGeolocationMarks = (geolocation, marks) => {
+export const updateGeolocationMarks = (geolocation: any, marks: any) => {
   return {
     type: UPDATE_GEOLOCATION_MARKS,
     geolocation: geolocation,
@@ -1334,14 +1365,17 @@ export const restartCompanySMS = () => {
   }
 }
 
-export const actualizationSMSCompanyClients = countMessages => {
+export const actualizationSMSCompanyClients = (countMessages: any) => {
   return {
     type: ACUTLIZATION_SMS_COMPANY_CLIENTS,
     countMessages: countMessages,
   }
 }
 
-export const deleteWorkerFromCompany = (companyId, workerUserId) => {
+export const deleteWorkerFromCompany = (
+  companyId: string,
+  workerUserId: string
+) => {
   return {
     type: DELETE_WORKER_FROM_COMPANY,
     companyId: companyId,
@@ -1356,19 +1390,19 @@ export const resetCompanyStats = () => {
 }
 
 export const updateCompanySMSSettings = (
-  smsReserwationAvaible,
-  smsReserwationChangedUserAvaible,
-  smsNotifactionAvaible,
-  smsCanceledAvaible,
-  smsChangedAvaible,
-  smsServiceCreatedAvaible,
-  smsServiceChangedAvaible,
-  smsServiceFinishedAvaible,
-  smsServiceCanceledAvaible,
-  smsCommunitingNotificationAvaible,
-  smsCommunitingCreatedAvaible,
-  smsCommunitingChangedAvaible,
-  smsCommunitingCanceledAvaible
+  smsReserwationAvaible: boolean,
+  smsReserwationChangedUserAvaible: boolean,
+  smsNotifactionAvaible: boolean,
+  smsCanceledAvaible: boolean,
+  smsChangedAvaible: boolean,
+  smsServiceCreatedAvaible: boolean,
+  smsServiceChangedAvaible: boolean,
+  smsServiceFinishedAvaible: boolean,
+  smsServiceCanceledAvaible: boolean,
+  smsCommunitingNotificationAvaible: boolean,
+  smsCommunitingCreatedAvaible: boolean,
+  smsCommunitingChangedAvaible: boolean,
+  smsCommunitingCanceledAvaible: boolean
 ) => {
   return {
     type: UPDATE_COMPANY_SMS_SETTINGS,
@@ -1388,42 +1422,45 @@ export const updateCompanySMSSettings = (
   }
 }
 
-export const addCoinsOffer = data => {
+export const addCoinsOffer = (data: any) => {
   return {
     type: ADD_COINS_OFFER,
     data: data,
   }
 }
 
-export const addCompanyTransactionHistory = data => {
+export const addCompanyTransactionHistory = (data: any) => {
   return {
     type: ADD_COMPANY_TRANSACTION_HISTORY,
     data: data,
   }
 }
 
-export const addCheckoutId = paymentItem => {
+export const addCheckoutId = (paymentItem: any) => {
   return {
     type: ADD_CHECKOUT_ID,
     paymentItem: paymentItem,
   }
 }
 
-export const changeUserBlockSmsSend = date => {
+export const changeUserBlockSmsSend = (date: any) => {
   return {
     type: CHANGE_USER_BLOCK_SMS_SEND,
     date: date,
   }
 }
 
-export const changeBlockUserChangeEmail = date => {
+export const changeBlockUserChangeEmail = (date: any) => {
   return {
     type: CHANGE_BLOCK_USER_CHANGE_EMAIL,
     date: date,
   }
 }
 
-export const changeVerifiedUserFields = (changePhone, changeEmail) => {
+export const changeVerifiedUserFields = (
+  changePhone: any,
+  changeEmail: any
+) => {
   return {
     type: CHANGE_VERIFIED_USER_FIELDS,
     changePhone: changePhone,
@@ -1431,21 +1468,21 @@ export const changeVerifiedUserFields = (changePhone, changeEmail) => {
   }
 }
 
-export const errorLoadingPage = value => {
+export const errorLoadingPage = (value: any) => {
   return {
     type: ERROR_LOADING_PAGE,
     value: value,
   }
 }
 
-export const veryfiedUserPhone = token => {
+export const veryfiedUserPhone = (token: string) => {
   return {
     type: VERYFIED_USER_PHONE,
     token: token,
   }
 }
 
-export const veryfiedUserEmail = token => {
+export const veryfiedUserEmail = (token: string) => {
   return {
     type: VERYFIED_USER_EMAIL,
     token: token,
@@ -1458,14 +1495,14 @@ export const changeDeleteCompanyConfirm = () => {
   }
 }
 
-export const deleteCompanyUser = companyId => {
+export const deleteCompanyUser = (companyId: string) => {
   return {
     type: DELETE_COMPANY_USER,
     companyId: companyId,
   }
 }
 
-export const confirmDeleteCompany = value => {
+export const confirmDeleteCompany = (value: any) => {
   return {
     type: CONFIRM_DELETE_COMPANY,
     value: value,
@@ -1473,13 +1510,13 @@ export const confirmDeleteCompany = value => {
 }
 
 export const updateReserwationWorkerDate = (
-  reserwationId,
-  changed,
-  noFinished,
-  newTimeStart,
-  newTimeEnd,
-  workerSelectedUserId,
-  dateReserwation
+  reserwationId: string,
+  changed: boolean,
+  noFinished: boolean,
+  newTimeStart: string,
+  newTimeEnd: string,
+  workerSelectedUserId: string,
+  dateReserwation: Date
 ) => {
   return {
     type: UPDATE_RESERWATION_WORKER_DATA,
@@ -1493,21 +1530,21 @@ export const updateReserwationWorkerDate = (
   }
 }
 
-export const deleteReserwationWorkerDate = dataId => {
+export const deleteReserwationWorkerDate = (dataId: string) => {
   return {
     type: DELETE_RESERWATION_WORKER_DATA,
     dataId: dataId,
   }
 }
 
-export const addReserwationWorkerDate = data => {
+export const addReserwationWorkerDate = (data: any) => {
   return {
     type: ADD_RESERWATION_WORKER_DATA,
     data: data,
   }
 }
 
-export const addWorkerClientReserwationDate = data => {
+export const addWorkerClientReserwationDate = (data: any) => {
   return {
     type: ADD_WORKER_CLIENT_RESERWATION_DATA,
     data: data,
@@ -1515,11 +1552,11 @@ export const addWorkerClientReserwationDate = data => {
 }
 
 export const saveCompanyStats = (
-  stats,
-  services,
-  raportSMS,
-  raportServices,
-  raportCommunitings
+  stats: any,
+  services: any,
+  raportSMS: any,
+  raportServices: any,
+  raportCommunitings: any
 ) => {
   return {
     type: SAVE_COMPANY_STATS,
@@ -1531,14 +1568,18 @@ export const saveCompanyStats = (
   }
 }
 
-export const saveEditedCompanyShopStore = shopStore => {
+export const saveEditedCompanyShopStore = (shopStore: any) => {
   return {
     type: SAVE_EDITED_COMPANY_SHOP_STORE,
     shopStore: shopStore,
   }
 }
 
-export const editUserCompanyAvailability = (itemId, itemName, itemCount) => {
+export const editUserCompanyAvailability = (
+  itemId: string,
+  itemName: string,
+  itemCount: number
+) => {
   return {
     type: EDIT_USER_COMPANY_AVAILABILITY,
     itemId: itemId,
@@ -1547,7 +1588,7 @@ export const editUserCompanyAvailability = (itemId, itemName, itemCount) => {
   }
 }
 
-export const deleteUserCompanyAvailability = itemId => {
+export const deleteUserCompanyAvailability = (itemId: string) => {
   return {
     type: DELETE_USER_COMPANY_AVAILABILITY,
     itemId: itemId,
@@ -1560,7 +1601,10 @@ export const resetFetchUserCompanyAvailability = () => {
   }
 }
 
-export const addUserCompanyAvailability = (data, hasPermission) => {
+export const addUserCompanyAvailability = (
+  data: any,
+  hasPermission: boolean
+) => {
   return {
     type: ADD_USER_COMPANY_AVAILABILITY,
     data: data,
@@ -1574,14 +1618,14 @@ export const resetUserFavourites = () => {
   }
 }
 
-export const deleteFavouritesCompany = companyId => {
+export const deleteFavouritesCompany = (companyId: string) => {
   return {
     type: DELETE_FAVOURITES_COMPANY,
     companyId: companyId,
   }
 }
 
-export const addFavouritesCompany = favouriteAddData => {
+export const addFavouritesCompany = (favouriteAddData: any) => {
   return {
     type: ADD_FAVOURITES_COMPANY,
     favouriteAddData: favouriteAddData,
@@ -1589,9 +1633,9 @@ export const addFavouritesCompany = favouriteAddData => {
 }
 
 export const updateUserReserwationsCount = (
-  companyId,
-  isStampActive,
-  countStampsToActive
+  companyId: string,
+  isStampActive: boolean,
+  countStampsToActive: number
 ) => {
   return {
     type: UPDATE_USER_RESERWATIONS_COUNT,
@@ -1601,7 +1645,7 @@ export const updateUserReserwationsCount = (
   }
 }
 
-export const daleteCompanyStamps = (companyId, stampId) => {
+export const daleteCompanyStamps = (companyId: string, stampId: string) => {
   return {
     type: DELETE_COMPANY_STAMPS,
     companyId: companyId,
@@ -1615,7 +1659,7 @@ export const resetUpdateStamps = () => {
   }
 }
 
-export const updateCompanyStamps = (companyId, stampData) => {
+export const updateCompanyStamps = (companyId: string, stampData: any) => {
   return {
     type: UPDATE_COMPANY_STAMPS,
     companyId: companyId,
@@ -1623,7 +1667,10 @@ export const updateCompanyStamps = (companyId, stampData) => {
   }
 }
 
-export const addNewCompanyStamps = (companyId, newCompanyStamps) => {
+export const addNewCompanyStamps = (
+  companyId: string,
+  newCompanyStamps: any
+) => {
   return {
     type: ADD_NEW_COMPANY_STAMPS,
     newCompanyStamps: newCompanyStamps,
@@ -1637,28 +1684,31 @@ export const resetUserProfil = () => {
   }
 }
 
-export const updateUserImage = imageUrl => {
+export const updateUserImage = (imagestring: string) => {
   return {
     type: UPDATE_USER_IMAGE,
-    imageUrl: imageUrl,
+    imagestring: imagestring,
   }
 }
 
-export const changeActiveWorker = value => {
+export const changeActiveWorker = (value: any) => {
   return {
     type: CHANGE_ACTIVE_WORKER,
     value: value,
   }
 }
 
-export const changeWorkerHours = dataWorkingHours => {
+export const changeWorkerHours = (dataWorkingHours: any) => {
   return {
     type: CHANGE_WORKING_HOURS,
     dataWorkingHours: dataWorkingHours,
   }
 }
 
-export const changeCompanyMainImage = (companyId, imagePath) => {
+export const changeCompanyMainImage = (
+  companyId: string,
+  imagePath: string
+) => {
   return {
     type: CHANGE_COMPANY_MAIN_IMAGE,
     companyId: companyId,
@@ -1672,7 +1722,11 @@ export const updateUpdatedImageIdCompany = () => {
   }
 }
 
-export const updateCompanyImage = (companyId, pathImage, imageId) => {
+export const updateCompanyImage = (
+  companyId: string,
+  pathImage: string,
+  imageId: string
+) => {
   return {
     type: UPDATE_COMPANY_IMAGE,
     pathImage: pathImage,
@@ -1681,7 +1735,7 @@ export const updateCompanyImage = (companyId, pathImage, imageId) => {
   }
 }
 
-export const deleteCompanyImage = (companyId, pathImage) => {
+export const deleteCompanyImage = (companyId: string, pathImage: string) => {
   return {
     type: DELETE_COMPANY_IMAGE,
     companyId: companyId,
@@ -1690,11 +1744,11 @@ export const deleteCompanyImage = (companyId, pathImage) => {
 }
 
 export const addEditedOpinionToCommuniting = (
-  communitingId,
-  opinionEdited,
-  company,
-  companyId,
-  opinionId
+  communitingId: string,
+  opinionEdited: boolean,
+  company: any,
+  companyId: string,
+  opinionId: string
 ) => {
   return {
     type: ADD_EDITED_OPINION_TO_COMMUNITING,
@@ -1707,11 +1761,11 @@ export const addEditedOpinionToCommuniting = (
 }
 
 export const addEditedOpinionToService = (
-  serviceId,
-  opinionEdited,
-  company,
-  companyId,
-  opinionId
+  serviceId: string,
+  opinionEdited: boolean,
+  company: any,
+  companyId: string,
+  opinionId: string
 ) => {
   return {
     type: ADD_EDITED_OPINION_TO_SERVICE,
@@ -1724,11 +1778,11 @@ export const addEditedOpinionToService = (
 }
 
 export const addEditedOpinionToReserwation = (
-  reserwationId,
-  opinionEdited,
-  company,
-  companyId,
-  opinionId
+  reserwationId: string,
+  opinionEdited: boolean,
+  company: any,
+  companyId: string,
+  opinionId: string
 ) => {
   return {
     type: ADD_EDITED_OPINION_TO_RESERWATION,
@@ -1741,10 +1795,10 @@ export const addEditedOpinionToReserwation = (
 }
 
 export const addNewOpinionToCommuniting = (
-  communitingId,
-  opinion,
-  company,
-  companyId
+  communitingId: string,
+  opinion: any,
+  company: any,
+  companyId: string
 ) => {
   return {
     type: ADD_NEW_OPINION_TO_COMMUNITING,
@@ -1756,10 +1810,10 @@ export const addNewOpinionToCommuniting = (
 }
 
 export const addNewOpinionToService = (
-  serviceId,
-  opinion,
-  company,
-  companyId
+  serviceId: string,
+  opinion: any,
+  company: any,
+  companyId: string
 ) => {
   return {
     type: ADD_NEW_OPINION_TO_SERVICE,
@@ -1771,10 +1825,10 @@ export const addNewOpinionToService = (
 }
 
 export const addNewOpinionToReserwation = (
-  reserwationId,
-  opinion,
-  company,
-  companyId
+  reserwationId: string,
+  opinion: any,
+  company: any,
+  companyId: string
 ) => {
   return {
     type: ADD_NEW_OPINION_TO_RESERWATION,
@@ -1785,7 +1839,11 @@ export const addNewOpinionToReserwation = (
   }
 }
 
-export const addReplayToOpinion = (opinionId, replay, companyId) => {
+export const addReplayToOpinion = (
+  opinionId: string,
+  replay: any,
+  companyId: string
+) => {
   return {
     type: ADD_REPLAY_TO_OPINION,
     opinionId: opinionId,
@@ -1800,7 +1858,7 @@ export const resetOpinionFunction = () => {
   }
 }
 
-export const addNewOpinionsCompany = (companyId, opinions) => {
+export const addNewOpinionsCompany = (companyId: string, opinions: any) => {
   return {
     type: ADD_NEW_OPINIONS_COMPANY,
     companyId: companyId,
@@ -1814,14 +1872,14 @@ export const updatePromotionsDispatch = () => {
   }
 }
 
-export const updateCompanyPathPromotion = promotionDate => {
+export const updateCompanyPathPromotion = (promotionDate: any) => {
   return {
     type: UPDATE_COMPANY_PATH_PROMOTION,
     promotionDate: promotionDate,
   }
 }
 
-export const deleteCompanyPromotion = promotionId => {
+export const deleteCompanyPromotion = (promotionId: string) => {
   return {
     type: DELETE_COMPANY_PROMOTION,
     promotionId: promotionId,
@@ -1834,42 +1892,42 @@ export const updateConstHappyHoursFunction = () => {
   }
 }
 
-export const updateCompanyHappyHourConstPatch = dateConst => {
+export const updateCompanyHappyHourConstPatch = (dateConst: any) => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOUR_CONST_PATCH,
     dateConst: dateConst,
   }
 }
 
-export const deleteCompanyHappyHoursConst = happyHourId => {
+export const deleteCompanyHappyHoursConst = (happyHourId: string) => {
   return {
     type: DELETE_COMPANY_HAPPY_HOUR_CONST,
     happyHourId: happyHourId,
   }
 }
 
-export const updateCompanyHappyHoursConst = constHappyHours => {
+export const updateCompanyHappyHoursConst = (constHappyHours: any) => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOURS_CONST,
     constHappyHours: constHappyHours,
   }
 }
 
-export const updateCompanyPromotions = promotions => {
+export const updateCompanyPromotions = (promotions: any) => {
   return {
     type: UPDATE_COMPANY_HAPPY_HOURS_NO_CONST,
     promotions: promotions,
   }
 }
 
-export const updateCompanyMaps = maps => {
+export const updateCompanyMaps = (maps: any) => {
   return {
     type: UPDATE_COMPANY_MAPS,
     maps: maps,
   }
 }
 
-export const updateOpeningHoursCompany = (openingHours, daysOff) => {
+export const updateOpeningHoursCompany = (openingHours: any, daysOff: any) => {
   return {
     type: UPDATE_COMPANY_OPENING_HOURS,
     openingHours: openingHours,
@@ -1877,14 +1935,17 @@ export const updateOpeningHoursCompany = (openingHours, daysOff) => {
   }
 }
 
-export const updateComanyTeksts = texts => {
+export const updateComanyTeksts = (texts: any) => {
   return {
     type: UPDATE_COMPANY_TEKSTS,
     texts: texts,
   }
 }
 
-export const companyDeleteWorkerNoConstHours = (workerId, noConstHourId) => {
+export const companyDeleteWorkerNoConstHours = (
+  workerId: string,
+  noConstHourId: string
+) => {
   return {
     type: COMPANY_DELETE_WORKER_NO_CONST_HOURS,
     workerId: workerId,
@@ -1892,7 +1953,7 @@ export const companyDeleteWorkerNoConstHours = (workerId, noConstHourId) => {
   }
 }
 
-export const companyAddWorkerNoConstHours = (workerId, data) => {
+export const companyAddWorkerNoConstHours = (workerId: string, data: any) => {
   return {
     type: COMPANY_ADD_WORKER_NO_CONST_HOURS,
     workerId: workerId,
@@ -1900,7 +1961,7 @@ export const companyAddWorkerNoConstHours = (workerId, data) => {
   }
 }
 
-export const companyPatchWorkerNoConstHours = (workerId, data) => {
+export const companyPatchWorkerNoConstHours = (workerId: string, data: any) => {
   return {
     type: COMPANY_PATCH_WORKER_NO_CONST_HOURS,
     workerId: workerId,
@@ -1914,21 +1975,21 @@ export const resetWorkersPropsVisible = () => {
   }
 }
 
-export const companyPatchWorkerContTime = dataTime => {
+export const companyPatchWorkerContTime = (dataTime: any) => {
   return {
     type: COMPANY_PATCH_WORKER_CONST_TIME,
     dataTime: dataTime,
   }
 }
 
-export const companyPatchWorkerSettings = dataWorker => {
+export const companyPatchWorkerSettings = (dataWorker: any) => {
   return {
     type: COMPANY_PATCH_WORKER_SETTINGS,
     dataWorker: dataWorker,
   }
 }
 
-export const companyPatchSettings = data => {
+export const companyPatchSettings = (data: any) => {
   return {
     type: COMPANY_PATCH_SETTINGS,
     data: data,
@@ -1936,12 +1997,12 @@ export const companyPatchSettings = data => {
 }
 
 export const patchNewCompanyServices = (
-  data,
-  ownerDataServices,
-  workers,
-  promotions,
-  happyHoursConst,
-  companyStamps
+  data: any,
+  ownerDataServices: any,
+  workers: any,
+  promotions: any,
+  happyHoursConst: any,
+  companyStamps: any
 ) => {
   return {
     type: COMPANY_PATCH_NEW_SERVICES,
@@ -1954,7 +2015,10 @@ export const patchNewCompanyServices = (
   }
 }
 
-export const addSelectedUserReserwations = (userSelectedId, reserwations) => {
+export const addSelectedUserReserwations = (
+  userSelectedId: string,
+  reserwations: any
+) => {
   return {
     type: ADD_SELECTED_USER_RESERWATIONS,
     userSelectedId: userSelectedId,
@@ -1962,7 +2026,10 @@ export const addSelectedUserReserwations = (userSelectedId, reserwations) => {
   }
 }
 
-export const addToUserInformations = (userSelectedId, messages) => {
+export const addToUserInformations = (
+  userSelectedId: string,
+  messages: any
+) => {
   return {
     type: ADD_TO_USER_INFORMATIONS,
     userSelectedId: userSelectedId,
@@ -1970,7 +2037,10 @@ export const addToUserInformations = (userSelectedId, messages) => {
   }
 }
 
-export const newWorkerUsersMessageInformations = (data, selectedUserId) => {
+export const newWorkerUsersMessageInformations = (
+  data: any,
+  selectedUserId: string
+) => {
   return {
     type: WORKER_MORE_USERS_MESSAGES_INFORMATIONS,
     data: data,
@@ -1978,7 +2048,10 @@ export const newWorkerUsersMessageInformations = (data, selectedUserId) => {
   }
 }
 
-const deleteMessageToUserInformation = (selectedUserId, messageId) => {
+const deleteMessageToUserInformation = (
+  selectedUserId: string,
+  messageId: string
+) => {
   return {
     type: DELETE_MESSAGE_WORKER_USER_INFORMATION,
     selectedUserId: selectedUserId,
@@ -1986,14 +2059,17 @@ const deleteMessageToUserInformation = (selectedUserId, messageId) => {
   }
 }
 
-export const resetBellAlerts = value => {
+export const resetBellAlerts = (value: any) => {
   return {
     type: RESET_BELL_ALERT,
     value: value,
   }
 }
 
-export const addNewMessageToUserInformation = (selectedUserId, newMessage) => {
+export const addNewMessageToUserInformation = (
+  selectedUserId: string,
+  newMessage: string
+) => {
   return {
     type: ADD_NEW_MESSAGE_WORKER_USER_INFORMATION,
     selectedUserId: selectedUserId,
@@ -2001,7 +2077,10 @@ export const addNewMessageToUserInformation = (selectedUserId, newMessage) => {
   }
 }
 
-export const addPhoneToWorkerUserInformation = (selectedUserId, userPhone) => {
+export const addPhoneToWorkerUserInformation = (
+  selectedUserId: string,
+  userPhone: number
+) => {
   return {
     type: ADD_NEW_PHONE_WORKER_USER_INFORMATION,
     selectedUserId: selectedUserId,
@@ -2010,9 +2089,9 @@ export const addPhoneToWorkerUserInformation = (selectedUserId, userPhone) => {
 }
 
 export const addPhoneToWorkerReserwation = (
-  selectedUserId,
-  userPhone,
-  reserwationId
+  selectedUserId: string,
+  userPhone: number,
+  reserwationId: string
 ) => {
   return {
     type: ADD_NEW_PHONE_WORKER_RESERWATION,
@@ -2022,7 +2101,10 @@ export const addPhoneToWorkerReserwation = (
   }
 }
 
-export const newWorkerUsersInformationsBlock = (selectedUserId, isBlocked) => {
+export const newWorkerUsersInformationsBlock = (
+  selectedUserId: string,
+  isBlocked: boolean
+) => {
   return {
     type: WORKER_USERS_INFORMATIONS_BLOCK,
     selectedUserId: selectedUserId,
@@ -2030,7 +2112,10 @@ export const newWorkerUsersInformationsBlock = (selectedUserId, isBlocked) => {
   }
 }
 
-export const newWorkerUsersHistoryInformations = (data, userSelectedId) => {
+export const newWorkerUsersHistoryInformations = (
+  data: any,
+  userSelectedId: string
+) => {
   return {
     type: WORKER_MORE_USERS_HISTORY_INFORMATIONS,
     data: data,
@@ -2038,14 +2123,14 @@ export const newWorkerUsersHistoryInformations = (data, userSelectedId) => {
   }
 }
 
-export const newWorkerUsersInformations = data => {
+export const newWorkerUsersInformations = (data: any) => {
   return {
     type: WORKER_USERS_INFORMATIONS,
     data: data,
   }
 }
 
-export const addNewAlerts = data => {
+export const addNewAlerts = (data: any) => {
   return {
     type: ADD_NEW_ALERTS,
     data: data,
@@ -2064,7 +2149,7 @@ export const resetPlaces = () => {
   }
 }
 
-export const avaibleUpdatePage = value => {
+export const avaibleUpdatePage = (value: any) => {
   return {
     type: AVAIBLE_UPDATE_PAGE,
     value: value,
@@ -2077,7 +2162,10 @@ export const updatePage = () => {
   }
 }
 
-export const updateUserOneReserwation = (reserwationId, companyName) => {
+export const updateUserOneReserwation = (
+  reserwationId: string,
+  companyName: string
+) => {
   return {
     type: UPDATE_USER_ONE_RESERWATION,
     reserwationId: reserwationId,
@@ -2085,49 +2173,49 @@ export const updateUserOneReserwation = (reserwationId, companyName) => {
   }
 }
 
-export const updateUserReserwations = data => {
+export const updateUserReserwations = (data: any) => {
   return {
     type: UPDATE_USER_RESERWATIONS,
     data: data,
   }
 }
 
-export const updateWorkerReserwations = data => {
+export const updateWorkerReserwations = (data: any) => {
   return {
     type: UPDATE_WORKER_RESERWATIONS,
     data: data,
   }
 }
 
-export const updatePlacesData = data => {
+export const updatePlacesData = (data: any) => {
   return {
     type: UPDATE_PLACES_DATA,
     data: data,
   }
 }
 
-export const updateNewPlacesData = data => {
+export const updateNewPlacesData = (data: any) => {
   return {
     type: UPDATE_NEW_PLACES_DATA,
     data: data,
   }
 }
 
-export const updatePatchCompanyData = data => {
+export const updatePatchCompanyData = (data: any) => {
   return {
     type: UPDATE_PATCH_COMPANY_DATA,
     data: data,
   }
 }
 
-export const avaibleDateToReserwationUpdate = value => {
+export const avaibleDateToReserwationUpdate = (value: any) => {
   return {
     type: AVAIBLE_DATE_TO_RESERWATION_UPDATE,
     value: value,
   }
 }
 
-export const avaibleDateToReserwation = date => {
+export const avaibleDateToReserwation = (date: any) => {
   return {
     type: AVAIBLE_DATE_TO_RESERWATION,
     date: date,
@@ -2141,7 +2229,7 @@ export const avaibleDateToReserwation = date => {
 //   }
 // }
 
-export const changeEditWorkerHours = (value, item) => {
+export const changeEditWorkerHours = (value: any, item: any) => {
   return {
     type: CHANGE_EDIT_WORKER_HOURS,
     value: value,
@@ -2149,21 +2237,21 @@ export const changeEditWorkerHours = (value, item) => {
   }
 }
 
-export const changeReserwationValue = value => {
+export const changeReserwationValue = (value: any) => {
   return {
     type: CHANGE_RESERWATION_VALUE,
     value: value,
   }
 }
 
-export const resetEditCompany = value => {
+export const resetEditCompany = (value: any) => {
   return {
     type: RESET_EDIT_COMPANY,
     value: value,
   }
 }
 
-export const replaceCompanyData = data => {
+export const replaceCompanyData = (data: any) => {
   return {
     type: REPLACE_COMPANY_DATA,
     data: data,
@@ -2171,19 +2259,19 @@ export const replaceCompanyData = data => {
 }
 
 export const fetchCompanyRegistration = (
-  companyEmail,
-  companyName,
-  companyNumber,
-  companyCity,
-  companyDiscrict,
-  companyAdress,
-  userToken,
-  userId,
-  industries,
-  companyNip,
-  companyAdressCode
+  companyEmail: string,
+  companyName: string,
+  companyNumber: number,
+  companyCity: string,
+  companyDiscrict: string,
+  companyAdress: string,
+  userToken: string,
+  userId: string,
+  industries: any,
+  companyNip: number,
+  companyAdressCode: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2206,7 +2294,7 @@ export const fetchCompanyRegistration = (
         }
       )
 
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(fetchAutoLogin(true, true, userToken, userId, true))
         dispatch(updateResetCreateCompany(true))
@@ -2236,8 +2324,11 @@ export const fetchCompanyRegistration = (
   }
 }
 
-export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
-  return dispatch => {
+export const fetchSentAgainCompanyActivedEmail = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/company-sent-again-verification-email`,
@@ -2250,7 +2341,7 @@ export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addAlertItem(
             "Pomyślnie wysłano kod aktywacyjny do aktywowania konto firmowe podany adres email",
@@ -2279,8 +2370,11 @@ export const fetchSentAgainCompanyActivedEmail = (token, companyId) => {
   }
 }
 
-export const fetchSentAgainCompanyActivedNewPhone = (token, companyId) => {
-  return dispatch => {
+export const fetchSentAgainCompanyActivedNewPhone = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/company-sent-again-verification-new-phone`,
@@ -2328,8 +2422,11 @@ export const fetchSentAgainCompanyActivedNewPhone = (token, companyId) => {
   }
 }
 
-export const fetchSentAgainCompanyActivedPhone = (token, companyId) => {
-  return dispatch => {
+export const fetchSentAgainCompanyActivedPhone = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/company-sent-again-verification-phone`,
@@ -2378,12 +2475,11 @@ export const fetchSentAgainCompanyActivedPhone = (token, companyId) => {
 }
 
 export const fetchActiveCompanyAccount = (
-  codeToVerified,
-  companyId,
-  token,
-  userId
+  codeToVerified: number,
+  companyId: string,
+  token: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -2404,7 +2500,7 @@ export const fetchActiveCompanyAccount = (
           fetchUpdateStatusActiveCompanyEmail(
             companyId,
             response.data.accountEmailVerified,
-            false
+            null
           )
         )
 
@@ -2430,12 +2526,12 @@ export const fetchActiveCompanyAccount = (
 }
 
 export const fetchActiveCompanyAccountPhone = (
-  codeToVerified,
-  companyId,
-  token,
-  userId
+  codeToVerified: number,
+  companyId: string,
+  token: string,
+  userId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -2450,10 +2546,10 @@ export const fetchActiveCompanyAccountPhone = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(addAlertItem("Pomyślnie aktywowano telefon firmowy", "green"))
         dispatch(fetchAutoLogin(true, true, token, userId))
-        dispatch(fetchUpdateStatusActiveCompanyEmail(companyId, true, true))
+        dispatch(fetchUpdateStatusActiveCompanyEmail(companyId, true, null))
       })
       .catch(error => {
         if (!!error) {
@@ -2474,8 +2570,8 @@ export const fetchActiveCompanyAccountPhone = (
   }
 }
 
-export const fetchCompanyData = (companyId, token) => {
-  return dispatch => {
+export const fetchCompanyData = (companyId: string, token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2520,8 +2616,12 @@ export const fetchCompanyData = (companyId, token) => {
   }
 }
 
-export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
-  return dispatch => {
+export const fetchAddWorkerToCompany = (
+  companyId: string,
+  emailWorker: string,
+  token: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2536,7 +2636,7 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addAlertItem("Wysłano link aktywacyjny na podany email.", "green")
         )
@@ -2566,8 +2666,12 @@ export const fetchAddWorkerToCompany = (companyId, emailWorker, token) => {
   }
 }
 
-export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
-  return dispatch => {
+export const fetchAddAgainWorkerToCompany = (
+  companyId: string,
+  emailWorker: string,
+  token: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2582,7 +2686,7 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addAlertItem(
             "Wysłano ponownie link aktywacyjny na podany email.",
@@ -2614,11 +2718,11 @@ export const fetchAddAgainWorkerToCompany = (companyId, emailWorker, token) => {
 }
 
 export const fetchConfirmAddWorkerToCompany = (
-  companyId,
-  workerEmail,
-  codeToActive
+  companyId: string,
+  workerEmail: string,
+  codeToActive: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(`${Site.serverUrl}/confirm-added-worker-to-company`, {
@@ -2626,7 +2730,7 @@ export const fetchConfirmAddWorkerToCompany = (
         workerEmail: workerEmail,
         codeToActive: codeToActive,
       })
-      .then(response => {
+      .then(() => {
         dispatch(addAlertItem("Dodano użytkownika do firmy.", "green"))
         dispatch(changeSpinner(false))
       })
@@ -2653,12 +2757,12 @@ export const fetchConfirmAddWorkerToCompany = (
 }
 
 export const fetchDeleteUserFromCompany = (
-  companyId,
-  workerUserId,
-  token,
-  password
+  companyId: string,
+  workerUserId: string,
+  token: string,
+  password: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2674,7 +2778,7 @@ export const fetchDeleteUserFromCompany = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(addAlertItem("Usunięto pracownika.", "green"))
         dispatch(deleteWorkerFromCompany(companyId, workerUserId))
         dispatch(changeSpinner(false))
@@ -2699,19 +2803,19 @@ export const fetchDeleteUserFromCompany = (
 }
 
 export const fetchDoReserwation = (
-  token,
-  companyId,
-  workerUserId,
-  workerId,
-  dateStart,
-  dateFull,
-  reserwationMessage,
-  serviceId,
-  numberPhone,
-  isStampActive,
-  countStampsToActive
+  token: string,
+  companyId: string,
+  workerUserId: string,
+  workerId: string,
+  dateStart: string,
+  dateFull: string,
+  reserwationMessage: string,
+  serviceId: string,
+  numberPhone: number,
+  isStampActive: boolean,
+  countStampsToActive: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2733,7 +2837,7 @@ export const fetchDoReserwation = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         if (!!isStampActive) {
           dispatch(
             updateUserReserwationsCount(
@@ -2767,20 +2871,20 @@ export const fetchDoReserwation = (
 }
 
 export const fetchChangeReserwation = (
-  token,
-  companyId,
-  workerUserId,
-  workerId,
-  dateStart,
-  dateFull,
-  reserwationMessage,
-  serviceId,
-  numberPhone,
-  isStampActive,
-  countStampsToActive,
-  selectedReserwationId
+  token: string,
+  companyId: string,
+  workerUserId: string,
+  workerId: string,
+  dateStart: string,
+  dateFull: string,
+  reserwationMessage: string,
+  serviceId: string,
+  numberPhone: number,
+  isStampActive: boolean,
+  countStampsToActive: number,
+  selectedReserwationId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -2803,7 +2907,7 @@ export const fetchChangeReserwation = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         if (!!isStampActive) {
           dispatch(
             updateUserReserwationsCount(
@@ -2837,17 +2941,17 @@ export const fetchChangeReserwation = (
 }
 
 export const fetchWorkerDisabledHours = (
-  token,
-  companyId,
-  selectedWorkerUserId,
-  selectedWorkerId,
-  selectedDay,
-  selectedMonth,
-  selectedYear,
-  timeReserwation,
-  serviceId
+  token: string,
+  companyId: string,
+  selectedWorkerUserId: string,
+  selectedWorkerId: string,
+  selectedDay: number,
+  selectedMonth: number,
+  selectedYear: number,
+  timeReserwation: number,
+  serviceId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(
       changeAlertExtra("Ładowanie wylnych godzin wybranego pracownika", true)
     )
@@ -2895,8 +2999,8 @@ export const fetchWorkerDisabledHours = (
   }
 }
 
-export const fetchPathCompany = companyPath => {
-  return dispatch => {
+export const fetchPathCompany = (companyPath: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie dancyh o firmie", true))
     return axios
       .post(`${Site.serverUrl}/company-path`, {
@@ -2928,14 +3032,14 @@ export const fetchPathCompany = companyPath => {
 }
 
 export const fetchAllCompanys = (
-  page = 1,
-  sorts,
-  filters,
-  localization,
-  selectedName,
-  district
+  page: number = 1,
+  sorts: any,
+  filters: any,
+  localization: string,
+  selectedName: string,
+  district: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
     } else {
@@ -2954,8 +3058,8 @@ export const fetchAllCompanys = (
         if (page === 1) {
           dispatch(
             updatePlacesData(
-              response.data.companysDoc,
-              response.data.geolocation
+              response.data.companysDoc
+              // response.data.geolocation ?
             )
           )
           dispatch(changeLoadingPlaces(false))
@@ -2992,15 +3096,15 @@ export const fetchAllCompanys = (
 }
 
 export const fetchAllCompanysOfType = (
-  page = 1,
-  type = 1,
-  sorts,
-  filters,
-  localization,
-  selectedName,
-  district
+  page: number = 1,
+  type: number = 1,
+  sorts: any,
+  filters: any,
+  localization: string,
+  selectedName: string,
+  district: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     if (page === 1) {
       dispatch(changeLoadingPlaces(true))
     } else {
@@ -3021,8 +3125,8 @@ export const fetchAllCompanysOfType = (
           dispatch(changeLoadingPlaces(false))
           dispatch(
             updatePlacesData(
-              response.data.companysDoc,
-              response.data.geolocation
+              response.data.companysDoc
+              // response.data.geolocation ?
             )
           )
           if (response.data.companysDoc.length === 0) {
@@ -3058,14 +3162,14 @@ export const fetchAllCompanysOfType = (
 }
 
 export const fetchAllMapsMarks = (
-  type = 1,
-  sorts,
-  filters,
-  localization,
-  selectedName,
-  district
+  type: number = 1,
+  sorts: any,
+  filters: any,
+  localization: string,
+  selectedName: string,
+  district: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Ładowanie znaczników na mapę", true))
 
     return axios
@@ -3103,8 +3207,8 @@ export const fetchAllMapsMarks = (
   }
 }
 
-export const fetchUserReserwations = token => {
-  return dispatch => {
+export const fetchUserReserwations = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie rezerwacji", true))
     return axios
       .get(`${Site.serverUrl}/user-reserwations`, {
@@ -3136,12 +3240,12 @@ export const fetchUserReserwations = token => {
 }
 
 export const fetchUserReserwationsAll = (
-  token,
-  yearPicker,
-  monthPicker,
-  onlyToOpinion
+  token: string,
+  yearPicker: number,
+  monthPicker: number,
+  onlyToOpinion: boolean
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie wszystkich rezerwacji", true))
     return axios
       .post(
@@ -3181,13 +3285,13 @@ export const fetchUserReserwationsAll = (
 }
 
 export const fetchGetWorkerWorkingHours = (
-  token,
-  companyId,
-  workerId,
-  year,
-  month
+  token: string,
+  companyId: string,
+  workerId: string,
+  year: number,
+  month: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -3235,8 +3339,13 @@ export const fetchGetWorkerWorkingHours = (
   }
 }
 
-export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
-  return dispatch => {
+export const fetchGetOwnerWorkingHours = (
+  token: string,
+  companyId: string,
+  year: number,
+  month: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -3284,14 +3393,14 @@ export const fetchGetOwnerWorkingHours = (token, companyId, year, month) => {
 }
 
 export const fetchWorkerReserwationsAll = (
-  token,
-  workerUserId,
-  yearPicker,
-  monthPicker,
-  companyId,
-  isAdmin
+  token: string,
+  workerUserId: string,
+  yearPicker: number,
+  monthPicker: number,
+  companyId: string,
+  isAdmin: boolean
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3346,17 +3455,17 @@ export const fetchWorkerReserwationsAll = (
 }
 
 export const fetchDoReserwationWorker = (
-  token,
-  workerUserId,
-  companyId,
-  dateStart,
-  dateEnd,
-  dateFull,
-  reserwationMessage,
-  yearPicker,
-  monthPicker
+  token: string,
+  workerUserId: string,
+  companyId: string,
+  dateStart: string,
+  dateEnd: string,
+  dateFull: string,
+  reserwationMessage: string,
+  yearPicker: number,
+  monthPicker: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3403,12 +3512,12 @@ export const fetchDoReserwationWorker = (
 }
 
 export const fetchDeleteReserwation = (
-  token,
-  reserwationId,
-  canceled = null,
-  companyName = ""
+  token: string,
+  reserwationId: string,
+  canceled: any = null,
+  companyName: string = ""
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Aktualizacja rezerwacji", true))
     return axios
       .patch(
@@ -3423,7 +3532,7 @@ export const fetchDeleteReserwation = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeAlertExtra(null, false))
         dispatch(updateUserOneReserwation(reserwationId, companyName))
         dispatch(addAlertItem("Zaktualizowano rezerwację.", "green"))
@@ -3448,21 +3557,21 @@ export const fetchDeleteReserwation = (
 }
 
 export const fetchUpdateWorkerReserwation = (
-  token,
-  workerUserId,
-  reserwationId,
-  canceled = null,
-  changed = null,
-  noFinished = null,
-  yearPicker,
-  monthPicker,
-  companyId,
-  newTimeStart,
-  newTimeEnd,
-  workerSelectedUserId,
-  dateReserwation = null
+  token: string,
+  workerUserId: string,
+  reserwationId: string,
+  canceled: any = null,
+  changed: any = null,
+  noFinished: any = null,
+  yearPicker: number,
+  monthPicker: number,
+  companyId: string,
+  newTimeStart: string,
+  newTimeEnd: string,
+  workerSelectedUserId: string,
+  dateReserwation: any = null
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -3484,7 +3593,7 @@ export const fetchUpdateWorkerReserwation = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         if (
           !!canceled ||
           workerUserId !==
@@ -3526,8 +3635,8 @@ export const fetchUpdateWorkerReserwation = (
   }
 }
 
-export const fetchUpdateUserAlert = token => {
-  return dispatch => {
+export const fetchUpdateUserAlert = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/update-user-alert`,
@@ -3538,7 +3647,7 @@ export const fetchUpdateUserAlert = token => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(resetUserAlerts())
       })
       .catch(error => {
@@ -3559,8 +3668,8 @@ export const fetchUpdateUserAlert = token => {
   }
 }
 
-export const fetchGetMoreAlerts = (token, page) => {
-  return dispatch => {
+export const fetchGetMoreAlerts = (token: string, page: number) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Ładowanie alertów", true))
     return axios
       .post(
@@ -3597,8 +3706,11 @@ export const fetchGetMoreAlerts = (token, page) => {
   }
 }
 
-export const fetchworkerUsersInformations = (token, companyId) => {
-  return dispatch => {
+export const fetchworkerUsersInformations = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3639,12 +3751,12 @@ export const fetchworkerUsersInformations = (token, companyId) => {
 }
 
 export const fetchworkerUsersMoreInformationsHistory = (
-  token,
-  companyId,
-  userSelectedId,
-  page
+  token: string,
+  companyId: string,
+  userSelectedId: string,
+  page: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie informacji o kliencie", true))
     return axios
       .post(
@@ -3689,12 +3801,12 @@ export const fetchworkerUsersMoreInformationsHistory = (
 }
 
 export const fetchworkerUsersMoreInformationsMessage = (
-  token,
-  companyId,
-  selectedUserId,
-  page
+  token: string,
+  companyId: string,
+  selectedUserId: string,
+  page: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie informacji o kliencie", true))
     return axios
       .post(
@@ -3739,12 +3851,12 @@ export const fetchworkerUsersMoreInformationsMessage = (
 }
 
 export const fetchCompanyUsersInformationsBlock = (
-  token,
-  companyId,
-  selectedUserId,
-  isBlocked
+  token: string,
+  companyId: string,
+  selectedUserId: string,
+  isBlocked: boolean
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Blokowanie użytkownika", true))
     return axios
       .post(
@@ -3760,7 +3872,7 @@ export const fetchCompanyUsersInformationsBlock = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeAlertExtra(null, false))
         dispatch(newWorkerUsersInformationsBlock(selectedUserId, isBlocked))
         if (!!isBlocked) {
@@ -3793,12 +3905,12 @@ export const fetchCompanyUsersInformationsBlock = (
 }
 
 export const fetchCompanyUsersInformationsMessage = (
-  token,
-  companyId,
-  selectedUserId,
-  workerMessage
+  token: string,
+  companyId: string,
+  selectedUserId: string,
+  workerMessage: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3841,12 +3953,12 @@ export const fetchCompanyUsersInformationsMessage = (
 }
 
 export const fetchCompanyUsersInformationsDeleteMessage = (
-  token,
-  companyId,
-  selectedUserId,
-  messageId
+  token: string,
+  companyId: string,
+  selectedUserId: string,
+  messageId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3862,7 +3974,7 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(deleteMessageToUserInformation(selectedUserId, messageId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto wiadomość o kliencie.", "green"))
@@ -3887,12 +3999,12 @@ export const fetchCompanyUsersInformationsDeleteMessage = (
 }
 
 export const fetchCustomUserPhone = (
-  token,
-  selectedUserId,
-  companyId,
-  reserwationId = null
+  token: string,
+  selectedUserId: string,
+  companyId: string,
+  reserwationId: string = ""
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3945,8 +4057,12 @@ export const fetchCustomUserPhone = (
   }
 }
 
-export const fetchUserInformations = (token, companyId, userSelectedId) => {
-  return dispatch => {
+export const fetchUserInformations = (
+  token: string,
+  companyId: string,
+  userSelectedId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -3985,11 +4101,11 @@ export const fetchUserInformations = (token, companyId, userSelectedId) => {
 }
 
 export const fetchSelectedUserReserwations = (
-  token,
-  userSelectedId,
-  companyId
+  token: string,
+  userSelectedId: string,
+  companyId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -4033,8 +4149,12 @@ export const fetchSelectedUserReserwations = (
   }
 }
 
-export const fetchSaveCompanyServices = (token, companyId, services) => {
-  return dispatch => {
+export const fetchSaveCompanyServices = (
+  token: string,
+  companyId: string,
+  services: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4091,8 +4211,12 @@ export const fetchSaveCompanyServices = (token, companyId, services) => {
   }
 }
 
-export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
-  return dispatch => {
+export const fetchSaveCompanySettings = (
+  token: string,
+  companyId: string,
+  dataSettings: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4107,7 +4231,7 @@ export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addAlertItem("Zaktualizowano ustawienia działalności", "green")
         )
@@ -4134,12 +4258,12 @@ export const fetchSaveCompanySettings = (token, companyId, dataSettings) => {
 }
 
 export const fetchSaveWorkerProps = (
-  token,
-  companyId,
-  dateProps = null,
-  constTime = null
+  token: string,
+  companyId: string,
+  dateProps: any = null,
+  constTime: any = null
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4155,7 +4279,7 @@ export const fetchSaveWorkerProps = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         if (!!dateProps) {
           dispatch(companyPatchWorkerSettings(dateProps))
@@ -4185,13 +4309,13 @@ export const fetchSaveWorkerProps = (
 }
 
 export const fetchGetWorkerNoConstData = (
-  token,
-  companyId,
-  workerId,
-  year,
-  month
+  token: string,
+  companyId: string,
+  workerId: string,
+  year: number,
+  month: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4241,13 +4365,13 @@ export const fetchGetWorkerNoConstData = (
 }
 
 export const fetchGetOwnerNoConstData = (
-  token,
-  companyId,
-  year,
-  month,
-  ownerId
+  token: string,
+  companyId: string,
+  year: number,
+  month: number,
+  ownerId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4296,8 +4420,13 @@ export const fetchGetOwnerNoConstData = (
   }
 }
 
-export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
-  return dispatch => {
+export const addNewNoConstHour = (
+  token: string,
+  companyId: string,
+  workerId: string,
+  newDate: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4342,12 +4471,12 @@ export const addNewNoConstHour = (token, companyId, workerId, newDate) => {
 }
 
 export const deleteNoConstHour = (
-  token,
-  companyId,
-  workerId,
-  noConstDateId
+  token: string,
+  companyId: string,
+  workerId: string,
+  noConstDateId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4363,7 +4492,7 @@ export const deleteNoConstHour = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(companyDeleteWorkerNoConstHours(workerId, noConstDateId))
       })
@@ -4390,13 +4519,13 @@ export const deleteNoConstHour = (
 }
 
 export const fetchSaveTextsCompany = (
-  token,
-  companyId,
-  textAboutUs = null,
-  textReserwation = null,
-  links = null
+  token: string,
+  companyId: string,
+  textAboutUs: string | null = null,
+  textReserwation: string | null = null,
+  links: any = null
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     const allTextsCompany = {
       textAboutUs: textAboutUs,
       textReserwation: textReserwation,
@@ -4416,7 +4545,7 @@ export const fetchSaveTextsCompany = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(updateComanyTeksts(allTextsCompany))
         dispatch(addAlertItem("Zaktualizowano tekst", "green"))
@@ -4439,12 +4568,12 @@ export const fetchSaveTextsCompany = (
 }
 
 export const fetchSaveOpeningHoursCompany = (
-  token,
-  companyId,
-  openingHours = null,
-  daysOff = null
+  token: string,
+  companyId: string,
+  openingHours: any = null,
+  daysOff: any = null
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     const openingHoursCompany = {
       openingHours: openingHours,
       daysOff: daysOff,
@@ -4463,7 +4592,7 @@ export const fetchSaveOpeningHoursCompany = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(updateOpeningHoursCompany(openingHours, daysOff))
         dispatch(addAlertItem("Zaktualizowano godziny otwarcia.", "green"))
@@ -4487,8 +4616,8 @@ export const fetchSaveOpeningHoursCompany = (
   }
 }
 
-export const fetchSaveMaps = (token, companyId, maps) => {
-  return dispatch => {
+export const fetchSaveMaps = (token: string, companyId: string, maps: any) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4503,7 +4632,7 @@ export const fetchSaveMaps = (token, companyId, maps) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateCompanyMaps(maps))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano mapę.", "green"))
@@ -4525,8 +4654,12 @@ export const fetchSaveMaps = (token, companyId, maps) => {
   }
 }
 
-export const fetchAddConstDateHappyHour = (token, companyId, constDate) => {
-  return dispatch => {
+export const fetchAddConstDateHappyHour = (
+  token: string,
+  companyId: string,
+  constDate: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4563,8 +4696,12 @@ export const fetchAddConstDateHappyHour = (token, companyId, constDate) => {
   }
 }
 
-export const fetchAddPromotion = (token, companyId, promotionDate) => {
-  return dispatch => {
+export const fetchAddPromotion = (
+  token: string,
+  companyId: string,
+  promotionDate: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4601,8 +4738,12 @@ export const fetchAddPromotion = (token, companyId, promotionDate) => {
   }
 }
 
-export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
-  return dispatch => {
+export const fetchDeleteConstHappyHour = (
+  token: string,
+  companyId: string,
+  happyHourId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4617,7 +4758,7 @@ export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(deleteCompanyHappyHoursConst(happyHourId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto happy hour.", "green"))
@@ -4639,8 +4780,12 @@ export const fetchDeleteConstHappyHour = (token, companyId, happyHourId) => {
   }
 }
 
-export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
-  return dispatch => {
+export const fetchUpdateConstDateHappyHour = (
+  token: string,
+  companyId: string,
+  constDate: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4655,7 +4800,7 @@ export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateCompanyHappyHourConstPatch(constDate))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano happy hour.", "green"))
@@ -4679,8 +4824,12 @@ export const fetchUpdateConstDateHappyHour = (token, companyId, constDate) => {
   }
 }
 
-export const fetchDeletePromotion = (token, companyId, promotionId) => {
-  return dispatch => {
+export const fetchDeletePromotion = (
+  token: string,
+  companyId: string,
+  promotionId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4695,7 +4844,7 @@ export const fetchDeletePromotion = (token, companyId, promotionId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(deleteCompanyPromotion(promotionId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto promocję.", "green"))
@@ -4717,8 +4866,12 @@ export const fetchDeletePromotion = (token, companyId, promotionId) => {
   }
 }
 
-export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
-  return dispatch => {
+export const fetchUpdatePromotion = (
+  token: string,
+  companyId: string,
+  promotionDate: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -4733,7 +4886,7 @@ export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateCompanyPathPromotion(promotionDate))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zatualizowano promocję.", "green"))
@@ -4757,8 +4910,12 @@ export const fetchUpdatePromotion = (token, companyId, promotionDate) => {
   }
 }
 
-export const fetchAddOpinion = (token, opinionData, company) => {
-  return dispatch => {
+export const fetchAddOpinion = (
+  token: string,
+  opinionData: any,
+  company: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -4808,8 +4965,12 @@ export const fetchAddOpinion = (token, opinionData, company) => {
   }
 }
 
-export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
-  return dispatch => {
+export const fetchUpdateEditedOpinion = (
+  token: string,
+  opinionData: any,
+  company: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -4823,7 +4984,7 @@ export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addEditedOpinionToReserwation(
             opinionData.reserwationId,
@@ -4853,8 +5014,8 @@ export const fetchUpdateEditedOpinion = (token, opinionData, company) => {
   }
 }
 
-export const fetchLoadMoreOpinions = (page, companyId) => {
-  return dispatch => {
+export const fetchLoadMoreOpinions = (page: number, companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie opinii", true))
     return axios
       .post(`${Site.serverUrl}/load-more-opinions`, {
@@ -4880,8 +5041,13 @@ export const fetchLoadMoreOpinions = (page, companyId) => {
   }
 }
 
-export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
-  return dispatch => {
+export const fetchAddReplayOpinion = (
+  token: string,
+  companyId: string,
+  replay: any,
+  opinionId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -4897,7 +5063,7 @@ export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(addReplayToOpinion(opinionId, replay, companyId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano odpowiedz do opinii.", "green"))
@@ -4924,8 +5090,13 @@ export const fetchAddReplayOpinion = (token, companyId, replay, opinionId) => {
   }
 }
 
-export const fetchCompanyUploadImage = (token, companyId, file, imageId) => {
-  return dispatch => {
+export const fetchCompanyUploadImage = (
+  token: string,
+  companyId: string,
+  file: any,
+  imageId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -4941,7 +5112,9 @@ export const fetchCompanyUploadImage = (token, companyId, file, imageId) => {
         }
       )
       .then(response => {
-        dispatch(updateCompanyImage(companyId, response.data.imageUrl, imageId))
+        dispatch(
+          updateCompanyImage(companyId, response.data.imagestring, imageId)
+        )
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano zdjęcie.", "green"))
       })
@@ -4962,8 +5135,12 @@ export const fetchCompanyUploadImage = (token, companyId, file, imageId) => {
   }
 }
 
-export const fetchCompanyDeleteImage = (token, companyId, imagePath) => {
-  return dispatch => {
+export const fetchCompanyDeleteImage = (
+  token: string,
+  companyId: string,
+  imagePath: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -4978,7 +5155,7 @@ export const fetchCompanyDeleteImage = (token, companyId, imagePath) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(deleteCompanyImage(companyId, imagePath))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
@@ -5000,8 +5177,12 @@ export const fetchCompanyDeleteImage = (token, companyId, imagePath) => {
   }
 }
 
-export const fetchCompanyMainImage = (token, companyId, imagePath) => {
-  return dispatch => {
+export const fetchCompanyMainImage = (
+  token: string,
+  companyId: string,
+  imagePath: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5016,7 +5197,7 @@ export const fetchCompanyMainImage = (token, companyId, imagePath) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeCompanyMainImage(companyId, imagePath))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Ustawiono nowe główne zdjęcie.", "green"))
@@ -5043,8 +5224,8 @@ export const fetchCompanyMainImage = (token, companyId, imagePath) => {
   }
 }
 
-export const fetchUserUploadImage = (token, image) => {
-  return dispatch => {
+export const fetchUserUploadImage = (token: string, image: any) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5059,7 +5240,7 @@ export const fetchUserUploadImage = (token, image) => {
         }
       )
       .then(response => {
-        dispatch(updateUserImage(response.data.imageUrl))
+        dispatch(updateUserImage(response.data.imagestring))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano zdjęcie.", "green"))
       })
@@ -5080,8 +5261,8 @@ export const fetchUserUploadImage = (token, image) => {
   }
 }
 
-export const fetchUserDeleteImage = (token, imagePath) => {
-  return dispatch => {
+export const fetchUserDeleteImage = (token: string, imagePath: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5095,7 +5276,7 @@ export const fetchUserDeleteImage = (token, imagePath) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateUserImage(""))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
@@ -5117,8 +5298,8 @@ export const fetchUserDeleteImage = (token, imagePath) => {
   }
 }
 
-export const fetchUserDeleteImageOther = (token, imagePath) => {
-  return dispatch => {
+export const fetchUserDeleteImageOther = (token: string, imagePath: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5132,7 +5313,7 @@ export const fetchUserDeleteImageOther = (token, imagePath) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateUserImage(""))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto zdjęcie.", "green"))
@@ -5154,8 +5335,12 @@ export const fetchUserDeleteImageOther = (token, imagePath) => {
   }
 }
 
-export const companyAddStamp = (token, companyId, stampData) => {
-  return dispatch => {
+export const companyAddStamp = (
+  token: string,
+  companyId: string,
+  stampData: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5192,8 +5377,12 @@ export const companyAddStamp = (token, companyId, stampData) => {
   }
 }
 
-export const companyDeleteStamp = (token, companyId, stampId) => {
-  return dispatch => {
+export const companyDeleteStamp = (
+  token: string,
+  companyId: string,
+  stampId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5208,7 +5397,7 @@ export const companyDeleteStamp = (token, companyId, stampId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(daleteCompanyStamps(companyId, stampId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto pieczątke.", "green"))
@@ -5230,8 +5419,12 @@ export const companyDeleteStamp = (token, companyId, stampId) => {
   }
 }
 
-export const companyUpdateStamp = (token, companyId, stampData) => {
-  return dispatch => {
+export const companyUpdateStamp = (
+  token: string,
+  companyId: string,
+  stampData: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5246,7 +5439,7 @@ export const companyUpdateStamp = (token, companyId, stampData) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateCompanyStamps(companyId, stampData))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano pieczątke.", "green"))
@@ -5270,8 +5463,8 @@ export const companyUpdateStamp = (token, companyId, stampData) => {
   }
 }
 
-export const addCompanyFavourites = (token, favouriteAddData) => {
-  return dispatch => {
+export const addCompanyFavourites = (token: string, favouriteAddData: any) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -5285,7 +5478,7 @@ export const addCompanyFavourites = (token, favouriteAddData) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(addFavouritesCompany(favouriteAddData))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Dodano do ulubionych.", "green"))
@@ -5309,8 +5502,8 @@ export const addCompanyFavourites = (token, favouriteAddData) => {
   }
 }
 
-export const deleteCompanyFavourites = (token, companyId) => {
-  return dispatch => {
+export const deleteCompanyFavourites = (token: string, companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -5324,7 +5517,7 @@ export const deleteCompanyFavourites = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(deleteFavouritesCompany(companyId))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto z ulubionych.", "green"))
@@ -5348,8 +5541,8 @@ export const deleteCompanyFavourites = (token, companyId) => {
   }
 }
 
-export const getCompanyAvailability = (token, companyId) => {
-  return dispatch => {
+export const getCompanyAvailability = (token: string, companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Pobieranie stanu magazynowego", true))
     return axios
       .post(
@@ -5395,12 +5588,12 @@ export const getCompanyAvailability = (token, companyId) => {
 }
 
 export const addCompanyAvailability = (
-  token,
-  companyId,
-  itemName,
-  itemCount
+  token: string,
+  companyId: string,
+  itemName: string,
+  itemCount: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5443,8 +5636,12 @@ export const addCompanyAvailability = (
   }
 }
 
-export const deleteCompanyAvailability = (token, companyId, itemId) => {
-  return dispatch => {
+export const deleteCompanyAvailability = (
+  token: string,
+  companyId: string,
+  itemId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5459,7 +5656,7 @@ export const deleteCompanyAvailability = (token, companyId, itemId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(deleteUserCompanyAvailability(itemId))
         dispatch(addAlertItem("Zaktualizowano stan magazynowy", "green"))
@@ -5482,13 +5679,13 @@ export const deleteCompanyAvailability = (token, companyId, itemId) => {
 }
 
 export const editCompanyAvailability = (
-  token,
-  companyId,
-  itemId,
-  itemName,
-  itemCount
+  token: string,
+  companyId: string,
+  itemId: string,
+  itemName: string,
+  itemCount: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5505,7 +5702,7 @@ export const editCompanyAvailability = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(editUserCompanyAvailability(itemId, itemName, itemCount))
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano stan magazynowy", "green"))
@@ -5530,13 +5727,13 @@ export const editCompanyAvailability = (
 }
 
 export const fetchSaveShopStore = (
-  token,
-  companyId,
-  newCategorys,
-  editedCategory,
-  deletedCategory
+  token: string,
+  companyId: string,
+  newCategorys: any,
+  editedCategory: any,
+  deletedCategory: any
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5577,8 +5774,13 @@ export const fetchSaveShopStore = (
   }
 }
 
-export const fetchCompanyStaticts = (token, companyId, months, year) => {
-  return dispatch => {
+export const fetchCompanyStaticts = (
+  token: string,
+  companyId: string,
+  months: number,
+  year: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5623,8 +5825,11 @@ export const fetchCompanyStaticts = (token, companyId, months, year) => {
   }
 }
 
-export const fetchSentCodeConfirmDelete = (token, companyId) => {
-  return dispatch => {
+export const fetchSentCodeConfirmDelete = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5638,7 +5843,7 @@ export const fetchSentCodeConfirmDelete = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(
           addAlertItem(
@@ -5669,8 +5874,12 @@ export const fetchSentCodeConfirmDelete = (token, companyId) => {
   }
 }
 
-export const fetchConfirmDelete = (token, companyId, code) => {
-  return dispatch => {
+export const fetchConfirmDelete = (
+  token: string,
+  companyId: string,
+  code: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5685,7 +5894,7 @@ export const fetchConfirmDelete = (token, companyId, code) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(confirmDeleteCompany(false))
         dispatch(deleteCompanyUser(companyId))
@@ -5717,8 +5926,11 @@ export const fetchConfirmDelete = (token, companyId, code) => {
   }
 }
 
-export const fetchConfirmDeleteCreatedCompany = (token, companyId) => {
-  return dispatch => {
+export const fetchConfirmDeleteCreatedCompany = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5732,7 +5944,7 @@ export const fetchConfirmDeleteCreatedCompany = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(deleteCompanyUser(companyId))
         dispatch(addAlertItem("Usunięto działalność.", "green"))
@@ -5756,8 +5968,8 @@ export const fetchConfirmDeleteCreatedCompany = (token, companyId) => {
   }
 }
 
-export const fetchSentCodeConfirmDeleteAccount = token => {
-  return dispatch => {
+export const fetchSentCodeConfirmDeleteAccount = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5769,7 +5981,7 @@ export const fetchSentCodeConfirmDeleteAccount = token => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(
           addAlertItem("Wysłano na e-maila kod do usunięcia konta.", "green")
@@ -5797,8 +6009,8 @@ export const fetchSentCodeConfirmDeleteAccount = token => {
   }
 }
 
-export const fetchSentCodeConfirmVerifiedPhone = token => {
-  return dispatch => {
+export const fetchSentCodeConfirmVerifiedPhone = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5851,8 +6063,8 @@ export const fetchSentCodeConfirmVerifiedPhone = token => {
   }
 }
 
-export const fetchDeleteAccount = (token, code) => {
-  return dispatch => {
+export const fetchDeleteAccount = (token: string, code: number) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5866,7 +6078,7 @@ export const fetchDeleteAccount = (token, code) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         changeUserProfilVisible(false)
         dispatch(changeSpinner(false))
         localStorage.removeItem("USERID")
@@ -5893,8 +6105,8 @@ export const fetchDeleteAccount = (token, code) => {
   }
 }
 
-export const fetchVerifiedPhone = (token, code) => {
-  return dispatch => {
+export const fetchVerifiedPhone = (token: string, code: number) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5941,8 +6153,12 @@ export const fetchVerifiedPhone = (token, code) => {
   }
 }
 
-export const fetchNewOrder = (token, companyId, coinsIds) => {
-  return dispatch => {
+export const fetchNewOrder = (
+  token: string,
+  companyId: string,
+  coinsIds: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -5980,8 +6196,11 @@ export const fetchNewOrder = (token, companyId, coinsIds) => {
   }
 }
 
-export const getCompanyTransactionHistory = (token, companyId) => {
-  return dispatch => {
+export const getCompanyTransactionHistory = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6021,8 +6240,8 @@ export const getCompanyTransactionHistory = (token, companyId) => {
   }
 }
 
-export const getCoinsOffer = (token, companyId) => {
-  return dispatch => {
+export const getCoinsOffer = (token: string, companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .get(`${Site.serverUrl}/get-coins-offer`)
@@ -6049,8 +6268,12 @@ export const getCoinsOffer = (token, companyId) => {
   }
 }
 
-export const sendInvoiceToCompanyEmail = (token, companyId, invoiceId) => {
-  return dispatch => {
+export const sendInvoiceToCompanyEmail = (
+  token: string,
+  companyId: string,
+  invoiceId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6065,7 +6288,7 @@ export const sendInvoiceToCompanyEmail = (token, companyId, invoiceId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
       })
       .catch(error => {
@@ -6091,23 +6314,23 @@ export const sendInvoiceToCompanyEmail = (token, companyId, invoiceId) => {
 }
 
 export const fetchSaveCompanySMS = (
-  token,
-  companyId,
-  smsReserwationAvaible = false,
-  smsReserwationChangedUserAvaible = false,
-  smsNotifactionAvaible = false,
-  smsCanceledAvaible = false,
-  smsChangedAvaible = false,
-  smsServiceCreatedAvaible = false,
-  smsServiceChangedAvaible = false,
-  smsServiceFinishedAvaible = false,
-  smsServiceCanceledAvaible = false,
-  smsCommunitingNotificationAvaible = false,
-  smsCommunitingCreatedAvaible = false,
-  smsCommunitingChangedAvaible = false,
-  smsCommunitingCanceledAvaible = false
+  token: string,
+  companyId: string,
+  smsReserwationAvaible: boolean = false,
+  smsReserwationChangedUserAvaible: boolean = false,
+  smsNotifactionAvaible: boolean = false,
+  smsCanceledAvaible: boolean = false,
+  smsChangedAvaible: boolean = false,
+  smsServiceCreatedAvaible: boolean = false,
+  smsServiceChangedAvaible: boolean = false,
+  smsServiceFinishedAvaible: boolean = false,
+  smsServiceCanceledAvaible: boolean = false,
+  smsCommunitingNotificationAvaible: boolean = false,
+  smsCommunitingCreatedAvaible: boolean = false,
+  smsCommunitingChangedAvaible: boolean = false,
+  smsCommunitingCanceledAvaible: boolean = false
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -6134,7 +6357,7 @@ export const fetchSaveCompanySMS = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           updateCompanySMSSettings(
             smsReserwationAvaible,
@@ -6175,13 +6398,13 @@ export const fetchSaveCompanySMS = (
 }
 
 export const fetchSendSMSCompanyClients = (
-  token,
-  companyId,
-  allClients = false,
-  selectedClients = [],
-  textMessage = ""
+  token: string,
+  companyId: string,
+  allClients: any = false,
+  selectedClients: any = [],
+  textMessage: string = ""
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .patch(
@@ -6224,8 +6447,8 @@ export const fetchSendSMSCompanyClients = (
   }
 }
 
-export const fetchCompanyMarker = companyId => {
-  return dispatch => {
+export const fetchCompanyMarker = (companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeAlertExtra("Ładowanie danych firmy", true))
     dispatch(changeCompanyMarker(null))
     return axios
@@ -6250,12 +6473,12 @@ export const fetchCompanyMarker = companyId => {
 }
 
 export const fetchAddReport = (
-  token,
-  companyId,
-  reportValue,
-  opinionId = null
+  token: string,
+  companyId: string,
+  reportValue: any,
+  opinionId: string | null = null
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     if (!!opinionId) {
       dispatch(changeAlertExtra("Raportowanie opinii", true))
     } else {
@@ -6275,7 +6498,7 @@ export const fetchAddReport = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeAlertExtra(null, false))
         if (!!opinionId) {
           dispatch(addAlertItem("Zgłoszono opinie.", "green"))
@@ -6313,8 +6536,8 @@ export const fetchAddReport = (
   }
 }
 
-export const fetchNotificationEndpoint = (token, endpoint) => {
-  return dispatch => {
+export const fetchNotificationEndpoint = (token: string, endpoint: any) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/save-notification-endpoint`,
@@ -6332,8 +6555,12 @@ export const fetchNotificationEndpoint = (token, endpoint) => {
   }
 }
 
-export const fetchAddCompanyLink = (token, companyId, pathValue) => {
-  return dispatch => {
+export const fetchAddCompanyLink = (
+  token: string,
+  companyId: string,
+  pathValue: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6348,7 +6575,7 @@ export const fetchAddCompanyLink = (token, companyId, pathValue) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Zaktualizowano link firmowy.", "green"))
         dispatch(updateCompanyPath(pathValue))
@@ -6372,8 +6599,12 @@ export const fetchAddCompanyLink = (token, companyId, pathValue) => {
   }
 }
 
-export const fetchCompanyUpdateNip = (token, companyId, nipValue) => {
-  return dispatch => {
+export const fetchCompanyUpdateNip = (
+  token: string,
+  companyId: string,
+  nipValue: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6428,8 +6659,8 @@ export const fetchCompanyUpdateNip = (token, companyId, nipValue) => {
   }
 }
 
-export const fetchCompanyUpdateNipInfo = (token, companyId) => {
-  return dispatch => {
+export const fetchCompanyUpdateNipInfo = (token: string, companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6480,8 +6711,8 @@ export const fetchCompanyUpdateNipInfo = (token, companyId) => {
   }
 }
 
-export const fetchUpdateDefaultCompany = (token, companyId) => {
-  return dispatch => {
+export const fetchUpdateDefaultCompany = (token: string, companyId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6495,7 +6726,7 @@ export const fetchUpdateDefaultCompany = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(updateDefaultCompany(companyId))
         dispatch(addAlertItem("Zaktualizowano domyślną działalność.", "green"))
@@ -6523,20 +6754,20 @@ export const fetchUpdateDefaultCompany = (token, companyId) => {
 }
 
 export const fetchAddService = (
-  token,
-  companyId,
-  nameInput,
-  surnameInput,
-  isActiveUser,
-  phoneInput,
-  objectInput,
-  descriptionInput,
-  costInput,
-  statusValue,
-  email,
-  workerUserId
+  token: string,
+  companyId: string,
+  nameInput: string,
+  surnameInput: string,
+  isActiveUser: boolean,
+  phoneInput: number,
+  objectInput: any,
+  descriptionInput: string,
+  costInput: number,
+  statusValue: number,
+  email: string,
+  workerUserId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6592,13 +6823,13 @@ export const fetchAddService = (
 }
 
 export const fetchGetCompanyServices = (
-  token,
-  companyId,
-  year,
-  month,
-  workerUserId
+  token: string,
+  companyId: string,
+  year: number,
+  month: number,
+  workerUserId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6638,8 +6869,12 @@ export const fetchGetCompanyServices = (
   }
 }
 
-export const fetchCompanyDeleteService = (token, companyId, serviceId) => {
-  return dispatch => {
+export const fetchCompanyDeleteService = (
+  token: string,
+  companyId: string,
+  serviceId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6654,7 +6889,7 @@ export const fetchCompanyDeleteService = (token, companyId, serviceId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto usługę", "green"))
         dispatch(deleteCompanyServices(serviceId))
@@ -6677,16 +6912,16 @@ export const fetchCompanyDeleteService = (token, companyId, serviceId) => {
 }
 
 export const fetchUpdateCompanyService = (
-  token,
-  companyId,
-  serviceId,
-  descriptionInput,
-  objectInput,
-  costInput,
-  selectedWorkerUserId,
-  statusValue
+  token: string,
+  companyId: string,
+  serviceId: string,
+  descriptionInput: string,
+  objectInput: string,
+  costInput: number,
+  selectedWorkerUserId: string,
+  statusValue: number
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6706,7 +6941,7 @@ export const fetchUpdateCompanyService = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           updateServiceCompanyServices({
             serviceId: serviceId,
@@ -6737,8 +6972,12 @@ export const fetchUpdateCompanyService = (
   }
 }
 
-export const fetchCheckUserPhone = (token, companyId, serviceId) => {
-  return dispatch => {
+export const fetchCheckUserPhone = (
+  token: string,
+  companyId: string,
+  serviceId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6779,11 +7018,11 @@ export const fetchCheckUserPhone = (token, companyId, serviceId) => {
 }
 
 export const fetchCheckUserPhoneCommuniting = (
-  token,
-  companyId,
-  communitingId
+  token: string,
+  companyId: string,
+  communitingId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6826,8 +7065,12 @@ export const fetchCheckUserPhoneCommuniting = (
   }
 }
 
-export const fetchGetUserHistoryServices = (token, month, year) => {
-  return dispatch => {
+export const fetchGetUserHistoryServices = (
+  token: string,
+  month: number,
+  year: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6869,25 +7112,25 @@ export const fetchGetUserHistoryServices = (token, month, year) => {
 }
 
 export const fetchAddCommuniting = (
-  token,
-  companyId,
-  nameInput,
-  surnameInput,
-  isActiveUser,
-  phoneInput,
-  descriptionInput,
-  costInput,
-  statusValue,
-  email,
-  workerUserId,
-  cityInput,
-  streetInput,
-  timeStart,
-  timeEnd,
-  addWorkerTime,
-  fullDate
+  token: string,
+  companyId: string,
+  nameInput: string,
+  surnameInput: string,
+  isActiveUser: boolean,
+  phoneInput: number,
+  descriptionInput: string,
+  costInput: number,
+  statusValue: number,
+  email: string,
+  workerUserId: string,
+  cityInput: string,
+  streetInput: string,
+  timeStart: string,
+  timeEnd: string,
+  addWorkerTime: any,
+  fullDate: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6948,13 +7191,13 @@ export const fetchAddCommuniting = (
 }
 
 export const fetchGetCompanyCommunitings = (
-  token,
-  companyId,
-  year,
-  month,
-  workerUserId
+  token: string,
+  companyId: string,
+  year: number,
+  month: number,
+  workerUserId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -6998,13 +7241,13 @@ export const fetchGetCompanyCommunitings = (
 }
 
 export const fetchCompanyDeleteCommuniting = (
-  token,
-  companyId,
-  communitingId,
-  reserwationId,
-  opinionId
+  token: string,
+  companyId: string,
+  communitingId: string,
+  reserwationId: string,
+  opinionId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7021,7 +7264,7 @@ export const fetchCompanyDeleteCommuniting = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(addAlertItem("Usunięto dojazd", "green"))
         dispatch(deleteCompanyCommuniting(communitingId))
@@ -7044,19 +7287,19 @@ export const fetchCompanyDeleteCommuniting = (
 }
 
 export const fetchUpdateCompanyCommuniting = (
-  token,
-  companyId,
-  communitingId,
-  descriptionInput,
-  costInput,
-  selectedWorkerUserId,
-  statusValue,
-  timeStart,
-  timeEnd,
-  fullDate,
-  reserwationId
+  token: string,
+  companyId: string,
+  communitingId: string,
+  descriptionInput: string,
+  costInput: number,
+  selectedWorkerUserId: string,
+  statusValue: number,
+  timeStart: string,
+  timeEnd: string,
+  fullDate: string,
+  reserwationId: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7079,7 +7322,7 @@ export const fetchUpdateCompanyCommuniting = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         if (statusValue === 4) {
           dispatch(deleteCompanyCommuniting(communitingId))
         } else {
@@ -7116,8 +7359,12 @@ export const fetchUpdateCompanyCommuniting = (
   }
 }
 
-export const fetchGetUserHistoryCommuniting = (token, month, year) => {
-  return dispatch => {
+export const fetchGetUserHistoryCommuniting = (
+  token: string,
+  month: number,
+  year: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7158,8 +7405,12 @@ export const fetchGetUserHistoryCommuniting = (token, month, year) => {
   }
 }
 
-export const fetchUserCancelCommunity = (token, communityId, reserwationId) => {
-  return dispatch => {
+export const fetchUserCancelCommunity = (
+  token: string,
+  communityId: string,
+  reserwationId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7174,7 +7425,7 @@ export const fetchUserCancelCommunity = (token, communityId, reserwationId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(cancelUserCommuniting(communityId))
         dispatch(addAlertItem("Odwołano dojazd", "green"))
@@ -7196,8 +7447,12 @@ export const fetchUserCancelCommunity = (token, communityId, reserwationId) => {
   }
 }
 
-export const fetchAddOpinionCommuniting = (token, opinionData, company) => {
-  return dispatch => {
+export const fetchAddOpinionCommuniting = (
+  token: string,
+  opinionData: any,
+  company: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7248,11 +7503,11 @@ export const fetchAddOpinionCommuniting = (token, opinionData, company) => {
 }
 
 export const fetchUpdateEditedOpinionCommuniting = (
-  token,
-  opinionData,
-  company
+  token: string,
+  opinionData: any,
+  company: any
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7266,7 +7521,7 @@ export const fetchUpdateEditedOpinionCommuniting = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addEditedOpinionToCommuniting(
             opinionData.communitingId,
@@ -7296,8 +7551,12 @@ export const fetchUpdateEditedOpinionCommuniting = (
   }
 }
 
-export const fetchAddOpinionService = (token, opinionData, company) => {
-  return dispatch => {
+export const fetchAddOpinionService = (
+  token: string,
+  opinionData: any,
+  company: any
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7348,11 +7607,11 @@ export const fetchAddOpinionService = (token, opinionData, company) => {
 }
 
 export const fetchUpdateEditedOpinionService = (
-  token,
-  opinionData,
-  company
+  token: string,
+  opinionData: any,
+  company: any
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7366,7 +7625,7 @@ export const fetchUpdateEditedOpinionService = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(
           addEditedOpinionToService(
             opinionData.serviceId,
@@ -7396,8 +7655,8 @@ export const fetchUpdateEditedOpinionService = (
   }
 }
 
-export const fetchDownloadCommuniting = communitingId => {
-  return dispatch => {
+export const fetchDownloadCommuniting = (communitingId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     dispatch(updateDownloadCommuniting(null))
     return axios
@@ -7425,8 +7684,8 @@ export const fetchDownloadCommuniting = communitingId => {
   }
 }
 
-export const fetchDownloadService = serviceId => {
-  return dispatch => {
+export const fetchDownloadService = (serviceId: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     dispatch(updateDownloadService(null))
     return axios
@@ -7455,23 +7714,23 @@ export const fetchDownloadService = serviceId => {
 }
 
 export const fetchAddWorkerClientReserwation = (
-  token,
-  companyId,
-  dateStart,
-  dateEnd,
-  dateFull,
-  reserwationMessage,
-  selectedWorkerUserId,
-  selectedServiceId,
-  isActiveUser,
-  phone,
-  name,
-  surname,
-  email,
-  activePromotion,
-  activeHappyHour
+  token: string,
+  companyId: string,
+  dateStart: string,
+  dateEnd: string,
+  dateFull: string,
+  reserwationMessage: string,
+  selectedWorkerUserId: string,
+  selectedServiceId: string,
+  isActiveUser: boolean,
+  phone: number,
+  name: string,
+  surname: string,
+  email: string,
+  activePromotion: boolean,
+  activeHappyHour: boolean
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7520,8 +7779,13 @@ export const fetchAddWorkerClientReserwation = (
   }
 }
 
-export const fetchUpdateUserProps = (token, language, darkMode, blindMode) => {
-  return dispatch => {
+export const fetchUpdateUserProps = (
+  token: string,
+  language: string,
+  darkMode: boolean,
+  blindMode: boolean
+) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/update-user-props`,
@@ -7542,12 +7806,12 @@ export const fetchUpdateUserProps = (token, language, darkMode, blindMode) => {
 }
 
 export const fetchUpdateCompanyPhone = (
-  token,
-  companyId,
-  newPhone,
-  password
+  token: string,
+  companyId: string,
+  newPhone: string,
+  password: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7563,7 +7827,7 @@ export const fetchUpdateCompanyPhone = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateCompanyPhone(companyId, newPhone))
         dispatch(changeSpinner(false))
         dispatch(
@@ -7601,8 +7865,11 @@ export const fetchUpdateCompanyPhone = (
   }
 }
 
-export const fetchCancelUpdateCompanyPhone = (token, companyId) => {
-  return dispatch => {
+export const fetchCancelUpdateCompanyPhone = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7616,7 +7883,7 @@ export const fetchCancelUpdateCompanyPhone = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(cancelUpdateCompanyPhone(companyId))
         dispatch(addAlertItem("Anulowano zmianę numeru telefonu", "green"))
@@ -7643,8 +7910,11 @@ export const fetchCancelUpdateCompanyPhone = (token, companyId) => {
   }
 }
 
-export const fetchCancelUpdateCompanyEmail = (token, companyId) => {
-  return dispatch => {
+export const fetchCancelUpdateCompanyEmail = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7658,7 +7928,7 @@ export const fetchCancelUpdateCompanyEmail = (token, companyId) => {
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(changeSpinner(false))
         dispatch(cancelUpdateCompanyEmail(companyId))
         dispatch(addAlertItem("Anulowano zmianę adresu email", "green"))
@@ -7685,8 +7955,12 @@ export const fetchCancelUpdateCompanyEmail = (token, companyId) => {
   }
 }
 
-export const fetchUpdateCompanyPhoneVeryfiedCode = (token, companyId, code) => {
-  return dispatch => {
+export const fetchUpdateCompanyPhoneVeryfiedCode = (
+  token: string,
+  companyId: string,
+  code: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7728,12 +8002,12 @@ export const fetchUpdateCompanyPhoneVeryfiedCode = (token, companyId, code) => {
 }
 
 export const fetchUpdateCompanyEmail = (
-  token,
-  companyId,
-  newEmail,
-  password
+  token: string,
+  companyId: string,
+  newEmail: string,
+  password: string
 ) => {
-  return dispatch => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7749,7 +8023,7 @@ export const fetchUpdateCompanyEmail = (
           },
         }
       )
-      .then(response => {
+      .then(() => {
         dispatch(updateCompanyEmail(companyId, newEmail))
         dispatch(changeSpinner(false))
       })
@@ -7774,8 +8048,11 @@ export const fetchUpdateCompanyEmail = (
   }
 }
 
-export const fetchSentAgainCompanyActivedNewEmail = (token, companyId) => {
-  return dispatch => {
+export const fetchSentAgainCompanyActivedNewEmail = (
+  token: string,
+  companyId: string
+) => {
+  return (dispatch: Dispatch<any>) => {
     return axios
       .post(
         `${Site.serverUrl}/company-sent-again-verification-new-email`,
@@ -7823,8 +8100,12 @@ export const fetchSentAgainCompanyActivedNewEmail = (token, companyId) => {
   }
 }
 
-export const fetchUpdateCompanyEmailVeryfiedCode = (token, companyId, code) => {
-  return dispatch => {
+export const fetchUpdateCompanyEmailVeryfiedCode = (
+  token: string,
+  companyId: string,
+  code: number
+) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7865,8 +8146,8 @@ export const fetchUpdateCompanyEmailVeryfiedCode = (token, companyId, code) => {
   }
 }
 
-export const fetchVerifiedEmail = (token, code) => {
-  return dispatch => {
+export const fetchVerifiedEmail = (token: string, code: number) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7913,8 +8194,8 @@ export const fetchVerifiedEmail = (token, code) => {
   }
 }
 
-export const fetchSentCodeConfirmVerifiedEmail = token => {
-  return dispatch => {
+export const fetchSentCodeConfirmVerifiedEmail = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -7962,8 +8243,8 @@ export const fetchSentCodeConfirmVerifiedEmail = token => {
   }
 }
 
-export const fetchDeleteVerifiedUserPhone = token => {
-  return dispatch => {
+export const fetchDeleteVerifiedUserPhone = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(
@@ -8002,8 +8283,8 @@ export const fetchDeleteVerifiedUserPhone = token => {
   }
 }
 
-export const fetchDeleteVerifiedUserEmail = token => {
-  return dispatch => {
+export const fetchDeleteVerifiedUserEmail = (token: string) => {
+  return (dispatch: Dispatch<any>) => {
     dispatch(changeSpinner(true))
     return axios
       .post(

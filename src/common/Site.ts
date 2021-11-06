@@ -7,3 +7,11 @@ export const Site = {
   mobileSize: 576,
   barSize: 1200,
 }
+
+export interface SiteInterface {
+  serverUrl: string
+  siteUrl: string
+  awsUrl: string
+  mobileSize: number
+  barSize: number
+}

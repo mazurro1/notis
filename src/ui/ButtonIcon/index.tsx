@@ -8,7 +8,9 @@ const ButtonIcon = ({
   fontIconSize = "25",
   fontSize = "18",
   uppercase = false,
-  onClick = () => {},
+  onClick = (e: any) => {
+    e.preventDefault()
+  },
   title = "",
   icon,
   secondColors = false,
@@ -19,14 +21,31 @@ const ButtonIcon = ({
   id = "",
   isFetchToBlock = false,
   isActive = false,
+}: {
+  fontIconSize: string
+  fontSize: string
+  uppercase: boolean
+  onClick: Function
+  title: string
+  icon: object
+  secondColors: boolean
+  buttonBgDark: boolean
+  disabled: boolean
+  customColorButton: string | null
+  customColorIcon: string | null
+  id: string
+  isFetchToBlock: boolean
+  isActive: boolean
 }) => {
   const [mouseOn, setMouseOn] = useState(false)
   const [mouseClick, setMouseClick] = useState(false)
   const [numberScale, setNumberScale] = useState(1)
-  const refButton = useRef(null)
-  const timerToClearSomewhere = useRef(null)
-  const siteProps = useSelector(state => state.siteProps)
-  const disableFetchActions = useSelector(state => state.disableFetchActions)
+  const refButton = useRef<any>(null)
+  const timerToClearSomewhere: any = useRef(null)
+  const siteProps = useSelector((state: any) => state.siteProps)
+  const disableFetchActions = useSelector(
+    (state: any) => state.disableFetchActions
+  )
 
   const dispatch = useDispatch()
 
@@ -55,7 +74,7 @@ const ButtonIcon = ({
     }
   }
 
-  const handleOnClick = e => {
+  const handleOnClick = (e: Event) => {
     if (!disabled) {
       if (isFetchToBlock) {
         if (!disableFetchActions) {
@@ -105,7 +124,6 @@ const ButtonIcon = ({
       uppercase={uppercase}
       onMouseEnter={handleOnMouseOn}
       onMouseLeave={handleOnMouseLeave}
-      onClick={handleOnClick}
       icon={!!icon}
       ref={refButton}
       mouseClick={mouseClick}
@@ -115,6 +133,7 @@ const ButtonIcon = ({
       disabled={disabled || (disableFetchActions && isFetchToBlock)}
       customColorButton={customColorButton}
       siteProps={siteProps}
+      onClick={(e: any) => handleOnClick(e)}
     >
       {allIcon}
       <styled.TextStyle siteProps={siteProps}>{title}</styled.TextStyle>

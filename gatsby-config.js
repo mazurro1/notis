@@ -17,6 +17,21 @@ module.exports = {
 
   plugins: [
     {
+      resolve: `gatsby-plugin-tsconfig-paths`,
+      options: {
+        configFile: `${__dirname}/tsconfig.json`,
+        silent: true,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-typescript`,
+      options: {
+        isTSX: true,
+        jsxPragma: `js`,
+        allExtensions: true,
+      },
+    },
+    {
       resolve: "gatsby-plugin-offline",
       options: {
         appendScript: require.resolve("./src/custom-sw.js"),
@@ -57,18 +72,36 @@ module.exports = {
         downloadFiles: true,
       },
     },
-    {
-      resolve: `gatsby-plugin-alias-imports`,
-      options: {
-        alias: {
-          "@components": path.resolve(__dirname, "src/components"),
-          "@state": path.resolve(__dirname, "src/state"),
-          "@common": path.resolve(__dirname, "src/common"),
-          "@ui": path.resolve(__dirname, "src/ui"),
-        },
-        extensions: ["js"],
-      },
-    },
+    // {
+    //   resolve: "gatsby-plugin-root-import",
+    //   options: {
+    //     resolveModules: [path.join(__dirname, "libs")],
+    //     utils: path.join(
+    //       __dirname,
+    //       "src",
+    //       "components",
+    //       "state",
+    //       "common",
+    //       "ui"
+    //     ),
+    //     // "@components": path.resolve(__dirname, "src/components"),
+    //     // "@state": path.resolve(__dirname, "src/state"),
+    //     // "@common": path.resolve(__dirname, "src/common"),
+    //     // "@ui": path.resolve(__dirname, "src/ui"),
+    //   },
+    // },
+    // {
+    //   resolve: `gatsby-plugin-alias-imports`,
+    //   options: {
+    //     alias: {
+    //       "@components": path.resolve(__dirname, "src/components"),
+    //       "@state": path.resolve(__dirname, "src/state"),
+    //       "@common": path.resolve(__dirname, "src/common"),
+    //       "@ui": path.resolve(__dirname, "src/ui"),
+    //     },
+    //     extensions: [".js", ".tsx", ".ts"],
+    //   },
+    // },
     "gatsby-plugin-transition-link",
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,

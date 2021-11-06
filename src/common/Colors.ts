@@ -1,5 +1,10 @@
+export interface ColorsInterface {
+  blind: boolean
+  dark: boolean
+}
+
 export const Colors = (
-  siteProps = {
+  siteProps: ColorsInterface = {
     blind: false,
     dark: false,
   }

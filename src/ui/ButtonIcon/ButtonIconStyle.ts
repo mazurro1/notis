@@ -1,7 +1,19 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const ButtonStyle = styled.div`
+export const ButtonStyle = styled.div<{
+  icon: any
+  mouseOn: boolean
+  fontSize: any
+  uppercase: boolean
+  disabled: boolean
+  mouseClick: boolean
+  secondColors: boolean
+  siteProps: SitePropsInterface
+  buttonBgDark: boolean
+  customColorButton: string | null
+}>`
   position: relative;
   padding: 4px 10px;
   padding-left: 45px;
@@ -36,7 +48,16 @@ export const ButtonStyle = styled.div`
   transition-timing-function: ease-in-out;
 `
 
-export const IconStyle = styled.div`
+export const IconStyle = styled.div<{
+  mouseClick: boolean
+  secondColors: boolean
+  siteProps: SitePropsInterface
+  customColorIcon: string | null
+  buttonBgDark: boolean
+  disabled: boolean
+  mouseOn: boolean
+  numberScale: number
+}>`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -69,7 +90,10 @@ export const IconStyle = styled.div`
   transition-timing-function: ease-in-out;
 `
 
-export const OnlyIcon = styled.div`
+export const OnlyIcon = styled.div<{
+  siteProps: SitePropsInterface
+  fontIconSize: string
+}>`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -83,7 +107,9 @@ export const OnlyIcon = styled.div`
   padding: 5px;
 `
 
-export const TextStyle = styled.div`
+export const TextStyle = styled.div<{
+  siteProps: any
+}>`
   position: relative;
   z-index: 10;
   text-align: center;
