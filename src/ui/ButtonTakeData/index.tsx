@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { MdClose } from "react-icons/md"
 import { useSelector } from "react-redux"
 import * as styled from "./ButtonTakeDataStyle"
-import PropTypes from "prop-types"
 
 const ButtonTakeData = ({
   icon = null,
@@ -10,10 +9,16 @@ const ButtonTakeData = ({
   onClick = () => {},
   setResetText = () => {},
   resetTextEnable = false,
+}: {
+  icon: null | object
+  text: string
+  onClick: Function
+  setResetText: Function
+  resetTextEnable: boolean
 }) => {
   const [mouseClick, setMouseClick] = useState(false)
   const [numberScale, setNumberScale] = useState(1)
-  const siteProps = useSelector(state => state.siteProps)
+  const siteProps = useSelector((state: any) => state.siteProps)
 
   const handleOnClick = () => {
     setMouseClick(true)
@@ -25,7 +30,7 @@ const ButtonTakeData = ({
     }, 500)
   }
 
-  const handleResetText = e => {
+  const handleResetText = (e: Event) => {
     e.stopPropagation()
     setResetText()
   }
@@ -47,14 +52,6 @@ const ButtonTakeData = ({
       )}
     </styled.DivTakeData>
   )
-}
-
-ButtonTakeData.propTypes = {
-  icon: PropTypes.object.isRequired,
-  text: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  setResetText: PropTypes.func,
-  resetTextEnable: PropTypes.bool,
 }
 
 export default ButtonTakeData

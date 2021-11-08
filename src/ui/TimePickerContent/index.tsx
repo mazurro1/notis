@@ -8,18 +8,24 @@ import moment from "moment"
 import { useDispatch, useSelector } from "react-redux"
 import { addAlertItem } from "@state/actions"
 import * as styled from "./TimePickerContentStyle"
-import PropTypes from "prop-types"
 
 const TimePickerContent = ({
   handleResetTakeData = () => {},
   setSelectedTime,
-  timeTimePicker = null,
+  timeTimePicker = "",
   secondColor = false,
   minTime,
   maxTime,
+}: {
+  handleResetTakeData?: Function
+  setSelectedTime: Function
+  timeTimePicker: string
+  secondColor?: boolean
+  minTime?: string
+  maxTime?: string
 }) => {
   const [time, setTime] = useState(timeTimePicker)
-  const siteProps = useSelector(state => state.siteProps)
+  const siteProps = useSelector((state: any) => state.siteProps)
   const dispatch = useDispatch()
   moment().format(moment.HTML5_FMT.TIME)
   useEffect(() => {
@@ -30,7 +36,7 @@ const TimePickerContent = ({
     }
   }, [time])
 
-  const handleTimeOnChange = data => {
+  const handleTimeOnChange = (data: any) => {
     setTime(data.formatted24)
   }
 
@@ -85,14 +91,14 @@ const TimePickerContent = ({
           time={time}
           closeOnMinuteSelect
           onChange={handleTimeOnChange}
-          doneButton={newTime => (
+          doneButton={() => (
             <styled.ButtonConfirmDate siteProps={siteProps}>
               <styled.MarginButtons>
                 <ButtonIcon
                   title="Anuluj"
                   uppercase
-                  fontIconSize="20"
-                  fontSize="14"
+                  fontIconSize={20}
+                  fontSize="SMALL"
                   icon={<FaArrowLeft />}
                   onClick={handleReset}
                   customColorButton={Colors(siteProps).dangerColorDark}
@@ -103,8 +109,8 @@ const TimePickerContent = ({
                 <ButtonIcon
                   title="ZATWIERDŹ"
                   uppercase
-                  fontIconSize="20"
-                  fontSize="14"
+                  fontIconSize={20}
+                  fontSize="SMALL"
                   icon={<MdDoneAll />}
                   onClick={handleClose}
                   customColorButton={Colors(siteProps).successColorDark}
@@ -117,15 +123,6 @@ const TimePickerContent = ({
       )}
     </styled.MaxWidth>
   )
-}
-
-TimePickerContent.propTypes = {
-  handleResetTakeData: PropTypes.func,
-  setSelectedTime: PropTypes.func.isRequired,
-  timeTimePicker: PropTypes.string.isRequired,
-  secondColor: PropTypes.bool,
-  minTime: PropTypes.string,
-  maxTime: PropTypes.string,
 }
 
 export default TimePickerContent

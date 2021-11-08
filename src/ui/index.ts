@@ -8,6 +8,7 @@ import ButtonTakeData from "./ButtonTakeData/index"
 import TimePickerContent from "./TimePickerContent/index"
 import SelectDataCalendar from "./SelectDataCalendar/index"
 import BufferText from "./BufferText/index"
+import ParagraphText from "./ParagraphText/index"
 
 export {
   ButtonIcon,
@@ -20,4 +21,5 @@ export {
   TimePickerContent,
   SelectDataCalendar,
   BufferText,
+  ParagraphText,
 }

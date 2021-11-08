@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
 import { Site } from "@common/Site"
+import { SitePropsInterface } from "@common/types"
 
 export const WrapSelectedElements = styled.div`
   width: 100%;
@@ -10,7 +11,10 @@ export const WrapSelectedElements = styled.div`
   text-align: left;
 `
 
-export const SizeSelect = styled.div`
+export const SizeSelect = styled.div<{
+  width: string
+  isClearable: boolean
+}>`
   position: relative;
   display: block;
   width: ${props =>
@@ -19,7 +23,13 @@ export const SizeSelect = styled.div`
   max-width: 100%;
 `
 
-export const PositionValues = styled.div`
+export const PositionValues = styled.div<{
+  siteProps: SitePropsInterface
+  height: number
+  isClearable: boolean
+  secondColor: boolean
+  top: boolean
+}>`
   position: absolute;
   ${props =>
     !props.top ? "top: calc(100% + 5px)" : "bottom: calc(100% + 5px)"};
@@ -37,7 +47,13 @@ export const PositionValues = styled.div`
   overflow-x: hidden;
 `
 
-export const DataItem = styled.button`
+export const DataItem = styled.button<{
+  siteProps: SitePropsInterface
+  active: boolean
+  onClick: any
+  key: number
+  secondColor: boolean
+}>`
   display: block;
   font-family: "Poppins-Regular", sans-serif;
   width: 100%;
@@ -120,7 +136,13 @@ export const ClearSelect = styled.div`
   }
 `
 
-export const SelectedItemValue = styled.span`
+export const SelectedItemValue = styled.span<{
+  key: number
+  siteProps: SitePropsInterface
+  onClick: Function
+  hoverActive: boolean
+  secondColor: boolean
+}>`
   display: inline-block;
   font-size: 0.8rem;
   padding: 2px 5px;
@@ -156,7 +178,9 @@ export const FlexItemSelectedName = styled.div`
   align-items: center;
 `
 
-export const DeleteItemSelected = styled.div`
+export const DeleteItemSelected = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   color: ${props => Colors(props.siteProps).textNormalWhite};
   display: flex;
   flex-direction: row;
@@ -175,7 +199,9 @@ export const DefaultPlaceholderStyle = styled.div`
   }
 `
 
-export const TextSelect = styled.div`
+export const TextSelect = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   font-size: 0.8rem;
   margin-left: 5px;
   font-family: "Poppins-Bold", sans-serif;

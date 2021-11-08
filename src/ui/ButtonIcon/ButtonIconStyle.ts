@@ -2,7 +2,55 @@ import styled from "styled-components"
 import { Colors } from "@common/Colors"
 import { SitePropsInterface } from "@common/types"
 
-export const ButtonStyle = styled.div<{
+export const ButtonStyle = styled.button<{
+  icon: any
+  mouseOn: boolean
+  fontSize: any
+  uppercase: boolean
+  disabled: boolean
+  mouseClick: boolean
+  secondColors: boolean
+  siteProps: SitePropsInterface
+  buttonBgDark: boolean
+  customColorButton: string | null
+}>`
+  border: none;
+  outline: none;
+  position: relative;
+  padding: 4px 10px;
+  padding-left: 45px;
+  padding-left: ${props => (props.icon ? "45px" : "10px")};
+  border-radius: 5px;
+  background-color: ${props =>
+    props.mouseOn && !props.icon
+      ? props.secondColors
+        ? Colors(props.siteProps).secondColor
+        : Colors(props.siteProps).primaryColor
+      : props.disabled
+      ? Colors(props.siteProps).disabled
+      : props.buttonBgDark && props.icon
+      ? Colors(props.siteProps).darkColorDark
+      : props.secondColors
+      ? Colors(props.siteProps).secondDarkColor
+      : props.buttonBgDark
+      ? Colors(props.siteProps).darkColor
+      : props.customColorButton
+      ? props.customColorButton
+      : Colors(props.siteProps).primaryColorDark};
+  color: black;
+  overflow: hidden;
+  color: white;
+  font-size: ${props => props.fontSize + "px"};
+  text-transform: ${props => (props.uppercase ? "uppercase" : "")};
+  transform: ${props => (props.mouseClick ? `scale(0.95)` : "scale(1)")};
+  user-select: none;
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+  transition-property: background-color, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+`
+
+export const DivStyle = styled.div<{
   icon: any
   mouseOn: boolean
   fontSize: any
@@ -92,7 +140,7 @@ export const IconStyle = styled.div<{
 
 export const OnlyIcon = styled.div<{
   siteProps: SitePropsInterface
-  fontIconSize: string
+  fontIconSize: number
 }>`
   position: absolute;
   top: 0;

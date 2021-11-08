@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react"
-import PropTypes from "prop-types"
 import * as styled from "./ButtonIconStyle"
 import { disableFetchactions } from "@state/actions"
 import { useDispatch, useSelector } from "react-redux"
 
 const ButtonIcon = ({
-  fontIconSize = "25",
-  fontSize = "18",
+  fontIconSize = 25,
+  fontSize = "MEDIUM",
   uppercase = false,
   onClick = () => {},
   title = "",
@@ -19,21 +18,25 @@ const ButtonIcon = ({
   id = "",
   isFetchToBlock = false,
   isActive = false,
+  isButton = false,
+  type = "button",
 }: {
-  fontIconSize: string
-  fontSize: string
-  uppercase: boolean
+  fontIconSize?: number
+  fontSize?: "SMALL" | "MEDIUM" | "LARGE"
+  uppercase?: boolean
   onClick: Function
-  title: string
-  icon: object
-  secondColors: boolean
-  buttonBgDark: boolean
-  disabled: boolean
-  customColorButton: string | null
-  customColorIcon: string | null
-  id: string
-  isFetchToBlock: boolean
-  isActive: boolean
+  title: string | object
+  icon?: object
+  secondColors?: boolean
+  buttonBgDark?: boolean
+  disabled?: boolean
+  customColorButton?: string | null
+  customColorIcon?: string | null
+  id?: string
+  isFetchToBlock?: boolean
+  isActive?: boolean
+  isButton?: boolean
+  type?: "button" | "submit" | "reset"
 }) => {
   const [mouseOn, setMouseOn] = useState(false)
   const [mouseClick, setMouseClick] = useState(false)
@@ -115,10 +118,31 @@ const ButtonIcon = ({
     </>
   )
 
+  const fontSizeCheck: number =
+    fontSize === "SMALL" ? 14 : fontSize === "MEDIUM" ? 16 : 14
+  // fontSize === "SMALL" ? 14 : fontSize === "MEDIUM" ? 16 : 18
+
+  const CheckStyledElement: any = isButton
+    ? styled.ButtonStyle
+    : styled.DivStyle
+
+  interface idElementButtonInterface {
+    id: string
+  }
+
+  const idElementButton: idElementButtonInterface | {} = !!id ? { id: id } : {}
+
+  interface typeElementInterface {
+    type: string
+  }
+
+  const typeElement: typeElementInterface | {} = isButton ? { type: type } : {}
+
   return (
-    <styled.ButtonStyle
-      id={id}
-      fontSize={Number(fontSize) <= 18 ? 14 : fontSize}
+    <CheckStyledElement
+      {...typeElement}
+      {...idElementButton}
+      fontSize={fontSizeCheck}
       uppercase={uppercase}
       onMouseEnter={handleOnMouseOn}
       onMouseLeave={handleOnMouseLeave}
@@ -135,25 +159,8 @@ const ButtonIcon = ({
     >
       {allIcon}
       <styled.TextStyle siteProps={siteProps}>{title}</styled.TextStyle>
-    </styled.ButtonStyle>
+    </CheckStyledElement>
   )
-}
-
-ButtonIcon.propTypes = {
-  fontIconSize: PropTypes.string,
-  fontSize: PropTypes.string,
-  uppercase: PropTypes.bool,
-  onClick: PropTypes.func,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-  icon: PropTypes.object,
-  secondColors: PropTypes.bool,
-  buttonBgDark: PropTypes.bool,
-  disabled: PropTypes.bool,
-  customColorButton: PropTypes.string,
-  customColorIcon: PropTypes.string,
-  id: PropTypes.string,
-  isFetchToBlock: PropTypes.bool,
-  isActive: PropTypes.bool,
 }
 
 export default ButtonIcon

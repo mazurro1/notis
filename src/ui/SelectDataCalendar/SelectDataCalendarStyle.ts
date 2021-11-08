@@ -1,7 +1,10 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const StyleSimpleReactCalendar = styled.div`
+export const StyleSimpleReactCalendar = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   position: relative;
   transform: translate(0px, 0px) !important;
   opacity: 1;

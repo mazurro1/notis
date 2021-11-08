@@ -1,7 +1,12 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const TitlePagePopup = styled.div`
+export const TitlePagePopup = styled.div<{
+  siteProps: SitePropsInterface
+  secondColors: boolean
+  smallTitle: boolean
+}>`
   position: relative;
   top: 0;
   left: 0;
@@ -11,18 +16,25 @@ export const TitlePagePopup = styled.div`
       ? Colors(props.siteProps).secondColor
       : Colors(props.siteProps).primaryColorDark};
   color: ${props => Colors(props.siteProps).textNormalWhite};
-  font-size: ${props => (props.smallTitle ? "1rem" : "1.4rem")};
+  /* font-size: ${props => (props.smallTitle ? "1rem" : "1.4rem")}; */
   padding: 5px 10px;
   padding-right: 35px;
   overflow: hidden;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2) inset;
 
   @media all and (max-width: 767px) {
-    font-size: ${props => (props.smallTitle ? "1.0rem" : "1.2rem")};
+    /* font-size: ${props => (props.smallTitle ? "1.0rem" : "1.2rem")}; */
   }
 `
 
-export const PopupWindow = styled.div`
+export const PopupWindow = styled.div<{
+  calendar: boolean
+  position: string
+  borderRadius: boolean
+  top: string
+  bottom: string
+  lightBackground: boolean
+}>`
   position: ${props => props.position};
   top: ${props => props.top};
   right: 0;
@@ -42,7 +54,14 @@ export const PopupWindow = styled.div`
   }
 `
 
-export const PopupContent = styled.div`
+export const PopupContent = styled.div<{
+  maxWidth: number
+  fullScreen: boolean
+  siteProps: SitePropsInterface
+  overflowComponent: boolean
+  maxHeight: boolean
+  heightFull: boolean
+}>`
   position: relative;
   background-color: white;
   max-width: ${props => props.maxWidth + "px"};
@@ -56,7 +75,9 @@ export const PopupContent = styled.div`
   overflow: ${props => (props.overflowComponent ? "hidden" : "auto")};
 `
 
-export const PaddingContnent = styled.div`
+export const PaddingContnent = styled.div<{
+  maxHeight: boolean
+}>`
   padding: 10px 15px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -64,7 +85,12 @@ export const PaddingContnent = styled.div`
   max-height: ${props => (props.maxHeight ? "calc(90vh - 41px)" : "auto")};
 `
 
-export const ClosePopup = styled.div`
+export const ClosePopup = styled.div<{
+  siteProps: SitePropsInterface
+  isTitleOn: boolean
+  smallTitle: boolean
+  secondColors: boolean
+}>`
   position: absolute;
   top: 0px;
   right: 0px;
@@ -72,7 +98,7 @@ export const ClosePopup = styled.div`
   cursor: pointer;
   font-size: 1.5rem;
   color: ${props =>
-    props.titleOn ? Colors(props.siteProps).textNormalWhite : "#757575"};
+    props.isTitleOn ? Colors(props.siteProps).textNormalWhite : "#757575"};
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease;

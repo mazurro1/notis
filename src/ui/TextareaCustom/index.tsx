@@ -1,16 +1,21 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import PropTypes from "prop-types"
 import * as styled from "./TextareaCustomStyle"
 
 const TextareaCustom = ({
   placeholder = "Uzupełnij pole",
-  onChange = () => {},
+  // @ts-ignore
+  onChange = (e: Event) => {},
   value = "",
   isErrorText = false,
+}: {
+  placeholder: string
+  onChange: Function
+  value: string
+  isErrorText: boolean
 }) => {
-  const siteProps = useSelector(state => state.siteProps)
-  const handleOnChange = e => {
+  const siteProps = useSelector((state: any) => state.siteProps)
+  const handleOnChange = (e: any) => {
     onChange(e)
   }
 
@@ -22,7 +27,7 @@ const TextareaCustom = ({
         placeholder={`${placeholder}...`}
         autocomplete="off"
         autocapitalize="sentences"
-        onChange={e => handleOnChange(e)}
+        onChange={(e: any) => handleOnChange(e)}
         value={value}
         siteProps={siteProps}
       />
@@ -35,13 +40,6 @@ const TextareaCustom = ({
       )}
     </div>
   )
-}
-
-TextareaCustom.propTypes = {
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
-  isErrorText: PropTypes.bool,
 }
 
 export default TextareaCustom

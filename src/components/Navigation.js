@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Colors } from "@common/Colors"
-import { ButtonIcon, Popup, SelectCreated } from "@ui"
+import { ButtonIcon, Popup, SelectCreated, ParagraphStyle } from "@ui"
 import styled from "styled-components"
 import {
   FaUserPlus,
@@ -358,19 +358,15 @@ const HelpIconStyle = styled.div`
 
 const Navigation = props => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [workerReserwationsVisible, setWorkerReserwationsVisible] = useState(
-    false
-  )
-  const [
-    workerUsersInformationVisible,
-    setWorkerUsersInformationVisible,
-  ] = useState(false)
+  const [workerReserwationsVisible, setWorkerReserwationsVisible] =
+    useState(false)
+  const [workerUsersInformationVisible, setWorkerUsersInformationVisible] =
+    useState(false)
   const [historyReserwations, setHistoryReserwations] = useState(false)
   const [workPropsVisible, setWorkPropsVisible] = useState(false)
   const selectedNameMenu = useSelector(state => state.selectedNameMenu)
-  const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] = useState(
-    false
-  )
+  const [emplyeeWorkingHoursVisible, setEmplyeeWorkingHoursVisible] =
+    useState(false)
   const [companyServicesVisible, setCompanyServicesVisible] = useState(false)
   const [companyCommutingVisible, setCompanyCommutingsVisible] = useState(false)
   const [stampsVisible, setStampsVisible] = useState(false)
@@ -379,9 +375,8 @@ const Navigation = props => {
   const [companyStatistics, setCompanyStatistics] = useState(false)
   const [addSMSVisible, setAddSMSVisible] = useState(false)
   const [userServicesVisible, setUserServicesVisible] = useState(false)
-  const [transactionHistoryVisible, setTransactionHistoryVisible] = useState(
-    false
-  )
+  const [transactionHistoryVisible, setTransactionHistoryVisible] =
+    useState(false)
   const [historyServices, setHistoryServices] = useState(false)
   const [historyCommunitings, setHistoryCommunitings] = useState(false)
   const [disabledSwitchUserProps, setDisabledSwitchUserProps] = useState(false)
@@ -503,21 +498,7 @@ const Navigation = props => {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(userVapid),
     })
-    // sw.periodicSync
-    //   .register({
-    //     tag: "myFirstSync",
-    //     minPeriod: 3000,
-    //     powerState: "avoid-draining",
-    //     networkState: "avoid-cellular",
-    //   })
-    //   .then(
-    //     periodicSyncReg => {
-    //       console.log("sucess")
-    //     },
-    //     () => {
-    //       console.log("some error occured.")
-    //     }
-    //   )
+
     dispatch(fetchNotificationEndpoint(user.token, result))
   }
 

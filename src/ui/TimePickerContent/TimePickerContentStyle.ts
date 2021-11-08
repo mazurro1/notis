@@ -1,7 +1,10 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const ButtonConfirmDate = styled.div`
+export const ButtonConfirmDate = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   padding: 5px;
   background-color: ${props => Colors(props.siteProps).timePickerTopBackground};
   display: flex;
@@ -15,7 +18,10 @@ export const MarginButtons = styled.div`
   margin: 5px;
 `
 
-export const MaxWidth = styled.div`
+export const MaxWidth = styled.div<{
+  siteProps: SitePropsInterface
+  secondColor: boolean
+}>`
   .react-timekeeper {
     width: 100% !important;
   }

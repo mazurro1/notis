@@ -1,9 +1,18 @@
-import loadable from "@loadable/component"
-const PinField = loadable(() => import("react-pin-field"))
+// @ts-ignore
+
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
+import loadable from "@loadable/component"
+// @ts-ignore
+const PinField = loadable(() => import("react-pin-field"))
 
-export const ColorsInput = styled.div`
+export const ColorsInput = styled.div<{
+  siteProps: SitePropsInterface
+  width: number
+  marginElements: number
+  whiteInputs: boolean
+}>`
   input {
     background-color: ${props =>
       props.whiteInputs
@@ -23,7 +32,12 @@ export const ColorsInput = styled.div`
   }
 `
 
-export const ColorsInputShort = styled.div`
+export const ColorsInputShort = styled.div<{
+  siteProps: SitePropsInterface
+  width: number
+  marginElements: number
+  whiteInputs: boolean
+}>`
   input {
     background-color: ${props =>
       props.whiteInputs
@@ -50,7 +64,9 @@ export const ColorsInputShort = styled.div`
   }
 `
 
-export const PanFieldStyle = styled(PinField)`
+export const PanFieldStyle = styled(PinField)<{
+  onChange: any
+}>`
   border-radius: 2px;
   border: none;
   outline: none;
@@ -73,7 +89,10 @@ export const PanFieldStyle = styled(PinField)`
   }
 `
 
-export const TextValue = styled.div`
+export const TextValue = styled.div<{
+  siteProps: SitePropsInterface
+  active: boolean
+}>`
   font-size: 0.8rem;
   font-family: "Poppins-Medium", sans-serif;
   color: ${props =>
@@ -85,7 +104,9 @@ export const TextValue = styled.div`
   transition-timing-function: ease;
 `
 
-export const NumberToCountry = styled.div`
+export const NumberToCountry = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   display: inline-block;
   color: ${props => Colors(props.siteProps).primaryColorDark};
   margin-right: 10px;

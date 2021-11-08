@@ -4,7 +4,11 @@ import { MdKeyboardArrowDown, MdClose } from "react-icons/md"
 import { CSSTransition } from "react-transition-group"
 import { useSelector } from "react-redux"
 import * as styled from "./SelectCreatedStyle"
-import PropTypes from "prop-types"
+
+interface optionPInterface {
+  label: string
+  value: string
+}
 
 const SelectCreated = ({
   options = [],
@@ -15,7 +19,7 @@ const SelectCreated = ({
   isClearable = false,
   defaultMenuIsOpen = false,
   isDisabled = false,
-  value,
+  value = null,
   handleChange = () => {},
   width = "300px",
   secondColor = false,
@@ -24,17 +28,35 @@ const SelectCreated = ({
   deleteItem = true,
   textUp = false,
   top = false,
+}: {
+  options: optionPInterface[]
+  isMulti: boolean
+  maxMenuHeight: number
+  closeMenuOnSelect: boolean
+  placeholder: string
+  isClearable: boolean
+  defaultMenuIsOpen: boolean
+  isDisabled: boolean
+  value: any
+  handleChange: Function
+  width: string
+  secondColor: boolean
+  darkSelect: boolean
+  onlyText: boolean
+  deleteItem: boolean
+  textUp: boolean
+  top: boolean
 }) => {
   const [selectActive, setSelectActive] = useState(
     isDisabled ? false : defaultMenuIsOpen
   )
-  const [selectedItems, setSelectedItems] = useState([])
+  const [selectedItems, setSelectedItems] = useState<optionPInterface[]>([])
   const [hoverActive, setHoverActive] = useState(false)
-  const siteProps = useSelector(state => state.siteProps)
-  const refSelect = useRef(null)
+  const siteProps = useSelector((state: any) => state.siteProps)
+  const refSelect: any = useRef(null)
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    function handleClickOutside(event: Event) {
       if (refSelect.current && !refSelect.current.contains(event.target)) {
         setSelectActive(defaultMenuIsOpen)
       }
@@ -65,7 +87,7 @@ const SelectCreated = ({
     }
   }
 
-  const handleClickItem = (e, selectedItem) => {
+  const handleClickItem = (e: Event, selectedItem: optionPInterface) => {
     e.preventDefault()
     if (!isDisabled) {
       let valueToSentHandleChange = null
@@ -117,7 +139,7 @@ const SelectCreated = ({
     }
   }
 
-  const handleClearSelect = e => {
+  const handleClearSelect = (e: Event) => {
     e.preventDefault()
     let valueToSentHandle = null
     if (isMulti) {
@@ -128,7 +150,7 @@ const SelectCreated = ({
     setSelectedItems([])
   }
 
-  const handleDeleteSelectedItem = (e, selectedItem) => {
+  const handleDeleteSelectedItem = (e: any, selectedItem: optionPInterface) => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     if (deleteItem) {
@@ -146,7 +168,7 @@ const SelectCreated = ({
     }
   }
 
-  const handleStopPropagination = e => {
+  const handleStopPropagination = (e: any) => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     if (!isDisabled && closeMenuOnSelect) {
@@ -178,7 +200,7 @@ const SelectCreated = ({
       <styled.DataItem
         siteProps={siteProps}
         active={isItemActive}
-        onClick={e => handleClickItem(e, item)}
+        onClick={(e: Event) => handleClickItem(e, item)}
         key={index}
         secondColor={secondColor}
       >
@@ -201,6 +223,7 @@ const SelectCreated = ({
           {deleteItem && (
             <styled.DeleteItemSelected
               onClick={e => handleDeleteSelectedItem(e, item)}
+              siteProps={siteProps}
             >
               <MdClose />
             </styled.DeleteItemSelected>
@@ -241,8 +264,8 @@ const SelectCreated = ({
             )
           }
           uppercase
-          fontIconSize="22"
-          fontSize="16"
+          fontIconSize={22}
+          isButton
           icon={<MdKeyboardArrowDown />}
           onClick={handleClickSelect}
           disabled={isDisabled}
@@ -267,32 +290,12 @@ const SelectCreated = ({
         </styled.PositionValues>
       </CSSTransition>
       {isClearable && !isDisabled && (
-        <styled.ClearSelect onClick={e => handleClearSelect(e)}>
+        <styled.ClearSelect onClick={(e: any) => handleClearSelect(e)}>
           <MdClose />
         </styled.ClearSelect>
       )}
     </styled.SizeSelect>
   )
-}
-
-SelectCreated.propTypes = {
-  options: PropTypes.array.isRequired,
-  isMulti: PropTypes.bool,
-  maxMenuHeight: PropTypes.number,
-  closeMenuOnSelect: PropTypes.bool,
-  placeholder: PropTypes.string,
-  isClearable: PropTypes.bool,
-  defaultMenuIsOpen: PropTypes.bool,
-  isDisabled: PropTypes.bool,
-  value: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  handleChange: PropTypes.func.isRequired,
-  width: PropTypes.string,
-  secondColor: PropTypes.bool,
-  darkSelect: PropTypes.bool,
-  onlyText: PropTypes.bool,
-  deleteItem: PropTypes.bool,
-  textUp: PropTypes.bool,
-  top: PropTypes.bool,
 }
 
 export default SelectCreated

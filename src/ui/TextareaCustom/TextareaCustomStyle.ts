@@ -1,7 +1,17 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const CustomStyleTextarea = styled.textarea`
+export const CustomStyleTextarea = styled.textarea<{
+  siteProps: SitePropsInterface
+  isErrorText: boolean
+  spellcheck: boolean
+  placeholder: string
+  autocomplete: string
+  autocapitalize: string
+  onChange: Function
+  value: string
+}>`
   max-width: 100%;
   min-width: 100%;
   min-height: 100px;
@@ -22,7 +32,9 @@ export const CustomStyleTextarea = styled.textarea`
   transition-timing-function: ease;
 `
 
-export const ErrorText = styled.div`
+export const ErrorText = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   font-size: 0.75rem;
   font-family: "Poppins-Bold", sans-serif;
   color: ${props => Colors(props.siteProps).dangerColor};

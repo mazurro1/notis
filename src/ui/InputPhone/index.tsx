@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import * as styled from "./InputPhoneStyles"
-import PropTypes from "prop-types"
 
 const InputPhone = ({
   setPhoneNumber = () => {},
@@ -11,15 +10,24 @@ const InputPhone = ({
   textPhone = "Numer telefonu:",
   whiteInputs = false,
   phoneLength = 9,
+}: {
+  setPhoneNumber: Function
+  defaultValues: string | null
+  width: number
+  marginElements: number
+  textPhone: string
+  whiteInputs: boolean
+  phoneLength: number
 }) => {
   const [inputActive, setInputActive] = useState(false)
-  const siteProps = useSelector(state => state.siteProps)
-  const fieldOneRef = useRef(null)
+  const siteProps = useSelector((state: any) => state.siteProps)
+  const fieldOneRef: any = useRef(null)
 
   useEffect(() => {
     if (!!fieldOneRef) {
       if (!!fieldOneRef.current) {
-        fieldOneRef.current.forEach((item, index) => {
+        console.log(fieldOneRef)
+        fieldOneRef.current.forEach((item: any, index: number) => {
           if (!!defaultValues) {
             if (!!defaultValues[index]) {
               item.value = defaultValues[index]
@@ -55,14 +63,16 @@ const InputPhone = ({
         marginElements={marginElements}
         whiteInputs={whiteInputs}
       >
-        <styled.NumberToCountry>+48</styled.NumberToCountry>
+        <styled.NumberToCountry siteProps={siteProps}>
+          +48
+        </styled.NumberToCountry>
         <styled.PhoneInline>
           <styled.PanFieldStyle
             ref={fieldOneRef}
-            onChange={code => {
+            onChange={(code: Event) => {
               setPhoneNumber(code)
             }}
-            format={k => k.toUpperCase()}
+            format={(k: string) => k.toUpperCase()}
             length={phoneLength}
             validate={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
           />
@@ -70,16 +80,6 @@ const InputPhone = ({
       </SelectStyleInput>
     </styled.StyleInputs>
   )
-}
-
-InputPhone.propTypes = {
-  setPhoneNumber: PropTypes.func.isRequired,
-  defaultValues: PropTypes.string,
-  width: PropTypes.number,
-  marginElements: PropTypes.number,
-  textPhone: PropTypes.string,
-  whiteInputs: PropTypes.bool,
-  phoneLength: PropTypes.number,
 }
 
 export default InputPhone

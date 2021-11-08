@@ -3,11 +3,10 @@ import { useSelector } from "react-redux"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import ReactTooltip from "react-tooltip"
 import * as styled from "./InputIconStyle"
-import PropTypes from "prop-types"
 
 const InputIcon = ({
   placeholder = "",
-  icon = "",
+  icon = null,
   value = "",
   onChange = () => {},
   type = "text",
@@ -17,10 +16,22 @@ const InputIcon = ({
   validText = "",
   showPassword = false,
   refInput = null,
+}: {
+  placeholder: string
+  icon: null | object
+  value: string
+  onChange: Function
+  type: string
+  max: string
+  secondColor: boolean
+  required: boolean
+  validText: string
+  showPassword: boolean
+  refInput: React.RefAttributes<HTMLInputElement> | null
 }) => {
   const [inputActive, setInputActive] = useState(false)
   const [clickEye, setClickEye] = useState(false)
-  const siteProps = useSelector(state => state.siteProps)
+  const siteProps = useSelector((state: any) => state.siteProps)
 
   useEffect(() => {
     setClickEye(false)
@@ -40,7 +51,7 @@ const InputIcon = ({
     setClickEye(prevState => !prevState)
   }
 
-  const randomNumber =
+  const randomNumber: number =
     Math.floor(Math.random() * (999999999 - 111111111 + 1)) + 111111111
 
   return (
@@ -116,20 +127,6 @@ const InputIcon = ({
       )}
     </styled.AllInput>
   )
-}
-
-InputIcon.propTypes = {
-  placeholder: PropTypes.string,
-  icon: PropTypes.object,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onChange: PropTypes.func.isRequired,
-  type: PropTypes.string,
-  max: PropTypes.string,
-  secondColor: PropTypes.bool,
-  required: PropTypes.bool,
-  validText: PropTypes.string,
-  showPassword: PropTypes.bool,
-  refInput: PropTypes.object,
 }
 
 export default InputIcon

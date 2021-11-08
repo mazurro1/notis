@@ -1,7 +1,24 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const InputStyled = styled.input`
+export const InputStyled = styled.input<{
+  icon: boolean
+  paddingEye: boolean
+  validText: boolean
+  inputActive: boolean
+  siteProps: SitePropsInterface
+  secondColor: boolean
+  value: string
+  placeholder: string
+  onChange: any
+  onFocus: Function
+  onBlur: Function
+  type: string
+  max: string
+  required: boolean
+  ref: any
+}>`
   padding: 15px 15px;
   padding-bottom: 10px;
   padding-top: 20px;
@@ -54,7 +71,11 @@ export const AllInput = styled.div`
   margin: 5px 0;
 `
 
-export const IconInput = styled.div`
+export const IconInput = styled.div<{
+  inputActive: boolean
+  secondColor: boolean
+  siteProps: SitePropsInterface
+}>`
   position: absolute;
   top: 6px;
   bottom: 0;
@@ -75,7 +96,11 @@ export const IconInput = styled.div`
   transition-timing-function: ease;
 `
 
-export const ValidTextInput = styled.div`
+export const ValidTextInput = styled.div<{
+  inputActive: boolean
+  secondColor: boolean
+  siteProps: SitePropsInterface
+}>`
   font-size: 0.8rem;
   text-align: right;
   color: ${props =>
@@ -94,7 +119,12 @@ export const PositionRelative = styled.div`
   position: relative;
 `
 
-export const TextValue = styled.div`
+export const TextValue = styled.div<{
+  active: boolean
+  inputActive: boolean
+  secondColor: boolean
+  siteProps: SitePropsInterface
+}>`
   position: absolute;
   left: 0;
   top: 0;
@@ -112,7 +142,11 @@ export const TextValue = styled.div`
   transition-timing-function: ease;
 `
 
-export const ShowPassword = styled.div`
+export const ShowPassword = styled.div<{
+  active: boolean
+  secondColor: boolean
+  siteProps: SitePropsInterface
+}>`
   position: absolute;
   top: 0;
   bottom: 0;

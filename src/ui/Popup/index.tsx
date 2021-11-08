@@ -2,8 +2,8 @@ import React from "react"
 import { CSSTransition } from "react-transition-group"
 import { MdClose } from "react-icons/md"
 import { useSelector } from "react-redux"
-import PropTypes from "prop-types"
 import * as styled from "./PopupStyle"
+import { ParagraphText } from "@ui"
 
 const Popup = ({
   popupEnable = false,
@@ -13,7 +13,7 @@ const Popup = ({
   noContent = false,
   fullScreen = false,
   calendar = false,
-  title = null,
+  title = "",
   opacity = false,
   secondColors = false,
   position = "fixed",
@@ -28,17 +28,40 @@ const Popup = ({
   bottom = "0",
   lightBackground = false,
   unmountOnExit = true,
+}: {
+  popupEnable: boolean
+  handleClose: Function
+  children: ChildNode
+  maxWidth: number
+  noContent: boolean
+  fullScreen: boolean
+  calendar: boolean
+  title: string
+  opacity: boolean
+  secondColors: boolean
+  position: string
+  closeTitle: boolean
+  borderRadius: boolean
+  smallTitle: boolean
+  overflowComponent: boolean
+  maxHeight: boolean
+  clickedBackground: boolean
+  heightFull: boolean
+  top: string
+  bottom: string
+  lightBackground: boolean
+  unmountOnExit: boolean
 }) => {
-  const siteProps = useSelector(state => state.siteProps)
-  const handleOnClick = e => {
+  const siteProps = useSelector((state: any) => state.siteProps)
+  const handleOnClick = () => {
     handleClose()
   }
 
-  const handleOnClickContent = e => {
+  const handleOnClickContent = (e: any) => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
   }
-  const handleClickBackground = e => {
+  const handleClickBackground = (e: any) => {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     if (clickedBackground) {
@@ -46,7 +69,7 @@ const Popup = ({
     }
   }
 
-  const isTitleOn = !!title
+  const isTitleOn: boolean = !!title
 
   const contentComponent = noContent ? (
     <styled.ContentNoBorder
@@ -73,12 +96,16 @@ const Popup = ({
           secondColors={secondColors}
           smallTitle={smallTitle}
         >
-          {title}
+          <ParagraphText
+            text={title}
+            fontSize={smallTitle ? "TITLE_SMALL" : "TITLE"}
+            fontColor="WHITE"
+          />
           {closeTitle && (
             <styled.ClosePopup
               onClick={handleOnClick}
               siteProps={siteProps}
-              titleOn={isTitleOn}
+              isTitleOn={isTitleOn}
               secondColors={secondColors}
               smallTitle={smallTitle}
             >
@@ -94,8 +121,9 @@ const Popup = ({
         <styled.ClosePopup
           onClick={handleOnClick}
           siteProps={siteProps}
-          title={isTitleOn}
+          isTitleOn={isTitleOn}
           smallTitle={smallTitle}
+          secondColors={secondColors}
         >
           <MdClose />
         </styled.ClosePopup>
@@ -123,31 +151,6 @@ const Popup = ({
       </styled.PopupWindow>
     </CSSTransition>
   )
-}
-
-Popup.propTypes = {
-  popupEnable: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func,
-  children: PropTypes.node,
-  maxWidth: PropTypes.number,
-  noContent: PropTypes.bool,
-  fullScreen: PropTypes.bool,
-  calendar: PropTypes.bool,
-  title: PropTypes.string,
-  opacity: PropTypes.bool,
-  secondColors: PropTypes.bool,
-  position: PropTypes.string,
-  closeTitle: PropTypes.bool,
-  borderRadius: PropTypes.bool,
-  smallTitle: PropTypes.bool,
-  overflowComponent: PropTypes.bool,
-  maxHeight: PropTypes.bool,
-  clickedBackground: PropTypes.bool,
-  heightFull: PropTypes.bool,
-  top: PropTypes.string,
-  bottom: PropTypes.string,
-  lightBackground: PropTypes.bool,
-  unmountOnExit: PropTypes.bool,
 }
 
 export default Popup

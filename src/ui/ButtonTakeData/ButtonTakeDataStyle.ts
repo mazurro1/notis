@@ -1,7 +1,13 @@
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
+import { SitePropsInterface } from "@common/types"
 
-export const DivTakeData = styled.div`
+export const DivTakeData = styled.div<{
+  mouseClick: boolean
+  numberScale: number
+  resetTextEnable: boolean
+  siteProps: SitePropsInterface
+}>`
   position: relative;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 5px;
@@ -28,7 +34,9 @@ export const DivTakeData = styled.div`
   }
 `
 
-export const IconStyle = styled.div`
+export const IconStyle = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   position: absolute;
   top: -2px;
   bottom: 0;
@@ -41,7 +49,10 @@ export const IconStyle = styled.div`
   color: ${props => Colors(props.siteProps).selectDateNavigationText};
 `
 
-export const IconResetDate = styled.div`
+export const IconResetDate = styled.div<{
+  onClick: any
+  siteProps: SitePropsInterface
+}>`
   position: absolute;
   top: 10px;
   right: 5px;
