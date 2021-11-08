@@ -9,6 +9,7 @@ import TimePickerContent from "./TimePickerContent/index"
 import SelectDataCalendar from "./SelectDataCalendar/index"
 import BufferText from "./BufferText/index"
 import ParagraphText from "./ParagraphText/index"
+import withTranslates from "./hooks/withTranslates"
 
 export {
   ButtonIcon,
@@ -22,4 +23,5 @@ export {
   SelectDataCalendar,
   BufferText,
   ParagraphText,
+  withTranslates,
 }

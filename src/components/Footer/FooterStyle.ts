@@ -43,7 +43,6 @@ export const LinkRoutes = styled.div<{
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  font-size: 0.9rem;
 
   a {
     padding: 10px;

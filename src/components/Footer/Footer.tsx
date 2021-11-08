@@ -3,13 +3,21 @@ import { Routes, RoutesInterface } from "@common/Routes"
 import { FaFacebookSquare } from "react-icons/fa"
 import { LinkEffect } from "@common/LinkEffect"
 import { useSelector } from "react-redux"
-import { ParagraphText } from "@ui"
+import { ParagraphText, withTranslates } from "@ui"
 import * as styles from "./FooterStyle"
+import { IFooterInterface } from "@common/Translates/Footer"
 
-const Footer = () => {
+const Footer = ({ texts }: { texts: IFooterInterface }) => {
   const siteProps = useSelector((state: any) => state.siteProps)
   const mapRoutes = Routes.map((item: RoutesInterface, index: number) => {
-    return <LinkEffect path={item.path} key={index} text={item.name} />
+    return (
+      <LinkEffect
+        path={item.path}
+        key={index}
+        text={item.name}
+        fontSize={0.95}
+      />
+    )
   })
 
   return (
@@ -17,14 +25,15 @@ const Footer = () => {
       <styles.FooterDiv siteProps={siteProps}>
         <styles.LinkRoutes siteProps={siteProps}>{mapRoutes}</styles.LinkRoutes>
         <styles.FacebookIcon siteProps={siteProps}>
-          <a href="https://www.facebook.com/" target="__blank">
+          <a href={texts.linkFacebook} target="__blank">
             <FaFacebookSquare />
           </a>
         </styles.FacebookIcon>
         <styles.ReservedRights>
           <ParagraphText
-            text="© 2020 Meetsy Wszystkie prawa zastrzeżone"
+            text={texts.copyright}
             fontColor="GRAY"
+            fontSize="SMALL"
           />
         </styles.ReservedRights>
       </styles.FooterDiv>
@@ -32,4 +41,4 @@ const Footer = () => {
   )
 }
 
-export default Footer
+export default withTranslates(Footer, "Footer")
