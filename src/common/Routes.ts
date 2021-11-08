@@ -24,3 +24,8 @@ export const Routes = [
     path: "/contact",
   },
 ]
+
+export interface RoutesInterface {
+  name: string
+  path: string
+}

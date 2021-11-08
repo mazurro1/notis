@@ -36,6 +36,7 @@ const ButtonIcon = ({
     | "BLUE_DARK"
     | "ORANGE"
     | "ORANGE_DARK"
+    | "GRAY"
   spanColor?:
     | "BLACK"
     | "BLACK_FORCE"
@@ -96,7 +97,10 @@ const ButtonIcon = ({
     checkFontColor = Colors(siteProps).secondColor
   } else if (fontColor === "ORANGE_DARK") {
     checkFontColor = Colors(siteProps).secondDarkColor
+  } else if (fontColor === "GRAY") {
+    checkFontColor = Colors(siteProps).darkColorLight
   }
+
   interface idElementPInterface {
     id: string
   }

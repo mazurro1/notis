@@ -1,12 +1,10 @@
-import React from "react"
 import { Colors } from "@common/Colors"
 import styled from "styled-components"
-import { Routes } from "@common/Routes"
-import { FaFacebookSquare } from "react-icons/fa"
-import { LinkEffect } from "@common/LinkEffect"
-import { useSelector } from "react-redux"
+import { SitePropsInterface } from "@common/types"
 
-const WrapperFooter = styled.div`
+export const WrapperFooter = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   position: sticky;
   top: 0;
   left: 0;
@@ -14,7 +12,9 @@ const WrapperFooter = styled.div`
   background-color: ${props => Colors(props.siteProps).navBackground};
 `
 
-const FooterDiv = styled.div`
+export const FooterDiv = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   color: ${props => Colors(props.siteProps).navText};
   background-color: ${props => Colors(props.siteProps).navBackground};
   max-width: 900px;
@@ -23,7 +23,7 @@ const FooterDiv = styled.div`
   padding-top: 30px;
 `
 
-const ReservedRights = styled.div`
+export const ReservedRights = styled.div`
   position: absolute;
   left: 0;
   right: 0;
@@ -34,7 +34,9 @@ const ReservedRights = styled.div`
   color: #bdbdbd;
 `
 
-const LinkRoutes = styled.div`
+export const LinkRoutes = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -56,7 +58,9 @@ const LinkRoutes = styled.div`
   }
 `
 
-const FacebookIcon = styled.div`
+export const FacebookIcon = styled.div<{
+  siteProps: SitePropsInterface
+}>`
   text-align: center;
 
   a {
@@ -71,28 +75,3 @@ const FacebookIcon = styled.div`
     }
   }
 `
-
-const Footer = () => {
-  const siteProps = useSelector(state => state.siteProps)
-  const mapRoutes = Routes.map((item, index) => {
-    return <LinkEffect path={item.path} key={index} text={item.name} />
-  })
-
-  return (
-    <WrapperFooter siteProps={siteProps}>
-      <FooterDiv siteProps={siteProps}>
-        <LinkRoutes siteProps={siteProps}>{mapRoutes}</LinkRoutes>
-        <FacebookIcon siteProps={siteProps}>
-          <a href="https://www.facebook.com/" target="__blank">
-            <FaFacebookSquare />
-          </a>
-        </FacebookIcon>
-        <ReservedRights>
-          © 2020 Meetsy Wszystkie prawa zastrzeżone
-        </ReservedRights>
-      </FooterDiv>
-    </WrapperFooter>
-  )
-}
-
-export default Footer
