@@ -100,6 +100,7 @@ import CompanyCommuniting from "./companyInterface/CompanyCommuniting/CompanyCom
 import UserHistoryServices from "./userInterface/userHistorys/UserHistoryServices"
 import UserHistoryCommuniting from "./userInterface/userHistorys/UserHistoryCommuniting"
 import InfoMenu from "./userInterface/InfoMenu/InfoMenu"
+import LogoMeetsyImage from "../images/logoMeetsyWhiteText.svg"
 
 const MarginButtonsWork = styled.div`
   margin-top: 10px;
@@ -177,9 +178,14 @@ const NavigationItems = styled.div`
 const LogoStyle = styled.div`
   position: absolute;
   left: 5%;
+  top: 5px;
   a {
     font-size: 3.2rem;
     color: white;
+  }
+
+  img {
+    width: 90px;
   }
 `
 
@@ -1918,7 +1924,7 @@ const Navigation = props => {
                       isMobileSize ? (
                         <MeetsyLogo siteProps={siteProps}>M</MeetsyLogo>
                       ) : (
-                        "Meetsy"
+                        <img src={LogoMeetsyImage} alt="logo" />
                       )
                     }
                     path="/"
