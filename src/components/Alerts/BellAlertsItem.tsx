@@ -7,7 +7,7 @@ import {
   BellAlert,
   LoginUserInterface,
 } from "@common/types"
-import { checkPropTypes } from "@ui"
+import { checkPropTypes, allTypes } from "@ui"
 
 const TimeStyle = styled.div<{
   siteProps: SitePropsInterface
@@ -53,16 +53,67 @@ const BellAlertsItem: FunctionComponent<IBellAlertsItem> = ({
   checkPropTypes(
     {
       name: "jaaaaaaa",
-      surname: "xxxxxx",
+      // surname: "xxxxxx",
+      company: {
+        name: "prof",
+        city: 22,
+      },
+      dataToValid: "2021-11-08T17:02:50.447Z",
+      alerts: [
+        {
+          alertName: "powiad",
+          data: "2021-11-08T17:02:50.447Z",
+          street: "2",
+        },
+        {
+          alertName: "powiad",
+          data: "2021-11-08T17:02:50.447Z",
+          street: "xd",
+        },
+      ],
     },
     {
+      alerts: {
+        isNestedArray: true,
+        alertName: {
+          type: allTypes.string,
+          required: true,
+        },
+        data: {
+          type: allTypes.date,
+          required: true,
+        },
+        street: {
+          type: allTypes.string,
+          required: true,
+        },
+      },
+      company: {
+        isNestedObject: true,
+        name: {
+          type: allTypes.string,
+          required: true,
+        },
+        city: {
+          type: allTypes.number,
+          required: true,
+        },
+        street: {
+          type: allTypes.string,
+          required: false,
+        },
+      },
       name: {
-        type: "string",
+        type: allTypes.string,
         required: true,
       },
       surname: {
-        type: "string",
+        type: allTypes.string,
         required: false,
+      },
+      dataToValid: {
+        type: allTypes.date,
+        required: true,
       },
     }
   )

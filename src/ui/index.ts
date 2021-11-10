@@ -10,7 +10,7 @@ import SelectDataCalendar from "./SelectDataCalendar/index"
 import BufferText from "./BufferText/index"
 import ParagraphText from "./ParagraphText/index"
 import withTranslates from "./hooks/withTranslates"
-import checkPropTypes from "./CheckPropTypes/CheckPropTypes"
+import { checkPropTypes, allTypes } from "./CheckPropTypes/CheckPropTypes"
 
 export {
   ButtonIcon,
@@ -26,4 +26,5 @@ export {
   ParagraphText,
   withTranslates,
   checkPropTypes,
+  allTypes,
 }
