@@ -1,9 +1,19 @@
-import React from "react"
+import React, { FunctionComponent } from "react"
 import styled from "styled-components"
 import { Colors } from "@common/Colors"
 import { generateBellAllertItemContentSwitch } from "@common/GenerateBellAlertItemContent"
+import {
+  SitePropsInterface,
+  BellAlert,
+  LoginUserInterface,
+} from "@common/types"
+import { checkPropTypes } from "@ui"
 
-const TimeStyle = styled.div`
+const TimeStyle = styled.div<{
+  siteProps: SitePropsInterface
+  active: boolean
+  alertColor: string
+}>`
   position: absolute;
   top: 2px;
   left: 10px;
@@ -23,12 +33,39 @@ const TimeStyle = styled.div`
   }
 `
 
-const BellAlertsItem = ({ siteProps, alert, AlertItemStyle, user, texts }) => {
-  const {
-    alertMessage = "",
-    alertColor = "default",
-  } = generateBellAllertItemContentSwitch(alert, user, siteProps, texts)
+export interface IBellAlertsItem {
+  siteProps: SitePropsInterface
+  alert: BellAlert
+  AlertItemStyle: any
+  user: LoginUserInterface
+  texts: number
+}
 
+const BellAlertsItem: FunctionComponent<IBellAlertsItem> = ({
+  siteProps,
+  alert,
+  AlertItemStyle,
+  user,
+  texts,
+}) => {
+  const { alertMessage = "", alertColor = "default" } =
+    generateBellAllertItemContentSwitch(alert, user, siteProps, texts)
+  checkPropTypes(
+    {
+      name: "jaaaaaaa",
+      surname: "xxxxxx",
+    },
+    {
+      name: {
+        type: "string",
+        required: true,
+      },
+      surname: {
+        type: "string",
+        required: false,
+      },
+    }
+  )
   return (
     <div
       data-sal="zoom-in"

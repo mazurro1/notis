@@ -6,9 +6,12 @@ import { useSelector } from "react-redux"
 import { ParagraphText, withTranslates } from "@ui"
 import * as styles from "./FooterStyle"
 import { IFooterInterface } from "@common/Translates/Footer"
+import { LoginUserInterface } from "@common/types"
 
 const Footer = ({ texts }: { texts: IFooterInterface }) => {
   const siteProps = useSelector((state: any) => state.siteProps)
+  const user: LoginUserInterface = useSelector((state: any) => state.user)
+  console.log(user)
   const mapRoutes = Routes.map((item: RoutesInterface, index: number) => {
     return (
       <LinkEffect
