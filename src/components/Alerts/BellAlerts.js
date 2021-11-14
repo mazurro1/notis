@@ -215,7 +215,7 @@ const BellAlerts = ({ siteProps, user, isMobileSize, texts }) => {
     }
   }
 
-  const mapAlerts = allAlerts.map((alert, index) => {
+  const mapAlerts = [allAlerts[0]].map((alert, index) => {
     return (
       <BellAlertsItem
         key={index}

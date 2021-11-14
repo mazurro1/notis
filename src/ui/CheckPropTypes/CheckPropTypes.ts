@@ -7,7 +7,7 @@ export const allTypes = {
   array: "[object Array]",
 }
 
-export const checkPropTypes = (
+export const checkAndReturnPropTypes = (
   propsToCheck: object,
   propsTypes: object,
   valuesName: {
@@ -28,8 +28,7 @@ export const checkPropTypes = (
       const valueItemPropToCheck = (propsToCheck as any)[itemPropToCheck]
       let selectedPropTypeValue: string | null = null
       const isNestedArray: boolean =
-        Object.prototype.toString.call(valueItemPropToCheck) ===
-        "[object Array]"
+        Object.prototype.toString.call(valueItemPropToCheck) === allTypes.array
       const isNestedObject: boolean =
         typeof valueItemPropToCheck === allTypes.object && !isNestedArray
       //check is nested array
@@ -198,7 +197,11 @@ export const checkPropTypes = (
           const nestedSelectedValuePropType = (selectedValuePropType as any)[
             nestedItemPropType
           ]
-          if (nestedSelectedValuePropType.required) {
+          const isSelectedRequired: boolean =
+            nestedSelectedValuePropType.required === undefined
+              ? true
+              : nestedSelectedValuePropType.required
+          if (isSelectedRequired) {
             if (nestedItemPropType !== valuesName.valueIsNestedArray) {
               for (const itemPropToCheck in propsToCheck) {
                 const valueItemPropToCheck = (propsToCheck as any)[
@@ -233,7 +236,11 @@ export const checkPropTypes = (
             const nestedSelectedValuePropType = (selectedValuePropType as any)[
               nestedItemPropType
             ]
-            if (nestedSelectedValuePropType.required) {
+            const isSelectedRequired: boolean =
+              nestedSelectedValuePropType.required === undefined
+                ? true
+                : nestedSelectedValuePropType.required
+            if (isSelectedRequired) {
               let isValueFind: boolean = false
               for (const itemPropToCheck in propsToCheck) {
                 const valueItemPropToCheck = (propsToCheck as any)[
@@ -254,14 +261,31 @@ export const checkPropTypes = (
           }
         }
       } else {
-        if (selectedValuePropType.required) {
+        const isSelectedRequired: boolean =
+          selectedValuePropType.required === undefined
+            ? true
+            : selectedValuePropType.required
+        if (isSelectedRequired) {
           let isValueFind: boolean = false
+          let isValueNoString: boolean = false
           for (const itemPropToCheck in propsToCheck) {
+            const valueItemPropToCheck = (propsToCheck as any)[itemPropToCheck]
+            const isTypeStringValue =
+              typeof valueItemPropToCheck === allTypes.string ||
+              typeof valueItemPropToCheck === allTypes.number
             if (itemPropType === itemPropToCheck) {
-              isValueFind = true
+              if (!isTypeStringValue) {
+                isValueNoString = true
+              } else {
+                isValueFind = true
+              }
             }
           }
-          if (!isValueFind) {
+          if (isValueNoString) {
+            console.warn(
+              `Varible: ${itemPropType} is not valid. Meybe if is nested object select ${valuesName.valueIsNestedObject}: true, or is nested array select ${valuesName.valueIsNestedArray}: true`
+            )
+          } else if (!isValueFind) {
             console.warn(`Dont find varible: ${itemPropType}`)
           }
         }

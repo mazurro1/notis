@@ -7,7 +7,7 @@ import {
   BellAlert,
   LoginUserInterface,
 } from "@common/types"
-import { checkPropTypes, allTypes } from "@ui"
+import { checkAndReturnPropTypes, allTypes } from "@ui"
 
 const TimeStyle = styled.div<{
   siteProps: SitePropsInterface
@@ -50,10 +50,10 @@ const BellAlertsItem: FunctionComponent<IBellAlertsItem> = ({
 }) => {
   const { alertMessage = "", alertColor = "default" } =
     generateBellAllertItemContentSwitch(alert, user, siteProps, texts)
-  checkPropTypes(
+  checkAndReturnPropTypes(
     {
       name: "jaaaaaaa",
-      // surname: "xxxxxx",
+      surname: "xxxxxx",
       company: {
         name: "prof",
         city: 22,
@@ -109,7 +109,7 @@ const BellAlertsItem: FunctionComponent<IBellAlertsItem> = ({
       },
       surname: {
         type: allTypes.string,
-        required: false,
+        required: true,
       },
       dataToValid: {
         type: allTypes.date,
